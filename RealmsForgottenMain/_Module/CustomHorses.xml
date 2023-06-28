@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CustomHorseLibrary>
+	<Horses>
+		<!-- CULTURE SHOULD MATCH STRING ID OF CULTURE -->
+		<!-- CHANCE TO SPAWN IS A DAILY PERCENTAGE IN EVERY TOWN, SO 1.0 IS 100% IN ALL TOWNS. RECOMMEND SETTING THIS VERY LOW IF THERE ARE MULTIPLE CUSTOM HORSE TYPES OR YOU'LL BE FLOODED WITH THEM -->
+		<Horse id="undead_horse" culture="sturgia" chance_to_spawn="0.5" />
+		<Horse id="athas_raptor" culture="aserai" chance_to_spawn="0.3" />
+		<Horse id="elvean_grey_wolf" culture="battania" chance_to_spawn="0.6" />
+	</Horses>
+</CustomHorseLibrary>

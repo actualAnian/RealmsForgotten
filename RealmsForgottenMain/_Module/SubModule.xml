@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Module xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/BUTR/Bannerlord.XmlSchemas/master/SubModule.xsd" >
+  <Id value="$modulename$" />
+  <Name value="$modulename$" />
+  <Version value="v$version$" />
+  <DefaultModule value="false" />
+  <ModuleCategory value="Singleplayer"/>
+  <ModuleType value="Community" />
+  <DependedModules>
+    <DependedModule Id="Bannerlord.Harmony" />
+    <DependedModule Id="Native" />
+    <DependedModule Id="SandBoxCore" />
+    <DependedModule Id="Sandbox" />
+    <DependedModule Id="StoryMode" />
+    <DependedModule Id="CustomBattle" />
+  </DependedModules>
+  <!-- Community Dependency Metadata -->
+  <!-- https://github.com/BUTR/Bannerlord.BUTRLoader#for-modders -->
+  <DependedModuleMetadatas>
+    <DependedModuleMetadata id="Bannerlord.Harmony" DependentVersion="v1.1.2" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="Native" DependentVersion="v1.1.2" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="SandBoxCore" DependentVersion="v1.1.2" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="Sandbox" DependentVersion="v1.1.2" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="StoryMode" DependentVersion="v1.1.2" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="CustomBattle" DependentVersion="v1.1.2" order="LoadBeforeThis" />
+  </DependedModuleMetadatas>
+  <!-- Community Dependency Metadata -->
+  <SubModules>
+    <SubModule>
+      <Name value="$modulename$" />
+      <DLLName value="$modulename$.dll" />
+      <SubModuleClassType value="$modulename$.SubModule" />
+      <Tags />
+    </SubModule>
+	  <SubModule>
+		  <Name value="RFLegendaryTroops" />
+		  <DLLName value="RFLegendaryTroops.dll" />
+		  <SubModuleClassType value="RFLegendaryTroops.SubModule" />
+		  <Tags />
+	  </SubModule>
+
+  </SubModules>
+</Module>
