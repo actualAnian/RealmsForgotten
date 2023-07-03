@@ -13,11 +13,11 @@ namespace RealmsForgotten
 {
     internal class SubModule : MBSubModuleBase
     {
-        internal static readonly Random random = new Random();
-        internal static Dictionary<string, Tuple<string, string, string, string>> villagerMin = new Dictionary<string, Tuple<string, string, string, string>>();
-        internal static Dictionary<string, Tuple<string, string, string, string>> villagerMax = new Dictionary<string, Tuple<string, string, string, string>>();
-        internal static Dictionary<string, Tuple<string, string, string, string>> fighterMin = new Dictionary<string, Tuple<string, string, string, string>>();
-        internal static Dictionary<string, Tuple<string, string, string, string>> fighterMax = new Dictionary<string, Tuple<string, string, string, string>>();
+        internal static readonly Random random = new();
+        internal static Dictionary<string, Tuple<string, string, string, string>> villagerMin = new();
+        internal static Dictionary<string, Tuple<string, string, string, string>> villagerMax = new();
+        internal static Dictionary<string, Tuple<string, string, string, string>> fighterMin = new();
+        internal static Dictionary<string, Tuple<string, string, string, string>> fighterMax = new();
         internal static readonly string[] cultures = new string[]
         {
             "battania",
@@ -31,9 +31,9 @@ namespace RealmsForgotten
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
-            TextObject coreContentDisabledReason = new TextObject("Disabled during installation.", null);
+            TextObject coreContentDisabledReason = new("Disabled during installation.", null);
             Module.CurrentModule.AddInitialStateOption(
-                new InitialStateOption("RT", new TextObject("Realms Forgotten", null), 3,
+                new InitialStateOption("RT", name: new TextObject("Realms Forgotten", null), 3,
                 () => MBGameManager.StartNewGame(new RFCampaignManager()),
                 () => (Module.CurrentModule.IsOnlyCoreContentEnabled, coreContentDisabledReason))
             );
@@ -43,7 +43,7 @@ namespace RealmsForgotten
         protected override void InitializeGameStarter(Game game, IGameStarter starterObject)
         {
             base.InitializeGameStarter(game, starterObject);
-            XmlDocument xmlDocument = new XmlDocument();
+            XmlDocument xmlDocument = new();
             xmlDocument.Load(Path.Combine(ModuleHelper.GetModuleFullPath("SandBoxCore"), "ModuleData/sandboxcore_bodyproperties.xml"));
             SubModule.villagerMax = new Dictionary<string, Tuple<string, string, string, string>>();
             SubModule.villagerMin = new Dictionary<string, Tuple<string, string, string, string>>();
@@ -64,8 +64,7 @@ namespace RealmsForgotten
                                 {
                                     if (idAttribute.FirstChild.Value.Contains(SubModule.cultures[i]))
                                     {
-                                        Tuple<string, string, string, string> tuple;
-                                        if (!SubModule.villagerMin.TryGetValue(SubModule.cultures[i], out tuple) && xmlElement.Name == "BodyPropertiesMin" && idAttribute.Value.Contains("villager"))
+                                        if (!SubModule.villagerMin.TryGetValue(SubModule.cultures[i], out Tuple<string, string, string, string> tuple) && xmlElement.Name == "BodyPropertiesMin" && idAttribute.Value.Contains("villager"))
                                         {
                                             SubModule.villagerMin.Add(SubModule.cultures[i], new Tuple<string, string, string, string>(xmlElement.Attributes["age"].Value, xmlElement.Attributes["weight"].Value, xmlElement.Attributes["build"].Value, xmlElement.Attributes["key"].Value));
                                         }

@@ -27,12 +27,6 @@
   </DependedModuleMetadatas>
   <!-- Community Dependency Metadata -->
   <SubModules>
-    <SubModule>
-      <Name value="$modulename$" />
-      <DLLName value="$modulename$.dll" />
-      <SubModuleClassType value="$modulename$.SubModule" />
-      <Tags />
-    </SubModule>
 	  <SubModule>
 		  <Name value="RFLegendaryTroops" />
 		  <DLLName value="RFLegendaryTroops.dll" />
@@ -41,4 +35,5 @@
 	  </SubModule>
 
   </SubModules>
+	fdsgfksdgfg
 </Module>
