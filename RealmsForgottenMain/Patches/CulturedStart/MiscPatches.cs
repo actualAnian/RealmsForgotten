@@ -3,8 +3,7 @@ using System.Reflection;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterCreationContent;
-
-//using StoryMode.CharacterCreationContent;
+using StoryMode.CharacterCreationContent;
 using RealmsForgotten.Managers;
 using RealmsForgotten.Utility.Utility;
 
