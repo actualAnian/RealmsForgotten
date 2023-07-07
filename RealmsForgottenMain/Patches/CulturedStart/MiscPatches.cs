@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterCreationContent;
-using TaleWorlds.Core;
 using StoryMode.CharacterCreationContent;
 using RealmsForgotten.Managers;
 using RealmsForgotten.Utility.Utility;

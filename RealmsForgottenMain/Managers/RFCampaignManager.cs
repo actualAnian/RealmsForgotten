@@ -1,4 +1,5 @@
-﻿using TaleWorlds.CampaignSystem;
+﻿using System;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterCreationContent;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameState;
@@ -7,6 +8,7 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
+using TaleWorlds.ModuleManager;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.SaveSystem.Load;
 
@@ -61,7 +63,7 @@ namespace RealmsForgotten.Managers
                         if (!_loadingSavedGame)
                         {
                             MBDebug.Print("Initializing new game begin...", 0, Debug.DebugColor.White, 17592186044416UL);
-                            Campaign campaign = new Campaign(CampaignGameMode.Campaign);
+                            Campaign campaign = new(CampaignGameMode.Campaign);
                             Game.CreateGame(campaign, this);
                             campaign.SetLoadingParameters(Campaign.GameLoadingType.NewCampaign);
                             MBDebug.Print("Initializing new game end...", 0, Debug.DebugColor.White, 17592186044416UL);
@@ -98,40 +100,42 @@ namespace RealmsForgotten.Managers
 
         public override void OnLoadFinished()
         {
-            if (!_loadingSavedGame)
+            if (!this._loadingSavedGame)
             {
                 MBDebug.Print("Switching to menu window...", 0, Debug.DebugColor.White, 17592186044416UL);
-                LaunchSandboxCharacterCreation();
+
+
+                VideoPlaybackState state = Game.Current.GameStateManager.CreateState<VideoPlaybackState>();
+                string str = ModuleHelper.GetModuleFullPath("RF_Core_Main") + "Videos/CampaignIntro/";
+                string subtitleFileBasePath = str + "RF_lore_intro_b";
+                string videoPath = str + "RF_lore_intro_b.ivf";
+                string audioPath = str + "RF_lore_intro_b.ogg";
+                state.SetStartingParameters(videoPath, audioPath, subtitleFileBasePath);
+                state.SetOnVideoFinisedDelegate(new Action(this.LaunchSandboxCharacterCreation));
+                Game.Current.GameStateManager.CleanAndPushState((GameState)state);
+
             }
             else
             {
-                if (CampaignSiegeTestStatic.IsSiegeTestBuild)
-                {
-                    CampaignSiegeTestStatic.DisableSiegeTest();
-                }
                 Game.Current.GameStateManager.OnSavedGameLoadFinished();
                 Game.Current.GameStateManager.CleanAndPushState(Game.Current.GameStateManager.CreateState<MapState>(), 0);
-                MapState? mapState = Game.Current.GameStateManager.ActiveState as MapState;
-                string? text = mapState?.GameMenuId;
+                MapState mapState = Game.Current.GameStateManager.ActiveState as MapState;
+                string text = mapState?.GameMenuId;
                 if (!string.IsNullOrEmpty(text))
                 {
                     PlayerEncounter playerEncounter = PlayerEncounter.Current;
-                    if (playerEncounter != null)
-                    {
-                        playerEncounter.OnLoad();
-                    }
+                    playerEncounter?.OnLoad();
                     Campaign.Current.GameMenuManager.SetNextMenu(text);
                 }
-                IPartyVisual visuals = PartyBase.MainParty.Visuals;
-                visuals?.SetMapIconAsDirty();
+                PartyBase.MainParty.SetVisualAsDirty();
                 Campaign.Current.CampaignInformationManager.OnGameLoaded();
                 foreach (Settlement settlement in Settlement.All)
                 {
-                    settlement.Party.Visuals.RefreshLevelMask(settlement.Party);
+                    settlement.Party.SetLevelMaskIsDirty();
                 }
                 CampaignEventDispatcher.Instance.OnGameLoadFinished();
             }
-            IsLoaded = true;
+            base.IsLoaded = true;
         }
 
         private void LaunchSandboxCharacterCreation()
@@ -139,5 +143,7 @@ namespace RealmsForgotten.Managers
             CharacterCreationState gameState = Game.Current.GameStateManager.CreateState<CharacterCreationState>(new RFCharacterCreationContent());
             Game.Current.GameStateManager.CleanAndPushState(gameState);
         }
+
+        public override void OnAfterCampaignStart(Game game) {}
     }
 }
