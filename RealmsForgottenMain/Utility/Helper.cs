@@ -1,13 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using HarmonyLib;
 using TaleWorlds.Core;
+using TaleWorlds.MountAndBlade;
 
-namespace RealmsForgotten.Utility.Utility
+namespace RealmsForgotten.Utility
 {
     public static class Helper
     {
-
+        public static List<string> mainMenuIdsToSkip = new List<string>() { "StoryModeNewGame", "ContinueCampaign", "SandBoxNewGame"};
         internal static BodyProperties GenerateCultureBodyProperties(string culture)
         {
             Tuple<string, string, string, string> fighterMin = SubModule.fighterMin[culture];
@@ -81,6 +83,11 @@ namespace RealmsForgotten.Utility.Utility
             } while (ulongRand > ulong.MaxValue - ((ulong.MaxValue % uRange) + 1) % uRange);
 
             return (long)(ulongRand % uRange) + min;
+        }
+        public static bool ShouldLoadMainMenuOption(InitialStateOption initialStateOption)
+        {
+            if (mainMenuIdsToSkip.Contains(initialStateOption.Id)) return false;
+            return true;
         }
     }
 }
