@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Herds>
+  <Herd>
+    <notifMessage>Herd of hogs spotted</notifMessage>
+    <messageTitle>Herd Spotted</messageTitle>
+    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <spawnId>hog</spawnId>
+    <totalAmountInHerd>100</totalAmountInHerd>
+    <isPassive>false</isPassive>
+    <startingHealth>20.0</startingHealth>
+    <maxSpeed>10.0</maxSpeed>
+    <hitboxRange>1.2</hitboxRange>
+    <damageToPlayer>5</damageToPlayer>
+    <sightRange>15.0</sightRange>
+    <fleeOnAttacked>true</fleeOnAttacked>
+    <ItemDrops>
+      <ItemDrop>
+        <itemId>fur</itemId>
+        <amount>1</amount>
+        <maxAmount>4</maxAmount>
+      </ItemDrop>
+      <ItemDrop>
+        <itemId>meat</itemId>
+        <amount>1</amount>
+      </ItemDrop>
+    </ItemDrops>
+  </Herd>
+  <Herd>
+    <notifMessage>Herd of mad cows spotted</notifMessage>
+    <messageTitle>Herd Spotted</messageTitle>
+    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <spawnId>cow</spawnId>
+    <totalAmountInHerd>100</totalAmountInHerd>
+    <isPassive>false</isPassive>
+    <startingHealth>40.0</startingHealth>
+    <maxSpeed>10.0</maxSpeed>
+    <hitboxRange>2.1</hitboxRange>
+    <damageToPlayer>15</damageToPlayer>
+    <sightRange>15.0</sightRange>
+    <fleeOnAttacked>true</fleeOnAttacked>
+    <ItemDrops>
+      <ItemDrop>
+        <itemId>fur</itemId>
+        <amount>3</amount>
+        <maxAmount>9</maxAmount>
+      </ItemDrop>
+      <ItemDrop>
+        <itemId>meat</itemId>
+        <amount>3</amount>
+        <maxAmount>5</maxAmount>
+      </ItemDrop>
+    </ItemDrops>
+  </Herd>
+  <Herd>
+    <notifMessage>Herd of chickens spotted</notifMessage>
+    <messageTitle>Herd Spotted</messageTitle>
+    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <spawnId>chicken</spawnId>
+    <totalAmountInHerd>100</totalAmountInHerd>
+    <isPassive>true</isPassive>
+    <startingHealth>5.0</startingHealth>
+    <maxSpeed>10.0</maxSpeed>
+    <hitboxRange>0.0</hitboxRange>
+    <damageToPlayer>0</damageToPlayer>
+    <sightRange>50.0</sightRange>
+    <fleeOnAttacked>true</fleeOnAttacked>
+    <ItemDrops>
+      <ItemDrop>
+        <itemId>meat</itemId>
+        <amount>1</amount>
+      </ItemDrop>
+    </ItemDrops>
+  </Herd>
+  <Herd>
+    <notifMessage>Herd of vengeful horses spotted</notifMessage>
+    <messageTitle>Herd Spotted</messageTitle>
+    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <spawnId>battania_horse_tournament</spawnId>
+    <totalAmountInHerd>1000</totalAmountInHerd>
+    <isPassive>false</isPassive>
+    <startingHealth>600.0</startingHealth>
+    <maxSpeed>40.0</maxSpeed>
+    <hitboxRange>2.25</hitboxRange>
+    <damageToPlayer>35</damageToPlayer>
+    <sightRange>100.0</sightRange>
+    <fleeOnAttacked>false</fleeOnAttacked>
+    <ItemDrops>
+      <ItemDrop>
+        <itemId>meat</itemId>
+        <amount>6</amount>
+        <maxAmount>58</maxAmount>
+      </ItemDrop>
+    </ItemDrops>
+  </Herd>
+</Herds>

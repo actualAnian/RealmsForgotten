@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterCreationContent;
 using TaleWorlds.CampaignSystem.Encounters;
@@ -83,7 +84,7 @@ namespace RealmsForgotten.Managers
                 case GameManagerLoadingSteps.PostInitializeFourthState:
                     {
                         bool submodulesLoaded = true;
-                        foreach (MBSubModuleBase mbsubModuleBase in Module.CurrentModule.SubModules)
+                        foreach (MBSubModuleBase mbsubModuleBase in TaleWorlds.MountAndBlade.Module.CurrentModule.SubModules)
                         {
                             submodulesLoaded = submodulesLoaded && mbsubModuleBase.DoLoading(Game.Current);
                         }
@@ -106,7 +107,7 @@ namespace RealmsForgotten.Managers
 
 
                 VideoPlaybackState state = Game.Current.GameStateManager.CreateState<VideoPlaybackState>();
-                string str = ModuleHelper.GetModuleFullPath("RF_Core_Main") + "Videos/CampaignIntro/";
+                string str = ModuleHelper.GetModuleFullPath(Assembly.GetExecutingAssembly().GetName().Name) + "Videos/CampaignIntro/";
                 string subtitleFileBasePath = str + "RF_lore_intro_b";
                 string videoPath = str + "RF_lore_intro_b.ivf";
                 string audioPath = str + "RF_lore_intro_b.ogg";
