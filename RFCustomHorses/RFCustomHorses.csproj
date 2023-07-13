@@ -59,8 +59,11 @@
     <PackageReference Include="BUTR.Harmony.Analyzer" Version="1.0.1.44" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
   </ItemGroup>
 
+<<<<<<< HEAD
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="xcopy /y /d /exclude:..\excludedfileslist.txt &quot;$(ProjectDir)\bin\x64\Debug\netstandard2.0\*&quot; &quot;$(BANNERLORD_GAME_DIR)\Modules\RealmsForgotten\bin\Win64_Shipping_Client&quot;" />
   </Target>
 
+=======
+>>>>>>> b6618f421de99a55caf6f04afdca1b5d7646f9b0
 </Project>

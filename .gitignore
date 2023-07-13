@@ -2,7 +2,16 @@ RealmsForgottenMain/obj
 RealmsForgottenMain/bin
 RFLegendaryTroops/obj
 RFLegendaryTroops/bin
+<<<<<<< HEAD
 HuntableHerds/obj
 HuntableHerds/bin
 excludedfileslist.txt
+=======
+RFEffects/obj
+RFEffects/bin
+RFCustomHorses/obj
+RFCustomHorses/bin
+NecromancyAndSummoning/obj
+NecromancyAndSummoning/bin
+>>>>>>> b6618f421de99a55caf6f04afdca1b5d7646f9b0
 .vs
