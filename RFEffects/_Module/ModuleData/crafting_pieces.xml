@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CraftingPieces>
+	<CraftingPiece id="vlandian_blade_8_fire"
+	name="Fire Tapered Kaskara Blade"
+	tier="4"
+	piece_type="Blade"
+	mesh="vlandian_blade_8"
+	culture="Culture.aserai"
+	length="80.3"
+	weight="1.2"
+	is_hidden="true">
+		<BladeData stack_amount="3"
+		physics_material="metal_weapon"
+		body_name="bo_sword_one_handed"
+		holster_mesh="vlandian_blade_8_scabbard_8">
+			<Thrust damage_type="Pierce"
+			damage_factor="2.7" />
+			<Swing damage_type="Cut"
+			damage_factor="3.6" />
+		</BladeData>
+		<Flags>
+			<Flag name="Civilian"
+			type="ItemFlags" />
+			<Flag name="CanKnockDown" />
+			<Flag name="CanHook" />
+		</Flags>
+		<Materials>
+			<Material id="Iron4"
+			count="2" />
+		</Materials>
+	</CraftingPiece>
+	<CraftingPiece id="vlandian_blade_2_fire"
+	name="Fire Broad Two Hander Blade"
+	tier="5"
+	piece_type="Blade"
+	mesh="vlandian_blade_2"
+	culture="Culture.vlandia"
+	length="99"
+	weight="1.15"
+	is_hidden="true">
+		<BladeData stack_amount="3"
+		physics_material="metal_weapon"
+		body_name="bo_sword_one_handed"
+		holster_mesh="vlandian_blade_2_scabbard_2">
+			<Thrust damage_type="Pierce"
+			damage_factor="2.8" />
+			<Swing damage_type="Cut"
+			damage_factor="3.8" />
+		</BladeData>
+		<Flags>
+			<Flag name="CanKnockDown" />
+			<Flag name="CanHook" />
+		</Flags>
+		<Materials>
+			<Material id="Iron5"
+			count="3" />
+		</Materials>
+	</CraftingPiece>
+	<CraftingPiece id="vlandian_blade_3_fire"
+	name="Fire Wide Fullered Broad Two Hander Blade"
+	tier="6"
+	piece_type="Blade"
+	mesh="vlandian_blade_3"
+	culture="Culture.vlandia"
+	length="99.4"
+	weight="1.35"
+	is_hidden="true">
+		<BladeData stack_amount="3"
+		physics_material="metal_weapon"
+		body_name="bo_sword_one_handed"
+		holster_mesh="vlandian_blade_2_scabbard_2">
+			<Thrust damage_type="Pierce"
+			damage_factor="3.2" />
+			<Swing damage_type="Cut"
+			damage_factor="4.1" />
+		</BladeData>
+		<Flags>
+			<Flag name="CanKnockDown" />
+			<Flag name="CanHook" />
+		</Flags>
+		<Materials>
+			<Material id="Iron6"
+			count="4" />
+		</Materials>
+	</CraftingPiece>
+
+
+
+  <CraftingPiece id="javelin_blade_fire"
+                 name="{=Js1FKwrL}Javelin Head"
+                 tier="2"
+                 piece_type="Blade"
+                 mesh="spear_blade_16"
+                 length="23.328"
+                 weight="0.204"
+                 excluded_item_usage_features="swing">
+    <BladeData stack_amount="4"
+               physics_material="wood_weapon"
+               body_name="bo_spear_b"
+               holster_mesh="throwing_spear_quiver_3_1"
+               holster_body_name="bo_throwing_spear_quiver_3_1"
+               holster_mesh_length="96.8">
+      <Thrust damage_type="Pierce"
+              damage_factor="1.8" />
+    </BladeData>
+    <Flags>
+      <Flag name="CanKnockDown" />
+      <Flag name="CanHook" />
+    </Flags>
+    <Materials>
+      <Material id="Iron2"
+                count="1" />
+    </Materials>
+  </CraftingPiece>
+</CraftingPieces>

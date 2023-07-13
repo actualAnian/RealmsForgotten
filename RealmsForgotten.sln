@@ -7,6 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RFLegendaryTroops", "RFLege
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealmsForgotten", "RealmsForgottenMain\RealmsForgotten.csproj", "{68C3BA02-1AA6-4F65-BF11-3A5185EDA733}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RFEffects", "RFEffects\RFEffects.csproj", "{3FABC5C4-2802-49C3-9F42-83E5937BC6BE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NecromancyAndSummoning", "NecromancyAndSummoning\NecromancyAndSummoning.csproj", "{74D0988D-8A41-4FAB-AA02-F808EB8B08CD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RFCustomHorses", "RFCustomHorses\RFCustomHorses.csproj", "{55E6DBBA-C8C8-4280-8372-E82AE14E3C0B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +37,30 @@ Global
 		{68C3BA02-1AA6-4F65-BF11-3A5185EDA733}.Release|Any CPU.Build.0 = Release|x64
 		{68C3BA02-1AA6-4F65-BF11-3A5185EDA733}.Release|x64.ActiveCfg = Release|x64
 		{68C3BA02-1AA6-4F65-BF11-3A5185EDA733}.Release|x64.Build.0 = Release|x64
+		{3FABC5C4-2802-49C3-9F42-83E5937BC6BE}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{3FABC5C4-2802-49C3-9F42-83E5937BC6BE}.Debug|Any CPU.Build.0 = Debug|x64
+		{3FABC5C4-2802-49C3-9F42-83E5937BC6BE}.Debug|x64.ActiveCfg = Debug|x64
+		{3FABC5C4-2802-49C3-9F42-83E5937BC6BE}.Debug|x64.Build.0 = Debug|x64
+		{3FABC5C4-2802-49C3-9F42-83E5937BC6BE}.Release|Any CPU.ActiveCfg = Release|x64
+		{3FABC5C4-2802-49C3-9F42-83E5937BC6BE}.Release|Any CPU.Build.0 = Release|x64
+		{3FABC5C4-2802-49C3-9F42-83E5937BC6BE}.Release|x64.ActiveCfg = Release|x64
+		{3FABC5C4-2802-49C3-9F42-83E5937BC6BE}.Release|x64.Build.0 = Release|x64
+		{74D0988D-8A41-4FAB-AA02-F808EB8B08CD}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{74D0988D-8A41-4FAB-AA02-F808EB8B08CD}.Debug|Any CPU.Build.0 = Debug|x64
+		{74D0988D-8A41-4FAB-AA02-F808EB8B08CD}.Debug|x64.ActiveCfg = Debug|x64
+		{74D0988D-8A41-4FAB-AA02-F808EB8B08CD}.Debug|x64.Build.0 = Debug|x64
+		{74D0988D-8A41-4FAB-AA02-F808EB8B08CD}.Release|Any CPU.ActiveCfg = Release|x64
+		{74D0988D-8A41-4FAB-AA02-F808EB8B08CD}.Release|Any CPU.Build.0 = Release|x64
+		{74D0988D-8A41-4FAB-AA02-F808EB8B08CD}.Release|x64.ActiveCfg = Release|x64
+		{74D0988D-8A41-4FAB-AA02-F808EB8B08CD}.Release|x64.Build.0 = Release|x64
+		{55E6DBBA-C8C8-4280-8372-E82AE14E3C0B}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{55E6DBBA-C8C8-4280-8372-E82AE14E3C0B}.Debug|Any CPU.Build.0 = Debug|x64
+		{55E6DBBA-C8C8-4280-8372-E82AE14E3C0B}.Debug|x64.ActiveCfg = Debug|x64
+		{55E6DBBA-C8C8-4280-8372-E82AE14E3C0B}.Debug|x64.Build.0 = Debug|x64
+		{55E6DBBA-C8C8-4280-8372-E82AE14E3C0B}.Release|Any CPU.ActiveCfg = Release|x64
+		{55E6DBBA-C8C8-4280-8372-E82AE14E3C0B}.Release|Any CPU.Build.0 = Release|x64
+		{55E6DBBA-C8C8-4280-8372-E82AE14E3C0B}.Release|x64.ActiveCfg = Release|x64
+		{55E6DBBA-C8C8-4280-8372-E82AE14E3C0B}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

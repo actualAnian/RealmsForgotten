@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Items>
+
+
+   <Item id="flame_stone_fire_rfthrowing100"
+        name="{=1CPdu9K0}Fire Stone [+100 Throwing]"
+        is_merchandise="true"
+        body_name="bo_throwing_stone"
+        holster_body_name="bo_axe_short"
+        holster_mesh="stone_holster"
+        holster_mesh_with_weapon="stone_holster"
+        mesh="throwing_stone"
+        flying_mesh="throwing_stone"
+        value="2"
+        weight="0.1"
+        appearance="0.1"
+        Type="Thrown"
+        item_holsters="throwing_stone:throwing_stone_2">
+    <ItemComponent>
+      <Weapon weapon_class="Stone"
+              ammo_class="Stone"
+              stack_amount="14"
+              physics_material="missile"
+              accuracy="45"
+              thrust_speed="102"
+              speed_rating="102"
+              missile_speed="40"
+              weapon_length="10"
+              thrust_damage="15"
+              item_usage="stone"
+              rotation="100,30,20"
+              passby_sound_code=""
+              trail_particle_name="psys_flaming_weapon"
+              rotation_speed="0, -3.0, 0">
+        <WeaponFlags RangedWeapon="true"
+                     Consumable="true"
+                     AutoReload="true"
+                     LeavesTrail="true"
+                     CanKnockDown="true"
+                     AffectsArea="true"
+                     Burning="true"
+                     UnloadWhenSheathed="true"
+                     UseHandAsThrowBase="true" />
+      </Weapon>
+    </ItemComponent>
+    <Flags QuickFadeOut="true" />
+  </Item>
+</Items>
