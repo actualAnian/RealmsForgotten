@@ -11,7 +11,7 @@ using TaleWorlds.MountAndBlade.GauntletUI.Widgets.Multiplayer;
 namespace RFEffects
 {
 	// Token: 0x02000005 RID: 5
-	internal class Patch
+	class Patch
 	{
         [HarmonyPatch(typeof(Mission), "DecideAgentHitParticles")]
 		public class AKDecideAgentHitParticlesPatchForRealisticBattleMod

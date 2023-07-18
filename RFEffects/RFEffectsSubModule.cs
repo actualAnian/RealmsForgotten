@@ -6,6 +6,7 @@ using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
+using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.GameState;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
@@ -29,8 +30,10 @@ namespace RFEffects
 
 		protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
 		{
-			this.ReplaceModel<DefaultDamageParticleModel, AnoritDamageParticleModel>(gameStarterObject);
-		}
+            this.ReplaceModel<DefaultDamageParticleModel, AnoritDamageParticleModel>(gameStarterObject);
+            if (game.GameType is Campaign)  
+				gameStarterObject.AddModel(new RFVolunteerModel());
+        }
 
         protected override void InitializeGameStarter(Game game, IGameStarter starterObject)
         {
@@ -74,5 +77,20 @@ namespace RFEffects
 			mission.AddMissionBehavior(missionBehavior);
         }
 	}
+    class RFVolunteerModel : DefaultVolunteerModel
+    {
 
+        public override int MaximumIndexHeroCanRecruitFromHero(Hero buyerHero, Hero sellerHero, int useValueAsRelation = -101)
+        {
+            int baseValue = base.MaximumIndexHeroCanRecruitFromHero(buyerHero, sellerHero, useValueAsRelation);
+
+            IFaction buyerKingdom = buyerHero.MapFaction;
+            if (buyerKingdom == null || buyerHero.Clan != null && buyerHero.Clan.IsClanTypeMercenary && buyerHero.Clan.IsMinorFaction)
+                return baseValue;
+            if (buyerKingdom.IsAtWarWith(sellerHero.HomeSettlement.MapFaction))
+                return 0;
+
+            return baseValue;
+        }
+    }
 }
