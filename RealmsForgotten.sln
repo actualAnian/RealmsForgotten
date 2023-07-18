@@ -8,10 +8,19 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealmsForgotten", "RealmsForgottenMain\RealmsForgotten.csproj", "{68C3BA02-1AA6-4F65-BF11-3A5185EDA733}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RFEffects", "RFEffects\RFEffects.csproj", "{3FABC5C4-2802-49C3-9F42-83E5937BC6BE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{68C3BA02-1AA6-4F65-BF11-3A5185EDA733} = {68C3BA02-1AA6-4F65-BF11-3A5185EDA733}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NecromancyAndSummoning", "NecromancyAndSummoning\NecromancyAndSummoning.csproj", "{74D0988D-8A41-4FAB-AA02-F808EB8B08CD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{68C3BA02-1AA6-4F65-BF11-3A5185EDA733} = {68C3BA02-1AA6-4F65-BF11-3A5185EDA733}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RFCustomHorses", "RFCustomHorses\RFCustomHorses.csproj", "{55E6DBBA-C8C8-4280-8372-E82AE14E3C0B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{68C3BA02-1AA6-4F65-BF11-3A5185EDA733} = {68C3BA02-1AA6-4F65-BF11-3A5185EDA733}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
