@@ -1,7 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
 using Helpers;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
@@ -15,6 +14,50 @@ namespace RealmsForgotten.Managers
 {
     public static class CulturedStartAction
     {
+            private enum StartType
+            {
+                Other = -1,
+                Default,
+                Merchant,
+                Exiled,
+                Mercenary,
+                Looter,
+                VassalNoFief,
+                KingdomRuler,
+                CastleRuler,
+                VassalFief,
+                EscapedPrisoner
+            }
+            private static readonly Dictionary<StartType, Dictionary<string, string>> mainHeroStartingEquipment = new()
+            {
+                [StartType.Looter] = new Dictionary<string, string>
+                {
+                    ["aserai"] = "rf_looter",
+                    ["empire"] = "rf_looter",
+                    ["khuzait"] = "rf_looter",
+                    ["sturgia"] = "rf_looter",
+                    ["battania"] = "rf_looter",
+                    ["vlandia"] = "rf_looter"
+                },
+                [StartType.Mercenary] = new Dictionary<string, string>
+                {
+                    ["aserai"] = "merc_athas_start",
+                    ["empire"] = "merc_realms_start",
+                    ["khuzait"] = "merc_allkhuur_start",
+                    ["sturgia"] = "merc_vortiak_start",
+                    ["battania"] = "merc_elvean_start",
+                    ["vlandia"] = "merc_nasoria_start"
+                },
+                [StartType.VassalNoFief] = new Dictionary<string, string>
+                {
+                    ["aserai"] = "deserter",
+                    ["empire"] = "deserter",
+                    ["khuzait"] = "deserter",
+                    ["sturgia"] = "deserter",
+                    ["battania"] = "deserter",
+                    ["vlandia"] = "deserter"
+                }
+            };
         public static void Apply(int storyOption, int locationOption)
         {
             Hero mainHero = Hero.MainHero;
@@ -63,16 +106,17 @@ namespace RealmsForgotten.Managers
                 mapState.Handler.TeleportCameraToMainParty();
             }
 
-            switch (storyOption)
+            StartType startOption = (StartType)storyOption;
+            switch (startOption)
             {
-                case 0: // Default
+                case StartType.Default: // Default
                     ApplyInternal(mainHero, gold: 1000, grain: 2);
                     break;
-                case 1: // Merchant
-                    ApplyInternal(mainHero, gold: 8000, grain: 250, mules: 25, troops: new int[] { 12, 7 });
+                case StartType.Merchant: // Merchant
+                    ApplyInternal(mainHero, gold: 8000, grain: 250, mules: 25, troops: new int[] { 12, 7 }, startOption: StartType.Merchant);
                     break;
-                case 2: // Exiled
-                    ApplyInternal(mainHero, gold: 3000, grain: 15, tier: 4, companions: 1);
+                case StartType.Exiled: // Exiled
+                    ApplyInternal(mainHero, gold: 3000, grain: 15, tier: 4, companions: 1, startOption: StartType.Exiled);
                     if (ruler != null)
                     {
                         ChangeCrimeRatingAction.Apply(ruler.MapFaction, 50, false);
@@ -83,31 +127,31 @@ namespace RealmsForgotten.Managers
                         }
                     }
                     break;
-                case 3: // Mercenary
-                    ApplyInternal(mainHero, gold: 5000, grain: 25, tier: 2, troops: new int[] { 10 }, isMercenary: true);
+                case StartType.Mercenary: // Mercenary
+                    ApplyInternal(mainHero, gold: 5000, grain: 25, tier: 2, troops: new int[] { 10, 5, 3, 1 }, startOption: StartType.Mercenary);
                     mainHero.PartyBelongedTo.RecentEventsMorale -= 40;
                     break;
-                case 4: // Looter
-                    ApplyInternal(mainHero, gold: 500, grain: 10, troops: new int[] { 7, 5 }, isLooter: true);
+                case StartType.Looter: // Looter
+                    ApplyInternal(mainHero, gold: 500, grain: 10, troops: new int[] { 7, 5 }, startOption: StartType.Looter);
                     foreach (Kingdom kingdom in Campaign.Current.Kingdoms)
                     {
                         ChangeCrimeRatingAction.Apply(kingdom.MapFaction, 50, false);
                     }
                     break;
-                case 5: // Vassal
-                    ApplyInternal(mainHero, gold: 15000, grain: 40, tier: 3, troops: new int[] { 40, 10 }, ruler: ruler);
+                case StartType.VassalNoFief: // Vassal
+                    ApplyInternal(mainHero, gold: 15000, grain: 40, tier: 3, troops: new int[] { 40, 10 }, ruler: ruler, startOption: StartType.VassalNoFief);
                     break;
-                case 6: // Kingdom
-                    ApplyInternal(mainHero, gold: 45000, grain: 150, tier: 5, troops: new int[] { 60, 30, 20, 10, 6 }, companions: 3, companionParties: 2, hasKingdom: true);
+                case StartType.KingdomRuler: // Kingdom
+                    ApplyInternal(mainHero, gold: 45000, grain: 150, tier: 5, troops: new int[] { 60, 30, 20, 10, 6 }, companions: 3, companionParties: 2, startOption: StartType.KingdomRuler);
                     break;
-                case 7: // Holding
-                    ApplyInternal(mainHero, gold: 60000, grain: 30, tier: 3, troops: new int[] { 31, 20, 14, 10, 6 }, companions: 1, companionParties: 1, castle: startingSettlement, hasKingdom: true);
+                case StartType.CastleRuler: // Holding
+                    ApplyInternal(mainHero, gold: 60000, grain: 30, tier: 3, troops: new int[] { 31, 20, 14, 10, 6 }, companions: 1, companionParties: 1, castle: startingSettlement, startOption: StartType.CastleRuler);
                     break;
-                case 8: // Landed Vassal
-                    ApplyInternal(mainHero, gold: 35000, grain: 80, tier: 2, troops: new int[] { 60, 20 }, companions: 1, companionParties: 1, ruler: ruler, castle: startingSettlement, isLandedVassal: true);
+                case StartType.VassalFief: // Landed Vassal
+                    ApplyInternal(mainHero, gold: 35000, grain: 80, tier: 2, troops: new int[] { 60, 20 }, companions: 1, companionParties: 1, ruler: ruler, castle: startingSettlement, startOption: StartType.VassalFief);
                     break;
-                case 9: // Escaped Prisoner
-                    ApplyInternal(mainHero, gold: 0, grain: 1, isLooter: true);
+                case StartType.EscapedPrisoner: // Escaped Prisoner
+                    ApplyInternal(mainHero, gold: 0, grain: 1, startOption: StartType.EscapedPrisoner);
                     if (captor != null)
                     {
                         CharacterRelationManager.SetHeroRelation(mainHero, captor, -50);
@@ -118,44 +162,23 @@ namespace RealmsForgotten.Managers
             }
         }
 
-        private static void ApplyInternal(Hero mainHero, int gold, int grain, int mules = 0, int tier = -1, int[] troops = null, int companions = 0, int companionParties = 0, Hero ruler = null, Settlement castle = null, bool isMercenary = false, bool isLooter = false, bool isLandedVassal = false, bool hasKingdom = false)
+        private static void ApplyInternal(Hero mainHero, int gold, int grain, int mules = 0, int tier = -1, int[]? troops = null, int companions = 0, int companionParties = 0, Hero? ruler = null, Settlement? castle = null, StartType startOption = StartType.Default)
         {
             Settlement? givenCastle = null;
             CharacterObject? idealTroop = null;
             GiveGoldAction.ApplyBetweenCharacters(null, mainHero, gold, true);
             mainHero.PartyBelongedTo.ItemRoster.AddToCounts(DefaultItems.Grain, grain);
             mainHero.PartyBelongedTo.ItemRoster.AddToCounts(MBObjectManager.Instance.GetObject<ItemObject>("mule"), mules);
-            if (isMercenary)
+            try
             {
-                if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("aserai_recruit").Culture) // The City States of Athas
-                    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_athas_start");
-                else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("imperial_recruit").Culture) // Kingdoms of Men
-                    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_realms_start");
-                else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("khuzait_nomad").Culture) // Al-Kuuhr
-                    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_allkhuur_start");
-                else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("sturgian_recruit").Culture) // The Dreaddrealms
-                    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_vortiak_start");
-                else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("battanian_volunteer").Culture) // High Kingdom of the Elveans
-                    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_elvean_start");
-                else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("vlandian_recruit").Culture) // Easterners Tribes
-                    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_nasoria_start");
-                tier = idealTroop.Tier;
+                idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>(mainHeroStartingEquipment[startOption][mainHero.Culture.StringId]);
             }
-            else if (isLooter)
+            catch (Exception)
             {
                 idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("rf_looter");
-                //if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("aserai_recruit").Culture) // The City States of Athas
-                //    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("rf_looter");
-                //else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("imperial_recruit").Culture) // Kingdoms of Men
-                //    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("rf_looter");
-                //else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("khuzait_nomad").Culture) // Al-Kuuhr
-                //    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("steppe_bandits_bandit");
-                //else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("sturgian_recruit").Culture) // The Dreaddrealms
-                //    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("sea_raiders_bandit");
-                //else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("battanian_volunteer").Culture) // High Kingdom of the Elveans
-                //    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("forest_bandits_bandit");
-                //else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("vlandian_recruit").Culture) // Easterners Tribes
-                //    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("desert_bandits_bandit");
+            }
+            if (startOption == StartType.Looter)
+            {
                 tier = idealTroop.Tier;
             }
             if (idealTroop != null)
@@ -216,28 +239,15 @@ namespace RealmsForgotten.Managers
             if (castle != null)
             {
                 ChangeOwnerOfSettlementAction.ApplyByKingDecision(mainHero, castle);
-                if (isLandedVassal)
+                if (startOption == StartType.VassalFief)
                 {
-                    if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("aserai_recruit").Culture) // The City States of Athas
-                        idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("vassal_athas_start");
-                    else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("imperial_recruit").Culture) // Kingdoms of Men
-                        idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_realms_start");
-                    else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("khuzait_nomad").Culture) // Al-Kuuhr
-                        idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_allkhuur_start");
-                    else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("sturgian_recruit").Culture) // The Dreaddrealms
-                        idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_vortiak_start");
-                    else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("battanian_volunteer").Culture) // High Kingdom of the Elveans
-                        idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_elvean_start");
-                    else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("vlandian_recruit").Culture) // Easterners Tribes
-                        idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_nasoria_start");
-                    tier = idealTroop.Tier;
                     givenCastle = (from settlement in Settlement.All
                                    where settlement.Culture == mainHero.Culture && settlement.IsCastle
                                    select settlement).GetRandomElementInefficiently();
                     ChangeOwnerOfSettlementAction.ApplyByKingDecision(mainHero, givenCastle);
                 }
             }
-            if (hasKingdom)
+            if (startOption == StartType.KingdomRuler || startOption == StartType.CastleRuler)
             {
                 Campaign.Current.KingdomManager.CreateKingdom(mainHero.Clan.Name, mainHero.Clan.InformalName, mainHero.Clan.Culture, mainHero.Clan);
                 mainHero.Clan.Influence = 100;
