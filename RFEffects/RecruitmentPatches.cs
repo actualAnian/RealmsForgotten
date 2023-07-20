@@ -76,9 +76,13 @@ namespace RFEffects
                 if (Settlement.CurrentSettlement.MapFaction.IsAtWarWith(Hero.MainHero.MapFaction) && Settlement.CurrentSettlement.Culture != Hero.MainHero.Culture)
                 {
                     args.IsEnabled = false;
-                    args.Tooltip = new TextObject("{=recruitment_war_condition_tooltip}You are in war with this faction.");
+                    args.Tooltip = new TextObject("{=recruitment_war_condition_tooltip_1}You are in war with this faction.");
                 }
-
+                else if(Clan.PlayerClan.Influence < 0)
+                {
+                    args.IsEnabled = false;
+                    args.Tooltip = new TextObject("{=recruitment_war_condition_tooltip_2}You have negative influence.");
+                }
             }
         }
 
