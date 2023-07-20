@@ -50,13 +50,40 @@ namespace RealmsForgotten.Managers
                 },
                 [StartType.VassalNoFief] = new Dictionary<string, string>
                 {
-                    ["aserai"] = "deserter",
-                    ["empire"] = "deserter",
-                    ["khuzait"] = "deserter",
-                    ["sturgia"] = "deserter",
-                    ["battania"] = "deserter",
-                    ["vlandia"] = "deserter"
-                }
+                    ["aserai"] = "athas_vassal_nofief",
+                    ["empire"] = "realms_vassal_nofief",
+                    ["khuzait"] = "khuzait_vassal_nofief",
+                    ["sturgia"] = "dreadrealms_vassal_nofief",
+                    ["battania"] = "elvean_vassal_nofief",
+                    ["vlandia"] = "nasoria_vassal_nofief"
+                },
+                 [StartType.KingdomRuler] = new Dictionary<string, string>
+                 {
+                     ["aserai"] = "king_athas_start",
+                     ["empire"] = "king_realms_start",
+                     ["khuzait"] = "king_allkhuur_start",
+                     ["sturgia"] = "king_vortiak_start",
+                     ["battania"] = "king_elvean_start",
+                     ["vlandia"] = "king_nasoria_start"
+                 },
+                 [StartType.CastleRuler] = new Dictionary<string, string>
+                 {
+                     ["aserai"] = "vassal_athas_start",
+                     ["empire"] = "vassal_realms_start",
+                     ["khuzait"] = "vassal_allkhuur_start",
+                     ["sturgia"] = "vassal_vortiak_start",
+                     ["battania"] = "vassal_elvean_start",
+                     ["vlandia"] = "vassal_nasoria_start"
+                 },
+                [StartType.VassalFief] = new Dictionary<string, string>
+                {
+                    ["aserai"] = "ruler_athas_start",
+                    ["empire"] = "imperial_vigla_recruit",
+                    ["khuzait"] = "khuzait_noble_son",
+                    ["sturgia"] = "varyag",
+                    ["battania"] = "lord_elvean_start",
+                    ["vlandia"] = "vlandian_squire"
+                },
             };
         public static void Apply(int storyOption, int locationOption)
         {
