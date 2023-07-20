@@ -84,7 +84,7 @@ namespace RealmsForgotten.Managers
                     }
                     break;
                 case 3: // Mercenary
-                    ApplyInternal(mainHero, gold: 5000, grain: 25, tier: 2, troops: new int[] { 10, 5, 3, 1 }, isMercenary: true);
+                    ApplyInternal(mainHero, gold: 5000, grain: 25, tier: 2, troops: new int[] { 10 }, isMercenary: true);
                     mainHero.PartyBelongedTo.RecentEventsMorale -= 40;
                     break;
                 case 4: // Looter
@@ -127,25 +127,35 @@ namespace RealmsForgotten.Managers
             mainHero.PartyBelongedTo.ItemRoster.AddToCounts(MBObjectManager.Instance.GetObject<ItemObject>("mule"), mules);
             if (isMercenary)
             {
-                idealTroop = (from character in CharacterObject.All
-                              where character.Tier == tier && !character.IsHero && character.Occupation == Occupation.Mercenary && !character.Equipment.IsEmpty() && MatchWildcardString("mercenary*", "" + character.StringId)
-                              select character).GetRandomElementInefficiently();
+                if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("aserai_recruit").Culture) // The City States of Athas
+                    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_athas_start");
+                else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("imperial_recruit").Culture) // Kingdoms of Men
+                    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_realms_start");
+                else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("khuzait_nomad").Culture) // Al-Kuuhr
+                    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_allkhuur_start");
+                else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("sturgian_recruit").Culture) // The Dreaddrealms
+                    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_vortiak_start");
+                else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("battanian_volunteer").Culture) // High Kingdom of the Elveans
+                    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_elvean_start");
+                else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("vlandian_recruit").Culture) // Easterners Tribes
+                    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_nasoria_start");
+                tier = idealTroop.Tier;
             }
             else if (isLooter)
             {
-
-                if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("aserai_recruit").Culture) // The City States of Athas
-                    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("mountain_bandits_bandit");
-                else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("imperial_recruit").Culture) // Kingdoms of Men
-                    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("deserter");
-                else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("khuzait_nomad").Culture) // Al-Kuuhr
-                    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("steppe_bandits_bandit");
-                else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("sturgian_recruit").Culture) // The Dreaddrealms
-                    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("sea_raiders_bandit");
-                else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("battanian_volunteer").Culture) // High Kingdom of the Elveans
-                    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("forest_bandits_bandit");
-                else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("vlandian_recruit").Culture) // Easterners Tribes
-                    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("desert_bandits_bandit");
+                idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("rf_looter");
+                //if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("aserai_recruit").Culture) // The City States of Athas
+                //    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("rf_looter");
+                //else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("imperial_recruit").Culture) // Kingdoms of Men
+                //    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("rf_looter");
+                //else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("khuzait_nomad").Culture) // Al-Kuuhr
+                //    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("steppe_bandits_bandit");
+                //else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("sturgian_recruit").Culture) // The Dreaddrealms
+                //    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("sea_raiders_bandit");
+                //else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("battanian_volunteer").Culture) // High Kingdom of the Elveans
+                //    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("forest_bandits_bandit");
+                //else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("vlandian_recruit").Culture) // Easterners Tribes
+                //    idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("desert_bandits_bandit");
                 tier = idealTroop.Tier;
             }
             if (idealTroop != null)
@@ -208,6 +218,19 @@ namespace RealmsForgotten.Managers
                 ChangeOwnerOfSettlementAction.ApplyByKingDecision(mainHero, castle);
                 if (isLandedVassal)
                 {
+                    if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("aserai_recruit").Culture) // The City States of Athas
+                        idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("vassal_athas_start");
+                    else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("imperial_recruit").Culture) // Kingdoms of Men
+                        idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_realms_start");
+                    else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("khuzait_nomad").Culture) // Al-Kuuhr
+                        idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_allkhuur_start");
+                    else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("sturgian_recruit").Culture) // The Dreaddrealms
+                        idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_vortiak_start");
+                    else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("battanian_volunteer").Culture) // High Kingdom of the Elveans
+                        idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_elvean_start");
+                    else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("vlandian_recruit").Culture) // Easterners Tribes
+                        idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_nasoria_start");
+                    tier = idealTroop.Tier;
                     givenCastle = (from settlement in Settlement.All
                                    where settlement.Culture == mainHero.Culture && settlement.IsCastle
                                    select settlement).GetRandomElementInefficiently();
