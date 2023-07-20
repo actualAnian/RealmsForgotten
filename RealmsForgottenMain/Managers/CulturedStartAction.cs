@@ -295,19 +295,6 @@ namespace RealmsForgotten.Managers
                 mainHero.Clan.Influence = 10;
                 if (startOption == StartType.VassalFief)
                 {
-                    if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("aserai_recruit").Culture) // The City States of Athas
-                        idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("vassal_athas_start");
-                    else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("imperial_recruit").Culture) // Kingdoms of Men
-                        idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_realms_start");
-                    else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("khuzait_nomad").Culture) // Al-Kuuhr
-                        idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_allkhuur_start");
-                    else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("sturgian_recruit").Culture) // The Dreaddrealms
-                        idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_vortiak_start");
-                    else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("battanian_volunteer").Culture) // High Kingdom of the Elveans
-                        idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_elvean_start");
-                    else if (mainHero.Culture == MBObjectManager.Instance.GetObject<CharacterObject>("vlandian_recruit").Culture) // Easterners Tribes
-                        idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("merc_nasoria_start");
-                    tier = idealTroop.Tier;
                     givenCastle = (from settlement in Settlement.All
                                    where settlement.IsCastle && mainHero.Clan.Kingdom == ruler.Clan.Kingdom
                                    select settlement).GetRandomElementInefficiently();
