@@ -4,7 +4,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-namespace NecromancyAndSummoning.Patch
+namespace RealmsForgotten.NecromancyAndSummoning.Patch
 {
     internal class SummoningAndRaiseCorpsePatch
     {

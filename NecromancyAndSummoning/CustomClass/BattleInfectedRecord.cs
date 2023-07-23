@@ -1,7 +1,7 @@
 ﻿using System;
 using TaleWorlds.CampaignSystem;
 
-namespace NecromancyAndSummoning.CustomClass
+namespace RealmsForgotten.NecromancyAndSummoning.CustomClass
 {
 	// Token: 0x0200000F RID: 15
 	internal class BattleInfectedRecord

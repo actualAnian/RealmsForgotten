@@ -1,7 +1,7 @@
 ﻿using System;
 using TaleWorlds.CampaignSystem.Party;
 
-namespace NecromancyAndSummoning.CustomClass
+namespace RealmsForgotten.NecromancyAndSummoning.CustomClass
 {
 	// Token: 0x02000014 RID: 20
 	internal class SummonKillRecord

@@ -14,7 +14,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 
-namespace RFEffects
+namespace RealmsForgotten.RFEffects
 {
         [HarmonyPatch(typeof(RecruitmentCampaignBehavior), "GetRecruitVolunteerFromIndividual")]
         static class GetRecruitVolunteerFromIndividualPatch

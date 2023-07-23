@@ -1,12 +1,13 @@
 ﻿using HarmonyLib;
-using HuntableHerds.Models;
+using RealmsForgotten.HuntableHerds.Models;
 using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-namespace HuntableHerds {
+namespace RealmsForgotten.HuntableHerds
+{
     public class SubModule : MBSubModuleBase {
         public static Random Random = new();
 

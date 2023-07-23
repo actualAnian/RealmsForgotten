@@ -8,7 +8,7 @@ using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.GauntletUI.Widgets.Multiplayer;
 
-namespace RFEffects
+namespace RealmsForgotten.RFEffects
 {
 	// Token: 0x02000005 RID: 5
 	class Patch

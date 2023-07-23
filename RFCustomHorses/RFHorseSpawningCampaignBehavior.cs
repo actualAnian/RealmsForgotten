@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Extensions;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.ModuleManager;
 
-namespace RFCustomHorses
+namespace RealmsForgotten.RFCustomHorses
 {
     public class RFHorseSpawningCampaignBehavior : CampaignBehaviorBase
     {
@@ -33,7 +34,7 @@ namespace RFCustomHorses
         {
             if (HorseLibrary == null)
             {
-                HorseLibrary = CustomHorseLibrary.LoadFromFile(Path.Combine(ModuleHelper.GetModuleFullPath("RealmsForgotten"), CustomHorseLibrary.LIBRARY_FILENAME));
+                HorseLibrary = CustomHorseLibrary.LoadFromFile(Path.Combine(ModuleHelper.GetModuleFullPath(Globals.realmsForgottenAssembly.GetName().Name), CustomHorseLibrary.LIBRARY_FILENAME));
             }
             foreach (Town town in Town.AllTowns.ToList())
             {

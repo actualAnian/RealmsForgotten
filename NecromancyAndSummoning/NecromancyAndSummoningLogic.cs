@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using NecromancyAndSummoning.CustomClass;
+using RealmsForgotten.NecromancyAndSummoning.CustomClass;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
-namespace NecromancyAndSummoning
+namespace RealmsForgotten.NecromancyAndSummoning
 {
 	// Token: 0x02000004 RID: 4
 	internal class NecromancyAndSummoningLogic : MissionLogic

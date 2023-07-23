@@ -16,7 +16,7 @@ using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.TwoDimension;
 
-namespace RFEffects
+namespace RealmsForgotten.RFEffects
 {
 	// Token: 0x02000002 RID: 2
 	public class RFEffectsSubModule : MBSubModuleBase

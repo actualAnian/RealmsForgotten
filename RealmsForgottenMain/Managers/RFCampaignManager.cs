@@ -107,7 +107,7 @@ namespace RealmsForgotten.Managers
 
 
                 VideoPlaybackState state = Game.Current.GameStateManager.CreateState<VideoPlaybackState>();
-                string str = ModuleHelper.GetModuleFullPath(Assembly.GetExecutingAssembly().GetName().Name) + "Videos/CampaignIntro/";
+                string str = ModuleHelper.GetModuleFullPath(Globals.realmsForgottenAssembly.GetName().Name) + "Videos/CampaignIntro/";
                 string subtitleFileBasePath = str + "RF_lore_intro_b";
                 string videoPath = str + "RF_lore_intro_b.ivf";
                 string audioPath = str + "RF_lore_intro_b.ogg";

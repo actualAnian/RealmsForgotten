@@ -3,15 +3,15 @@ using System.IO;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
-using NecromancyAndSummoning.Config;
-using NecromancyAndSummoning.Patch;
+using RealmsForgotten.NecromancyAndSummoning.Config;
+using RealmsForgotten.NecromancyAndSummoning.Patch;
 using Newtonsoft.Json;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-namespace NecromancyAndSummoning
+namespace RealmsForgotten.NecromancyAndSummoning
 {
 	internal class SubModule : MBSubModuleBase
 	{

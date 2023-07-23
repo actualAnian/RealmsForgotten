@@ -4,7 +4,7 @@
 // MVID: CBA83544-CC7B-4D78-8CFB-3216C3C4F741
 // Assembly location: C:\Users\Pedrinho\Desktop\NecromancyAndSummoning.dll
 
-using NecromancyAndSummoning.CustomClass;
+using RealmsForgotten.NecromancyAndSummoning.CustomClass;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +24,7 @@ using TaleWorlds.ObjectSystem;
 
 
 #nullable enable
-namespace NecromancyAndSummoning
+namespace RealmsForgotten.NecromancyAndSummoning
 {
     internal class NecroSummon
     {

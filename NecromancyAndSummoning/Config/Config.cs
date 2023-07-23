@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace NecromancyAndSummoning.Config
+namespace RealmsForgotten.NecromancyAndSummoning.Config
 {
 	// Token: 0x0200000E RID: 14
 	internal class Config

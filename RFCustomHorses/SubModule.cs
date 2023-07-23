@@ -7,7 +7,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
-namespace RFCustomHorses
+namespace RealmsForgotten.RFCustomHorses
 {
     internal class SubModule : MBSubModuleBase
     {

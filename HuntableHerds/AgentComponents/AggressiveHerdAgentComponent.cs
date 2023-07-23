@@ -1,12 +1,12 @@
-﻿using HuntableHerds.Extensions;
-using HuntableHerds.Models;
+﻿using RealmsForgotten.HuntableHerds.Extensions;
+using RealmsForgotten.HuntableHerds.Models;
 using System;
 using TaleWorlds.Core;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-namespace HuntableHerds.AgentComponents {
+namespace RealmsForgotten.HuntableHerds.AgentComponents {
     public class AggressiveHerdAgentComponent : HerdAgentComponent {
         private float _attackTimer = 0f;
         private float _aggroTimer = 0f;

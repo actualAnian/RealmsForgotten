@@ -3,7 +3,7 @@ using HarmonyLib;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
-namespace NecromancyAndSummoning.Patch
+namespace RealmsForgotten.NecromancyAndSummoning.Patch
 {
 	// Token: 0x0200000A RID: 10
 	[HarmonyPatch(typeof(Mission), "OnAgentRemoved")]

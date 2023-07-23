@@ -3,7 +3,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
 
-namespace RFEffects
+namespace RealmsForgotten.RFEffects
 {
 	// Token: 0x02000003 RID: 3
 	public class AnoritDamageParticleModel : DefaultDamageParticleModel

@@ -1,10 +1,10 @@
-﻿using HuntableHerds.Models;
+﻿using RealmsForgotten.HuntableHerds.Models;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-namespace HuntableHerds.AgentComponents {
+namespace RealmsForgotten.HuntableHerds.AgentComponents {
     public class HerdAgentComponent : AgentComponent {
         private ItemRoster itemDrops;
 

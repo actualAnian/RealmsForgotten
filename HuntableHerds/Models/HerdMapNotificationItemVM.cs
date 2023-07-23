@@ -5,7 +5,7 @@ using TaleWorlds.CampaignSystem.ViewModelCollection.Map.MapNotificationTypes;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 
-namespace HuntableHerds.Models {
+namespace RealmsForgotten.HuntableHerds.Models {
     public class HerdMapNotificationItemVM : MapNotificationItemBaseVM {
         public HerdMapNotificationItemVM(HerdMapNotification data) : base(data) {
             base.NotificationIdentifier = "ransom";
