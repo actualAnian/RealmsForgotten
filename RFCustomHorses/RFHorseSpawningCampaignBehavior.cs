@@ -33,7 +33,7 @@ namespace RFCustomHorses
         {
             if (HorseLibrary == null)
             {
-                HorseLibrary = CustomHorseLibrary.LoadFromFile(Path.Combine(ModuleHelper.GetModuleFullPath("RFCustomHorses"), CustomHorseLibrary.LIBRARY_FILENAME));
+                HorseLibrary = CustomHorseLibrary.LoadFromFile(Path.Combine(ModuleHelper.GetModuleFullPath("RealmsForgotten"), CustomHorseLibrary.LIBRARY_FILENAME));
             }
             foreach (Town town in Town.AllTowns.ToList())
             {
