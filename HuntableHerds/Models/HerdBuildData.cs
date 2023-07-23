@@ -6,7 +6,7 @@ using System.Xml.Linq;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Core;
 
-namespace HuntableHerds.Models {
+namespace RealmsForgotten.HuntableHerds.Models {
     public class HerdBuildData {
         public string NotifMessage;
         public string MessageTitle;

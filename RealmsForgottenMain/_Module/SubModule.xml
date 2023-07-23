@@ -37,29 +37,36 @@
 			</Tags>
 		</SubModule>
 		<SubModule>
+			<Name value="HuntableHerds" />
+			<DLLName value="HuntableHerds.dll" />
+			<SubModuleClassType value="RealmsForgotten.HuntableHerds.SubModule" />
+			<Tags />
+		</SubModule>
+		<SubModule>
 			<Name value="RFLegendaryTroops" />
 			<DLLName value="RFLegendaryTroops.dll" />
-			<SubModuleClassType value="RFLegendaryTroops.SubModule" />
+			<SubModuleClassType value="RealmsForgotten.RFLegendaryTroops.SubModule" />
 			<Tags />
 		</SubModule>
 		<SubModule>
 			<Name value="NecromancyAndSummoning" />
 			<DLLName value="NecromancyAndSummoning.dll" />
-			<SubModuleClassType value="NecromancyAndSummoning.SubModule" />
+			<SubModuleClassType value="RealmsForgotten.NecromancyAndSummoning.SubModule" />
 			<Tags />
 		</SubModule>
 		<SubModule>
 			<Name value="RFCustomHorses" />
 			<DLLName value="RFCustomHorses.dll" />
-			<SubModuleClassType value="RFCustomHorses.SubModule" />
+			<SubModuleClassType value="RealmsForgotten.RFCustomHorses.SubModule" />
 			<Tags />
 		</SubModule>
 		<SubModule>
 			<Name value="RFEffects" />
 			<DLLName value="RFEffects.dll" />
-			<SubModuleClassType value="RFEffects.RFEffectsSubModule" />
+			<SubModuleClassType value="RealmsForgotten.RFEffects.RFEffectsSubModule" />
 			<Tags />
 		</SubModule>
+		
 	</SubModules>
 	<Xmls>
 		<XmlNode>

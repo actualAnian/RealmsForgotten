@@ -2,7 +2,7 @@
 using TaleWorlds.CampaignSystem.Inventory;
 using TaleWorlds.CampaignSystem.Settlements;
 
-namespace RFLegendaryTroops
+namespace RealmsForgotten.RFLegendaryTroops
 {
     public class RFLegendaryTroopsPlayerVisit
     //    {

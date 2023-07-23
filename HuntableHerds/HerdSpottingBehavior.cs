@@ -1,11 +1,12 @@
-﻿using HuntableHerds.Models;
+﻿using RealmsForgotten.HuntableHerds.Models;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 using TaleWorlds.SaveSystem;
 
-namespace HuntableHerds {
+namespace RealmsForgotten.HuntableHerds
+{
     public class HerdSpottingBehavior : CampaignBehaviorBase {
         public override void RegisterEvents() {
             CampaignEvents.DailyTickPartyEvent.AddNonSerializedListener(this, OnDailyTickParty);

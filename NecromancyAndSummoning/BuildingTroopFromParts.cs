@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using NecromancyAndSummoning.CustomClass;
+using RealmsForgotten.NecromancyAndSummoning.CustomClass;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.MapEvents;
@@ -13,7 +13,7 @@ using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.ObjectSystem;
 
-namespace NecromancyAndSummoning
+namespace RealmsForgotten.NecromancyAndSummoning
 {
 	// Token: 0x02000002 RID: 2
 	internal class BuildingTroopFromParts

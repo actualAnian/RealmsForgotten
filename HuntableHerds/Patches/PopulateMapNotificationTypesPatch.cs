@@ -1,8 +1,8 @@
 ﻿using HarmonyLib;
-using HuntableHerds.Models;
+using RealmsForgotten.HuntableHerds.Models;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Map;
 
-namespace HuntableHerds.Patches {
+namespace RealmsForgotten.HuntableHerds.Patches {
     [HarmonyPatch(typeof(MapNotificationVM), "PopulateTypeDictionary")]
     internal class PopulateMapNotificationTypesPatch {
         [HarmonyPostfix]

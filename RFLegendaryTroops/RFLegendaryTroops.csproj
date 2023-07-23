@@ -12,6 +12,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\RealmsForgottenMain\RealmsForgotten.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <Reference Include="TaleWorlds.CampaignSystem">
 	    <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.CampaignSystem.dll</HintPath>
 	  </Reference>

@@ -4,7 +4,7 @@ using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 
-namespace RFLegendaryTroops
+namespace RealmsForgotten.RFLegendaryTroops
 {
     public class RFLegendaryTroopsAIRecruitment : CampaignBehaviorBase
     {

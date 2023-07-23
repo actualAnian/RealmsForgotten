@@ -2,7 +2,7 @@
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-namespace HuntableHerds.Extensions {
+namespace RealmsForgotten.HuntableHerds.Extensions {
     public static class AgentExtensions {
         public static bool CanSeeOtherAgent(this Agent agent, Agent otherAgent, float angleMax = 1.5f, float distance = 30f) {
             if (agent == null || otherAgent == null)

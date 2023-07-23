@@ -9,7 +9,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-namespace RFEffects
+namespace RealmsForgotten.RFEffects
 {
 	// Token: 0x02000004 RID: 4
 	public class AnoritMissionBehaviour : MissionBehavior

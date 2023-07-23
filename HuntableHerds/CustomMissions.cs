@@ -1,4 +1,4 @@
-﻿using HuntableHerds.Models;
+﻿using RealmsForgotten.HuntableHerds.Models;
 using SandBox;
 using SandBox.Missions.MissionLogics;
 using TaleWorlds.CampaignSystem;
@@ -8,7 +8,8 @@ using TaleWorlds.MountAndBlade.Source.Missions;
 using TaleWorlds.MountAndBlade.Source.Missions.Handlers;
 using TaleWorlds.MountAndBlade.View;
 
-namespace HuntableHerds {
+namespace RealmsForgotten.HuntableHerds
+{
     public static class CustomMissions {
         public static Mission StartHuntingMission(string sceneName, bool isRandomScene) {
             return MissionState.OpenNew(sceneName,

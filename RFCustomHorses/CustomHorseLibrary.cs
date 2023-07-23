@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 
-namespace RFCustomHorses
+namespace RealmsForgotten.RFCustomHorses
 {
     [Serializable]
     public class CustomHorseLibrary

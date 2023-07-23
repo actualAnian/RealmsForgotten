@@ -1,8 +1,8 @@
-﻿using HuntableHerds.Extensions;
-using HuntableHerds.Models;
+﻿using RealmsForgotten.HuntableHerds.Extensions;
+using RealmsForgotten.HuntableHerds.Models;
 using TaleWorlds.MountAndBlade;
 
-namespace HuntableHerds.AgentComponents {
+namespace RealmsForgotten.HuntableHerds.AgentComponents {
     public class PassiveHerdAgentComponent : HerdAgentComponent {
         public PassiveHerdAgentComponent(Agent agent) : base(agent) {
         }

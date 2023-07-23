@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-namespace HuntableHerds.Extensions {
+namespace RealmsForgotten.HuntableHerds.Extensions {
     public static class MissionExtensions {
         public static Vec3 GetTrueRandomPositionAroundPoint(this Mission mission, Vec3 position, float minDistance, float maxDistance, bool nearFirst = false, int tries = 100) {
             Vec3 randomPos = mission.GetRandomPositionAroundPoint(position, minDistance, maxDistance, nearFirst);
