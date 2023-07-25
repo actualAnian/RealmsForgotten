@@ -19,7 +19,6 @@ namespace RealmsForgotten.RFLegendaryTroops
         {
             this.AddGameMenus(campaignGameStarter);
         }
-
         public override void SyncData(IDataStore dataStore)
         {
         }
