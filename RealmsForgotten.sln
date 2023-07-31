@@ -3,30 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RFLegendaryTroops", "RFLegendaryTroops\RFLegendaryTroops.csproj", "{97E076BE-C9B2-4140-B22E-6A90F1BBD17E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealmsForgotten", "RealmsForgottenMain\RealmsForgotten.csproj", "{68C3BA02-1AA6-4F65-BF11-3A5185EDA733}"
-EndProject
-<<<<<<< HEAD
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HuntableHerds", "HuntableHerds\HuntableHerds.csproj", "{1E0B57AC-1C0B-4D40-8F3A-E809436EF5D4}"
-=======
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RFEffects", "RFEffects\RFEffects.csproj", "{3FABC5C4-2802-49C3-9F42-83E5937BC6BE}"
-	ProjectSection(ProjectDependencies) = postProject
-		{68C3BA02-1AA6-4F65-BF11-3A5185EDA733} = {68C3BA02-1AA6-4F65-BF11-3A5185EDA733}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NecromancyAndSummoning", "NecromancyAndSummoning\NecromancyAndSummoning.csproj", "{74D0988D-8A41-4FAB-AA02-F808EB8B08CD}"
-	ProjectSection(ProjectDependencies) = postProject
-		{68C3BA02-1AA6-4F65-BF11-3A5185EDA733} = {68C3BA02-1AA6-4F65-BF11-3A5185EDA733}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RFCustomHorses", "RFCustomHorses\RFCustomHorses.csproj", "{55E6DBBA-C8C8-4280-8372-E82AE14E3C0B}"
-	ProjectSection(ProjectDependencies) = postProject
-		{68C3BA02-1AA6-4F65-BF11-3A5185EDA733} = {68C3BA02-1AA6-4F65-BF11-3A5185EDA733}
-	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HuntableHerds", "HuntableHerds\HuntableHerds.csproj", "{3B955555-48C5-4A4B-9A0F-3C801AC0579A}"
->>>>>>> main
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HuntableHerds", "HuntableHerds\HuntableHerds.csproj", "{FF903985-2BD6-4B37-8D15-EB4898C4FC6C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealmsForgotten", "RealmsForgottenMain\RealmsForgotten.csproj", "{1076A320-4649-4272-B9B7-EB10875BC6B2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RFLegendaryTroops", "RFLegendaryTroops\RFLegendaryTroops.csproj", "{80796246-BA5E-41D3-AAA9-514BE2F74BB3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,32 +23,6 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{97E076BE-C9B2-4140-B22E-6A90F1BBD17E}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{97E076BE-C9B2-4140-B22E-6A90F1BBD17E}.Debug|Any CPU.Build.0 = Debug|x64
-		{97E076BE-C9B2-4140-B22E-6A90F1BBD17E}.Debug|x64.ActiveCfg = Debug|x64
-		{97E076BE-C9B2-4140-B22E-6A90F1BBD17E}.Debug|x64.Build.0 = Debug|x64
-		{97E076BE-C9B2-4140-B22E-6A90F1BBD17E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{97E076BE-C9B2-4140-B22E-6A90F1BBD17E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{97E076BE-C9B2-4140-B22E-6A90F1BBD17E}.Release|x64.ActiveCfg = Release|x64
-		{97E076BE-C9B2-4140-B22E-6A90F1BBD17E}.Release|x64.Build.0 = Release|x64
-		{68C3BA02-1AA6-4F65-BF11-3A5185EDA733}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{68C3BA02-1AA6-4F65-BF11-3A5185EDA733}.Debug|Any CPU.Build.0 = Debug|x64
-		{68C3BA02-1AA6-4F65-BF11-3A5185EDA733}.Debug|x64.ActiveCfg = Debug|x64
-		{68C3BA02-1AA6-4F65-BF11-3A5185EDA733}.Debug|x64.Build.0 = Debug|x64
-		{68C3BA02-1AA6-4F65-BF11-3A5185EDA733}.Release|Any CPU.ActiveCfg = Release|x64
-		{68C3BA02-1AA6-4F65-BF11-3A5185EDA733}.Release|Any CPU.Build.0 = Release|x64
-		{68C3BA02-1AA6-4F65-BF11-3A5185EDA733}.Release|x64.ActiveCfg = Release|x64
-		{68C3BA02-1AA6-4F65-BF11-3A5185EDA733}.Release|x64.Build.0 = Release|x64
-<<<<<<< HEAD
-		{1E0B57AC-1C0B-4D40-8F3A-E809436EF5D4}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{1E0B57AC-1C0B-4D40-8F3A-E809436EF5D4}.Debug|Any CPU.Build.0 = Debug|x64
-		{1E0B57AC-1C0B-4D40-8F3A-E809436EF5D4}.Debug|x64.ActiveCfg = Debug|x64
-		{1E0B57AC-1C0B-4D40-8F3A-E809436EF5D4}.Debug|x64.Build.0 = Debug|x64
-		{1E0B57AC-1C0B-4D40-8F3A-E809436EF5D4}.Release|Any CPU.ActiveCfg = Release|x64
-		{1E0B57AC-1C0B-4D40-8F3A-E809436EF5D4}.Release|Any CPU.Build.0 = Release|x64
-		{1E0B57AC-1C0B-4D40-8F3A-E809436EF5D4}.Release|x64.ActiveCfg = Release|x64
-		{1E0B57AC-1C0B-4D40-8F3A-E809436EF5D4}.Release|x64.Build.0 = Release|x64
-=======
 		{3FABC5C4-2802-49C3-9F42-83E5937BC6BE}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{3FABC5C4-2802-49C3-9F42-83E5937BC6BE}.Debug|Any CPU.Build.0 = Debug|x64
 		{3FABC5C4-2802-49C3-9F42-83E5937BC6BE}.Debug|x64.ActiveCfg = Debug|x64
@@ -86,15 +47,30 @@ Global
 		{55E6DBBA-C8C8-4280-8372-E82AE14E3C0B}.Release|Any CPU.Build.0 = Release|x64
 		{55E6DBBA-C8C8-4280-8372-E82AE14E3C0B}.Release|x64.ActiveCfg = Release|x64
 		{55E6DBBA-C8C8-4280-8372-E82AE14E3C0B}.Release|x64.Build.0 = Release|x64
-		{3B955555-48C5-4A4B-9A0F-3C801AC0579A}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{3B955555-48C5-4A4B-9A0F-3C801AC0579A}.Debug|Any CPU.Build.0 = Debug|x64
-		{3B955555-48C5-4A4B-9A0F-3C801AC0579A}.Debug|x64.ActiveCfg = Debug|x64
-		{3B955555-48C5-4A4B-9A0F-3C801AC0579A}.Debug|x64.Build.0 = Debug|x64
-		{3B955555-48C5-4A4B-9A0F-3C801AC0579A}.Release|Any CPU.ActiveCfg = Release|x64
-		{3B955555-48C5-4A4B-9A0F-3C801AC0579A}.Release|Any CPU.Build.0 = Release|x64
-		{3B955555-48C5-4A4B-9A0F-3C801AC0579A}.Release|x64.ActiveCfg = Release|x64
-		{3B955555-48C5-4A4B-9A0F-3C801AC0579A}.Release|x64.Build.0 = Release|x64
->>>>>>> main
+		{FF903985-2BD6-4B37-8D15-EB4898C4FC6C}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{FF903985-2BD6-4B37-8D15-EB4898C4FC6C}.Debug|Any CPU.Build.0 = Debug|x64
+		{FF903985-2BD6-4B37-8D15-EB4898C4FC6C}.Debug|x64.ActiveCfg = Debug|x64
+		{FF903985-2BD6-4B37-8D15-EB4898C4FC6C}.Debug|x64.Build.0 = Debug|x64
+		{FF903985-2BD6-4B37-8D15-EB4898C4FC6C}.Release|Any CPU.ActiveCfg = Release|x64
+		{FF903985-2BD6-4B37-8D15-EB4898C4FC6C}.Release|Any CPU.Build.0 = Release|x64
+		{FF903985-2BD6-4B37-8D15-EB4898C4FC6C}.Release|x64.ActiveCfg = Release|x64
+		{FF903985-2BD6-4B37-8D15-EB4898C4FC6C}.Release|x64.Build.0 = Release|x64
+		{1076A320-4649-4272-B9B7-EB10875BC6B2}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{1076A320-4649-4272-B9B7-EB10875BC6B2}.Debug|Any CPU.Build.0 = Debug|x64
+		{1076A320-4649-4272-B9B7-EB10875BC6B2}.Debug|x64.ActiveCfg = Debug|x64
+		{1076A320-4649-4272-B9B7-EB10875BC6B2}.Debug|x64.Build.0 = Debug|x64
+		{1076A320-4649-4272-B9B7-EB10875BC6B2}.Release|Any CPU.ActiveCfg = Release|x64
+		{1076A320-4649-4272-B9B7-EB10875BC6B2}.Release|Any CPU.Build.0 = Release|x64
+		{1076A320-4649-4272-B9B7-EB10875BC6B2}.Release|x64.ActiveCfg = Release|x64
+		{1076A320-4649-4272-B9B7-EB10875BC6B2}.Release|x64.Build.0 = Release|x64
+		{80796246-BA5E-41D3-AAA9-514BE2F74BB3}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{80796246-BA5E-41D3-AAA9-514BE2F74BB3}.Debug|Any CPU.Build.0 = Debug|x64
+		{80796246-BA5E-41D3-AAA9-514BE2F74BB3}.Debug|x64.ActiveCfg = Debug|x64
+		{80796246-BA5E-41D3-AAA9-514BE2F74BB3}.Debug|x64.Build.0 = Debug|x64
+		{80796246-BA5E-41D3-AAA9-514BE2F74BB3}.Release|Any CPU.ActiveCfg = Release|x64
+		{80796246-BA5E-41D3-AAA9-514BE2F74BB3}.Release|Any CPU.Build.0 = Release|x64
+		{80796246-BA5E-41D3-AAA9-514BE2F74BB3}.Release|x64.ActiveCfg = Release|x64
+		{80796246-BA5E-41D3-AAA9-514BE2F74BB3}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

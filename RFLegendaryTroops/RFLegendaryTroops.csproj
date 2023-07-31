@@ -11,40 +11,13 @@
 		<GameFolder>$(BANNERLORD_GAME_DIR)</GameFolder>
 	</PropertyGroup>
 
-<<<<<<< HEAD
-=======
-	<ItemGroup>
-	  <ProjectReference Include="..\RealmsForgottenMain\RealmsForgotten.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Reference Include="TaleWorlds.CampaignSystem">
-	    <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.CampaignSystem.dll</HintPath>
-	  </Reference>
-	  <Reference Include="TaleWorlds.Core">
-	    <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Core.dll</HintPath>
-	  </Reference>
-	  <Reference Include="TaleWorlds.Library">
-	    <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Library.dll</HintPath>
-	  </Reference>
-	  <Reference Include="TaleWorlds.LinQuick">
-	    <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.LinQuick.dll</HintPath>
-	  </Reference>
-	  <Reference Include="TaleWorlds.Localization">
-	    <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Localization.dll</HintPath>
-	  </Reference>
-	  <Reference Include="TaleWorlds.MountAndBlade">
-	    <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.dll</HintPath>
-	  </Reference>
-	  <Reference Include="TaleWorlds.ObjectSystem">
-	    <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.ObjectSystem.dll</HintPath>
-	  </Reference>
-	</ItemGroup>
-
->>>>>>> main
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 	  <Exec Command="xcopy /y /d  &quot;$(ProjectDir)\\bin\x64\Debug\net472\RFLegendaryTroops.*&quot; &quot;$(BANNERLORD_GAME_DIR)\Modules\RealmsForgotten\bin\Win64_Shipping_Client&quot;" />
 	</Target>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\RealmsForgottenMain\RealmsForgotten.csproj" />
+	</ItemGroup>
 
 	<ItemGroup>
 	  <Reference Include="TaleWorlds.CampaignSystem">
