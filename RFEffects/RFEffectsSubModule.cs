@@ -69,7 +69,6 @@ namespace RealmsForgotten.RFEffects
 			}
 		}
 
-		// Token: 0x0600000A RID: 10 RVA: 0x00002380 File Offset: 0x00000580
 		public override void OnMissionBehaviorInitialize(Mission mission)
 		{
             RFMissionBehaviour missionBehavior = new RFMissionBehaviour();

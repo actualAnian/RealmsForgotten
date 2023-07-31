@@ -117,7 +117,7 @@ namespace RealmsForgotten.RFEffects
         
         private ItemRoster CreateItemRoster()
         {
-            //Takes all items with the rf id --> randomly remove some of them --> increases the price based on the level --> returns item roster
+            //Takes all items with the rf id --> randomly remove some of them --> if rfmisc randomly increases the amount and increases the price based on the level --> returns item roster
 
             List<ItemObject> randomItems = MBObjectManager.Instance.GetObjectTypeList<ItemObject>()
                 .Where(x => skillsIds.Any(y => x.StringId.Contains(y))).ToList();

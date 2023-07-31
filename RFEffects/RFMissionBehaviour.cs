@@ -22,15 +22,12 @@ namespace RealmsForgotten.RFEffects
 			}
 		}
 
-		// Token: 0x06000012 RID: 18 RVA: 0x000025E1 File Offset: 0x000007E1
 		private bool IsInBattle()
 		{
 			return base.Mission.Mode == MissionMode.Battle || base.Mission.Mode == MissionMode.Duel || base.Mission.Mode == MissionMode.Stealth || base.Mission.Mode == MissionMode.Tournament;
 		}
 
 
-
-		// Token: 0x06000013 RID: 19 RVA: 0x0000261D File Offset: 0x0000081D
 		public override void OnAgentDeleted(Agent agent)
 		{
 			if (!this.IsInBattle())
@@ -40,7 +37,6 @@ namespace RealmsForgotten.RFEffects
 			this.toBeRemoved.Add(agent);
 		}
 
-		// Token: 0x06000014 RID: 20 RVA: 0x00002634 File Offset: 0x00000834
 		public override void OnMissionTick(float dt)
 		{
 			if (!this.IsInBattle() || (this.victimsDamage.Count == 0 && this.toBeAdded.Count == 0))
@@ -100,16 +96,12 @@ namespace RealmsForgotten.RFEffects
 				}
 			}
 		}
-
-		// Token: 0x06000015 RID: 21 RVA: 0x00002882 File Offset: 0x00000A82
 		private bool CheckAgent(Agent agent)
 		{
 			return agent == this.currVictim;
 		}
 
 
-
-        // Token: 0x06000016 RID: 22 RVA: 0x00002890 File Offset: 0x00000A90
         private Blow CreateBlow(Agent victim, int damagePerSecond, int attackerId)
 		{
 			Blow blow = new Blow(attackerId);
@@ -395,22 +387,16 @@ namespace RealmsForgotten.RFEffects
             return result;
         }
 
-        // Token: 0x0400000A RID: 10
         public Dictionary<Agent, double> victimsDamage = new Dictionary<Agent, double>();
 
-		// Token: 0x0400000B RID: 11
 		public List<Agent> toBeRemoved = new List<Agent>();
 
-		// Token: 0x0400000C RID: 12
 		public List<Agent> toBeAdded = new List<Agent>();
 
-		// Token: 0x0400000D RID: 13
 		private Agent currVictim;
 
-		// Token: 0x0400000E RID: 14
 		private double clockGeneratorTime;
 
-		// Token: 0x0400000F RID: 15
 		public Dictionary<int, int> attackerId = new Dictionary<int, int>();
 	}
 }

@@ -36,7 +36,7 @@ namespace RealmsForgotten.NecromancyAndSummoning
 			}
 			catch (Exception ex)
 			{
-				string str = "Necromancy Behaviour Error: ";
+				string str = "RF Error: ";
 				string str2 = ex.Message.ToString();
 				string str3 = "\n";
 				Exception innerException = ex.InnerException;
