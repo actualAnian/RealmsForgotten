@@ -11,11 +11,9 @@ using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.RFEffects
 {
-	// Token: 0x02000004 RID: 4
-	public class AnoritMissionBehaviour : MissionBehavior
+	public class RFMissionBehaviour : MissionBehavior
 	{
-		// Token: 0x17000001 RID: 1
-		// (get) Token: 0x06000011 RID: 17 RVA: 0x000025DE File Offset: 0x000007DE
+
 		public override MissionBehaviorType BehaviorType
 		{
 			get
