@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.ObjectSystem;
 
-namespace RFLegendaryTroops
+namespace RealmsForgotten.RFLegendaryTroops
 {
         static class Helper 
         {

@@ -1,0 +1,6 @@
+{
+  "UnitInfectUnit": [
+    {"InfectorUnitId":"main_hero", "UnitId":["zombie_looter"]},
+    {"InfectorUnitId":"zombie_looter", "UnitId":["zombie_looter","xx"]}
+  ]
+}

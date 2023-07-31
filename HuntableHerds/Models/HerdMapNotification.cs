@@ -1,7 +1,7 @@
 ﻿using TaleWorlds.Core;
 using TaleWorlds.Localization;
 
-namespace HuntableHerds.Models {
+namespace RealmsForgotten.HuntableHerds.Models {
     public class HerdMapNotification : InformationData {
         public override TextObject TitleText {
             get {

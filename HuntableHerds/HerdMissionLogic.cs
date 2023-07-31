@@ -9,12 +9,13 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.Inventory;
 using TaleWorlds.InputSystem;
-using HuntableHerds.AgentComponents;
-using HuntableHerds.Models;
+using RealmsForgotten.HuntableHerds.AgentComponents;
+using RealmsForgotten.HuntableHerds.Models;
 using TaleWorlds.Engine;
-using HuntableHerds.Extensions;
+using RealmsForgotten.HuntableHerds.Extensions;
 
-namespace HuntableHerds {
+namespace RealmsForgotten.HuntableHerds
+{
     public class HerdMissionLogic : MissionLogic {
         private Dictionary<Agent, HerdAgentComponent> animals = new();
 

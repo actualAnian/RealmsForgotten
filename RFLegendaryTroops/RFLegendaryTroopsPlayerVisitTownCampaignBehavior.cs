@@ -5,7 +5,7 @@ using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Localization;
 
-namespace RFLegendaryTroops
+namespace RealmsForgotten.RFLegendaryTroops
 {
     public class RFLegendaryTroopsPlayerVisitTownCampaignBehavior: CampaignBehaviorBase
     {

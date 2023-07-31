@@ -99,9 +99,12 @@
     <PackageReference Include="BUTR.Harmony.Analyzer" Version="1.0.1.44" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
   </ItemGroup>
 
+<<<<<<< HEAD
   <ItemGroup>
     <ProjectReference Include="..\HuntableHerds\HuntableHerds.csproj" />
     <ProjectReference Include="..\RFLegendaryTroops\RFLegendaryTroops.csproj" />
   </ItemGroup>
 
+=======
+>>>>>>> main
 </Project>

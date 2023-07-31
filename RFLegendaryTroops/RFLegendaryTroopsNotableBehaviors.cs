@@ -10,7 +10,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.LinQuick;
 
-namespace RFLegendaryTroops
+namespace RealmsForgotten.RFLegendaryTroops
 {
     public class RFLegendaryTroopsNotableBehaviors : RecruitmentCampaignBehavior
 	{
