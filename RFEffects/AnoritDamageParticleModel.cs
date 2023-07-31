@@ -57,7 +57,7 @@ namespace RealmsForgotten.RFEffects
 		// Token: 0x06000010 RID: 16 RVA: 0x00002578 File Offset: 0x00000778
 		private void AddToTheListOfFlame(Agent attacker, Agent victim)
 		{
-			AnoritMissionBehaviour missionBehavior = Mission.Current.GetMissionBehavior<AnoritMissionBehaviour>();
+            RFMissionBehaviour missionBehavior = Mission.Current.GetMissionBehavior<RFMissionBehaviour>();
 			missionBehavior.toBeAdded.Add(victim);
 			if (!missionBehavior.attackerId.ContainsKey(victim.Index))
 			{

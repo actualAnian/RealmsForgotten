@@ -57,7 +57,7 @@ namespace RealmsForgotten.RFEffects
 				{
 					return;
 				}
-				AnoritMissionBehaviour missionBehavior = Mission.Current.GetMissionBehavior<AnoritMissionBehaviour>();
+                RFMissionBehaviour missionBehavior = Mission.Current.GetMissionBehavior<RFMissionBehaviour>();
 				missionBehavior.toBeAdded.Add(victim);
 				if (!missionBehavior.attackerId.ContainsKey(victim.Index))
 				{

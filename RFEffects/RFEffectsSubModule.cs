@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using AnoritKingdom;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
@@ -44,7 +43,6 @@ namespace RealmsForgotten.RFEffects
                 campaignGameStarter.AddBehavior(new RFCampaignBehavior());
             }
         }
-        // Token: 0x06000009 RID: 9 RVA: 0x0000230C File Offset: 0x0000050C
         private void ReplaceModel<TBaseType, TChildType>(IGameStarter gameStarterObject) where TBaseType : GameModel where TChildType : TBaseType
 		{
 			IList<GameModel> list = gameStarterObject.Models as IList<GameModel>;
@@ -55,6 +53,7 @@ namespace RealmsForgotten.RFEffects
 			bool flag = false;
 			for (int i = 0; i < list.Count; i++)
 			{
+
 				if (list[i] is TBaseType)
 				{
 					flag = true;
@@ -73,7 +72,7 @@ namespace RealmsForgotten.RFEffects
 		// Token: 0x0600000A RID: 10 RVA: 0x00002380 File Offset: 0x00000580
 		public override void OnMissionBehaviorInitialize(Mission mission)
 		{
-			AnoritMissionBehaviour missionBehavior = new AnoritMissionBehaviour();
+            RFMissionBehaviour missionBehavior = new RFMissionBehaviour();
 			mission.AddMissionBehavior(missionBehavior);
         }
 	}
