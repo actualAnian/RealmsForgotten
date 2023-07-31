@@ -221,16 +221,9 @@ namespace RealmsForgotten.Managers
                                          !MatchWildcardString("*_militia_*", "" + character.StringId) && !MatchWildcardString("*armed*", "" + character.StringId) && !MatchWildcardString("*caravan*", "" + character.StringId)
                                          && !MatchWildcardString("*mercenary*", "" + character.StringId)
                                          select character).GetRandomElementInefficiently();
-                if (idealTroop?.Occupation == Occupation.Bandit)
-                {
-                    troop = idealTroop;
-                }
-                if (idealTroop?.Occupation == Occupation.Mercenary)
-                {
-                    troop = idealTroop;
-                }
-                mainHero.PartyBelongedTo.AddElementToMemberRoster(troop, num, false);
-            }
+
+                if (troop != null) mainHero.PartyBelongedTo.AddElementToMemberRoster(troop, num, false);
+               }
             for (int i = 0; i < companions; i++)
             {
                 CharacterObject wanderer = (from character in CharacterObject.All
