@@ -373,8 +373,9 @@ namespace Quest
             ChangeRelationAction.ApplyPlayerRelation(Hero.FindFirst(x=>x.StringId=="the_owl_hero"), -20, false);
             PlayerEncounter.Finish();
             anoritLordConversationTime = CampaignTime.Now;
+            
+            //Declarar guerra aos anorit
         }
-
         private DialogFlow TheOwlDialog => DialogFlow.CreateDialogFlow("start", 125)
             .PlayerLine(GameTexts.FindText("rf_the_owl_text_1"))
             .Condition(() => CharacterObject.OneToOneConversationCharacter?.StringId == _theOwlId && !hasTalkedToOwl)
