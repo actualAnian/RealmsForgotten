@@ -2,32 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using Helpers;
+using SandBox.CampaignBehaviors;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.CampaignSystem.Extensions;
 using TaleWorlds.CampaignSystem.GameState;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.ObjectSystem;
+using static RealmsForgotten.Globals;
 
 namespace RealmsForgotten.Managers
 {
     public static class CulturedStartAction
     {
-            private enum StartType
-            {
-                Other = -1,
-                Default,
-                Merchant,
-                Exiled,
-                Mercenary,
-                Looter,
-                VassalNoFief,
-                KingdomRuler,
-                CastleRuler,
-                VassalFief,
-                EscapedPrisoner
-            }
             private static readonly Dictionary<StartType, Dictionary<string, string>> mainHeroStartingEquipment = new()
             {
                 [StartType.Looter] = new Dictionary<string, string>
@@ -169,7 +158,7 @@ namespace RealmsForgotten.Managers
                     ApplyInternal(mainHero, gold: 15000, grain: 40, tier: 3, troops: new int[] { 40, 10 }, ruler: ruler, startOption: StartType.VassalNoFief);
                     break;
                 case StartType.KingdomRuler: // Kingdom
-                    ApplyInternal(mainHero, gold: 45000, grain: 150, tier: 5, troops: new int[] { 60, 30, 20, 10, 6 }, companions: 3, companionParties: 2, startOption: StartType.KingdomRuler);
+                    ApplyInternal(mainHero, gold: 45000, grain: 150, tier: 5, troops: new int[] { 30, 50, 25, 10, 6 }, companions: 3, companionParties: 2, startOption: StartType.KingdomRuler);
                     break;
                 case StartType.CastleRuler: // Holding
                     ApplyInternal(mainHero, gold: 60000, grain: 30, tier: 3, troops: new int[] { 31, 20, 14, 10, 6 }, companions: 1, companionParties: 1, castle: startingSettlement, startOption: StartType.CastleRuler);
@@ -192,26 +181,29 @@ namespace RealmsForgotten.Managers
         private static void ApplyInternal(Hero mainHero, int gold, int grain, int mules = 0, int tier = -1, int[]? troops = null, int companions = 0, int companionParties = 0, Hero? ruler = null, Settlement? castle = null, StartType startOption = StartType.Default)
         {
             Settlement? givenCastle = null;
-            CharacterObject? idealTroop = null;
+            MBEquipmentRoster? idealEquipment = null;
             GiveGoldAction.ApplyBetweenCharacters(null, mainHero, gold, true);
             mainHero.PartyBelongedTo.ItemRoster.AddToCounts(DefaultItems.Grain, grain);
             mainHero.PartyBelongedTo.ItemRoster.AddToCounts(MBObjectManager.Instance.GetObject<ItemObject>("mule"), mules);
+            
             try
             {
-                idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>(mainHeroStartingEquipment[startOption][mainHero.Culture.StringId]);
+                idealEquipment = MBObjectManager.Instance.GetObject<MBEquipmentRoster>(mainHeroStartingEquipment[startOption][mainHero.Culture.StringId]);
             }
             catch (Exception)
             {
-                idealTroop = MBObjectManager.Instance.GetObject<CharacterObject>("rf_looter");
+                //idealEquipment = MBObjectManager.Instance.GetObject<CharacterObject>("rf_looter").AllEquipments;
+                idealEquipment = MBObjectManager.Instance.GetObject<MBEquipmentRoster>("rf_looter");
             }
-            if (startOption == StartType.Looter)
+            if (idealEquipment != null)
             {
-                tier = idealTroop.Tier;
+                mainHero.BattleEquipment.FillFrom(idealEquipment.AllEquipments.GetRandomElement());
             }
-            if (idealTroop != null)
+            foreach (SkillObject skill in Skills.All)
             {
-                mainHero.BattleEquipment.FillFrom(idealTroop.Equipment);
+                mainHero.SetSkillValue(skill, (int)(mainHero.GetSkillValue(skill) * startingSkillMult[startOption]));
             }
+
             for (int i = 0; i < troops?.Length; i++)
             {
                 int troopTier = i + 1;
@@ -237,9 +229,10 @@ namespace RealmsForgotten.Managers
                 //companion.HasMet = true;
                 companion.Clan = randomSettlement.OwnerClan;
                 companion.ChangeState(Hero.CharacterStates.Active);
-                if (idealTroop != null)
+                if (startOption == StartType.KingdomRuler || startOption == StartType.CastleRuler || startOption == StartType.VassalFief) // gives companions noble equipment
                 {
-                    companion.BattleEquipment.FillFrom(idealTroop.Equipment);
+                    companion.BattleEquipment.FillFrom(Campaign.Current.Models.EquipmentSelectionModel.GetEquipmentRostersForHeroComeOfAge(companion, false)[0].AllEquipments.GetRandomElement());
+                    companion.CivilianEquipment.FillFrom(Campaign.Current.Models.EquipmentSelectionModel.GetEquipmentRostersForHeroComeOfAge(companion, true)[0].AllEquipments.GetRandomElement());
                 }
                 AddCompanionAction.Apply(Clan.PlayerClan, companion);
                 AddHeroToPartyAction.Apply(companion, mainHero.PartyBelongedTo, false);

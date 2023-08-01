@@ -41,7 +41,7 @@ namespace RealmsForgotten
             base.OnSubModuleLoad();
             TextObject coreContentDisabledReason = new("Disabled during installation.", null);
             Module.CurrentModule.AddInitialStateOption(
-                new InitialStateOption("RT", name: new TextObject("Realms Forgotten", null), 3,
+                new InitialStateOption("RT", name: new("Realms Forgotten", null), 3,
                 () => MBGameManager.StartNewGame(new RFCampaignManager()),
                 () => (Module.CurrentModule.IsOnlyCoreContentEnabled, coreContentDisabledReason))
             );

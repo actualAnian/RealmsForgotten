@@ -3,7 +3,7 @@ namespace RealmsForgotten.Managers
 {
     public class CulturedStartManager
     {
-        private static readonly CulturedStartManager _culturedStartManager = new CulturedStartManager();
+        private static readonly CulturedStartManager _culturedStartManager = new();
 
         public static CulturedStartManager Current => _culturedStartManager;
 
