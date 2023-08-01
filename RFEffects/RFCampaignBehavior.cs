@@ -40,9 +40,10 @@ namespace RealmsForgotten.RFEffects
             CampaignEvents.OnMissionStartedEvent.AddNonSerializedListener(this, imission =>
             {
                 Mission mission = (Mission)imission;
-                ItemRosterElement item = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("elixir_rfmisc"));
-                if (!item.IsEmpty)
-                    mission?.AddMissionBehavior(new HealingPotionMissionBehavior(item));
+                ItemRosterElement elixir = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("elixir_rfmisc"));
+                ItemRosterElement berserker = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("berzerker_potion"));
+                if (!elixir.IsEmpty || !berserker.IsEmpty)
+                    mission?.AddMissionBehavior(new HealingPotionMissionBehavior(elixir, berserker));
             });
             CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, DailyTick);
         }

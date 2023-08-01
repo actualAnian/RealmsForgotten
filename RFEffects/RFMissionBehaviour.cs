@@ -322,7 +322,7 @@ namespace RealmsForgotten.RFEffects
             }
 
         }
-        public void ModifyCharacterSkillAttribute(BasicCharacterObject character, SkillObject skill, int value)
+        public static void ModifyCharacterSkillAttribute(BasicCharacterObject character, SkillObject skill, int value)
         {
 
             FieldInfo characterSkillsProperty = AccessTools.Field(typeof(BasicCharacterObject), "DefaultCharacterSkills");
