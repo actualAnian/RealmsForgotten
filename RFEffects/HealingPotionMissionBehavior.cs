@@ -37,6 +37,12 @@ namespace RealmsForgotten.RFEffects
             berserkerMode = false;
 
         }
+        protected override void OnEndMission()
+        {
+            base.OnEndMission();
+            if(berserkerMode)
+                GiveBerserkerSkills(0, false);
+        }
         public override void OnMissionTick(float dt)
         {
             base.OnMissionTick(dt);

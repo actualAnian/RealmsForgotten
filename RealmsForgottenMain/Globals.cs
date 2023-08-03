@@ -6,10 +6,10 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-[assembly: InternalsVisibleTo("RFCustomHorses")]
+
 namespace RealmsForgotten
 {
-    internal static class Globals
+    public static class Globals
     {
         public static Assembly realmsForgottenAssembly = Assembly.GetExecutingAssembly();
     }
