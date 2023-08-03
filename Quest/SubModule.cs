@@ -35,18 +35,7 @@ namespace Quest
 {
 
 
-    [HarmonyPatch(typeof(DefaultMapWeatherModel), "GetWeatherEventInPosition")]
-    class ArrangeDestructedMeshesPatch
-    {
-        [HarmonyFinalizer]
-        static Exception Finalizer(Exception __exception, DefaultMapWeatherModel __instance)
-        {
-            //If there is a exception it will increase the _weatherDataCache size
-            if (__exception != null)
-                AccessTools.Field(typeof(DefaultMapWeatherModel), "_weatherDataCache").SetValue(__instance, new MapWeatherModel.WeatherEvent[4096]);
-            return null;
-        }
-    }
+
     public class SubModule : MBSubModuleBase
     {
         protected override void OnApplicationTick(float dt)

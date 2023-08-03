@@ -6,6 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.ComponentInterfaces;
+using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 using TaleWorlds.ModuleManager;
@@ -108,6 +110,20 @@ namespace RealmsForgotten
                         }
                     }
                 }
+            }
+        }
+
+        //Map border crash fix
+        [HarmonyPatch(typeof(DefaultMapWeatherModel), "GetWeatherEventInPosition")]
+        class ArrangeDestructedMeshesPatch
+        {
+            [HarmonyFinalizer]
+            static Exception Finalizer(Exception __exception, DefaultMapWeatherModel __instance)
+            {
+                //If there is a exception it will increase the _weatherDataCache size
+                if (__exception != null)
+                    AccessTools.Field(typeof(DefaultMapWeatherModel), "_weatherDataCache").SetValue(__instance, new MapWeatherModel.WeatherEvent[4096]);
+                return null;
             }
         }
     }
