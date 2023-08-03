@@ -74,7 +74,6 @@ namespace Quest
         }
         private void HandleBandits()
         {
-            //AccessTools.Property(typeof(Hero), "Issue").SetValue(Uliah, null);
             new RescueUliahQuest("rescue_uliah_quest", Uliah, CampaignTime.Never, 0).StartQuest();
             Hideout nearestHideout = Hideout.All.Find(x => x.StringId == "hideout_mountain_7");
             if (!nearestHideout.IsInfested)
@@ -391,15 +390,6 @@ namespace Quest
                     AddHeroToPartyAction.Apply(Uliah, Queen.PartyBelongedTo);
                 else
                     TeleportHeroAction.ApplyImmediateTeleportToSettlement(Uliah, Queen.CurrentSettlement);
-            }
-
-            private void Fail()
-            {
-                base.CompleteQuestWithFail();
-                base.QuestGiver.AddPower(-5f);
-
-                ChangeRelationAction.ApplyPlayerRelation(Queen, -15);
-                ChangeRelationAction.ApplyPlayerRelation(base.QuestGiver, -15, true, true);
             }
 
             private void SmallPlayerArmyConsequence()

@@ -73,10 +73,6 @@ namespace Quest
         {
             base.OnGameLoaded(game, initializerObject);
             CampaignGameStarter gameStarter = (CampaignGameStarter)initializerObject;
-            gameStarter.GetPresumedGameMenu("encounter").OnInit += (MenuCallbackArgs args) =>
-            {
-                MenuCallbackArgs args2 = args;
-            };
             AddQuestBehaviors(gameStarter, false);
         
         }
@@ -86,7 +82,6 @@ namespace Quest
             {
 
                 gameStarter.AddBehavior(new RescueUliahBehavior(gameStarter, isNewGame));
-                InformationManager.DisplayMessage(new InformationMessage("RF Quest Behavior loaded"));
             }
         }
     }

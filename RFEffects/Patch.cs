@@ -10,13 +10,11 @@ using TaleWorlds.MountAndBlade.GauntletUI.Widgets.Multiplayer;
 
 namespace RealmsForgotten.RFEffects
 {
-	// Token: 0x02000005 RID: 5
 	class Patch
 	{
         [HarmonyPatch(typeof(Mission), "DecideAgentHitParticles")]
 		public class AKDecideAgentHitParticlesPatchForRealisticBattleMod
 		{
-			// Token: 0x0600001D RID: 29 RVA: 0x00002A54 File Offset: 0x00000C54
 			[HarmonyPriority(0)]
 			[HarmonyAfter(new string[]
 			{

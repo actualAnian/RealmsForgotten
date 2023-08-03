@@ -44,14 +44,13 @@ namespace RealmsForgotten.RFEffects
                 }
                 if (Settlement.CurrentSettlement.Culture == Hero.MainHero.Culture || ____troopsInCart.Count == 0)
                     return true;
-                float total = 0;
+                int total = 0;
                 foreach (RecruitVolunteerTroopVM recruitVolunteerTroopVM in ____troopsInCart)
                 {
-                    total -= recruitVolunteerTroopVM.Character.Tier * (10 - (Hero.MainHero.Clan.Renown / 10000));
+                    total -= (int)(recruitVolunteerTroopVM.Character.Tier * (10 - (Hero.MainHero.Clan.Renown / 10000)));
                 }
                 if (total > 0)
                     return true;
-                total = (float)Math.Round(total, 2);
                 string title = new TextObject("{=acculturarion_title}Acculturation").ToString();
                 TextObject descriptionTO = new TextObject("{=acculturarion_description}Due to the volunteers being from a different culture from yours you will invest {INFLUENCE_COST} of influence by recruiting them.");
                 descriptionTO.SetTextVariable("INFLUENCE_COST", -total);
