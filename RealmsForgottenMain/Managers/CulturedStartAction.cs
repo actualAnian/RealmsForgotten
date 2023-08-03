@@ -39,7 +39,7 @@ namespace RealmsForgotten.Managers
                 },
                 [StartType.VassalNoFief] = new Dictionary<string, string>
                 {
-                    ["aserai"] = "athas_vassal_nofief",
+                    ["aserai"] = "athas_vassal_nofief_equip",
                     ["empire"] = "realms_vassal_nofief",
                     ["khuzait"] = "khuzait_vassal_nofief",
                     ["sturgia"] = "dreadrealms_vassal_nofief",
@@ -67,11 +67,11 @@ namespace RealmsForgotten.Managers
                 [StartType.VassalFief] = new Dictionary<string, string>
                 {
                     ["aserai"] = "ruler_athas_start",
-                    ["empire"] = "imperial_vigla_recruit",
-                    ["khuzait"] = "khuzait_noble_son",
-                    ["sturgia"] = "varyag",
+                    ["empire"] = "ruler_realms_start",
+                    ["khuzait"] = "ruler_allkhuur_start",
+                    ["sturgia"] = "ruler_dreadrealms_start",
                     ["battania"] = "lord_elvean_start",
-                    ["vlandia"] = "vlandian_squire"
+                    ["vlandia"] = "ruler_nasoria_start"
                 },
             };
         public static void Apply(int storyOption, int locationOption)
