@@ -87,7 +87,8 @@ namespace RealmsForgotten.RFEffects
                 List<MapEventParty> parties = mapEvent.Winner.Parties;
                 foreach(MapEventParty party in parties)
                 {
-                    
+                    if (party.Party.Owner.Culture.StringId != sturgiaId)
+                        continue;
                     int wounded = party.HealthyManCountAtStart - party.Party.NumberOfHealthyMembers;
                     if (wounded <= 0)
                         continue;
@@ -103,11 +104,13 @@ namespace RealmsForgotten.RFEffects
                             
                             party.Party.AddElementToMemberRoster(characterObject, 1);
                         }
-                        var textObject = new TextObject("{=sf4yHsh3JKw}{AMOUNT} undead soldiers rejoined your army");
-                        textObject.SetTextVariable("AMOUNT", recovered);
-                        MBInformationManager.AddQuickInformation(textObject);   
+                        if(party.Party == PartyBase.MainParty)
+                        {
+                            var textObject = new TextObject("{=sf4yHsh3JKw}{AMOUNT} undead soldiers rejoined your army");
+                            textObject.SetTextVariable("AMOUNT", recovered);
+                            MBInformationManager.AddQuickInformation(textObject);
+                        }
                     }
-
                 }   
 
             }
