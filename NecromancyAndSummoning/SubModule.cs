@@ -31,7 +31,7 @@ namespace RealmsForgotten.NecromancyAndSummoning
 			harmony.PatchAll();
 
         }
-		private Harmony harmony;
+		private Harmony? harmony;
 		public override void OnBeforeMissionBehaviorInitialize(Mission mission)
 		{
 			if(mission.IsSiegeBattle || mission.IsSallyOutBattle || mission.IsFieldBattle)

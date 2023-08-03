@@ -5,7 +5,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterCreationContent;
 using StoryMode.CharacterCreationContent;
 using RealmsForgotten.Managers;
-using RealmsForgotten.Utility.Utility;
+using RealmsForgotten.Utility;
 
 namespace RealmsForgotten.Patches.CulturedStart
 {
