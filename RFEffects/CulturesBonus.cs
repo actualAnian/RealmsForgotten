@@ -103,7 +103,9 @@ namespace RealmsForgotten.RFEffects
                             
                             party.Party.AddElementToMemberRoster(characterObject, 1);
                         }
-                            
+                        var textObject = new TextObject("{=sf4yHsh3JKw}{AMOUNT} undead soldiers rejoined your army");
+                        textObject.SetTextVariable("AMOUNT", recovered);
+                        MBInformationManager.AddQuickInformation(textObject);   
                     }
 
                 }   
