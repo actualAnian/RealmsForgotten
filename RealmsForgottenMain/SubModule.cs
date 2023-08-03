@@ -3,6 +3,7 @@ using RealmsForgotten.Managers;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
@@ -36,12 +37,25 @@ namespace RealmsForgotten
                 campaignGameStarter.AddBehavior(new BaseGameDebugCampaignBehavior());
             }
         }
+        private void RemoveSandboxAndStoryOptions()
+        {
+            List<InitialStateOption> initialOptionsList = Module.CurrentModule.GetInitialStateOptions().ToList();
+            initialOptionsList.RemoveAll(x => x.Id == "SandBoxNewGame" || x.Id == "StoryModeNewGame");
+            Module.CurrentModule.ClearStateOptions();
+            foreach(InitialStateOption initialStateOption in initialOptionsList)
+            {
+                Module.CurrentModule.AddInitialStateOption(initialStateOption);
+            }
+        }
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
             TextObject coreContentDisabledReason = new("Disabled during installation.", null);
+
+            RemoveSandboxAndStoryOptions();
+
             Module.CurrentModule.AddInitialStateOption(
-                new InitialStateOption("RT", name: new("Realms Forgotten", null), 3,
+                new InitialStateOption("RF", name: new TextObject("Realms Forgotten", null), 3,
                 () => MBGameManager.StartNewGame(new RFCampaignManager()),
                 () => (Module.CurrentModule.IsOnlyCoreContentEnabled, coreContentDisabledReason))
             );

@@ -2,10 +2,10 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("RFCustomHorses")]
+
 namespace RealmsForgotten
 {
-    internal static class Globals
+    public static class Globals
     {
         public static Assembly realmsForgottenAssembly = Assembly.GetExecutingAssembly();
 

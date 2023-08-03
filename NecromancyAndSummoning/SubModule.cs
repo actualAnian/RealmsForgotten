@@ -42,7 +42,6 @@ namespace RealmsForgotten.NecromancyAndSummoning
 		{
 			harmony.Patch(AccessTools.Method(typeof(Mission), "MissileHitCallback"), null, new HarmonyMethod(typeof(SummoningAndRaiseCorpsePatch), "Postfix"));
 
-            InformationManager.DisplayMessage(new InformationMessage("NecromancyAndSummoning OnGameStart"));
 			bool flag = game.GameType is Campaign;
 			if (flag)
 			{
