@@ -82,7 +82,7 @@ namespace RealmsForgotten.RFEffects
         }
         private void SturgianBonus(MapEvent mapEvent)
         {
-            if(mapEvent.HasWinner && mapEvent.Winner.LeaderParty.Culture.StringId == sturgiaId && RFEffectsSubModule.undeadRespawnConfig?.Count > 0)
+            if(mapEvent.HasWinner && mapEvent.Winner.LeaderParty.Culture.StringId == sturgiaId && RFEffectsSubModule.undeadRespawnConfig?.Count > 0 && MBRandom.RandomFloat < 0.15)
             {
                 List<MapEventParty> parties = mapEvent.Winner.Parties;
                 foreach(MapEventParty party in parties)
@@ -91,7 +91,7 @@ namespace RealmsForgotten.RFEffects
                     int wounded = party.HealthyManCountAtStart - party.Party.NumberOfHealthyMembers;
                     if (wounded <= 0)
                         continue;
-                    int recovered = (int)((15f / 100f) * wounded);
+                    int recovered = (int)((10f / 100f) * wounded);
                     if (recovered > 0)
                     {
                         for (int i = 0; i < recovered; i++)
