@@ -17,7 +17,7 @@ namespace RealmsForgotten.Managers
 {
     public class RFCampaignManager : MBGameManager
     {
-        private bool _loadingSavedGame;
+        private readonly bool _loadingSavedGame;
         private LoadResult _loadedGameResult;
 
         public RFCampaignManager()
