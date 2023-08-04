@@ -15,6 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealmsForgotten", "RealmsFo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RFLegendaryTroops", "RFLegendaryTroops\RFLegendaryTroops.csproj", "{80796246-BA5E-41D3-AAA9-514BE2F74BB3}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quest", "Quest\Quest.csproj", "{7AC73BAE-3491-42B3-AD74-A4A3CC415B63}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1076A320-4649-4272-B9B7-EB10875BC6B2} = {1076A320-4649-4272-B9B7-EB10875BC6B2}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +76,14 @@ Global
 		{80796246-BA5E-41D3-AAA9-514BE2F74BB3}.Release|Any CPU.Build.0 = Release|x64
 		{80796246-BA5E-41D3-AAA9-514BE2F74BB3}.Release|x64.ActiveCfg = Release|x64
 		{80796246-BA5E-41D3-AAA9-514BE2F74BB3}.Release|x64.Build.0 = Release|x64
+		{7AC73BAE-3491-42B3-AD74-A4A3CC415B63}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{7AC73BAE-3491-42B3-AD74-A4A3CC415B63}.Debug|Any CPU.Build.0 = Debug|x64
+		{7AC73BAE-3491-42B3-AD74-A4A3CC415B63}.Debug|x64.ActiveCfg = Debug|x64
+		{7AC73BAE-3491-42B3-AD74-A4A3CC415B63}.Debug|x64.Build.0 = Debug|x64
+		{7AC73BAE-3491-42B3-AD74-A4A3CC415B63}.Release|Any CPU.ActiveCfg = Release|x64
+		{7AC73BAE-3491-42B3-AD74-A4A3CC415B63}.Release|Any CPU.Build.0 = Release|x64
+		{7AC73BAE-3491-42B3-AD74-A4A3CC415B63}.Release|x64.ActiveCfg = Release|x64
+		{7AC73BAE-3491-42B3-AD74-A4A3CC415B63}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

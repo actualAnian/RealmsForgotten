@@ -34,7 +34,7 @@ namespace RealmsForgotten
             [StartType.KingdomRuler] = 3.5,
             [StartType.CastleRuler] = 3,
             [StartType.VassalFief] = 2.5,
-            [StartType.EscapedPrisoner] = 1
+            [StartType.EscapedPrisoner] = 1,
         };
     }
 }
