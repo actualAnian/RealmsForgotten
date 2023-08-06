@@ -29,6 +29,7 @@ using TaleWorlds.MountAndBlade.View;
 using TaleWorlds.MountAndBlade.View.MissionViews.Singleplayer;
 using TaleWorlds.ObjectSystem;
 using TaleWorlds.SaveSystem;
+using static Quest.RescueUliahBehavior;
 using Module = TaleWorlds.MountAndBlade.Module;
 
 namespace Quest
@@ -72,6 +73,21 @@ namespace Quest
 
                 gameStarter.AddBehavior(new RescueUliahBehavior(gameStarter, isNewGame));
             }
+        }
+
+
+    }
+    public class QuestTypeDefiner : SaveableTypeDefiner
+    {
+        public QuestTypeDefiner() : base(585820)
+        {
+        }
+
+        protected override void DefineClassTypes()
+        {
+            base.AddClassDefinition(typeof(RescueUliahQuest), 1);
+            base.AddClassDefinition(typeof(QueenQuest), 2);
+            base.AddClassDefinition(typeof(AnoritFindRelicsQuest), 3);
         }
     }
 

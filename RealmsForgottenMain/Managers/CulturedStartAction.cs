@@ -251,7 +251,6 @@ namespace RealmsForgotten.Managers
             }
             if (castle != null)
             {
-                ChangeOwnerOfSettlementAction.ApplyByKingDecision(mainHero, castle);
                 if (startOption == StartType.VassalFief)
                 {
                     givenCastle = (from settlement in Settlement.All
