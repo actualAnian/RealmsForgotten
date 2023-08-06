@@ -11,6 +11,7 @@ using TaleWorlds.Localization;
 using TaleWorlds.Library;
 using RealmsForgotten.Managers;
 using static RealmsForgotten.Globals;
+using TaleWorlds.ObjectSystem;
 
 namespace RealmsForgotten
 {
@@ -84,7 +85,9 @@ namespace RealmsForgotten
 			}
 			BodyProperties.FromString(bodyPropString, out BodyProperties properties);
 			playerCharacter.UpdatePlayerCharacterBodyProperties(properties, playerCharacter.Race, playerCharacter.IsFemale);
-		}
+            
+
+        }
 
 		public override int GetSelectedParentType()
 		{
@@ -118,6 +121,38 @@ namespace RealmsForgotten
 			base.AddAgeSelectionMenu(characterCreation);
 			this.AddCultureStartMenu(characterCreation);
 			this.AddCultureLocationMenu(characterCreation);
+
+			RFCulturalFeats culturalFeats = new RFCulturalFeats();
+
+
+            foreach (CultureObject cultureObject in MBObjectManager.Instance.GetObjectTypeList<CultureObject>())
+			{
+				cultureObject.CultureFeats.Clear();
+				string cultureId = cultureObject.StringId;
+				switch (cultureId)
+				{
+					case "vlandia":
+                        cultureObject.CultureFeats.Add(culturalFeats.nasoriaCheaperMercenaries);
+                        break;
+                    case "sturgia":
+                        cultureObject.CultureFeats.Add(culturalFeats.dreadrealmSoldiersRevive);
+                        break;
+                    case "battania":
+                        cultureObject.CultureFeats.Add(culturalFeats.elveanForestMorale);
+                        break;
+                    case "aserai":
+                        cultureObject.CultureFeats.Add(culturalFeats.athasFasterConstructions);
+                        break;
+                    case "empire":
+                        cultureObject.CultureFeats.Add(culturalFeats.empireAdittionalTier);
+                        break;
+                    case "khuzait":
+                        cultureObject.CultureFeats.Add(culturalFeats.allkhuurPrisonersJoinMilitia);
+                        break;
+                }
+				
+			}
+			
 		}
 
 		protected new void AddParentsMenu(CharacterCreation characterCreation)

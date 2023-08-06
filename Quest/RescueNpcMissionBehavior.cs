@@ -541,16 +541,6 @@ namespace Quest
             }
         }
             
-        public class RescueUliahIssueTypeDefiner : SaveableTypeDefiner
-        {
-            public RescueUliahIssueTypeDefiner() : base(585820)
-            {
-            }
 
-            protected override void DefineClassTypes()
-            {
-                base.AddClassDefinition(typeof(RescueUliahQuest), 1);
-            }
-        }
     }
 }

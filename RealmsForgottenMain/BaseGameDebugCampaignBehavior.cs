@@ -47,19 +47,17 @@ namespace RealmsForgotten
             dataStore.SyncData<Dictionary<string, int>>("_heroRaceMap", ref this._heroRaceMap);
         }
         private Dictionary<string, int> _heroRaceMap = new Dictionary<string, int>();
-
-        public class HeroRaceMapSaveableTypeDefiner : SaveableTypeDefiner
+    }
+    public class HeroRaceMapSaveableTypeDefiner : SaveableTypeDefiner
+    {
+        public HeroRaceMapSaveableTypeDefiner() : base(576011)
         {
-            public HeroRaceMapSaveableTypeDefiner() : base(576011)
-            {
-            }
-
-            protected override void DefineContainerDefinitions()
-            {
-                base.ConstructContainerDefinition(typeof(Dictionary<string, int>));
-            }
         }
 
+        protected override void DefineContainerDefinitions()
+        {
+            base.ConstructContainerDefinition(typeof(Dictionary<string, int>));
+        }
     }
 
 }

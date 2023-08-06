@@ -413,16 +413,4 @@ namespace Quest
         {
         }
     }
-
-    public class QueenQuestTypeDefiner : SaveableTypeDefiner
-    {
-        public QueenQuestTypeDefiner() : base(545346672)
-        {
-        }
-
-        protected override void DefineClassTypes()
-        {
-            base.AddClassDefinition(typeof(QueenQuest), 1);
-        }
-    }
 }
