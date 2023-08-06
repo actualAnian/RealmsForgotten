@@ -26,6 +26,7 @@ namespace RealmsForgotten
 
         public static Dictionary<StartType, double> startingSkillMult = new()
         {
+            [StartType.Default] = 1,
             [StartType.Merchant] = 1,
             [StartType.Exiled] = 2,
             [StartType.Mercenary] = 1.5,
