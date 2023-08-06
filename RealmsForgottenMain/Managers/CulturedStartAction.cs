@@ -17,63 +17,63 @@ namespace RealmsForgotten.Managers
 {
     public static class CulturedStartAction
     {
-            private static readonly Dictionary<StartType, Dictionary<string, string>> mainHeroStartingEquipment = new()
+        private static readonly Dictionary<StartType, Dictionary<string, string>> mainHeroStartingEquipment = new()
+        {
+            [StartType.Looter] = new Dictionary<string, string>
             {
-                [StartType.Looter] = new Dictionary<string, string>
-                {
-                    ["aserai"] = "rf_looter",
-                    ["empire"] = "rf_looter",
-                    ["khuzait"] = "rf_looter",
-                    ["sturgia"] = "rf_looter",
-                    ["battania"] = "rf_looter",
-                    ["vlandia"] = "rf_looter"
-                },
-                [StartType.Mercenary] = new Dictionary<string, string>
-                {
-                    ["aserai"] = "merc_athas_start",
-                    ["empire"] = "merc_realms_start",
-                    ["khuzait"] = "merc_allkhuur_start",
-                    ["sturgia"] = "merc_vortiak_start",
-                    ["battania"] = "merc_elvean_start",
-                    ["vlandia"] = "merc_nasoria_start"
-                },
-                [StartType.VassalNoFief] = new Dictionary<string, string>
-                {
-                    ["aserai"] = "athas_vassal_nofief_equip",
-                    ["empire"] = "realms_vassal_nofief",
-                    ["khuzait"] = "khuzait_vassal_nofief",
-                    ["sturgia"] = "dreadrealms_vassal_nofief",
-                    ["battania"] = "elvean_vassal_nofief",
-                    ["vlandia"] = "nasoria_vassal_nofief"
-                },
-                 [StartType.KingdomRuler] = new Dictionary<string, string>
-                 {
-                     ["aserai"] = "king_athas_start",
-                     ["empire"] = "king_realms_start",
-                     ["khuzait"] = "king_allkhuur_start",
-                     ["sturgia"] = "king_vortiak_start",
-                     ["battania"] = "king_elvean_start",
-                     ["vlandia"] = "king_nasoria_start"
-                 },
-                 [StartType.CastleRuler] = new Dictionary<string, string>
-                 {
-                     ["aserai"] = "vassal_athas_start",
-                     ["empire"] = "vassal_realms_start",
-                     ["khuzait"] = "vassal_allkhuur_start",
-                     ["sturgia"] = "vassal_vortiak_start",
-                     ["battania"] = "vassal_elvean_start",
-                     ["vlandia"] = "vassal_nasoria_start"
-                 },
-                [StartType.VassalFief] = new Dictionary<string, string>
-                {
-                    ["aserai"] = "ruler_athas_start",
-                    ["empire"] = "ruler_realms_start",
-                    ["khuzait"] = "ruler_allkhuur_start",
-                    ["sturgia"] = "ruler_dreadrealms_start",
-                    ["battania"] = "lord_elvean_start",
-                    ["vlandia"] = "ruler_nasoria_start"
-                },
-            };
+                ["aserai"] = "rf_looter",
+                ["empire"] = "rf_looter",
+                ["khuzait"] = "rf_looter",
+                ["sturgia"] = "rf_looter",
+                ["battania"] = "rf_looter",
+                ["vlandia"] = "rf_looter"
+            },
+            [StartType.Mercenary] = new Dictionary<string, string>
+            {
+                ["aserai"] = "merc_athas_start",
+                ["empire"] = "merc_realms_start",
+                ["khuzait"] = "merc_allkhuur_start",
+                ["sturgia"] = "merc_vortiak_start",
+                ["battania"] = "merc_elvean_start",
+                ["vlandia"] = "merc_nasoria_start"
+            },
+            [StartType.VassalNoFief] = new Dictionary<string, string>
+            {
+                ["aserai"] = "athas_vassal_nofief_equip",
+                ["empire"] = "realms_vassal_nofief",
+                ["khuzait"] = "khuzait_vassal_nofief",
+                ["sturgia"] = "dreadrealms_vassal_nofief",
+                ["battania"] = "elvean_vassal_nofief",
+                ["vlandia"] = "nasoria_vassal_nofief"
+            },
+            [StartType.KingdomRuler] = new Dictionary<string, string>
+            {
+                ["aserai"] = "king_athas_start",
+                ["empire"] = "king_realms_start",
+                ["khuzait"] = "king_allkhuur_start",
+                ["sturgia"] = "king_vortiak_start",
+                ["battania"] = "king_elvean_start",
+                ["vlandia"] = "king_nasoria_start"
+            },
+            [StartType.CastleRuler] = new Dictionary<string, string>
+            {
+                ["aserai"] = "vassal_athas_start",
+                ["empire"] = "vassal_realms_start",
+                ["khuzait"] = "vassal_allkhuur_start",
+                ["sturgia"] = "vassal_vortiak_start",
+                ["battania"] = "vassal_elvean_start",
+                ["vlandia"] = "vassal_nasoria_start"
+            },
+            [StartType.VassalFief] = new Dictionary<string, string>
+            {
+                ["aserai"] = "ruler_athas_start",
+                ["empire"] = "ruler_realms_start",
+                ["khuzait"] = "ruler_allkhuur_start",
+                ["sturgia"] = "ruler_dreadrealms_start",
+                ["battania"] = "lord_elvean_start",
+                ["vlandia"] = "ruler_nasoria_start"
+            },
+        };
         public static void Apply(int storyOption, int locationOption)
         {
             Hero mainHero = Hero.MainHero;
@@ -155,16 +155,16 @@ namespace RealmsForgotten.Managers
                     }
                     break;
                 case StartType.VassalNoFief: // Vassal
-                    ApplyInternal(mainHero, gold: 15000, grain: 40, tier: 3, troops: new int[] { 40, 10 }, ruler: ruler, startOption: StartType.VassalNoFief);
+                    ApplyInternal(mainHero, gold: 15000, grain: 40, tier: 3, troops: new int[] { 30, 10, 10 }, ruler: ruler, startOption: StartType.VassalNoFief);
                     break;
                 case StartType.KingdomRuler: // Kingdom
-                    ApplyInternal(mainHero, gold: 45000, grain: 150, tier: 5, troops: new int[] { 30, 50, 25, 10, 6 }, companions: 3, companionParties: 2, startOption: StartType.KingdomRuler);
+                    ApplyInternal(mainHero, gold: 45000, grain: 150, tier: 5, troops: new int[] { 30, 50, 25, 10, 10 }, companions: 3, companionParties: 2, startOption: StartType.KingdomRuler);
                     break;
                 case StartType.CastleRuler: // Holding
-                    ApplyInternal(mainHero, gold: 60000, grain: 30, tier: 3, troops: new int[] { 31, 20, 14, 10, 6 }, companions: 1, companionParties: 1, castle: startingSettlement, startOption: StartType.CastleRuler);
+                    ApplyInternal(mainHero, gold: 60000, grain: 30, tier: 3, troops: new int[] { 31, 20, 14, 10, 6 }, companions: 1, companionParties: 1, startingSettlement: startingSettlement, startOption: StartType.CastleRuler);
                     break;
                 case StartType.VassalFief: // Landed Vassal
-                    ApplyInternal(mainHero, gold: 35000, grain: 80, tier: 2, troops: new int[] { 60, 20 }, companions: 1, companionParties: 1, ruler: ruler, castle: startingSettlement, startOption: StartType.VassalFief);
+                    ApplyInternal(mainHero, gold: 35000, grain: 80, tier: 2, troops: new int[] { 40, 20, 20, 5 }, companions: 1, companionParties: 1, ruler: ruler, startingSettlement: startingSettlement, startOption: StartType.VassalFief);
                     break;
                 case StartType.EscapedPrisoner: // Escaped Prisoner
                     ApplyInternal(mainHero, gold: 0, grain: 1, startOption: StartType.EscapedPrisoner);
@@ -178,14 +178,14 @@ namespace RealmsForgotten.Managers
             }
         }
 
-        private static void ApplyInternal(Hero mainHero, int gold, int grain, int mules = 0, int tier = -1, int[]? troops = null, int companions = 0, int companionParties = 0, Hero? ruler = null, Settlement? castle = null, StartType startOption = StartType.Default)
+        private static void ApplyInternal(Hero mainHero, int gold, int grain, int mules = 0, int tier = -1, int[]? troops = null, int companions = 0, int companionParties = 0, Hero? ruler = null, Settlement? startingSettlement = null, StartType startOption = StartType.Default)
         {
             Settlement? givenCastle = null;
             MBEquipmentRoster? idealEquipment = null;
             GiveGoldAction.ApplyBetweenCharacters(null, mainHero, gold, true);
             mainHero.PartyBelongedTo.ItemRoster.AddToCounts(DefaultItems.Grain, grain);
             mainHero.PartyBelongedTo.ItemRoster.AddToCounts(MBObjectManager.Instance.GetObject<ItemObject>("mule"), mules);
-            
+
             try
             {
                 idealEquipment = MBObjectManager.Instance.GetObject<MBEquipmentRoster>(mainHeroStartingEquipment[startOption][mainHero.Culture.StringId]);
@@ -215,7 +215,7 @@ namespace RealmsForgotten.Managers
                                          select character).GetRandomElementInefficiently();
 
                 if (troop != null) mainHero.PartyBelongedTo.AddElementToMemberRoster(troop, num, false);
-               }
+            }
             for (int i = 0; i < companions; i++)
             {
                 CharacterObject wanderer = (from character in CharacterObject.All
@@ -248,17 +248,16 @@ namespace RealmsForgotten.Managers
                 CharacterRelationManager.SetHeroRelation(mainHero, ruler, 10);
                 ChangeKingdomAction.ApplyByJoinToKingdom(mainHero.Clan, ruler.Clan.Kingdom, false);
                 mainHero.Clan.Influence = 10;
-            }
-            if (castle != null)
-            {
                 if (startOption == StartType.VassalFief)
                 {
                     givenCastle = (from settlement in Settlement.All
-                                   where settlement.Culture == mainHero.Culture && settlement.IsCastle
+                                   where settlement.IsCastle && mainHero.Clan.Kingdom == ruler.Clan.Kingdom
                                    select settlement).GetRandomElementInefficiently();
                     ChangeOwnerOfSettlementAction.ApplyByKingDecision(mainHero, givenCastle);
                 }
+
             }
+
             if (startOption == StartType.KingdomRuler || startOption == StartType.CastleRuler)
             {
                 Campaign.Current.KingdomManager.CreateKingdom(mainHero.Clan.Name, mainHero.Clan.InformalName, mainHero.Clan.Culture, mainHero.Clan);
