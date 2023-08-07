@@ -1,4 +1,5 @@
-﻿using TaleWorlds.CampaignSystem;
+﻿using HarmonyLib;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
@@ -8,7 +9,8 @@ namespace RealmsForgotten.RFLegendaryTroops
     {
         protected override void OnSubModuleLoad()
         {
-            base.OnSubModuleLoad();
+            base.OnSubModuleLoad(); 
+            new Harmony("RFLegendaryTroops").PatchAll();
 
         }
 
