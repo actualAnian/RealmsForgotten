@@ -127,7 +127,6 @@ namespace RealmsForgotten
 
             foreach (CultureObject cultureObject in MBObjectManager.Instance.GetObjectTypeList<CultureObject>())
 			{
-				cultureObject.CultureFeats.Clear();
 				string cultureId = cultureObject.StringId;
 				switch (cultureId)
 				{
