@@ -17,63 +17,63 @@ namespace RealmsForgotten.Managers
 {
     public static class CulturedStartAction
     {
-            private static readonly Dictionary<StartType, Dictionary<string, string>> mainHeroStartingEquipment = new()
+        private static readonly Dictionary<StartType, Dictionary<string, string>> mainHeroStartingEquipment = new()
+        {
+            [StartType.Looter] = new Dictionary<string, string>
             {
-                [StartType.Looter] = new Dictionary<string, string>
-                {
-                    ["aserai"] = "rf_looter",
-                    ["empire"] = "rf_looter",
-                    ["khuzait"] = "rf_looter",
-                    ["sturgia"] = "rf_looter",
-                    ["battania"] = "rf_looter",
-                    ["vlandia"] = "rf_looter"
-                },
-                [StartType.Mercenary] = new Dictionary<string, string>
-                {
-                    ["aserai"] = "merc_athas_start",
-                    ["empire"] = "merc_realms_start",
-                    ["khuzait"] = "merc_allkhuur_start",
-                    ["sturgia"] = "merc_vortiak_start",
-                    ["battania"] = "merc_elvean_start",
-                    ["vlandia"] = "merc_nasoria_start"
-                },
-                [StartType.VassalNoFief] = new Dictionary<string, string>
-                {
-                    ["aserai"] = "athas_vassal_nofief_equip",
-                    ["empire"] = "realms_vassal_nofief",
-                    ["khuzait"] = "khuzait_vassal_nofief",
-                    ["sturgia"] = "dreadrealms_vassal_nofief",
-                    ["battania"] = "elvean_vassal_nofief",
-                    ["vlandia"] = "nasoria_vassal_nofief"
-                },
-                 [StartType.KingdomRuler] = new Dictionary<string, string>
-                 {
-                     ["aserai"] = "king_athas_start",
-                     ["empire"] = "king_realms_start",
-                     ["khuzait"] = "king_allkhuur_start",
-                     ["sturgia"] = "king_vortiak_start",
-                     ["battania"] = "king_elvean_start",
-                     ["vlandia"] = "king_nasoria_start"
-                 },
-                 [StartType.CastleRuler] = new Dictionary<string, string>
-                 {
-                     ["aserai"] = "vassal_athas_start",
-                     ["empire"] = "vassal_realms_start",
-                     ["khuzait"] = "vassal_allkhuur_start",
-                     ["sturgia"] = "vassal_vortiak_start",
-                     ["battania"] = "vassal_elvean_start",
-                     ["vlandia"] = "vassal_nasoria_start"
-                 },
-                [StartType.VassalFief] = new Dictionary<string, string>
-                {
-                    ["aserai"] = "ruler_athas_start",
-                    ["empire"] = "ruler_realms_start",
-                    ["khuzait"] = "ruler_allkhuur_start",
-                    ["sturgia"] = "ruler_dreadrealms_start",
-                    ["battania"] = "lord_elvean_start",
-                    ["vlandia"] = "ruler_nasoria_start"
-                },
-            };
+                ["aserai"] = "rf_looter",
+                ["empire"] = "rf_looter",
+                ["khuzait"] = "rf_looter",
+                ["sturgia"] = "rf_looter",
+                ["battania"] = "rf_looter",
+                ["vlandia"] = "rf_looter"
+            },
+            [StartType.Mercenary] = new Dictionary<string, string>
+            {
+                ["aserai"] = "merc_athas_start",
+                ["empire"] = "merc_realms_start",
+                ["khuzait"] = "merc_allkhuur_start",
+                ["sturgia"] = "merc_vortiak_start",
+                ["battania"] = "merc_elvean_start",
+                ["vlandia"] = "merc_nasoria_start"
+            },
+            [StartType.VassalNoFief] = new Dictionary<string, string>
+            {
+                ["aserai"] = "athas_vassal_nofief_equip",
+                ["empire"] = "realms_vassal_nofief",
+                ["khuzait"] = "khuzait_vassal_nofief",
+                ["sturgia"] = "dreadrealms_vassal_nofief",
+                ["battania"] = "elvean_vassal_nofief",
+                ["vlandia"] = "nasoria_vassal_nofief"
+            },
+            [StartType.KingdomRuler] = new Dictionary<string, string>
+            {
+                ["aserai"] = "king_athas_start",
+                ["empire"] = "king_realms_start",
+                ["khuzait"] = "king_allkhuur_start",
+                ["sturgia"] = "king_vortiak_start",
+                ["battania"] = "king_elvean_start",
+                ["vlandia"] = "king_nasoria_start"
+            },
+            [StartType.CastleRuler] = new Dictionary<string, string>
+            {
+                ["aserai"] = "vassal_athas_start",
+                ["empire"] = "vassal_realms_start",
+                ["khuzait"] = "vassal_allkhuur_start",
+                ["sturgia"] = "vassal_vortiak_start",
+                ["battania"] = "vassal_elvean_start",
+                ["vlandia"] = "vassal_nasoria_start"
+            },
+            [StartType.VassalFief] = new Dictionary<string, string>
+            {
+                ["aserai"] = "ruler_athas_start",
+                ["empire"] = "ruler_realms_start",
+                ["khuzait"] = "ruler_allkhuur_start",
+                ["sturgia"] = "ruler_dreadrealms_start",
+                ["battania"] = "lord_elvean_start",
+                ["vlandia"] = "ruler_nasoria_start"
+            },
+        };
         public static void Apply(int storyOption, int locationOption)
         {
             Hero mainHero = Hero.MainHero;
@@ -185,7 +185,7 @@ namespace RealmsForgotten.Managers
             GiveGoldAction.ApplyBetweenCharacters(null, mainHero, gold, true);
             mainHero.PartyBelongedTo.ItemRoster.AddToCounts(DefaultItems.Grain, grain);
             mainHero.PartyBelongedTo.ItemRoster.AddToCounts(MBObjectManager.Instance.GetObject<ItemObject>("mule"), mules);
-            
+
             try
             {
                 idealEquipment = MBObjectManager.Instance.GetObject<MBEquipmentRoster>(mainHeroStartingEquipment[startOption][mainHero.Culture.StringId]);
@@ -215,7 +215,7 @@ namespace RealmsForgotten.Managers
                                          select character).GetRandomElementInefficiently();
 
                 if (troop != null) mainHero.PartyBelongedTo.AddElementToMemberRoster(troop, num, false);
-               }
+            }
             for (int i = 0; i < companions; i++)
             {
                 CharacterObject wanderer = (from character in CharacterObject.All
