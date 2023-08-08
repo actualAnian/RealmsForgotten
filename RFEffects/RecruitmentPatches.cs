@@ -42,7 +42,7 @@ namespace RealmsForgotten.RFEffects
                     isOriginalMethod = false;
                     return true;
                 }
-                if (Settlement.CurrentSettlement.Culture == Hero.MainHero.Culture || ____troopsInCart.Count == 0)
+                if (Settlement.CurrentSettlement.Culture == Hero.MainHero.Culture || Settlement.CurrentSettlement.Owner == Hero.MainHero || ____troopsInCart.Count == 0)
                     return true;
                 int total = 0;
                 foreach (RecruitVolunteerTroopVM recruitVolunteerTroopVM in ____troopsInCart)
