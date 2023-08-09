@@ -43,6 +43,7 @@ namespace RealmsForgotten.RFEffects
                 gameStarterObject.AddModel(new NasoriaWageModel());
                 gameStarterObject.AddModel(new ElveanMoraleModel());
                 gameStarterObject.AddModel(new AthasBuildingConstructionModel());
+                gameStarterObject.AddModel(new BerserkerAgentApplyDamageModel());
             }
             
 
