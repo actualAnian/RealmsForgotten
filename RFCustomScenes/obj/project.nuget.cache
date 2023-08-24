@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "LsZzTEaeex9fA3u6rPVGwiNeWvKOpxmGwOS1xr7Nom+KQYQm6bFIEjvNWrUzFu0wwrmTaPE6oM59y3cCSbJLow==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Damian\\Bannerlord Mods\\RealmsForgotten\\RFCustomScenes\\RFCustomSettlements.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Damian\\.nuget\\packages\\lib.harmony\\2.2.2\\lib.harmony.2.2.2.nupkg.sha512"
+  ],
+  "logs": []
+}
