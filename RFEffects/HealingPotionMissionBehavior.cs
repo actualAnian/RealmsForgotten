@@ -74,7 +74,7 @@ namespace RealmsForgotten.RFEffects
                 if(timer.Check(Time.ApplicationTime))
                 {
                     DrinkBerserker();
-                    timer = new(Time.ApplicationTime, 20f, false);
+                    timer = new(Time.ApplicationTime, 45f, false);
                 }
                 else
                 {
@@ -93,6 +93,8 @@ namespace RealmsForgotten.RFEffects
         private void GiveBerserkerSkills(int value, bool isActivating = true)
         {
             var ma = Agent.Main;
+            if (ma == null)
+                return;
             CharacterObject character = ma.Character as CharacterObject;
             Hero mainHero = character.HeroObject;
 

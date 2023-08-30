@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using Quest.SecondUpdate;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.CharacterCreationContent;
@@ -34,15 +35,8 @@ using Module = TaleWorlds.MountAndBlade.Module;
 
 namespace Quest
 {
-
-
-
     public class SubModule : MBSubModuleBase
     {
-        protected override void OnApplicationTick(float dt)
-        {
-            
-        }
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
@@ -64,6 +58,7 @@ namespace Quest
             base.OnGameLoaded(game, initializerObject);
             CampaignGameStarter gameStarter = (CampaignGameStarter)initializerObject;
             AddQuestBehaviors(gameStarter, false);
+            
         
         }
         private void AddQuestBehaviors(CampaignGameStarter gameStarter, bool isNewGame)
@@ -71,7 +66,9 @@ namespace Quest
             if (gameStarter != null)
             {
 
-                gameStarter.AddBehavior(new RescueUliahBehavior(gameStarter, isNewGame));
+                gameStarter.AddBehavior(new RescueUliahBehavior(isNewGame));
+                gameStarter.AddBehavior(new PersuadeAthasNpcBehavior());
+                gameStarter.AddBehavior(new SaveCurrentQuestCampaignBehavior());
             }
         }
 

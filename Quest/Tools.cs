@@ -16,27 +16,6 @@ namespace Quest.Tools
 {
     class Tools
     {
-        public static MobileParty CreateRaiderParty(int number, bool isBanditBossParty, Settlement hideout)
-        {
-            MobileParty mobileParty = BanditPartyComponent.CreateBanditParty("queen_quest_raider_party_" + number, hideout.OwnerClan, hideout.Hideout, isBanditBossParty);
-            TroopRoster troopRoster = new TroopRoster(mobileParty.Party);
-            CharacterObject @object = Campaign.Current.ObjectManager.GetObject<CharacterObject>(hideout.Culture.StringId + "_bandit");
-            troopRoster.AddToCounts(@object, 5, false, 0, 0, true, -1);
-            TroopRoster prisonerRoster = new TroopRoster(mobileParty.Party);
-            mobileParty.InitializeMobilePartyAtPosition(troopRoster, prisonerRoster, hideout.Position2D);
-            mobileParty.SetCustomName(new TextObject("{=u1Pkt4HC}Raiders", null));
-            mobileParty.ActualClan = hideout.OwnerClan;
-            mobileParty.Position2D = hideout.Position2D;
-            mobileParty.Party.SetVisualAsDirty();
-            float totalStrength = mobileParty.Party.TotalStrength;
-            int initialGold = (int)(1f * MBRandom.RandomFloat * 20f * totalStrength + 50f);
-            mobileParty.InitializePartyTrade(initialGold);
-            mobileParty.Ai.SetMoveGoToSettlement(hideout);
-            mobileParty.Ai.SetDoNotMakeNewDecisions(true);
-            mobileParty.SetPartyUsedByQuest(true);
-            EnterSettlementAction.ApplyForParty(mobileParty, hideout);
-            return mobileParty;
-        }
         public static void MergeDisbandParty(MobileParty disbandParty, PartyBase mergeToParty)
         {
             mergeToParty.ItemRoster.Add(disbandParty.ItemRoster.AsEnumerable());

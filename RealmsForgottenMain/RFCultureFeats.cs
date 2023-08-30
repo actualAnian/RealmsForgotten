@@ -53,9 +53,9 @@ namespace RealmsForgotten
 
             allkhuurPrisonersJoinMilitia.Initialize("{=!}allkhuur_prisoners_join_militia", "{=allkhuur_prisoners_join_militia}Prisoners in towns have a 20% chance of joining the militia.", 0.20f, true, FeatObject.AdditionType.AddFactor);
             
-            dreadrealmSoldiersRevive.Initialize("{=!}dreadrealm_soldiers_revive", "{=fB7kS9Cx}15% chance to recover 15% of your troops in battle, the higher your level the greater the number of troops recovered.", 0.15f, true, FeatObject.AdditionType.AddFactor);
+            dreadrealmSoldiersRevive.Initialize("{=!}dreadrealm_soldiers_revive", "{=dreadrealm_soldiers_revive}15% chance to recover 15% of your troops in battle, the higher your level the greater the number of troops recovered.", 0.15f, true, FeatObject.AdditionType.AddFactor);
 
-            nasoriaCheaperMercenaries.Initialize("{=!}nasoria_cheaper_mercenaries", "{=O1XCNeZr}Recruiting mercenaries is 20% cheaper.", 0.20f, true, FeatObject.AdditionType.AddFactor);
+            nasoriaCheaperMercenaries.Initialize("{=!}nasoria_cheaper_mercenaries", "{=nasoria_cheaper_mercenaries}Recruiting mercenaries is 20% cheaper.", 0.20f, true, FeatObject.AdditionType.AddFactor);
         }
 
 

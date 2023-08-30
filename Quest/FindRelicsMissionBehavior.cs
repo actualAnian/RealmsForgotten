@@ -15,7 +15,7 @@ namespace Quest
     class FindRelicsHideoutMissionBehavior : MissionBehavior
     {
         private bool relicSpawned = false;
-        JournalLog _findMapJournalLog;
+        readonly JournalLog _findMapJournalLog;
 
         public FindRelicsHideoutMissionBehavior(JournalLog findMapJournalLog)
         {
