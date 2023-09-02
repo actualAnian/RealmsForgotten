@@ -17,7 +17,7 @@ namespace RealmsForgotten.Managers
 {
     public static class CulturedStartAction
     {
-        private static readonly Dictionary<StartType, Dictionary<string, string>> mainHeroStartingEquipment = new()
+        public static readonly Dictionary<StartType, Dictionary<string, string>> mainHeroStartingEquipment = new()
         {
             [StartType.Looter] = new Dictionary<string, string>
             {
@@ -186,19 +186,19 @@ namespace RealmsForgotten.Managers
             mainHero.PartyBelongedTo.ItemRoster.AddToCounts(DefaultItems.Grain, grain);
             mainHero.PartyBelongedTo.ItemRoster.AddToCounts(MBObjectManager.Instance.GetObject<ItemObject>("mule"), mules);
 
-            try
-            {
-                idealEquipment = MBObjectManager.Instance.GetObject<MBEquipmentRoster>(mainHeroStartingEquipment[startOption][mainHero.Culture.StringId]);
-            }
-            catch (Exception)
-            {
-                //idealEquipment = MBObjectManager.Instance.GetObject<CharacterObject>("rf_looter").AllEquipments;
-                idealEquipment = MBObjectManager.Instance.GetObject<MBEquipmentRoster>("rf_looter");
-            }
-            if (idealEquipment != null)
-            {
-                mainHero.BattleEquipment.FillFrom(idealEquipment.AllEquipments.GetRandomElement());
-            }
+            //try
+            //{
+            //    idealEquipment = MBObjectManager.Instance.GetObject<MBEquipmentRoster>(mainHeroStartingEquipment[startOption][mainHero.Culture.StringId]);
+            //}
+            //catch (Exception)
+            //{
+            //    //idealEquipment = MBObjectManager.Instance.GetObject<CharacterObject>("rf_looter").AllEquipments;
+            //    idealEquipment = MBObjectManager.Instance.GetObject<MBEquipmentRoster>("rf_looter");
+            //}
+            //if (idealEquipment != null)
+            //{
+            //    mainHero.BattleEquipment.FillFrom(idealEquipment.AllEquipments.GetRandomElement());
+            //}
             foreach (SkillObject skill in Skills.All)
             {
                 mainHero.SetSkillValue(skill, (int)(mainHero.GetSkillValue(skill) * startingSkillMult[startOption]));
