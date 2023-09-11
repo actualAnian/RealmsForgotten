@@ -95,7 +95,7 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         private void game_menu_rf_settlement_explore_on_consequence(MenuCallbackArgs args)
         {
-            CustomSettlementMission.StartHuntingMission("beast_hunt_3", false);
+            CustomSettlementMission.StartCustomSettlementMission("beast_hunt_3", false);
         }
 
         private bool game_menu_rf_settlement_wait_on_condition(MenuCallbackArgs args)

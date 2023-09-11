@@ -35,6 +35,9 @@
 	  <Reference Include="TaleWorlds.Engine">
 	    <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Engine.dll</HintPath>
 	  </Reference>
+	  <Reference Include="TaleWorlds.InputSystem">
+	    <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.InputSystem.dll</HintPath>
+	  </Reference>
 	  <Reference Include="TaleWorlds.Library">
 	    <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Library.dll</HintPath>
 	  </Reference>

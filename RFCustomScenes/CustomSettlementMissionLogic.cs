@@ -29,7 +29,6 @@ namespace RFCustomSettlements
     {
         private class UsedObject
         {
-            // Token: 0x06000BC7 RID: 3015 RVA: 0x000523BB File Offset: 0x000505BB
             public UsedObject(UsableMachine machine, bool isMachineAITicked)
             {
                 this.Machine = machine;
@@ -37,13 +36,12 @@ namespace RFCustomSettlements
                 this.IsMachineAITicked = isMachineAITicked;
             }
 
-            // Token: 0x04000559 RID: 1369
             public readonly UsableMachine Machine;
 
             // Token: 0x0400055A RID: 1370
             public readonly UsableMachineAIBase MachineAI;
 
-            // Token: 0x0400055B RID: 1371
+
             public bool IsMachineAITicked;
         }
 
@@ -78,18 +76,22 @@ namespace RFCustomSettlements
 
         private void InitializeMission()
         {
+            GameEntity gameEntity = base.Mission.Scene.FindEntityWithTag("No Prefab");
+            var aga = base.Mission.MissionObjects;
+            var aa = aga.Where(m => (m.GameEntity.Name == "arrow_new_icon"));
+
             try {
             areaMarkers.AddRange(from area in base.Mission.ActiveMissionObjects.FindAllWithType<CommonAreaMarker>()
                                        orderby area.AreaIndex
                                        select area);
             }
             catch (Exception ex) { areaMarkers = new(); }
-            patrolAreas.AddRange(base.Mission.ActiveMissionObjects.FindAllWithType<PatrolArea>());
-            //patrolAreas.AddRange(from area in base.Mission.ActiveMissionObjects.FindAllWithType<PatrolArea>()
-            //                           orderby area.AreaIndex
-            //                           select area);
+            patrolAreas.AddRange(from area in base.Mission.ActiveMissionObjects.FindAllWithType<PatrolArea>()
+                                 orderby area.AreaIndex
+                                 select area);
             //Temp();
-            SpawnTroops(areaMarkers, patrolAreas, defenderAgentObjects);
+            SpawnPatrollingTroops(patrolAreas, defenderAgentObjects);
+            SpawnStandingTroops(areaMarkers, defenderAgentObjects);
         }
 
         private FlattenedTroopRoster Temp()
@@ -106,7 +108,52 @@ namespace RFCustomSettlements
             //troopSupplier = new PartyGroupTroopSupplier(MapEvent.PlayerMapEvent, BattleSideEnum.Defender, troopRoster, null);
         }
 
-        private void SpawnTroops(List<CommonAreaMarker> areaMarkers, List<PatrolArea> patrolAreas, Dictionary<Agent, CustomSettlementMissionLogic.UsedObject> defenderAgentObjects)
+        private void SpawnStandingTroops(List<CommonAreaMarker> areaMarkers, Dictionary<Agent, CustomSettlementMissionLogic.UsedObject> defenderAgentObjects)
+        {
+            foreach (CommonAreaMarker commonAreaMarker in areaMarkers)
+            {
+                List<StandingPoint> usableMachinesInArea = new();
+                StandingPoint standingPoint = new();
+                MatrixFrame globalFrame;
+
+                CharacterObject looter = MBObjectManager.Instance.GetObject<CharacterObject>("looter");
+
+                MobileParty mparty = new MobileParty();
+                mparty.AddElementToMemberRoster(looter, 1);
+                FlattenedTroopRoster flattenedTroopRosterElements = mparty.MemberRoster.ToFlattenedRoster();
+                UniqueTroopDescriptor descriptor = flattenedTroopRosterElements.ElementAt(0).Descriptor;
+                PartyBase party = new PartyBase(mparty);
+
+                RFAgentOrigin rFAgentOrigin = new RFAgentOrigin(party, descriptor, 1, flattenedTroopRosterElements[descriptor]);
+
+                foreach (UsableMachine usableMachine in commonAreaMarker.GetUsableMachinesInRange(null))
+                {
+                    usableMachinesInArea.AddRange(usableMachine.StandingPoints);
+                }
+                usableMachinesInArea.Shuffle();
+                Queue<StandingPoint> usableMachinesQueue = new Queue<StandingPoint>((IEnumerable<StandingPoint>)usableMachinesInArea);
+
+                for(int i = 0; i < 2; i++)
+                {
+                    try 
+                    {
+                        standingPoint = usableMachinesQueue.Dequeue();
+                        globalFrame = standingPoint.GameEntity.GetGlobalFrame();
+                        globalFrame.rotation.OrthonormalizeAccordingToForwardAndKeepUpAsZAxis();
+                        Agent agent = Mission.Current.SpawnTroop(rFAgentOrigin, false, false, false, false, 0, 0, false, false, false, new Vec3?(globalFrame.origin), new Vec2?(globalFrame.rotation.f.AsVec2.Normalized()), "_hideout_bandit", null, FormationClass.NumberOfAllFormations, false);
+
+                        InitializeBanditAgent(agent, standingPoint, false, defenderAgentObjects);
+                    }
+                    catch(InvalidOperationException)
+                    {
+                        break;
+                    }
+                }
+
+            }
+        }
+
+        private void SpawnPatrollingTroops(List<PatrolArea> patrolAreas, Dictionary<Agent, CustomSettlementMissionLogic.UsedObject> defenderAgentObjects)
         {
             StandingPoint standingPoint = null;
             IEnumerable<PatrolArea> source = from area in patrolAreas
@@ -121,10 +168,7 @@ namespace RFCustomSettlements
             globalFrame.rotation.OrthonormalizeAccordingToForwardAndKeepUpAsZAxis();
 
             CharacterObject looter = MBObjectManager.Instance.GetObject<CharacterObject>("looter");
-            //AgentBuildData agentBuildData = new AgentBuildData(looter).Team(base.Mission.DefenderTeam);
 
-            //AgentBuildData agentBuildData2 = agentBuildData.CivilianEquipment(false).NoHorses(false).NoWeapons(false).ClothingColor1(base.Mission.PlayerTeam.Color).ClothingColor2(base.Mission.PlayerTeam.Color2).TroopOrigin(new PartyAgentOrigin(PartyBase.MainParty, looter, -1, default(UniqueTroopDescriptor), false)).MountKey(MountCreationKey.GetRandomMountKeyString(looter.Equipment[EquipmentIndex.ArmorItemEndSlot].Item, looter.GetMountKeySeed())).Controller(Agent.ControllerType.Player);
-            //Agent agent = base.Mission.SpawnAgent(agentBuildData2);
             MobileParty mparty = new MobileParty();
             mparty.AddElementToMemberRoster(looter, 1);
             FlattenedTroopRoster flattenedTroopRosterElements = mparty.MemberRoster.ToFlattenedRoster();
@@ -133,7 +177,7 @@ namespace RFCustomSettlements
 
             RFAgentOrigin rFAgentOrigin = new RFAgentOrigin(party, descriptor, 1, flattenedTroopRosterElements[descriptor]);
             Agent agent = Mission.Current.SpawnTroop(rFAgentOrigin, false, false, false, false, 0, 0, false, false, false, new Vec3?(globalFrame.origin), new Vec2?(globalFrame.rotation.f.AsVec2.Normalized()), "_hideout_bandit", null, FormationClass.NumberOfAllFormations, false);
-            this.InitializeBanditAgent(agent, standingPoint, true, defenderAgentObjects);
+            InitializeBanditAgent(agent, standingPoint, false, defenderAgentObjects);
         }
 
         private void InitializeBanditAgent(Agent agent, StandingPoint spawnPoint, bool isPatrolling, Dictionary<Agent, CustomSettlementMissionLogic.UsedObject> defenderAgentObjects)

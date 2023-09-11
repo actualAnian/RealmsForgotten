@@ -4,10 +4,13 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.DotNet;
+using TaleWorlds.Engine;
 using TaleWorlds.ObjectSystem;
 
 namespace RFCustomSettlements.Patches
 {
+
     [HarmonyPatch(typeof(Campaign), "OnRegisterTypes")]
     public class CEKRegisterTypes
     {

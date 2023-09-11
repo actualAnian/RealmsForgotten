@@ -10,7 +10,7 @@ namespace RFCustomSettlements
 {
     public static class CustomSettlementMission
     {
-            public static Mission StartHuntingMission(string sceneName, bool isRandomScene)
+            public static Mission StartCustomSettlementMission(string sceneName, bool isRandomScene)
             {
                 return MissionState.OpenNew(sceneName,
                     SandBoxMissions.CreateSandBoxMissionInitializerRecord(sceneName, "", false, DecalAtlasGroup.Battle),
