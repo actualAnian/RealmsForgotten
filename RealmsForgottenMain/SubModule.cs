@@ -5,9 +5,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using RealmsForgotten.Behaviors;
+using RealmsForgotten.CustomSkills;
+using RealmsForgotten.Models;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameComponents;
+using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 using TaleWorlds.ModuleManager;
@@ -37,7 +41,33 @@ namespace RealmsForgotten
             {
                 CampaignGameStarter campaignGameStarter = (CampaignGameStarter)gameStarterObject;
                 campaignGameStarter.AddBehavior(new BaseGameDebugCampaignBehavior());
+                campaignGameStarter.AddBehavior(new RFCampaignBehavior());
+
+                campaignGameStarter.AddModel(new RFAgentStatCalculateModel());
+                campaignGameStarter.AddModel(new RFAgentApplyDamageModel());
+                campaignGameStarter.AddModel(new RFVolunteerModel());
+                campaignGameStarter.AddModel(new RFCombatXpModel());
+
+
+
+                new RFAttribute().Initialize();
+                new RFSkills().Initialize();
+                new RFPerks().Initialize();
+
             }
+        }
+        public override void OnMissionBehaviorInitialize(Mission mission)
+        {
+            if (mission != null)
+            {
+                mission.AddMissionBehavior(new RFEnchantedWeaponsBehavior());
+
+                ItemRosterElement elixir = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("elixir_rfmisc"));
+                ItemRosterElement berserker = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("berzerker_potion"));
+                if (!elixir.IsEmpty || !berserker.IsEmpty)
+                    mission.AddMissionBehavior(new HealingPotionMissionBehavior(elixir, berserker));
+            }
+
         }
         private void RemoveSandboxAndStoryOptions()
         {

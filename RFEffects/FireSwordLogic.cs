@@ -82,6 +82,7 @@ namespace FireLord
                 }
             }
 
+            public static string particleName = "ice_flame";
             public void SetFireSwordEnable(bool enable)
             {
                 if (agent == null)
@@ -139,7 +140,7 @@ namespace FireLord
                                 {
                                     MatrixFrame matrixFrame4 = new MatrixFrame(Mat3.Identity, default(Vec3));
                                     MatrixFrame boneLocalFrame2 = matrixFrame4.Elevate((float)i * 0.1f);
-                                    ParticleSystem component2 = ParticleSystem.CreateParticleSystemAttachedToEntity("psys_game_burning_agent", weaponEntityFromEquipmentSlot, ref boneLocalFrame2);
+                                    ParticleSystem component2 = ParticleSystem.CreateParticleSystemAttachedToEntity(particleName, weaponEntityFromEquipmentSlot, ref boneLocalFrame2);
                                     skeleton.AddComponentToBone(Game.Current.DefaultMonster.MainHandItemBoneIndex, component2);
                                 }
 
@@ -159,7 +160,7 @@ namespace FireLord
                                 {
                                     MatrixFrame matrixFrame = new MatrixFrame(Mat3.Identity, default(Vec3));
                                     MatrixFrame boneLocalFrame = matrixFrame.Elevate((float)num3 * 0.1f);
-                                    ParticleSystem component = ParticleSystem.CreateParticleSystemAttachedToEntity("psys_game_burning_agent", weaponEntityFromEquipmentSlot, ref boneLocalFrame);
+                                    ParticleSystem component = ParticleSystem.CreateParticleSystemAttachedToEntity(particleName, weaponEntityFromEquipmentSlot, ref boneLocalFrame);
                                     skeleton.AddComponentToBone(Game.Current.DefaultMonster.MainHandItemBoneIndex, component);
                                     num3--;
                                 }
@@ -179,7 +180,7 @@ namespace FireLord
                         for (sbyte b = 0; b < boneCount; b = (sbyte)(b + 1))
                         {
                             MatrixFrame boneLocalFrame3 = new MatrixFrame(Mat3.Identity, new Vec3(0f, 0f, 0f, -1f)).Elevate(0.2f);
-                            ParticleSystem component3 = ParticleSystem.CreateParticleSystemAttachedToEntity("psys_game_burning_agent", weaponEntityFromEquipmentSlot, ref boneLocalFrame3);
+                            ParticleSystem component3 = ParticleSystem.CreateParticleSystemAttachedToEntity(particleName, weaponEntityFromEquipmentSlot, ref boneLocalFrame3);
                             skeleton.AddComponentToBone(b, component3);
                         }
                     }

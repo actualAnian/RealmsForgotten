@@ -6,11 +6,26 @@ using TaleWorlds.CampaignSystem.CharacterCreationContent;
 using StoryMode.CharacterCreationContent;
 using RealmsForgotten.Managers;
 using RealmsForgotten.Utility;
+using Helpers;
+using TaleWorlds.Localization;
+using TaleWorlds.CampaignSystem.Settlements;
+using System.Linq;
 
 namespace RealmsForgotten.Patches.CulturedStart
 {
     public class MiscPatches
     {
+        [HarmonyPatch(typeof(FactionHelper), "GenerateClanNameforPlayer")]
+        internal class FactionHelperPatches
+        {
+            public static void Postfix(ref TextObject __result)
+            {
+                CultureObject playerCulture = Hero.MainHero.Culture;
+                var newSettlement = from settlement in Settlement.All where settlement.StringId == "town_V1" select settlement;
+                if (playerCulture.StringId == "vlandia")
+                    __result = NameGenerator.Current.GenerateClanName(playerCulture, newSettlement.ElementAt(0));
+            }
+        }
         //private static readonly AccessTools.StructFieldRef<BodyProperties, StaticBodyProperties> StaticBodyProps = AccessTools.StructFieldRefAccess<BodyProperties, StaticBodyProperties>("_staticBodyProperties");
 
         [HarmonyPatch(typeof(SandboxCharacterCreationContent), "OnCultureSelected")]
