@@ -38,7 +38,6 @@ namespace RFCustomSettlements
 
             public readonly UsableMachine Machine;
 
-            // Token: 0x0400055A RID: 1370
             public readonly UsableMachineAIBase MachineAI;
 
 
@@ -79,8 +78,13 @@ namespace RFCustomSettlements
             GameEntity gameEntity = base.Mission.Scene.FindEntityWithTag("No Prefab");
             var aga = base.Mission.MissionObjects;
             var aa = aga.Where(m => (m.GameEntity.Name == "arrow_new_icon"));
+            aa.ElementAt(0).GameEntity.ClearComponents();
+            //RFArrowBarrel arrowBarrel = new RFArrowBarrel(((TaleWorlds.MountAndBlade.UsableMachine)aa.ElementAt(0)).Ai.UsableMachine);
+            //arrowBarrel.OnInit();
 
-            try {
+
+            try
+            {
             areaMarkers.AddRange(from area in base.Mission.ActiveMissionObjects.FindAllWithType<CommonAreaMarker>()
                                        orderby area.AreaIndex
                                        select area);
@@ -221,6 +225,29 @@ namespace RFCustomSettlements
         {
             SpawnPlayer();
             SpawnChicken();
+            SpawnItems();
+        }
+
+        private void SpawnItems()
+        {
+            ItemObject item = MBObjectManager.Instance.GetObject<ItemObject>("relic_map_arrow");
+            MissionWeapon missionWeapon = new MissionWeapon(item, new ItemModifier(), Banner.CreateOneColoredEmptyBanner(1));
+            Vec3 pos = Vec3.Invalid;
+            Vec3 rot = Vec3.Invalid;
+            pos = new Vec3(423.71f, 326.38f, 50.81f);
+            rot = new Vec3(20f, 15f, 0f);
+            if (pos != Vec3.Invalid)
+                this.Mission.SpawnWeaponWithNewEntityAux(missionWeapon, Mission.WeaponSpawnFlags.WithStaticPhysics, new MatrixFrame(Mat3.CreateMat3WithForward(rot),
+                    pos), 0, null, false);
+
+            this.Mission.OnItemPickUp += OnItemPickup;
+
+        }
+
+        private void OnItemPickup(Agent agent, SpawnedItemEntity entity)
+        {
+            PartyBase.MainParty.ItemRoster.AddToCounts(
+                    MBObjectManager.Instance.GetObject<ItemObject>("relic_map_arrow"), 1);
         }
 
         private Agent SpawnPlayer()
