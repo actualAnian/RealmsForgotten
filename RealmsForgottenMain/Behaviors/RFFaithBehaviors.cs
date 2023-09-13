@@ -20,11 +20,6 @@ namespace RealmsForgotten.Behaviors
     internal class RFFaithMissionBehavior : MissionBehavior
     {
         public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;
-        public override void OnCreated()
-        {
-            base.OnCreated();
-
-        }
 
         public override void OnAgentHit(Agent affectedAgent, Agent affectorAgent, in MissionWeapon affectorWeapon, in Blow blow,
             in AttackCollisionData attackCollisionData)
@@ -60,7 +55,7 @@ namespace RealmsForgotten.Behaviors
                     (captain.GetPerkValue(RFPerks.Faith.ThuriksPrayer) ? captain.GetFaithPerkBonus(RFPerks.Faith.ThuriksPrayer) : 0);
                 
                 if (factor > 0)
-                    agent.ChangeMorale(factor);
+                    agent.ChangeMorale(100 * factor);
             }
         }
     }

@@ -93,7 +93,7 @@ namespace RealmsForgotten.CustomSkills
             //Faith perks
             _ilacsPrayer.Initialize("{=!}Ilac's Prayer", RFSkills.Faith, 50, _druidsSong,
                 "{=!}Augment the morale of your troop by x1.5.",
-                SkillEffect.PerkRole.PartyLeader, 1.5f, SkillEffect.EffectIncrementType.AddFactor);
+                SkillEffect.PerkRole.PartyLeader, 0.15f, SkillEffect.EffectIncrementType.AddFactor);
 
             _druidsSong.Initialize("{=!}Druids Song", RFSkills.Faith, 50, _ilacsPrayer,
                 "{=!}Heals 20% of the player hit points after battle.",
@@ -101,7 +101,7 @@ namespace RealmsForgotten.CustomSkills
 
             _thuriksPrayer.Initialize("{=!}Thurik's Prayer", RFSkills.Faith, 100, _druidsSongII,
                 "{=!}Augment the morale of your troops by x3.5.",
-                SkillEffect.PerkRole.PartyLeader, 3.5f, SkillEffect.EffectIncrementType.AddFactor);
+                SkillEffect.PerkRole.PartyLeader, 0.35f, SkillEffect.EffectIncrementType.AddFactor);
 
             _druidsSongII.Initialize("{=!}Druids Song II", RFSkills.Faith, 100, _thuriksPrayer,
                 "{=!}Heals 50% of the player hit points after battle.",
