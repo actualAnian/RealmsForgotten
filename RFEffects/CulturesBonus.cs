@@ -17,7 +17,7 @@ using TaleWorlds.Localization;
 
 namespace RealmsForgotten.RFEffects
 {
-    class NasoriaWageModel : DefaultPartyWageModel
+    internal class NasoriaWageModel : DefaultPartyWageModel
     {
         public override int GetTroopRecruitmentCost(CharacterObject troop, Hero buyerHero, bool withoutItemCost = false)
         {
@@ -30,7 +30,7 @@ namespace RealmsForgotten.RFEffects
             return baseValue;
         }
     }
-    public class AthasBuildingConstructionModel : DefaultBuildingConstructionModel
+    internal class AthasBuildingConstructionModel : DefaultBuildingConstructionModel
     {
         public override ExplainedNumber CalculateDailyConstructionPower(Town town, bool includeDescriptions = false)
         {
@@ -40,12 +40,12 @@ namespace RealmsForgotten.RFEffects
             return baseNumber;
         }   
     }
-    class ElveanMoraleModel : DefaultPartyMoraleModel
+    internal class ElveanMoraleModel : DefaultPartyMoraleModel
     {
         public override ExplainedNumber GetEffectivePartyMorale(MobileParty party, bool includeDescription = false)
         {
             ExplainedNumber baseNumber = base.GetEffectivePartyMorale(party, includeDescription);
-            if (party == null)
+            if (party?.Party?.Culture == null)
                 return baseNumber;
             TerrainType faceTerrainType = Campaign.Current.MapSceneWrapper.GetFaceTerrainType(party.CurrentNavigationFace);
             if (party.Party.Culture.StringId == "battania" && faceTerrainType == TerrainType.Forest)
@@ -54,7 +54,7 @@ namespace RealmsForgotten.RFEffects
         }
     }
 
-    class CulturesCampaignBehavior : CampaignBehaviorBase
+    internal class CulturesCampaignBehavior : CampaignBehaviorBase
     {
         private readonly string sturgiaId = "sturgia";
         private readonly string khuzaitId = "khuzait";
@@ -68,7 +68,7 @@ namespace RealmsForgotten.RFEffects
         }
         private void KhuzaitBonus(Settlement settlement)
         {
-            if((settlement.IsTown || settlement.IsCastle) && settlement.Owner.Culture.StringId == khuzaitId && settlement.Party.PrisonRoster.TotalRegulars > 0)
+            if((settlement.IsTown || settlement.IsCastle) && settlement.Owner.Culture.StringId == khuzaitId && settlement.Party.PrisonRoster.TotalRegulars > 0 && settlement.MilitiaPartyComponent != null)
             {
                 foreach(FlattenedTroopRosterElement troopRosterElement in settlement.Party.PrisonRoster.ToFlattenedRoster())
                 {

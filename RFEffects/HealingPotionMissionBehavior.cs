@@ -12,14 +12,29 @@ using TaleWorlds.InputSystem;
 using System.Linq;
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.MountAndBlade.ComponentInterfaces;
+using SandBox.GameComponents;
 
 namespace RealmsForgotten.RFEffects
 {
+    
+    public class BerserkerAgentApplyDamageModel : SandboxAgentApplyDamageModel
+    {
+        public override float CalculateDamage(in AttackInformation attackInformation, in AttackCollisionData collisionData, in MissionWeapon weapon, float baseDamage)
+        {
+            float baseNumber = base.CalculateDamage(attackInformation, collisionData, weapon, baseDamage);
+            if (attackInformation.VictimAgent == Agent.Main && HealingPotionMissionBehavior.berserkerMode)
+                return 0;
+            return baseNumber;
+        }
+    }
+
+
     public class HealingPotionMissionBehavior : MissionBehavior
     {
         private int soundIndex;
-        private bool berserkerMode;
-
+        public static bool berserkerMode;
+        
         private ItemRosterElement elixir;
         private ItemRosterElement berserker;
         private (int, int, int, int) oldSkillsValues;
@@ -42,6 +57,7 @@ namespace RealmsForgotten.RFEffects
             base.OnEndMission();
             if(berserkerMode)
                 GiveBerserkerSkills(0, false);
+
         }
         public override void OnMissionTick(float dt)
         {
@@ -58,7 +74,7 @@ namespace RealmsForgotten.RFEffects
                 if(timer.Check(Time.ApplicationTime))
                 {
                     DrinkBerserker();
-                    timer = new(Time.ApplicationTime, 20f, false);
+                    timer = new(Time.ApplicationTime, 45f, false);
                 }
                 else
                 {
@@ -77,6 +93,8 @@ namespace RealmsForgotten.RFEffects
         private void GiveBerserkerSkills(int value, bool isActivating = true)
         {
             var ma = Agent.Main;
+            if (ma == null)
+                return;
             CharacterObject character = ma.Character as CharacterObject;
             Hero mainHero = character.HeroObject;
 

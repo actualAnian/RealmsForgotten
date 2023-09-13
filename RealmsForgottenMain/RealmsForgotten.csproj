@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Version>0.0.1</Version>
@@ -88,10 +88,6 @@
       <HintPath>%(Identity)</HintPath>
       <Private>False</Private>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="_Module\SubModule.xml" />
   </ItemGroup>
 
   <ItemGroup>
