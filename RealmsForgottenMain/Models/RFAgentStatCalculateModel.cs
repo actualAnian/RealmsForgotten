@@ -34,6 +34,43 @@ namespace RealmsForgotten.Models
                 //AddPerkEffectsForAgent(agent, agentDrivenProperties);
             }
         }
+
+        private EquipmentIndex[] equipmentIndices = { EquipmentIndex.Weapon0, EquipmentIndex.Weapon1, EquipmentIndex.Weapon2, EquipmentIndex.Weapon3};
+        public override void InitializeMissionEquipment(Agent agent)
+        {
+            base.InitializeMissionEquipment(agent);
+
+            CharacterObject agentCharacterObject = agent?.Character as CharacterObject;
+            ;
+            if (agent?.IsMount == true || agent?.Equipment == null || agentCharacterObject == null)
+                return;
+
+            foreach (var equipmentIndex in equipmentIndices)
+            {
+                if (agent.Equipment[equipmentIndex].Item == null)
+                    continue;
+                if (agent.Equipment[equipmentIndex].Item.PrimaryWeapon.WeaponClass == WeaponClass.Cartridge ||
+                    agent.Equipment[equipmentIndex].Item.StringId.Contains("spell_"))
+                {
+                    ExplainedNumber number = new ExplainedNumber(agent.Equipment[equipmentIndex].Amount);
+                    SkillHelper.AddSkillBonusForCharacter(RFSkills.Arcane, RFSkillEffects.MagicStaffPower,
+                        agentCharacterObject, ref number);
+
+                    agent.SetWeaponAmountInSlot(equipmentIndex, (short)number.ResultNumber, true);
+                }
+                else if (agent.Equipment[equipmentIndex].Item.StringId.Contains("anorit_fire"))
+                {
+                    ExplainedNumber number = new ExplainedNumber(agent.Equipment[equipmentIndex].Amount);
+                    SkillHelper.AddSkillBonusForCharacter(RFSkills.Alchemy, RFSkillEffects.BombStackMultiplier,
+                        agentCharacterObject, ref number);
+
+                    agent.SetWeaponAmountInSlot(equipmentIndex, (short)number.ResultNumber, true);
+                }
+                    
+            }
+            
+        }
+
         private void AddSkillEffectsForAgent(Agent agent, AgentDrivenProperties agentDrivenProperties)
         {
             EquipmentIndex wieldedItemIndex = agent.GetWieldedItemIndex(Agent.HandIndex.MainHand);
@@ -69,17 +106,4 @@ namespace RealmsForgotten.Models
 
         }
     }
-    /*
-     *     internal class RFAgentStatCalculateModel : SandboxAgentStatCalculateModel
-    {
-
-        public override int GetEffectiveSkillForWeapon(Agent agent, WeaponComponentData weapon)
-        {
-            int baseValue = base,GetEffectiveSkillForWeapon(agent, weapon);
-            if (weapon.WeaponClass == WeaponClass.Musket)
-                return agent.Character.GetSkillValue(RFSkills.Arcane);
-            return baseValue;
-        }
-    }
-     */
 }

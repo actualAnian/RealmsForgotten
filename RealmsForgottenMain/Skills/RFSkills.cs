@@ -49,20 +49,23 @@ namespace RealmsForgotten.CustomSkills
         private SkillEffect _wandReloadSpeed;
         private SkillEffect _wandAccuracy;
         private SkillEffect _faithPerkMultiplier;
-        private SkillEffect _bombAccuracy;
+        private SkillEffect _bombStackMultiplier;
+        private SkillEffect _magicStaffPower;
 
         public static RFSkillEffects Instance { get; private set; }
         public static SkillEffect WandReloadSpeed => Instance._wandReloadSpeed;
         public static SkillEffect WandAccuracy => Instance._wandAccuracy;
         public static SkillEffect FaithPerkMultiplier => Instance._faithPerkMultiplier;
-        public static SkillEffect BombAccuracy => Instance._bombAccuracy;
+        public static SkillEffect BombStackMultiplier => Instance._bombStackMultiplier;
+        public static SkillEffect MagicStaffPower => Instance._magicStaffPower;
 
         public void InitializeAll()
         {
             _wandReloadSpeed = Game.Current.ObjectManager.RegisterPresumedObject(new SkillEffect("WandReloadSpeed"));
             _wandAccuracy = Game.Current.ObjectManager.RegisterPresumedObject(new SkillEffect("WandAccuracy"));
             _faithPerkMultiplier = Game.Current.ObjectManager.RegisterPresumedObject(new SkillEffect("FaithPerkMultiplier"));
-            _bombAccuracy = Game.Current.ObjectManager.RegisterPresumedObject(new SkillEffect("BombAccuracy"));
+            _bombStackMultiplier = Game.Current.ObjectManager.RegisterPresumedObject(new SkillEffect("BombStackMultiplier"));
+            _magicStaffPower = Game.Current.ObjectManager.RegisterPresumedObject(new SkillEffect("MagicStaffPower"));
 
             _wandReloadSpeed.Initialize(new TextObject("{=!}Wand reload speed: +{a0} %", null), new SkillObject[]
             {
@@ -75,13 +78,18 @@ namespace RealmsForgotten.CustomSkills
                 RFSkills.Arcane
             }, SkillEffect.PerkRole.Personal, 0.4f);
 
+            _magicStaffPower.Initialize(new TextObject("{=!}Magic staff power: +{a0} %", null), new SkillObject[]
+            {
+                RFSkills.Arcane
+            }, SkillEffect.PerkRole.Personal, 0.4f);
+
 
             _faithPerkMultiplier.Initialize(new TextObject("{=!}Perk effect multiplier: +{a0} %", null), new SkillObject[]
             {
                 RFSkills.Faith
             }, SkillEffect.PerkRole.Personal, 0.4f);
 
-            _bombAccuracy.Initialize(new TextObject("{=!}Bomb accuracy: +{a0} %", null), new SkillObject[]
+            _bombStackMultiplier.Initialize(new TextObject("{=!}Bomb stack multiplier: +{a0} %", null), new SkillObject[]
             {
                 RFSkills.Alchemy
             }, SkillEffect.PerkRole.Personal, 0.4f);
