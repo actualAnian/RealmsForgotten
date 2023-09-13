@@ -40,15 +40,33 @@ namespace RealmsForgotten.Models
             WeaponComponentData weapon = (wieldedItemIndex != EquipmentIndex.None) ? agent.Equipment[wieldedItemIndex].CurrentUsageItem : null;
             var character = agent.Character as CharacterObject;
             var captain = agent.Team.Leader;
-            if (weapon != null && character != null && weapon.WeaponClass == WeaponClass.Stone)
+            if (weapon != null && character != null && weapon.WeaponClass == WeaponClass.Cartridge)
             {
                 int effectiveSkill = GetEffectiveSkill(agent, RFSkills.Alchemy);
                 ExplainedNumber reloadSpeed = new ExplainedNumber(agentDrivenProperties.ReloadSpeed);
-                SkillHelper.AddSkillBonusForCharacter(RFSkills.Alchemy, RFSkillEffects.SpellPrecision, character, ref reloadSpeed, effectiveSkill, true, 0);
+
+                SkillHelper.AddSkillBonusForCharacter(RFSkills.Arcane, RFSkillEffects.WandReloadSpeed, character, ref reloadSpeed, effectiveSkill);
                 
 
                 agentDrivenProperties.ReloadSpeed = reloadSpeed.ResultNumber;
             }
+        }
+        public override float GetWeaponInaccuracy(Agent agent, WeaponComponentData weapon, int weaponSkill)
+        {
+            float baseValue = base.GetWeaponInaccuracy(agent, weapon, weaponSkill);
+            ExplainedNumber accuracy = new ExplainedNumber(baseValue, false, null);
+            var character = agent.Character as CharacterObject;
+            if (character != null)
+            {
+                if (weapon.IsRangedWeapon && weapon.RelevantSkill == RFSkills.Arcane && weapon.WeaponClass == WeaponClass.Musket)
+                {
+                    SkillHelper.AddSkillBonusForCharacter(RFSkills.Arcane, RFSkillEffects.WandAccuracy, character, ref accuracy, weaponSkill, false, 0);
+
+                }
+            }
+
+            return accuracy.ResultNumber;
+
         }
     }
     /*

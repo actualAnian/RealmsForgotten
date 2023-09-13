@@ -89,24 +89,40 @@ namespace RealmsForgotten.Patches
 
             return combatLog;
         }
+
+        public static float isWand = 0f;
+        public static Blow CurrentBlow;
         private static MethodInfo RegisterBlow = AccessTools.Method(typeof(Mission), "RegisterBlow");
+
+
         [HarmonyPrefix]
-        public static bool Prefix(ref AttackCollisionData collisionDataInput, ref Blow blowInput, Agent alreadyDamagedAgent, Agent shooterAgent, bool isBigExplosion, Mission __instance, Dictionary<int, Missile> ____missiles)
+        public static bool Prefix(ref AttackCollisionData collisionDataInput, ref Blow blowInput, Agent alreadyDamagedAgent, Agent shooterAgent, bool isBigExplosion,  Mission __instance)
         {
-            if (blowInput.WeaponRecord.WeaponClass == WeaponClass.Stone && shooterAgent.WieldedWeapon.Item?.StringId.Contains("anorit_fire") == true && shooterAgent.Character.IsHero)
+            bool isBomb = blowInput.WeaponRecord.WeaponClass == WeaponClass.Stone &&
+                        shooterAgent.WieldedWeapon.Item?.StringId.Contains("anorit_fire") == true &&
+                        shooterAgent.Character.IsHero;
+
+            if (isWand > 0f || isBomb)
             {
                 float num = isBigExplosion ? 2.8f : 1.2f;
                 float num2 = isBigExplosion ? 1.6f : 1f;
-                CharacterObject shooterAgentCharacterObject = shooterAgent.Character as CharacterObject;
-                if (shooterAgentCharacterObject != null)
+
+
+                if (isBomb)
                 {
-                    float factor = shooterAgentCharacterObject.GetPerkValue(RFPerks.Alchemy.NovicesDedication) ? RFPerks.Alchemy.NovicesDedication.PrimaryBonus :
-                        (shooterAgentCharacterObject.GetPerkValue(RFPerks.Alchemy.ApprenticesLuck) ? RFPerks.Alchemy.ApprenticesDedication.PrimaryBonus :
-                            (shooterAgentCharacterObject.GetPerkValue(RFPerks.Alchemy.AdeptsLuck) ? RFPerks.Alchemy.AdeptsDedication.PrimaryBonus :
-                                (shooterAgentCharacterObject.GetPerkValue(RFPerks.Alchemy.MastersLuck) ? RFPerks.Alchemy.MastersDedication.PrimaryBonus : 0)));
-                    num *= factor;
+                    CharacterObject shooterAgentCharacterObject = shooterAgent.Character as CharacterObject;
+                    if (shooterAgentCharacterObject != null)
+                    {
+                        float factor = shooterAgentCharacterObject.GetPerkValue(RFPerks.Alchemy.NovicesDedication) ? RFPerks.Alchemy.NovicesDedication.PrimaryBonus :
+                            (shooterAgentCharacterObject.GetPerkValue(RFPerks.Alchemy.ApprenticesLuck) ? RFPerks.Alchemy.ApprenticesDedication.PrimaryBonus :
+                                (shooterAgentCharacterObject.GetPerkValue(RFPerks.Alchemy.AdeptsLuck) ? RFPerks.Alchemy.AdeptsDedication.PrimaryBonus :
+                                    (shooterAgentCharacterObject.GetPerkValue(RFPerks.Alchemy.MastersLuck) ? RFPerks.Alchemy.MastersDedication.PrimaryBonus : 0)));
+                        num *= factor;
+                    }
                 }
-                    
+                else if (isWand > 0f)
+                    num *= isWand;
+
 
                 float num3 = 1f;
                 if (collisionDataInput.MissileVelocity.LengthSquared < 484f)
@@ -164,7 +180,12 @@ namespace RealmsForgotten.Patches
 
                         num8 *= num3;
                         attackCollisionData.SetCollisionBoneIndexForAreaDamage(collisionBoneIndexForAreaDamage);
+
+                        Dictionary<int, Missile> ____missiles =
+                            (Dictionary<int, Missile>)AccessTools.Field(typeof(Mission), "_missiles").GetValue(__instance);
                         MissionWeapon attackerWeapon = ____missiles[attackCollisionData.AffectorWeaponSlotOrMissileIndex].Weapon;
+
+
                         GetAttackCollisionResults(shooterAgent, item, null, 1f, in attackerWeapon, crushedThrough: false, cancelDamage: false, crushedThroughWithoutAgentCollision: false, ref attackCollisionData, out var _, out var combatLog);
                         b.BaseMagnitude = attackCollisionData.BaseMagnitude;
                         b.MovementSpeedDamageModifier = attackCollisionData.MovementSpeedDamageModifier;
@@ -175,11 +196,15 @@ namespace RealmsForgotten.Patches
                         b.InflictedDamage = MathF.Round((float)b.InflictedDamage * num8);
                         b.SelfInflictedDamage = MathF.Round((float)b.SelfInflictedDamage * num8);
                         combatLog.ModifiedDamage = MathF.Round((float)combatLog.ModifiedDamage * num8);
+
+                        CurrentBlow = blowInput;
                         RegisterBlow.Invoke(__instance, new object[] { (object)shooterAgent, (object)item, (object)null, (object)b, (object)attackCollisionData, (object)attackerWeapon, (object)combatLog });
+                        CurrentBlow = default;
                     }
                 }
-
+                isWand = 0f;
                 return false;
+                
             }
 
             return true;

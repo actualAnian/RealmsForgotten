@@ -11,10 +11,12 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using RealmsForgotten.CustomSkills;
+using RealmsForgotten.Patches;
 
 namespace RealmsForgotten.Behaviors
 {
-    internal class RFEnchantedWeaponsBehavior : MissionBehavior
+    internal class RFEnchantedWeaponsMissionBehavior : MissionBehavior
     {
         private static Dictionary<int, (SkillObject, int)> agentsInitialSkills = new Dictionary<int, (SkillObject, int)>();
         private static Dictionary<string, SkillObject> skillsDic = new()
@@ -117,7 +119,29 @@ namespace RealmsForgotten.Behaviors
             }
 
         }
+        public override void OnAgentHit(Agent affectedAgent, Agent affectorAgent, in MissionWeapon affectorWeapon, in Blow blow, in AttackCollisionData attackCollisionData)
+        {
 
+            if (affectorWeapon.Item != null && affectorWeapon.CurrentUsageItem?.WeaponClass == WeaponClass.Cartridge && IncreaseAreaOfDamagePatch.CurrentBlow.OwnerId != blow.OwnerId)
+            {
+                CharacterObject attackerCharacterObject = affectorAgent.Character as CharacterObject;
+                if (attackerCharacterObject != null)
+                {
+                    float AreaFactor = attackerCharacterObject.GetPerkValue(RFPerks.Arcane.NeophytesStaff) ? RFPerks.Arcane.NeophytesStaff.PrimaryBonus :
+                        (attackerCharacterObject.GetPerkValue(RFPerks.Arcane.InitiatesStaff) ? RFPerks.Arcane.InitiatesStaff.PrimaryBonus :
+                            (attackerCharacterObject.GetPerkValue(RFPerks.Arcane.HierophantsStaff) ? RFPerks.Arcane.HierophantsStaff.PrimaryBonus : 0));
+                    if (AreaFactor > 0)
+                    {
+                        AttackCollisionData CollisionData = attackCollisionData;
+                        Blow blow1 = blow;
+                        IncreaseAreaOfDamagePatch.isWand = AreaFactor;
+
+
+                        IncreaseAreaOfDamagePatch.Prefix(ref CollisionData, ref blow1, affectedAgent, affectorAgent, false, Mission.Current);
+                    }
+                }
+            }
+        }
         public override void OnAgentBuild(Agent agent, Banner banner)
         {
 

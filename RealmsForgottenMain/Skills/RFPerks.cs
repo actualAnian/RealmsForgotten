@@ -101,11 +101,11 @@ namespace RealmsForgotten.CustomSkills
 
             _thuriksPrayer.Initialize("{=!}Thurik's Prayer", RFSkills.Faith, 100, _druidsSongII,
                 "{=!}Augment the morale of your troops by x3.5.",
-                SkillEffect.PerkRole.ArmyCommander, 3.5f, SkillEffect.EffectIncrementType.AddFactor);
+                SkillEffect.PerkRole.PartyLeader, 3.5f, SkillEffect.EffectIncrementType.AddFactor);
 
             _druidsSongII.Initialize("{=!}Druids Song II", RFSkills.Faith, 100, _thuriksPrayer,
                 "{=!}Heals 50% of the player hit points after battle.",
-                SkillEffect.PerkRole.Personal, 5.0f, SkillEffect.EffectIncrementType.AddFactor);
+                SkillEffect.PerkRole.Personal, 0.5f, SkillEffect.EffectIncrementType.AddFactor);
 
             _quatzulsPrayer.Initialize("{=!}Quatzul's Prayer", RFSkills.Faith, 150, _druidsWave,
                 "{=!}Increases troops athletics in x3.",
@@ -116,12 +116,12 @@ namespace RealmsForgotten.CustomSkills
                 SkillEffect.PerkRole.Personal, 0f, SkillEffect.EffectIncrementType.Invalid);
 
             _igathurilsPrayer.Initialize("{=!}Igathuril's Prayer", RFSkills.Faith, 250, _druidsBlessing,
-                "{=!}Causes terror on enemy troops dropping their morale in 50%.",
-                SkillEffect.PerkRole.ArmyCommander, 5.0f, SkillEffect.EffectIncrementType.AddFactor);
+                "{=!}Increases the combat skills of all the troops in 30%.",
+                SkillEffect.PerkRole.PartyLeader, 5.0f, SkillEffect.EffectIncrementType.AddFactor);
 
             _druidsBlessing.Initialize("{=!}Druids Blessing", RFSkills.Faith, 250, _igathurilsPrayer,
-                "{=!}Regenerates troops hit points in 50% after battle.",
-                SkillEffect.PerkRole.PartyLeader, 5.0f, SkillEffect.EffectIncrementType.AddFactor);
+                "{=!}Regenerates 50% of the wounded troops after battle.",
+                SkillEffect.PerkRole.PartyLeader, 0.5f, SkillEffect.EffectIncrementType.AddFactor);
 
             //Arcane perks
             _neophytesTalisman.Initialize("{=!}Neophytes Talisman", RFSkills.Arcane, 50, _neophytesStaff,

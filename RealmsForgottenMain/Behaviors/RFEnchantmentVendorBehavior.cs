@@ -29,7 +29,7 @@ using RealmsForgotten.Utility;
 
 namespace RealmsForgotten.Behaviors
 {
-    class RFCampaignBehavior : CampaignBehaviorBase
+    class RFEnchantmentVendorBehavior: CampaignBehaviorBase
     {
         private CampaignTime lastMeetingTime;
         private ItemRoster? vendorItemRoster;

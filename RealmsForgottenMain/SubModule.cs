@@ -41,7 +41,8 @@ namespace RealmsForgotten
             {
                 CampaignGameStarter campaignGameStarter = (CampaignGameStarter)gameStarterObject;
                 campaignGameStarter.AddBehavior(new BaseGameDebugCampaignBehavior());
-                campaignGameStarter.AddBehavior(new RFCampaignBehavior());
+                campaignGameStarter.AddBehavior(new RFEnchantmentVendorBehavior());
+                campaignGameStarter.AddBehavior(new RFFaithCampaignBehavior());
 
                 campaignGameStarter.AddModel(new RFAgentStatCalculateModel());
                 campaignGameStarter.AddModel(new RFAgentApplyDamageModel());
@@ -52,6 +53,7 @@ namespace RealmsForgotten
 
                 new RFAttribute().Initialize();
                 new RFSkills().Initialize();
+                new RFSkillEffects().InitializeAll();
                 new RFPerks().Initialize();
 
             }
@@ -60,7 +62,7 @@ namespace RealmsForgotten
         {
             if (mission != null)
             {
-                mission.AddMissionBehavior(new RFEnchantedWeaponsBehavior());
+                mission.AddMissionBehavior(new RFEnchantedWeaponsMissionBehavior());
 
                 ItemRosterElement elixir = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("elixir_rfmisc"));
                 ItemRosterElement berserker = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("berzerker_potion"));
@@ -83,7 +85,8 @@ namespace RealmsForgotten
         {
             base.OnSubModuleLoad();
             TextObject coreContentDisabledReason = new("Disabled during installation.", null);
-
+            SpawnedItemEntity e;
+          
             RemoveSandboxAndStoryOptions();
 
             Module.CurrentModule.AddInitialStateOption(

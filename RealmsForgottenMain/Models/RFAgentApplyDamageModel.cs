@@ -12,6 +12,7 @@ using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.ComponentInterfaces;
 using FaceGen = TaleWorlds.Core.FaceGen;
 using RealmsForgotten.Behaviors;
+using RealmsForgotten.Patches;
 using TaleWorlds.CampaignSystem;
 using static HarmonyLib.Code;
 using TaleWorlds.Engine;
@@ -46,6 +47,13 @@ namespace RealmsForgotten.Models
 
             int half_giant = FaceGen.GetRaceOrDefault("half_giant");
 
+
+
+
+
+
+
+
             if (victimAgent.Character?.Race == half_giant && attackerAgent.Character?.Race != half_giant)
                 return false;
 
@@ -64,18 +72,31 @@ namespace RealmsForgotten.Models
             {
                 CalculateRaceDamages(attackInformation, weapon, ref baseNumber);
 
-                //If weapon is a spell, do additional damage based on the alchemy skill of the attacker
+                
                 CharacterObject attackerCharacterObject = attackInformation.AttackerAgentCharacter as CharacterObject;
-                if (attackerCharacterObject != null)
+                //If weapon is a spell, do additional damage based on the alchemy skill of the attacker
+                if (weapon.Item.StringId.Contains("anorit_fire"))
                 {
-                    float factor = attackerCharacterObject.GetPerkValue(RFPerks.Alchemy.NovicesLuck) ? RFPerks.Alchemy.NovicesLuck.PrimaryBonus :
-                        (attackerCharacterObject.GetPerkValue(RFPerks.Alchemy.ApprenticesLuck) ? RFPerks.Alchemy.ApprenticesLuck.PrimaryBonus :
-                            (attackerCharacterObject.GetPerkValue(RFPerks.Alchemy.AdeptsLuck) ? RFPerks.Alchemy.AdeptsLuck.PrimaryBonus : 
-                                (attackerCharacterObject.GetPerkValue(RFPerks.Alchemy.MastersLuck) ? RFPerks.Alchemy.MastersLuck.PrimaryBonus : 0)));
+                    if (attackerCharacterObject != null)
+                    {
+                        float factor = attackerCharacterObject.GetPerkValue(RFPerks.Alchemy.NovicesLuck) ? RFPerks.Alchemy.NovicesLuck.PrimaryBonus :
+                            (attackerCharacterObject.GetPerkValue(RFPerks.Alchemy.ApprenticesLuck) ? RFPerks.Alchemy.ApprenticesLuck.PrimaryBonus :
+                                (attackerCharacterObject.GetPerkValue(RFPerks.Alchemy.AdeptsLuck) ? RFPerks.Alchemy.AdeptsLuck.PrimaryBonus :
+                                    (attackerCharacterObject.GetPerkValue(RFPerks.Alchemy.MastersLuck) ? RFPerks.Alchemy.MastersLuck.PrimaryBonus : 0)));
 
-                    if (factor > 0 &&      weapon.Item.StringId.Contains("anorit_fire") &&
-                        weapon.CurrentUsageItem.WeaponClass == WeaponClass.Stone)
-                        baseNumber *= factor;
+                        if (factor > 0 &&
+                            weapon.CurrentUsageItem.WeaponClass == WeaponClass.Stone)
+                            baseNumber *= factor;
+                    }
+                } 
+                else if (weapon.CurrentUsageItem.WeaponClass == WeaponClass.Cartridge)
+                {
+                    float DamageFactor = attackerCharacterObject.GetPerkValue(RFPerks.Arcane.NeophytesTalisman) ? RFPerks.Arcane.NeophytesTalisman.PrimaryBonus :
+                        (attackerCharacterObject.GetPerkValue(RFPerks.Arcane.InitiatesTalisman) ? RFPerks.Arcane.InitiatesTalisman.PrimaryBonus :
+                            (attackerCharacterObject.GetPerkValue(RFPerks.Arcane.HierophantsTalisman) ? RFPerks.Arcane.HierophantsTalisman.PrimaryBonus : 0));
+
+                    if (DamageFactor > 0)
+                        baseNumber *= DamageFactor;
                 }
             }
 

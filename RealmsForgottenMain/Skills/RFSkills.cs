@@ -23,16 +23,16 @@ namespace RealmsForgotten.CustomSkills
         public static SkillObject Alchemy => Instance._alchemy;
 
         public void Initialize()
-        { 
-            new RFSkillEffects().InitializeAll();
+        {
+
             _faith = Game.Current.ObjectManager.RegisterPresumedObject(new SkillObject("faith"));
             _faith.Initialize(new TextObject("{=!}Faith", null), new TextObject("{=!}Faith is your deeply held belief on  your chosen religion or a deep trust on your spiritual convictions."), SkillObject.SkillTypeEnum.Personal)
                 .SetAttribute(RFAttribute.Discipline);
-           
+
             _arcane = Game.Current.ObjectManager.RegisterPresumedObject(new SkillObject("arcane"));
             _arcane.Initialize(new TextObject("{=!}Arcane", null), new TextObject("{=!}Represents your knowledge in the ancient rites and supernatural phenomena, including the use of organic and inorganic materials in incantations. It defines your capacity to to access magic."), SkillObject.SkillTypeEnum.Personal)
                 .SetAttribute(RFAttribute.Discipline);
-            
+
             _alchemy = Game.Current.ObjectManager.RegisterPresumedObject(new SkillObject("alchemy"));
             _alchemy.Initialize(new TextObject("{=!}Alchemy", null), new TextObject("{=!}Alchemy represents your  understanding in manipulating matter and mixing base substances into higher or more purified forms."), SkillObject.SkillTypeEnum.Personal)
                 .SetAttribute(RFAttribute.Discipline);
@@ -46,32 +46,42 @@ namespace RealmsForgotten.CustomSkills
     }
     public class RFSkillEffects
     {
-        private SkillEffect _spellPrecision;
-        private SkillEffect _gunAccuracy;
-        private SkillEffect _spellEffectiveness;
-        private SkillEffect _spellDuration;
-        private SkillEffect _windsRechargeRate;
-        private SkillEffect _maxWinds;
-        private SkillEffect _faithWardSave;
-        private SkillEffect _blessingDuration;
+        private SkillEffect _wandReloadSpeed;
+        private SkillEffect _wandAccuracy;
+        private SkillEffect _faithPerkMultiplier;
+        private SkillEffect _bombAccuracy;
 
         public static RFSkillEffects Instance { get; private set; }
-        public static SkillEffect SpellPrecision => Instance._spellPrecision;
-        public static SkillEffect GunAccuracy => Instance._gunAccuracy;
-        public static SkillEffect SpellEffectiveness => Instance._spellEffectiveness;
-        public static SkillEffect SpellDuration => Instance._spellDuration;
-        public static SkillEffect WindsRechargeRate => Instance._windsRechargeRate;
-        public static SkillEffect MaxWinds => Instance._maxWinds;
-        public static SkillEffect FaithWardSave => Instance._faithWardSave;
-        public static SkillEffect BlessingDuration => Instance._blessingDuration;
+        public static SkillEffect WandReloadSpeed => Instance._wandReloadSpeed;
+        public static SkillEffect WandAccuracy => Instance._wandAccuracy;
+        public static SkillEffect FaithPerkMultiplier => Instance._faithPerkMultiplier;
+        public static SkillEffect BombAccuracy => Instance._bombAccuracy;
 
         public void InitializeAll()
         {
-            _spellPrecision = Game.Current.ObjectManager.RegisterPresumedObject(new SkillEffect("GunReloadSpeed"));
+            _wandReloadSpeed = Game.Current.ObjectManager.RegisterPresumedObject(new SkillEffect("WandReloadSpeed"));
+            _wandAccuracy = Game.Current.ObjectManager.RegisterPresumedObject(new SkillEffect("WandAccuracy"));
+            _faithPerkMultiplier = Game.Current.ObjectManager.RegisterPresumedObject(new SkillEffect("FaithPerkMultiplier"));
+            _bombAccuracy = Game.Current.ObjectManager.RegisterPresumedObject(new SkillEffect("BombAccuracy"));
+
+            _wandReloadSpeed.Initialize(new TextObject("{=!}Wand reload speed: +{a0} %", null), new SkillObject[]
+            {
+                RFSkills.Arcane
+            }, SkillEffect.PerkRole.Personal, 0.4f);
 
 
+            _wandAccuracy.Initialize(new TextObject("{=!}Wand accuracy: +{a0} %", null), new SkillObject[]
+            {
+                RFSkills.Arcane
+            }, SkillEffect.PerkRole.Personal, 0.4f);
 
-            _spellPrecision.Initialize(new TextObject("{=!}Spell area damage: +{a0} %", null), new SkillObject[]
+
+            _faithPerkMultiplier.Initialize(new TextObject("{=!}Perk effect multiplier: +{a0} %", null), new SkillObject[]
+            {
+                RFSkills.Faith
+            }, SkillEffect.PerkRole.Personal, 0.4f);
+
+            _bombAccuracy.Initialize(new TextObject("{=!}Bomb accuracy: +{a0} %", null), new SkillObject[]
             {
                 RFSkills.Alchemy
             }, SkillEffect.PerkRole.Personal, 0.4f);
