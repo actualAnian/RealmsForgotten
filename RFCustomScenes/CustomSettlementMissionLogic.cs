@@ -22,6 +22,12 @@ using TaleWorlds.ObjectSystem;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.TroopSuppliers;
 using RealmsForgotten.RFCustomSettlements.AgentOrigins;
+using TaleWorlds.InputSystem;
+using RealmsForgotten.HuntableHerds.AgentComponents;
+using TaleWorlds.CampaignSystem.Inventory;
+using TaleWorlds.Localization;
+using System.Text;
+using RealmsForgotten.RFCustomSettlements;
 
 namespace RFCustomSettlements
 {
@@ -44,6 +50,8 @@ namespace RFCustomSettlements
             public bool IsMachineAITicked;
         }
 
+
+
         private bool isRandomScene;
         private static int _disabledFaceId;
         private static int _disabledFaceIdForAnimals;
@@ -52,18 +60,26 @@ namespace RFCustomSettlements
         private List<CommonAreaMarker> areaMarkers;
         private IMissionTroopSupplier troopSupplier;
         private readonly Dictionary<Agent, CustomSettlementMissionLogic.UsedObject> defenderAgentObjects;
-
+        private IEnumerable<MissionObject> pickableItems;
+        private ItemRoster loot;
+        private int goldLooted = 0;
         public CustomSettlementMissionLogic(bool isRandomScene)
         {
             this.isRandomScene = isRandomScene;
             defenderAgentObjects = new Dictionary<Agent, CustomSettlementMissionLogic.UsedObject>();
             patrolAreas = new();
             areaMarkers = new();
+            loot = new();
             Temp();
         }
         public override void OnMissionTick(float dt)
         {
             base.OnMissionTick(dt);
+            if (Agent.Main == null)
+                return;
+
+            if (Input.IsKeyPressed(InputKey.Q))
+                LootArea();
 
             if (!isMissionInitialized)
             {
@@ -73,16 +89,46 @@ namespace RFCustomSettlements
             }
         }
 
+        private void LootArea()
+        {
+
+            ItemRoster fullItemRoster = new ItemRoster();
+            List<HerdAgentComponent> huntableAgentsLooted = new();
+
+            foreach (MissionObject missionObject in pickableItems)
+            {
+                if(missionObject.GameEntity.GlobalPosition.Distance(Agent.Main.Position) < Config.maxPickableDistance)
+                {
+                    try
+                    {
+                    string[] data =  missionObject.GameEntity.Name.Split('_');
+                    StringBuilder itemIdBuilder = new StringBuilder();
+                    foreach(string str in data.Skip(2).Take(data.Length - 3))
+                        itemIdBuilder.Append(str + "_");
+                        itemIdBuilder.Remove(itemIdBuilder.Length -1, 1);
+                    string itemId = itemIdBuilder.ToString();
+                    int amount = int.Parse(data.Last());
+                    if (itemId == "gold") goldLooted += amount;
+                    else loot.AddToCounts(MBObjectManager.Instance.GetObject<ItemObject>(itemId), amount);
+                    }
+                    catch 
+                    {
+                    }
+                }
+//                fullItemRoster.Add(pair.Value.GetItemDrops());
+  //              huntableAgentsLooted.Add(pair.Value);
+            }
+
+            if (huntableAgentsLooted.Count == 0)
+            {
+    //            SubModule.PrintDebugMessage("There's nothing to loot nearby...");
+                return;
+            }
+        }
+
         private void InitializeMission()
         {
-            GameEntity gameEntity = base.Mission.Scene.FindEntityWithTag("No Prefab");
-            var aga = base.Mission.MissionObjects;
-            var aa = aga.Where(m => (m.GameEntity.Name == "arrow_new_icon"));
-            aa.ElementAt(0).GameEntity.ClearComponents();
-            //RFArrowBarrel arrowBarrel = new RFArrowBarrel(((TaleWorlds.MountAndBlade.UsableMachine)aa.ElementAt(0)).Ai.UsableMachine);
-            //arrowBarrel.OnInit();
-
-
+            pickableItems = base.Mission.MissionObjects.Where(m => (m.GameEntity.Name.Contains("rf_pickable")));
             try
             {
             areaMarkers.AddRange(from area in base.Mission.ActiveMissionObjects.FindAllWithType<CommonAreaMarker>()
@@ -201,6 +247,13 @@ namespace RFCustomSettlements
             agent.SetAgentFlags((agentFlags | AgentFlag.CanGetAlarmed) & ~AgentFlag.CanRetreat);
             agent.GetComponent<CampaignAgentComponent>().CreateAgentNavigator();
             this.SimulateTick(agent);
+        }
+        protected override void OnEndMission()
+        {
+            CustomSettlementsCampaignBehavior.goldLoot = goldLooted;
+            CustomSettlementsCampaignBehavior.itemLoot = loot;
+            CustomSettlementsCampaignBehavior.finishedMission = true;
+            base.OnEndMission();
         }
         private void SimulateTick(Agent agent)
         {

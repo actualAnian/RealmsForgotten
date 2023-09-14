@@ -25,7 +25,6 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             if (starterObject is CampaignGameStarter starter)
             {
-                //starter.AddBehavior(new RuinCampaignBehavior());
                 starter.AddBehavior(new CustomSettlementsCampaignBehavior());
                 //                starter.AddBehavior(new RFLegendaryTroopsPlayerVisitTownCampaignBehavior());
             }

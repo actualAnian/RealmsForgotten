@@ -7,8 +7,10 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameMenus;
+using TaleWorlds.CampaignSystem.Inventory;
 using TaleWorlds.CampaignSystem.Overlay;
 using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Localization;
 
@@ -18,6 +20,10 @@ namespace RealmsForgotten.RFCustomSettlements
     {
         private List<RFCustomSettlement> customSettlementComponents;
         private List<Settlement>? customSettlements;
+
+        internal static ItemRoster itemLoot;
+        internal static int goldLoot;
+        internal static bool finishedMission;
         public override void RegisterEvents()
         {
             CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.FillSettlementList));
@@ -138,6 +144,12 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             if (Settlement.CurrentSettlement.SettlementComponent == null || Settlement.CurrentSettlement.SettlementComponent is not RFCustomSettlements.RFCustomSettlement) return;
   
+            if(finishedMission)
+            {
+                finishedMission = false;
+                InventoryManager.OpenScreenAsReceiveItems(itemLoot, new TextObject("Loot"), null);
+                Hero.MainHero.ChangeHeroGold(goldLoot);
+            }
             //this.currentRuin = (Settlement.CurrentSettlement.SettlementComponent as RFCustomSettlement);
             //GameTexts.SetVariable("RUIN_TEXT", this.currentRuin.Settlement.EncyclopediaText);
             //if (MobileParty.MainParty.CurrentSettlement != null)
