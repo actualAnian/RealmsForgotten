@@ -29,7 +29,7 @@ using TaleWorlds.Localization;
 using System.Text;
 using RealmsForgotten.RFCustomSettlements;
 
-namespace RFCustomSettlements
+namespace RealmsForgotten.RFCustomSettlements
 {
     internal class CustomSettlementMissionLogic : MissionBehavior
     {
@@ -60,7 +60,7 @@ namespace RFCustomSettlements
         private List<CommonAreaMarker> areaMarkers;
         private IMissionTroopSupplier troopSupplier;
         private readonly Dictionary<Agent, CustomSettlementMissionLogic.UsedObject> defenderAgentObjects;
-        private IEnumerable<MissionObject> pickableItems;
+        private List<MissionObject> pickableItems;
         private ItemRoster loot;
         private int goldLooted = 0;
         public CustomSettlementMissionLogic(bool isRandomScene)
@@ -91,44 +91,66 @@ namespace RFCustomSettlements
 
         private void LootArea()
         {
-
-            ItemRoster fullItemRoster = new ItemRoster();
-            List<HerdAgentComponent> huntableAgentsLooted = new();
-
+            bool foundItems = false;
+            List<MissionObject> objectsToRemove = new List<MissionObject>();
             foreach (MissionObject missionObject in pickableItems)
             {
                 if(missionObject.GameEntity.GlobalPosition.Distance(Agent.Main.Position) < Config.maxPickableDistance)
                 {
                     try
                     {
-                    string[] data =  missionObject.GameEntity.Name.Split('_');
-                    StringBuilder itemIdBuilder = new StringBuilder();
-                    foreach(string str in data.Skip(2).Take(data.Length - 3))
-                        itemIdBuilder.Append(str + "_");
-                        itemIdBuilder.Remove(itemIdBuilder.Length -1, 1);
-                    string itemId = itemIdBuilder.ToString();
-                    int amount = int.Parse(data.Last());
-                    if (itemId == "gold") goldLooted += amount;
-                    else loot.AddToCounts(MBObjectManager.Instance.GetObject<ItemObject>(itemId), amount);
+                        string itemId;
+                        int amount;
+                        ParseEditorItemData(missionObject.GameEntity.Name.Split('_'), out itemId, out amount);
+                        string soundEventId = "";
+                        if (itemId == "gold")
+                        {
+                            goldLooted += amount;
+                            soundEventId = "event:/ui/notification/coins_positive";
+                            HuntableHerds.SubModule.PrintDebugMessage("You found " + goldLooted + " gold coins!");
+                        }
+                        else
+                        {
+                            ItemObject item = MBObjectManager.Instance.GetObject<ItemObject>(itemId);
+                            loot.AddToCounts(item, amount);
+                            HuntableHerds.SubModule.PrintDebugMessage("You found " + item.Name + "!");
+                            soundEventId = "event:/mission/combat/pickup_arrows";
+                        }
+                        foundItems = true;
+                        Mission.MakeSoundOnlyOnRelatedPeer(SoundEvent.GetEventIdFromString(soundEventId), missionObject.GameEntity.GlobalPosition, Mission.MainAgent.Index);
+                        missionObject.GameEntity.ClearComponents();
+                        objectsToRemove.Add(missionObject);
                     }
-                    catch 
+                    catch
                     {
+                        string str = "Error in game entity name" + missionObject.GameEntity.Name;
+                        HuntableHerds.SubModule.PrintDebugMessage(str, 255, 0, 0);
                     }
                 }
-//                fullItemRoster.Add(pair.Value.GetItemDrops());
-  //              huntableAgentsLooted.Add(pair.Value);
             }
 
-            if (huntableAgentsLooted.Count == 0)
+            pickableItems.RemoveAll(m => objectsToRemove.Contains(m));
+            if (!foundItems)
             {
-    //            SubModule.PrintDebugMessage("There's nothing to loot nearby...");
+                HuntableHerds.SubModule.PrintDebugMessage("There's nothing to loot nearby...");
                 return;
             }
         }
 
+        private static void ParseEditorItemData(string[] EditorItemString, out string itemId, out int amount)
+        {
+            string[] data = EditorItemString;
+            StringBuilder itemIdBuilder = new();
+            foreach (string str in data.Skip(2).Take(data.Length - 3))
+                itemIdBuilder.Append(str + "_");
+            itemIdBuilder.Remove(itemIdBuilder.Length - 1, 1);
+            itemId = itemIdBuilder.ToString();
+            amount = int.Parse(data.Last());
+        }
+
         private void InitializeMission()
         {
-            pickableItems = base.Mission.MissionObjects.Where(m => (m.GameEntity.Name.Contains("rf_pickable")));
+            pickableItems = base.Mission.MissionObjects.Where(m => (m.GameEntity.Name.Contains("rf_pickable"))).ToList();
             try
             {
             areaMarkers.AddRange(from area in base.Mission.ActiveMissionObjects.FindAllWithType<CommonAreaMarker>()
@@ -279,6 +301,7 @@ namespace RFCustomSettlements
             SpawnPlayer();
             SpawnChicken();
             SpawnItems();
+            HuntableHerds.SubModule.PrintDebugMessage("Press Q nearby interesting items to loot them!");
         }
 
         private void SpawnItems()

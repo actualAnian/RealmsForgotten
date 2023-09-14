@@ -1,15 +1,22 @@
 ﻿using SandBox;
+using SandBox.Conversation.MissionLogics;
+using SandBox.Missions.AgentBehaviors;
 using SandBox.Missions.MissionLogics;
+using SandBox.Missions.MissionLogics.Towns;
+using System.Collections.Generic;
+using TaleWorlds.CampaignSystem.Settlements.Locations;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.Source.Missions;
 using TaleWorlds.MountAndBlade.Source.Missions.Handlers;
+using TaleWorlds.MountAndBlade.Source.Missions.Handlers.Logic;
 using TaleWorlds.MountAndBlade.View;
 
-namespace RFCustomSettlements
+namespace RealmsForgotten.RFCustomSettlements
 {
     public static class CustomSettlementMission
     {
+            [MissionMethod]
             public static Mission StartCustomSettlementMission(string sceneName, bool isRandomScene)
             {
                 return MissionState.OpenNew(sceneName,
@@ -29,6 +36,13 @@ namespace RFCustomSettlements
                     new MissionBoundaryPlacer(),
                     new MissionBoundaryCrossingHandler(),
                     new EquipmentControllerLeaveLogic(),
+                    new HighlightsController(),
+
+                    new BattleMissionAgentInteractionLogic(),
+
+            //  new MissionSettlementPrepareLogic(),
+            new SandBoxMissionHandler(),
+                    new MissionFightHandler(),
                     ViewCreator.CreateMissionLeaveView(),
                     ViewCreator.CreateMissionBoundaryCrossingView(),
                     ViewCreator.CreateMissionAgentStatusUIHandler(mission),

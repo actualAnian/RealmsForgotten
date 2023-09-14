@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RFCustomSettlements
+namespace RealmsForgotten.RFCustomSettlements
 {
     static class Config
     {

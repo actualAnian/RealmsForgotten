@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameMenus;
@@ -12,6 +13,7 @@ using TaleWorlds.CampaignSystem.Overlay;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.Library;
 using TaleWorlds.Localization;
 
 namespace RealmsForgotten.RFCustomSettlements
@@ -147,8 +149,13 @@ namespace RealmsForgotten.RFCustomSettlements
             if(finishedMission)
             {
                 finishedMission = false;
-                InventoryManager.OpenScreenAsReceiveItems(itemLoot, new TextObject("Loot"), null);
                 Hero.MainHero.ChangeHeroGold(goldLoot);
+                TextObject goldText = new TextObject("Total Gold Loot: {CHANGE}{GOLD_ICON}", null);
+                goldText.SetTextVariable("CHANGE", goldLoot);
+                goldText.SetTextVariable("GOLD_ICON", "{=!}<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">");
+
+                InformationManager.DisplayMessage(new InformationMessage(goldText.ToString(), "event:/ui/notification/coins_positive"));
+                InventoryManager.OpenScreenAsReceiveItems(itemLoot, new TextObject("Loot"), null);
             }
             //this.currentRuin = (Settlement.CurrentSettlement.SettlementComponent as RFCustomSettlement);
             //GameTexts.SetVariable("RUIN_TEXT", this.currentRuin.Settlement.EncyclopediaText);
