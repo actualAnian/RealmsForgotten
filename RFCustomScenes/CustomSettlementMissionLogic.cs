@@ -22,6 +22,12 @@ using TaleWorlds.ObjectSystem;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.TroopSuppliers;
 using RealmsForgotten.RFCustomSettlements.AgentOrigins;
+using TaleWorlds.InputSystem;
+using RealmsForgotten.HuntableHerds.AgentComponents;
+using TaleWorlds.CampaignSystem.Inventory;
+using TaleWorlds.Localization;
+using System.Text;
+using RealmsForgotten.RFCustomSettlements;
 
 namespace RFCustomSettlements
 {
@@ -38,12 +44,13 @@ namespace RFCustomSettlements
 
             public readonly UsableMachine Machine;
 
-            // Token: 0x0400055A RID: 1370
             public readonly UsableMachineAIBase MachineAI;
 
 
             public bool IsMachineAITicked;
         }
+
+
 
         private bool isRandomScene;
         private static int _disabledFaceId;
@@ -53,18 +60,26 @@ namespace RFCustomSettlements
         private List<CommonAreaMarker> areaMarkers;
         private IMissionTroopSupplier troopSupplier;
         private readonly Dictionary<Agent, CustomSettlementMissionLogic.UsedObject> defenderAgentObjects;
-
+        private IEnumerable<MissionObject> pickableItems;
+        private ItemRoster loot;
+        private int goldLooted = 0;
         public CustomSettlementMissionLogic(bool isRandomScene)
         {
             this.isRandomScene = isRandomScene;
             defenderAgentObjects = new Dictionary<Agent, CustomSettlementMissionLogic.UsedObject>();
             patrolAreas = new();
             areaMarkers = new();
+            loot = new();
             Temp();
         }
         public override void OnMissionTick(float dt)
         {
             base.OnMissionTick(dt);
+            if (Agent.Main == null)
+                return;
+
+            if (Input.IsKeyPressed(InputKey.Q))
+                LootArea();
 
             if (!isMissionInitialized)
             {
@@ -74,13 +89,48 @@ namespace RFCustomSettlements
             }
         }
 
+        private void LootArea()
+        {
+
+            ItemRoster fullItemRoster = new ItemRoster();
+            List<HerdAgentComponent> huntableAgentsLooted = new();
+
+            foreach (MissionObject missionObject in pickableItems)
+            {
+                if(missionObject.GameEntity.GlobalPosition.Distance(Agent.Main.Position) < Config.maxPickableDistance)
+                {
+                    try
+                    {
+                    string[] data =  missionObject.GameEntity.Name.Split('_');
+                    StringBuilder itemIdBuilder = new StringBuilder();
+                    foreach(string str in data.Skip(2).Take(data.Length - 3))
+                        itemIdBuilder.Append(str + "_");
+                        itemIdBuilder.Remove(itemIdBuilder.Length -1, 1);
+                    string itemId = itemIdBuilder.ToString();
+                    int amount = int.Parse(data.Last());
+                    if (itemId == "gold") goldLooted += amount;
+                    else loot.AddToCounts(MBObjectManager.Instance.GetObject<ItemObject>(itemId), amount);
+                    }
+                    catch 
+                    {
+                    }
+                }
+//                fullItemRoster.Add(pair.Value.GetItemDrops());
+  //              huntableAgentsLooted.Add(pair.Value);
+            }
+
+            if (huntableAgentsLooted.Count == 0)
+            {
+    //            SubModule.PrintDebugMessage("There's nothing to loot nearby...");
+                return;
+            }
+        }
+
         private void InitializeMission()
         {
-            GameEntity gameEntity = base.Mission.Scene.FindEntityWithTag("No Prefab");
-            var aga = base.Mission.MissionObjects;
-            var aa = aga.Where(m => (m.GameEntity.Name == "arrow_new_icon"));
-
-            try {
+            pickableItems = base.Mission.MissionObjects.Where(m => (m.GameEntity.Name.Contains("rf_pickable")));
+            try
+            {
             areaMarkers.AddRange(from area in base.Mission.ActiveMissionObjects.FindAllWithType<CommonAreaMarker>()
                                        orderby area.AreaIndex
                                        select area);
@@ -198,6 +248,13 @@ namespace RFCustomSettlements
             agent.GetComponent<CampaignAgentComponent>().CreateAgentNavigator();
             this.SimulateTick(agent);
         }
+        protected override void OnEndMission()
+        {
+            CustomSettlementsCampaignBehavior.goldLoot = goldLooted;
+            CustomSettlementsCampaignBehavior.itemLoot = loot;
+            CustomSettlementsCampaignBehavior.finishedMission = true;
+            base.OnEndMission();
+        }
         private void SimulateTick(Agent agent)
         {
             int num = MBRandom.RandomInt(1, 20);
@@ -221,6 +278,29 @@ namespace RFCustomSettlements
         {
             SpawnPlayer();
             SpawnChicken();
+            SpawnItems();
+        }
+
+        private void SpawnItems()
+        {
+            ItemObject item = MBObjectManager.Instance.GetObject<ItemObject>("relic_map_arrow");
+            MissionWeapon missionWeapon = new MissionWeapon(item, new ItemModifier(), Banner.CreateOneColoredEmptyBanner(1));
+            Vec3 pos = Vec3.Invalid;
+            Vec3 rot = Vec3.Invalid;
+            pos = new Vec3(423.71f, 326.38f, 50.81f);
+            rot = new Vec3(20f, 15f, 0f);
+            if (pos != Vec3.Invalid)
+                this.Mission.SpawnWeaponWithNewEntityAux(missionWeapon, Mission.WeaponSpawnFlags.WithStaticPhysics, new MatrixFrame(Mat3.CreateMat3WithForward(rot),
+                    pos), 0, null, false);
+
+            this.Mission.OnItemPickUp += OnItemPickup;
+
+        }
+
+        private void OnItemPickup(Agent agent, SpawnedItemEntity entity)
+        {
+            PartyBase.MainParty.ItemRoster.AddToCounts(
+                    MBObjectManager.Instance.GetObject<ItemObject>("relic_map_arrow"), 1);
         }
 
         private Agent SpawnPlayer()
