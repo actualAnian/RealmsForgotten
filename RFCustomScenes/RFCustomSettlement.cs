@@ -8,14 +8,6 @@ using TaleWorlds.SaveSystem;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
-
-    public enum CustomSettlementType
-    {
-        Town,
-        Castle,
-        Village,
-        Misc
-    }
     public class RFCustomSettlement : SettlementComponent
     {
         protected override void OnInventoryUpdated(ItemRosterElement item, int count)
@@ -28,7 +20,7 @@ namespace RealmsForgotten.RFCustomSettlements
             base.BackgroundCropPosition = float.Parse(node.Attributes["background_crop_position"].Value);
             base.BackgroundMeshName = node.Attributes["background_mesh"].Value;
             base.WaitMeshName = node.Attributes["wait_mesh"].Value;
-            this.RuinType = (CustomSettlementType)Enum.Parse(typeof(CustomSettlementType), node.Attributes["type"].Value, true);
+            CustomScene = node.Attributes["custom_scene"].Value;
         }
 
         public RFCustomSettlement()
@@ -59,8 +51,6 @@ namespace RealmsForgotten.RFCustomSettlements
         [SaveableProperty(503)]
         public string RuinSettlementID { get; set; }
 
-        public CustomSettlementType RuinType { get; set; }
-
         [SaveableProperty(505)]
         public bool HasBandits { get; set; }
 
@@ -69,5 +59,7 @@ namespace RealmsForgotten.RFCustomSettlements
 
         [SaveableProperty(507)]
         public bool IsSpotted { get; set; }
+
+        public string CustomScene { get; set; }
     }
 }

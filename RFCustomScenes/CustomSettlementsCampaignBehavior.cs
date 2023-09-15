@@ -103,7 +103,8 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         private void game_menu_rf_settlement_explore_on_consequence(MenuCallbackArgs args)
         {
-            CustomSettlementMission.StartCustomSettlementMission("beast_hunt_3", false);
+            var rfSettlement = Settlement.CurrentSettlement.SettlementComponent as RFCustomSettlement;
+            if(rfSettlement != null) CustomSettlementMission.StartCustomSettlementMission(rfSettlement.CustomScene);
         }
 
         private bool game_menu_rf_settlement_wait_on_condition(MenuCallbackArgs args)
@@ -118,7 +119,7 @@ namespace RealmsForgotten.RFCustomSettlements
         private bool game_menu_rf_settlement_explore_on_condition(MenuCallbackArgs args)
         {
             bool result;
-            if (Settlement.CurrentSettlement.SettlementComponent is RFCustomSettlements.RFCustomSettlement settlementComponent)
+            if (Settlement.CurrentSettlement.SettlementComponent is RFCustomSettlement settlementComponent)
             {
                 if (CharacterObject.PlayerCharacter.HitPoints < 25)
                 {
@@ -144,7 +145,7 @@ namespace RealmsForgotten.RFCustomSettlements
         [GameMenuInitializationHandler("rf_settlement_start")]
         private void game_menu_rf_settlement_start_on_init(MenuCallbackArgs args)
         {
-            if (Settlement.CurrentSettlement.SettlementComponent == null || Settlement.CurrentSettlement.SettlementComponent is not RFCustomSettlements.RFCustomSettlement) return;
+            if (Settlement.CurrentSettlement.SettlementComponent == null || Settlement.CurrentSettlement.SettlementComponent is not RFCustomSettlement) return;
   
             if(finishedMission)
             {

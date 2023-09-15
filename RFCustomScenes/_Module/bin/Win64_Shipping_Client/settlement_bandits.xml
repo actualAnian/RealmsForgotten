@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<RFCustomScenes>
+	<CustomScene>
+		<id>beast_hunt_3</id>
+		<Bandits>
+			<CommonArea>
+				<areaIndex>1</areaIndex>
+				<Bandit>
+					<id>looter</id>
+					<amount>3</amount>
+				</Bandit>
+			</CommonArea>
+			<PatrolArea>
+				<areaIndex>0</areaIndex>
+				<Bandit>
+					<id>looter</id>
+					<amount>1</amount>
+				</Bandit>
+			</PatrolArea>
+		</Bandits>
+	</CustomScene>
+</RFCustomScenes>
