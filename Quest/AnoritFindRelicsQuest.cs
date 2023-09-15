@@ -18,9 +18,9 @@ namespace Quest
 {
     internal class AnoritFindRelicsQuest : QuestBase
     {
-        [SaveableField(0)]
-        private CampaignTime anoritLordConversationTime;
         [SaveableField(1)]
+        private CampaignTime anoritLordConversationTime;
+        [SaveableField(2)]
         private bool escapedPrison;
         public AnoritFindRelicsQuest(string questId, Hero questGiver, CampaignTime duration, int rewardGold) : base(questId, questGiver, duration, rewardGold)
         {

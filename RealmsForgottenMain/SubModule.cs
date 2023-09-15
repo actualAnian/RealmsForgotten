@@ -5,13 +5,21 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using RealmsForgotten.Behaviors;
+using RealmsForgotten.CustomSkills;
+using RealmsForgotten.Models;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameComponents;
+using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 using TaleWorlds.ModuleManager;
 using TaleWorlds.MountAndBlade;
+using System.Reflection;
+using Newtonsoft.Json.Linq;
+using TaleWorlds.Engine.GauntletUI;
+using Module = TaleWorlds.MountAndBlade.Module;
 
 namespace RealmsForgotten
 {
@@ -37,7 +45,35 @@ namespace RealmsForgotten
             {
                 CampaignGameStarter campaignGameStarter = (CampaignGameStarter)gameStarterObject;
                 campaignGameStarter.AddBehavior(new BaseGameDebugCampaignBehavior());
+                campaignGameStarter.AddBehavior(new RFEnchantmentVendorBehavior());
+                campaignGameStarter.AddBehavior(new RFFaithCampaignBehavior());
+
+                campaignGameStarter.AddModel(new RFAgentStatCalculateModel());
+                campaignGameStarter.AddModel(new RFAgentApplyDamageModel());
+                campaignGameStarter.AddModel(new RFVolunteerModel());
+                campaignGameStarter.AddModel(new RFCombatXpModel());
+
+
+
+                new RFAttribute().Initialize();
+                new RFSkills().Initialize();
+                new RFSkillEffects().InitializeAll();
+                new RFPerks().Initialize();
+
             }
+        }
+        public override void OnMissionBehaviorInitialize(Mission mission)
+        {
+            if (mission != null)
+            {
+                mission.AddMissionBehavior(new RFEnchantedWeaponsMissionBehavior());
+
+                ItemRosterElement elixir = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("elixir_rfmisc"));
+                ItemRosterElement berserker = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("berzerker_potion"));
+                if (!elixir.IsEmpty || !berserker.IsEmpty)
+                    mission.AddMissionBehavior(new HealingPotionMissionBehavior(elixir, berserker));
+            }
+
         }
         private void RemoveSandboxAndStoryOptions()
         {
@@ -53,7 +89,8 @@ namespace RealmsForgotten
         {
             base.OnSubModuleLoad();
             TextObject coreContentDisabledReason = new("Disabled during installation.", null);
-
+            SpawnedItemEntity e;
+            UIConfig.DoNotUseGeneratedPrefabs = true;
             RemoveSandboxAndStoryOptions();
 
             Module.CurrentModule.AddInitialStateOption(
@@ -63,7 +100,34 @@ namespace RealmsForgotten
             );
             new Harmony("mods.bannerlord.realmsforgotten").PatchAll();
         }
+        public static Dictionary<string, int> undeadRespawnConfig { get; private set; }
+        private void ReadConfigFile()
+        {
+            string jsonFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "undead_respawn_config.json");
+            JObject jsonObject = JObject.Parse(File.ReadAllText(jsonFilePath));
 
+            if (jsonObject.TryGetValue("characters", out JToken charactersToken))
+            {
+                JObject charactersObject = (JObject)charactersToken;
+                undeadRespawnConfig = new();
+                foreach (var character in charactersObject)
+                {
+
+                    string characterName = character.Key;
+                    int characterValue = character.Value.Value<int>();
+                    if (characterValue > 100)
+                        characterValue = 100;
+                    if (characterValue < 1)
+                        characterValue = 1;
+                    undeadRespawnConfig.Add(characterName, characterValue);
+                }
+
+            }
+            else
+            {
+                Console.WriteLine("Error in undead_respawn_config.json");
+            }
+        }
         protected override void InitializeGameStarter(Game game, IGameStarter starterObject)
         {
             base.InitializeGameStarter(game, starterObject);

@@ -5,8 +5,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime;
+using ParticleTester;
+using RealmsForgotten.RFEffects;
+using RealmsForgotten.RFEffects.Utilities;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.InputSystem;
@@ -14,7 +18,7 @@ using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
 
-namespace FireLord
+namespace ParticleTester
 {
 
     public static class FireSwordProperties
@@ -32,8 +36,53 @@ namespace FireLord
 
         public static InputKey FireSwordToggleKey { get; set; } = (InputKey)Enum.Parse(typeof(InputKey), "C");
     }
-    internal class FireSwordLogic : MissionLogic
+    internal class WeaponEffectsBehavior : MissionLogic
     {
+        delegate void VictimAgentConsequence(Agent affectedAgent, Agent affectorAgent, in MissionWeapon affectorWeapon, in Blow blow, in AttackCollisionData attackCollisionData);
+        public override void OnAgentHit(Agent affectedAgent, Agent affectorAgent, in MissionWeapon affectorWeapon, in Blow blow, in AttackCollisionData attackCollisionData)
+        {
+            if (blow.InflictedDamage < 1) return;
+            MissionWeapon missionWeapon = affectorWeapon;
+            RFEffectsLibrary.WeaponEffect effect =
+                RFEffectsLibrary.Instance.Effects.FirstOrDefault(x => x.Id == missionWeapon.Item?.StringId);
+
+            if (effect != default)
+            {
+                TOWParticleSystem.ApplyParticleToAgent(affectedAgent, effect.VictimEffect, out List<GameEntity> childEntities,
+                    TOWParticleSystem.ParticleIntensity.Low, false);
+
+                
+
+                VictimAgentConsequence victimEffect;
+
+                switch (effect.Effect)
+                {
+                    
+                }
+
+
+            }
+        }
+        public override void OnAgentShootMissile(Agent shooterAgent, EquipmentIndex weaponIndex, Vec3 position, Vec3 velocity, Mat3 orientation, bool hasRigidBody, int forcedMissileIndex)
+        {
+            Mission.Missile missile = Mission.Missiles.ElementAt(0);
+
+            Skeleton skeleton = missile.Entity.Skeleton;
+            Scene scene = Mission.Current.Scene;
+            GameEntity childEntity = GameEntity.CreateEmpty(scene);
+            MatrixFrame localFrame = new MatrixFrame(Mat3.Identity, new Vec3(0, 0, 0));
+            float elevationOffset = 0f;
+            MissionWeapon missionWeapon = missile.Weapon;
+            RFEffectsLibrary.WeaponEffect effect = RFEffectsLibrary.Instance.Effects.FirstOrDefault(x => x.Id == missionWeapon.Item?.StringId);
+            if (effect == default) return;
+            localFrame.Elevate(elevationOffset);
+            ParticleSystem particle = ParticleSystem.CreateParticleSystemAttachedToEntity(effect.ItemEffect, childEntity, ref localFrame);
+            if (particle != null)
+            {
+                missile.Entity.AddChild(childEntity);
+                skeleton.AddComponentToBone((sbyte)0, particle);
+            }
+        }
         public class AgentFireSwordData
         {
             public bool enabled;
@@ -82,6 +131,8 @@ namespace FireLord
                 }
             }
 
+
+
             public void SetFireSwordEnable(bool enable)
             {
                 if (agent == null)
@@ -110,8 +161,12 @@ namespace FireLord
                         return;
                     }
 
-                    if (wieldedWeapon.Item?.StringId.Contains("_fire") == false)
+                    RFEffectsLibrary.WeaponEffect Effects = RFEffectsLibrary.Instance.Effects.FirstOrDefault(x => x.Id == wieldedWeapon.Item?.StringId);
+                    if (Effects == default)
+                    {
                         return;
+                    }
+
 
                     int num = (int)Math.Round((double)wieldedWeapon.GetWeaponStatsData()[0].WeaponLength / 10.0);
                     MBAgentVisuals agentVisuals = agent.AgentVisuals;
@@ -126,6 +181,7 @@ namespace FireLord
                     Light light = Light.CreatePointLight(FireSwordProperties.FireSwordLightRadius);
                     light.Intensity = FireSwordProperties.FireSwordLightIntensity;
                     light.LightColor = FireSwordProperties.FireSwordLightColor;
+
                     switch (wieldedWeapon.CurrentUsageItem.WeaponClass)
                     {
                         default:
@@ -134,12 +190,23 @@ namespace FireLord
                         case WeaponClass.TwoHandedSword:
                         case WeaponClass.Mace:
                         case WeaponClass.TwoHandedMace:
+                        case WeaponClass.ThrowingKnife:
+                        case WeaponClass.Boulder:
+                        case WeaponClass.Stone:
+                        case WeaponClass.Bow:
+                        case WeaponClass.Dagger:
+                        case WeaponClass.Javelin:
                             {
                                 for (int i = 1; i < num; i++)
                                 {
                                     MatrixFrame matrixFrame4 = new MatrixFrame(Mat3.Identity, default(Vec3));
                                     MatrixFrame boneLocalFrame2 = matrixFrame4.Elevate((float)i * 0.1f);
-                                    ParticleSystem component2 = ParticleSystem.CreateParticleSystemAttachedToEntity("psys_game_burning_agent", weaponEntityFromEquipmentSlot, ref boneLocalFrame2);
+                                    ParticleSystem component2 = ParticleSystem.CreateParticleSystemAttachedToEntity(Effects.ItemEffect, weaponEntityFromEquipmentSlot, ref boneLocalFrame2);
+                                    if (component2 == null)
+                                    {
+                                        InformationManager.DisplayMessage(new InformationMessage($"Item effect of the weapon '{Effects.Id}' doens't exist."));
+                                        return;
+                                    }
                                     skeleton.AddComponentToBone(Game.Current.DefaultMonster.MainHandItemBoneIndex, component2);
                                 }
 
@@ -147,8 +214,11 @@ namespace FireLord
                                 MatrixFrame matrixFrame6 = (light3.Frame = light.Frame.Elevate((float)(num - 1) * 0.1f));
                                 break;
                             }
+                        case WeaponClass.Arrow:
+                        case WeaponClass.Bolt:
                         case WeaponClass.OneHandedAxe:
                         case WeaponClass.TwoHandedAxe:
+                        case WeaponClass.ThrowingAxe:
                         case WeaponClass.OneHandedPolearm:
                         case WeaponClass.TwoHandedPolearm:
                         case WeaponClass.LowGripPolearm:
@@ -159,7 +229,12 @@ namespace FireLord
                                 {
                                     MatrixFrame matrixFrame = new MatrixFrame(Mat3.Identity, default(Vec3));
                                     MatrixFrame boneLocalFrame = matrixFrame.Elevate((float)num3 * 0.1f);
-                                    ParticleSystem component = ParticleSystem.CreateParticleSystemAttachedToEntity("psys_game_burning_agent", weaponEntityFromEquipmentSlot, ref boneLocalFrame);
+                                    ParticleSystem component = ParticleSystem.CreateParticleSystemAttachedToEntity(Effects.ItemEffect, weaponEntityFromEquipmentSlot, ref boneLocalFrame);
+                                    if (component == null)
+                                    {
+                                        InformationManager.DisplayMessage(new InformationMessage($"Item effect of the weapon '{Effects.Id}' doens't exist."));
+                                        return;
+                                    }
                                     skeleton.AddComponentToBone(Game.Current.DefaultMonster.MainHandItemBoneIndex, component);
                                     num3--;
                                 }
@@ -179,7 +254,12 @@ namespace FireLord
                         for (sbyte b = 0; b < boneCount; b = (sbyte)(b + 1))
                         {
                             MatrixFrame boneLocalFrame3 = new MatrixFrame(Mat3.Identity, new Vec3(0f, 0f, 0f, -1f)).Elevate(0.2f);
-                            ParticleSystem component3 = ParticleSystem.CreateParticleSystemAttachedToEntity("psys_game_burning_agent", weaponEntityFromEquipmentSlot, ref boneLocalFrame3);
+                            ParticleSystem component3 = ParticleSystem.CreateParticleSystemAttachedToEntity(Effects.ItemEffect, weaponEntityFromEquipmentSlot, ref boneLocalFrame3);
+                            if (component3 == null)
+                            {
+                                InformationManager.DisplayMessage(new InformationMessage($"Item effect of the weapon '{Effects.Id}' doens't exist."));
+                                return;
+                            }
                             skeleton.AddComponentToBone(b, component3);
                         }
                     }
@@ -223,13 +303,11 @@ namespace FireLord
 
 
         private Dictionary<Agent, AgentFireSwordData> _agentFireSwordData = new();
-
-        public FireSwordLogic()
+        public WeaponEffectsBehavior()
         {
-
             _playerFireSwordEnabled = true;
+            RFEffectsLibrary.Initialize();
         }
-
 
         public bool IsInBattle()
         {

@@ -15,21 +15,9 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.MountAndBlade.ComponentInterfaces;
 using SandBox.GameComponents;
 
-namespace RealmsForgotten.RFEffects
+namespace RealmsForgotten.Behaviors
 {
     
-    public class BerserkerAgentApplyDamageModel : SandboxAgentApplyDamageModel
-    {
-        public override float CalculateDamage(in AttackInformation attackInformation, in AttackCollisionData collisionData, in MissionWeapon weapon, float baseDamage)
-        {
-            float baseNumber = base.CalculateDamage(attackInformation, collisionData, weapon, baseDamage);
-            if (attackInformation.VictimAgent == Agent.Main && HealingPotionMissionBehavior.berserkerMode)
-                return 0;
-            return baseNumber;
-        }
-    }
-
-
     public class HealingPotionMissionBehavior : MissionBehavior
     {
         private int soundIndex;

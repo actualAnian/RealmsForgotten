@@ -152,6 +152,12 @@ namespace RealmsForgotten
                     case "khuzait":
                         cultureObject.CultureFeats.Add(culturalFeats.allkhuurPrisonersJoinMilitia);
                         break;
+                    case "giant":
+                        cultureObject.CultureFeats.Add(culturalFeats.empireAdittionalTier);
+                        break;
+                    case "aqarun":
+                        cultureObject.CultureFeats.Add(culturalFeats.allkhuurPrisonersJoinMilitia);
+                        break;
                 }
 
             }

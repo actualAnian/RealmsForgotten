@@ -51,12 +51,12 @@ namespace RealmsForgotten.RFEffects
 		{
             RFMissionBehaviour missionBehavior = Mission.Current.GetMissionBehavior<RFMissionBehaviour>();
 			missionBehavior.toBeAdded.Add(victim);
-			if (!missionBehavior.attackerId.ContainsKey(victim.Index))
+			if (!missionBehavior.agentsUnderFire.ContainsKey(victim.Index))
 			{
-				missionBehavior.attackerId.Add(victim.Index, attacker.Index);
+				missionBehavior.agentsUnderFire.Add(victim.Index, attacker.Index);
 				return;
 			}
-			missionBehavior.attackerId[victim.Index] = attacker.Index;
+			missionBehavior.agentsUnderFire[victim.Index] = attacker.Index;
 		}
 		private readonly int _bloodStartHitParticleIndex = -1;
 
