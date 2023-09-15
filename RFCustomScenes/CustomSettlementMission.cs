@@ -1,17 +1,26 @@
 ﻿using SandBox;
+using SandBox.Conversation.MissionLogics;
+using SandBox.Missions.AgentBehaviors;
 using SandBox.Missions.MissionLogics;
+using SandBox.Missions.MissionLogics.Towns;
+using SandBox.View.Missions;
+using System.Collections.Generic;
+using TaleWorlds.CampaignSystem.Settlements.Locations;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.Source.Missions;
 using TaleWorlds.MountAndBlade.Source.Missions.Handlers;
+using TaleWorlds.MountAndBlade.Source.Missions.Handlers.Logic;
 using TaleWorlds.MountAndBlade.View;
+using TaleWorlds.MountAndBlade.View.MissionViews;
 
-namespace RFCustomSettlements
+namespace RealmsForgotten.RFCustomSettlements
 {
     public static class CustomSettlementMission
     {
-            public static Mission StartCustomSettlementMission(string sceneName, bool isRandomScene)
-            {
+            [MissionMethod]
+            public static Mission StartCustomSettlementMission(string sceneName)
+                {
                 return MissionState.OpenNew(sceneName,
                     SandBoxMissions.CreateSandBoxMissionInitializerRecord(sceneName, "", false, DecalAtlasGroup.Battle),
                     (Mission mission) => new MissionBehavior[] {
@@ -29,14 +38,33 @@ namespace RFCustomSettlements
                     new MissionBoundaryPlacer(),
                     new MissionBoundaryCrossingHandler(),
                     new EquipmentControllerLeaveLogic(),
+                    new HighlightsController(),
+
+                    new BattleMissionAgentInteractionLogic(),
+
+                    new MissionSingleplayerViewHandler(),
+                    new MissionItemContourControllerView(),
+                    new MissionAgentContourControllerView(),
+            //  new MissionSettlementPrepareLogic(),
+                    new SandBoxMissionHandler(),
+                    new MissionFightHandler(),
                     ViewCreator.CreateMissionLeaveView(),
                     ViewCreator.CreateMissionBoundaryCrossingView(),
-                    ViewCreator.CreateMissionAgentStatusUIHandler(mission),
                     ViewCreator.CreateMissionSingleplayerEscapeMenu(false),
                     ViewCreator.CreateOptionsUIHandler(),
                     ViewCreator.CreatePhotoModeView(),
-                    new CustomSettlementMissionLogic(isRandomScene)
-                    });
+                    ViewCreator.CreateMissionMainAgentEquipDropView(mission),
+                    ViewCreator.CreateSingleplayerMissionKillNotificationUIHandler(),
+
+                    new CustomSettlementMissionLogic(CustomSettlementBuildData.allCustomSettlementBuildDatas[sceneName]),
+                    ViewCreator.CreateMissionAgentStatusUIHandler(mission),
+
+                    new MissionCampaignView(),
+                    ViewCreator.CreateMissionAgentLockVisualizerView(),
+                    new MissionBoundaryWallView(),
+
+                    ViewCreator.CreateMissionMainAgentEquipmentController()
+                    }, true, true);
             }
         }
 

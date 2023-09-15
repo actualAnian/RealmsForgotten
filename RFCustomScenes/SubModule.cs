@@ -19,7 +19,7 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
-            SceneBuildData.BuildAll();
+            CustomSettlementBuildData.BuildAll();
         }
         protected override void OnGameStart(Game game, IGameStarter starterObject)
         {

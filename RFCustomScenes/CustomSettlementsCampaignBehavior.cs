@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameMenus;
@@ -12,6 +13,7 @@ using TaleWorlds.CampaignSystem.Overlay;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.Library;
 using TaleWorlds.Localization;
 
 namespace RealmsForgotten.RFCustomSettlements
@@ -101,7 +103,8 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         private void game_menu_rf_settlement_explore_on_consequence(MenuCallbackArgs args)
         {
-            CustomSettlementMission.StartCustomSettlementMission("beast_hunt_3", false);
+            var rfSettlement = Settlement.CurrentSettlement.SettlementComponent as RFCustomSettlement;
+            if(rfSettlement != null) CustomSettlementMission.StartCustomSettlementMission(rfSettlement.CustomScene);
         }
 
         private bool game_menu_rf_settlement_wait_on_condition(MenuCallbackArgs args)
@@ -116,7 +119,7 @@ namespace RealmsForgotten.RFCustomSettlements
         private bool game_menu_rf_settlement_explore_on_condition(MenuCallbackArgs args)
         {
             bool result;
-            if (Settlement.CurrentSettlement.SettlementComponent is RFCustomSettlements.RFCustomSettlement settlementComponent)
+            if (Settlement.CurrentSettlement.SettlementComponent is RFCustomSettlement settlementComponent)
             {
                 if (CharacterObject.PlayerCharacter.HitPoints < 25)
                 {
@@ -142,13 +145,18 @@ namespace RealmsForgotten.RFCustomSettlements
         [GameMenuInitializationHandler("rf_settlement_start")]
         private void game_menu_rf_settlement_start_on_init(MenuCallbackArgs args)
         {
-            if (Settlement.CurrentSettlement.SettlementComponent == null || Settlement.CurrentSettlement.SettlementComponent is not RFCustomSettlements.RFCustomSettlement) return;
+            if (Settlement.CurrentSettlement.SettlementComponent == null || Settlement.CurrentSettlement.SettlementComponent is not RFCustomSettlement) return;
   
             if(finishedMission)
             {
                 finishedMission = false;
-                InventoryManager.OpenScreenAsReceiveItems(itemLoot, new TextObject("Loot"), null);
                 Hero.MainHero.ChangeHeroGold(goldLoot);
+                TextObject goldText = new TextObject("Total Gold Loot: {CHANGE}{GOLD_ICON}", null);
+                goldText.SetTextVariable("CHANGE", goldLoot);
+                goldText.SetTextVariable("GOLD_ICON", "{=!}<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">");
+
+                InformationManager.DisplayMessage(new InformationMessage(goldText.ToString(), "event:/ui/notification/coins_positive"));
+                InventoryManager.OpenScreenAsReceiveItems(itemLoot, new TextObject("Loot"), null);
             }
             //this.currentRuin = (Settlement.CurrentSettlement.SettlementComponent as RFCustomSettlement);
             //GameTexts.SetVariable("RUIN_TEXT", this.currentRuin.Settlement.EncyclopediaText);

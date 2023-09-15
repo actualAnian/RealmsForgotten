@@ -29,7 +29,7 @@ using TaleWorlds.Localization;
 using System.Text;
 using RealmsForgotten.RFCustomSettlements;
 
-namespace RFCustomSettlements
+namespace RealmsForgotten.RFCustomSettlements
 {
     internal class CustomSettlementMissionLogic : MissionBehavior
     {
@@ -52,7 +52,6 @@ namespace RFCustomSettlements
 
 
 
-        private bool isRandomScene;
         private static int _disabledFaceId;
         private static int _disabledFaceIdForAnimals;
         private bool isMissionInitialized;
@@ -60,17 +59,19 @@ namespace RFCustomSettlements
         private List<CommonAreaMarker> areaMarkers;
         private IMissionTroopSupplier troopSupplier;
         private readonly Dictionary<Agent, CustomSettlementMissionLogic.UsedObject> defenderAgentObjects;
-        private IEnumerable<MissionObject> pickableItems;
+        private List<MissionObject> pickableItems;
         private ItemRoster loot;
         private int goldLooted = 0;
-        public CustomSettlementMissionLogic(bool isRandomScene)
+        private MobileParty banditsInSettlement;
+        private CustomSettlementBuildData BanditsData;
+        public CustomSettlementMissionLogic(CustomSettlementBuildData buildData)
         {
-            this.isRandomScene = isRandomScene;
             defenderAgentObjects = new Dictionary<Agent, CustomSettlementMissionLogic.UsedObject>();
             patrolAreas = new();
             areaMarkers = new();
             loot = new();
-            Temp();
+            banditsInSettlement = CreateBanditData(buildData);
+            BanditsData = buildData;
         }
         public override void OnMissionTick(float dt)
         {
@@ -91,90 +92,117 @@ namespace RFCustomSettlements
 
         private void LootArea()
         {
-
-            ItemRoster fullItemRoster = new ItemRoster();
-            List<HerdAgentComponent> huntableAgentsLooted = new();
-
+            bool foundItems = false;
+            List<MissionObject> objectsToRemove = new List<MissionObject>();
             foreach (MissionObject missionObject in pickableItems)
             {
                 if(missionObject.GameEntity.GlobalPosition.Distance(Agent.Main.Position) < Config.maxPickableDistance)
                 {
                     try
                     {
-                    string[] data =  missionObject.GameEntity.Name.Split('_');
-                    StringBuilder itemIdBuilder = new StringBuilder();
-                    foreach(string str in data.Skip(2).Take(data.Length - 3))
-                        itemIdBuilder.Append(str + "_");
-                        itemIdBuilder.Remove(itemIdBuilder.Length -1, 1);
-                    string itemId = itemIdBuilder.ToString();
-                    int amount = int.Parse(data.Last());
-                    if (itemId == "gold") goldLooted += amount;
-                    else loot.AddToCounts(MBObjectManager.Instance.GetObject<ItemObject>(itemId), amount);
+                        string itemId;
+                        int amount;
+                        ParseEditorItemData(missionObject.GameEntity.Name.Split('_'), out itemId, out amount);
+                        string soundEventId = "";
+                        if (itemId == "gold")
+                        {
+                            goldLooted += amount;
+                            soundEventId = "event:/ui/notification/coins_positive";
+                            HuntableHerds.SubModule.PrintDebugMessage("You found " + goldLooted + " gold coins!");
+                        }
+                        else
+                        {
+                            ItemObject item = MBObjectManager.Instance.GetObject<ItemObject>(itemId);
+                            loot.AddToCounts(item, amount);
+                            HuntableHerds.SubModule.PrintDebugMessage("You found " + item.Name + "!");
+                            soundEventId = "event:/mission/combat/pickup_arrows";
+                        }
+                        foundItems = true;
+                        Mission.MakeSoundOnlyOnRelatedPeer(SoundEvent.GetEventIdFromString(soundEventId), missionObject.GameEntity.GlobalPosition, Mission.MainAgent.Index);
+                        missionObject.GameEntity.ClearComponents();
+                        objectsToRemove.Add(missionObject);
                     }
-                    catch 
+                    catch
                     {
+                        string str = "Error in game entity name" + missionObject.GameEntity.Name;
+                        HuntableHerds.SubModule.PrintDebugMessage(str, 255, 0, 0);
                     }
                 }
-//                fullItemRoster.Add(pair.Value.GetItemDrops());
-  //              huntableAgentsLooted.Add(pair.Value);
             }
 
-            if (huntableAgentsLooted.Count == 0)
+            pickableItems.RemoveAll(m => objectsToRemove.Contains(m));
+            if (!foundItems)
             {
-    //            SubModule.PrintDebugMessage("There's nothing to loot nearby...");
+                HuntableHerds.SubModule.PrintDebugMessage("There's nothing to loot nearby...");
                 return;
             }
         }
 
+        private static void ParseEditorItemData(string[] EditorItemString, out string itemId, out int amount)
+        {
+            string[] data = EditorItemString;
+            StringBuilder itemIdBuilder = new();
+            foreach (string str in data.Skip(2).Take(data.Length - 3))
+                itemIdBuilder.Append(str + "_");
+            itemIdBuilder.Remove(itemIdBuilder.Length - 1, 1);
+            itemId = itemIdBuilder.ToString();
+            amount = int.Parse(data.Last());
+        }
+
         private void InitializeMission()
         {
-            pickableItems = base.Mission.MissionObjects.Where(m => (m.GameEntity.Name.Contains("rf_pickable")));
-            try
-            {
+            pickableItems = base.Mission.MissionObjects.Where(m => (m.GameEntity.Name.Contains("rf_pickable"))).ToList();
+
             areaMarkers.AddRange(from area in base.Mission.ActiveMissionObjects.FindAllWithType<CommonAreaMarker>()
                                        orderby area.AreaIndex
                                        select area);
-            }
-            catch (Exception ex) { areaMarkers = new(); }
+            
             patrolAreas.AddRange(from area in base.Mission.ActiveMissionObjects.FindAllWithType<PatrolArea>()
                                  orderby area.AreaIndex
                                  select area);
-            //Temp();
             SpawnPatrollingTroops(patrolAreas, defenderAgentObjects);
             SpawnStandingTroops(areaMarkers, defenderAgentObjects);
         }
 
-        private FlattenedTroopRoster Temp()
+        private MobileParty CreateBanditData(CustomSettlementBuildData bd)
         {
-            var looter = MBObjectManager.Instance.GetObject<CharacterObject>("looter");
+            List<string> banditIDs = new();
 
-            TroopRoster temp = new TroopRoster(Hero.MainHero.PartyBelongedTo.Party);
-            temp.AddToCounts(looter, 1);
-            
-            FlattenedTroopRoster troopRoster = new();
-            troopRoster.Add(temp.GetElementCopyAtIndex(0));
-            temp = TroopRoster.CreateDummyTroopRoster();
-            return troopRoster;
-            //troopSupplier = new PartyGroupTroopSupplier(MapEvent.PlayerMapEvent, BattleSideEnum.Defender, troopRoster, null);
+            MobileParty mparty = new MobileParty();
+
+            foreach (KeyValuePair<int, CustomSettlementBuildData.RFBanditData> pair in bd.patrolAreasBandits)
+            {
+                if(!banditIDs.Contains(pair.Value.Id))
+                {
+                    banditIDs.Add(pair.Value.Id);
+                    var troop = MBObjectManager.Instance.GetObject<CharacterObject>(pair.Value.Id);
+                    mparty.AddElementToMemberRoster(troop, 1);
+                }
+            }
+            foreach(KeyValuePair<int, List<CustomSettlementBuildData.RFBanditData>> pair in bd.stationaryAreasBandits) 
+            {
+                foreach(CustomSettlementBuildData.RFBanditData banditData in pair.Value)
+                {
+                    banditIDs.Add(banditData.Id);
+                    var troop = MBObjectManager.Instance.GetObject<CharacterObject>(banditData.Id);
+                    mparty.AddElementToMemberRoster(troop, 1);
+                }
+            }
+
+            return mparty;            
         }
 
         private void SpawnStandingTroops(List<CommonAreaMarker> areaMarkers, Dictionary<Agent, CustomSettlementMissionLogic.UsedObject> defenderAgentObjects)
         {
             foreach (CommonAreaMarker commonAreaMarker in areaMarkers)
             {
+                int areaIndex = commonAreaMarker.AreaIndex;
+                if (!BanditsData.stationaryAreasBandits.ContainsKey(areaIndex)) continue;
                 List<StandingPoint> usableMachinesInArea = new();
-                StandingPoint standingPoint = new();
+                StandingPoint standingPoint;
                 MatrixFrame globalFrame;
 
-                CharacterObject looter = MBObjectManager.Instance.GetObject<CharacterObject>("looter");
-
-                MobileParty mparty = new MobileParty();
-                mparty.AddElementToMemberRoster(looter, 1);
-                FlattenedTroopRoster flattenedTroopRosterElements = mparty.MemberRoster.ToFlattenedRoster();
-                UniqueTroopDescriptor descriptor = flattenedTroopRosterElements.ElementAt(0).Descriptor;
-                PartyBase party = new PartyBase(mparty);
-
-                RFAgentOrigin rFAgentOrigin = new RFAgentOrigin(party, descriptor, 1, flattenedTroopRosterElements[descriptor]);
+                Dictionary<string, int> banditsInArea = GetTroopsInArea(BanditsData.stationaryAreasBandits[areaIndex], out int allBandits);
 
                 foreach (UsableMachine usableMachine in commonAreaMarker.GetUsableMachinesInRange(null))
                 {
@@ -183,14 +211,15 @@ namespace RFCustomSettlements
                 usableMachinesInArea.Shuffle();
                 Queue<StandingPoint> usableMachinesQueue = new Queue<StandingPoint>((IEnumerable<StandingPoint>)usableMachinesInArea);
 
-                for(int i = 0; i < 2; i++)
+                for(int i = 0; i < allBandits; i++)
                 {
                     try 
                     {
+                        RFAgentOrigin agentToSpawn = PrepareAgentToSpawn(ChooseBanditToSpawn(banditsInArea));
                         standingPoint = usableMachinesQueue.Dequeue();
                         globalFrame = standingPoint.GameEntity.GetGlobalFrame();
                         globalFrame.rotation.OrthonormalizeAccordingToForwardAndKeepUpAsZAxis();
-                        Agent agent = Mission.Current.SpawnTroop(rFAgentOrigin, false, false, false, false, 0, 0, false, false, false, new Vec3?(globalFrame.origin), new Vec2?(globalFrame.rotation.f.AsVec2.Normalized()), "_hideout_bandit", null, FormationClass.NumberOfAllFormations, false);
+                        Agent agent = Mission.Current.SpawnTroop(agentToSpawn, false, false, false, false, 0, 0, false, false, false, new Vec3?(globalFrame.origin), new Vec2?(globalFrame.rotation.f.AsVec2.Normalized()), "_hideout_bandit", null, FormationClass.NumberOfAllFormations, false);
 
                         InitializeBanditAgent(agent, standingPoint, false, defenderAgentObjects);
                     }
@@ -203,33 +232,56 @@ namespace RFCustomSettlements
             }
         }
 
+        private RFAgentOrigin PrepareAgentToSpawn(string banditId)
+        {
+            FlattenedTroopRoster flattenedTR = banditsInSettlement.MemberRoster.ToFlattenedRoster();
+            UniqueTroopDescriptor descriptor = flattenedTR.FindIndexOfCharacter(MBObjectManager.Instance.GetObject<CharacterObject>(banditId));
+
+            RFAgentOrigin rFAgentOrigin = new RFAgentOrigin(new PartyBase(banditsInSettlement), descriptor, 1, flattenedTR[descriptor]);
+            return rFAgentOrigin;
+        }
+        private string ChooseBanditToSpawn(Dictionary<string, int> banditsInArea)
+        {
+            KeyValuePair<string, int> banditPair = banditsInArea.GetRandomElementInefficiently();
+            banditsInArea[banditPair.Key] -= 1;
+            if (banditsInArea[banditPair.Key] < 1) banditsInArea.Remove(banditPair.Key);
+            return banditPair.Key;
+        }
+
         private void SpawnPatrollingTroops(List<PatrolArea> patrolAreas, Dictionary<Agent, CustomSettlementMissionLogic.UsedObject> defenderAgentObjects)
         {
-            StandingPoint standingPoint = null;
             IEnumerable<PatrolArea> source = from area in patrolAreas
                                              where area.StandingPoints.All((StandingPoint point) => !point.HasUser && !point.HasAIMovingTo)
                                              select area;
-            if (!source.IsEmpty<PatrolArea>())
+            foreach(PatrolArea area in source) 
             {
-                standingPoint = source.First<PatrolArea>().StandingPoints[0];
+                try
+                {
+                    int areaIndex = area.AreaIndex;
+                    if (!BanditsData.patrolAreasBandits.ContainsKey(areaIndex)) continue;
+
+                    MatrixFrame globalFrame = area.GameEntity.GetGlobalFrame();
+                    globalFrame.rotation.OrthonormalizeAccordingToForwardAndKeepUpAsZAxis();
+
+                    RFAgentOrigin troopToSpawn = PrepareAgentToSpawn(BanditsData.patrolAreasBandits[areaIndex].Id);
+                    Agent agent = Mission.Current.SpawnTroop(troopToSpawn, false, false, false, false, 0, 0, false, false, false, new Vec3?(globalFrame.origin), new Vec2?(globalFrame.rotation.f.AsVec2.Normalized()), "_hideout_bandit", null, FormationClass.NumberOfAllFormations, false);
+                    InitializeBanditAgent(agent, area.StandingPoints[0], false, defenderAgentObjects);
+                }
+                catch (Exception) { }
+
             }
-//            List<IAgentOriginBase> list2 = troopSupplier.SupplyTroops(1).ToList<IAgentOriginBase>();
-            MatrixFrame globalFrame = standingPoint.GameEntity.GetGlobalFrame();
-            globalFrame.rotation.OrthonormalizeAccordingToForwardAndKeepUpAsZAxis();
-
-            CharacterObject looter = MBObjectManager.Instance.GetObject<CharacterObject>("looter");
-
-            MobileParty mparty = new MobileParty();
-            mparty.AddElementToMemberRoster(looter, 1);
-            FlattenedTroopRoster flattenedTroopRosterElements = mparty.MemberRoster.ToFlattenedRoster();
-            UniqueTroopDescriptor descriptor = flattenedTroopRosterElements.ElementAt(0).Descriptor;
-            PartyBase party = new PartyBase(mparty);
-
-            RFAgentOrigin rFAgentOrigin = new RFAgentOrigin(party, descriptor, 1, flattenedTroopRosterElements[descriptor]);
-            Agent agent = Mission.Current.SpawnTroop(rFAgentOrigin, false, false, false, false, 0, 0, false, false, false, new Vec3?(globalFrame.origin), new Vec2?(globalFrame.rotation.f.AsVec2.Normalized()), "_hideout_bandit", null, FormationClass.NumberOfAllFormations, false);
-            InitializeBanditAgent(agent, standingPoint, false, defenderAgentObjects);
         }
-
+        private Dictionary<string, int> GetTroopsInArea(List<CustomSettlementBuildData.RFBanditData> rFBanditData, out int allBandits)
+        {
+            Dictionary<string, int> bandits = new();
+            allBandits = 0;
+            foreach (CustomSettlementBuildData.RFBanditData data in rFBanditData)
+            {
+                bandits[data.Id] = data.Amount;
+                allBandits += data.Amount;
+            }
+            return bandits;
+        }
         private void InitializeBanditAgent(Agent agent, StandingPoint spawnPoint, bool isPatrolling, Dictionary<Agent, CustomSettlementMissionLogic.UsedObject> defenderAgentObjects)
         {
             UsableMachine usableMachine = isPatrolling ? spawnPoint.GameEntity.Parent.GetScriptComponents<PatrolArea>().FirstOrDefault<PatrolArea>() : spawnPoint.GameEntity.Parent.GetScriptComponents<UsableMachine>().FirstOrDefault<UsableMachine>();
@@ -279,6 +331,7 @@ namespace RFCustomSettlements
             SpawnPlayer();
             SpawnChicken();
             SpawnItems();
+            HuntableHerds.SubModule.PrintDebugMessage("Press Q nearby interesting items to loot them!");
         }
 
         private void SpawnItems()
@@ -319,6 +372,12 @@ namespace RFCustomSettlements
 
             AgentBuildData agentBuildData2 = agentBuildData.InitialDirection(vec).CivilianEquipment(false).NoHorses(false).NoWeapons(false).ClothingColor1(base.Mission.PlayerTeam.Color).ClothingColor2(base.Mission.PlayerTeam.Color2).TroopOrigin(new PartyAgentOrigin(PartyBase.MainParty, playerCharacter, -1, default(UniqueTroopDescriptor), false)).MountKey(MountCreationKey.GetRandomMountKeyString(playerCharacter.Equipment[EquipmentIndex.ArmorItemEndSlot].Item, playerCharacter.GetMountKeySeed())).Controller(Agent.ControllerType.Player);
 
+            Hero heroObject = playerCharacter.HeroObject;
+
+            if (((heroObject != null) ? heroObject.ClanBanner : null) != null)
+            {
+                agentBuildData2.Banner(playerCharacter.HeroObject.ClanBanner);
+            }
 
             Agent agent = base.Mission.SpawnAgent(agentBuildData2);
 
