@@ -33,7 +33,7 @@ namespace RealmsForgotten.Behaviors
     {
         private CampaignTime lastMeetingTime;
         private ItemRoster? vendorItemRoster;
-        public static readonly string[] skillsIds = new[] { "rfonehanded", "rftwohanded", "rfpolearm", "rfthrowing", "rfbow", "rfcrossbow", "rfmoralizing", "rfdemoralizing", "rfmisc" };
+        public static readonly string[] skillsIds = new[] { "rfonehanded", "rftwohanded", "rfpolearm", "rfthrowing", "rfbow", "rfcrossbow", "rfmoralizing", "rfdemoralizing", "rfmisc", "rfprice" };
         public override void RegisterEvents()
         {
             CampaignEvents.LocationCharactersAreReadyToSpawnEvent.AddNonSerializedListener(this, new Action<Dictionary<string, int>>(this.LocationCharactersAreReadyToSpawn));

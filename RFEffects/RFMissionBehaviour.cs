@@ -32,8 +32,6 @@ namespace RealmsForgotten.RFEffects
         public override void OnCreated()
         {
             base.OnCreated();
-            if (RFEffectsSubModule.undeadRespawnConfig.Count == 0)
-                MBInformationManager.AddQuickInformation(new TextObject("undead_respawn_config.json is null!!"));
         }
 
         public override void OnAgentDeleted(Agent agent)
@@ -91,7 +89,7 @@ namespace RealmsForgotten.RFEffects
 						Dictionary<Agent, double> dictionary = this.victimsDamage;
 						Agent key = keyValuePair.Key;
 						dictionary[key] += (double)num;
-						Blow blow = this.CreateBlow(keyValuePair.Key, num, this.attackerId[keyValuePair.Key.Index]);
+						Blow blow = this.CreateBlow(keyValuePair.Key, num, this.agentsUnderFire[keyValuePair.Key.Index]);
 						AttackCollisionData attackCollisionData = default(AttackCollisionData);
 						ref AttackCollisionData collisionData = ref attackCollisionData;
 						keyValuePair.Key.RegisterBlow(blow, collisionData);
@@ -140,6 +138,6 @@ namespace RealmsForgotten.RFEffects
 
 		private double clockGeneratorTime;
 
-		public Dictionary<int, int> attackerId = new Dictionary<int, int>();
+		public Dictionary<int, int> agentsUnderFire = new Dictionary<int, int>();
 	}
 }

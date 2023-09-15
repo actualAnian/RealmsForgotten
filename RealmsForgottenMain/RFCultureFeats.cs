@@ -36,6 +36,10 @@ namespace RealmsForgotten
 
             nasoriaCheaperMercenaries = this.Create("nasoria_cheaper_mercenaries");
 
+            xilantlacayRaidersBonus = this.Create("xilantlacay_raiders_bonus");
+
+            aqarunRecruitBandits = this.Create("aqarun_recruit_bandits");
+
             this.InitializeAll();
         }
 
@@ -56,6 +60,10 @@ namespace RealmsForgotten
             dreadrealmSoldiersRevive.Initialize("{=!}dreadrealm_soldiers_revive", "{=dreadrealm_soldiers_revive}15% chance to recover 15% of your troops in battle, the higher your level the greater the number of troops recovered.", 0.15f, true, FeatObject.AdditionType.AddFactor);
 
             nasoriaCheaperMercenaries.Initialize("{=!}nasoria_cheaper_mercenaries", "{=nasoria_cheaper_mercenaries}Recruiting mercenaries is 20% cheaper.", 0.20f, true, FeatObject.AdditionType.AddFactor);
+
+            xilantlacayRaidersBonus.Initialize("{=!}xilantlacay_raiders_bonus", "{=xilantlacay_raiders_bonus}Raiding villages is 20% faster and give 20% more loot.", 0.20f, true, FeatObject.AdditionType.AddFactor);
+
+            aqarunRecruitBandits.Initialize("{=!}aqarun_recruit_bandits", "{=aqarun_recruit_bandits}No costs in recruiting bandits.", 0.20f, true, FeatObject.AdditionType.AddFactor);
         }
 
 
@@ -70,6 +78,10 @@ namespace RealmsForgotten
         public FeatObject dreadrealmSoldiersRevive;
 
         public FeatObject nasoriaCheaperMercenaries;
+
+        public FeatObject xilantlacayRaidersBonus;
+
+        public FeatObject aqarunRecruitBandits;
     }
 
 }

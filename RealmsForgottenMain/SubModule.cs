@@ -16,6 +16,10 @@ using TaleWorlds.Core;
 using TaleWorlds.Localization;
 using TaleWorlds.ModuleManager;
 using TaleWorlds.MountAndBlade;
+using System.Reflection;
+using Newtonsoft.Json.Linq;
+using TaleWorlds.Engine.GauntletUI;
+using Module = TaleWorlds.MountAndBlade.Module;
 
 namespace RealmsForgotten
 {
@@ -86,7 +90,7 @@ namespace RealmsForgotten
             base.OnSubModuleLoad();
             TextObject coreContentDisabledReason = new("Disabled during installation.", null);
             SpawnedItemEntity e;
-          
+            UIConfig.DoNotUseGeneratedPrefabs = true;
             RemoveSandboxAndStoryOptions();
 
             Module.CurrentModule.AddInitialStateOption(
@@ -96,7 +100,34 @@ namespace RealmsForgotten
             );
             new Harmony("mods.bannerlord.realmsforgotten").PatchAll();
         }
+        public static Dictionary<string, int> undeadRespawnConfig { get; private set; }
+        private void ReadConfigFile()
+        {
+            string jsonFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "undead_respawn_config.json");
+            JObject jsonObject = JObject.Parse(File.ReadAllText(jsonFilePath));
 
+            if (jsonObject.TryGetValue("characters", out JToken charactersToken))
+            {
+                JObject charactersObject = (JObject)charactersToken;
+                undeadRespawnConfig = new();
+                foreach (var character in charactersObject)
+                {
+
+                    string characterName = character.Key;
+                    int characterValue = character.Value.Value<int>();
+                    if (characterValue > 100)
+                        characterValue = 100;
+                    if (characterValue < 1)
+                        characterValue = 1;
+                    undeadRespawnConfig.Add(characterName, characterValue);
+                }
+
+            }
+            else
+            {
+                Console.WriteLine("Error in undead_respawn_config.json");
+            }
+        }
         protected override void InitializeGameStarter(Game game, IGameStarter starterObject)
         {
             base.InitializeGameStarter(game, starterObject);
