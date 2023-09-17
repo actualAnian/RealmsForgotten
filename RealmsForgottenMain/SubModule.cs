@@ -17,8 +17,8 @@ using TaleWorlds.Localization;
 using TaleWorlds.ModuleManager;
 using TaleWorlds.MountAndBlade;
 using System.Reflection;
-using Newtonsoft.Json.Linq;
 using TaleWorlds.Engine.GauntletUI;
+using Newtonsoft.Json.Linq;
 using Module = TaleWorlds.MountAndBlade.Module;
 
 namespace RealmsForgotten

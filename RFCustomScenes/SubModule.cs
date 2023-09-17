@@ -11,6 +11,7 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             base.OnSubModuleLoad();
             new Harmony("RFCustomScenes").PatchAll();
+            CustomSettlementBuildData.BuildAll();
         }
 
         protected override void OnSubModuleUnloaded()
@@ -19,7 +20,6 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
-            CustomSettlementBuildData.BuildAll();
         }
         protected override void OnGameStart(Game game, IGameStarter starterObject)
         {
