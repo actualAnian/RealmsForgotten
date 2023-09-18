@@ -153,10 +153,20 @@ namespace RealmsForgotten
                         cultureObject.CultureFeats.Add(culturalFeats.allkhuurPrisonersJoinMilitia);
                         break;
                     case "giant":
-                        cultureObject.CultureFeats.Add(culturalFeats.empireAdittionalTier);
+                        cultureObject.CultureFeats.Add(culturalFeats.xilantlacayRaidersBonus);
+                        if (cultureObject.CultureFeats.Contains(DefaultCulturalFeats.AseraiDesertFeat))
+                            cultureObject.CultureFeats.Remove(DefaultCulturalFeats.AseraiDesertFeat);
+                        if (cultureObject.CultureFeats.Contains(DefaultCulturalFeats.AseraiTraderFeat))
+                            cultureObject.CultureFeats.Remove(DefaultCulturalFeats.AseraiTraderFeat);
                         break;
                     case "aqarun":
-                        cultureObject.CultureFeats.Add(culturalFeats.allkhuurPrisonersJoinMilitia);
+
+                        if(cultureObject.CultureFeats.Contains(DefaultCulturalFeats.AseraiDesertFeat))
+                            cultureObject.CultureFeats.Remove(DefaultCulturalFeats.AseraiDesertFeat);
+                        if (cultureObject.CultureFeats.Contains(DefaultCulturalFeats.AseraiTraderFeat))
+                            cultureObject.CultureFeats.Remove(DefaultCulturalFeats.AseraiTraderFeat);
+
+                        cultureObject.CultureFeats.Add(culturalFeats.aqarunRecruitBandits);
                         break;
                 }
 
