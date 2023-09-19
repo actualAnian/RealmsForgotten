@@ -39,7 +39,6 @@ namespace RealmsForgotten.HuntableHerds
                     animalSpawnPositions.Add(globalFrame.origin);
                 }
             }
-
             SpawnPlayer();
             SubModule.PrintDebugMessage("Press Q nearby slain animals to skin and loot them!");
         }
