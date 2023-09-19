@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Core;
-
-namespace RealmsForgotten.HuntableHerds.Models {
+namespace RealmsForgotten.HuntableHerds.Models
+{
     public class HerdBuildData {
         public string NotifMessage;
         public string MessageTitle;
@@ -23,8 +24,9 @@ namespace RealmsForgotten.HuntableHerds.Models {
         public List<(string, (int, int))> ItemDrops;
         public List<string> SceneIds;
 
-        private static List<HerdBuildData> allHuntableAgentBuildDatas = new();
+        public static List<HerdBuildData> allHuntableAgentBuildDatas = new();
         public static HerdBuildData? CurrentHerdBuildData;
+
 
         public HerdBuildData(string notifMessage, string messageTitle, string message, string spawnId, int totalAmountInHerd, bool isPassive, float startingHealth, float maxSpeed, float hitboxRange, int damageToPlayer, float sightRange, bool fleeOnAttacked, List<(string, (int, int))> itemDropsIdAndCount, List<string> sceneIds) {
             NotifMessage = notifMessage;

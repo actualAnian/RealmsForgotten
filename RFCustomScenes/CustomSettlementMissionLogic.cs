@@ -28,6 +28,7 @@ using TaleWorlds.CampaignSystem.Inventory;
 using TaleWorlds.Localization;
 using System.Text;
 using RealmsForgotten.RFCustomSettlements;
+using RealmsForgotten.HuntableHerds.Models;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -58,6 +59,7 @@ namespace RealmsForgotten.RFCustomSettlements
         private List<PatrolArea> patrolAreas;
         private List<CommonAreaMarker> areaMarkers;
         private IMissionTroopSupplier troopSupplier;
+        private List<GameEntity> animalSpawnPositions = new();
         private readonly Dictionary<Agent, CustomSettlementMissionLogic.UsedObject> defenderAgentObjects;
         private List<MissionObject> pickableItems;
         private ItemRoster loot;
@@ -160,10 +162,62 @@ namespace RealmsForgotten.RFCustomSettlements
             patrolAreas.AddRange(from area in base.Mission.ActiveMissionObjects.FindAllWithType<PatrolArea>()
                                  orderby area.AreaIndex
                                  select area);
+            animalSpawnPositions.AddRange(Mission.Current.Scene.FindEntitiesWithTag("spawnpoint_herdanimal"));
+
             SpawnPatrollingTroops(patrolAreas, defenderAgentObjects);
             SpawnStandingTroops(areaMarkers, defenderAgentObjects);
+            SpawnHuntableHerdsAnimals();
         }
 
+        private void SpawnHuntableHerdsAnimals()
+        {
+            foreach(GameEntity entity in animalSpawnPositions)
+            {
+                try
+                {
+                    MatrixFrame frame = MatrixFrame.Identity;
+                    Vec3 position = entity.GetGlobalFrame().origin;
+                    ItemObject spawnObject = Game.Current.ObjectManager.GetObject<ItemObject>(entity.Name);
+                    ItemRosterElement rosterElement = new ItemRosterElement(spawnObject);
+                    Vec2 initialDirection = frame.rotation.f.AsVec2;
+                    Agent agent = base.Mission.SpawnMonster(rosterElement, default(ItemRosterElement), in position, in initialDirection);
+
+                    HerdBuildData herdBuildData = (from buildData in HerdBuildData.allHuntableAgentBuildDatas where buildData.SpawnId == entity.Name select buildData).ElementAt(0);
+                    HerdAgentComponent huntAgentComponent = herdBuildData.IsPassive ? new PassiveHerdAgentComponent(agent) : new AggressiveHerdAgentComponent(agent);
+
+                    agent.AddComponent(huntAgentComponent);
+
+                    //animals.Add(agent, huntAgentComponent);
+
+                    for (int i = 0; i < 3; i++)
+                    {
+                        agent.AgentVisuals.GetSkeleton().TickAnimations(0.1f, agent.AgentVisuals.GetGlobalFrame(), true);
+                    }
+                }
+                catch 
+                { }
+            }
+        }
+        private void SpawnAnimalToHunt(Vec3 position)
+        {
+            MatrixFrame frame = MatrixFrame.Identity;
+
+            ItemObject spawnObject = Game.Current.ObjectManager.GetObject<ItemObject>(HerdBuildData.CurrentHerdBuildData.SpawnId);
+            ItemRosterElement rosterElement = new ItemRosterElement(spawnObject);
+            Vec2 initialDirection = frame.rotation.f.AsVec2;
+            Agent agent = base.Mission.SpawnMonster(rosterElement, default(ItemRosterElement), in position, in initialDirection);
+
+            HerdAgentComponent huntAgentComponent = HerdBuildData.CurrentHerdBuildData.IsPassive ? new PassiveHerdAgentComponent(agent) : new AggressiveHerdAgentComponent(agent);
+
+            agent.AddComponent(huntAgentComponent);
+
+            //animals.Add(agent, huntAgentComponent);
+
+            for (int i = 0; i < 3; i++)
+            {
+                agent.AgentVisuals.GetSkeleton().TickAnimations(0.1f, agent.AgentVisuals.GetGlobalFrame(), true);
+            }
+        }
         private MobileParty CreateBanditData(CustomSettlementBuildData bd)
         {
             List<string> banditIDs = new();
@@ -223,14 +277,15 @@ namespace RealmsForgotten.RFCustomSettlements
 
                         InitializeBanditAgent(agent, standingPoint, false, defenderAgentObjects);
                     }
-                    catch(InvalidOperationException)
+                    catch
                     {
-                        break;
+                        HuntableHerds.SubModule.PrintDebugMessage($"error spawning the bandits in area {areaIndex}");
                     }
                 }
 
             }
         }
+
 
         private RFAgentOrigin PrepareAgentToSpawn(string banditId)
         {

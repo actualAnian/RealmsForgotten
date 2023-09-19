@@ -36,9 +36,7 @@ namespace RealmsForgotten.RFCustomSettlements
 
         public static void BuildAll()
         {
-            Dictionary<int, List<RFBanditData>> buildStationaryAreasBandits = new();
-            Dictionary<int, RFBanditData> buildPatrolAreasBandits = new();
-            string sceneId;
+
 
             string mainPath = Path.GetDirectoryName(Globals.realmsForgottenAssembly.Location);
 
@@ -48,6 +46,10 @@ namespace RealmsForgotten.RFCustomSettlements
 
             foreach (XElement element in SettlementBandits.Descendants("CustomScene"))
             {
+                Dictionary<int, List<RFBanditData>> buildStationaryAreasBandits = new();
+                Dictionary<int, RFBanditData> buildPatrolAreasBandits = new();
+                string sceneId;
+
                 sceneId = element.Element("id").Value;
                 foreach (XElement xElement in element.Descendants("Bandits").Descendants("CommonArea"))
                 {
