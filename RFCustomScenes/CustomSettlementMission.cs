@@ -3,6 +3,7 @@ using SandBox.Conversation.MissionLogics;
 using SandBox.Missions.AgentBehaviors;
 using SandBox.Missions.MissionLogics;
 using SandBox.Missions.MissionLogics.Towns;
+using SandBox.View;
 using SandBox.View.Missions;
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem.Settlements.Locations;
@@ -63,7 +64,10 @@ namespace RealmsForgotten.RFCustomSettlements
                     ViewCreator.CreateMissionAgentLockVisualizerView(),
                     new MissionBoundaryWallView(),
 
-                    ViewCreator.CreateMissionMainAgentEquipmentController()
+                    ViewCreator.CreateMissionMainAgentEquipmentController(),
+
+
+                    SandBoxViewCreator.CreateMissionNameMarkerUIHandler(mission)
                     }, true, true);
             }
         }
