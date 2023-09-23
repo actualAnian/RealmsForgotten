@@ -92,6 +92,10 @@ namespace RealmsForgotten.RFCustomSettlements
         [GameMenuInitializationHandler("rf_settlement_wait_menu")]
         private void game_menu_rf_settlement_wait_menu_on_init(MenuCallbackArgs args)
         {
+            RFCustomSettlement curSettlement;
+            if (Settlement.CurrentSettlement.SettlementComponent == null || (curSettlement = ((RFCustomSettlement)Settlement.CurrentSettlement.SettlementComponent)) == null) return;
+            args.MenuContext.SetBackgroundMeshName(curSettlement.WaitMeshName);
+
             args.MenuContext.GameMenu.StartWait();
             //UpdateMenuLocations();
             if (PlayerEncounter.Current != null)
@@ -127,6 +131,7 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             bool canPlayerDo = Campaign.Current.Models.SettlementAccessModel.CanMainHeroDoSettlementAction(Settlement.CurrentSettlement, SettlementAccessModel.SettlementAction.WaitInSettlement, out bool shouldBeDisabled, out TextObject disabledText);
             args.optionLeaveType = GameMenuOption.LeaveType.Wait;
+
             return MenuHelper.SetOptionProperties(args, canPlayerDo, shouldBeDisabled, disabledText);
         }
 
@@ -138,7 +143,7 @@ namespace RealmsForgotten.RFCustomSettlements
                 if (CharacterObject.PlayerCharacter.HitPoints < 25)
                 {
                     args.IsEnabled = false;
-                    args.Tooltip = new TextObject("{=rf_too_wounded}You are too wounded to explore the ruin!", null);
+                    args.Tooltip = new TextObject("{=rf_too_wounded}You are too wounded to explore the area!", null);
                 }
                 if (settlementComponent.IsRaided)
                 {
@@ -158,9 +163,9 @@ namespace RealmsForgotten.RFCustomSettlements
 
         [GameMenuInitializationHandler("rf_settlement_start")]
         private void game_menu_rf_settlement_start_on_init(MenuCallbackArgs args)
-#pragma warning restore IDE1006 // Naming Styles
         {
-            if (Settlement.CurrentSettlement.SettlementComponent == null || Settlement.CurrentSettlement.SettlementComponent is not RFCustomSettlement) return;
+            RFCustomSettlement curSettlement;
+            if (Settlement.CurrentSettlement.SettlementComponent == null || (curSettlement = ((RFCustomSettlement)Settlement.CurrentSettlement.SettlementComponent)) == null) return;
             if(NextSceneData.Instance.shouldSwitchScenes && NextSceneData.Instance.newSceneId != null)
             {
                 try
@@ -189,6 +194,7 @@ namespace RealmsForgotten.RFCustomSettlements
                 if(!itemLoot.IsEmpty())
                     InventoryManager.OpenScreenAsReceiveItems(itemLoot, new TextObject("Loot"), null);
             }
+            args.MenuContext.SetBackgroundMeshName(curSettlement.BackgroundMeshName);
             //this.currentRuin = (Settlement.CurrentSettlement.SettlementComponent as RFCustomSettlement);
             //GameTexts.SetVariable("RUIN_TEXT", this.currentRuin.Settlement.EncyclopediaText);
             //if (MobileParty.MainParty.CurrentSettlement != null)
@@ -196,7 +202,7 @@ namespace RealmsForgotten.RFCustomSettlements
             //    PlayerEncounter.LeaveSettlement();
             //}
         }
-
+#pragma warning restore IDE1006 // Naming Styles
         public override void SyncData(IDataStore dataStore)
         {
             if (dataStore.IsSaving)

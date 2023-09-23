@@ -48,14 +48,14 @@ namespace RealmsForgotten.RFCustomSettlements
         private static int _disabledFaceId;
         private static int _disabledFaceIdForAnimals;
         private bool isMissionInitialized;
-        private List<PatrolArea> patrolAreas;
-        private List<CommonAreaMarker> areaMarkers;
-        private List<GameEntity> animalSpawnPositions = new();
+        private readonly List<PatrolArea> patrolAreas;
+        private readonly List<CommonAreaMarker> areaMarkers;
+        private readonly List<GameEntity> animalSpawnPositions = new();
         private readonly Dictionary<Agent, CustomSettlementMissionLogic.UsedObject> defenderAgentObjects;
-        private ItemRoster loot;
+        private readonly ItemRoster loot;
         private int goldLooted = 0;
-        private MobileParty banditsInSettlement;
-        private CustomSettlementBuildData BanditsData;
+        private readonly MobileParty banditsInSettlement;
+        private readonly CustomSettlementBuildData BanditsData;
         public CustomSettlementMissionLogic(CustomSettlementBuildData buildData)
         {
             defenderAgentObjects = new Dictionary<Agent, CustomSettlementMissionLogic.UsedObject>();
@@ -131,37 +131,6 @@ namespace RealmsForgotten.RFCustomSettlements
         //        return;
         //    }
         //}
-        private void LootItem(UsablePlace usablePlace)
-        {
-            try
-            {
-                string[] itemData = usablePlace.GameEntity.Name.Split('_');
-                string itemId = Helper.GetRFPickableObjectName(itemData);
-                int amount = int.Parse(itemData.Last());
-                string soundEventId = "";
-                if (itemId == "gold")
-                {
-                    goldLooted += amount;
-                    soundEventId = "event:/ui/notification/coins_positive";
-                    HuntableHerds.SubModule.PrintDebugMessage("You found " + goldLooted + "<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">");
-                }
-                else
-                {
-                    ItemObject item = MBObjectManager.Instance.GetObject<ItemObject>(itemId);
-                    loot.AddToCounts(item, amount);
-                    HuntableHerds.SubModule.PrintDebugMessage("You found " + item.Name + "!");
-                    soundEventId = "event:/mission/combat/pickup_arrows";
-                }
-                Mission.MakeSoundOnlyOnRelatedPeer(SoundEvent.GetEventIdFromString(soundEventId), usablePlace.GameEntity.GlobalPosition, Mission.MainAgent.Index);
-                usablePlace.GameEntity.ClearComponents();
-            }
-            catch
-            {
-                string str = "Error in game entity name" + usablePlace.GameEntity.Name;
-                HuntableHerds.SubModule.PrintDebugMessage(str, 255, 0, 0);
-            }
-
-        }
 
         //public override void OnFocusGained(Agent agent, IFocusable focusableObject, bool isInteractable)
         //{
@@ -179,8 +148,8 @@ namespace RealmsForgotten.RFCustomSettlements
                                  select area);
             animalSpawnPositions.AddRange(Mission.Current.Scene.FindEntitiesWithTag("spawnpoint_herdanimal"));
 
-            SpawnPatrollingTroops(patrolAreas, defenderAgentObjects);
-            SpawnStandingTroops(areaMarkers, defenderAgentObjects);
+            SpawnPatrollingTroops(patrolAreas);
+            SpawnStandingTroops(areaMarkers);
             SpawnHuntableHerdsAnimals();
         }
 
@@ -241,7 +210,7 @@ namespace RealmsForgotten.RFCustomSettlements
             return mparty;            
         }
 
-        private void SpawnStandingTroops(List<CommonAreaMarker> areaMarkers, Dictionary<Agent, CustomSettlementMissionLogic.UsedObject> defenderAgentObjects)
+        private void SpawnStandingTroops(List<CommonAreaMarker> areaMarkers)
         {
             foreach (CommonAreaMarker commonAreaMarker in areaMarkers)
             {
@@ -284,8 +253,32 @@ namespace RealmsForgotten.RFCustomSettlements
 
             }
         }
+        private void SpawnPatrollingTroops(List<PatrolArea> patrolAreas)
+        {
+            IEnumerable<PatrolArea> source = from area in patrolAreas
+                                             where area.StandingPoints.All((StandingPoint point) => !point.HasUser && !point.HasAIMovingTo)
+                                             select area;
+            foreach(PatrolArea area in source)
+            {
+                int areaIndex = area.AreaIndex;
+                try
+                {
+                    if (!BanditsData.patrolAreasBandits.ContainsKey(areaIndex)) continue;
 
+                    MatrixFrame globalFrame = area.GameEntity.GetGlobalFrame();
+                    globalFrame.rotation.OrthonormalizeAccordingToForwardAndKeepUpAsZAxis();
 
+                    RFAgentOrigin troopToSpawn = PrepareAgentToSpawn(BanditsData.patrolAreasBandits[areaIndex].Id);
+                    Agent agent = Mission.Current.SpawnTroop(troopToSpawn, false, false, false, false, 0, 0, false, false, false, new Vec3?(globalFrame.origin), new Vec2?(globalFrame.rotation.f.AsVec2.Normalized()), "_hideout_bandit", null, FormationClass.NumberOfAllFormations, false);
+                    InitializeBanditAgent(agent, area.StandingPoints[0], false, defenderAgentObjects);
+                }
+                catch (Exception)
+                {
+                    HuntableHerds.SubModule.PrintDebugMessage($"error spawning the bandits in patrol area {areaIndex}");
+                }
+
+            }
+        }
         private RFAgentOrigin PrepareAgentToSpawn(string banditId)
         {
             FlattenedTroopRoster flattenedTR = banditsInSettlement.MemberRoster.ToFlattenedRoster();
@@ -300,30 +293,6 @@ namespace RealmsForgotten.RFCustomSettlements
             banditsInArea[banditPair.Key] -= 1;
             if (banditsInArea[banditPair.Key] < 1) banditsInArea.Remove(banditPair.Key);
             return banditPair.Key;
-        }
-
-        private void SpawnPatrollingTroops(List<PatrolArea> patrolAreas, Dictionary<Agent, CustomSettlementMissionLogic.UsedObject> defenderAgentObjects)
-        {
-            IEnumerable<PatrolArea> source = from area in patrolAreas
-                                             where area.StandingPoints.All((StandingPoint point) => !point.HasUser && !point.HasAIMovingTo)
-                                             select area;
-            foreach(PatrolArea area in source) 
-            {
-                try
-                {
-                    int areaIndex = area.AreaIndex;
-                    if (!BanditsData.patrolAreasBandits.ContainsKey(areaIndex)) continue;
-
-                    MatrixFrame globalFrame = area.GameEntity.GetGlobalFrame();
-                    globalFrame.rotation.OrthonormalizeAccordingToForwardAndKeepUpAsZAxis();
-
-                    RFAgentOrigin troopToSpawn = PrepareAgentToSpawn(BanditsData.patrolAreasBandits[areaIndex].Id);
-                    Agent agent = Mission.Current.SpawnTroop(troopToSpawn, false, false, false, false, 0, 0, false, false, false, new Vec3?(globalFrame.origin), new Vec2?(globalFrame.rotation.f.AsVec2.Normalized()), "_hideout_bandit", null, FormationClass.NumberOfAllFormations, false);
-                    InitializeBanditAgent(agent, area.StandingPoints[0], false, defenderAgentObjects);
-                }
-                catch (Exception) { }
-
-            }
         }
         private Dictionary<string, int> GetTroopsInArea(List<CustomSettlementBuildData.RFBanditData> rFBanditData, out int allBandits)
         {
@@ -515,11 +484,38 @@ namespace RealmsForgotten.RFCustomSettlements
                     break;
             }
         }
-
-        private void DoHealing(UsablePlace usablePlace)
+        private void LootItem(UsablePlace usablePlace)
         {
-            Agent.Main.Health = Agent.Main.HealthLimit;
+            try
+            {
+                string[] itemData = usablePlace.GameEntity.Name.Split('_');
+                string itemId = Helper.GetRFPickableObjectName(itemData);
+                int amount = int.Parse(itemData.Last());
+                string soundEventId = "";
+                if (itemId == "gold")
+                {
+                    goldLooted += amount;
+                    soundEventId = "event:/ui/notification/coins_positive";
+                    HuntableHerds.SubModule.PrintDebugMessage("You found " + goldLooted + "<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">");
+                }
+                else
+                {
+                    ItemObject item = MBObjectManager.Instance.GetObject<ItemObject>(itemId);
+                    loot.AddToCounts(item, amount);
+                    HuntableHerds.SubModule.PrintDebugMessage("You found " + item.Name + "!");
+                    soundEventId = "event:/mission/combat/pickup_arrows";
+                }
+                Mission.MakeSoundOnlyOnRelatedPeer(SoundEvent.GetEventIdFromString(soundEventId), usablePlace.GameEntity.GlobalPosition, Mission.MainAgent.Index);
+                usablePlace.GameEntity.ClearComponents();
+            }
+            catch
+            {
+                string str = "Error in game entity name" + usablePlace.GameEntity.Name;
+                HuntableHerds.SubModule.PrintDebugMessage(str, 255, 0, 0);
+            }
+
         }
+
 
         private void StartNewMission(UsablePlace usablePlace)
         {
@@ -532,6 +528,10 @@ namespace RealmsForgotten.RFCustomSettlements
             Mission.Current.EndMission();
             CustomSettlementsCampaignBehavior.NextSceneData.Instance.shouldSwitchScenes = true;
             CustomSettlementsCampaignBehavior.NextSceneData.Instance.newSceneId = newSceneId;
+        }
+        private void DoHealing(UsablePlace usablePlace)
+        {
+            Agent.Main.Health = Agent.Main.HealthLimit;
         }
     }
 }

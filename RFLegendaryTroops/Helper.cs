@@ -50,7 +50,6 @@ namespace RealmsForgotten.RFLegendaryTroops
         {
             return 1;
             //return settlement.Town.GetWallLevel();    //  possible other way to spawn notables
-
         }
 
     }
