@@ -23,43 +23,18 @@ namespace RealmsForgotten.RFCustomSettlements
             CustomScene = node.Attributes["custom_scene"].Value;
         }
 
-        public RFCustomSettlement()
-        {
-            this.IsRaided = false;
-            this.HasBandits = true;
-            this.IsSpotted = false;
-        }
+        //public RFCustomSettlement()
+        //{
+        //    this.IsRaided = false;
+        //    this.HasBandits = true;
+        //    this.IsVisible = false;
+        //}
 
-        public void ResetRuin()
-        {
-            this.IsRaided = false;
-            this.HasBandits = true;
-            this.LastRaided = CampaignTime.Never;
-            this.RaidProgress = 0f;
-            this.LastTick = 0f;
-        }
+        //[SaveableProperty(500)]
+        //public bool IsRaided { get; set; }
 
         [SaveableProperty(500)]
-        public bool IsRaided { get; set; }
-
-        [SaveableProperty(501)]
-        public float RaidProgress { get; set; }
-
-        [SaveableProperty(502)]
-        public float LastTick { get; set; }
-
-        [SaveableProperty(503)]
-        public string RuinSettlementID { get; set; }
-
-        [SaveableProperty(505)]
-        public bool HasBandits { get; set; }
-
-        [SaveableProperty(506)]
-        public CampaignTime LastRaided { get; set; }
-
-        [SaveableProperty(507)]
-        public bool IsSpotted { get; set; }
-
-        public string CustomScene { get; set; }
+        public bool IsVisible { get; set; }
+        public string? CustomScene { get; set; }
     }
 }

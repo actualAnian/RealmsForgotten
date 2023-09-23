@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using RealmsForgotten.RFCustomSettlements;
 using SandBox.Objects.Usables;
+using SandBox.ViewModelCollection.Nameplate;
 using System.Linq;
 using System.Reflection;
 using TaleWorlds.CampaignSystem;
@@ -9,6 +10,7 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.InputSystem;
+using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.View.MissionViews;
 using TaleWorlds.MountAndBlade.View.Screens;
@@ -124,6 +126,7 @@ namespace RFCustomSettlements.Patches
                         __instance.IsFocusedOnExit = true;
                         break;
                     case RFUsableObjectType.Healing:
+                        __instance.PrimaryInteractionMessage = button + "Heal";
                         break;
                 }
             }
@@ -145,6 +148,38 @@ namespace RFCustomSettlements.Patches
                 {
                     var c = (Mission)curMisInfo.Invoke(__instance, null);
                     ((CustomSettlementMissionLogic)c.MissionBehaviors.Where(m => m is CustomSettlementMissionLogic).ElementAt(0)).OnObjectUsed(usablePlace);
+                }
+            }
+        }
+        [HarmonyPatch(typeof(SettlementNameplateVM), "IsVisible")]
+        public class IsVisiblePatch
+        {
+            private static void Postfix(in Vec3 cameraPosition, SettlementNameplateVM __instance, ref bool __result)
+            {
+                SettlementComponent settlementComponent = __instance.Settlement.SettlementComponent;
+                RFCustomSettlement? rfSettlement;
+                if (!(settlementComponent == null) && (rfSettlement = settlementComponent as RFCustomSettlement) is not null)
+                {
+                    __result = rfSettlement.IsVisible;
+                }
+            }
+        }
+        [HarmonyPatch(typeof(PartyBase), "UpdateVisibilityAndInspected")]
+        public class UpdateVisibilityAndInspectedPatch
+        {
+            private static void Postfix(float mainPartySeeingRange, PartyBase __instance)
+            {
+                RFCustomSettlement? rFCustomSettlement;
+                if (__instance.IsSettlement && __instance.Settlement.SettlementComponent != null && (rFCustomSettlement = __instance.Settlement.SettlementComponent as RFCustomSettlement) != null) 
+                {
+                    if (MobileParty.MainParty.Position2D.Distance(__instance.Settlement.Position2D) > mainPartySeeingRange)
+                    {
+                        __instance.Settlement.IsVisible = rFCustomSettlement.IsVisible = false;
+                    }
+                    else
+                    {
+                        __instance.Settlement.IsVisible = rFCustomSettlement.IsVisible = true;
+                    }
                 }
             }
         }
