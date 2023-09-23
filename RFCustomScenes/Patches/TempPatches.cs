@@ -1,18 +1,13 @@
 ﻿using HarmonyLib;
 using RealmsForgotten.RFCustomSettlements;
-using SandBox.AI;
 using SandBox.Objects.Usables;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
-using TaleWorlds.DotNet;
-using TaleWorlds.Engine;
 using TaleWorlds.InputSystem;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.View.MissionViews;
@@ -23,6 +18,7 @@ using static RealmsForgotten.RFCustomSettlements.Helper;
 
 namespace RFCustomSettlements.Patches
 {
+#pragma warning disable IDE0051 // Remove unused private members
 
     [HarmonyPatch(typeof(Campaign), "OnRegisterTypes")]
     public class CEKRegisterTypes
@@ -137,8 +133,8 @@ namespace RFCustomSettlements.Patches
     [HarmonyPatch(typeof(MissionMainAgentInteractionComponent), "FocusStateCheckTick")]
     public class FocusStateCheckTickPatch
     {
-        static MethodInfo curMisScrInfo = AccessTools.PropertyGetter("MissionMainAgentInteractionComponent:CurrentMissionScreen");
-        static MethodInfo curMisInfo = AccessTools.PropertyGetter("MissionMainAgentInteractionComponent:CurrentMission");
+        static readonly MethodInfo curMisScrInfo = AccessTools.PropertyGetter("MissionMainAgentInteractionComponent:CurrentMissionScreen");
+        static readonly MethodInfo curMisInfo = AccessTools.PropertyGetter("MissionMainAgentInteractionComponent:CurrentMission");
         static void Postfix(MissionMainAgentInteractionComponent __instance)
         {
             UsablePlace usablePlace;
@@ -152,6 +148,6 @@ namespace RFCustomSettlements.Patches
                 }
             }
         }
-
+#pragma warning restore IDE0051 // Remove unused private members
     }
 }
