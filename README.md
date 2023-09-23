@@ -10,7 +10,7 @@ PurpleSpark
 
 Enchanted Vendor items id's:
 <br />
-rfonehanded<skillpoints> <br />
+rfonehanded<<skillpoints>> <br />
 rftwohanded<skillpoints> <br />
 rfpolearm<skillpoints> <br />
 rfthrowing<skillpoints> <br />
