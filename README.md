@@ -1,8 +1,8 @@
 # RealmsForgotten
 Magic Effects Id:
-Heal
-Fire
-Ice
-Force
-GreenSpark
+Heal <br />
+Fire <br />
+Ice <br />
+Force <br />
+GreenSpark <br />
 PurpleSpark
