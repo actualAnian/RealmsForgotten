@@ -9,32 +9,20 @@ using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.Utility
 {
-    internal class RFUtility
+    public static class RFUtility
     {
-        public static void RemoveInitialStateOption(string name)
+        public static IEnumerable<Agent> GetAgentsInRadius(Vec2 searchPoint, float radius)
         {
-            try
+            AgentProximityMap.ProximityMapSearchStruct searchStruct = AgentProximityMap.BeginSearch(Mission.Current, searchPoint, radius, extendRangeByBiggestAgentCollisionPadding: true);
+            while (searchStruct.LastFoundAgent != null)
             {
-                FieldInfo field = typeof(TaleWorlds.MountAndBlade.Module).GetField("_initialStateOptions", BindingFlags.Instance | BindingFlags.NonPublic);
-                object value = field.GetValue(TaleWorlds.MountAndBlade.Module.CurrentModule);
-                //bool flag = !(value.GetType() == typeof(List<InitialStateOption>));
-                if (value.GetType() == typeof(List<InitialStateOption>))
+                Agent lastFoundAgent = searchStruct.LastFoundAgent;
+                if (lastFoundAgent.CurrentMortalityState != Agent.MortalityState.Invulnerable)
                 {
-                    List<InitialStateOption> list = (List<InitialStateOption>)value;
-                    foreach (InitialStateOption initialStateOption in list)
-                    {
-                        bool flag2 = initialStateOption.Id.Contains(name);
-                        if (flag2)
-                        {
-                            list.Remove(initialStateOption);
-                        }
-                    }
-                    field.SetValue(typeof(TaleWorlds.MountAndBlade.Module).GetField("_initialStateOptions", BindingFlags.Instance | BindingFlags.NonPublic), list);
+                    yield return lastFoundAgent;
                 }
-            }
-            catch (Exception ex)
-            {
-                InformationManager.DisplayMessage(new InformationMessage(ex.Message));
+
+                AgentProximityMap.FindNext(Mission.Current, ref searchStruct);
             }
         }
 
@@ -44,6 +32,8 @@ namespace RealmsForgotten.Utility
             FieldInfo characterSkillsProperty = AccessTools.Field(typeof(BasicCharacterObject), "DefaultCharacterSkills");
             if (characterSkillsProperty == null)
                 return;
+            if (value < 0)
+                value = 0;
             object characterSkills = characterSkillsProperty.GetValue(character);
 
             PropertyInfo skillsInfo = AccessTools.Property(characterSkills.GetType(), "Skills");
@@ -97,7 +87,7 @@ namespace RealmsForgotten.Utility
 
                 }
 
-                InformationManager.DisplayMessage(new InformationMessage($"The weapon you are wielding has enhanced your skill in combat, increasing your {skill} by {result} points.", Color.FromUint(9424384)));
+                InformationManager.DisplayMessage(new InformationMessage($"A weapon you're carrying has enhanced your skill in combat, increasing your {skill} by {result} points.", Color.FromUint(9424384)));
             }
 
             return result;

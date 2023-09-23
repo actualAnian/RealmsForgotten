@@ -71,7 +71,7 @@ namespace RealmsForgotten
                 ItemRosterElement elixir = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("elixir_rfmisc"));
                 ItemRosterElement berserker = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("berzerker_potion"));
                 if (!elixir.IsEmpty || !berserker.IsEmpty)
-                    mission.AddMissionBehavior(new HealingPotionMissionBehavior(elixir, berserker));
+                    mission.AddMissionBehavior(new PotionsMissionBehavior(elixir, berserker));
             }
 
         }
