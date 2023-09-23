@@ -18,7 +18,7 @@ using SandBox.GameComponents;
 namespace RealmsForgotten.Behaviors
 {
     
-    public class HealingPotionMissionBehavior : MissionBehavior
+    public class PotionsMissionBehavior : MissionBehavior
     {
         private int soundIndex;
         public static bool berserkerMode;
@@ -30,7 +30,7 @@ namespace RealmsForgotten.Behaviors
 
         public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;
 
-        public HealingPotionMissionBehavior(ItemRosterElement elixirPotion, ItemRosterElement berserkerPotion)
+        public PotionsMissionBehavior(ItemRosterElement elixirPotion, ItemRosterElement berserkerPotion)
         {
             soundIndex = SoundEvent.GetEventIdFromString("realmsforgotten/drink");
 

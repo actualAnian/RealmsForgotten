@@ -48,10 +48,17 @@ namespace RealmsForgotten
                 campaignGameStarter.AddBehavior(new RFEnchantmentVendorBehavior());
                 campaignGameStarter.AddBehavior(new RFFaithCampaignBehavior());
 
-                campaignGameStarter.AddModel(new RFAgentStatCalculateModel());
                 campaignGameStarter.AddModel(new RFAgentApplyDamageModel());
-                campaignGameStarter.AddModel(new RFVolunteerModel());
+                campaignGameStarter.AddModel(new RFAgentStatCalculateModel());
+                campaignGameStarter.AddModel(new RFBuildingConstructionModel());
                 campaignGameStarter.AddModel(new RFCombatXpModel());
+                campaignGameStarter.AddModel(new RFDefaultCharacterDevelopmentModel());
+                campaignGameStarter.AddModel(new RFPartyMoraleModel());
+                campaignGameStarter.AddModel(new RFPartySpeedCalculatingModel());
+                campaignGameStarter.AddModel(new RFPrisonerRecruitmentCalculationModel());
+                campaignGameStarter.AddModel(new RFRaidModel());
+                campaignGameStarter.AddModel(new RFVolunteerModel());
+                campaignGameStarter.AddModel(new RFWageModel());
 
 
 
@@ -71,7 +78,7 @@ namespace RealmsForgotten
                 ItemRosterElement elixir = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("elixir_rfmisc"));
                 ItemRosterElement berserker = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("berzerker_potion"));
                 if (!elixir.IsEmpty || !berserker.IsEmpty)
-                    mission.AddMissionBehavior(new HealingPotionMissionBehavior(elixir, berserker));
+                    mission.AddMissionBehavior(new PotionsMissionBehavior(elixir, berserker));
             }
 
         }

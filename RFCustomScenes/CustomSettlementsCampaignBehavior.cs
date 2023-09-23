@@ -1,4 +1,5 @@
 ﻿using Helpers;
+using RealmsForgotten.HuntableHerds;
 using RFCustomSettlements;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ using TaleWorlds.CampaignSystem.Overlay;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 
@@ -20,10 +22,24 @@ namespace RealmsForgotten.RFCustomSettlements
 {
     internal class CustomSettlementsCampaignBehavior : CampaignBehaviorBase
     {
-        private List<RFCustomSettlement> customSettlementComponents;
+        internal class NextSceneData
+        {
+            private static NextSceneData? _instance;
+            public bool shouldSwitchScenes = false;
+            public string? newSceneId;
+            public static NextSceneData Instance
+            {
+                get
+                {
+                    _instance ??= new NextSceneData();
+                    return _instance;
+                }
+            }
+        }
+        private List<RFCustomSettlement>? customSettlementComponents;
         private List<Settlement>? customSettlements;
 
-        internal static ItemRoster itemLoot;
+        internal static ItemRoster? itemLoot;
         internal static int goldLoot;
         internal static bool finishedMission;
         public override void RegisterEvents()
@@ -60,6 +76,7 @@ namespace RealmsForgotten.RFCustomSettlements
 
             }, true, -1, false, null);
         }
+#pragma warning disable IDE1006 // Naming Styles
         private bool back_on_condition(MenuCallbackArgs args)
         {
             args.optionLeaveType = GameMenuOption.LeaveType.Leave;
@@ -75,6 +92,10 @@ namespace RealmsForgotten.RFCustomSettlements
         [GameMenuInitializationHandler("rf_settlement_wait_menu")]
         private void game_menu_rf_settlement_wait_menu_on_init(MenuCallbackArgs args)
         {
+            RFCustomSettlement curSettlement;
+            if (Settlement.CurrentSettlement.SettlementComponent == null || (curSettlement = ((RFCustomSettlement)Settlement.CurrentSettlement.SettlementComponent)) == null) return;
+            args.MenuContext.SetBackgroundMeshName(curSettlement.WaitMeshName);
+
             args.MenuContext.GameMenu.StartWait();
             //UpdateMenuLocations();
             if (PlayerEncounter.Current != null)
@@ -103,16 +124,14 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         private void game_menu_rf_settlement_explore_on_consequence(MenuCallbackArgs args)
         {
-            var rfSettlement = Settlement.CurrentSettlement.SettlementComponent as RFCustomSettlement;
-            if(rfSettlement != null) CustomSettlementMission.StartCustomSettlementMission(rfSettlement.CustomScene);
+            if (Settlement.CurrentSettlement.SettlementComponent is RFCustomSettlement rfSettlement) CustomSettlementMission.StartCustomSettlementMission(rfSettlement.CustomScene);
         }
 
         private bool game_menu_rf_settlement_wait_on_condition(MenuCallbackArgs args)
         {
-            bool shouldBeDisabled;
-            TextObject disabledText;
-            bool canPlayerDo = Campaign.Current.Models.SettlementAccessModel.CanMainHeroDoSettlementAction(Settlement.CurrentSettlement, SettlementAccessModel.SettlementAction.WaitInSettlement, out shouldBeDisabled, out disabledText);
+            bool canPlayerDo = Campaign.Current.Models.SettlementAccessModel.CanMainHeroDoSettlementAction(Settlement.CurrentSettlement, SettlementAccessModel.SettlementAction.WaitInSettlement, out bool shouldBeDisabled, out TextObject disabledText);
             args.optionLeaveType = GameMenuOption.LeaveType.Wait;
+
             return MenuHelper.SetOptionProperties(args, canPlayerDo, shouldBeDisabled, disabledText);
         }
 
@@ -124,7 +143,7 @@ namespace RealmsForgotten.RFCustomSettlements
                 if (CharacterObject.PlayerCharacter.HitPoints < 25)
                 {
                     args.IsEnabled = false;
-                    args.Tooltip = new TextObject("{=rf_too_wounded}You are too wounded to explore the ruin!", null);
+                    args.Tooltip = new TextObject("{=rf_too_wounded}You are too wounded to explore the area!", null);
                 }
                 if (settlementComponent.IsRaided)
                 {
@@ -145,19 +164,37 @@ namespace RealmsForgotten.RFCustomSettlements
         [GameMenuInitializationHandler("rf_settlement_start")]
         private void game_menu_rf_settlement_start_on_init(MenuCallbackArgs args)
         {
-            if (Settlement.CurrentSettlement.SettlementComponent == null || Settlement.CurrentSettlement.SettlementComponent is not RFCustomSettlement) return;
-  
-            if(finishedMission)
+            RFCustomSettlement curSettlement;
+            if (Settlement.CurrentSettlement.SettlementComponent == null || (curSettlement = ((RFCustomSettlement)Settlement.CurrentSettlement.SettlementComponent)) == null) return;
+            if(NextSceneData.Instance.shouldSwitchScenes && NextSceneData.Instance.newSceneId != null)
+            {
+                try
+                {
+                CustomSettlementMission.StartCustomSettlementMission(NextSceneData.Instance.newSceneId);
+                return;
+                }
+                catch 
+                {
+
+                    InformationManager.DisplayMessage(new InformationMessage($"Error trying to load scene: {NextSceneData.Instance.newSceneId}"));
+                }
+            }
+            if (finishedMission)
             {
                 finishedMission = false;
-                Hero.MainHero.ChangeHeroGold(goldLoot);
-                TextObject goldText = new TextObject("Total Gold Loot: {CHANGE}{GOLD_ICON}", null);
-                goldText.SetTextVariable("CHANGE", goldLoot);
-                goldText.SetTextVariable("GOLD_ICON", "{=!}<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">");
+                if(goldLoot > 0)
+                { 
+                    Hero.MainHero.ChangeHeroGold(goldLoot);
+                    TextObject goldText = new("Total Gold Loot: {CHANGE}{GOLD_ICON}", null);
+                    goldText.SetTextVariable("CHANGE", goldLoot);
+                    goldText.SetTextVariable("GOLD_ICON", "{=!}<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">");
 
-                InformationManager.DisplayMessage(new InformationMessage(goldText.ToString(), "event:/ui/notification/coins_positive"));
-                InventoryManager.OpenScreenAsReceiveItems(itemLoot, new TextObject("Loot"), null);
+                    InformationManager.DisplayMessage(new InformationMessage(goldText.ToString(), "event:/ui/notification/coins_positive"));
+                }
+                if(!itemLoot.IsEmpty())
+                    InventoryManager.OpenScreenAsReceiveItems(itemLoot, new TextObject("Loot"), null);
             }
+            args.MenuContext.SetBackgroundMeshName(curSettlement.BackgroundMeshName);
             //this.currentRuin = (Settlement.CurrentSettlement.SettlementComponent as RFCustomSettlement);
             //GameTexts.SetVariable("RUIN_TEXT", this.currentRuin.Settlement.EncyclopediaText);
             //if (MobileParty.MainParty.CurrentSettlement != null)
@@ -165,7 +202,7 @@ namespace RealmsForgotten.RFCustomSettlements
             //    PlayerEncounter.LeaveSettlement();
             //}
         }
-
+#pragma warning restore IDE1006 // Naming Styles
         public override void SyncData(IDataStore dataStore)
         {
             if (dataStore.IsSaving)
@@ -173,8 +210,8 @@ namespace RealmsForgotten.RFCustomSettlements
                 customSettlementComponents = (from Settlement settlement in customSettlements
                                               select (RFCustomSettlement)settlement.SettlementComponent).ToList();
             }
-
-            dataStore.SyncData<List<RFCustomSettlement>>("ruinComponents", ref customSettlementComponents);
+            if(customSettlementComponents != null)
+                dataStore.SyncData<List<RFCustomSettlement>>("ruinComponents", ref customSettlementComponents);
         }
     }
 }

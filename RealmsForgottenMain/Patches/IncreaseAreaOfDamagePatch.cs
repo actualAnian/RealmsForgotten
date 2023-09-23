@@ -198,6 +198,7 @@ namespace RealmsForgotten.Patches
                         combatLog.ModifiedDamage = MathF.Round((float)combatLog.ModifiedDamage * num8);
 
                         CurrentBlow = blowInput;
+
                         RegisterBlow.Invoke(__instance, new object[] { (object)shooterAgent, (object)item, (object)null, (object)b, (object)attackCollisionData, (object)attackerWeapon, (object)combatLog });
                         CurrentBlow = default;
                     }

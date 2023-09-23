@@ -22,9 +22,14 @@ using static TaleWorlds.MountAndBlade.Mission;
 namespace RealmsForgotten.Models
 {
 
-    internal class RFAgentApplyDamageModel : SandboxAgentApplyDamageModel
+    public class RFAgentApplyDamageModel : SandboxAgentApplyDamageModel
     {
-       
+        public static RFAgentApplyDamageModel Instance;
+        public RFAgentApplyDamageModel()
+        {
+            Instance = this;
+        }
+        public Dictionary<int, float> ModifiedDamageAgents = new();
         public override bool DecideAgentKnockedBackByBlow(Agent attackerAgent, Agent victimAgent,
             in AttackCollisionData collisionData, WeaponComponentData attackerWeapon, in Blow blow)
         {
@@ -47,32 +52,22 @@ namespace RealmsForgotten.Models
 
             int half_giant = FaceGen.GetRaceOrDefault("half_giant");
 
-
-
-
-
-
-
-
             if (victimAgent.Character?.Race == half_giant && attackerAgent.Character?.Race != half_giant)
                 return false;
 
             return baseValue;
         }
 
-        public override float CalculateDamage(in AttackInformation attackInformation,
-            in AttackCollisionData collisionData, in MissionWeapon weapon, float baseDamage)
+        public override float CalculateDamage(in AttackInformation attackInformation, in AttackCollisionData collisionData, in MissionWeapon weapon, float baseDamage)
         {
             float baseNumber = base.CalculateDamage(attackInformation, collisionData, weapon, baseDamage);
 
-            //If in berserker mode disables damage
-            if (attackInformation.VictimAgent == Agent.Main && HealingPotionMissionBehavior.berserkerMode)
-                return 0;
+
             if (weapon.Item != null)
             {
                 CalculateRaceDamages(attackInformation, weapon, ref baseNumber);
+                CalculateEffectsDamage(attackInformation, ref baseNumber);
 
-                
                 CharacterObject attackerCharacterObject = attackInformation.AttackerAgentCharacter as CharacterObject;
                 //If weapon is a spell, do additional damage based on the alchemy skill of the attacker
                 if (weapon.Item.StringId.Contains("anorit_fire"))
@@ -103,6 +98,20 @@ namespace RealmsForgotten.Models
             return baseNumber;
         }
 
+        private float CalculateEffectsDamage(in AttackInformation attackInformation, ref float baseDamage)
+        {
+            //If in berserker mode disables damage
+            if (attackInformation.VictimAgent == Agent.Main && PotionsMissionBehavior.berserkerMode)
+                return 0;
+
+            if (ModifiedDamageAgents.TryGetValue(attackInformation.AttackerAgent.Index, out float factor))
+            {
+                return baseDamage + (baseDamage * factor);
+            }
+
+            return baseDamage;
+
+        }
         private void CalculateRaceDamages(AttackInformation attackInformation, MissionWeapon weapon, ref float baseNumber)
         {
             int half_giant = FaceGen.GetRaceOrDefault("half_giant");

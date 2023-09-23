@@ -18,7 +18,7 @@ namespace RealmsForgotten.Behaviors
 {
     internal class RFEnchantedWeaponsMissionBehavior : MissionBehavior
     {
-        private static Dictionary<int, (SkillObject, int)> agentsInitialSkills = new Dictionary<int, (SkillObject, int)>();
+        private static Dictionary<int, (SkillObject, int)> heroesInitialSkills = new Dictionary<int, (SkillObject, int)>();
         private static Dictionary<string, SkillObject> skillsDic = new()
         {
             { "rfonehanded", DefaultSkills.OneHanded}, { "rftwohanded", DefaultSkills.TwoHanded }, { "rfpolearm", DefaultSkills.Polearm }, {"rfbow", DefaultSkills.Bow}, {"rfcrossbow", DefaultSkills.Crossbow},
@@ -142,10 +142,13 @@ namespace RealmsForgotten.Behaviors
                 }
             }
         }
+
+        private BasicCharacterObject[] modifiedCharacterObjects = { };
         public override void OnAgentBuild(Agent agent, Banner banner)
         {
-
-
+            if (agent.Character == null || agent.IsMount)
+                return;
+            BasicCharacterObject basicCharacterObject = agent.Character;
             if (isBattle() && agent.Team != null)
             {
                 if (HaveDemoralizingArmor.Item1 && !agent.Team.IsPlayerTeam && !agent.Team.IsPlayerAlly)
@@ -157,91 +160,65 @@ namespace RealmsForgotten.Behaviors
                     agent.ChangeMorale(HaveMoralizingArmor.Item2);
                 }
             }
-            if (agent.IsMainAgent)
-                agent.OnMainAgentWieldedItemChange = delegate
+            if (agent.IsHero)
+            {
+                CharacterObject characterObject = basicCharacterObject as CharacterObject;
+
+                if (characterObject != null)
                 {
-                    CharacterObject characterObject = agent.Character as CharacterObject;
-
-                    if (characterObject != null && agent.WieldedWeapon.Item != null)
+                    string skillString;
+                    for (EquipmentIndex equipmentIndex = EquipmentIndex.Weapon0; equipmentIndex <= EquipmentIndex.Weapon3; equipmentIndex++)
                     {
-                        Hero hero = characterObject.HeroObject;
-                        string stringId = agent.WieldedWeapon.Item.StringId;
-                        string skillString =
-                            skillsKeys.FirstOrDefault(x => agent.WieldedWeapon.Item.StringId.Contains(x));
-
-
-                        if (agentsInitialSkills.ContainsKey(agent.Index))
-                        {
-                            hero.SetSkillValue(agentsInitialSkills[agent.Index].Item1,
-                                agentsInitialSkills[agent.Index].Item2);
-                            agentsInitialSkills.Remove(agent.Index);
-                        }
-
+                        skillString = skillsKeys.FirstOrDefault(x => characterObject.Equipment[equipmentIndex].Item?.StringId.Contains(x) == true);
                         if (skillString != null)
                         {
-                            if (!agentsInitialSkills.ContainsKey(agent.Index))
-                                agentsInitialSkills.Add(agent.Index,
-                                    (skillsDic[skillString],
-                                        agent.Character.GetSkillValue(skillsDic[skillString])));
-                            hero.SetSkillValue(skillsDic[skillString],
-                                characterObject.GetSkillValue(skillsDic[skillString]) +
-                                RFUtility.GetNumberAfterSkillWord(stringId, skillString, true));
-                        }
+                            Hero hero = characterObject.HeroObject;
+                            if (heroesInitialSkills.ContainsKey(agent.Index))
+                            {
+                                hero.SetSkillValue(heroesInitialSkills[agent.Index].Item1,
+                                    heroesInitialSkills[agent.Index].Item2);
+                                heroesInitialSkills.Remove(agent.Index);
+                            }
+                            else
+                                heroesInitialSkills.Add(agent.Index, (skillsDic[skillString], agent.Character.GetSkillValue(skillsDic[skillString])));
 
+                            hero.SetSkillValue(skillsDic[skillString],characterObject.GetSkillValue(skillsDic[skillString]) + 
+                                                                      RFUtility.GetNumberAfterSkillWord(characterObject.Equipment[equipmentIndex].Item?.StringId, skillString, true));
+                        }
                     }
-                };
-            else
-                agent.OnAgentWieldedItemChange = delegate
+                }
+            }
+            else if(!modifiedCharacterObjects.Contains(basicCharacterObject))
+            {
+                bool haveEnchantedWeapon = false;
+                string skillString;
+                for (EquipmentIndex equipmentIndex = EquipmentIndex.Weapon0; equipmentIndex <= EquipmentIndex.Weapon3; equipmentIndex++)
                 {
-                    if (agent.Character != null && agent.WieldedWeapon.Item != null)
+                    skillString = skillsKeys.FirstOrDefault(x => basicCharacterObject.Equipment[equipmentIndex].Item?.StringId.Contains(x) == true);
+                    if (skillString != null)
                     {
-                        CharacterObject characterObject = agent.Character as CharacterObject;
-                        string stringId = agent.WieldedWeapon.Item.StringId;
-                        string skillString =
-                            skillsKeys.FirstOrDefault(x => agent.WieldedWeapon.Item.StringId.Contains(x));
+                        haveEnchantedWeapon = true;
 
-                        if (agentsInitialSkills.ContainsKey(agent.Index))
-                        {
-                            if (characterObject != null && characterObject.HeroObject != null)
-                                characterObject.HeroObject.SetSkillValue(agentsInitialSkills[agent.Index].Item1,
-                                    agentsInitialSkills[agent.Index].Item2);
-                            else
-                                RFUtility.ModifyCharacterSkillAttribute(agent.Character,
-                                    agentsInitialSkills[agent.Index].Item1, agentsInitialSkills[agent.Index].Item2);
-                            agentsInitialSkills.Remove(agent.Index);
-                        }
-
-                        if (skillString != null)
-                        {
-                            if (!agentsInitialSkills.ContainsKey(agent.Index))
-                                agentsInitialSkills.Add(agent.Index,
-                                    (skillsDic[skillString],
-                                        agent.Character.GetSkillValue(skillsDic[skillString])));
-                            if (characterObject != null && characterObject.HeroObject != null)
-                                characterObject.HeroObject.SetSkillValue(skillsDic[skillString],
-                                    characterObject.GetSkillValue(skillsDic[skillString]) +
-                                    RFUtility.GetNumberAfterSkillWord(stringId, skillString));
-                            else
-                                RFUtility.ModifyCharacterSkillAttribute(agent.Character, skillsDic[skillString],
-                                    agent.Character.GetSkillValue(skillsDic[skillString]) +
-                                    RFUtility.GetNumberAfterSkillWord(stringId, skillString));
-                        }
+                        RFUtility.ModifyCharacterSkillAttribute(basicCharacterObject, skillsDic[skillString], basicCharacterObject.GetSkillValue(skillsDic[skillString]) +
+                            RFUtility.GetNumberAfterSkillWord(basicCharacterObject.Equipment[equipmentIndex].Item?.StringId, skillString, false));
                     }
-                };
-
+                }
+                if(haveEnchantedWeapon)
+                    modifiedCharacterObjects.AddItem(basicCharacterObject);
+            }
         }
 
         protected bool isBattle() =>
             this.Mission.IsFieldBattle || this.Mission.IsSiegeBattle || this.Mission.IsSallyOutBattle;
         protected override void OnEndMission()
         {
-            if (agentsInitialSkills != null)
+            if (heroesInitialSkills != null)
                 foreach (Agent agent in Mission.AllAgents.Where(x => x.IsHero))
                 {
                     CharacterObject character = agent.Character as CharacterObject;
 
-                    if (character != null && agentsInitialSkills.ContainsKey(agent.Index))
-                        character.HeroObject.SetSkillValue(agentsInitialSkills[agent.Index].Item1, agentsInitialSkills[agent.Index].Item2);
+                    if (character != null && heroesInitialSkills.ContainsKey(agent.Index))
+                        character.HeroObject.SetSkillValue(heroesInitialSkills[agent.Index].Item1, heroesInitialSkills[agent.Index].Item2);
                 }
 
         }

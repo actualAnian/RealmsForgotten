@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
-using ParticleTester;
+using RFEffects;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
@@ -14,51 +15,23 @@ namespace RealmsForgotten.RFEffects
 		protected override void OnSubModuleLoad()
 		{
 			new Harmony("RFEffectsPatcher").PatchAll();
+            foreach (var method in AccessTools.GetDeclaredMethods(typeof(WeaponEffectConsequences)).Where(x => x.IsPublic))
+            {
+                WeaponEffectConsequences.AllMethods.Add(method.Name, (VictimAgentConsequence)method.CreateDelegate(typeof(VictimAgentConsequence)));
+            }
         }
 
-
-		protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
-		{
-            this.ReplaceModel<DefaultDamageParticleModel, AnoritDamageParticleModel>(gameStarterObject);
-
-        }
 
         protected override void InitializeGameStarter(Game game, IGameStarter starterObject)
         {
             base.InitializeGameStarter(game, starterObject);
 
         }
-        private void ReplaceModel<TBaseType, TChildType>(IGameStarter gameStarterObject) where TBaseType : GameModel where TChildType : TBaseType
-		{
-			IList<GameModel> list = gameStarterObject.Models as IList<GameModel>;
-			if (list == null)
-			{
-				return;
-			}
-			bool flag = false;
-			for (int i = 0; i < list.Count; i++)
-			{
-
-				if (list[i] is TBaseType)
-				{
-					flag = true;
-					if (!(list[i] is TChildType))
-					{
-						list[i] = Activator.CreateInstance<TChildType>();
-					}
-				}
-			}
-			if (!flag)
-			{
-				gameStarterObject.AddModel(Activator.CreateInstance<TChildType>());
-			}
-		}
 
 		public override void OnMissionBehaviorInitialize(Mission mission)
 		{
-            RFMissionBehaviour missionBehavior = new RFMissionBehaviour();
-			mission.AddMissionBehavior(missionBehavior);
-            mission.AddMissionBehavior(new WeaponEffectsBehavior());
+            mission.AddMissionBehavior(new MagicEffectsBehavior());
+            mission.AddMissionBehavior(new WeaponParticlesBehavior());
         }
 
 	}
