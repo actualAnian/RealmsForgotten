@@ -16,7 +16,10 @@ namespace RealmsForgotten.RFLegendaryTroops
             {"sturgia", "legendary_zombie"},
             {"khuzait", "Legendary_steppe_horseman"},
             {"vlandia", "legendary_warlord"},
-            {"aserai", "legendary_mull"}
+            {"aserai", "legendary_mull"},
+            {"giant", "legendary_xilantlacay"},
+            {"aqarun", "legendary_aqarun"},
+
         }; 
         public static CharacterObject ChooseLegendaryTroop(CultureObject culture)
         {

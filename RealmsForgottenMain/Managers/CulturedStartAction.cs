@@ -19,6 +19,39 @@ namespace RealmsForgotten.Managers
     {
         public static readonly Dictionary<StartType, Dictionary<string, string>> mainHeroStartingEquipment = new()
         {
+            [StartType.Default] = new Dictionary<string, string>
+            {
+                ["aserai"] = "rf_looter",
+                ["empire"] = "rf_looter",
+                ["khuzait"] = "rf_looter",
+                ["sturgia"] = "rf_looter",
+                ["battania"] = "rf_looter",
+                ["vlandia"] = "rf_looter",
+                ["giant"] = "rf_looter",
+                ["aqarun"] = "rf_looter"
+            },
+            [StartType.Merchant] = new Dictionary<string, string>
+            {
+                ["aserai"] = "rf_looter",
+                ["empire"] = "rf_looter",
+                ["khuzait"] = "rf_looter",
+                ["sturgia"] = "rf_looter",
+                ["battania"] = "rf_looter",
+                ["vlandia"] = "rf_looter",
+                ["giant"] = "rf_looter",
+                ["aqarun"] = "rf_looter"
+            },
+            [StartType.Exiled] = new Dictionary<string, string>
+            {
+                ["aserai"] = "rf_looter",
+                ["empire"] = "rf_looter",
+                ["khuzait"] = "rf_looter",
+                ["sturgia"] = "rf_looter",
+                ["battania"] = "rf_looter",
+                ["vlandia"] = "rf_looter",
+                ["giant"] = "rf_looter",
+                ["aqarun"] = "rf_looter"
+            },
             [StartType.Looter] = new Dictionary<string, string>
             {
                 ["aserai"] = "rf_looter",
@@ -26,7 +59,9 @@ namespace RealmsForgotten.Managers
                 ["khuzait"] = "rf_looter",
                 ["sturgia"] = "rf_looter",
                 ["battania"] = "rf_looter",
-                ["vlandia"] = "rf_looter"
+                ["vlandia"] = "rf_looter",
+                ["giant"] = "rf_looter",
+                ["aqarun"] = "rf_looter"
             },
             [StartType.Mercenary] = new Dictionary<string, string>
             {
@@ -35,7 +70,9 @@ namespace RealmsForgotten.Managers
                 ["khuzait"] = "merc_allkhuur_start",
                 ["sturgia"] = "merc_vortiak_start",
                 ["battania"] = "merc_elvean_start",
-                ["vlandia"] = "merc_nasoria_start"
+                ["vlandia"] = "merc_nasoria_start",
+                ["giant"] = "merc_giant_start",
+                ["aqarun"] = "merc_athas_start"
             },
             [StartType.VassalNoFief] = new Dictionary<string, string>
             {
@@ -44,7 +81,9 @@ namespace RealmsForgotten.Managers
                 ["khuzait"] = "khuzait_vassal_nofief",
                 ["sturgia"] = "dreadrealms_vassal_nofief",
                 ["battania"] = "elvean_vassal_nofief",
-                ["vlandia"] = "nasoria_vassal_nofief"
+                ["vlandia"] = "nasoria_vassal_nofief",
+                ["giant"] = "giant_vassal_nofief",
+                ["aqarun"] = "vassalnofief_aqarun_start"
             },
             [StartType.KingdomRuler] = new Dictionary<string, string>
             {
@@ -53,7 +92,9 @@ namespace RealmsForgotten.Managers
                 ["khuzait"] = "king_allkhuur_start",
                 ["sturgia"] = "king_vortiak_start",
                 ["battania"] = "king_elvean_start",
-                ["vlandia"] = "king_nasoria_start"
+                ["vlandia"] = "king_nasoria_start",
+                ["giant"] = "king_giant_start",
+                ["aqarun"] = "king_aqarun_start"
             },
             [StartType.CastleRuler] = new Dictionary<string, string>
             {
@@ -62,7 +103,9 @@ namespace RealmsForgotten.Managers
                 ["khuzait"] = "vassal_allkhuur_start",
                 ["sturgia"] = "vassal_vortiak_start",
                 ["battania"] = "vassal_elvean_start",
-                ["vlandia"] = "vassal_nasoria_start"
+                ["vlandia"] = "vassal_nasoria_start",
+                ["giant"] = "vassal_giant_start",
+                ["aqarun"] = "vassal_aqarun_start"
             },
             [StartType.VassalFief] = new Dictionary<string, string>
             {
@@ -71,9 +114,11 @@ namespace RealmsForgotten.Managers
                 ["khuzait"] = "ruler_allkhuur_start",
                 ["sturgia"] = "ruler_dreadrealms_start",
                 ["battania"] = "lord_elvean_start",
-                ["vlandia"] = "ruler_nasoria_start"
+                ["vlandia"] = "ruler_nasoria_start",
+                ["giant"] = "ruler_giant_start",
+                ["giant"] = "ruler_aqarun_start"
             },
-        };
+         };
         public static void Apply(int storyOption, int locationOption)
         {
             Hero mainHero = Hero.MainHero;
