@@ -48,10 +48,17 @@ namespace RealmsForgotten
                 campaignGameStarter.AddBehavior(new RFEnchantmentVendorBehavior());
                 campaignGameStarter.AddBehavior(new RFFaithCampaignBehavior());
 
-                campaignGameStarter.AddModel(new RFAgentStatCalculateModel());
                 campaignGameStarter.AddModel(new RFAgentApplyDamageModel());
-                campaignGameStarter.AddModel(new RFVolunteerModel());
+                campaignGameStarter.AddModel(new RFAgentStatCalculateModel());
+                campaignGameStarter.AddModel(new RFBuildingConstructionModel());
                 campaignGameStarter.AddModel(new RFCombatXpModel());
+                campaignGameStarter.AddModel(new RFDefaultCharacterDevelopmentModel());
+                campaignGameStarter.AddModel(new RFPartyMoraleModel());
+                campaignGameStarter.AddModel(new RFPartySpeedCalculatingModel());
+                campaignGameStarter.AddModel(new RFPrisonerRecruitmentCalculationModel());
+                campaignGameStarter.AddModel(new RFRaidModel());
+                campaignGameStarter.AddModel(new RFVolunteerModel());
+                campaignGameStarter.AddModel(new RFWageModel());
 
 
 
