@@ -21,6 +21,19 @@ namespace RealmsForgotten.RFCustomSettlements
             {"healing", RFUsableObjectType.Healing}
         };
 
+        internal static int GetGoldAmount(string[] itemData)
+        {
+            return int.Parse(itemData.Last());
+        }
+
+        internal static string GetNameOfGoldObject(int amount)
+        {
+            if (0 < amount && amount < 20) return "Gold Pile";
+            else if (amount < 10) return "Gold Pouch";
+            else if (amount < 500) return "Gold Chest";
+            else return "Gold";
+        }
+
         public static float maxPickableDistance = 10f;
         public static RFUsableObjectType? ChooseObjectType(string objectName)
         {
@@ -36,5 +49,6 @@ namespace RealmsForgotten.RFCustomSettlements
             itemIdBuilder.Remove(itemIdBuilder.Length - 1, 1);
             return itemIdBuilder.ToString();
         }
+
     }
 }

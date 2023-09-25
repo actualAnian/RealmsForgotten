@@ -23,6 +23,7 @@ using RealmsForgotten.RFCustomSettlements.AgentOrigins;
 using RealmsForgotten.HuntableHerds.AgentComponents;
 using RealmsForgotten.HuntableHerds.Models;
 using System.Text;
+using static RealmsForgotten.RFCustomSettlements.CustomSettlementsCampaignBehavior;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -148,9 +149,11 @@ namespace RealmsForgotten.RFCustomSettlements
                                  select area);
             animalSpawnPositions.AddRange(Mission.Current.Scene.FindEntitiesWithTag("spawnpoint_herdanimal"));
 
+            base.Mission.MakeDefaultDeploymentPlans();
             SpawnPatrollingTroops(patrolAreas);
             SpawnStandingTroops(areaMarkers);
             SpawnHuntableHerdsAnimals();
+            SpawnPlayerTroops();
         }
 
         private void SpawnHuntableHerdsAnimals()
@@ -279,6 +282,34 @@ namespace RealmsForgotten.RFCustomSettlements
 
             }
         }
+
+        private void SpawnPlayerTroops()
+        {
+            TroopRoster? troopRoster;
+            if ((troopRoster = NextSceneData.Instance.playerTroopRoster) == null) return;
+            FlattenedTroopRoster flattenedTR = troopRoster.ToFlattenedRoster();
+            foreach(TroopRosterElement troop in  troopRoster.GetTroopRoster())
+            {
+                if(troop.Character == Hero.MainHero.CharacterObject) continue;
+                UniqueTroopDescriptor descriptor = flattenedTR.FindIndexOfCharacter(troop.Character);
+                RFAgentOrigin troopToSpawn = new(Hero.MainHero.PartyBelongedTo.Party, descriptor, 1, flattenedTR[descriptor]);
+                Agent agent = Mission.Current.SpawnTroop(troopToSpawn, true, true, false, false, 0, 0, true, true, true, null, null, null, null, FormationClass.NumberOfAllFormations, false);
+            }
+            foreach (Formation formation in Mission.Current.AttackerTeam.FormationsIncludingEmpty)
+            {
+                if (formation.CountOfUnits > 0)
+                {
+                    formation.SetMovementOrder(MovementOrder.MovementOrderMove(formation.QuerySystem.MedianPosition));
+                }
+                formation.FiringOrder = FiringOrder.FiringOrderHoldYourFire;
+                if (Mission.Current.AttackerTeam == Mission.Current.PlayerTeam)
+                {
+                    formation.PlayerOwner = Mission.Current.MainAgent;
+                }
+            }
+
+        }
+
         private RFAgentOrigin PrepareAgentToSpawn(string banditId)
         {
             FlattenedTroopRoster flattenedTR = banditsInSettlement.MemberRoster.ToFlattenedRoster();
@@ -490,7 +521,7 @@ namespace RealmsForgotten.RFCustomSettlements
             {
                 string[] itemData = usablePlace.GameEntity.Name.Split('_');
                 string itemId = Helper.GetRFPickableObjectName(itemData);
-                int amount = int.Parse(itemData.Last());
+                int amount = Helper.GetGoldAmount(itemData);
                 string soundEventId = "";
                 if (itemId == "gold")
                 {

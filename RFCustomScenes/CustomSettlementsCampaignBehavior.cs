@@ -27,6 +27,7 @@ namespace RealmsForgotten.RFCustomSettlements
             private static NextSceneData? _instance;
             public bool shouldSwitchScenes = false;
             public string? newSceneId;
+            public TroopRoster? playerTroopRoster;
             public static NextSceneData Instance
             {
                 get
@@ -58,7 +59,7 @@ namespace RealmsForgotten.RFCustomSettlements
 
         private void AddGameMenus(CampaignGameStarter starter)
         {
-            starter.AddGameMenu("rf_settlement_start", "{=rf_settlement_start}What's this???", new OnInitDelegate(this.game_menu_rf_settlement_start_on_init), GameOverlays.MenuOverlayType.None, GameMenu.MenuFlags.None, null);
+            starter.AddGameMenu("rf_settlement_start", "{=rf_settlement_start} You came across a captivating location!", new OnInitDelegate(this.game_menu_rf_settlement_start_on_init), GameOverlays.MenuOverlayType.None, GameMenu.MenuFlags.None, null);
             starter.AddGameMenuOption("rf_settlement_start", "explore", "{=rf_explore}Explore", new GameMenuOption.OnConditionDelegate(this.game_menu_rf_settlement_explore_on_condition), new GameMenuOption.OnConsequenceDelegate(this.game_menu_rf_settlement_explore_on_consequence), false, -1, false);
             starter.AddGameMenuOption("rf_settlement_start", "wait", "{=zEoHYEUS}Wait here for some time", new GameMenuOption.OnConditionDelegate(this.game_menu_rf_settlement_wait_on_condition), delegate (MenuCallbackArgs x)
             {
@@ -95,7 +96,6 @@ namespace RealmsForgotten.RFCustomSettlements
             RFCustomSettlement curSettlement;
             if (Settlement.CurrentSettlement.SettlementComponent == null || (curSettlement = ((RFCustomSettlement)Settlement.CurrentSettlement.SettlementComponent)) == null) return;
             args.MenuContext.SetBackgroundMeshName(curSettlement.WaitMeshName);
-
             args.MenuContext.GameMenu.StartWait();
             //UpdateMenuLocations();
             if (PlayerEncounter.Current != null)
@@ -124,9 +124,29 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         private void game_menu_rf_settlement_explore_on_consequence(MenuCallbackArgs args)
         {
-            if (Settlement.CurrentSettlement.SettlementComponent is RFCustomSettlement rfSettlement) CustomSettlementMission.StartCustomSettlementMission(rfSettlement.CustomScene);
+            int playerMaximumTroopCountForHideoutMission = 2;
+            TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
+            TroopRoster strongestAndPriorTroops = MobilePartyHelper.GetStrongestAndPriorTroops(MobileParty.MainParty, playerMaximumTroopCountForHideoutMission, true);
+            troopRoster.Add(strongestAndPriorTroops);
+            Campaign campaign = Campaign.Current;
+            int maxSelectableTroopCount = (campaign != null) ? 2 : 0;
+            args.MenuContext.OpenTroopSelection(MobileParty.MainParty.MemberRoster, troopRoster, new Func<CharacterObject, bool>(this.CanChangeStatusOfTroop), new Action<TroopRoster>(this.OnTroopRosterManageDone), maxSelectableTroopCount, 1);
+            //if (Settlement.CurrentSettlement.SettlementComponent is RFCustomSettlement rfSettlement) CustomSettlementMission.StartCustomSettlementMission(rfSettlement.CustomScene);
         }
 
+        private void OnTroopRosterManageDone(TroopRoster roster)
+        {
+            if (Settlement.CurrentSettlement.SettlementComponent is RFCustomSettlement rfSettlement && rfSettlement.CustomScene != null)
+            {
+                NextSceneData.Instance.playerTroopRoster = roster;
+                CustomSettlementMission.StartCustomSettlementMission(rfSettlement.CustomScene);
+            }
+        }
+
+        private bool CanChangeStatusOfTroop(CharacterObject character)
+        {
+            return !character.IsPlayerCharacter && !character.IsNotTransferableInHideouts;
+        }
         private bool game_menu_rf_settlement_wait_on_condition(MenuCallbackArgs args)
         {
             bool canPlayerDo = Campaign.Current.Models.SettlementAccessModel.CanMainHeroDoSettlementAction(Settlement.CurrentSettlement, SettlementAccessModel.SettlementAction.WaitInSettlement, out bool shouldBeDisabled, out TextObject disabledText);
@@ -137,7 +157,7 @@ namespace RealmsForgotten.RFCustomSettlements
 
         private bool game_menu_rf_settlement_explore_on_condition(MenuCallbackArgs args)
         {
-            bool result;
+            bool canExplore;
             if (Settlement.CurrentSettlement.SettlementComponent is RFCustomSettlement settlementComponent)
             {
                 if (CharacterObject.PlayerCharacter.HitPoints < 25)
@@ -145,19 +165,19 @@ namespace RealmsForgotten.RFCustomSettlements
                     args.IsEnabled = false;
                     args.Tooltip = new TextObject("{=rf_too_wounded}You are too wounded to explore the area!", null);
                 }
-                if (settlementComponent.IsRaided)
-                {
-                    args.IsEnabled = false;
-                    args.Tooltip = new TextObject("{=rf_raided}You were here just a little while ago. There is nothing left to find, you should come back later.", null);
-                }
+                //if (settlementComponent.IsRaided)
+                //{
+                //    args.IsEnabled = false;
+                //    args.Tooltip = new TextObject("{=rf_raided}You were here just a little while ago. There is nothing left to find, you should come back later.", null);
+                //}
                 args.optionLeaveType = GameMenuOption.LeaveType.Mission;
-                result = true;
+                canExplore = true;
             }
             else
             {
-                result = false;
+                canExplore = false;
             }
-            return result;
+            return canExplore;
 
         }
 
