@@ -112,12 +112,17 @@ namespace RFCustomSettlements.Patches
             {
                 GameKey key = HotKeyManager.GetCategory("CombatHotKeyCategory").GetGameKey(13);
                 string button = $@"<img src=""General\InputKeys\{key.ToString().ToLower()}"" extend=""24"">";
-                switch(RealmsForgotten.RFCustomSettlements.Helper.ChooseObjectType(machine.GameEntity.Name))
+                string[] objectName = machine.GameEntity.Name.Split('_');
+                if (objectName.Length < 2) return;
+                switch (RealmsForgotten.RFCustomSettlements.Helper.ChooseObjectType(machine.GameEntity.Name))
                 { 
                     case RFUsableObjectType.Pickable:
-                        string itemId = RealmsForgotten.RFCustomSettlements.Helper.GetRFPickableObjectName(machine.GameEntity.Name.Split('_'));
+                        string itemId = RealmsForgotten.RFCustomSettlements.Helper.GetRFPickableObjectName(objectName);
                         if (itemId == "gold")
-                            __instance.PrimaryInteractionMessage = button + " Gold Pouch";
+                        { 
+                            int amount = RealmsForgotten.RFCustomSettlements.Helper.GetGoldAmount(objectName);
+                            __instance.PrimaryInteractionMessage = button + RealmsForgotten.RFCustomSettlements.Helper.GetNameOfGoldObject(amount);
+                        }
                         else
                             __instance.PrimaryInteractionMessage = button + " " + MBObjectManager.Instance.GetObject<ItemObject>(itemId).Name;
                         break;
@@ -140,8 +145,8 @@ namespace RFCustomSettlements.Patches
         static readonly MethodInfo curMisInfo = AccessTools.PropertyGetter("MissionMainAgentInteractionComponent:CurrentMission");
         static void Postfix(MissionMainAgentInteractionComponent __instance)
         {
-            UsablePlace usablePlace;
-            if ((usablePlace = (UsablePlace)(__instance.CurrentFocusedMachine)) != null)
+            UsablePlace? usablePlace;
+            if ((usablePlace = (__instance.CurrentFocusedMachine as UsablePlace)) != null)
             {
 
                 if(((MissionScreen)curMisScrInfo.Invoke(__instance, null)).SceneLayer.Input.IsGameKeyPressed(13) && usablePlace.GameEntity.Name.StartsWith("rf"))

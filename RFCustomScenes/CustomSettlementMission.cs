@@ -14,6 +14,7 @@ using TaleWorlds.MountAndBlade.Source.Missions.Handlers;
 using TaleWorlds.MountAndBlade.Source.Missions.Handlers.Logic;
 using TaleWorlds.MountAndBlade.View;
 using TaleWorlds.MountAndBlade.View.MissionViews;
+using TaleWorlds.MountAndBlade.View.MissionViews.Order;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -59,13 +60,15 @@ namespace RealmsForgotten.RFCustomSettlements
 
                     new CustomSettlementMissionLogic(CustomSettlementBuildData.allCustomSettlementBuildDatas[sceneName]),
                     ViewCreator.CreateMissionAgentStatusUIHandler(mission),
-
                     new MissionCampaignView(),
                     ViewCreator.CreateMissionAgentLockVisualizerView(),
                     new MissionBoundaryWallView(),
 
                     ViewCreator.CreateMissionMainAgentEquipmentController(),
 
+                    new OrderTroopPlacer(),
+                    ViewCreator.CreateMissionOrderUIHandler(null),
+                    ViewCreator.CreateMissionFormationMarkerUIHandler(mission),
 
                     SandBoxViewCreator.CreateMissionNameMarkerUIHandler(mission)
                     }, true, true);
