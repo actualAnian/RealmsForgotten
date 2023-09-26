@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
 using TaleWorlds.Core;
 
@@ -23,21 +24,18 @@ namespace RealmsForgotten.RFCustomSettlements
             public string Id { get => _id; }
             public int Amount { get => _amount; }
         }
-
         internal static readonly Dictionary<string, CustomSettlementBuildData> allCustomSettlementBuildDatas = new ();
-
-        public Dictionary<int, List<RFBanditData>> stationaryAreasBandits;
-        public Dictionary<int, RFBanditData> patrolAreasBandits;
-        public CustomSettlementBuildData(Dictionary<int, List<RFBanditData>> buildStationaryAreasBandits, Dictionary<int, RFBanditData> buildPatrolAreasBandits)
+        public readonly Dictionary<int, List<RFBanditData>> stationaryAreasBandits;
+        public readonly Dictionary<int, RFBanditData> patrolAreasBandits;
+        public readonly int maxPlayersideTroops;
+        public CustomSettlementBuildData(Dictionary<int, List<RFBanditData>> buildStationaryAreasBandits, Dictionary<int, RFBanditData> buildPatrolAreasBandits, int buildMaxPlayersideTroops)
         {
             stationaryAreasBandits = buildStationaryAreasBandits;
             patrolAreasBandits = buildPatrolAreasBandits;
+            maxPlayersideTroops = buildMaxPlayersideTroops;
         }
-
         public static void BuildAll()
         {
-
-
             string mainPath = Path.GetDirectoryName(Globals.realmsForgottenAssembly.Location);
 
             string xmlFileName = Path.Combine(mainPath, "settlement_bandits.xml");
@@ -46,6 +44,7 @@ namespace RealmsForgotten.RFCustomSettlements
 
             foreach (XElement element in SettlementBandits.Descendants("CustomScene"))
             {
+                int maxPlayersideTroops = int.Parse(element.Element("maxPlayersideTroops").Value);
                 Dictionary<int, List<RFBanditData>> buildStationaryAreasBandits = new();
                 Dictionary<int, RFBanditData> buildPatrolAreasBandits = new();
                 string sceneId;
@@ -68,8 +67,7 @@ namespace RealmsForgotten.RFCustomSettlements
                     RFBanditData bd = new(xElement.Element("Bandit").Element("id").Value, xElement.Element("Bandit").Element("amount").Value);
                     buildPatrolAreasBandits.Add(int.Parse(xElement.Element("areaIndex").Value), bd);
                 }
-
-                CustomSettlementBuildData buildData = new(buildStationaryAreasBandits, buildPatrolAreasBandits);
+                CustomSettlementBuildData buildData = new(buildStationaryAreasBandits, buildPatrolAreasBandits, maxPlayersideTroops);
                 allCustomSettlementBuildDatas.Add(sceneId, buildData);
             }
         }

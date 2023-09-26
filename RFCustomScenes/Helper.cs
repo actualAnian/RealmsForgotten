@@ -29,8 +29,8 @@ namespace RealmsForgotten.RFCustomSettlements
         internal static string GetNameOfGoldObject(int amount)
         {
             if (0 < amount && amount < 20) return "Gold Pile";
-            else if (amount < 10) return "Gold Pouch";
-            else if (amount < 500) return "Gold Chest";
+            else if (amount < 100) return "Gold Pouch";
+            else if (amount < 2000) return "Gold Chest";
             else return "Gold";
         }
 
