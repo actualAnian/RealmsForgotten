@@ -21,7 +21,7 @@ namespace RealmsForgotten.RFCustomSettlements
     public static class CustomSettlementMission
     {
             [MissionMethod]
-            public static Mission StartCustomSettlementMission(string sceneName)
+            public static Mission StartCustomSettlementMission(string sceneName, CustomSettlementBuildData currentBuildData)
                 {
                 return MissionState.OpenNew(sceneName,
                     SandBoxMissions.CreateSandBoxMissionInitializerRecord(sceneName, "", false, DecalAtlasGroup.Battle),
@@ -58,7 +58,7 @@ namespace RealmsForgotten.RFCustomSettlements
                     ViewCreator.CreateMissionMainAgentEquipDropView(mission),
                     ViewCreator.CreateSingleplayerMissionKillNotificationUIHandler(),
 
-                    new CustomSettlementMissionLogic(CustomSettlementBuildData.allCustomSettlementBuildDatas[sceneName]),
+                    new CustomSettlementMissionLogic(currentBuildData),
                     ViewCreator.CreateMissionAgentStatusUIHandler(mission),
                     new MissionCampaignView(),
                     ViewCreator.CreateMissionAgentLockVisualizerView(),

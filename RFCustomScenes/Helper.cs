@@ -1,13 +1,19 @@
-﻿using System;
+﻿using SandBox.Objects.Usables;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaleWorlds.Engine;
+using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
     static class Helper
     {
+
+        private static readonly float rfInteractionDistance = 2.5f;
+        private static bool _canInteract;
         public enum RFUsableObjectType
         {
             Pickable,
@@ -20,6 +26,24 @@ namespace RealmsForgotten.RFCustomSettlements
             {"passage", RFUsableObjectType.Passage},
             {"healing", RFUsableObjectType.Healing}
         };
+        public static bool IsRFObject(IFocusable focusable)
+        {
+            UsablePlace? usablePlace;
+            if ((usablePlace = focusable as UsablePlace) != null && usablePlace.GameEntity.Name.StartsWith("rf_")) return true;
+            //if (gameEntity != null && gameEntity.Name.StartsWith("rf_")) return true;
+            return false;
+        }
+
+        public static bool IsCloseEnough(Agent mainAgent, IFocusable focusable)
+        {
+            if(((UsablePlace)focusable).GameEntity.GlobalPosition.Distance(Agent.Main.Position) < rfInteractionDistance)
+            {
+                _canInteract = true;
+                return true;
+            }
+            _canInteract = false;
+            return false;
+        }
 
         internal static int GetGoldAmount(string[] itemData)
         {
@@ -29,12 +53,15 @@ namespace RealmsForgotten.RFCustomSettlements
         internal static string GetNameOfGoldObject(int amount)
         {
             if (0 < amount && amount < 20) return "Gold Pile";
-            else if (amount < 10) return "Gold Pouch";
-            else if (amount < 500) return "Gold Chest";
+            else if (amount < 100) return "Gold Pouch";
+            else if (amount < 2000) return "Gold Chest";
             else return "Gold";
         }
 
         public static float maxPickableDistance = 10f;
+
+        public static bool CanInteract { get => _canInteract;}
+
         public static RFUsableObjectType? ChooseObjectType(string objectName)
         {
             string objectType = objectName.Split('_')[1];

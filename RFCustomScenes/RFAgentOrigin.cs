@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO.Ports;
 using Helpers;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
@@ -9,32 +10,28 @@ using TaleWorlds.CampaignSystem.TroopSuppliers;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.ObjectSystem;
+using static RealmsForgotten.RFCustomSettlements.CustomSettlementsCampaignBehavior;
 
 namespace RealmsForgotten.RFCustomSettlements.AgentOrigins
 {
     public class RFAgentOrigin : IAgentOriginBase
     {
-        internal RFAgentOrigin(PartyBase party, UniqueTroopDescriptor descriptor, int rank, FlattenedTroopRosterElement rosterElement)
+        internal RFAgentOrigin(PartyBase party, UniqueTroopDescriptor descriptor, int rank, CharacterObject character, bool isUnderPlayersCommand = false)
         {
-            this.rosterElement = rosterElement;
-            Party = party;
-//            this._supplier = supplier;
+            this.characterObject = character;
+            this._party = party;
             this._descriptor = descriptor;
-            this._rank = rank;
+            this._isUnderPlayerCommand = isUnderPlayersCommand;
+            _rank = rank;
         }
-
-        private FlattenedTroopRosterElement rosterElement;
-
         public PartyBase Party
         {
             get
             {
-                return MobileParty.MainParty.Party;
+                return _party;
                 //                return this._supplier.GetParty(this._descriptor);
             }
-            private set { }
         }
-
         public IBattleCombatant BattleCombatant
         {
             get
@@ -42,7 +39,6 @@ namespace RealmsForgotten.RFCustomSettlements.AgentOrigins
                 return this.Party;
             }
         }
-
         public Banner Banner
         {
             get
@@ -54,7 +50,6 @@ namespace RealmsForgotten.RFCustomSettlements.AgentOrigins
                 return this.Party.LeaderHero.ClanBanner;
             }
         }
-
         public int UniqueSeed
         {
             get
@@ -62,17 +57,15 @@ namespace RealmsForgotten.RFCustomSettlements.AgentOrigins
                 return this._descriptor.UniqueSeed;
             }
         }
-
         public CharacterObject Troop
         {
             get
             {
-                return rosterElement.Troop;
+                return characterObject;
 //                return MBObjectManager.Instance.GetObject<CharacterObject>("looter");
 //                return this._supplier.GetTroop(this._descriptor);
             }
         }
-
         BasicCharacterObject IAgentOriginBase.Troop
         {
             get
@@ -80,12 +73,40 @@ namespace RealmsForgotten.RFCustomSettlements.AgentOrigins
                 return this.Troop;
             }
         }
-
         public UniqueTroopDescriptor TroopDesc
         {
             get
             {
                 return this._descriptor;
+            }
+        }
+        public bool IsUnderPlayersCommand
+        {
+            get
+            {
+                return _isUnderPlayerCommand;
+              //  return this.Troop == Hero.MainHero.CharacterObject || RFAgentOrigin.IsPartyUnderPlayerCommand(this.Party);
+            }
+        }
+        public uint FactionColor
+        {
+            get
+            {
+                return this.Party.MapFaction.Color;
+            }
+        }
+        public uint FactionColor2
+        {
+            get
+            {
+                return this.Party.MapFaction.Color2;
+            }
+        }
+        public int Seed
+        {
+            get
+            {
+                return CharacterHelper.GetPartyMemberFaceSeed(this.Party, this.Troop, this.Rank);
             }
         }
 
@@ -97,53 +118,28 @@ namespace RealmsForgotten.RFCustomSettlements.AgentOrigins
             }
         }
 
-        public bool IsUnderPlayersCommand
-        {
-            get
-            {
-                return false;
-//                return this.Troop == Hero.MainHero.CharacterObject || RFAgentOrigin.IsPartyUnderPlayerCommand(this.Party);
-            }
-        }
-
-        public uint FactionColor
-        {
-            get
-            {
-                return this.Party.MapFaction.Color;
-            }
-        }
-
-        public uint FactionColor2
-        {
-            get
-            {
-                return this.Party.MapFaction.Color2;
-            }
-        }
-
-        public int Seed
-        {
-            get
-            {
-                return CharacterHelper.GetPartyMemberFaceSeed(this.Party, this.Troop, this.Rank);
-            }
-        }
-
         public void SetWounded()
         {
             if (!this._isRemoved)
             {
- //               this._supplier.OnTroopWounded(this._descriptor);
+                if (Party == MobileParty.MainParty.Party)
+                { 
+                    this.Party.MemberRoster.AddToCounts(Troop, 0, false, 1, 0, true, -1);
+                    NextSceneData.Instance.OnTroopWounded(Troop);
+                }
+                //               this._supplier.OnTroopWounded(this._descriptor);
                 this._isRemoved = true;
             }
         }
-
         public void SetKilled()
         {
             if (!this._isRemoved)
             {
- //               this._supplier.OnTroopKilled(this._descriptor);
+                if (Party == MobileParty.MainParty.Party)
+                { 
+                    Party.MemberRoster.AddToCounts(Troop, -1, false, 0, 0, true, -1);
+                    NextSceneData.Instance.OnTroopKilled(Troop);
+                }
                 if (this.Troop.IsHero)
                 {
                     KillCharacterAction.ApplyByBattle(this.Troop.HeroObject, null, true);
@@ -151,7 +147,6 @@ namespace RealmsForgotten.RFCustomSettlements.AgentOrigins
                 this._isRemoved = true;
             }
         }
-
         public void SetRouted()
         {
             if (!this._isRemoved)
@@ -160,7 +155,6 @@ namespace RealmsForgotten.RFCustomSettlements.AgentOrigins
                 this._isRemoved = true;
             }
         }
-
         public void OnAgentRemoved(float agentHealth)
         {
             if (this.Troop.IsHero)
@@ -168,44 +162,24 @@ namespace RealmsForgotten.RFCustomSettlements.AgentOrigins
                 this.Troop.HeroObject.HitPoints = MathF.Max(1, MathF.Round(agentHealth));
             }
         }
-
         void IAgentOriginBase.OnScoreHit(BasicCharacterObject victim, BasicCharacterObject captain, int damage, bool isFatal, bool isTeamKill, WeaponComponentData attackerWeapon)
         {
 //            this._supplier.OnTroopScoreHit(this._descriptor, victim, damage, isFatal, isTeamKill, attackerWeapon);
         }
-
         public void SetBanner(Banner banner)
         {
             throw new NotImplementedException();
         }
-
         public static bool IsPartyUnderPlayerCommand(PartyBase party)
         {
-            return false;
-            //if (party == PartyBase.MainParty)
-            //{
-            //    return true;
-            //}
-            //if (party.Side != PartyBase.MainParty.Side)
-            //{
-            //    return false;
-            //}
-            //bool flag = party.Owner == Hero.MainHero;
-            //IFaction mapFaction = party.MapFaction;
-            //bool flag2 = ((mapFaction != null) ? mapFaction.Leader : null) == Hero.MainHero;
-            //bool flag3 = party.MobileParty != null && party.MobileParty.DefaultBehavior == AiBehavior.EscortParty && party.MobileParty.TargetParty == MobileParty.MainParty;
-            //bool flag4 = party.MobileParty != null && party.MobileParty.Army != null && party.MobileParty.Army.LeaderParty == MobileParty.MainParty;
-            //Settlement mapEventSettlement = party.MapEvent.MapEventSettlement;
-            //bool flag5 = mapEventSettlement != null && mapEventSettlement.OwnerClan.Leader == Hero.MainHero;
-            //return flag || flag2 || flag3 || flag4 || flag5;
+            return party == PartyBase.MainParty;
         }
 
-//        private readonly PartyGroupTroopSupplier _supplier;
-
         private readonly UniqueTroopDescriptor _descriptor;
-
-        private readonly int _rank;
-
+        private readonly bool _isUnderPlayerCommand;
         private bool _isRemoved;
+        private readonly CharacterObject characterObject;
+        private readonly PartyBase _party;
+        private readonly int _rank;
     }
 }

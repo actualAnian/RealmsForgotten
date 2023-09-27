@@ -24,6 +24,7 @@ using RealmsForgotten.HuntableHerds.AgentComponents;
 using RealmsForgotten.HuntableHerds.Models;
 using System.Text;
 using static RealmsForgotten.RFCustomSettlements.CustomSettlementsCampaignBehavior;
+using static TaleWorlds.Engine.GameEntity;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -155,7 +156,6 @@ namespace RealmsForgotten.RFCustomSettlements
             SpawnHuntableHerdsAnimals();
             SpawnPlayerTroops();
         }
-
         private void SpawnHuntableHerdsAnimals()
         {
             foreach(GameEntity entity in animalSpawnPositions)
@@ -200,7 +200,7 @@ namespace RealmsForgotten.RFCustomSettlements
                     mparty.AddElementToMemberRoster(troop, 1);
                 }
             }
-            foreach(KeyValuePair<int, List<CustomSettlementBuildData.RFBanditData>> pair in bd.stationaryAreasBandits) 
+            foreach(KeyValuePair<int, List<CustomSettlementBuildData.RFBanditData>> pair in bd.stationaryAreasBandits)
             {
                 foreach(CustomSettlementBuildData.RFBanditData banditData in pair.Value)
                 {
@@ -209,10 +209,9 @@ namespace RealmsForgotten.RFCustomSettlements
                     mparty.AddElementToMemberRoster(troop, 1);
                 }
             }
-
-            return mparty;            
+            mparty.ActualClan = Clan.All.Where(c => c.StringId == "looters").ElementAt(0);
+            return mparty;
         }
-
         private void SpawnStandingTroops(List<CommonAreaMarker> areaMarkers)
         {
             foreach (CommonAreaMarker commonAreaMarker in areaMarkers)
@@ -241,7 +240,6 @@ namespace RealmsForgotten.RFCustomSettlements
                         globalFrame = standingPoint.GameEntity.GetGlobalFrame();
                         globalFrame.rotation.OrthonormalizeAccordingToForwardAndKeepUpAsZAxis();
                         Agent agent = Mission.Current.SpawnTroop(agentToSpawn, false, false, false, false, 0, 0, false, false, false, new Vec3?(globalFrame.origin), new Vec2?(globalFrame.rotation.f.AsVec2.Normalized()), "_hideout_bandit", null, FormationClass.NumberOfAllFormations, false);
-
                         InitializeBanditAgent(agent, standingPoint, false, defenderAgentObjects);
                     }
                     catch(InvalidOperationException)
@@ -282,7 +280,6 @@ namespace RealmsForgotten.RFCustomSettlements
 
             }
         }
-
         private void SpawnPlayerTroops()
         {
             TroopRoster? troopRoster;
@@ -290,10 +287,14 @@ namespace RealmsForgotten.RFCustomSettlements
             FlattenedTroopRoster flattenedTR = troopRoster.ToFlattenedRoster();
             foreach(TroopRosterElement troop in  troopRoster.GetTroopRoster())
             {
-                if(troop.Character == Hero.MainHero.CharacterObject) continue;
-                UniqueTroopDescriptor descriptor = flattenedTR.FindIndexOfCharacter(troop.Character);
-                RFAgentOrigin troopToSpawn = new(Hero.MainHero.PartyBelongedTo.Party, descriptor, 1, flattenedTR[descriptor]);
-                Agent agent = Mission.Current.SpawnTroop(troopToSpawn, true, true, false, false, 0, 0, true, true, true, null, null, null, null, FormationClass.NumberOfAllFormations, false);
+                CharacterObject? character;
+                if((character = troop.Character) == Hero.MainHero.CharacterObject) continue;
+                for(int i = 0; i < troop.Number; i++)
+                {
+                    UniqueTroopDescriptor descriptor = flattenedTR.FindIndexOfCharacter(character);
+                    RFAgentOrigin troopToSpawn = new(Hero.MainHero.PartyBelongedTo.Party, descriptor, character.Tier, character, true);
+                    Agent agent = Mission.Current.SpawnTroop(troopToSpawn, true, true, false, false, 0, 0, true, true, true, null, null, null, null, FormationClass.NumberOfAllFormations, false);
+                }
             }
             foreach (Formation formation in Mission.Current.AttackerTeam.FormationsIncludingEmpty)
             {
@@ -307,15 +308,13 @@ namespace RealmsForgotten.RFCustomSettlements
                     formation.PlayerOwner = Mission.Current.MainAgent;
                 }
             }
-
         }
-
         private RFAgentOrigin PrepareAgentToSpawn(string banditId)
         {
             FlattenedTroopRoster flattenedTR = banditsInSettlement.MemberRoster.ToFlattenedRoster();
-            UniqueTroopDescriptor descriptor = flattenedTR.FindIndexOfCharacter(MBObjectManager.Instance.GetObject<CharacterObject>(banditId));
-
-            RFAgentOrigin rFAgentOrigin = new(new PartyBase(banditsInSettlement), descriptor, 1, flattenedTR[descriptor]);
+            CharacterObject troop = MBObjectManager.Instance.GetObject<CharacterObject>(banditId);
+            UniqueTroopDescriptor descriptor = flattenedTR.FindIndexOfCharacter(troop);
+            RFAgentOrigin rFAgentOrigin = new(new PartyBase(banditsInSettlement), descriptor, troop.Tier, troop);
             return rFAgentOrigin;
         }
         private string ChooseBanditToSpawn(Dictionary<string, int> banditsInArea)
@@ -356,9 +355,9 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         protected override void OnEndMission()
         {
-            CustomSettlementsCampaignBehavior.goldLoot = goldLooted;
-            CustomSettlementsCampaignBehavior.itemLoot = loot;
-            CustomSettlementsCampaignBehavior.finishedMission = true;
+            NextSceneData.Instance.goldLoot = goldLooted;
+            NextSceneData.Instance.itemLoot = loot;
+            NextSceneData.Instance.finishedMission = true;
             base.OnEndMission();
         }
         private void SimulateTick(Agent agent)
@@ -379,13 +378,11 @@ namespace RealmsForgotten.RFCustomSettlements
 				return MissionBehaviorType.Other;
 			}
 		}
-
         public override void AfterStart()
         {
             SpawnPlayer();
             SpawnChicken();
         }
-
         private Agent SpawnPlayer()
         {
             MatrixFrame matrixFrame = MatrixFrame.Identity;
@@ -450,7 +447,6 @@ namespace RealmsForgotten.RFCustomSettlements
                 agent.SetWantsToYell();
             }
         }
-
         public void SpawnChicken()
         {
             GameEntity gameEntity2 = base.Mission.Scene.FindEntityWithTag("navigation_mesh_deactivator");
@@ -544,10 +540,7 @@ namespace RealmsForgotten.RFCustomSettlements
                 string str = "Error in game entity name" + usablePlace.GameEntity.Name;
                 HuntableHerds.SubModule.PrintDebugMessage(str, 255, 0, 0);
             }
-
         }
-
-
         private void StartNewMission(UsablePlace usablePlace)
         {
             StringBuilder sb = new();
@@ -563,6 +556,10 @@ namespace RealmsForgotten.RFCustomSettlements
         private void DoHealing(UsablePlace usablePlace)
         {
             Agent.Main.Health = Agent.Main.HealthLimit;
+            usablePlace.GameEntity.ClearComponents();
+            //var component = usablePlace.GameEntity.GetComponentAtIndex(0, ComponentType.ParticleSystemInstanced);
+            //if (component != null)
+            //    usablePlace.GameEntity.RemoveComponent(component);
         }
     }
 }

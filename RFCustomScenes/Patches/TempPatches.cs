@@ -2,13 +2,17 @@
 using RealmsForgotten.RFCustomSettlements;
 using SandBox.Objects.Usables;
 using SandBox.ViewModelCollection.Nameplate;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
+using TaleWorlds.Engine;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
@@ -18,7 +22,7 @@ using TaleWorlds.MountAndBlade.ViewModelCollection;
 using TaleWorlds.ObjectSystem;
 using static RealmsForgotten.RFCustomSettlements.Helper;
 
-namespace RFCustomSettlements.Patches
+namespace RFCustomSettlements
 {
 #pragma warning disable IDE0051 // Remove unused private members
 
@@ -111,17 +115,17 @@ namespace RFCustomSettlements.Patches
             if (machine.GameEntity.Name.StartsWith("rf"))
             {
                 GameKey key = HotKeyManager.GetCategory("CombatHotKeyCategory").GetGameKey(13);
-                string button = $@"<img src=""General\InputKeys\{key.ToString().ToLower()}"" extend=""24"">";
+                string button = CanInteract ? $@"<img src=""General\InputKeys\{key.ToString().ToLower()}"" extend=""24"">" : "";
                 string[] objectName = machine.GameEntity.Name.Split('_');
                 if (objectName.Length < 2) return;
-                switch (RealmsForgotten.RFCustomSettlements.Helper.ChooseObjectType(machine.GameEntity.Name))
+                switch (ChooseObjectType(machine.GameEntity.Name))
                 { 
                     case RFUsableObjectType.Pickable:
-                        string itemId = RealmsForgotten.RFCustomSettlements.Helper.GetRFPickableObjectName(objectName);
+                        string itemId = GetRFPickableObjectName(objectName);
                         if (itemId == "gold")
                         { 
-                            int amount = RealmsForgotten.RFCustomSettlements.Helper.GetGoldAmount(objectName);
-                            __instance.PrimaryInteractionMessage = button + RealmsForgotten.RFCustomSettlements.Helper.GetNameOfGoldObject(amount);
+                            int amount = GetGoldAmount(objectName);
+                            __instance.PrimaryInteractionMessage = button + GetNameOfGoldObject(amount);
                         }
                         else
                             __instance.PrimaryInteractionMessage = button + " " + MBObjectManager.Instance.GetObject<ItemObject>(itemId).Name;
@@ -149,7 +153,7 @@ namespace RFCustomSettlements.Patches
             if ((usablePlace = (__instance.CurrentFocusedMachine as UsablePlace)) != null)
             {
 
-                if(((MissionScreen)curMisScrInfo.Invoke(__instance, null)).SceneLayer.Input.IsGameKeyPressed(13) && usablePlace.GameEntity.Name.StartsWith("rf"))
+                if(((MissionScreen)curMisScrInfo.Invoke(__instance, null)).SceneLayer.Input.IsGameKeyPressed(13) && IsRFObject(usablePlace) && CanInteract)
                 {
                     var c = (Mission)curMisInfo.Invoke(__instance, null);
                     ((CustomSettlementMissionLogic)c.MissionBehaviors.Where(m => m is CustomSettlementMissionLogic).ElementAt(0)).OnObjectUsed(usablePlace);
@@ -188,6 +192,48 @@ namespace RFCustomSettlements.Patches
                 }
             }
         }
+
+        [HarmonyDebug]
+        [HarmonyPatch(typeof(MissionMainAgentInteractionComponent), "FocusTick")]
+        internal class MissionMainAgentInteractionComponentFocusTickPatch
+        {
+            internal static IEnumerable<CodeInstruction> FocusTickPatch(IEnumerable<CodeInstruction> instructions, ILGenerator ilGenerator)
+            
+            {
+                var codes = instructions.ToList();
+                var insertion = 0;
+                var startVanillaRecruitjumpLabel = ilGenerator.DefineLabel();
+                for (var index = 0; index < codes.Count; index++)
+                {
+                    if (codes[index].opcode == OpCodes.Ldarg_0
+                        && codes[index + 1].opcode == OpCodes.Ldloc_0
+                        && codes[index + 2].opcode == OpCodes.Ldloc_1
+                        && codes[index + 3].opcode == OpCodes.Ldloc_S
+                        && codes[index - 1].opcode == OpCodes.Stloc_S)
+                        insertion = index;
+
+                    if (codes[index].opcode == OpCodes.Ldarg_0
+                        && codes[index + 1].opcode == OpCodes.Ldloc_0
+                        && codes[index + 2].opcode == OpCodes.Ldloc_1
+                        && codes[index + 3].opcode == OpCodes.Ldloc_S)
+                        codes[index].labels.Add(startVanillaRecruitjumpLabel);
+                }
+
+                var instr_list = new List<CodeInstruction>
+                {
+                    new(OpCodes.Ldloc_0, null),
+                    new(OpCodes.Call, AccessTools.Method(typeof(RealmsForgotten.RFCustomSettlements.Helper), nameof(IsRFObject))),
+                    new(OpCodes.Brfalse, startVanillaRecruitjumpLabel),
+                    new(OpCodes.Ldloc_S, 4),
+                    new(OpCodes.Ldloc_0, null),
+                    new(OpCodes.Call, AccessTools.Method(typeof(RealmsForgotten.RFCustomSettlements.Helper), nameof(IsCloseEnough))),
+                    new(OpCodes.Stloc_S, 21),
+                };
+                codes.InsertRange(insertion, instr_list);
+                return codes.AsEnumerable();
+            }
+        }
+
 #pragma warning restore IDE0051 // Remove unused private members
     }
 }

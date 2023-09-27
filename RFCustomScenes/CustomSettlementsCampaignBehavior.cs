@@ -24,10 +24,15 @@ namespace RealmsForgotten.RFCustomSettlements
     {
         internal class NextSceneData
         {
-            private static NextSceneData? _instance;
-            public bool shouldSwitchScenes = false;
-            public string? newSceneId;
-            public TroopRoster? playerTroopRoster;
+
+            internal ItemRoster? itemLoot;
+            internal int goldLoot;
+            internal static NextSceneData? _instance;
+            internal bool shouldSwitchScenes = false;
+            internal string? newSceneId;
+            internal TroopRoster? playerTroopRoster;
+            internal bool finishedMission;
+
             public static NextSceneData Instance
             {
                 get
@@ -36,13 +41,32 @@ namespace RealmsForgotten.RFCustomSettlements
                     return _instance;
                 }
             }
+
+            internal void ResetData()
+            {
+                goldLoot = 0;
+                itemLoot = new();
+                finishedMission = false;
+                shouldSwitchScenes = false;
+                playerTroopRoster = TroopRoster.CreateDummyTroopRoster();
+                newSceneId = null;
+            }
+
+            internal void OnTroopKilled(CharacterObject character)
+            {
+                playerTroopRoster?.RemoveTroop(character, 1);
+            }
+
+            internal void OnTroopWounded(CharacterObject character)
+            {
+                playerTroopRoster?.RemoveTroop(character, 1);
+
+            }
         }
         private List<RFCustomSettlement>? customSettlementComponents;
         private List<Settlement>? customSettlements;
+        private static CustomSettlementBuildData? CurrentBuildData;
 
-        internal static ItemRoster? itemLoot;
-        internal static int goldLoot;
-        internal static bool finishedMission;
         public override void RegisterEvents()
         {
             CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.FillSettlementList));
@@ -124,14 +148,22 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         private void game_menu_rf_settlement_explore_on_consequence(MenuCallbackArgs args)
         {
-            int playerMaximumTroopCountForHideoutMission = 2;
-            TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
-            TroopRoster strongestAndPriorTroops = MobilePartyHelper.GetStrongestAndPriorTroops(MobileParty.MainParty, playerMaximumTroopCountForHideoutMission, true);
-            troopRoster.Add(strongestAndPriorTroops);
-            Campaign campaign = Campaign.Current;
-            int maxSelectableTroopCount = (campaign != null) ? 2 : 0;
-            args.MenuContext.OpenTroopSelection(MobileParty.MainParty.MemberRoster, troopRoster, new Func<CharacterObject, bool>(this.CanChangeStatusOfTroop), new Action<TroopRoster>(this.OnTroopRosterManageDone), maxSelectableTroopCount, 1);
-            //if (Settlement.CurrentSettlement.SettlementComponent is RFCustomSettlement rfSettlement) CustomSettlementMission.StartCustomSettlementMission(rfSettlement.CustomScene);
+            RFCustomSettlement? rfSettlement;
+            if ((rfSettlement = Settlement.CurrentSettlement.SettlementComponent as RFCustomSettlement) == null  || rfSettlement.CustomScene == null) return;
+            try
+            {
+                CurrentBuildData = CustomSettlementBuildData.allCustomSettlementBuildDatas[rfSettlement.CustomScene];
+                int playerMaximumTroopCount = CurrentBuildData.maxPlayersideTroops;
+                TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
+                TroopRoster strongestAndPriorTroops = MobilePartyHelper.GetStrongestAndPriorTroops(MobileParty.MainParty, playerMaximumTroopCount, true);
+                troopRoster.Add(strongestAndPriorTroops);
+                Campaign campaign = Campaign.Current;
+                args.MenuContext.OpenTroopSelection(MobileParty.MainParty.MemberRoster, troopRoster, new Func<CharacterObject, bool>(this.CanChangeStatusOfTroop), new Action<TroopRoster>(this.OnTroopRosterManageDone), playerMaximumTroopCount, 1);
+            }
+            catch
+            {
+                HuntableHerds.SubModule.PrintDebugMessage($"error in the settlement_bandits.xml, couldn't find {rfSettlement.CustomScene}");
+            }
         }
 
         private void OnTroopRosterManageDone(TroopRoster roster)
@@ -139,7 +171,7 @@ namespace RealmsForgotten.RFCustomSettlements
             if (Settlement.CurrentSettlement.SettlementComponent is RFCustomSettlement rfSettlement && rfSettlement.CustomScene != null)
             {
                 NextSceneData.Instance.playerTroopRoster = roster;
-                CustomSettlementMission.StartCustomSettlementMission(rfSettlement.CustomScene);
+                CustomSettlementMission.StartCustomSettlementMission(rfSettlement.CustomScene, CurrentBuildData);
             }
         }
 
@@ -186,33 +218,34 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             RFCustomSettlement curSettlement;
             if (Settlement.CurrentSettlement.SettlementComponent == null || (curSettlement = ((RFCustomSettlement)Settlement.CurrentSettlement.SettlementComponent)) == null) return;
-            if(NextSceneData.Instance.shouldSwitchScenes && NextSceneData.Instance.newSceneId != null)
+            string? newSceneID;
+            if(NextSceneData.Instance.shouldSwitchScenes && (newSceneID = NextSceneData.Instance.newSceneId) != null)
             {
                 try
                 {
-                CustomSettlementMission.StartCustomSettlementMission(NextSceneData.Instance.newSceneId);
+                    CurrentBuildData = CustomSettlementBuildData.allCustomSettlementBuildDatas[newSceneID];
+                    CustomSettlementMission.StartCustomSettlementMission(newSceneID, CurrentBuildData);
                 return;
                 }
-                catch 
+                catch
                 {
-
-                    InformationManager.DisplayMessage(new InformationMessage($"Error trying to load scene: {NextSceneData.Instance.newSceneId}"));
+                    InformationManager.DisplayMessage(new InformationMessage($"Error trying to load scene: {newSceneID}"));
                 }
             }
-            if (finishedMission)
+            if (NextSceneData.Instance.finishedMission)
             {
-                finishedMission = false;
-                if(goldLoot > 0)
-                { 
-                    Hero.MainHero.ChangeHeroGold(goldLoot);
+                if(NextSceneData.Instance.goldLoot > 0)
+                {
+                    Hero.MainHero.ChangeHeroGold(NextSceneData.Instance.goldLoot);
                     TextObject goldText = new("Total Gold Loot: {CHANGE}{GOLD_ICON}", null);
-                    goldText.SetTextVariable("CHANGE", goldLoot);
+                    goldText.SetTextVariable("CHANGE", NextSceneData.Instance.goldLoot);
                     goldText.SetTextVariable("GOLD_ICON", "{=!}<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">");
 
                     InformationManager.DisplayMessage(new InformationMessage(goldText.ToString(), "event:/ui/notification/coins_positive"));
                 }
-                if(!itemLoot.IsEmpty())
-                    InventoryManager.OpenScreenAsReceiveItems(itemLoot, new TextObject("Loot"), null);
+                if(!NextSceneData.Instance.itemLoot.IsEmpty())
+                    InventoryManager.OpenScreenAsReceiveItems(NextSceneData.Instance.itemLoot, new TextObject("Loot"), null);
+                NextSceneData.Instance.ResetData();
             }
             args.MenuContext.SetBackgroundMeshName(curSettlement.BackgroundMeshName);
             //this.currentRuin = (Settlement.CurrentSettlement.SettlementComponent as RFCustomSettlement);
