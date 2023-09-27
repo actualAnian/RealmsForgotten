@@ -42,8 +42,6 @@ namespace RealmsForgotten.RFCustomSettlements
                     new EquipmentControllerLeaveLogic(),
                     new HighlightsController(),
 
-                    new BattleMissionAgentInteractionLogic(),
-
                     new MissionSingleplayerViewHandler(),
                     new MissionItemContourControllerView(),
                     new MissionAgentContourControllerView(),
