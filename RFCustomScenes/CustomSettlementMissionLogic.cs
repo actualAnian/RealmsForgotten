@@ -240,7 +240,6 @@ namespace RealmsForgotten.RFCustomSettlements
                         globalFrame = standingPoint.GameEntity.GetGlobalFrame();
                         globalFrame.rotation.OrthonormalizeAccordingToForwardAndKeepUpAsZAxis();
                         Agent agent = Mission.Current.SpawnTroop(agentToSpawn, false, false, false, false, 0, 0, false, false, false, new Vec3?(globalFrame.origin), new Vec2?(globalFrame.rotation.f.AsVec2.Normalized()), "_hideout_bandit", null, FormationClass.NumberOfAllFormations, false);
-
                         InitializeBanditAgent(agent, standingPoint, false, defenderAgentObjects);
                     }
                     catch(InvalidOperationException)
