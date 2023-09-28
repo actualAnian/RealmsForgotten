@@ -357,7 +357,9 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             NextSceneData.Instance.goldLoot = goldLooted;
             NextSceneData.Instance.itemLoot = loot;
-            NextSceneData.Instance.finishedMission = true;
+
+            if (CustomSettlementsCampaignBehavior.NextSceneData.Instance.shouldSwitchScenes == false)
+                NextSceneData.Instance.currentState = NextSceneData.RFSettlementState.Finished;
             base.OnEndMission();
         }
         private void SimulateTick(Agent agent)
@@ -552,6 +554,8 @@ namespace RealmsForgotten.RFCustomSettlements
             Mission.Current.EndMission();
             CustomSettlementsCampaignBehavior.NextSceneData.Instance.shouldSwitchScenes = true;
             CustomSettlementsCampaignBehavior.NextSceneData.Instance.newSceneId = newSceneId;
+            NextSceneData.Instance.currentState = NextSceneData.RFSettlementState.SwitchScene;
+
         }
         private void DoHealing(UsablePlace usablePlace)
         {

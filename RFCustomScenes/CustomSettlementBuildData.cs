@@ -28,11 +28,18 @@ namespace RealmsForgotten.RFCustomSettlements
         public readonly Dictionary<int, List<RFBanditData>> stationaryAreasBandits;
         public readonly Dictionary<int, RFBanditData> patrolAreasBandits;
         public readonly int maxPlayersideTroops;
-        public CustomSettlementBuildData(Dictionary<int, List<RFBanditData>> buildStationaryAreasBandits, Dictionary<int, RFBanditData> buildPatrolAreasBandits, int buildMaxPlayersideTroops)
+
+        public readonly bool canEnterOnlyAtSpecialHours;
+        public readonly int enterStartHour;
+        public readonly int enterEndHour;
+        public CustomSettlementBuildData(Dictionary<int, List<RFBanditData>> _stationaryAreasBandits, Dictionary<int, RFBanditData> _patrolAreasBandits, int _maxPlayersideTroops, bool _canEnterOnlyAtSpecialHours = false, int _enterStartHour = 0, int _enterEndHour = 24)
         {
-            stationaryAreasBandits = buildStationaryAreasBandits;
-            patrolAreasBandits = buildPatrolAreasBandits;
-            maxPlayersideTroops = buildMaxPlayersideTroops;
+            stationaryAreasBandits = _stationaryAreasBandits;
+            patrolAreasBandits = _patrolAreasBandits;
+            maxPlayersideTroops = _maxPlayersideTroops;
+            canEnterOnlyAtSpecialHours = _canEnterOnlyAtSpecialHours;
+            enterStartHour = _enterStartHour;
+            enterEndHour = _enterEndHour;
         }
         public static void BuildAll()
         {
@@ -67,7 +74,9 @@ namespace RealmsForgotten.RFCustomSettlements
                     RFBanditData bd = new(xElement.Element("Bandit").Element("id").Value, xElement.Element("Bandit").Element("amount").Value);
                     buildPatrolAreasBandits.Add(int.Parse(xElement.Element("areaIndex").Value), bd);
                 }
-                CustomSettlementBuildData buildData = new(buildStationaryAreasBandits, buildPatrolAreasBandits, maxPlayersideTroops);
+                //                CustomSettlementBuildData buildData = new(buildStationaryAreasBandits, buildPatrolAreasBandits, maxPlayersideTroops);
+                CustomSettlementBuildData buildData = new(buildStationaryAreasBandits, buildPatrolAreasBandits, maxPlayersideTroops, true, 8, 12);
+
                 allCustomSettlementBuildDatas.Add(sceneId, buildData);
             }
         }

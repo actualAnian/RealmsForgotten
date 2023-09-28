@@ -24,14 +24,19 @@ namespace RealmsForgotten.RFCustomSettlements
     {
         internal class NextSceneData
         {
-
+            public enum RFSettlementState
+            {
+                BeforeStart,
+                SwitchScene,
+                Finished
+            }
             internal ItemRoster? itemLoot;
             internal int goldLoot;
             internal static NextSceneData? _instance;
             internal bool shouldSwitchScenes = false;
             internal string? newSceneId;
             internal TroopRoster? playerTroopRoster;
-            internal bool finishedMission;
+            internal RFSettlementState currentState = RFSettlementState.BeforeStart;
 
             public static NextSceneData Instance
             {
@@ -46,10 +51,10 @@ namespace RealmsForgotten.RFCustomSettlements
             {
                 goldLoot = 0;
                 itemLoot = new();
-                finishedMission = false;
                 shouldSwitchScenes = false;
                 playerTroopRoster = TroopRoster.CreateDummyTroopRoster();
                 newSceneId = null;
+                currentState = RFSettlementState.BeforeStart;
             }
 
             internal void OnTroopKilled(CharacterObject character)
@@ -66,7 +71,14 @@ namespace RealmsForgotten.RFCustomSettlements
         private List<RFCustomSettlement>? customSettlementComponents;
         private List<Settlement>? customSettlements;
         private static CustomSettlementBuildData? CurrentBuildData;
+        private static RFCustomSettlement? currentSettlement;
 
+
+        private readonly int NightStart = 23;
+        private readonly int NightEnd = 2;
+        private float waitHours;
+        private float waitProgress;
+        private bool isNightScene = true;
         public override void RegisterEvents()
         {
             CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.FillSettlementList));
@@ -85,6 +97,7 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             starter.AddGameMenu("rf_settlement_start", "{=rf_settlement_start} You came across a captivating location!", new OnInitDelegate(this.game_menu_rf_settlement_start_on_init), GameOverlays.MenuOverlayType.None, GameMenu.MenuFlags.None, null);
             starter.AddGameMenuOption("rf_settlement_start", "explore", "{=rf_explore}Explore", new GameMenuOption.OnConditionDelegate(this.game_menu_rf_settlement_explore_on_condition), new GameMenuOption.OnConsequenceDelegate(this.game_menu_rf_settlement_explore_on_consequence), false, -1, false);
+            starter.AddGameMenuOption("rf_settlement_start", "prepare", "{=rf_explore}Prepare", new GameMenuOption.OnConditionDelegate(this.game_menu_rf_settlement_prepare_on_condition), new GameMenuOption.OnConsequenceDelegate(this.game_menu_rf_settlement_prepare_on_consequence), false, -1, false);
             starter.AddGameMenuOption("rf_settlement_start", "wait", "{=zEoHYEUS}Wait here for some time", new GameMenuOption.OnConditionDelegate(this.game_menu_rf_settlement_wait_on_condition), delegate (MenuCallbackArgs x)
             {
                 GameMenu.SwitchToMenu("rf_settlement_wait_menu");
@@ -100,7 +113,31 @@ namespace RealmsForgotten.RFCustomSettlements
                 GameMenu.SwitchToMenu("rf_settlement_start");
 
             }, true, -1, false, null);
+            starter.AddWaitGameMenu("rf_settlement_wait_till_night_menu", "Waiting until nightfall", delegate(MenuCallbackArgs args) { args.MenuContext.GameMenu.StartWait(); }, delegate (MenuCallbackArgs args) { 
+                return currentSettlement.canEnterAnytime == false;
+            }, delegate (MenuCallbackArgs args) { GameMenu.SwitchToMenu("rf_settlement_start"); }, new OnTickDelegate(this.game_menu_wait_till_night_menu_on_tick), GameMenu.MenuAndOptionType.WaitMenuShowOnlyProgressOption, GameOverlays.MenuOverlayType.None, waitHours, GameMenu.MenuFlags.None, null);
+            starter.AddGameMenuOption("rf_settlement_wait_till_night_menu", "leave", "{=3sRdGQou}Leave", new GameMenuOption.OnConditionDelegate(this.leave_on_condition), new GameMenuOption.OnConsequenceDelegate(this.game_menu_ruin_leave_on_consequence), true, -1, false);
         }
+        private bool game_menu_rf_settlement_prepare_on_condition(MenuCallbackArgs args)
+        {
+            args.optionLeaveType = GameMenuOption.LeaveType.Wait;
+            return !CanEnter();
+        }
+
+        private void game_menu_rf_settlement_prepare_on_consequence(MenuCallbackArgs args)
+        {
+           GameMenu.SwitchToMenu("rf_settlement_wait_till_night_menu");
+        }
+        private void game_menu_wait_till_night_menu_on_tick(MenuCallbackArgs args, CampaignTime dt)
+        {
+            waitProgress += (float)dt.ToHours;
+            if (waitHours.ApproximatelyEqualsTo(0f, 1E-05f))
+            {
+                CalculateSettlementExploreTime();
+            }
+            args.MenuContext.GameMenu.SetProgressOfWaitingInMenu(waitProgress / waitHours);
+        }
+
 #pragma warning disable IDE1006 // Naming Styles
         private bool back_on_condition(MenuCallbackArgs args)
         {
@@ -152,7 +189,6 @@ namespace RealmsForgotten.RFCustomSettlements
             if ((rfSettlement = Settlement.CurrentSettlement.SettlementComponent as RFCustomSettlement) == null  || rfSettlement.CustomScene == null) return;
             try
             {
-                CurrentBuildData = CustomSettlementBuildData.allCustomSettlementBuildDatas[rfSettlement.CustomScene];
                 int playerMaximumTroopCount = CurrentBuildData.maxPlayersideTroops;
                 TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
                 TroopRoster strongestAndPriorTroops = MobilePartyHelper.GetStrongestAndPriorTroops(MobileParty.MainParty, playerMaximumTroopCount, true);
@@ -179,6 +215,11 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             return !character.IsPlayerCharacter && !character.IsNotTransferableInHideouts;
         }
+        private void CalculateSettlementExploreTime()
+        {
+            waitHours = (currentSettlement.enterStart > CampaignTime.Now.CurrentHourInDay) ? (currentSettlement.enterStart - CampaignTime.Now.CurrentHourInDay) : (24f - CampaignTime.Now.CurrentHourInDay + currentSettlement.enterStart);
+        }
+
         private bool game_menu_rf_settlement_wait_on_condition(MenuCallbackArgs args)
         {
             bool canPlayerDo = Campaign.Current.Models.SettlementAccessModel.CanMainHeroDoSettlementAction(Settlement.CurrentSettlement, SettlementAccessModel.SettlementAction.WaitInSettlement, out bool shouldBeDisabled, out TextObject disabledText);
@@ -189,71 +230,72 @@ namespace RealmsForgotten.RFCustomSettlements
 
         private bool game_menu_rf_settlement_explore_on_condition(MenuCallbackArgs args)
         {
-            bool canExplore;
-            if (Settlement.CurrentSettlement.SettlementComponent is RFCustomSettlement settlementComponent)
+            if (!CanEnter()) return false;
+            if (CharacterObject.PlayerCharacter.HitPoints < 25)
             {
-                if (CharacterObject.PlayerCharacter.HitPoints < 25)
-                {
-                    args.IsEnabled = false;
-                    args.Tooltip = new TextObject("{=rf_too_wounded}You are too wounded to explore the area!", null);
-                }
-                //if (settlementComponent.IsRaided)
-                //{
-                //    args.IsEnabled = false;
-                //    args.Tooltip = new TextObject("{=rf_raided}You were here just a little while ago. There is nothing left to find, you should come back later.", null);
-                //}
-                args.optionLeaveType = GameMenuOption.LeaveType.Mission;
-                canExplore = true;
+                args.IsEnabled = false;
+                args.Tooltip = new TextObject("{=rf_too_wounded}You are too wounded to explore the area!", null);
             }
-            else
-            {
-                canExplore = false;
-            }
-            return canExplore;
+            args.optionLeaveType = GameMenuOption.LeaveType.Mission;
+            return true;
+        }
+
+        private bool CanEnter()
+        {
+            if (currentSettlement.canEnterAnytime) return true;
+            if (currentSettlement.enterStart > currentSettlement.enterEnd) return CampaignTime.Now.CurrentHourInDay >= currentSettlement.enterStart || CampaignTime.Now.CurrentHourInDay <= currentSettlement.enterEnd;
+            else return CampaignTime.Now.CurrentHourInDay >= currentSettlement.enterStart && CampaignTime.Now.CurrentHourInDay <= currentSettlement.enterEnd;
 
         }
 
         [GameMenuInitializationHandler("rf_settlement_start")]
         private void game_menu_rf_settlement_start_on_init(MenuCallbackArgs args)
         {
-            RFCustomSettlement curSettlement;
-            if (Settlement.CurrentSettlement.SettlementComponent == null || (curSettlement = ((RFCustomSettlement)Settlement.CurrentSettlement.SettlementComponent)) == null) return;
-            string? newSceneID;
-            if(NextSceneData.Instance.shouldSwitchScenes && (newSceneID = NextSceneData.Instance.newSceneId) != null)
-            {
-                try
-                {
-                    CurrentBuildData = CustomSettlementBuildData.allCustomSettlementBuildDatas[newSceneID];
-                    CustomSettlementMission.StartCustomSettlementMission(newSceneID, CurrentBuildData);
-                return;
-                }
-                catch
-                {
-                    InformationManager.DisplayMessage(new InformationMessage($"Error trying to load scene: {newSceneID}"));
-                }
-            }
-            if (NextSceneData.Instance.finishedMission)
-            {
-                if(NextSceneData.Instance.goldLoot > 0)
-                {
-                    Hero.MainHero.ChangeHeroGold(NextSceneData.Instance.goldLoot);
-                    TextObject goldText = new("Total Gold Loot: {CHANGE}{GOLD_ICON}", null);
-                    goldText.SetTextVariable("CHANGE", NextSceneData.Instance.goldLoot);
-                    goldText.SetTextVariable("GOLD_ICON", "{=!}<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">");
 
-                    InformationManager.DisplayMessage(new InformationMessage(goldText.ToString(), "event:/ui/notification/coins_positive"));
-                }
-                if(!NextSceneData.Instance.itemLoot.IsEmpty())
-                    InventoryManager.OpenScreenAsReceiveItems(NextSceneData.Instance.itemLoot, new TextObject("Loot"), null);
-                NextSceneData.Instance.ResetData();
+            currentSettlement = (RFCustomSettlement)Settlement.CurrentSettlement.SettlementComponent;
+            CurrentBuildData = CustomSettlementBuildData.allCustomSettlementBuildDatas[currentSettlement.CustomScene];
+
+
+            string? newSceneID;
+
+            switch(NextSceneData.Instance.currentState)
+            {
+                case NextSceneData.RFSettlementState.BeforeStart:
+                    waitHours = 0;
+                    waitProgress = 0;
+                    float currentHourInDay = CampaignTime.Now.CurrentHourInDay;
+                    if (currentHourInDay < currentSettlement.enterStart || currentHourInDay > currentSettlement.enterEnd)
+                        CalculateSettlementExploreTime();
+                    break;
+                case NextSceneData.RFSettlementState.SwitchScene:
+                    newSceneID = NextSceneData.Instance.newSceneId;
+                    try
+                    {
+                        CurrentBuildData = CustomSettlementBuildData.allCustomSettlementBuildDatas[newSceneID];
+                        CustomSettlementMission.StartCustomSettlementMission(newSceneID, CurrentBuildData);
+                        return;
+                    }
+                    catch
+                    {
+                        InformationManager.DisplayMessage(new InformationMessage($"Error trying to load scene: {newSceneID}"));
+                    }
+                    break;
+                case NextSceneData.RFSettlementState.Finished:
+                    if (NextSceneData.Instance.goldLoot > 0)
+                    {
+                        Hero.MainHero.ChangeHeroGold(NextSceneData.Instance.goldLoot);
+                        TextObject goldText = new("Total Gold Loot: {CHANGE}{GOLD_ICON}", null);
+                        goldText.SetTextVariable("CHANGE", NextSceneData.Instance.goldLoot);
+                        goldText.SetTextVariable("GOLD_ICON", "{=!}<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">");
+
+                        InformationManager.DisplayMessage(new InformationMessage(goldText.ToString(), "event:/ui/notification/coins_positive"));
+                    }
+                    if (!NextSceneData.Instance.itemLoot.IsEmpty())
+                        InventoryManager.OpenScreenAsReceiveItems(NextSceneData.Instance.itemLoot, new TextObject("Loot"), null);
+                    NextSceneData.Instance.ResetData();
+                    break;
             }
-            args.MenuContext.SetBackgroundMeshName(curSettlement.BackgroundMeshName);
-            //this.currentRuin = (Settlement.CurrentSettlement.SettlementComponent as RFCustomSettlement);
-            //GameTexts.SetVariable("RUIN_TEXT", this.currentRuin.Settlement.EncyclopediaText);
-            //if (MobileParty.MainParty.CurrentSettlement != null)
-            //{
-            //    PlayerEncounter.LeaveSettlement();
-            //}
+            args.MenuContext.SetBackgroundMeshName(currentSettlement.BackgroundMeshName);
         }
 #pragma warning restore IDE1006 // Naming Styles
         public override void SyncData(IDataStore dataStore)

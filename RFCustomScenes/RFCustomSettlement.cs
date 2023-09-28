@@ -21,6 +21,18 @@ namespace RealmsForgotten.RFCustomSettlements
             base.BackgroundMeshName = node.Attributes["background_mesh"].Value;
             base.WaitMeshName = node.Attributes["wait_mesh"].Value;
             CustomScene = node.Attributes["custom_scene"].Value;
+            try
+            {
+                canEnterAnytime = bool.Parse(node.Attributes["can_enter_anytime"].Value);
+                enterStart = int.Parse(node.Attributes["enter_start"].Value);
+                enterEnd = int.Parse(node.Attributes["enter_end"].Value);
+            }
+            catch
+            {
+                canEnterAnytime = true;
+                enterStart = 0;
+                enterEnd = 24;
+            }
         }
 
         //public RFCustomSettlement()
@@ -36,5 +48,9 @@ namespace RealmsForgotten.RFCustomSettlements
         [SaveableProperty(500)]
         public bool IsVisible { get; set; }
         public string? CustomScene { get; set; }
+
+        public bool canEnterAnytime;
+        public int enterStart;
+        public int enterEnd;
     }
 }
