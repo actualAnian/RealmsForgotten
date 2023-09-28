@@ -45,7 +45,6 @@ namespace Quest
         }
         public override void OnCampaignStart(Game game, object starterObject)
         {
-            int i = 0;
         }
         public override void OnNewGameCreated(Game game, object initializerObject)
         {

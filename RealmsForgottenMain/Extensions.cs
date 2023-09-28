@@ -14,7 +14,7 @@ namespace RealmsForgotten
 {
     public static class Extensions
     {
-        private static Random _random = new Random();
+        private static Random _random = new();
         public static float GetFaithPerkBonus(this CharacterObject hero, PerkObject perk)
         {
             ExplainedNumber explainedNumber = new ExplainedNumber(perk.PrimaryBonus);

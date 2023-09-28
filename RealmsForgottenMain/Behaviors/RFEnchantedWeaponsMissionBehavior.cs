@@ -13,12 +13,13 @@ using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using RealmsForgotten.CustomSkills;
 using RealmsForgotten.Patches;
+using TaleWorlds.CampaignSystem.Actions;
 
 namespace RealmsForgotten.Behaviors
 {
     internal class RFEnchantedWeaponsMissionBehavior : MissionBehavior
     {
-        private static Dictionary<int, (SkillObject, int)> heroesInitialSkills = new Dictionary<int, (SkillObject, int)>();
+        private static Dictionary<int, (SkillObject, int)> heroesInitialSkills = new();
         private static Dictionary<string, SkillObject> skillsDic = new()
         {
             { "rfonehanded", DefaultSkills.OneHanded}, { "rftwohanded", DefaultSkills.TwoHanded }, { "rfpolearm", DefaultSkills.Polearm }, {"rfbow", DefaultSkills.Bow}, {"rfcrossbow", DefaultSkills.Crossbow},
@@ -44,7 +45,7 @@ namespace RealmsForgotten.Behaviors
                 { "rfthrowing", DefaultSkills.Throwing }
             };
 
-            if (isBattle())
+            if (IsBattle())
             {
                 bool ismainagent = false;
                 int amount = 0;
@@ -124,8 +125,7 @@ namespace RealmsForgotten.Behaviors
 
             if (affectorWeapon.Item != null && affectorWeapon.CurrentUsageItem?.WeaponClass == WeaponClass.Cartridge && IncreaseAreaOfDamagePatch.CurrentBlow.OwnerId != blow.OwnerId)
             {
-                CharacterObject attackerCharacterObject = affectorAgent.Character as CharacterObject;
-                if (attackerCharacterObject != null)
+                if (affectorAgent.Character is CharacterObject attackerCharacterObject)
                 {
                     float AreaFactor = attackerCharacterObject.GetPerkValue(RFPerks.Arcane.NeophytesStaff) ? RFPerks.Arcane.NeophytesStaff.PrimaryBonus :
                         (attackerCharacterObject.GetPerkValue(RFPerks.Arcane.InitiatesStaff) ? RFPerks.Arcane.InitiatesStaff.PrimaryBonus :
@@ -149,7 +149,7 @@ namespace RealmsForgotten.Behaviors
             if (agent.Character == null || agent.IsMount)
                 return;
             BasicCharacterObject basicCharacterObject = agent.Character;
-            if (isBattle() && agent.Team != null)
+            if (IsBattle() && agent.Team != null)
             {
                 if (HaveDemoralizingArmor.Item1 && !agent.Team.IsPlayerTeam && !agent.Team.IsPlayerAlly)
                 {
@@ -162,9 +162,7 @@ namespace RealmsForgotten.Behaviors
             }
             if (agent.IsHero)
             {
-                CharacterObject characterObject = basicCharacterObject as CharacterObject;
-
-                if (characterObject != null)
+                if (basicCharacterObject is CharacterObject characterObject)
                 {
                     string skillString;
                     for (EquipmentIndex equipmentIndex = EquipmentIndex.Weapon0; equipmentIndex <= EquipmentIndex.Weapon3; equipmentIndex++)
@@ -182,8 +180,8 @@ namespace RealmsForgotten.Behaviors
                             else
                                 heroesInitialSkills.Add(agent.Index, (skillsDic[skillString], agent.Character.GetSkillValue(skillsDic[skillString])));
 
-                            hero.SetSkillValue(skillsDic[skillString],characterObject.GetSkillValue(skillsDic[skillString]) + 
-                                                                      RFUtility.GetNumberAfterSkillWord(characterObject.Equipment[equipmentIndex].Item?.StringId, skillString, true));
+                            hero.SetSkillValue(skillsDic[skillString], characterObject.GetSkillValue(skillsDic[skillString]) +
+                                                                      RFUtility.GetNumberAfterSkillWord(characterObject.Equipment[equipmentIndex].Item?.StringId, skillString, hero == Hero.MainHero));
                         }
                     }
                 }
@@ -208,16 +206,14 @@ namespace RealmsForgotten.Behaviors
             }
         }
 
-        protected bool isBattle() =>
+        protected bool IsBattle() =>
             this.Mission.IsFieldBattle || this.Mission.IsSiegeBattle || this.Mission.IsSallyOutBattle;
         protected override void OnEndMission()
         {
             if (heroesInitialSkills != null)
                 foreach (Agent agent in Mission.AllAgents.Where(x => x.IsHero))
                 {
-                    CharacterObject character = agent.Character as CharacterObject;
-
-                    if (character != null && heroesInitialSkills.ContainsKey(agent.Index))
+                    if (agent.Character is CharacterObject character && heroesInitialSkills.ContainsKey(agent.Index))
                         character.HeroObject.SetSkillValue(heroesInitialSkills[agent.Index].Item1, heroesInitialSkills[agent.Index].Item2);
                 }
 

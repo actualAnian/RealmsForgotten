@@ -1,20 +1,14 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RealmsForgotten.CustomSkills;
+﻿using RealmsForgotten.CustomSkills;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-namespace RealmsForgotten.RFEffects.Utilities
+namespace RealmsForgotten.RFEffects
 {
     public class TOWParticleSystem
     {
-        public static ParticleSystem ApplyParticleToAgent(Agent agent, string particleId, out GameEntity childEntities, ParticleIntensity intensity = ParticleIntensity.High, bool rootOnly = false)
+        public static ParticleSystem ApplyParticleToAgent(Agent agent, string particleId, out GameEntity childEntities, ParticleIntensity intensity = ParticleIntensity.Low, bool rootOnly = false)
         {
             childEntities = null;
             ParticleSystem particle = null;
@@ -39,7 +33,6 @@ namespace RealmsForgotten.RFEffects.Utilities
                     childEntities = childEntity;
                 }
             }
-
 
             return particle;
         }
@@ -72,6 +65,7 @@ namespace RealmsForgotten.RFEffects.Utilities
             weaponEntityFromEquipmentSlot = agent.GetWeaponEntityFromEquipmentSlot(equipmentIndex);
             if (weaponEntityFromEquipmentSlot == null)
                 return;
+
             MatrixFrame matrixFrame4 = new MatrixFrame(Mat3.Identity, default(Vec3));
             MatrixFrame boneLocalFrame2 = matrixFrame4.Elevate(elevateAmount);
             ParticleSystem component = ParticleSystem.CreateParticleSystemAttachedToEntity(particleId, weaponEntityFromEquipmentSlot, ref boneLocalFrame2);
@@ -81,8 +75,11 @@ namespace RealmsForgotten.RFEffects.Utilities
                 return;
             }
 
-            int arcaneLevel = agent.Character.GetSkillValue(RFSkills.Arcane) / 20;
-            for (int i = 0; i < 1; i++)
+            
+            int arcaneLevel = agent.Character.GetSkillValue(RFSkills.Arcane) / 30;
+            if (arcaneLevel < 1)
+                arcaneLevel = 1;
+            for (int i = 1; i <= arcaneLevel; i++)
                 skeleton.AddComponentToBone(Game.Current.DefaultMonster.MainHandItemBoneIndex, component);
 
 

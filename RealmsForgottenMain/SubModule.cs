@@ -96,7 +96,6 @@ namespace RealmsForgotten
         {
             base.OnSubModuleLoad();
             TextObject coreContentDisabledReason = new("Disabled during installation.", null);
-            SpawnedItemEntity e;
             UIConfig.DoNotUseGeneratedPrefabs = true;
             RemoveSandboxAndStoryOptions();
 

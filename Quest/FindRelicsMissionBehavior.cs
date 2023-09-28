@@ -21,6 +21,7 @@ namespace Quest
         {
             _findMapJournalLog = findMapJournalLog;
             relicSpawned = false;
+            pickedMap = false;
 
         }
         public override void AfterStart()
@@ -68,9 +69,10 @@ namespace Quest
 
         }
 
+        private bool pickedMap = false;
         public void OnItemPickup(Agent agent, SpawnedItemEntity item)
         {
-            if (item.WeaponCopy.Item.StringId == "relic_map_arrow")
+            if (item.WeaponCopy.Item.StringId == "relic_map_arrow" && !pickedMap)
             {
                 TextObject textObject = GameTexts.FindText("rf_second_quest_first_part_log_info"); ;
                 switch (Settlement.CurrentSettlement.Hideout.StringId)
@@ -99,6 +101,7 @@ namespace Quest
 
                 PartyBase.MainParty.ItemRoster.AddToCounts(
                     MBObjectManager.Instance.GetObject<ItemObject>("relic_map_arrow"), 1);
+                pickedMap = true;
             }
 
         }
