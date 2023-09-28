@@ -16,7 +16,7 @@ using TaleWorlds.SaveSystem;
 
 namespace Quest
 {
-    internal class AnoritFindRelicsQuest : QuestBase
+    public class AnoritFindRelicsQuest : QuestBase
     {
         [SaveableField(1)]
         private CampaignTime anoritLordConversationTime;

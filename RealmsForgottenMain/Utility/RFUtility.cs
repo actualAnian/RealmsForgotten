@@ -44,7 +44,7 @@ namespace RealmsForgotten.Utility
             attributes[skill] = value;
             attributesField.SetValue(skillValue, attributes);
         }
-        public static int GetNumberAfterSkillWord(string inputString, string word, bool isMainAgent = false)
+        public static int GetNumberAfterSkillWord(string inputString, string word, bool reportSKillIncrease = false)
         {
             int result = -1;
             int wordIndex = inputString.IndexOf(word);
@@ -61,7 +61,7 @@ namespace RealmsForgotten.Utility
                 }
             }
 
-            if (isMainAgent)
+            if (reportSKillIncrease)
             {
                 string skill = null;
                 switch (word)

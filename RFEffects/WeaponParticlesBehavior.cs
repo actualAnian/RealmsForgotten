@@ -9,8 +9,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime;
 using RealmsForgotten.RFEffects;
-using RealmsForgotten.RFEffects.Utilities;
-using RFEffects;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.InputSystem;
@@ -28,14 +26,12 @@ namespace RealmsForgotten.RFEffects
         {
             if (blow.InflictedDamage < 1 || affectorWeapon.Item == null) return;
 
-            WeaponEffectData effect;
-            if (RFEffectsLibrary.CurrentWeaponEffects.TryGetValue(affectorWeapon.Item.StringId, out effect) && effect.Effect != null)
+            if (RFEffectsLibrary.CurrentWeaponEffects.TryGetValue(affectorWeapon.Item.StringId, out WeaponEffectData effect) && effect.Effect != null)
             {
-                TOWParticleSystem.ApplyParticleToAgent(affectedAgent, effect.VictimParticle, out GameEntity childEntity,
-                    TOWParticleSystem.ParticleIntensity.Low, false);
+                TOWParticleSystem.ApplyParticleToAgent(affectedAgent, effect.VictimParticle, out GameEntity childEntity);
 
 
-                if (WeaponEffectConsequences.AllMethods.TryGetValue(effect.Effect, out VictimAgentConsequence method))
+                if (WeaponEffectConsequences.Methods.TryGetValue(effect.Effect, out VictimAgentConsequence method))
                     method?.Invoke(affectedAgent, affectorAgent, affectorWeapon, blow, attackCollisionData, childEntity);
 
 
@@ -50,16 +46,14 @@ namespace RealmsForgotten.RFEffects
                 Skeleton skeleton = missile.Entity.Skeleton;
                 Scene scene = Mission.Current.Scene;
                 GameEntity childEntity = GameEntity.CreateEmpty(scene);
-                MatrixFrame localFrame = new MatrixFrame(Mat3.Identity, new Vec3(0, 0, 0));
+                MatrixFrame localFrame = new (Mat3.Identity, new (0, 0, 0));
                 float elevationOffset = 0f;
                 MissionWeapon missionWeapon = missile.Weapon;
-
-                WeaponEffectData effect;
 
                 if (missionWeapon.Item == null)
                     return;
 
-                if (!RFEffectsLibrary.CurrentWeaponEffects.TryGetValue(missionWeapon.Item.StringId, out effect))
+                if (!RFEffectsLibrary.CurrentWeaponEffects.TryGetValue(missionWeapon.Item.StringId, out WeaponEffectData effect))
                     return;
 
                 localFrame.Elevate(elevationOffset);
@@ -89,16 +83,22 @@ namespace RealmsForgotten.RFEffects
 
                 MissionWeapon wieldedWeapon = agent.WieldedWeapon;
                 if (wieldedWeapon.Item == null)
-                    return;
-
-                if (RFEffectsLibrary.CurrentWeaponEffects.ContainsKey(wieldedWeapon.Item.StringId))
                 {
-                    timer = new MissionTimer(0.1f);
+                    if(enabled)
+                        SetFireSwordEnable(false);
+                    return;
+                }
+
+                if (!RFEffectsLibrary.CurrentWeaponEffects.ContainsKey(wieldedWeapon.Item.StringId))
+                {
+                    if(enabled)
+                        SetFireSwordEnable(false);
                     return;
                     
                 }
-                else
-                    SetFireSwordEnable(false);
+
+                timer = new MissionTimer(0.1f);
+                
             }
 
             public void OnAgentHealthChanged(Agent agent, float oldHealth, float newHealth)
@@ -137,8 +137,7 @@ namespace RealmsForgotten.RFEffects
                         return;
                     }
 
-                    WeaponEffectData Effects;
-                    if (!RFEffectsLibrary.CurrentWeaponEffects.TryGetValue(wieldedWeapon.Item?.StringId, out Effects))
+                    if (!RFEffectsLibrary.CurrentWeaponEffects.TryGetValue(wieldedWeapon.Item?.StringId, out WeaponEffectData Effects))
                     {
                         return;
                     }
@@ -147,7 +146,7 @@ namespace RealmsForgotten.RFEffects
                     int WeaponLength = (int)Math.Round((double)wieldedWeapon.GetWeaponStatsData()[0].WeaponLength / 10.0);
 
                     MBAgentVisuals agentVisuals = agent.AgentVisuals;
-                    if ((object)agentVisuals == null)
+                    if (agentVisuals is null)
                     {
                         return;
                     }
@@ -221,7 +220,7 @@ namespace RealmsForgotten.RFEffects
                 }
 
                 enabled = false;
-                if ((object)entity == null || agent == null)
+                if (entity is null || agent is null)
                 {
                     return;
                 }
@@ -264,9 +263,10 @@ namespace RealmsForgotten.RFEffects
         {
             if (IsInBattle() && agent.IsHuman && !_agentFireSwordData.ContainsKey(agent))
             {
-                AgentWeaponEffectData agentWeaponEffectData = new AgentWeaponEffectData();
-
-                agentWeaponEffectData.agent = agent;
+                AgentWeaponEffectData agentWeaponEffectData = new()
+                {
+                    agent = agent
+                };
 
                 agent.OnAgentWieldedItemChange = (Action)Delegate.Combine(agent.OnAgentWieldedItemChange, new Action(agentWeaponEffectData.OnAgentWieldedItemChange));
 
