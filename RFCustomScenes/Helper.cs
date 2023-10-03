@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaleWorlds.CampaignSystem.Encounters;
+using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
 
@@ -44,7 +46,11 @@ namespace RealmsForgotten.RFCustomSettlements
             _canInteract = false;
             return false;
         }
-
+        public static bool IsInRFSettlement()
+        {
+            Settlement settlement;
+            return (settlement = PlayerEncounter.EncounterSettlement) != null && settlement.SettlementComponent != null && settlement.SettlementComponent is RFCustomSettlement;
+        }
         internal static int GetGoldAmount(string[] itemData)
         {
             return int.Parse(itemData.Last());

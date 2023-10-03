@@ -25,6 +25,8 @@ using RealmsForgotten.HuntableHerds.Models;
 using System.Text;
 using static RealmsForgotten.RFCustomSettlements.CustomSettlementsCampaignBehavior;
 using static TaleWorlds.Engine.GameEntity;
+using TaleWorlds.CampaignSystem.Settlements.Locations;
+using static RFCustomSettlements.ExploreSettlementStateHandler;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -53,6 +55,7 @@ namespace RealmsForgotten.RFCustomSettlements
         private readonly List<PatrolArea> patrolAreas;
         private readonly List<CommonAreaMarker> areaMarkers;
         private readonly List<GameEntity> animalSpawnPositions = new();
+        private readonly List<GameEntity> npcSpawnPositions = new();
         private readonly Dictionary<Agent, CustomSettlementMissionLogic.UsedObject> defenderAgentObjects;
         private readonly ItemRoster loot;
         private int goldLooted = 0;
@@ -66,7 +69,7 @@ namespace RealmsForgotten.RFCustomSettlements
             loot = new();
             banditsInSettlement = CreateBanditData(buildData);
             BanditsData = buildData;
-            CustomSettlementsCampaignBehavior.NextSceneData.Instance.shouldSwitchScenes = false;
+            NextSceneData.Instance.shouldSwitchScenes = false;
         }
         public override void OnMissionTick(float dt)
         {
@@ -149,13 +152,31 @@ namespace RealmsForgotten.RFCustomSettlements
                                  orderby area.AreaIndex
                                  select area);
             animalSpawnPositions.AddRange(Mission.Current.Scene.FindEntitiesWithTag("spawnpoint_herdanimal"));
+            npcSpawnPositions.AddRange(Mission.Current.Scene.FindEntitiesWithTag("rf_npc"));
 
             base.Mission.MakeDefaultDeploymentPlans();
             SpawnPatrollingTroops(patrolAreas);
             SpawnStandingTroops(areaMarkers);
             SpawnHuntableHerdsAnimals();
+            SpawnNPCs();
             SpawnPlayerTroops();
         }
+
+        private void SpawnNPCs()
+        {
+            if (npcSpawnPositions.Count == 0) return;
+            GameEntity entity = npcSpawnPositions.ElementAt(0);
+
+            Team team = base.Mission.PlayerAllyTeam;
+
+            Vec3 position = entity.GetGlobalFrame().origin;
+            CharacterObject troop = MBObjectManager.Instance.GetObject<CharacterObject>("spc_notable_empire_8");
+            AgentBuildData agentBuildData = new AgentBuildData(troop).InitialPosition(position);
+            Vec2 vec = new Vec2(-entity.GetGlobalFrame().rotation.f.AsVec2.x, -entity.GetGlobalFrame().rotation.f.AsVec2.y);
+            AgentBuildData agentBuildData2 = agentBuildData.InitialDirection(vec).TroopOrigin(new SimpleAgentOrigin(troop, -1, null, default(UniqueTroopDescriptor))).Team(team);
+            Agent agent = Mission.Current.SpawnAgent(agentBuildData2, false);
+        }
+
         private void SpawnHuntableHerdsAnimals()
         {
             foreach(GameEntity entity in animalSpawnPositions)
@@ -358,8 +379,8 @@ namespace RealmsForgotten.RFCustomSettlements
             NextSceneData.Instance.goldLoot = goldLooted;
             NextSceneData.Instance.itemLoot = loot;
 
-            if (CustomSettlementsCampaignBehavior.NextSceneData.Instance.shouldSwitchScenes == false)
-                NextSceneData.Instance.currentState = NextSceneData.RFSettlementState.Finished;
+            if (NextSceneData.Instance.shouldSwitchScenes == false)
+                NextSceneData.Instance.currentState = NextSceneData.RFExploreState.Finished;
             base.OnEndMission();
         }
         private void SimulateTick(Agent agent)
@@ -552,18 +573,14 @@ namespace RealmsForgotten.RFCustomSettlements
             sb.Remove(sb.Length - 1, 1);
             string newSceneId = sb.ToString();
             Mission.Current.EndMission();
-            CustomSettlementsCampaignBehavior.NextSceneData.Instance.shouldSwitchScenes = true;
-            CustomSettlementsCampaignBehavior.NextSceneData.Instance.newSceneId = newSceneId;
-            NextSceneData.Instance.currentState = NextSceneData.RFSettlementState.SwitchScene;
-
+            NextSceneData.Instance.shouldSwitchScenes = true;
+            NextSceneData.Instance.newSceneId = newSceneId;
+            NextSceneData.Instance.currentState = NextSceneData.RFExploreState.SwitchScene;
         }
         private void DoHealing(UsablePlace usablePlace)
         {
             Agent.Main.Health = Agent.Main.HealthLimit;
             usablePlace.GameEntity.ClearComponents();
-            //var component = usablePlace.GameEntity.GetComponentAtIndex(0, ComponentType.ParticleSystemInstanced);
-            //if (component != null)
-            //    usablePlace.GameEntity.RemoveComponent(component);
         }
     }
 }

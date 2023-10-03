@@ -2,7 +2,6 @@
 <RFCustomScenes>
 	<CustomScene>
 		<id>beast_hunt_3</id>
-		<maxPlayersideTroops>2</maxPlayersideTroops>
 		<Bandits>
 			<CommonArea>
 				<areaIndex>1</areaIndex>

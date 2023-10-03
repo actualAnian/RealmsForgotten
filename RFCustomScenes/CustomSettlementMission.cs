@@ -1,11 +1,14 @@
-﻿using SandBox;
+﻿using RFCustomSettlements;
+using SandBox;
 using SandBox.Conversation.MissionLogics;
 using SandBox.Missions.AgentBehaviors;
 using SandBox.Missions.MissionLogics;
 using SandBox.Missions.MissionLogics.Towns;
 using SandBox.View;
 using SandBox.View.Missions;
+using SandBox.ViewModelCollection;
 using System.Collections.Generic;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements.Locations;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
@@ -15,6 +18,7 @@ using TaleWorlds.MountAndBlade.Source.Missions.Handlers.Logic;
 using TaleWorlds.MountAndBlade.View;
 using TaleWorlds.MountAndBlade.View.MissionViews;
 using TaleWorlds.MountAndBlade.View.MissionViews.Order;
+using TaleWorlds.MountAndBlade.View.MissionViews.Sound;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -48,6 +52,8 @@ namespace RealmsForgotten.RFCustomSettlements
             //  new MissionSettlementPrepareLogic(),
                     new SandBoxMissionHandler(),
                     new MissionFightHandler(),
+
+                    new RFConversationLogic(),
                     ViewCreator.CreateMissionLeaveView(),
                     ViewCreator.CreateMissionBoundaryCrossingView(),
                     ViewCreator.CreateMissionSingleplayerEscapeMenu(false),
@@ -68,7 +74,8 @@ namespace RealmsForgotten.RFCustomSettlements
                     ViewCreator.CreateMissionOrderUIHandler(null),
                     ViewCreator.CreateMissionFormationMarkerUIHandler(mission),
 
-                    SandBoxViewCreator.CreateMissionNameMarkerUIHandler(mission)
+                    SandBoxViewCreator.CreateMissionNameMarkerUIHandler(mission),
+                    SandBoxViewCreator.CreateMissionConversationView(mission)
                     }, true, true);
             }
         }

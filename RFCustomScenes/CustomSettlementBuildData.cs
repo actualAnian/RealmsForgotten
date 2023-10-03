@@ -36,7 +36,7 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             stationaryAreasBandits = _stationaryAreasBandits;
             patrolAreasBandits = _patrolAreasBandits;
-            maxPlayersideTroops = _maxPlayersideTroops;
+            maxPlayersideTroops = _maxPlayersideTroops; // OBSOLETE, to be removed
             canEnterOnlyAtSpecialHours = _canEnterOnlyAtSpecialHours;
             enterStartHour = _enterStartHour;
             enterEndHour = _enterEndHour;
@@ -51,7 +51,9 @@ namespace RealmsForgotten.RFCustomSettlements
 
             foreach (XElement element in SettlementBandits.Descendants("CustomScene"))
             {
-                int maxPlayersideTroops = int.Parse(element.Element("maxPlayersideTroops").Value);
+                var aha = element.Element("maxPlayersideTroops");
+                int maxPlayersideTroops = aha != null ? int.Parse(aha.Value) : 1;
+
                 Dictionary<int, List<RFBanditData>> buildStationaryAreasBandits = new();
                 Dictionary<int, RFBanditData> buildPatrolAreasBandits = new();
                 string sceneId;

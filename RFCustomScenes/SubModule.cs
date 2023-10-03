@@ -1,4 +1,6 @@
 ﻿using HarmonyLib;
+using RFCustomSettlements;
+using SandBox.CampaignBehaviors;
 using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
@@ -38,6 +40,8 @@ namespace RealmsForgotten.RFCustomSettlements
         private void RunManualPatches()
         {
             var original = AccessTools.Method("MissionMainAgentInteractionComponent:FocusTick");
+            var aha = AccessTools.Method("HideoutConversationsCampaignBehavior:bandit_hideout_start_defender_on_condition");
+           // harmony.Patch(aha, transpiler: new HarmonyMethod(typeof(HideoutConversationsCampaignBehaviorPatch), nameof(HideoutConversationsCampaignBehaviorPatch.StartOnConditionPatch)));
             harmony.Patch(original, transpiler: new HarmonyMethod(typeof(MissionMainAgentInteractionComponentFocusTickPatch), nameof(MissionMainAgentInteractionComponentFocusTickPatch.FocusTickPatch)));
         }
 
@@ -46,6 +50,7 @@ namespace RealmsForgotten.RFCustomSettlements
             if (starterObject is CampaignGameStarter starter)
             {
                 starter.AddBehavior(new CustomSettlementsCampaignBehavior());
+                starter.AddBehavior(new ArenaCampaignBehavior());
                 //                starter.AddBehavior(new RFLegendaryTroopsPlayerVisitTownCampaignBehavior());
             }
         }
