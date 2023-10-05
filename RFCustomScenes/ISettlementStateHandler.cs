@@ -119,7 +119,7 @@ namespace RFCustomSettlements
         }
         private void OnTroopRosterManageDone(TroopRoster roster)
         {
-            CustomSettlementMission.StartCustomSettlementMission(currentSettlement.CustomScene, CurrentBuildData);
+            RFMissions.StartExploreMission(currentSettlement.CustomScene, CurrentBuildData);
         }
         private bool CanChangeStatusOfTroop(CharacterObject character)
         {
@@ -143,7 +143,7 @@ namespace RFCustomSettlements
                     try
                     {
                         CurrentBuildData = CustomSettlementBuildData.allCustomSettlementBuildDatas[newSceneID];
-                        CustomSettlementMission.StartCustomSettlementMission(newSceneID, CurrentBuildData);
+                        RFMissions.StartExploreMission(newSceneID, CurrentBuildData);
                         return;
                     }
                     catch
@@ -185,7 +185,7 @@ namespace RFCustomSettlements
     internal class ArenaSettlementStateHandler : ISettlementStateHandler
     {
         private CustomSettlementBuildData? CurrentBuildData;
-        internal ArenaState currentState = ArenaState.Captured;
+        internal static ArenaState currentState = ArenaState.Captured;
         private RFCustomSettlement currentSettlement;
         public ArenaSettlementStateHandler(RFCustomSettlement settlement) => currentSettlement = settlement;
         public enum ArenaState
@@ -214,7 +214,8 @@ namespace RFCustomSettlements
 
         public void OnSettlementExploreConsequence(MenuCallbackArgs args)
         {
-            CustomSettlementMission.StartCustomSettlementMission(currentSettlement.CustomScene, CurrentBuildData);
+            RFMissions.OpenArenaMission("arena_test");
+           // RFMissions.StartExploreMission(currentSettlement.CustomScene, CurrentBuildData);
         }
 
         public void OnSettlementStartOnInit(MenuCallbackArgs args)
@@ -224,6 +225,9 @@ namespace RFCustomSettlements
                 case ArenaState.Visiting:
                     break; 
                 case ArenaState.Captured:
+                    break;
+                case ArenaState.FightStage1:
+                    RFMissions.OpenArenaMission("arena_test");
                     break;
             }
         }

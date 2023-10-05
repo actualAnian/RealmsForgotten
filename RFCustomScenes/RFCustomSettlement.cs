@@ -45,7 +45,8 @@ namespace RealmsForgotten.RFCustomSettlements
                 MaxPlayersideTroops = 1;
 
             // @TODO deserialize this member
-            StateHandler = new ExploreSettlementStateHandler(this);
+            //StateHandler = new ExploreSettlementStateHandler(this);
+            StateHandler = new ArenaSettlementStateHandler(this);
         }
 
         //public RFCustomSettlement()
