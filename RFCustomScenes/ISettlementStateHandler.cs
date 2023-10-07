@@ -21,9 +21,13 @@ namespace RFCustomSettlements
 {
     internal interface ISettlementStateHandler
     {
-        void OnSettlementExploreConsequence(MenuCallbackArgs args);
-        bool OnSettlementExploreCondition(MenuCallbackArgs args);
+        void OnSettlementStartConsequence(MenuCallbackArgs args);
+        bool OnSettlementStartCondition(MenuCallbackArgs args);
         void OnSettlementStartOnInit(MenuCallbackArgs args);
+        bool OnSettlementLeaveCondition(MenuCallbackArgs args);
+        bool OnSettlementWaitStartOnCondition(MenuCallbackArgs args);
+        bool OnSettlementWaitEndCondition(MenuCallbackArgs args);
+        void OnSettlementWaitEndConsequence(MenuCallbackArgs args);
         void OnWaitMenuTillEnterTick(MenuCallbackArgs args, CampaignTime dt);
         public void InitHandler(CustomSettlementBuildData buildData);
         public bool IsInitialized();
@@ -90,8 +94,9 @@ namespace RFCustomSettlements
         {
             return CurrentBuildData != null;
         }
-        public bool OnSettlementExploreCondition(MenuCallbackArgs args)
+        public bool OnSettlementStartCondition(MenuCallbackArgs args)
         {
+            if (waitHours != 0) return false;
             if (CharacterObject.PlayerCharacter.HitPoints < 25)
             {
                 args.IsEnabled = false;
@@ -101,7 +106,7 @@ namespace RFCustomSettlements
             return true;
         }
 
-        public void OnSettlementExploreConsequence(MenuCallbackArgs args)
+        public void OnSettlementStartConsequence(MenuCallbackArgs args)
         {
             try
             {
@@ -127,8 +132,9 @@ namespace RFCustomSettlements
         }
         public void OnSettlementStartOnInit(MenuCallbackArgs args)
         {
-            string? newSceneID;
-
+            string ? newSceneID;
+            
+            GameTexts.SetVariable("RF_SETTLEMENT_MAIN_TEXT", $"{Settlement.CurrentSettlement.EncyclopediaText}");
             switch (NextSceneData.Instance.currentState)
             {
                 case NextSceneData.RFExploreState.BeforeStart:
@@ -181,12 +187,41 @@ namespace RFCustomSettlements
             }
             args.MenuContext.GameMenu.SetProgressOfWaitingInMenu(waitProgress / waitHours);
         }
+
+        public bool OnSettlementLeaveCondition(MenuCallbackArgs args)
+        {
+            return MobileParty.MainParty.Army == null || MobileParty.MainParty.Army.LeaderParty == MobileParty.MainParty;
+        }
+
+        public bool OnSettlementWaitEndCondition(MenuCallbackArgs args)
+        {
+            return currentSettlement.CanEnterAnytime == false && waitHours != 0;
+        }
+
+        public bool OnSettlementWaitStartOnCondition(MenuCallbackArgs args)
+        {
+            return !CanEnter();
+        }
+        private bool CanEnter()
+        {
+            if (currentSettlement.CanEnterAnytime) return true;
+            if (currentSettlement.EnterStart > currentSettlement.EnterEnd) return CampaignTime.Now.CurrentHourInDay >= currentSettlement.EnterStart || CampaignTime.Now.CurrentHourInDay <= currentSettlement.EnterEnd;
+            else return CampaignTime.Now.CurrentHourInDay >= currentSettlement.EnterStart && CampaignTime.Now.CurrentHourInDay <= currentSettlement.EnterEnd;
+        }
+
+        public void OnSettlementWaitEndConsequence(MenuCallbackArgs args)
+        {
+            GameMenu.SwitchToMenu("rf_settlement_start");
+        }
     }
     internal class ArenaSettlementStateHandler : ISettlementStateHandler
     {
         private CustomSettlementBuildData? CurrentBuildData;
-        internal static ArenaState currentState = ArenaState.Captured;
+        internal static ArenaState currentState = ArenaState.FightStage1;
         private RFCustomSettlement currentSettlement;
+        private float waitHours;
+        private bool hasToWait = false;
+        private float waitProgress;
         public ArenaSettlementStateHandler(RFCustomSettlement settlement) => currentSettlement = settlement;
         public enum ArenaState
         {
@@ -207,12 +242,12 @@ namespace RFCustomSettlements
             return CurrentBuildData != null;
         }
 
-        public bool OnSettlementExploreCondition(MenuCallbackArgs args)
+        public bool OnSettlementStartCondition(MenuCallbackArgs args)
         {
-            return currentState == ArenaState.Captured;
+            return !hasToWait;
         }
 
-        public void OnSettlementExploreConsequence(MenuCallbackArgs args)
+        public void OnSettlementStartConsequence(MenuCallbackArgs args)
         {
             RFMissions.OpenArenaMission("arena_test");
            // RFMissions.StartExploreMission(currentSettlement.CustomScene, CurrentBuildData);
@@ -220,6 +255,8 @@ namespace RFCustomSettlements
 
         public void OnSettlementStartOnInit(MenuCallbackArgs args)
         {
+            GameTexts.SetVariable("RF_SETTLEMENT_MAIN_TEXT", "You are in the arena!");
+            if (hasToWait) SetWaitTimer(24);
             switch(currentState)
             {
                 case ArenaState.Visiting:
@@ -227,13 +264,55 @@ namespace RFCustomSettlements
                 case ArenaState.Captured:
                     break;
                 case ArenaState.FightStage1:
-                    RFMissions.OpenArenaMission("arena_test");
+                    //RFMissions.OpenArenaMission("arena_test");
+                    break;
+                case ArenaState.FightStage2:
+                    //RFMissions.OpenArenaMission("arena_test");
+                    break;
+                case ArenaState.FightStage3:
+                    //RFMissions.OpenArenaMission("arena_test");
+                    break;
+                case ArenaState.Finishing: 
                     break;
             }
         }
 
         public void OnWaitMenuTillEnterTick(MenuCallbackArgs args, CampaignTime dt)
         {
+            waitProgress += (float)dt.ToHours;
+            args.MenuContext.GameMenu.SetProgressOfWaitingInMenu(waitProgress / waitHours);
+        }
+
+        internal void SetWaitTimer(int time)
+        {
+            waitHours = time; 
+            hasToWait = true;
+        }
+
+        public bool OnSettlementLeaveCondition(MenuCallbackArgs args)
+        {
+            
+            bool result = currentState == ArenaState.Visiting || currentState == ArenaState.Finishing;
+            if (!result) args.IsEnabled = false;
+
+            return true;
+        }
+
+        public bool OnSettlementWaitEndCondition(MenuCallbackArgs args)
+        {
+            return true;
+        }
+
+        public bool OnSettlementWaitStartOnCondition(MenuCallbackArgs args)
+        {
+            return hasToWait;
+        }
+
+        public void OnSettlementWaitEndConsequence(MenuCallbackArgs args)
+        {
+            hasToWait = false;
+            waitProgress = 0;
+            GameMenu.SwitchToMenu("rf_settlement_start");
         }
     }
 }

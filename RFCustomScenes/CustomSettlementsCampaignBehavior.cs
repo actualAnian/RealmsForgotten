@@ -34,26 +34,35 @@ namespace RealmsForgotten.RFCustomSettlements
 
         private void AddGameMenus(CampaignGameStarter starter)
         {
-            starter.AddGameMenu("rf_settlement_start", "{=rf_settlement_start} You came across a captivating location!", new OnInitDelegate(this.game_menu_rf_settlement_start_on_init), GameOverlays.MenuOverlayType.None, GameMenu.MenuFlags.None, null);
-            starter.AddGameMenuOption("rf_settlement_start", "explore", "{=rf_explore}Explore", new GameMenuOption.OnConditionDelegate(this.game_menu_rf_settlement_explore_on_condition), new GameMenuOption.OnConsequenceDelegate(this.game_menu_rf_settlement_explore_on_consequence), false, -1, false);
-            starter.AddGameMenuOption("rf_settlement_start", "prepare", "{=rf_explore}Prepare", new GameMenuOption.OnConditionDelegate(this.game_menu_rf_settlement_prepare_on_condition), new GameMenuOption.OnConsequenceDelegate(this.game_menu_rf_settlement_prepare_on_consequence), false, -1, false);
+            starter.AddGameMenu("rf_settlement_start", "{=!}{RF_SETTLEMENT_MAIN_TEXT}", new OnInitDelegate(this.game_menu_rf_settlement_start_on_init), GameOverlays.MenuOverlayType.None, GameMenu.MenuFlags.None, null);
+            starter.AddGameMenuOption("rf_settlement_start", "start", "{=rf_explore}Explore", new GameMenuOption.OnConditionDelegate(this.game_menu_rf_settlement_start_on_condition), new GameMenuOption.OnConsequenceDelegate(this.game_menu_rf_settlement_start_on_consequence), false, -1, false);
+            starter.AddGameMenuOption("rf_settlement_start", "wait", "{=rf_explore}Prepare", new GameMenuOption.OnConditionDelegate(this.game_menu_rf_settlement_wait_on_condition), new GameMenuOption.OnConsequenceDelegate(this.game_menu_rf_settlement_wait_on_consequence), false, -1, false);
 
             starter.AddGameMenuOption("rf_settlement_start", "leave", "{=3sRdGQou}Leave", new GameMenuOption.OnConditionDelegate(this.leave_on_condition), new GameMenuOption.OnConsequenceDelegate(this.game_menu_leave_on_consequence), true, -1, false);
-            starter.AddWaitGameMenu("rf_settlement_wait_till_can_enter_menu", "Waiting until nightfall", delegate(MenuCallbackArgs args) { args.MenuContext.GameMenu.StartWait(); }, delegate (MenuCallbackArgs args) { 
-                return currentSettlement.CanEnterAnytime == false;
-            }, delegate (MenuCallbackArgs args) { GameMenu.SwitchToMenu("rf_settlement_start"); }, new OnTickDelegate(this.game_menu_wait_till_can_enter_menu_on_tick), GameMenu.MenuAndOptionType.WaitMenuShowOnlyProgressOption, GameOverlays.MenuOverlayType.None, 0, GameMenu.MenuFlags.None, null);
-            starter.AddGameMenuOption("rf_settlement_wait_till_can_enter_menu", "leave", "{=3sRdGQou}Leave", new GameMenuOption.OnConditionDelegate(this.leave_on_condition), new GameMenuOption.OnConsequenceDelegate(this.game_menu_leave_on_consequence), true, -1, false);
-        }
-#pragma warning disable IDE1006 // Naming Styles
-        private bool game_menu_rf_settlement_prepare_on_condition(MenuCallbackArgs args)
-        {
-            args.optionLeaveType = GameMenuOption.LeaveType.Wait;
-            return !CanEnter();
+            starter.AddWaitGameMenu("rf_settlement_wait_menu", "Waiting until nightfall", delegate(MenuCallbackArgs args) { args.MenuContext.GameMenu.StartWait();}, new OnConditionDelegate(this.wait_menu_on_condition), new OnConsequenceDelegate(this.wait_menu_on_consequence), new OnTickDelegate(this.game_menu_wait_till_can_enter_menu_on_tick), GameMenu.MenuAndOptionType.WaitMenuShowOnlyProgressOption, GameOverlays.MenuOverlayType.None, 0, GameMenu.MenuFlags.None, null);
+            starter.AddGameMenuOption("rf_settlement_wait_menu", "leave", "{=3sRdGQou}Leave", new GameMenuOption.OnConditionDelegate(this.leave_on_condition), new GameMenuOption.OnConsequenceDelegate(this.game_menu_leave_on_consequence), true, -1, false);
         }
 
-        private void game_menu_rf_settlement_prepare_on_consequence(MenuCallbackArgs args)
+        private void wait_menu_on_consequence(MenuCallbackArgs args)
         {
-           GameMenu.SwitchToMenu("rf_settlement_wait_till_can_enter_menu");
+            currentSettlement.StateHandler.OnSettlementWaitEndConsequence(args);
+        }
+
+        private bool wait_menu_on_condition(MenuCallbackArgs args)
+        {
+            args.optionLeaveType = GameMenuOption.LeaveType.Wait;
+            return currentSettlement.StateHandler.OnSettlementWaitEndCondition(args);
+        }
+#pragma warning disable IDE1006 // Naming Styles
+        private bool game_menu_rf_settlement_wait_on_condition(MenuCallbackArgs args)
+        {
+            args.optionLeaveType = GameMenuOption.LeaveType.Wait;
+            return currentSettlement.StateHandler.OnSettlementWaitStartOnCondition(args);
+        }
+
+        private void game_menu_rf_settlement_wait_on_consequence(MenuCallbackArgs args)
+        {
+           GameMenu.SwitchToMenu("rf_settlement_wait_menu");
         }
         private void game_menu_wait_till_can_enter_menu_on_tick(MenuCallbackArgs args, CampaignTime dt)
         {
@@ -74,23 +83,15 @@ namespace RealmsForgotten.RFCustomSettlements
         private bool leave_on_condition(MenuCallbackArgs args)
         {
             args.optionLeaveType = GameMenuOption.LeaveType.Leave;
-            return MobileParty.MainParty.Army == null || MobileParty.MainParty.Army.LeaderParty == MobileParty.MainParty;
+            return currentSettlement.StateHandler.OnSettlementLeaveCondition(args);
         }
-        private void game_menu_rf_settlement_explore_on_consequence(MenuCallbackArgs args)
+        private void game_menu_rf_settlement_start_on_consequence(MenuCallbackArgs args)
         {
-            currentSettlement.StateHandler.OnSettlementExploreConsequence(args);
+            currentSettlement.StateHandler.OnSettlementStartConsequence(args);
         }
-        private bool game_menu_rf_settlement_explore_on_condition(MenuCallbackArgs args)
+        private bool game_menu_rf_settlement_start_on_condition(MenuCallbackArgs args)
         {
-            if (!CanEnter()) return false;
-
-            return currentSettlement.StateHandler.OnSettlementExploreCondition(args);
-        }
-        private bool CanEnter()
-        {
-            if (currentSettlement.CanEnterAnytime) return true;
-            if (currentSettlement.EnterStart > currentSettlement.EnterEnd) return CampaignTime.Now.CurrentHourInDay >= currentSettlement.EnterStart || CampaignTime.Now.CurrentHourInDay <= currentSettlement.EnterEnd;
-            else return CampaignTime.Now.CurrentHourInDay >= currentSettlement.EnterStart && CampaignTime.Now.CurrentHourInDay <= currentSettlement.EnterEnd;
+            return currentSettlement.StateHandler.OnSettlementStartCondition(args);
         }
 
         [GameMenuInitializationHandler("rf_settlement_start")]

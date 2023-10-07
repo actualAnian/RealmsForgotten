@@ -14,6 +14,7 @@ using SandBox.Tournaments.MissionLogics;
 using TaleWorlds.ObjectSystem;
 using System.Text.RegularExpressions;
 using SandBox.ViewModelCollection.Tournament;
+using TaleWorlds.CampaignSystem.Encyclopedia;
 
 namespace RFCustomSettlements
 {
@@ -26,12 +27,26 @@ namespace RFCustomSettlements
             List<string> playerTeamTroops = new List<string>() { "looter", "looter" };
             List<string> enemyTeamTroops = new List<string>() { "looter", "looter" };
 
+            int[] array = new int[]
+{
+                119,
+                118,
+                120,
+                121
+};
+            int num = 0;
+            //for (int i = 0; i < numberOfTeamsPerMatch; i++)
+            //{
+            //    this._teams[i] = new TournamentTeam(this._teamSize, BannerManager.GetColor(array[num]), Banner.CreateOneColoredEmptyBanner(array[num]));
+            //    num++;
+            //    num %= 4;
+            //}
 
             base.Mission.SetMissionMode(MissionMode.Battle, true);
             List<Team> list = new List<Team>();
-
+            //BannerManager.GetColor(array[num]), Banner.CreateOneColoredEmptyBanner(array[num]
             BattleSideEnum side = BattleSideEnum.Defender;
-            Team team = base.Mission.Teams.Add(side);
+            Team team = base.Mission.Teams.Add(side, BannerManager.GetColor(array[0]), BannerManager.GetColor(array[0]), Banner.CreateOneColoredEmptyBanner(array[0]));
             GameEntity spawnPoint = spawnPoints[0];
             list.Add(team);
             SpawnPlayer(spawnPoint, team);
@@ -41,7 +56,7 @@ namespace RFCustomSettlements
             }
 
             side = BattleSideEnum.Attacker;
-            team = base.Mission.Teams.Add(side);
+            team = base.Mission.Teams.Add(side, BannerManager.GetColor(array[1]), BannerManager.GetColor(array[1]), Banner.CreateOneColoredEmptyBanner(array[1]));
             spawnPoint = spawnPoints[1];
             foreach (string troopId in enemyTeamTroops)
             {
@@ -88,7 +103,18 @@ namespace RFCustomSettlements
         protected override void OnEndMission()
         {
             base.Mission.CanAgentRout_AdditionalCondition -= this.CanAgentRout;
-            ArenaSettlementStateHandler.currentState = ArenaSettlementStateHandler.ArenaState.Captured;
+            switch (ArenaSettlementStateHandler.currentState)
+            { 
+                case ArenaSettlementStateHandler.ArenaState.FightStage1:
+                    ArenaSettlementStateHandler.currentState = ArenaSettlementStateHandler.ArenaState.FightStage2;
+                    break;
+                case ArenaSettlementStateHandler.ArenaState.FightStage2:
+                    ArenaSettlementStateHandler.currentState = ArenaSettlementStateHandler.ArenaState.FightStage3;
+                    break;
+                case ArenaSettlementStateHandler.ArenaState.FightStage3:
+                    ArenaSettlementStateHandler.currentState = ArenaSettlementStateHandler.ArenaState.Finishing;
+                    break;
+            }
         }
         public override void AfterStart()
         {

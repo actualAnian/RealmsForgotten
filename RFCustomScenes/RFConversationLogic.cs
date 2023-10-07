@@ -79,7 +79,7 @@ namespace RFCustomSettlements
         }
         public override bool IsThereAgentAction(Agent userAgent, Agent otherAgent)
         {
-            if (otherAgent.Character.StringId == "spc_notable_empire_8")
+            if (otherAgent.Character != null && otherAgent.Character.StringId == "spc_notable_empire_8")
                 return true;
             else return false;
         }

@@ -8,12 +8,14 @@ using SandBox.Missions.MissionLogics.Towns;
 using SandBox.Tournaments.MissionLogics;
 using SandBox.View;
 using SandBox.View.Missions;
+using SandBox.View.Missions.Sound.Components;
 using SandBox.ViewModelCollection;
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.Settlements.Locations;
 using TaleWorlds.CampaignSystem.TournamentGames;
+using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.Source.Missions;
@@ -93,7 +95,6 @@ namespace RealmsForgotten.RFCustomSettlements
                     new BasicLeaveMissionLogic(),
                     new CampaignMissionComponent(),
                     new EquipmentControllerLeaveLogic(),
-                    //new TournamentBehavior(tournamentGame, settlement, tournamentFightMissionController, isPlayerParticipating),
                     new AgentVictoryLogic(),
                     new MissionAgentPanicHandler(),
                     new AgentHumanAILogic(),
@@ -105,6 +106,7 @@ namespace RealmsForgotten.RFCustomSettlements
                     new SandboxHighlightsController(),
 
 
+                    ViewCreator.CreateMissionAgentLabelUIHandler(mission),
 
                     ViewCreator.CreateMissionSingleplayerEscapeMenu(false),
                     ViewCreator.CreateOptionsUIHandler(),
@@ -114,6 +116,7 @@ namespace RealmsForgotten.RFCustomSettlements
                     ViewCreator.CreateMissionAgentStatusUIHandler(mission),
                     ViewCreator.CreateMissionAgentLockVisualizerView(),
                     ViewCreator.CreateMissionMainAgentEquipmentController(),
+
             }, true, true);
         }
     }
