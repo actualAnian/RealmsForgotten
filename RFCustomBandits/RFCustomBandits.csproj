@@ -43,6 +43,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\RealmsForgottenMain\RealmsForgotten.csproj" />
+	  <ProjectReference Include="..\RFCustomScenes\RFCustomSettlements.csproj" />
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">

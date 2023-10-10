@@ -61,7 +61,8 @@ namespace RealmsForgotten.RFCustomSettlements
         private int goldLooted = 0;
         private readonly MobileParty banditsInSettlement;
         private readonly CustomSettlementBuildData BanditsData;
-        public CustomSettlementMissionLogic(CustomSettlementBuildData buildData)
+        private Action OnBattleEnd;
+        public CustomSettlementMissionLogic(CustomSettlementBuildData buildData, Action? onBattleEnd = null)
         {
             defenderAgentObjects = new Dictionary<Agent, CustomSettlementMissionLogic.UsedObject>();
             patrolAreas = new();
@@ -70,6 +71,7 @@ namespace RealmsForgotten.RFCustomSettlements
             banditsInSettlement = CreateBanditData(buildData);
             BanditsData = buildData;
             NextSceneData.Instance.shouldSwitchScenes = false;
+            OnBattleEnd = onBattleEnd;
         }
         public override void OnMissionTick(float dt)
         {
@@ -165,16 +167,20 @@ namespace RealmsForgotten.RFCustomSettlements
         private void SpawnNPCs()
         {
             if (npcSpawnPositions.Count == 0) return;
-            GameEntity entity = npcSpawnPositions.ElementAt(0);
-
-            Team team = base.Mission.PlayerAllyTeam;
-
-            Vec3 position = entity.GetGlobalFrame().origin;
-            CharacterObject troop = MBObjectManager.Instance.GetObject<CharacterObject>("spc_notable_empire_8");
-            AgentBuildData agentBuildData = new AgentBuildData(troop).InitialPosition(position);
-            Vec2 vec = new Vec2(-entity.GetGlobalFrame().rotation.f.AsVec2.x, -entity.GetGlobalFrame().rotation.f.AsVec2.y);
-            AgentBuildData agentBuildData2 = agentBuildData.InitialDirection(vec).TroopOrigin(new SimpleAgentOrigin(troop, -1, null, default(UniqueTroopDescriptor))).Team(team);
-            Agent agent = Mission.Current.SpawnAgent(agentBuildData2, false);
+            foreach (GameEntity npcSpawnPoint in npcSpawnPositions)
+            {
+                Team team = base.Mission.PlayerAllyTeam;
+                string? characterId = Helper.GetCharacterIdfromEntityName(npcSpawnPoint.Name);
+                try { 
+                    Vec3 position = npcSpawnPoint.GetGlobalFrame().origin;
+                    CharacterObject troop = MBObjectManager.Instance.GetObject<CharacterObject>(characterId);
+                    AgentBuildData agentBuildData = new AgentBuildData(troop).InitialPosition(position);
+                    Vec2 vec = new Vec2(-npcSpawnPoint.GetGlobalFrame().rotation.f.AsVec2.x, -npcSpawnPoint.GetGlobalFrame().rotation.f.AsVec2.y);
+                    AgentBuildData agentBuildData2 = agentBuildData.InitialDirection(vec).TroopOrigin(new SimpleAgentOrigin(troop, -1, null, default(UniqueTroopDescriptor))).Team(team);
+                    Agent agent = Mission.Current.SpawnAgent(agentBuildData2, false);
+                }
+                catch { HuntableHerds.SubModule.PrintDebugMessage($"ERROR, could not spawn npc from game entity of name: {npcSpawnPoint.Name}"); }
+            }
         }
 
         private void SpawnHuntableHerdsAnimals()
@@ -381,6 +387,7 @@ namespace RealmsForgotten.RFCustomSettlements
 
             if (NextSceneData.Instance.shouldSwitchScenes == false)
                 NextSceneData.Instance.currentState = NextSceneData.RFExploreState.Finished;
+            if (OnBattleEnd != null) this.OnBattleEnd();
             base.OnEndMission();
         }
         private void SimulateTick(Agent agent)

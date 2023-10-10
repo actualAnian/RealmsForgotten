@@ -21,7 +21,11 @@ namespace RFCustomSettlements
     internal class ArenaFightMissionController : MissionLogic
     {
         private List<GameEntity> spawnPoints;
-
+        private ArenaSettlementStateHandler Arenahandler;
+        public ArenaFightMissionController(ArenaSettlementStateHandler handler)
+        {
+            Arenahandler = handler;
+        }
         public void StartArenaBattle()
         {
             List<string> playerTeamTroops = new List<string>() { "looter", "looter" };
@@ -103,18 +107,9 @@ namespace RFCustomSettlements
         protected override void OnEndMission()
         {
             base.Mission.CanAgentRout_AdditionalCondition -= this.CanAgentRout;
-            switch (ArenaSettlementStateHandler.currentState)
-            { 
-                case ArenaSettlementStateHandler.ArenaState.FightStage1:
-                    ArenaSettlementStateHandler.currentState = ArenaSettlementStateHandler.ArenaState.FightStage2;
-                    break;
-                case ArenaSettlementStateHandler.ArenaState.FightStage2:
-                    ArenaSettlementStateHandler.currentState = ArenaSettlementStateHandler.ArenaState.FightStage3;
-                    break;
-                case ArenaSettlementStateHandler.ArenaState.FightStage3:
-                    ArenaSettlementStateHandler.currentState = ArenaSettlementStateHandler.ArenaState.Finishing;
-                    break;
-            }
+            if (true) // if player won the battle
+                Arenahandler.OnPlayerBattleWin();
+            else Arenahandler.OnPlayerBattleLoss();
         }
         public override void AfterStart()
         {

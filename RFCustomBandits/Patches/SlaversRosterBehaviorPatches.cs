@@ -8,6 +8,8 @@ using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.LinQuick;
+using RealmsForgotten.RFCustomSettlements;
+using RFCustomSettlements;
 
 namespace RealmsForgotten.RFCustomBandits.Patches
 {
@@ -55,20 +57,21 @@ namespace RealmsForgotten.RFCustomBandits.Patches
     [HarmonyPatch(typeof(PlayerCaptivityCampaignBehavior), nameof(PlayerCaptivityCampaignBehavior.CheckCaptivityChange))]
     internal class CheckCaptivityChangePatch
     {
-        static int ticksNeeded = 1000;
-        static int tickStart = 0;
+        static float hoursNeeded = 24;
+        static float tickStart = new Random().Next(0, 12);
         private static void Prefix(PlayerCaptivityCampaignBehavior __instance, float dt)
         {
             if(PlayerCaptivity.CaptorParty.Culture.StringId == "aserai")
             {
-                if(tickStart < ticksNeeded)
+                if(tickStart < hoursNeeded)
                 {
-                    tickStart += 1;
+                    tickStart += dt;
                 }
                 else
                 {
-                    tickStart = 0;
-                    GameMenu.SwitchToMenu("menu_captivity_end_by_ally_party_saved");
+                    tickStart = new Random().Next(0,12);
+                    ArenaCampaignBehavior.TeleportCapturedPlayerToArena();
+                    //GameMenu.SwitchToMenu("menu_captivity_end_by_ally_party_saved");
                     return;
                 }
 

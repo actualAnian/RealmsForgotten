@@ -10,6 +10,7 @@ using SandBox.View;
 using SandBox.View.Missions;
 using SandBox.View.Missions.Sound.Components;
 using SandBox.ViewModelCollection;
+using System;
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -31,7 +32,7 @@ namespace RealmsForgotten.RFCustomSettlements
     public static class RFMissions
     {
             [MissionMethod]
-            public static Mission StartExploreMission(string sceneName, CustomSettlementBuildData currentBuildData)
+            public static Mission StartExploreMission(string sceneName, CustomSettlementBuildData currentBuildData, Action? onBattleEnd = null)
                 {
                 return MissionState.OpenNew(sceneName,
                     SandBoxMissions.CreateSandBoxMissionInitializerRecord(sceneName, "", false, DecalAtlasGroup.Battle),
@@ -67,7 +68,7 @@ namespace RealmsForgotten.RFCustomSettlements
                     ViewCreator.CreateMissionMainAgentEquipDropView(mission),
                     ViewCreator.CreateSingleplayerMissionKillNotificationUIHandler(),
 
-                    new CustomSettlementMissionLogic(currentBuildData),
+                    new CustomSettlementMissionLogic(currentBuildData, onBattleEnd),
                     ViewCreator.CreateMissionAgentStatusUIHandler(mission),
                     new MissionCampaignView(),
                     ViewCreator.CreateMissionAgentLockVisualizerView(),
@@ -84,12 +85,12 @@ namespace RealmsForgotten.RFCustomSettlements
                     }, true, true);
             }
         [MissionMethod]
-        public static Mission OpenArenaMission(string scene)
+        public static Mission OpenArenaMission(string scene, ArenaSettlementStateHandler arenaHandler)
         {
             return MissionState.OpenNew("ArenaFight", SandBoxMissions.CreateSandBoxMissionInitializerRecord(scene, "", false, DecalAtlasGroup.Town),
                     (Mission mission) => new MissionBehavior[]
             {
-                    new ArenaFightMissionController(),
+                    new ArenaFightMissionController(arenaHandler),
                 
                     ViewCreator.CreateMissionLeaveView(),
                     new BasicLeaveMissionLogic(),

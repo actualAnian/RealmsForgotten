@@ -61,7 +61,7 @@ namespace RealmsForgotten.RFCustomSettlements
                 sceneId = element.Element("id").Value;
                 foreach (XElement xElement in element.Descendants("Bandits").Descendants("CommonArea"))
                 {
-                    foreach(XElement xElement2 in xElement.Descendants("Bandit"))
+                    foreach (XElement xElement2 in xElement.Descendants("Bandit"))
                     {
                         RFBanditData bd = new(xElement2.Element("id").Value, xElement2.Element("amount").Value);
                         int areaIndex = int.Parse(xElement.Element("areaIndex").Value);
