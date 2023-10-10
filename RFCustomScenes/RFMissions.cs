@@ -1,12 +1,22 @@
-﻿using SandBox;
+﻿using RFCustomSettlements;
+using SandBox;
 using SandBox.Conversation.MissionLogics;
 using SandBox.Missions.AgentBehaviors;
 using SandBox.Missions.MissionLogics;
+using SandBox.Missions.MissionLogics.Arena;
 using SandBox.Missions.MissionLogics.Towns;
+using SandBox.Tournaments.MissionLogics;
 using SandBox.View;
 using SandBox.View.Missions;
+using SandBox.View.Missions.Sound.Components;
+using SandBox.ViewModelCollection;
+using System;
 using System.Collections.Generic;
+using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.Settlements.Locations;
+using TaleWorlds.CampaignSystem.TournamentGames;
+using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.Source.Missions;
@@ -15,13 +25,14 @@ using TaleWorlds.MountAndBlade.Source.Missions.Handlers.Logic;
 using TaleWorlds.MountAndBlade.View;
 using TaleWorlds.MountAndBlade.View.MissionViews;
 using TaleWorlds.MountAndBlade.View.MissionViews.Order;
+using TaleWorlds.MountAndBlade.View.MissionViews.Sound;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
-    public static class CustomSettlementMission
+    public static class RFMissions
     {
             [MissionMethod]
-            public static Mission StartCustomSettlementMission(string sceneName, CustomSettlementBuildData currentBuildData)
+            public static Mission StartExploreMission(string sceneName, CustomSettlementBuildData currentBuildData, Action? onBattleEnd = null)
                 {
                 return MissionState.OpenNew(sceneName,
                     SandBoxMissions.CreateSandBoxMissionInitializerRecord(sceneName, "", false, DecalAtlasGroup.Battle),
@@ -45,9 +56,10 @@ namespace RealmsForgotten.RFCustomSettlements
                     new MissionSingleplayerViewHandler(),
                     new MissionItemContourControllerView(),
                     new MissionAgentContourControllerView(),
-            //  new MissionSettlementPrepareLogic(),
                     new SandBoxMissionHandler(),
                     new MissionFightHandler(),
+
+                    new RFConversationLogic(),
                     ViewCreator.CreateMissionLeaveView(),
                     ViewCreator.CreateMissionBoundaryCrossingView(),
                     ViewCreator.CreateMissionSingleplayerEscapeMenu(false),
@@ -56,7 +68,7 @@ namespace RealmsForgotten.RFCustomSettlements
                     ViewCreator.CreateMissionMainAgentEquipDropView(mission),
                     ViewCreator.CreateSingleplayerMissionKillNotificationUIHandler(),
 
-                    new CustomSettlementMissionLogic(currentBuildData),
+                    new CustomSettlementMissionLogic(currentBuildData, onBattleEnd),
                     ViewCreator.CreateMissionAgentStatusUIHandler(mission),
                     new MissionCampaignView(),
                     ViewCreator.CreateMissionAgentLockVisualizerView(),
@@ -68,9 +80,46 @@ namespace RealmsForgotten.RFCustomSettlements
                     ViewCreator.CreateMissionOrderUIHandler(null),
                     ViewCreator.CreateMissionFormationMarkerUIHandler(mission),
 
-                    SandBoxViewCreator.CreateMissionNameMarkerUIHandler(mission)
+                    SandBoxViewCreator.CreateMissionNameMarkerUIHandler(mission),
+                    SandBoxViewCreator.CreateMissionConversationView(mission)
                     }, true, true);
             }
+        [MissionMethod]
+        public static Mission OpenArenaMission(string scene, ArenaSettlementStateHandler arenaHandler)
+        {
+            return MissionState.OpenNew("ArenaFight", SandBoxMissions.CreateSandBoxMissionInitializerRecord(scene, "", false, DecalAtlasGroup.Town),
+                    (Mission mission) => new MissionBehavior[]
+            {
+                    new ArenaFightMissionController(arenaHandler),
+                
+                    ViewCreator.CreateMissionLeaveView(),
+                    new BasicLeaveMissionLogic(),
+                    new CampaignMissionComponent(),
+                    new EquipmentControllerLeaveLogic(),
+                    new AgentVictoryLogic(),
+                    new MissionAgentPanicHandler(),
+                    new AgentHumanAILogic(),
+                    new ArenaAgentStateDeciderLogic(),
+                    new MissionHardBorderPlacer(),
+                    new MissionBoundaryPlacer(),
+                    new MissionOptionsComponent(),
+                    new HighlightsController(),
+                    new SandboxHighlightsController(),
+
+
+                    ViewCreator.CreateMissionAgentLabelUIHandler(mission),
+
+                    ViewCreator.CreateMissionSingleplayerEscapeMenu(false),
+                    ViewCreator.CreateOptionsUIHandler(),
+                    ViewCreator.CreatePhotoModeView(),
+                    ViewCreator.CreateMissionMainAgentEquipDropView(mission),
+                    ViewCreator.CreateSingleplayerMissionKillNotificationUIHandler(),
+                    ViewCreator.CreateMissionAgentStatusUIHandler(mission),
+                    ViewCreator.CreateMissionAgentLockVisualizerView(),
+                    ViewCreator.CreateMissionMainAgentEquipmentController(),
+
+            }, true, true);
         }
+    }
 
 }

@@ -4,13 +4,9 @@ using Helpers;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Party;
-using TaleWorlds.CampaignSystem.Roster;
-using TaleWorlds.CampaignSystem.Settlements;
-using TaleWorlds.CampaignSystem.TroopSuppliers;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
-using TaleWorlds.ObjectSystem;
-using static RealmsForgotten.RFCustomSettlements.CustomSettlementsCampaignBehavior;
+using static RFCustomSettlements.ExploreSettlementStateHandler;
 
 namespace RealmsForgotten.RFCustomSettlements.AgentOrigins
 {

@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using RealmsForgotten.RFCustomSettlements;
+using SandBox.CampaignBehaviors;
 using SandBox.Objects.Usables;
 using SandBox.ViewModelCollection.Nameplate;
 using System;
@@ -233,6 +234,29 @@ namespace RFCustomSettlements
                 return codes.AsEnumerable();
             }
         }
+
+
+        [HarmonyPatch(typeof(HideoutConversationsCampaignBehavior), "bandit_hideout_start_defender_on_condition")]
+        internal class HideoutConversationsCampaignBehaviorPatch
+        {
+            internal static IEnumerable<CodeInstruction> StartOnConditionPatch(IEnumerable<CodeInstruction> instructions, ILGenerator ilGenerator)
+            {
+                var codes = instructions.ToList();
+                var insertion = 0;
+                var startVanillaRecruitjumpLabel = ilGenerator.DefineLabel();
+                var instr_list = new List<CodeInstruction>
+                {
+                    new(OpCodes.Call, AccessTools.Method(typeof(RealmsForgotten.RFCustomSettlements.Helper), nameof(IsInRFSettlement))),
+                    new(OpCodes.Brfalse, startVanillaRecruitjumpLabel),
+                    new(OpCodes.Ldc_I4_0, null),
+                    new(OpCodes.Ret, null)
+                };
+                codes[0].labels.Add(startVanillaRecruitjumpLabel);
+                codes.InsertRange(insertion, instr_list);
+                return codes.AsEnumerable();
+            }
+        }
+
 
 #pragma warning restore IDE0051 // Remove unused private members
     }

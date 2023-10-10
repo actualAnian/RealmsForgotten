@@ -25,6 +25,8 @@ using RealmsForgotten.HuntableHerds.Models;
 using System.Text;
 using static RealmsForgotten.RFCustomSettlements.CustomSettlementsCampaignBehavior;
 using static TaleWorlds.Engine.GameEntity;
+using TaleWorlds.CampaignSystem.Settlements.Locations;
+using static RFCustomSettlements.ExploreSettlementStateHandler;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -53,12 +55,14 @@ namespace RealmsForgotten.RFCustomSettlements
         private readonly List<PatrolArea> patrolAreas;
         private readonly List<CommonAreaMarker> areaMarkers;
         private readonly List<GameEntity> animalSpawnPositions = new();
+        private readonly List<GameEntity> npcSpawnPositions = new();
         private readonly Dictionary<Agent, CustomSettlementMissionLogic.UsedObject> defenderAgentObjects;
         private readonly ItemRoster loot;
         private int goldLooted = 0;
         private readonly MobileParty banditsInSettlement;
         private readonly CustomSettlementBuildData BanditsData;
-        public CustomSettlementMissionLogic(CustomSettlementBuildData buildData)
+        private Action OnBattleEnd;
+        public CustomSettlementMissionLogic(CustomSettlementBuildData buildData, Action? onBattleEnd = null)
         {
             defenderAgentObjects = new Dictionary<Agent, CustomSettlementMissionLogic.UsedObject>();
             patrolAreas = new();
@@ -66,7 +70,8 @@ namespace RealmsForgotten.RFCustomSettlements
             loot = new();
             banditsInSettlement = CreateBanditData(buildData);
             BanditsData = buildData;
-            CustomSettlementsCampaignBehavior.NextSceneData.Instance.shouldSwitchScenes = false;
+            NextSceneData.Instance.shouldSwitchScenes = false;
+            OnBattleEnd = onBattleEnd;
         }
         public override void OnMissionTick(float dt)
         {
@@ -149,13 +154,35 @@ namespace RealmsForgotten.RFCustomSettlements
                                  orderby area.AreaIndex
                                  select area);
             animalSpawnPositions.AddRange(Mission.Current.Scene.FindEntitiesWithTag("spawnpoint_herdanimal"));
+            npcSpawnPositions.AddRange(Mission.Current.Scene.FindEntitiesWithTag("rf_npc"));
 
             base.Mission.MakeDefaultDeploymentPlans();
             SpawnPatrollingTroops(patrolAreas);
             SpawnStandingTroops(areaMarkers);
             SpawnHuntableHerdsAnimals();
+            SpawnNPCs();
             SpawnPlayerTroops();
         }
+
+        private void SpawnNPCs()
+        {
+            if (npcSpawnPositions.Count == 0) return;
+            foreach (GameEntity npcSpawnPoint in npcSpawnPositions)
+            {
+                Team team = base.Mission.PlayerAllyTeam;
+                string? characterId = Helper.GetCharacterIdfromEntityName(npcSpawnPoint.Name);
+                try { 
+                    Vec3 position = npcSpawnPoint.GetGlobalFrame().origin;
+                    CharacterObject troop = MBObjectManager.Instance.GetObject<CharacterObject>(characterId);
+                    AgentBuildData agentBuildData = new AgentBuildData(troop).InitialPosition(position);
+                    Vec2 vec = new Vec2(-npcSpawnPoint.GetGlobalFrame().rotation.f.AsVec2.x, -npcSpawnPoint.GetGlobalFrame().rotation.f.AsVec2.y);
+                    AgentBuildData agentBuildData2 = agentBuildData.InitialDirection(vec).TroopOrigin(new SimpleAgentOrigin(troop, -1, null, default(UniqueTroopDescriptor))).Team(team);
+                    Agent agent = Mission.Current.SpawnAgent(agentBuildData2, false);
+                }
+                catch { HuntableHerds.SubModule.PrintDebugMessage($"ERROR, could not spawn npc from game entity of name: {npcSpawnPoint.Name}"); }
+            }
+        }
+
         private void SpawnHuntableHerdsAnimals()
         {
             foreach(GameEntity entity in animalSpawnPositions)
@@ -357,7 +384,10 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             NextSceneData.Instance.goldLoot = goldLooted;
             NextSceneData.Instance.itemLoot = loot;
-            NextSceneData.Instance.finishedMission = true;
+
+            if (NextSceneData.Instance.shouldSwitchScenes == false)
+                NextSceneData.Instance.currentState = NextSceneData.RFExploreState.Finished;
+            if (OnBattleEnd != null) this.OnBattleEnd();
             base.OnEndMission();
         }
         private void SimulateTick(Agent agent)
@@ -550,16 +580,14 @@ namespace RealmsForgotten.RFCustomSettlements
             sb.Remove(sb.Length - 1, 1);
             string newSceneId = sb.ToString();
             Mission.Current.EndMission();
-            CustomSettlementsCampaignBehavior.NextSceneData.Instance.shouldSwitchScenes = true;
-            CustomSettlementsCampaignBehavior.NextSceneData.Instance.newSceneId = newSceneId;
+            NextSceneData.Instance.shouldSwitchScenes = true;
+            NextSceneData.Instance.newSceneId = newSceneId;
+            NextSceneData.Instance.currentState = NextSceneData.RFExploreState.SwitchScene;
         }
         private void DoHealing(UsablePlace usablePlace)
         {
             Agent.Main.Health = Agent.Main.HealthLimit;
             usablePlace.GameEntity.ClearComponents();
-            //var component = usablePlace.GameEntity.GetComponentAtIndex(0, ComponentType.ParticleSystemInstanced);
-            //if (component != null)
-            //    usablePlace.GameEntity.RemoveComponent(component);
         }
     }
 }

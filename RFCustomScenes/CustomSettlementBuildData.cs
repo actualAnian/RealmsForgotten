@@ -28,11 +28,18 @@ namespace RealmsForgotten.RFCustomSettlements
         public readonly Dictionary<int, List<RFBanditData>> stationaryAreasBandits;
         public readonly Dictionary<int, RFBanditData> patrolAreasBandits;
         public readonly int maxPlayersideTroops;
-        public CustomSettlementBuildData(Dictionary<int, List<RFBanditData>> buildStationaryAreasBandits, Dictionary<int, RFBanditData> buildPatrolAreasBandits, int buildMaxPlayersideTroops)
+
+        public readonly bool canEnterOnlyAtSpecialHours;
+        public readonly int enterStartHour;
+        public readonly int enterEndHour;
+        public CustomSettlementBuildData(Dictionary<int, List<RFBanditData>> _stationaryAreasBandits, Dictionary<int, RFBanditData> _patrolAreasBandits, int _maxPlayersideTroops, bool _canEnterOnlyAtSpecialHours = false, int _enterStartHour = 0, int _enterEndHour = 24)
         {
-            stationaryAreasBandits = buildStationaryAreasBandits;
-            patrolAreasBandits = buildPatrolAreasBandits;
-            maxPlayersideTroops = buildMaxPlayersideTroops;
+            stationaryAreasBandits = _stationaryAreasBandits;
+            patrolAreasBandits = _patrolAreasBandits;
+            maxPlayersideTroops = _maxPlayersideTroops; // OBSOLETE, to be removed
+            canEnterOnlyAtSpecialHours = _canEnterOnlyAtSpecialHours;
+            enterStartHour = _enterStartHour;
+            enterEndHour = _enterEndHour;
         }
         public static void BuildAll()
         {
@@ -44,7 +51,9 @@ namespace RealmsForgotten.RFCustomSettlements
 
             foreach (XElement element in SettlementBandits.Descendants("CustomScene"))
             {
-                int maxPlayersideTroops = int.Parse(element.Element("maxPlayersideTroops").Value);
+                var aha = element.Element("maxPlayersideTroops");
+                int maxPlayersideTroops = aha != null ? int.Parse(aha.Value) : 1;
+
                 Dictionary<int, List<RFBanditData>> buildStationaryAreasBandits = new();
                 Dictionary<int, RFBanditData> buildPatrolAreasBandits = new();
                 string sceneId;
@@ -52,7 +61,7 @@ namespace RealmsForgotten.RFCustomSettlements
                 sceneId = element.Element("id").Value;
                 foreach (XElement xElement in element.Descendants("Bandits").Descendants("CommonArea"))
                 {
-                    foreach(XElement xElement2 in xElement.Descendants("Bandit"))
+                    foreach (XElement xElement2 in xElement.Descendants("Bandit"))
                     {
                         RFBanditData bd = new(xElement2.Element("id").Value, xElement2.Element("amount").Value);
                         int areaIndex = int.Parse(xElement.Element("areaIndex").Value);
@@ -67,7 +76,9 @@ namespace RealmsForgotten.RFCustomSettlements
                     RFBanditData bd = new(xElement.Element("Bandit").Element("id").Value, xElement.Element("Bandit").Element("amount").Value);
                     buildPatrolAreasBandits.Add(int.Parse(xElement.Element("areaIndex").Value), bd);
                 }
-                CustomSettlementBuildData buildData = new(buildStationaryAreasBandits, buildPatrolAreasBandits, maxPlayersideTroops);
+                //                CustomSettlementBuildData buildData = new(buildStationaryAreasBandits, buildPatrolAreasBandits, maxPlayersideTroops);
+                CustomSettlementBuildData buildData = new(buildStationaryAreasBandits, buildPatrolAreasBandits, maxPlayersideTroops, true, 8, 12);
+
                 allCustomSettlementBuildDatas.Add(sceneId, buildData);
             }
         }
