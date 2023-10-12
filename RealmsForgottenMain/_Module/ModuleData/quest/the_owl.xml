@@ -36,7 +36,7 @@
 	<NPCCharacter id="rf_athas_scholar"
 	              default_group="Infantry"
 	              level="26"
-	              name="{=rf_athas_scholar}Athas Scholra"
+	              name="{=rf_athas_scholar}Athas Scholar"
 	              occupation="Wanderer"
 	              culture="Culture.aserai"
 	              is_hero="false"

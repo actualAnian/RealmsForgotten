@@ -32,10 +32,10 @@ using TaleWorlds.CampaignSystem.Settlements.Locations;
 using System.Collections;
 using System.Timers;
 
-namespace Quest
+namespace RealmsForgotten.Quest
 {
     [HarmonyPatch(typeof(Hero), "CanHaveQuestsOrIssues")]
-    static class CanHaveQuestsOrIssuesPatch
+    static class RescueUliahQuest_CanHaveQuestsOrIssuesPatch
     {
         
         [HarmonyPostfix]
@@ -376,8 +376,8 @@ namespace Quest
                 
                 TraitLevelingHelper.OnIssueSolvedThroughQuest(base.QuestGiver, new Tuple<TraitObject, int>[]
                 {
-                    new Tuple<TraitObject, int>(DefaultTraits.Mercy, 50),
-                    new Tuple<TraitObject, int>(DefaultTraits.Generosity, 30)
+                    new(DefaultTraits.Mercy, 50),
+                    new(DefaultTraits.Generosity, 30)
                 });
                 GiveGoldAction.ApplyBetweenCharacters(Queen, Hero.MainHero, reward, false);
                 this.RelationshipChangeWithQuestGiver = 10;
@@ -492,17 +492,17 @@ namespace Quest
                 .PlayerLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_3").ToString()).NpcLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_4").ToString()).PlayerLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_5").ToString())
                 .NpcLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_6").ToString()).NpcLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_7").ToString()).Consequence(DeliverPrisonersToQueen)
                 .BeginPlayerOptions()
-                .PlayerOption(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_8").ToString(), null).NpcLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_11").ToString()).Consequence(StartSecondQuest).CloseDialog()
-                .PlayerOption(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_9").ToString(), null).NpcLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_10").ToString())
+                .PlayerOption(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_8").ToString()).NpcLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_11").ToString()).Consequence(StartSecondQuest).CloseDialog()
+                .PlayerOption(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_9").ToString()).NpcLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_10").ToString())
                 .Consequence(RefusedQueenMapQuest).CloseDialog().EndPlayerOptions();
 
             private void RefusedQueenMapQuest()
             {
                 Campaign.Current.ConversationManager.AddDialogFlow(DialogFlow.CreateDialogFlow("start", 125).NpcLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_7").ToString())
                     .Condition(() => Hero.OneToOneConversationHero == Queen).BeginPlayerOptions()
-                    .PlayerOption(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_8").ToString(), null)
+                    .PlayerOption(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_8").ToString())
                     .NpcLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_11").ToString()).Consequence(StartSecondQuest).CloseDialog()
-                    .PlayerOption(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_9").ToString(), null)
+                    .PlayerOption(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_9").ToString())
                     .NpcLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_10").ToString()).CloseDialog().EndPlayerOptions());
                 _refusedQueenMapQuest = true;
             }

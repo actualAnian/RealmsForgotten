@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using Quest.SecondUpdate;
+using RealmsForgotten.Quest.SecondUpdate;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.CharacterCreationContent;
@@ -30,37 +30,23 @@ using TaleWorlds.MountAndBlade.View;
 using TaleWorlds.MountAndBlade.View.MissionViews.Singleplayer;
 using TaleWorlds.ObjectSystem;
 using TaleWorlds.SaveSystem;
-using static Quest.RescueUliahBehavior;
 using Module = TaleWorlds.MountAndBlade.Module;
 
-namespace Quest
+namespace RealmsForgotten.Quest
 {
-    public class SubModule : MBSubModuleBase
+    public static class QuestSubModule
     {
-        protected override void OnSubModuleLoad()
+        public static void OnNewGameCreated(Game game, object initializerObject)
         {
-            base.OnSubModuleLoad();
-            Harmony harmony = new Harmony("rf_quest_patch");
-            harmony.PatchAll();
-        }
-        public override void OnCampaignStart(Game game, object starterObject)
-        {
-        }
-        public override void OnNewGameCreated(Game game, object initializerObject)
-        {
-            base.OnGameLoaded(game, initializerObject);
             CampaignGameStarter gameStarter = (CampaignGameStarter)initializerObject;
             AddQuestBehaviors(gameStarter, true);
         }
-        public override void OnGameLoaded(Game game, object initializerObject)
+        public static void OnGameLoaded(Game game, object initializerObject)
         {
-            base.OnGameLoaded(game, initializerObject);
             CampaignGameStarter gameStarter = (CampaignGameStarter)initializerObject;
             AddQuestBehaviors(gameStarter, false);
-            
-        
         }
-        private void AddQuestBehaviors(CampaignGameStarter gameStarter, bool isNewGame)
+        private static void AddQuestBehaviors(CampaignGameStarter gameStarter, bool isNewGame)
         {
             if (gameStarter != null)
             {
@@ -81,9 +67,10 @@ namespace Quest
 
         protected override void DefineClassTypes()
         {
-            base.AddClassDefinition(typeof(RescueUliahQuest), 1);
+            base.AddClassDefinition(typeof(RescueUliahBehavior.RescueUliahQuest), 1);
             base.AddClassDefinition(typeof(QueenQuest), 2);
             base.AddClassDefinition(typeof(AnoritFindRelicsQuest), 3);
+            base.AddClassDefinition(typeof(PersuadeAthasNpcQuest), 4);
         }
     }
 

@@ -12,7 +12,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 
-namespace Quest.Tools
+namespace RealmsForgotten.Quest.Tools
 {
     class Tools
     {

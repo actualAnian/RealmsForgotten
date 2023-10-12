@@ -41,11 +41,10 @@ using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.GauntletUI.Widgets.Inventory;
 using TaleWorlds.ObjectSystem;
 using TaleWorlds.SaveSystem;
-using static Quest.RescueUliahBehavior;
 using static TaleWorlds.CampaignSystem.Issues.IssueBase;
 using FaceGen = TaleWorlds.Core.FaceGen;
 
-namespace Quest
+namespace RealmsForgotten.Quest
 {
     public class QueenQuest : QuestBase
     {

@@ -7,7 +7,7 @@ using TaleWorlds.CampaignSystem.SceneInformationPopupTypes;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 
-namespace Quest
+namespace RealmsForgotten.Quest
 {
     public class FindingRelicMapSceneNotificationItem : SceneNotificationData
     {

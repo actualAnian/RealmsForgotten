@@ -16,6 +16,7 @@ namespace RealmsForgotten.RFEffects
             {
                 WeaponEffectConsequences.Methods.Add(method.Name, (VictimAgentConsequence)method.CreateDelegate(typeof(VictimAgentConsequence)));
             }
+
         }
 
 
