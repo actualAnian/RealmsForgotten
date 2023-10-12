@@ -14,7 +14,7 @@ using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.SaveSystem;
 
-namespace Quest
+namespace RealmsForgotten.Quest
 {
     public class AnoritFindRelicsQuest : QuestBase
     {
@@ -93,9 +93,6 @@ namespace Quest
                 if (qb != null)
                     qb.CompleteQuestWithSuccess();
             }
-
-
-            InformationManager.ShowInquiry(new InquiryData(GameTexts.FindText("quest_continuation_box_title").ToString(), GameTexts.FindText("quest_continuation_box_desc").ToString(), true, false, GameTexts.FindText("rf_ok").ToString(), "", null, null));
             escapedPrison = true;
                 
         }

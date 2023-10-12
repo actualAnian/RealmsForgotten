@@ -19,11 +19,13 @@ using TaleWorlds.MountAndBlade;
 using System.Reflection;
 using TaleWorlds.Engine.GauntletUI;
 using Newtonsoft.Json.Linq;
+using RealmsForgotten.Quest;
 using Module = TaleWorlds.MountAndBlade.Module;
 
 namespace RealmsForgotten
 {
-    internal class SubModule : MBSubModuleBase
+
+    public class SubModule : MBSubModuleBase
     {
         internal static readonly Random random = new();
         internal static Dictionary<string, Tuple<string, string, string, string>> villagerMin = new();
@@ -39,6 +41,8 @@ namespace RealmsForgotten
             "sturgia",
             "vlandia"
         };
+
+
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
             if (game.GameType is Campaign)
@@ -59,7 +63,6 @@ namespace RealmsForgotten
                 campaignGameStarter.AddModel(new RFRaidModel());
                 campaignGameStarter.AddModel(new RFVolunteerModel());
                 campaignGameStarter.AddModel(new RFWageModel());
-
 
 
                 new RFAttribute().Initialize();
@@ -134,6 +137,20 @@ namespace RealmsForgotten
                 Console.WriteLine("Error in undead_respawn_config.json");
             }
         }
+
+        public override void OnGameLoaded(Game game, object initializerObject)
+        {
+            base.OnGameLoaded(game, initializerObject);
+            QuestSubModule.OnGameLoaded(game, initializerObject);
+            
+        }
+
+        public override void OnNewGameCreated(Game game, object initializerObject)
+        {
+            base.OnNewGameCreated(game, initializerObject);
+            QuestSubModule.OnNewGameCreated(game, initializerObject);
+        }
+
         protected override void InitializeGameStarter(Game game, IGameStarter starterObject)
         {
             base.InitializeGameStarter(game, starterObject);

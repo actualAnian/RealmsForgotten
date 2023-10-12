@@ -10,9 +10,9 @@ using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
 
-namespace Quest
+namespace RealmsForgotten.Quest
 {
-    class FindRelicsHideoutMissionBehavior : MissionBehavior
+    public class FindRelicsHideoutMissionBehavior : MissionBehavior
     {
         private bool relicSpawned = false;
         readonly JournalLog _findMapJournalLog;

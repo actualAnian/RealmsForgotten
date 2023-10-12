@@ -14,7 +14,7 @@ using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade.View.Screens;
 using TaleWorlds.ScreenSystem;
 
-namespace Quest
+namespace RealmsForgotten.Quest
 {
     public class RFNotificationState : GameState
     {

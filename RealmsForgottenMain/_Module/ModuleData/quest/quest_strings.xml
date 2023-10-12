@@ -158,31 +158,61 @@
 	
 	
 	<string id="rf_quest_title_part_three" text="{=rf_quest_title_part_three}Realms Forgotten Quest: Part Three" />
-	<string id="rf_anorit_message" text='{=rf_anorit_message}A messenger approached you while your troops were camped, taking a break from the march. "Some progress have been made at the translation. It is time to meet again. Find your way back into my presence."' />
+
 	
-	<string id="rf_third_quest_anorit_objective_1" text="{=rf_third_quest_anorit_objective_1}Go talk to {ANORIT.LINK}" />
-	<string id="rf_third_quest_anorit_objective_2" text="{=rf_third_quest_anorit_objective_2}Go to" />
+	<string id="rf_anorit_message" text='{=rf_anorit_message}A messenger approached you while your troops were camped, taking a break from the march. "Some progress have been made at the translation. It is time to meet again. Find your way back into my presence."' />
+	<string id="rf_ityr_arrive_message" text="{=rf_ityr_arrive_message}Your caravan enters Ityr and you surreptitiously leave the caravan and enter the lords hall." />
+	
+	<string id="rf_third_quest_anorit_objective_1" text="{=rf_third_quest_anorit_objective_1}Go talk to {ANORIT.LINK}." />
+
+	<string id="rf_third_quest_anorit_objective_2_a" text="{=rf_third_quest_anorit_objective_2_a}Wait until your caravan arrives at {SETTLEMENT}." />
+	<string id="rf_third_quest_anorit_objective_2_b" text="{=rf_third_quest_anorit_objective_2_b}Go to {SETTLEMENT} and try to convince the scholar." />
 
 
 	<string id="rf_third_quest_anorit_dialog_1" text="{=rf_third_quest_anorit_dialog_1}Hello, i'm here." />
 	<string id="rf_third_quest_anorit_dialog_2" text="{=rf_third_quest_anorit_dialog_2}It took a great effort of our scholars to arrive in a unsatisfactory result... The language is ancient and there is nothing they could relate to it. Apart of some gryphs that have resemblance to the way the Athanians write. So i am led to believe we need the skills of an Athanian scholar. And that's the task i am willing to give it to you. Bring us an Athanian scholar, by force if necessary." />
 	<string id="rf_third_quest_anorit_dialog_3" text="{=rf_third_quest_anorit_dialog_3}I will need a clever plan..." />
 
-	<string id="rf_third_quest_anorit_dialog_4" text="{=rf_third_quest_anorit_dialog_4}There is a feast happening in one of their towns. Lords from all kingdoms have been invited. I planned that you could go as an noble caravan trader along one of our lords that will attend the festivities. That's how you will have access to the town keep inner halls." />
-	<string id="rf_third_quest_anorit_dialog_5" text="{=rf_third_quest_anorit_dialog_5}Humm... not bad. Also i could have acess to a larger army and go disguised as bandits and assalt that scholar somewhere..." />
-	<string id="rf_third_quest_anorit_dialog_6" text="{=rf_third_quest_anorit_dialog_6}That could work, but seems quite risky. If you get caught, and they discover anything we will have war. And i will have to let you to die... Your choice." />
 
+	<string id="rf_third_quest_anorit_dialog_4" text="{=rf_third_quest_anorit_dialog_4}There is a feast happening in one of their towns. Lords from all kingdoms have been invited. I planned that you could go as an noble caravan trader along one of our lords that will attend the festivities. That's how you will have access to the town keep inner halls." />
+	<string id="rf_third_quest_anorit_dialog_5" text="{=rf_third_quest_anorit_dialog_5}Humm... not bad. Also i could have access to a larger army and go disguised as bandits and assault that scholar somewhere..." />
+	<string id="rf_third_quest_anorit_dialog_6" text="{=rf_third_quest_anorit_dialog_6}That could work, but seems quite risky. If you get caught, and they discover anything we will have war. And i will have to let you to die... Your choice." />
+	<string id="rf_third_quest_anorit_dialog_7" text="{=rf_third_quest_anorit_dialog_7}Any way, which way do you choose ?" />
+
+	<string id="rf_third_quest_scholar_dialog_1" text="{=rf_third_quest_scholar_dialog_1}Excuse me sir, you don't know me but your name is very known among many of the caravan masters in the world. You are know for your interest for special items..." />
+	<string id="rf_third_quest_scholar_dialog_2" text="{=rf_third_quest_scholar_dialog_2}Is that so ? with whom am i talking to ?" />
+	<string id="rf_third_quest_scholar_dialog_3" text="{=rf_third_quest_scholar_dialog_3}My name is {PLAYER.LINK}. I am a merchant of rare items. And i have something that can interest you." />
+	<string id="rf_third_quest_scholar_dialog_4" text="{=rf_third_quest_scholar_dialog_4}I am listening..." />
+	<string id="rf_third_quest_scholar_dialog_5" text="{=rf_third_quest_scholar_dialog_5}I have came into the possession of old text, with writings i have never seen before. It is involved in a very special garment. I am sure it is something unique..." />
+	<string id="rf_third_quest_scholar_dialog_6" text="{=rf_third_quest_scholar_dialog_6}And what do you want from me ?" />
+	<string id="rf_third_quest_scholar_dialog_7" text="{=rf_third_quest_scholar_dialog_7}Well, maybe if it interests you, i can make an interesting price." />
+	<string id="rf_third_quest_scholar_dialog_8" text="{=rf_third_quest_scholar_dialog_8}I have to take a look first. Do you have it here?" />
+	<string id="rf_third_quest_scholar_dialog_9" text="{=rf_third_quest_scholar_dialog_9}Not here, but in my belongings. My caravan is stationed outside the town." />
+	<string id="rf_third_quest_scholar_dialog_10" text="{=rf_third_quest_scholar_dialog_10}Outside... humm, so maybe we can go there another time..." />
+	<string id="rf_third_quest_scholar_dialog_11" text="{=rf_third_quest_scholar_dialog_11}Why not now ?" />
+	<string id="rf_third_quest_scholar_dialog_12" text="{=rf_third_quest_scholar_dialog_12}Now ? Why such a rush ?" />
+
+	<string id="rf_third_quest_scholar_dialog_13_persuade_1" text="{=rf_third_quest_scholar_dialog_13_persuade_1}Cause there are other buyers waiting my response." />
+	<string id="rf_third_quest_scholar_dialog_13_persuade_2" text="{=rf_third_quest_scholar_dialog_13_persuade_2}I have to leave tomorrow early to proceed my travels." />
+
+	<string id="rf_third_quest_scholar_dialog_persuasion_fail" text="{=rf_third_quest_scholar_dialog_persuasion_fail}That's too much rush for such a business. I need more time. Lets talk after you come back to these surroundings." />
+	<string id="rf_third_quest_scholar_dialog_persuasion_success" text="{=rf_third_quest_scholar_dialog_persuasion_success}Right." />
+
+
+
+	<string id="rf_third_quest_anorit_dialog_8" text="{=rf_third_quest_anorit_dialog_8}I prefer to go by caravan." />
+	<string id="rf_third_quest_anorit_dialog_9" text="{=rf_third_quest_anorit_dialog_9}I will disguise myself with my soldiers and try to assault him." />
 	
 
 
 
 	<string id="town_athas_quest_option" text="{=town_athas_quest_option}Try to capture the scholar" />
 
-
 	<string id="rf_leave" text="{=rf_leave}Leave" />
-  <string id="rf_event" text="{=rf_event}Event" />
-  <string id="rf_influence" text="{=rf_influence}Your influence has decreased" />
-  <string id="rf_ok" text="{=rf_ok}Ok." />
+    <string id="rf_event" text="{=rf_event}Event" />
+    <string id="rf_influence" text="{=rf_influence}Your influence has decreased" />
+    <string id="rf_ok" text="{=rf_ok}Ok." />
+	<string id="rf_greetings" text="{=rf_greetings}Greetings." />
   
 
 

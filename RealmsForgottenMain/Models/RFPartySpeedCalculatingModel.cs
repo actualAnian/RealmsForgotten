@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RealmsForgotten.Quest.SecondUpdate;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem;
@@ -11,7 +12,7 @@ using TaleWorlds.Localization;
 
 namespace RealmsForgotten.Models
 {
-    internal class RFPartySpeedCalculatingModel : DefaultPartySpeedCalculatingModel
+    public class RFPartySpeedCalculatingModel : DefaultPartySpeedCalculatingModel
     {
         public override ExplainedNumber CalculateBaseSpeed(MobileParty party, bool includeDescriptions = false,
             int additionalTroopOnFootCount = 0, int additionalTroopOnHorseCount = 0)
@@ -20,6 +21,8 @@ namespace RealmsForgotten.Models
                 additionalTroopOnHorseCount);
             if (party.Owner?.CharacterObject.Race == FaceGen.GetRaceOrDefault("Xilantlacay"))
                 baseValue.AddFactor(0.20f, new TextObject("Xilantlacay's Speedness"));
+            if(PersuadeAthasNpcQuest.IsPlayerInOwlArmy && party.Army?.Parties.Contains(MobileParty.MainParty) == true)
+                baseValue.AddFactor(2.0f);
             return baseValue;
 
         }
