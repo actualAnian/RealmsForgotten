@@ -1,7 +1,5 @@
 ﻿using HarmonyLib;
 using RFCustomSettlements;
-using SandBox.CampaignBehaviors;
-using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
@@ -11,15 +9,14 @@ namespace RealmsForgotten.RFCustomSettlements
 {
     public class SubModule : MBSubModuleBase
     {
+        private bool manualPatchesHaveFired = false;
         public static readonly Harmony harmony = new("RFCustomScenes");
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
-            //new Harmony("RFCustomScenes")
             harmony.PatchAll();
             CustomSettlementBuildData.BuildAll();
         }
-
         protected override void OnSubModuleUnloaded()
         {
             base.OnSubModuleUnloaded();
@@ -30,18 +27,16 @@ namespace RealmsForgotten.RFCustomSettlements
         public override void OnGameInitializationFinished(Game game)
         {
             base.OnGameInitializationFinished(game);
-          //  if (!manualPatchesHaveFired)
-            //{
-             //   manualPatchesHaveFired = true;
+            if (!manualPatchesHaveFired)
+            {
+                manualPatchesHaveFired = true;
                 RunManualPatches();
-           // }
+            }
         }
 
         private void RunManualPatches()
         {
             var original = AccessTools.Method("MissionMainAgentInteractionComponent:FocusTick");
-            var aha = AccessTools.Method("HideoutConversationsCampaignBehavior:bandit_hideout_start_defender_on_condition");
-           // harmony.Patch(aha, transpiler: new HarmonyMethod(typeof(HideoutConversationsCampaignBehaviorPatch), nameof(HideoutConversationsCampaignBehaviorPatch.StartOnConditionPatch)));
             harmony.Patch(original, transpiler: new HarmonyMethod(typeof(MissionMainAgentInteractionComponentFocusTickPatch), nameof(MissionMainAgentInteractionComponentFocusTickPatch.FocusTickPatch)));
         }
 
@@ -51,7 +46,6 @@ namespace RealmsForgotten.RFCustomSettlements
             {
                 starter.AddBehavior(new CustomSettlementsCampaignBehavior());
                 starter.AddBehavior(new ArenaCampaignBehavior());
-                //                starter.AddBehavior(new RFLegendaryTroopsPlayerVisitTownCampaignBehavior());
             }
         }
     }

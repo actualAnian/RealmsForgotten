@@ -20,11 +20,15 @@ using System.Reflection;
 using TaleWorlds.Engine.GauntletUI;
 using Newtonsoft.Json.Linq;
 using Module = TaleWorlds.MountAndBlade.Module;
+using RealmsForgotten.Patches;
+using TaleWorlds.Library;
 
 namespace RealmsForgotten
 {
     internal class SubModule : MBSubModuleBase
     {
+        public static readonly Harmony harmony = new("RealmsForgotten");
+
         internal static readonly Random random = new();
         internal static Dictionary<string, Tuple<string, string, string, string>> villagerMin = new();
         internal static Dictionary<string, Tuple<string, string, string, string>> villagerMax = new();
@@ -75,6 +79,12 @@ namespace RealmsForgotten
             }
 
         }
+        public override void OnGameInitializationFinished(Game game)
+        {
+            base.OnGameInitializationFinished(game);
+            Globals.SetGiantRaceId();
+        }
+
         private void RemoveSandboxAndStoryOptions()
         {
             List<InitialStateOption> initialOptionsList = Module.CurrentModule.GetInitialStateOptions().ToList();
@@ -98,7 +108,7 @@ namespace RealmsForgotten
                 () => MBGameManager.StartNewGame(new RFCampaignManager()),
                 () => (Module.CurrentModule.IsOnlyCoreContentEnabled, coreContentDisabledReason))
             );
-            new Harmony("mods.bannerlord.realmsforgotten").PatchAll();
+            harmony.PatchAll();
         }
         public static Dictionary<string, int> undeadRespawnConfig { get; private set; }
         private void ReadConfigFile()

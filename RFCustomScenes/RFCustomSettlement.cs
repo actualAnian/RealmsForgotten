@@ -1,7 +1,5 @@
 ﻿using RFCustomSettlements;
-using System;
 using System.Xml;
-using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.ObjectSystem;
@@ -45,21 +43,16 @@ namespace RealmsForgotten.RFCustomSettlements
                 MaxPlayersideTroops = 1;
 
             var settType = node.Attributes["type"];
-            StateHandler = settType == null || settType.Value == "exploration"
-                ? new ExploreSettlementStateHandler(this)
-                : new ArenaSettlementStateHandler(this);
+            if (settType == null || settType.Value == "exploration")
+            {
+                StateHandler = new ExploreSettlementStateHandler(this);
+            }
+            else
+            {
+                ArenaBuildData buildData = ArenaBuildData.BuildArenaData();
+                StateHandler = new ArenaSettlementStateHandler(this, buildData);
+            }
         }
-
-        //public RFCustomSettlement()
-        //{
-        //    this.IsRaided = false;
-        //    this.HasBandits = true;
-        //    this.IsVisible = false;
-        //}
-
-        //[SaveableProperty(500)]
-        //public bool IsRaided { get; set; }
-
         [SaveableProperty(500)]
         public bool IsVisible { get; set; }
         public string? CustomScene { get; set; }
