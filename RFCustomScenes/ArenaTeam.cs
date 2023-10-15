@@ -10,7 +10,7 @@ using TaleWorlds.MountAndBlade;
 
 namespace RFCustomSettlements
 {
-    public class ArenaTeam
+    public class ArenaTeam : ICloneable
     {
         public uint TeamColor { get; private set; }
         public Banner TeamBanner { get; private set; }
@@ -18,13 +18,13 @@ namespace RFCustomSettlements
         public List<CharacterObject> members;
         public Team? MissionTeam { get; set; }
         private int membersCount;
-        public ArenaTeam(int _membersCount, uint teamColor, Banner teamBanner, Team _team)
+        private ArenaTeam(List<CharacterObject> memberss, uint teamColor, Banner teamBanner, bool isPlayerTeam)
         {
             TeamColor = teamColor;
             TeamBanner = teamBanner;
-            membersCount = _membersCount;
-            members = new();
-            MissionTeam = _team;
+            membersCount = memberss.Count;
+            members = memberss;
+            IsPlayerTeam = isPlayerTeam;
         }
         public ArenaTeam(int teamColor, bool isPlayerTeam = false)
         {
@@ -33,6 +33,12 @@ namespace RFCustomSettlements
             TeamBanner = Banner.CreateOneColoredEmptyBanner(teamColor);
             membersCount = 0;
             members = new();
+            if (IsPlayerTeam) AddMember(Hero.MainHero.CharacterObject);
+        }
+
+        public void Reset()
+        {
+            membersCount = members.Count;
         }
         public void AddMember(CharacterObject member) { members.Add(member); membersCount += 1; }
         public void RemoveMember() { membersCount -= 1; }
@@ -45,6 +51,17 @@ namespace RFCustomSettlements
         internal bool hasNoMembers()
         {
             return membersCount == 0;
+        }
+
+        public object Clone()
+        {
+            return new ArenaTeam(members, TeamColor, TeamBanner, IsPlayerTeam);
+        }
+
+        internal ArenaTeam SetTeam(Team team)
+        {
+            MissionTeam = team;
+            return this;
         }
     }
 }

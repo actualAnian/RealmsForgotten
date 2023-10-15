@@ -13,6 +13,7 @@ using TaleWorlds.MountAndBlade.Source.Missions.Handlers;
 using TaleWorlds.MountAndBlade.View;
 using TaleWorlds.MountAndBlade.View.MissionViews;
 using TaleWorlds.MountAndBlade.View.MissionViews.Order;
+using static RFCustomSettlements.ArenaBuildData;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -72,15 +73,12 @@ namespace RealmsForgotten.RFCustomSettlements
                     }, true, true);
             }
         [MissionMethod]
-        public static Mission OpenArenaMission(string scene, ArenaSettlementStateHandler arenaHandler)
+        public static Mission OpenArenaMission(string scene, StageData stageData, Action<bool> onBattleEnd)
         {
             return MissionState.OpenNew("ArenaFight", SandBoxMissions.CreateSandBoxMissionInitializerRecord(scene, "", false, DecalAtlasGroup.Town),
                     (Mission mission) => new MissionBehavior[]
-            {
-                    new ArenaFightMissionController(arenaHandler, new List<ArenaTeam>()), // @TODO temporary
-                
-                    ViewCreator.CreateMissionLeaveView(),
-                    new BasicLeaveMissionLogic(),
+             {
+                    new ArenaFightMissionController(stageData, onBattleEnd), // @TODO temporary
                     new CampaignMissionComponent(),
                     new EquipmentControllerLeaveLogic(),
                     new AgentVictoryLogic(),

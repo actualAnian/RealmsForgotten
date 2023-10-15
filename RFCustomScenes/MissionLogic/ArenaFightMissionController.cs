@@ -5,34 +5,35 @@ using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
-using TaleWorlds.ObjectSystem;
-using RealmsForgotten.RFCustomSettlements;
 using System;
 using static RFCustomSettlements.ArenaBuildData;
-using static System.Net.Mime.MediaTypeNames;
+using TaleWorlds.Localization;
 
 namespace RFCustomSettlements
 {
     internal class ArenaFightMissionController : MissionLogic
     {
-        private List<GameEntity> spawnPoints;
-        private ArenaSettlementStateHandler Arenahandler;
-        private BasicMissionTimer _endTimer;
-        private List<ArenaTeam> battleTeams;
-        private List<ArenaTeam> _aliveTeams;
+        private readonly List<GameEntity> spawnPoints;
+        private BasicMissionTimer? endTimer;
+        private readonly List<ArenaTeam> aliveTeams;
+        private bool isPlayerWinner = true;
+        private readonly Action<bool> OnBattleEnd;
 
-        public ArenaFightMissionController(ArenaSettlementStateHandler handler, List<ArenaTeam> arenaTeams)
+        public ArenaFightMissionController(StageData stageData, Action<bool> onbattleend)
         {
-            Arenahandler = handler;
-            battleTeams = arenaTeams;
+            spawnPoints = new();
+            aliveTeams = new();
+            foreach (ArenaTeam team in stageData.ArenaTeams)
+                aliveTeams.Add(((ArenaTeam)team.Clone()));
+            OnBattleEnd = onbattleend;
         }
-        public void StartArenaBattle(StageData stageData)
+        public void StartArenaBattle()
         {
             base.Mission.SetMissionMode(MissionMode.Battle, true);
             List<GameEntity>.Enumerator spawnPointEnum = spawnPoints.GetEnumerator();
             GameEntity? spawnPoint;
 
-            foreach (ArenaTeam arenaTeam in stageData.ArenaTeams)
+            foreach (ArenaTeam arenaTeam in aliveTeams)
             {
                 spawnPoint = spawnPointEnum.MoveNext() ? spawnPointEnum.Current : null;
                 if (spawnPoint == null)
@@ -42,7 +43,7 @@ namespace RFCustomSettlements
                 }
                 BattleSideEnum side = arenaTeam.IsPlayerTeam ? BattleSideEnum.Defender : BattleSideEnum.Attacker; 
                 Team team = Mission.Teams.Add(side, arenaTeam.TeamColor, arenaTeam.TeamColor, arenaTeam.TeamBanner);
-                if (arenaTeam.IsPlayerTeam) SpawnPlayer(spawnPoint, team);
+                arenaTeam.SetTeam(team);
                 arenaTeam.MissionTeam = team;
                 foreach (CharacterObject troop in arenaTeam.members)
                 {
@@ -50,31 +51,15 @@ namespace RFCustomSettlements
                 }
             }
 
-            for (int i = 0; i < stageData.ArenaTeams.Count; i++)
+            for (int i = 0; i < aliveTeams.Count; i++)
             {
-                for (int j = i + 1; j < stageData.ArenaTeams.Count; j++)
+                for (int j = i + 1; j < aliveTeams.Count; j++)
                 {
-                    stageData.ArenaTeams[i].SetIsEnemyOf(stageData.ArenaTeams[j]);
+                    aliveTeams[i].SetIsEnemyOf(aliveTeams[j]);
                 }
             }
-            //this._aliveParticipants = this._match.Participants.ToList<TournamentParticipant>();
-            _aliveTeams = stageData.ArenaTeams;
         }
 
-        private void SpawnPlayer(GameEntity spawnPoint, Team team)
-        {
-            MatrixFrame frame = spawnPoint.GetGlobalFrame();
-            frame.rotation.OrthonormalizeAccordingToForwardAndKeepUpAsZAxis();
-            frame.Strafe(MBRandom.RandomInt(-2, 2) * 1f);
-            frame.Advance(MBRandom.RandomInt(0, 2) * 1f);
-            CharacterObject character = Hero.MainHero.CharacterObject;
-            AgentBuildData agentBuildData = new AgentBuildData(new SimpleAgentOrigin(character, -1, null, default(UniqueTroopDescriptor))).Team(team).InitialPosition(frame.origin);
-            AgentBuildData agentBuildData2 = agentBuildData.InitialDirection(frame.rotation.f.AsVec2.Normalized()).ClothingColor1(team.Color).Banner(team.Banner).Controller(character.IsPlayerCharacter ? Agent.ControllerType.Player : Agent.ControllerType.AI);
-            Agent agent = base.Mission.SpawnAgent(agentBuildData2, false);
-            agent.Health = character.HeroObject.HitPoints;
-            base.Mission.PlayerTeam = team;
-            agent.WieldInitialWeapons(Agent.WeaponWieldActionType.InstantAfterPickUp, Equipment.InitialWeaponEquipPreference.Any);
-        }
 
         public override void OnBehaviorInitialize()
         {
@@ -89,13 +74,10 @@ namespace RFCustomSettlements
         protected override void OnEndMission()
         {
             base.Mission.CanAgentRout_AdditionalCondition -= this.CanAgentRout;
-            if (true) // if player won the battle
-                Arenahandler.OnPlayerBattleWin();
-            else Arenahandler.OnPlayerBattleLoss();
+            OnBattleEnd(isPlayerWinner);
         }
         public override void AfterStart()
         {
-            spawnPoints = new List<GameEntity>();
             for (int i = 0; i < 4; i++)
             {
                 GameEntity gameEntity = base.Mission.Scene.FindEntityWithTag("sp_arena_" + (i + 1));
@@ -104,7 +86,7 @@ namespace RFCustomSettlements
                     spawnPoints.Add(gameEntity);
                 }
             }
-            StartArenaBattle(Arenahandler.BuildData.Challenges[0].StageDatas[0]);
+            StartArenaBattle();
         }
         private void SpawnTroop(GameEntity spawnPoint, Team team, CharacterObject troop)
         {
@@ -112,20 +94,39 @@ namespace RFCustomSettlements
             frame.rotation.OrthonormalizeAccordingToForwardAndKeepUpAsZAxis();
             frame.Strafe(MBRandom.RandomInt(-2, 2) * 1f);
             frame.Advance(MBRandom.RandomInt(0, 2) * 1f);
-            AgentBuildData agentBuildData = new AgentBuildData(new SimpleAgentOrigin(troop, -1, null, default(UniqueTroopDescriptor))).Team(team).InitialPosition(frame.origin);
+            AgentBuildData agentBuildData = new AgentBuildData(new SimpleAgentOrigin(troop, -1, null, default)).Team(team).InitialPosition(frame.origin);
             AgentBuildData agentBuildData2 = agentBuildData.InitialDirection(frame.rotation.f.AsVec2.Normalized()).ClothingColor1(team.Color).Banner(team.Banner).Controller(troop.IsPlayerCharacter ? Agent.ControllerType.Player : Agent.ControllerType.AI);
             Agent agent = base.Mission.SpawnAgent(agentBuildData2, false);
-            agent.SetWatchState(Agent.WatchState.Alarmed);
+            if(agent.IsPlayerControlled)
+            {
+                agent.Health = troop.HeroObject.HitPoints;
+                base.Mission.PlayerTeam = team;
+            }
+            else agent.SetWatchState(Agent.WatchState.Alarmed);
             agent.WieldInitialWeapons(Agent.WeaponWieldActionType.InstantAfterPickUp, Equipment.InitialWeaponEquipPreference.Any);
         }
-        public override void OnAgentDeleted(Agent affectedAgent)
+        //private void SpawnPlayer(GameEntity spawnPoint, Team team)
+        //{
+        //    MatrixFrame frame = spawnPoint.GetGlobalFrame();
+        //    frame.rotation.OrthonormalizeAccordingToForwardAndKeepUpAsZAxis();
+        //    frame.Strafe(MBRandom.RandomInt(-2, 2) * 1f);
+        //    frame.Advance(MBRandom.RandomInt(0, 2) * 1f);
+        //    CharacterObject character = Hero.MainHero.CharacterObject;
+        //    AgentBuildData agentBuildData = new AgentBuildData(new SimpleAgentOrigin(character, -1, null, default)).Team(team).InitialPosition(frame.origin);
+        //    AgentBuildData agentBuildData2 = agentBuildData.InitialDirection(frame.rotation.f.AsVec2.Normalized()).ClothingColor1(team.Color).Banner(team.Banner).Controller(character.IsPlayerCharacter ? Agent.ControllerType.Player : Agent.ControllerType.AI);
+        //    Agent agent = base.Mission.SpawnAgent(agentBuildData2, false);
+
+        //    agent.WieldInitialWeapons(Agent.WeaponWieldActionType.InstantAfterPickUp, Equipment.InitialWeaponEquipPreference.Any);
+        //}
+
+        public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow killingBlow)
         {
-            foreach(ArenaTeam arenaTeam in _aliveTeams)
+            foreach(ArenaTeam arenaTeam in aliveTeams)
             {
                 if (arenaTeam.MissionTeam == affectedAgent.Team)
                 { 
                     arenaTeam.RemoveMember();
-                    if (arenaTeam.hasNoMembers()) _aliveTeams.Remove(arenaTeam);
+                    if (arenaTeam.hasNoMembers()) aliveTeams.Remove(arenaTeam);
                     break;
                 }
             }
@@ -144,17 +145,20 @@ namespace RFCustomSettlements
 
         private bool MatchEnded()
         {
-            if (_endTimer != null && _endTimer.ElapsedTime > 6f) return true;
-            else if (!AreThereEnemies())
+            if (endTimer != null && endTimer.ElapsedTime > 6f) return true;
+            else if (IsOneTeamRemaining() && endTimer == null)
             {
-                _endTimer = new BasicMissionTimer();
+                isPlayerWinner = aliveTeams[0].IsPlayerTeam;
+                endTimer = new BasicMissionTimer();
+                if(isPlayerWinner) MBInformationManager.AddQuickInformation(new TextObject("Your team has won, glory and fame to you!", null), 0, null, "");
+                else MBInformationManager.AddQuickInformation(new TextObject("Your team lost, you are a disgrace, and at mercy of your opponent", null), 0, null, "");
             }
             return false;
         }
 
-        private bool AreThereEnemies()
+        private bool IsOneTeamRemaining()
         {
-            return _aliveTeams.Count != 1;
+            return aliveTeams.Count == 1;
         }
     }
 }

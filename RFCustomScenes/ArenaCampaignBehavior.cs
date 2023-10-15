@@ -43,6 +43,13 @@ namespace RFCustomSettlements
                 new GameMenuOption.OnConsequenceDelegate(this.game_menu_taken_to_arena_on_consequence), false, -1, false, null);
             campaignGameStarter.AddGameMenu("rf_arena_finish", "You are victorious yet again! As a clear audience favourite, the arena master returns your freedom, amidst a grand ceremony. There are more ways to keep the public engaged than just through bloodshed, eh?", delegate(MenuCallbackArgs args) { }, GameOverlays.MenuOverlayType.None, GameMenu.MenuFlags.None, null);
             campaignGameStarter.AddGameMenuOption("rf_arena_finish", "rf_start_battle_continue", "Now I know the value of freedom.", null, new GameMenuOption.OnConsequenceDelegate(rf_arena_finish_consequence));
+            campaignGameStarter.AddGameMenu("rf_arena_player_lost", "Your fate is in the hands of your opponent... [todo]", delegate (MenuCallbackArgs args) { }, GameOverlays.MenuOverlayType.None, GameMenu.MenuFlags.None, null);
+            campaignGameStarter.AddGameMenuOption("rf_arena_player_lost", "rf_arena_player_lost_continue", "Continue.", null, new GameMenuOption.OnConsequenceDelegate(rf_arena_player_lost_consequence));
+        }
+
+        private void rf_arena_player_lost_consequence(MenuCallbackArgs args)
+        {
+            GameMenu.SwitchToMenu("rf_settlement_start");
         }
 
         private void rf_arena_finish_consequence(MenuCallbackArgs args)

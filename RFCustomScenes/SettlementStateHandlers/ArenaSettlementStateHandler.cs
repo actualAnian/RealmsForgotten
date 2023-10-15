@@ -65,8 +65,37 @@ namespace RealmsForgotten.RFCustomSettlements
                 RFMissions.StartExploreMission(currentSettlement.CustomScene, CurrentBuildData, new Action(OnArenaMasterTalkEnd));
             }
             else
-                RFMissions.OpenArenaMission("arena_test", this);
+                RFMissions.OpenArenaMission("arena_test", ChooseNextStageData(), OnBattleEnd);
         }
+
+        private ArenaBuildData.StageData ChooseNextStageData()
+        {
+            return BuildData.Challenges[0].StageDatas[0];
+        }
+
+        private void OnBattleEnd(bool isPlayerWinner)
+        {
+            if (isPlayerWinner)
+            {
+                switch (currentState)
+                {
+                    case ArenaSettlementStateHandler.ArenaState.FightStage1:
+                        currentState = ArenaSettlementStateHandler.ArenaState.FightStage2;
+                        hasToWait = true;
+                        break;
+                    case ArenaSettlementStateHandler.ArenaState.FightStage2:
+                        currentState = ArenaSettlementStateHandler.ArenaState.FightStage3;
+                        hasToWait = true;
+                        break;
+                    case ArenaSettlementStateHandler.ArenaState.FightStage3:
+                        currentState = ArenaSettlementStateHandler.ArenaState.Finishing;
+                        break;
+                }
+            }
+            else
+                GameMenu.SwitchToMenu("rf_arena_player_lost");
+        }
+
         private void OnArenaMasterTalkEnd()
         {
             SetWaitTimer((int)Math.Floor(ChooseWaitTime()));
