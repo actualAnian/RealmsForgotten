@@ -71,6 +71,8 @@ namespace RealmsForgotten.Quest
             base.AddClassDefinition(typeof(QueenQuest), 2);
             base.AddClassDefinition(typeof(AnoritFindRelicsQuest), 3);
             base.AddClassDefinition(typeof(PersuadeAthasNpcQuest), 4);
+            base.AddClassDefinition(typeof(QuestCaravanPartyComponent), 5);
+
         }
     }
 

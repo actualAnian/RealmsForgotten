@@ -42,6 +42,7 @@ namespace RealmsForgotten.Quest
                 });
         }
         public override bool IsRemainingTimeHidden => true;
+        public override bool IsSpecialQuest => true;
 
         protected override void HourlyTick()
         {
