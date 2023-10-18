@@ -6,30 +6,30 @@ using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.Core;
 using System.Collections.Generic;
 using RFCustomSettlements;
+using static RFCustomSettlements.ArenaBuildData;
+using System.Linq;
+using TaleWorlds.Library;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
     public class ArenaSettlementStateHandler : ISettlementStateHandler
     {
         private CustomSettlementBuildData? CurrentBuildData;
-        internal ArenaState currentState = ArenaState.FightStage1;
-        private RFCustomSettlement currentSettlement;
-        private ArenaBuildData _buildData;
-        private float waitHours;
-        private bool hasToWait = false;
+        internal ArenaState currentState = ArenaState.Visiting;
+        internal ArenaBuildData.ArenaChallenge? currentChallenge;
+        private readonly RFCustomSettlement currentSettlement;
+        private ArenaBuildData? _buildData;
+        private float waitHours = 0;
+        internal bool hasToWait = false;
         private float waitProgress;
-
-        private bool? playerWon = null;
 
         private static readonly int arenaBattlesStartTime = 18;
 
-        internal ArenaBuildData BuildData { get => _buildData; }
+        internal ArenaBuildData BuildData { get => _buildData; set => _buildData = value; }
 
-
-        public ArenaSettlementStateHandler(RFCustomSettlement settlement, ArenaBuildData buildData)
+        public ArenaSettlementStateHandler(RFCustomSettlement settlement)
         {
             currentSettlement = settlement;
-            _buildData = buildData;
         }
 
         public enum ArenaState
@@ -70,7 +70,17 @@ namespace RealmsForgotten.RFCustomSettlements
 
         private ArenaBuildData.StageData ChooseNextStageData()
         {
-            return BuildData.Challenges[0].StageDatas[0];
+            switch (currentState)
+            {
+                case ArenaState.FightStage1:
+                    return currentChallenge.StageDatas[0];
+                case ArenaState.FightStage2:
+                    return currentChallenge.StageDatas[1];
+                case ArenaState.FightStage3:
+                    return currentChallenge.StageDatas[2];
+                default:
+                    return currentChallenge.StageDatas[0];
+            };
         }
 
         private void OnBattleEnd(bool isPlayerWinner)
@@ -99,6 +109,12 @@ namespace RealmsForgotten.RFCustomSettlements
         private void OnArenaMasterTalkEnd()
         {
             SetWaitTimer((int)Math.Floor(ChooseWaitTime()));
+            ChooseChallenge();
+        }
+
+        private void ChooseChallenge()
+        {
+            currentChallenge = BuildData.Challenges.GetRandomElementInefficiently();
         }
 
         private float ChooseWaitTime()
@@ -113,11 +129,11 @@ namespace RealmsForgotten.RFCustomSettlements
         public void OnSettlementStartOnInit(MenuCallbackArgs args)
         {
             GameTexts.SetVariable("RF_SETTLEMENT_MAIN_TEXT", "You are in the arena!");
-            if (hasToWait) SetWaitTimer(24);
+            if (hasToWait && waitHours == 0) SetWaitTimer(24);
             switch(currentState)
             {
                 case ArenaState.Visiting:
-                    break; 
+                    break;
                 case ArenaState.Captured:
                     GameTexts.SetVariable("RF_SETTLEMENT_MAIN_TEXT", "You are thrown into a prison cell, and left alone. Assessing the situation, you take a look at your cell - it must have been occupied till recently, you shudder when you think about what happened to the previous prisoner. The noise of footsteps makes you come back from your thought, as a silhouette appears on the other side of your cell's bars");
                     break;
@@ -126,21 +142,18 @@ namespace RealmsForgotten.RFCustomSettlements
                         GameTexts.SetVariable("RF_SETTLEMENT_MAIN_TEXT", "You are too numb to laugh when you are brought your armor and weapon for the battle, it's clear they want a show, with you as a main actor!");
                     else
                         GameTexts.SetVariable("RF_SETTLEMENT_MAIN_TEXT", "You are left in your cell to wait for your first battle the following day");
-                    //RFMissions.OpenArenaMission("arena_test");
                     break;
                 case ArenaState.FightStage2:
                     if(!hasToWait)
                         GameTexts.SetVariable("RF_SETTLEMENT_MAIN_TEXT", "Servants come to take you to the arena again, you know what to expect by now...");
                     else
                         GameTexts.SetVariable("RF_SETTLEMENT_MAIN_TEXT", "As if nothing has changed, you are unceremoniously thrown into your cell, to wait for the next battle.");
-                    //RFMissions.OpenArenaMission("arena_test");
                     break;
                 case ArenaState.FightStage3:
                     if(!hasToWait)
                         GameTexts.SetVariable("RF_SETTLEMENT_MAIN_TEXT", "You hear rumour that the best fighters are given freedom, could it be the chance for you?");
                     else
                         GameTexts.SetVariable("RF_SETTLEMENT_MAIN_TEXT", "This is starting to become a routine you realise, while resting before another match. Regardless, you are too tired to dwell on it");
-                    //RFMissions.OpenArenaMission("arena_test");
                     break;
                 case ArenaState.Finishing:
                     GameMenu.SwitchToMenu("rf_arena_finish");
@@ -150,8 +163,20 @@ namespace RealmsForgotten.RFCustomSettlements
         public void OnWaitMenuTillEnterTick(MenuCallbackArgs args, CampaignTime dt)
         {
             waitProgress += (float)dt.ToHours;
+            if (waitHours.ApproximatelyEqualsTo(0f, 1E-05f))
+            {
+                CalculateWaitTime();
+            }
             args.MenuContext.GameMenu.SetProgressOfWaitingInMenu(waitProgress / waitHours);
         }
+
+        private void CalculateWaitTime()
+        {
+            float currentTime = CampaignTime.Now.CurrentHourInDay;
+            if (currentTime < arenaBattlesStartTime) waitHours = arenaBattlesStartTime - currentTime;
+            else waitHours = 24 - currentTime + arenaBattlesStartTime;
+        }
+
         internal void SetWaitTimer(int time)
         {
             waitHours = time; 
@@ -204,14 +229,16 @@ namespace RealmsForgotten.RFCustomSettlements
                     break;
             }
         }
-        internal void OnPlayerBattleLoss()
+
+        internal void SyncData(ArenaState currentArenaState, string? currentChallengeToSync, bool isWaiting)
         {
-            throw new NotImplementedException();
-        }
-        private List<ArenaTeam> BuildBattleTeams()
-        {
-            var teams = new List<ArenaTeam>();
-            return teams;
+            currentState = currentArenaState;
+            if (currentChallengeToSync != null)
+            {
+                ArenaChallenge curChallenge = (from challenge in BuildData.Challenges where challenge.ChallengeName == currentChallengeToSync select challenge).Single();
+                currentChallenge = curChallenge;
+            }
+            hasToWait = isWaiting;
         }
     }
 }

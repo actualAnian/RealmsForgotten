@@ -11,6 +11,7 @@ namespace RealmsForgotten
     {
         public static Assembly realmsForgottenAssembly = Assembly.GetExecutingAssembly();
 
+        public static ICustomSettingsProvider Settings { get { return RFSettings.Instance; } }
         public enum StartType
         {
             Other = -1,

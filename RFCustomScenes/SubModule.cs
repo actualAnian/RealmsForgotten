@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using RFCustomSettlements;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using static RFCustomSettlements.FocusStateCheckTickPatch;
@@ -24,16 +25,27 @@ namespace RealmsForgotten.RFCustomSettlements
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
         }
-        public override void OnGameInitializationFinished(Game game)
+        public override void OnAfterGameInitializationFinished(Game game, object obj)
         {
-            base.OnGameInitializationFinished(game);
+            foreach(Settlement settlement in CustomSettlementsCampaignBehavior.customSettlements)
+            {
+                RFCustomSettlement settlementComponent = (RFCustomSettlement)settlement.SettlementComponent;
+                if (settlementComponent.StateHandler is ArenaSettlementStateHandler)
+                {
+                    ArenaBuildData buildData = ArenaBuildData.BuildArenaData();
+                    ArenaSettlementStateHandler arenaHandler = (ArenaSettlementStateHandler)settlementComponent.StateHandler;
+                    arenaHandler.BuildData = buildData;
+                    arenaHandler.SyncData(ArenaCampaignBehavior.currentArenaState, ArenaCampaignBehavior.currentChallengeToSync, ArenaCampaignBehavior.isWaiting);
+                }
+
+            }
+            base.OnAfterGameInitializationFinished(game, obj);
             if (!manualPatchesHaveFired)
             {
                 manualPatchesHaveFired = true;
                 RunManualPatches();
             }
         }
-
         private void RunManualPatches()
         {
             var original = AccessTools.Method("MissionMainAgentInteractionComponent:FocusTick");

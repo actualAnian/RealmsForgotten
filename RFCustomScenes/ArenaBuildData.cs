@@ -6,6 +6,7 @@ using TaleWorlds.ObjectSystem;
 using TaleWorlds.CampaignSystem;
 using System.Linq;
 using TaleWorlds.MountAndBlade;
+using TaleWorlds.Core;
 
 namespace RFCustomSettlements
 {
@@ -18,10 +19,12 @@ namespace RFCustomSettlements
     {
         public class StageData
         {
+            public Equipment playerEquipment;
             public List<ArenaTeam> ArenaTeams;
-            public StageData(List<ArenaTeam> teams)
+            public StageData(List<ArenaTeam> teams, Equipment playerEquipment)
             {
                 ArenaTeams = teams;
+                this.playerEquipment = playerEquipment;
             }
         }
         public List<ArenaChallenge> Challenges { get; private set; }
@@ -58,13 +61,22 @@ namespace RFCustomSettlements
                     XElement stage = element.Element("Stage" + i);
                     if (stage == null) break;
                     List<ArenaTeam> teamList = new();
-                    for(int j = 1; ; j++)
+                    Equipment equipment = new Equipment();
+                    for (int j = 1; ; j++)
                     {
                         XElement team = stage.Element("Team" + j);
                         if (team == null) break;
                         int color = int.Parse(team.Element("color").Value);
-                        
-                        ArenaTeam arenaTeam = new(color, team.Element("Player") != null);
+
+
+                        string equipmentId;
+                        var playerEquipmentId = team.Element("PlayerEquipment");
+                        if (playerEquipmentId != null)
+                        {
+                            equipmentId = playerEquipmentId.Value == "" ? "rf_looter" : playerEquipmentId.Value;
+                            equipment = MBObjectManager.Instance.GetObject<MBEquipmentRoster>(equipmentId).DefaultEquipment;
+                        }
+                        ArenaTeam arenaTeam = new(color, playerEquipmentId != null);
                         foreach (XElement participant in team.Descendants("Participant"))
                         {
                             var aha = int.Parse(participant.Element("amount").Value);
@@ -73,7 +85,7 @@ namespace RFCustomSettlements
                         }
                         teamList.Add(arenaTeam);
                     }
-                    stageDatas.Add(new StageData(teamList));
+                    stageDatas.Add(new StageData(teamList, equipment));
                 }
                 challenges.Add(new(ChallengeName, stageDatas));
             }

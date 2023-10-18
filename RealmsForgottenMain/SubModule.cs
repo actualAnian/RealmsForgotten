@@ -22,6 +22,7 @@ using Newtonsoft.Json.Linq;
 using Module = TaleWorlds.MountAndBlade.Module;
 using RealmsForgotten.Patches;
 using TaleWorlds.Library;
+using System.Runtime;
 
 namespace RealmsForgotten
 {
@@ -78,6 +79,11 @@ namespace RealmsForgotten
                     mission.AddMissionBehavior(new HealingPotionMissionBehavior(elixir, berserker));
             }
 
+        }
+        protected override void OnBeforeInitialModuleScreenSetAsRoot()
+        {
+            //ICustomSettingsProvider instance = RFSettings.Instance;
+            //Globals.Settings = instance;
         }
         public override void OnGameInitializationFinished(Game game)
         {

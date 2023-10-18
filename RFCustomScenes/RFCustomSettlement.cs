@@ -49,8 +49,7 @@ namespace RealmsForgotten.RFCustomSettlements
             }
             else
             {
-                ArenaBuildData buildData = ArenaBuildData.BuildArenaData();
-                StateHandler = new ArenaSettlementStateHandler(this, buildData);
+                StateHandler = new ArenaSettlementStateHandler(this);
             }
         }
         [SaveableProperty(500)]

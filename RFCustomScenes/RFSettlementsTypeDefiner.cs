@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using TaleWorlds.SaveSystem;
+using static RealmsForgotten.RFCustomSettlements.ArenaSettlementStateHandler;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
-    internal class RFSettlementTypeDefiner : SaveableTypeDefiner
+    internal class RFSettlementsTypeDefiner : SaveableTypeDefiner
     {
-        public RFSettlementTypeDefiner() : base(2876493) { }
+        public RFSettlementsTypeDefiner() : base(2876493) { }
         protected override void DefineClassTypes()
         {
             base.AddClassDefinition(typeof(RFCustomSettlement), 1, null);
+            AddEnumDefinition(typeof(ArenaState), 2, null);
         }
         protected override void DefineContainerDefinitions()
         {

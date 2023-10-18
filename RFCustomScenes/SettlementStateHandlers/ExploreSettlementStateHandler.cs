@@ -198,6 +198,7 @@ namespace RealmsForgotten.RFCustomSettlements
 
         public void OnSettlementWaitInit(MenuCallbackArgs args)
         {
+            args.MenuContext.SetBackgroundMeshName(currentSettlement.WaitMeshName);
             GameTexts.SetVariable("RF_SETTLEMENT_WAIT_TEXT", "As the scouts tell you of the best approach time, you prepare for whatever danger might be inside");
         }
     }
