@@ -1,8 +1,7 @@
 ﻿using HarmonyLib;
 using RFCustomSettlements;
-using SandBox.CampaignBehaviors;
-using System;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using static RFCustomSettlements.FocusStateCheckTickPatch;
@@ -11,15 +10,14 @@ namespace RealmsForgotten.RFCustomSettlements
 {
     public class SubModule : MBSubModuleBase
     {
+        private bool manualPatchesHaveFired = false;
         public static readonly Harmony harmony = new("RFCustomScenes");
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
-            //new Harmony("RFCustomScenes")
             harmony.PatchAll();
             CustomSettlementBuildData.BuildAll();
         }
-
         protected override void OnSubModuleUnloaded()
         {
             base.OnSubModuleUnloaded();
@@ -27,21 +25,30 @@ namespace RealmsForgotten.RFCustomSettlements
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
         }
-        public override void OnGameInitializationFinished(Game game)
+        public override void OnAfterGameInitializationFinished(Game game, object obj)
         {
-            base.OnGameInitializationFinished(game);
-          //  if (!manualPatchesHaveFired)
-            //{
-             //   manualPatchesHaveFired = true;
-                RunManualPatches();
-           // }
-        }
+            foreach(Settlement settlement in CustomSettlementsCampaignBehavior.customSettlements)
+            {
+                RFCustomSettlement settlementComponent = (RFCustomSettlement)settlement.SettlementComponent;
+                if (settlementComponent.StateHandler is ArenaSettlementStateHandler)
+                {
+                    ArenaBuildData buildData = ArenaBuildData.BuildArenaData();
+                    ArenaSettlementStateHandler arenaHandler = (ArenaSettlementStateHandler)settlementComponent.StateHandler;
+                    arenaHandler.BuildData = buildData;
+                    arenaHandler.SyncData(ArenaCampaignBehavior.currentArenaState, ArenaCampaignBehavior.currentChallengeToSync, ArenaCampaignBehavior.isWaiting);
+                }
 
+            }
+            base.OnAfterGameInitializationFinished(game, obj);
+            if (!manualPatchesHaveFired)
+            {
+                manualPatchesHaveFired = true;
+                RunManualPatches();
+            }
+        }
         private void RunManualPatches()
         {
             var original = AccessTools.Method("MissionMainAgentInteractionComponent:FocusTick");
-            var aha = AccessTools.Method("HideoutConversationsCampaignBehavior:bandit_hideout_start_defender_on_condition");
-           // harmony.Patch(aha, transpiler: new HarmonyMethod(typeof(HideoutConversationsCampaignBehaviorPatch), nameof(HideoutConversationsCampaignBehaviorPatch.StartOnConditionPatch)));
             harmony.Patch(original, transpiler: new HarmonyMethod(typeof(MissionMainAgentInteractionComponentFocusTickPatch), nameof(MissionMainAgentInteractionComponentFocusTickPatch.FocusTickPatch)));
         }
 
@@ -51,7 +58,6 @@ namespace RealmsForgotten.RFCustomSettlements
             {
                 starter.AddBehavior(new CustomSettlementsCampaignBehavior());
                 starter.AddBehavior(new ArenaCampaignBehavior());
-                //                starter.AddBehavior(new RFLegendaryTroopsPlayerVisitTownCampaignBehavior());
             }
         }
     }

@@ -1,31 +1,19 @@
 ﻿using RFCustomSettlements;
 using SandBox;
-using SandBox.Conversation.MissionLogics;
-using SandBox.Missions.AgentBehaviors;
 using SandBox.Missions.MissionLogics;
 using SandBox.Missions.MissionLogics.Arena;
-using SandBox.Missions.MissionLogics.Towns;
-using SandBox.Tournaments.MissionLogics;
 using SandBox.View;
 using SandBox.View.Missions;
-using SandBox.View.Missions.Sound.Components;
-using SandBox.ViewModelCollection;
 using System;
 using System.Collections.Generic;
-using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Settlements;
-using TaleWorlds.CampaignSystem.Settlements.Locations;
-using TaleWorlds.CampaignSystem.TournamentGames;
-using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.Source.Missions;
 using TaleWorlds.MountAndBlade.Source.Missions.Handlers;
-using TaleWorlds.MountAndBlade.Source.Missions.Handlers.Logic;
 using TaleWorlds.MountAndBlade.View;
 using TaleWorlds.MountAndBlade.View.MissionViews;
 using TaleWorlds.MountAndBlade.View.MissionViews.Order;
-using TaleWorlds.MountAndBlade.View.MissionViews.Sound;
+using static RFCustomSettlements.ArenaBuildData;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -58,7 +46,7 @@ namespace RealmsForgotten.RFCustomSettlements
                     new MissionAgentContourControllerView(),
                     new SandBoxMissionHandler(),
                     new MissionFightHandler(),
-
+                    new MissionConversationCameraView(),
                     new RFConversationLogic(),
                     ViewCreator.CreateMissionLeaveView(),
                     ViewCreator.CreateMissionBoundaryCrossingView(),
@@ -85,15 +73,12 @@ namespace RealmsForgotten.RFCustomSettlements
                     }, true, true);
             }
         [MissionMethod]
-        public static Mission OpenArenaMission(string scene, ArenaSettlementStateHandler arenaHandler)
+        public static Mission OpenArenaMission(string scene, StageData stageData, Action<bool> onBattleEnd)
         {
             return MissionState.OpenNew("ArenaFight", SandBoxMissions.CreateSandBoxMissionInitializerRecord(scene, "", false, DecalAtlasGroup.Town),
                     (Mission mission) => new MissionBehavior[]
-            {
-                    new ArenaFightMissionController(arenaHandler),
-                
-                    ViewCreator.CreateMissionLeaveView(),
-                    new BasicLeaveMissionLogic(),
+             {
+                    new ArenaFightMissionController(stageData, onBattleEnd), // @TODO temporary
                     new CampaignMissionComponent(),
                     new EquipmentControllerLeaveLogic(),
                     new AgentVictoryLogic(),

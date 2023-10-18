@@ -5,8 +5,6 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Overlay;
-using TaleWorlds.CampaignSystem.Party;
-using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.Settlements;
 
 namespace RealmsForgotten.RFCustomSettlements
@@ -15,9 +13,14 @@ namespace RealmsForgotten.RFCustomSettlements
     {
 
         private List<RFCustomSettlement>? customSettlementComponents;
-        private List<Settlement>? customSettlements;
-        private static RFCustomSettlement? currentSettlement;
+        internal static List<Settlement>? customSettlements;
+        private static RFCustomSettlement currentSettlement;
 
+        public CustomSettlementsCampaignBehavior()
+        {
+            if (Settlement.CurrentSettlement != null && Settlement.CurrentSettlement.SettlementComponent is RFCustomSettlement settlement)
+                currentSettlement = settlement;
+        }
         public override void RegisterEvents()
         {
             CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.FillSettlementList));
@@ -43,6 +46,7 @@ namespace RealmsForgotten.RFCustomSettlements
             starter.AddGameMenuOption("rf_settlement_wait_menu", "leave", "{=3sRdGQou}Leave", new GameMenuOption.OnConditionDelegate(this.leave_on_condition), new GameMenuOption.OnConsequenceDelegate(this.game_menu_leave_on_consequence), true, -1, false);
         }
 
+#pragma warning disable IDE1006 // Naming Styles
         private void wait_menu_on_consequence(MenuCallbackArgs args)
         {
             currentSettlement.StateHandler.OnSettlementWaitEndConsequence(args);
@@ -53,7 +57,6 @@ namespace RealmsForgotten.RFCustomSettlements
             args.optionLeaveType = GameMenuOption.LeaveType.Wait;
             return currentSettlement.StateHandler.OnSettlementWaitEndCondition(args);
         }
-#pragma warning disable IDE1006 // Naming Styles
         private bool game_menu_rf_settlement_wait_on_condition(MenuCallbackArgs args)
         {
             args.optionLeaveType = GameMenuOption.LeaveType.Wait;

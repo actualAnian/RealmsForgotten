@@ -1,14 +1,13 @@
 ﻿using System;
-using System.IO.Ports;
 using Helpers;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
-using static RFCustomSettlements.ExploreSettlementStateHandler;
+using static RealmsForgotten.RFCustomSettlements.ExploreSettlementStateHandler;
 
-namespace RealmsForgotten.RFCustomSettlements.AgentOrigins
+namespace RealmsForgotten.RFCustomSettlements
 {
     public class RFAgentOrigin : IAgentOriginBase
     {
