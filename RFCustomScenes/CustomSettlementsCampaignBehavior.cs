@@ -5,6 +5,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Overlay;
+using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 
 namespace RealmsForgotten.RFCustomSettlements
@@ -18,7 +19,7 @@ namespace RealmsForgotten.RFCustomSettlements
 
         public CustomSettlementsCampaignBehavior()
         {
-            if (Settlement.CurrentSettlement != null && Settlement.CurrentSettlement.SettlementComponent is RFCustomSettlement settlement)
+            if (MobileParty.MainParty != null && Settlement.CurrentSettlement != null && Settlement.CurrentSettlement.SettlementComponent is RFCustomSettlement settlement)
                 currentSettlement = settlement;
         }
         public override void RegisterEvents()

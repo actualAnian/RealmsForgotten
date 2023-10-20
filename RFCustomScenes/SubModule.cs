@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using RFCustomSettlements;
+using RFCustomSettlements.Dialogues;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
@@ -17,6 +18,7 @@ namespace RealmsForgotten.RFCustomSettlements
             base.OnSubModuleLoad();
             harmony.PatchAll();
             CustomSettlementBuildData.BuildAll();
+            DialogueParser.Deserialize();
         }
         protected override void OnSubModuleUnloaded()
         {
