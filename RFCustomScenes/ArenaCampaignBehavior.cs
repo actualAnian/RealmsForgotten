@@ -40,7 +40,10 @@ namespace RFCustomSettlements
         internal static ArenaSettlementStateHandler.ArenaState currentArenaState;
         internal static bool isWaiting;
 
-        public ArenaCampaignBehavior() { }
+        public ArenaCampaignBehavior() 
+        {
+            currentArenaState = ArenaSettlementStateHandler.ArenaState.Visiting;
+        }
         public override void RegisterEvents()
         {
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnSessionLaunched));
