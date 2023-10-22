@@ -1,7 +1,9 @@
-﻿using System;
+﻿using RFCustomSettlements.Dialogues;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Conversation;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Overlay;
@@ -25,8 +27,27 @@ namespace RealmsForgotten.RFCustomSettlements
         public override void RegisterEvents()
         {
             CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.FillSettlementList));
-            CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.AddGameMenus));
+            CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnSessionLaunched));
             CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.FillSettlementList));
+        }
+
+        private void OnSessionLaunched(CampaignGameStarter starter)
+        {
+            AddGameMenus(starter);
+            AddDialogs(starter);
+        }
+
+        private void AddDialogs(CampaignGameStarter starter)
+        {
+            foreach(DialogueLine line in DialogueParser.allDialogues) 
+            {
+                if(line.IsPlayerLine)
+                {
+                    
+                    starter.AddPlayerLine(line.LineId + line.Text.First() + line.Text.GetHashCode().ToString(), line.InputId, line.GoToLineId, line.Text, line.Condition, null, 100, null, null);
+                }
+                else starter.AddDialogLine(line.LineId + line.Text.First() + line.Text.GetHashCode().ToString(), line.InputId, line.GoToLineId, line.Text, line.Condition, null, 100, null);
+            }
         }
 
         private void FillSettlementList(CampaignGameStarter starter)

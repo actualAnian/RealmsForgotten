@@ -102,6 +102,7 @@ namespace RFCustomSettlements
             Agent agent = Mission.SpawnAgent(agentBuildData2, false);
             if(agent.IsPlayerControlled)
             {
+                agent.Health = agent.HealthLimit;
                 //agent.Health = troop.HeroObject.HitPoints;
                 Mission.PlayerTeam = team;
             }

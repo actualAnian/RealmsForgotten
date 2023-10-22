@@ -1,4 +1,5 @@
-﻿using TaleWorlds.CampaignSystem;
+﻿using System.Collections.Generic;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Conversation;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
@@ -8,9 +9,13 @@ namespace RFCustomSettlements
     public class RFConversationLogic : MissionLogic
     {
         private MissionMode oldMissionMode;
-
+        private static List<string> listOfTalkableNpcs = new List<string>();
         public ConversationManager ConversationManager { get; private set; }
 
+        public static void AddNpcAsTalkable(string npcId)
+        {
+            listOfTalkableNpcs.Add(npcId);
+        }
         public override void OnAgentInteraction(Agent userAgent, Agent agent)
         {
             if (Campaign.Current.GameMode == CampaignGameMode.Campaign)
@@ -73,7 +78,7 @@ namespace RFCustomSettlements
         }
         public override bool IsThereAgentAction(Agent userAgent, Agent otherAgent)
         {
-            if (otherAgent.Character != null && otherAgent.Character.StringId == "caravan_master_aserai")
+            if (otherAgent.Character != null && listOfTalkableNpcs.Contains(otherAgent.Character.StringId))
                 return true;
             else return false;
         }
