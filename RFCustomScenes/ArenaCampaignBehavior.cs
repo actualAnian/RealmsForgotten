@@ -133,6 +133,7 @@ namespace RFCustomSettlements
         }
         private bool test()
         {
+            //return false;
             return Settlement.CurrentSettlement != null &&  Settlement.CurrentSettlement.SettlementComponent != null && Settlement.CurrentSettlement.SettlementComponent is RFCustomSettlement && CharacterObject.OneToOneConversationCharacter.StringId == "caravan_master_aserai";
         }
         public override void SyncData(IDataStore dataStore)
