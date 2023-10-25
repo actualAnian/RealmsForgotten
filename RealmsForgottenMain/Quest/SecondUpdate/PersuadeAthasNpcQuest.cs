@@ -196,6 +196,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             CampaignEvents.BeforeMissionOpenedEvent.AddNonSerializedListener(this, OnBeforeMissionStarted);
             CampaignEvents.OnMissionStartedEvent.AddNonSerializedListener(this, OnMissionStarted);
             CampaignEvents.BeforeMissionOpenedEvent.AddNonSerializedListener(this, OnBeforeMissionOpened);
+            CampaignEvents.TickEvent.AddNonSerializedListener(this, OnTick);
 
             CampaignEvents.HeroPrisonerTaken.AddNonSerializedListener(this, (partyBase, hero) =>
             {
@@ -218,6 +219,14 @@ namespace RealmsForgotten.Quest.SecondUpdate
                     }
                 }
             });
+        }
+
+        private void OnTick(float obj)
+        {
+            if (goToHideoutLog?.CurrentProgress == 0)
+            {
+                
+            }
         }
 
         private void OnLeaveSettlement(MobileParty mobileParty, Settlement settlement)
@@ -592,7 +601,10 @@ namespace RealmsForgotten.Quest.SecondUpdate
             EndCaptivityAction.ApplyByReleasedByChoice(athasScholarHero);
             TextObject textObject = GameTexts.FindText("rf_third_quest_anorit_objective_7");
             textObject.SetCharacterProperties("QUESTGIVER", QuestGiver.CharacterObject);
+
             goToHideoutLog = AddLog(textObject);
+
+            AddTrackedObject(Settlement.Find("hideout_forest_13"));
         }
         private DialogFlow AthasPersuasionDialogFlow()
         {
