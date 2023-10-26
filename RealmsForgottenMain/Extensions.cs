@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
+using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten
@@ -36,6 +37,16 @@ namespace RealmsForgotten
             }
 
             throw new InvalidOperationException("Dictionary is empty or has negative weights.");
+        }
+
+        public static IEnumerable<ItemObject> GetUsingWeapons(this BasicCharacterObject basicCharacterObject)
+        {
+            for (EquipmentIndex equipmentIndex = EquipmentIndex.Weapon0;
+                 equipmentIndex <= EquipmentIndex.Weapon3;
+                 equipmentIndex++)
+            {
+                yield return basicCharacterObject.Equipment[equipmentIndex].Item;
+            }
         }
     }
 }

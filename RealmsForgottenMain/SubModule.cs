@@ -20,6 +20,8 @@ using TaleWorlds.Engine.GauntletUI;
 using Module = TaleWorlds.MountAndBlade.Module;
 using Newtonsoft.Json.Linq;
 using RealmsForgotten.Quest;
+using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.CampaignSystem.GameMenus;
 
 namespace RealmsForgotten
 {
@@ -71,8 +73,11 @@ namespace RealmsForgotten
                 new RFSkillEffects().InitializeAll();
                 new RFPerks().Initialize();
 
+
             }
         }
+
+
         public override void OnMissionBehaviorInitialize(Mission mission)
         {
             if (mission != null)
