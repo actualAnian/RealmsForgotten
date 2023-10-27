@@ -54,7 +54,7 @@ namespace RealmsForgotten.RFCustomSettlements
         private int goldLooted = 0;
         private readonly MobileParty banditsInSettlement;
         private readonly CustomSettlementBuildData BanditsData;
-        private Action OnBattleEnd;
+        private readonly Action? OnBattleEnd;
         public CustomSettlementMissionLogic(CustomSettlementBuildData buildData, Action? onBattleEnd = null)
         {
             defenderAgentObjects = new Dictionary<Agent, CustomSettlementMissionLogic.UsedObject>();
@@ -168,8 +168,8 @@ namespace RealmsForgotten.RFCustomSettlements
                     Vec3 position = npcSpawnPoint.GetGlobalFrame().origin;
                     CharacterObject troop = MBObjectManager.Instance.GetObject<CharacterObject>(characterId);
                     AgentBuildData agentBuildData = new AgentBuildData(troop).InitialPosition(position);
-                    Vec2 vec = new Vec2(-npcSpawnPoint.GetGlobalFrame().rotation.f.AsVec2.x, -npcSpawnPoint.GetGlobalFrame().rotation.f.AsVec2.y);
-                    AgentBuildData agentBuildData2 = agentBuildData.InitialDirection(vec).TroopOrigin(new SimpleAgentOrigin(troop, -1, null, default(UniqueTroopDescriptor))).Team(team);
+                    Vec2 vec = new(-npcSpawnPoint.GetGlobalFrame().rotation.f.AsVec2.x, -npcSpawnPoint.GetGlobalFrame().rotation.f.AsVec2.y);
+                    AgentBuildData agentBuildData2 = agentBuildData.InitialDirection(vec).TroopOrigin(new SimpleAgentOrigin(troop, -1, null, default)).Team(team);
                     Agent agent = Mission.Current.SpawnAgent(agentBuildData2, false);
                 }
                 catch { HuntableHerds.SubModule.PrintDebugMessage($"ERROR, could not spawn npc from game entity of name: {npcSpawnPoint.Name}"); }
@@ -308,12 +308,12 @@ namespace RealmsForgotten.RFCustomSettlements
             foreach(TroopRosterElement troop in  troopRoster.GetTroopRoster())
             {
                 CharacterObject? character;
-                if((character = troop.Character) == Hero.MainHero.CharacterObject) continue;
+                if ((character = troop.Character) == Hero.MainHero.CharacterObject) continue;
                 for(int i = 0; i < troop.Number; i++)
                 {
                     UniqueTroopDescriptor descriptor = flattenedTR.FindIndexOfCharacter(character);
                     RFAgentOrigin troopToSpawn = new(Hero.MainHero.PartyBelongedTo.Party, descriptor, character.Tier, character, true);
-                    Agent agent = Mission.Current.SpawnTroop(troopToSpawn, true, true, false, false, 0, 0, true, true, true, null, null, null, null, FormationClass.NumberOfAllFormations, false);
+                    _ = Mission.Current.SpawnTroop(troopToSpawn, true, true, false, false, 0, 0, true, true, true, null, null, null, null, FormationClass.NumberOfAllFormations, false);
                 }
             }
             foreach (Formation formation in Mission.Current.AttackerTeam.FormationsIncludingEmpty)

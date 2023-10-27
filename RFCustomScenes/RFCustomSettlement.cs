@@ -9,16 +9,14 @@ namespace RealmsForgotten.RFCustomSettlements
 {
     public class RFCustomSettlement : SettlementComponent
     {
-        protected override void OnInventoryUpdated(ItemRosterElement item, int count)
-        {
-        }
+        protected override void OnInventoryUpdated(ItemRosterElement item, int count) { }
 
         public override void Deserialize(MBObjectManager objectManager, XmlNode node)
         {
             base.Deserialize(objectManager, node);
-            base.BackgroundCropPosition = float.Parse(node.Attributes["background_crop_position"].Value);
-            base.BackgroundMeshName = node.Attributes["background_mesh"].Value;
-            base.WaitMeshName = node.Attributes["wait_mesh"].Value;
+            BackgroundCropPosition = float.Parse(node.Attributes["background_crop_position"].Value);
+            BackgroundMeshName = node.Attributes["background_mesh"].Value;
+            WaitMeshName = node.Attributes["wait_mesh"].Value;
             CustomScene = node.Attributes["custom_scene"].Value;
 
             var tempEnterStart = node.Attributes["enter_start"];
@@ -54,7 +52,7 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         [SaveableProperty(500)]
         public bool IsVisible { get; set; }
-        public string? CustomScene { get; set; }
+        public string CustomScene { get; private set; }
         public int MaxPlayersideTroops { get; private set; }
         public bool CanEnterAnytime { get; private set; }
         public int EnterStart { get; private set; }

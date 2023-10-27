@@ -1,11 +1,11 @@
 ﻿using HarmonyLib;
 using RFCustomSettlements;
 using RFCustomSettlements.Dialogues;
+using RFCustomSettlements.Patches;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
-using static RFCustomSettlements.FocusStateCheckTickPatch;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -32,10 +32,10 @@ namespace RealmsForgotten.RFCustomSettlements
             foreach(Settlement settlement in CustomSettlementsCampaignBehavior.customSettlements)
             {
                 RFCustomSettlement settlementComponent = (RFCustomSettlement)settlement.SettlementComponent;
-                if (settlementComponent.StateHandler is ArenaSettlementStateHandler)
+                if (settlementComponent.StateHandler is ArenaSettlementStateHandler handler)
                 {
                     ArenaBuildData buildData = ArenaBuildData.BuildArenaData();
-                    ArenaSettlementStateHandler arenaHandler = (ArenaSettlementStateHandler)settlementComponent.StateHandler;
+                    ArenaSettlementStateHandler arenaHandler = handler;
                     arenaHandler.BuildData = buildData;
                     arenaHandler.SyncData(ArenaCampaignBehavior.currentArenaState, ArenaCampaignBehavior.currentChallengeToSync, ArenaCampaignBehavior.isWaiting);
                 }

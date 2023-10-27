@@ -25,7 +25,7 @@ namespace RealmsForgotten.RFCustomBandits
         private int currentNoBigSlaverParties = 0;
         private readonly int maxNumberOfBigSlaverParties = 10;
         private readonly int maxNumberOfSmallSlaverParties = 20;
-        private float mountToUnitsPercentage = 0.8f;
+        private readonly float mountToUnitsPercentage = 0.8f;
         public static int ChangeTotalSizeLimitIfSlavers(PartyBase party)
         {
             if (party.IsSlaverParty())
@@ -53,6 +53,7 @@ namespace RealmsForgotten.RFCustomBandits
             campaignGameSystemStarter.AddDialogLine("enslavers_encounter_ultimatum_war", "enslavers_encounter_ultimatum_answer", "close_window", "You will never take us alive[if:idle_angry][ib:aggressive]", null, new ConversationSentence.OnConsequenceDelegate(this.conversation_bandit_set_hostile_on_consequence), 100, null);
         }
 
+#pragma warning disable IDE1006 // Naming Styles
         private void conversation_bandit_set_hostile_on_consequence()
         {
 
@@ -78,19 +79,12 @@ namespace RealmsForgotten.RFCustomBandits
                 && PlayerEncounter.PlayerIsDefender
                 && MobileParty.ConversationParty != null)) return false;
 
-            string enslaversText;
-            if (Clan.PlayerClan.Tier > 2)
-                enslaversText = "A noble from a renowned clan? a fine catch, a fine catch, you will be a sight to behold... cuff" + (Hero.MainHero.IsFemale ? "her" : "him") + "men";
-            else if (MobileParty.MainParty.MemberRoster.TotalManCount == 1)
-            {
-                if (Hero.MainHero.IsFemale) enslaversText = "It is dangerous for lone damsels to travel these parts alone, we will take care of you. Take her men";
-                else enslaversText = "And what have we got here, a lone traveller, with no bodyguards? well, well, I claim you as my posession!";
-            }
-            else enslaversText = "Did i stumble upon an adventuring party? Perfect, the more the merrier, you will make fine slaves!";
+            string enslaversText = ChooseEnslaversDefenderText(Hero.MainHero.CharacterObject, MobileParty.MainParty.MemberRoster.TotalManCount, Clan.PlayerClan.Tier);
             MBTextManager.SetTextVariable("ENSLAVERS_START_DIALOGUE", enslaversText, false);
             return true;
         }
 
+#pragma warning restore IDE1006 // Naming Styles
         public void DailyTick()
         {
             var random = new Random();
@@ -182,6 +176,42 @@ namespace RealmsForgotten.RFCustomBandits
         public static int CountMounted(TroopRoster troopRoster)
         {
             return troopRoster.GetTroopRoster().WhereQ((TroopRosterElement t) => !t.Character.FirstBattleEquipment[10].IsEmpty).SumQ((TroopRosterElement t) => t.Number);
+        }
+        private string ChooseEnslaversDefenderText(CharacterObject player, int playerTroopNumber, int clanTier)
+        {
+            string enslaversText;
+            if (clanTier > 2)
+            {
+                if (player.IsUndead() || player.IsGiant())
+                    enslaversText = "I've heard of you, abomination, but I never expected to have you at my mercy. Surrender, there's lots of folks, who will want to see your performance.";
+                else // if(player.IsHuman() || player.IsElvean() || player.IsXilantlacay())
+                    enslaversText = "A noble from a renowned clan? a fine catch, a fine catch, you will be a sight to behold... cuff" + (Hero.MainHero.IsFemale ? "her" : "him") + "men";
+            }
+            else if (MobileParty.MainParty.MemberRoster.TotalManCount == 1)
+            {
+                if (player.IsMull()) enslaversText = "Look boys, We found another pet." + (Hero.MainHero.IsFemale ? "This one looks to be a female as well." : "") + "let's collar" + (Hero.MainHero.IsFemale ? "her" : "him");
+                else if (Hero.MainHero.IsFemale) enslaversText = "It is dangerous for lone damsels to travel these parts alone, we will take care of you. Take her men";
+                else enslaversText = "And what have we got here, a lone traveller, with no bodyguards? well, well, I claim you as my posession!";
+            }
+            else
+            {
+                if(player.IsElvean())
+                {
+                    if (player.IsFemale) enslaversText = "Trying to lead your own band, girl? You elveans make a better sight looking all proud behind the walls of your settlements. let's see if you can keep the attitude after some time with us.";
+                    else enslaversText = "And what have I come across, you know what is better than two men in cuffs? An elvean of course. Grab them men!";
+                }
+                if (player.IsHuman())
+                {
+                    if (player.IsFemale) enslaversText = "Trying to lead your own band, girl? You elveans make a better sight looking all proud behind the walls of your settlements. let's see if you can keep the attitude after some time with us.";
+                    else enslaversText = "";
+                }
+                if(player.IsMull())
+                {
+                    enslaversText = "";
+                }
+                enslaversText = "Did i stumble upon an adventuring party? Perfect, the more the merrier, you will make fine slaves!";
+            }
+            return enslaversText;
         }
     }
 }

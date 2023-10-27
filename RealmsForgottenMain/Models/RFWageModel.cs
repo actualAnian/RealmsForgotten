@@ -10,7 +10,10 @@ namespace RealmsForgotten.Models
 {
     internal class RFWageModel : DefaultPartyWageModel
     {
-
+        public override int GetCharacterWage(CharacterObject character)
+        {
+            return base.GetCharacterWage(character) * (character.IsGiant() ? 2 : 1);
+        }
         public override int GetTroopRecruitmentCost(CharacterObject troop, Hero buyerHero, bool withoutItemCost = false)
         {
             int baseValue = base.GetTroopRecruitmentCost(troop, buyerHero, withoutItemCost);

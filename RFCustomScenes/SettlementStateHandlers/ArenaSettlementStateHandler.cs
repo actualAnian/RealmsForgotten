@@ -16,7 +16,7 @@ namespace RealmsForgotten.RFCustomSettlements
     {
         private CustomSettlementBuildData? CurrentBuildData;
         internal ArenaState currentState = ArenaState.Visiting;
-        internal ArenaBuildData.ArenaChallenge? currentChallenge;
+        internal ArenaBuildData.ArenaChallenge currentChallenge;
         private readonly RFCustomSettlement currentSettlement;
         private ArenaBuildData? _buildData;
         private float waitHours = 0;
@@ -70,17 +70,14 @@ namespace RealmsForgotten.RFCustomSettlements
 
         private ArenaBuildData.StageData ChooseNextStageData()
         {
-            switch (currentState)
+            return currentState switch
             {
-                case ArenaState.FightStage1:
-                    return currentChallenge.StageDatas[0];
-                case ArenaState.FightStage2:
-                    return currentChallenge.StageDatas[1];
-                case ArenaState.FightStage3:
-                    return currentChallenge.StageDatas[2];
-                default:
-                    return currentChallenge.StageDatas[0];
+                ArenaState.FightStage1 => currentChallenge.StageDatas[0],
+                ArenaState.FightStage2 => currentChallenge.StageDatas[1],
+                ArenaState.FightStage3 => currentChallenge.StageDatas[2],
+                _ => currentChallenge.StageDatas[0],
             };
+            ;
         }
 
         private void OnBattleEnd(bool isPlayerWinner)

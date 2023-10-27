@@ -104,7 +104,9 @@ namespace RealmsForgotten.RFCustomSettlements
             }
         }
         private void OnTroopRosterManageDone(TroopRoster roster)
-        {
+          {
+
+            NextSceneData.Instance.playerTroopRoster = roster;
             RFMissions.StartExploreMission(currentSettlement.CustomScene, CurrentBuildData);
         }
 
