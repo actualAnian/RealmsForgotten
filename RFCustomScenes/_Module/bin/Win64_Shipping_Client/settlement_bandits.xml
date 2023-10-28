@@ -220,8 +220,14 @@
 			</CommonArea>
 			</Bandits>
 	</CustomScene>
+	
 	<CustomScene>
 		<id>slave_prison</id>
+	</CustomScene>
+	
+	<CustomScene>
+		<id>road_tavern</id>
 
 	</CustomScene>
+	
 </RFCustomScenes>

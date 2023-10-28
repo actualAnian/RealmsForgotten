@@ -203,11 +203,11 @@ namespace RealmsForgotten.RFCustomBandits
                 if (player.IsHuman())
                 {
                     if (player.IsFemale) enslaversText = "Trying to lead your own band, girl? You elveans make a better sight looking all proud behind the walls of your settlements. let's see if you can keep the attitude after some time with us.";
-                    else enslaversText = "";
+                    else enslaversText = "Yet another would be adventurer trying to form his own band, eh? Let's see how long it takes to break you and your companions in the arena.";
                 }
                 if(player.IsMull())
                 {
-                    enslaversText = "";
+                    enslaversText = "Looks like you have some claws to be ";
                 }
                 enslaversText = "Did i stumble upon an adventuring party? Perfect, the more the merrier, you will make fine slaves!";
             }

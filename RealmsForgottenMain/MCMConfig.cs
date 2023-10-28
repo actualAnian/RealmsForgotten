@@ -47,8 +47,8 @@ namespace RealmsForgotten
 
     public class CustomSettings : AttributeGlobalSettings<CustomSettings>, ICustomSettingsProvider
     {
-        public override string Id { get; } = "Realms forgotten Setings";
-        public override string DisplayName => new TextObject("{=CustomSettings_Name}Custom {VERSION}", new Dictionary<string, object>
+        public override string Id { get; } = "Realms Forgotten Setings";
+        public override string DisplayName => new TextObject("{=CustomSettings_Name}Realms Forgotten {VERSION}", new Dictionary<string, object>
     {
         { "VERSION", typeof(CustomSettings).Assembly.GetName().Version?.ToString(3) ?? "ERROR" }
     }).ToString();
