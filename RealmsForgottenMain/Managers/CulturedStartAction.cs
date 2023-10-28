@@ -21,25 +21,25 @@ namespace RealmsForgotten.Managers
         {
             [StartType.Default] = new Dictionary<string, string>
             {
-                ["aserai"] = "rf_looter",
-                ["empire"] = "rf_looter",
-                ["khuzait"] = "rf_looter",
-                ["sturgia"] = "rf_looter",
-                ["battania"] = "rf_looter",
-                ["vlandia"] = "rf_looter",
-                ["giant"] = "rf_looter",
-                ["aqarun"] = "rf_looter"
+                ["aserai"] = "player_char_creation_default",
+                ["empire"] = "player_char_creation_default",
+                ["khuzait"] = "player_char_creation_default",
+                ["sturgia"] = "player_char_creation_default",
+                ["battania"] = "player_char_creation_default",
+                ["vlandia"] = "player_char_creation_default",
+                ["giant"] = "rf_xilan_default",
+                ["aqarun"] = "rf_aqarun_default"
             },
             [StartType.Merchant] = new Dictionary<string, string>
             {
-                ["aserai"] = "rf_looter",
-                ["empire"] = "rf_looter",
-                ["khuzait"] = "rf_looter",
-                ["sturgia"] = "rf_looter",
-                ["battania"] = "rf_looter",
-                ["vlandia"] = "rf_looter",
-                ["giant"] = "rf_looter",
-                ["aqarun"] = "rf_looter"
+                ["aserai"] = "father_char_creation_3_aserai",
+                ["empire"] = "father_char_creation_2_empire",
+                ["khuzait"] = "father_char_creation_2_khuzait",
+                ["sturgia"] = "father_char_creation_2_sturgia",
+                ["battania"] = "rf_elvean_merchant",
+                ["vlandia"] = "father_char_creation_2_vlandia",
+                ["giant"] = "rf_elvean_merchant",
+                ["aqarun"] = "father_char_creation_3_aserai"
             },
             [StartType.Exiled] = new Dictionary<string, string>
             {
@@ -116,7 +116,7 @@ namespace RealmsForgotten.Managers
                 ["battania"] = "lord_elvean_start",
                 ["vlandia"] = "ruler_nasoria_start",
                 ["giant"] = "ruler_giant_start",
-                ["giant"] = "ruler_aqarun_start"
+                ["aqarun"] = "ruler_aqarun_start"
             },
          };
         public static void Apply(int storyOption, int locationOption)

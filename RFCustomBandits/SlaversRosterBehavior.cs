@@ -103,7 +103,7 @@ namespace RealmsForgotten.RFCustomBandits
         private void SpawnBigSlaverParty()
         {
             currentNoBigSlaverParties += 1;
-            PartyTemplateObject troopTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("enslavers_template");
+            PartyTemplateObject troopTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("enslavers_template_big");
             SpawnSlavers(troopTemplate);
         }
 
