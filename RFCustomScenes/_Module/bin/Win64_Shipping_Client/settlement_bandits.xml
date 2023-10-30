@@ -49,7 +49,6 @@
 	</CustomScene>
 	<CustomScene>
 		<id>necromancer_tower</id>
-		<maxPlayersideTroops>3</maxPlayersideTroops>
 		<Bandits>
 			<CommonArea>
 				<areaIndex>1</areaIndex>
@@ -471,6 +470,7 @@
 			</PatrolArea>
 		</Bandits>
 	</CustomScene>
+	
 	<CustomScene>
 		<id>old_king_ruins</id>
 		<Bandits>
@@ -670,4 +670,5 @@
 			</PatrolArea>
 		</Bandits>
 	</CustomScene>
+	
 </RFCustomScenes>

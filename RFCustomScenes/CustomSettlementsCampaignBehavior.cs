@@ -17,7 +17,7 @@ namespace RealmsForgotten.RFCustomSettlements
 
         private List<RFCustomSettlement>? customSettlementComponents;
         internal static List<Settlement>? customSettlements;
-        private static RFCustomSettlement currentSettlement;
+        private static RFCustomSettlement? currentSettlement;
 
         public CustomSettlementsCampaignBehavior()
         {
@@ -64,23 +64,26 @@ namespace RealmsForgotten.RFCustomSettlements
             starter.AddGameMenuOption("rf_settlement_start", "wait", "{=!}{RF_SETTLEMENT_WAIT_START_TEXT}", new GameMenuOption.OnConditionDelegate(this.game_menu_rf_settlement_wait_on_condition), new GameMenuOption.OnConsequenceDelegate(this.game_menu_rf_settlement_wait_on_consequence), false, -1, false);
 
             starter.AddGameMenuOption("rf_settlement_start", "leave", "{=3sRdGQou}Leave", new GameMenuOption.OnConditionDelegate(this.leave_on_condition), new GameMenuOption.OnConsequenceDelegate(this.game_menu_leave_on_consequence), true, -1, false);
-            starter.AddWaitGameMenu("rf_settlement_wait_menu", "{=!}{RF_SETTLEMENT_WAIT_TEXT}", delegate(MenuCallbackArgs args) { currentSettlement.StateHandler.OnSettlementWaitInit(args);  args.MenuContext.GameMenu.StartWait();}, new OnConditionDelegate(this.wait_menu_on_condition), new OnConsequenceDelegate(this.wait_menu_on_consequence), new OnTickDelegate(this.game_menu_wait_till_can_enter_menu_on_tick), GameMenu.MenuAndOptionType.WaitMenuShowOnlyProgressOption, GameOverlays.MenuOverlayType.None, 0, GameMenu.MenuFlags.None, null);
+            starter.AddWaitGameMenu("rf_settlement_wait_menu", "{=!}{RF_SETTLEMENT_WAIT_TEXT}", delegate (MenuCallbackArgs args) { if (currentSettlement == null) return; currentSettlement.StateHandler.OnSettlementWaitInit(args); args.MenuContext.GameMenu.StartWait(); }, new OnConditionDelegate(this.wait_menu_on_condition), new OnConsequenceDelegate(this.wait_menu_on_consequence), new OnTickDelegate(this.game_menu_wait_till_can_enter_menu_on_tick), GameMenu.MenuAndOptionType.WaitMenuShowOnlyProgressOption, GameOverlays.MenuOverlayType.None, 0, GameMenu.MenuFlags.None, null);
             starter.AddGameMenuOption("rf_settlement_wait_menu", "leave", "{=3sRdGQou}Leave", new GameMenuOption.OnConditionDelegate(this.leave_on_condition), new GameMenuOption.OnConsequenceDelegate(this.game_menu_leave_on_consequence), true, -1, false);
         }
 
 #pragma warning disable IDE1006 // Naming Styles
         private void wait_menu_on_consequence(MenuCallbackArgs args)
         {
+            if(currentSettlement == null) return;
             currentSettlement.StateHandler.OnSettlementWaitEndConsequence(args);
         }
 
         private bool wait_menu_on_condition(MenuCallbackArgs args)
         {
+            if (currentSettlement == null) return false;
             args.optionLeaveType = GameMenuOption.LeaveType.Wait;
             return currentSettlement.StateHandler.OnSettlementWaitEndCondition(args);
         }
         private bool game_menu_rf_settlement_wait_on_condition(MenuCallbackArgs args)
         {
+            if (currentSettlement == null) return false;
             args.optionLeaveType = GameMenuOption.LeaveType.Wait;
             return currentSettlement.StateHandler.OnSettlementWaitStartOnCondition(args);
         }
@@ -91,6 +94,7 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         private void game_menu_wait_till_can_enter_menu_on_tick(MenuCallbackArgs args, CampaignTime dt)
         {
+            if (currentSettlement == null) return;
             currentSettlement.StateHandler.OnWaitMenuTillEnterTick(args, dt);
         }
         //private static void UpdateMenuLocations()
@@ -107,15 +111,18 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         private bool leave_on_condition(MenuCallbackArgs args)
         {
+            if (currentSettlement == null) return false;
             args.optionLeaveType = GameMenuOption.LeaveType.Leave;
             return currentSettlement.StateHandler.OnSettlementLeaveCondition(args);
         }
         private void game_menu_rf_settlement_start_on_consequence(MenuCallbackArgs args)
         {
+            if (currentSettlement == null) return;
             currentSettlement.StateHandler.OnSettlementStartConsequence(args);
         }
         private bool game_menu_rf_settlement_start_on_condition(MenuCallbackArgs args)
         {
+            if (currentSettlement == null) return false;
             args.optionLeaveType = GameMenuOption.LeaveType.Mission;
             return currentSettlement.StateHandler.OnSettlementStartCondition(args);
         }
@@ -124,8 +131,18 @@ namespace RealmsForgotten.RFCustomSettlements
         private void game_menu_rf_settlement_start_on_init(MenuCallbackArgs args)
         {
             currentSettlement = (RFCustomSettlement)Settlement.CurrentSettlement.SettlementComponent;
-            if (!currentSettlement.StateHandler.IsInitialized()) 
-                currentSettlement.StateHandler.InitHandler(CustomSettlementBuildData.allCustomSettlementBuildDatas[currentSettlement.CustomScene]);
+
+            if (!currentSettlement.StateHandler.IsInitialized())
+                try
+                {
+                    if (CustomSettlementBuildData.allCustomSettlementBuildDatas.ContainsKey(currentSettlement.CustomScene))
+                        currentSettlement.StateHandler.InitHandler(CustomSettlementBuildData.allCustomSettlementBuildDatas[currentSettlement.CustomScene]);
+                }
+                catch(Exception)
+                {
+                    HuntableHerds.SubModule.PrintDebugMessage("Error loading the data for this settlement");
+                    PlayerEncounter.LeaveSettlement();
+                }
             currentSettlement.StateHandler.OnSettlementStartOnInit(args);
 
             args.MenuContext.SetBackgroundMeshName(currentSettlement.BackgroundMeshName);
