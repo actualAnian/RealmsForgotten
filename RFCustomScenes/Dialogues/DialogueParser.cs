@@ -47,6 +47,7 @@ namespace RFCustomSettlements.Dialogues
                     this.condition = delegate () { return CharacterObject.OneToOneConversationCharacter.StringId == data[2]; };
                     RFConversationLogic.AddNpcAsTalkable(data[2]);
                 }
+                else this.condition = delegate () { return true; };
             }
         }
 

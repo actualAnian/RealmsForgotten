@@ -1,11 +1,28 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
+using TaleWorlds.Engine;
+using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
     public class CustomSettlementBuildData
     {
+        public class NpcData
+        {
+            public string Id { get; private set; }
+            public int TagId { get; private set; }
+            public string ActionSet { get; private set; }
+            public NpcData(string id, string TagId, string actionSet)
+            {
+                this.Id = id;
+                this.TagId = int.Parse(TagId);
+                this.ActionSet = actionSet;
+            }
+
+        }
         public class RFBanditData
         {
             private readonly int _amount;
@@ -23,33 +40,30 @@ namespace RealmsForgotten.RFCustomSettlements
         internal static readonly Dictionary<string, CustomSettlementBuildData> allCustomSettlementBuildDatas = new ();
         public readonly Dictionary<int, List<RFBanditData>> stationaryAreasBandits;
         public readonly Dictionary<int, RFBanditData> patrolAreasBandits;
-        public readonly int maxPlayersideTroops;
 
         public readonly bool canEnterOnlyAtSpecialHours;
         public readonly int enterStartHour;
         public readonly int enterEndHour;
-        public CustomSettlementBuildData(Dictionary<int, List<RFBanditData>> _stationaryAreasBandits, Dictionary<int, RFBanditData> _patrolAreasBandits, int _maxPlayersideTroops, bool _canEnterOnlyAtSpecialHours = false, int _enterStartHour = 0, int _enterEndHour = 24)
+        public List<NpcData> allNpcs { get; private set; }
+        public CustomSettlementBuildData(Dictionary<int, List<RFBanditData>> _stationaryAreasBandits, Dictionary<int, RFBanditData> _patrolAreasBandits, List<NpcData>Npcs, bool _canEnterOnlyAtSpecialHours = false, int _enterStartHour = 0, int _enterEndHour = 24)
         {
             stationaryAreasBandits = _stationaryAreasBandits;
             patrolAreasBandits = _patrolAreasBandits;
-            maxPlayersideTroops = _maxPlayersideTroops; // OBSOLETE, to be removed
             canEnterOnlyAtSpecialHours = _canEnterOnlyAtSpecialHours;
             enterStartHour = _enterStartHour;
             enterEndHour = _enterEndHour;
+            allNpcs = Npcs;
         }
         public static void BuildAll()
         {
-            string mainPath = Path.GetDirectoryName(Globals.realmsForgottenAssembly.Location);
+            string mainPath = System.IO.Path.GetDirectoryName(Globals.realmsForgottenAssembly.Location);
 
-            string xmlFileName = Path.Combine(mainPath, "settlement_bandits.xml");
+            string xmlFileName = System.IO.Path.Combine(mainPath, "settlement_bandits.xml");
 
             XElement SettlementBandits = XElement.Load(xmlFileName);
 
             foreach (XElement element in SettlementBandits.Descendants("CustomScene"))
             {
-                var aha = element.Element("maxPlayersideTroops");
-                int maxPlayersideTroops = aha != null ? int.Parse(aha.Value) : 1;
-
                 Dictionary<int, List<RFBanditData>> buildStationaryAreasBandits = new();
                 Dictionary<int, RFBanditData> buildPatrolAreasBandits = new();
                 string sceneId;
@@ -72,8 +86,17 @@ namespace RealmsForgotten.RFCustomSettlements
                     RFBanditData bd = new(xElement.Element("Bandit").Element("id").Value, xElement.Element("Bandit").Element("amount").Value);
                     buildPatrolAreasBandits.Add(int.Parse(xElement.Element("areaIndex").Value), bd);
                 }
+                XElement NpcElement = element.Descendants("Npcs").FirstOrDefault();
+                List<NpcData> NpcsList = new();
+                if (NpcElement != null)
+                {
+                    foreach (XElement Npc in NpcElement.Descendants("Npc"))
+                    {
+                        NpcsList.Add(new(Npc.Element("NpcId").Value, Npc.Element("TagId").Value, Npc.Element("ActionSet").Value));
+                    }
+                }
                 //                CustomSettlementBuildData buildData = new(buildStationaryAreasBandits, buildPatrolAreasBandits, maxPlayersideTroops);
-                CustomSettlementBuildData buildData = new(buildStationaryAreasBandits, buildPatrolAreasBandits, maxPlayersideTroops, true, 8, 12);
+                CustomSettlementBuildData buildData = new(buildStationaryAreasBandits, buildPatrolAreasBandits, NpcsList, true, 8, 12);
 
                 allCustomSettlementBuildDatas.Add(sceneId, buildData);
             }

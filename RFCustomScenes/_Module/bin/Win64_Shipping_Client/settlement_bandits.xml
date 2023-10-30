@@ -227,7 +227,24 @@
 	
 	<CustomScene>
 		<id>road_tavern</id>
-
+		<Npcs>
+			<Npc>
+				<NpcId>a</NpcId>
+				<TagId>1</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+		</Npcs>
+	</CustomScene>
+	
+	<CustomScene>
+		<id>exploration_test</id>
+		<Npcs>
+			<Npc>
+				<NpcId>caravan_master_aserai</NpcId>
+				<TagId>1</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+		</Npcs>
 	</CustomScene>
 	
 </RFCustomScenes>
