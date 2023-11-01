@@ -21,6 +21,8 @@ using RealmsForgotten.HuntableHerds.Models;
 using System.Text;
 using static RealmsForgotten.RFCustomSettlements.ExploreSettlementStateHandler;
 using System.Collections;
+using SandBox.Missions.MissionLogics;
+using static RealmsForgotten.RFCustomSettlements.CustomSettlementBuildData;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -49,15 +51,15 @@ namespace RealmsForgotten.RFCustomSettlements
         private readonly List<PatrolArea> patrolAreas;
         private readonly List<CommonAreaMarker> areaMarkers;
         private readonly List<GameEntity> animalSpawnPositions = new();
-        private readonly List<UsableMachine> npcSpawnPositions = new();
+        private Dictionary<int, GameEntity> NpcSpawnPositions = new();
         private readonly Dictionary<Agent, CustomSettlementMissionLogic.UsedObject> defenderAgentObjects;
         private readonly ItemRoster loot;
         private int goldLooted = 0;
         private readonly MobileParty banditsInSettlement;
         private readonly CustomSettlementBuildData BanditsData;
         private readonly Action? OnBattleEnd;
+        private readonly Dictionary<int, NpcData> NpcsInSettlement = new();
 
-        private StandingPoint tetest;
         public CustomSettlementMissionLogic(CustomSettlementBuildData buildData, Action? onBattleEnd = null)
         {
             defenderAgentObjects = new Dictionary<Agent, CustomSettlementMissionLogic.UsedObject>();
@@ -65,6 +67,13 @@ namespace RealmsForgotten.RFCustomSettlements
             areaMarkers = new();
             loot = new();
             banditsInSettlement = CreateBanditData(buildData);
+            foreach(NpcData data in buildData.allNpcs)
+            {
+                if (!NpcsInSettlement.ContainsKey(data.TagId))
+                    NpcsInSettlement[data.TagId] = data;
+                else
+                    HuntableHerds.SubModule.PrintDebugMessage($"Error, multiple Npcs with same tag: {data.TagId}", 1, 0, 0);
+            }
             BanditsData = buildData;
             NextSceneData.Instance.shouldSwitchScenes = false;
             OnBattleEnd = onBattleEnd;
@@ -78,6 +87,8 @@ namespace RealmsForgotten.RFCustomSettlements
             //if (Input.IsKeyPressed(InputKey.Q))
             //    LootArea();
 
+            this.UsedObjectTick(dt);
+
             if (!isMissionInitialized)
             {
                 InitializeMission();
@@ -86,54 +97,16 @@ namespace RealmsForgotten.RFCustomSettlements
             }
         }
 
-        //private void LootArea()
-        //{
-        //    bool foundItems = false;
-        //    List<MissionObject> objectsToRemove = new List<MissionObject>();
-        //    foreach (MissionObject missionObject in pickableItems)
-        //    {
-        //        if(missionObject.GameEntity.GlobalPosition.Distance(Agent.Main.Position) < Helper.maxPickableDistance)
-        //        {
-        //            try
-        //            {
-        //                string[] itemData = usablePlace.GameEntity.Name.Split('_');
-        //                string itemId = Helper.GetRFPickableObjectName(itemData);
-        //                int amount = int.Parse(itemData.Last());
-        //                string soundEventId = "";
-        //                if (itemId == "gold")
-        //                {
-        //                    goldLooted += amount;
-        //                    soundEventId = "event:/ui/notification/coins_positive";
-        //                    HuntableHerds.SubModule.PrintDebugMessage("You found " + goldLooted + " gold coins!");
-        //                }
-        //                else
-        //                {
-        //                    ItemObject item = MBObjectManager.Instance.GetObject<ItemObject>(itemId);
-        //                    loot.AddToCounts(item, amount);
-        //                    HuntableHerds.SubModule.PrintDebugMessage("You found " + item.Name + "!");
-        //                    soundEventId = "event:/mission/combat/pickup_arrows";
-        //                }
-        //                foundItems = true;
-        //                Mission.MakeSoundOnlyOnRelatedPeer(SoundEvent.GetEventIdFromString(soundEventId), missionObject.GameEntity.GlobalPosition, Mission.MainAgent.Index);
-        //                missionObject.GameEntity.ClearComponents();
-        //                objectsToRemove.Add(missionObject);
-        //            }
-        //            catch
-        //            {
-        //                string str = "Error in game entity name" + missionObject.GameEntity.Name;
-        //                HuntableHerds.SubModule.PrintDebugMessage(str, 255, 0, 0);
-        //            }
-        //        }
-        //    }
-
-
-        //    pickableItems.RemoveAll(m => objectsToRemove.Contains(m));
-        //    if (!foundItems)
-        //    {
-        //        HuntableHerds.SubModule.PrintDebugMessage("There's nothing to loot nearby...");
-        //        return;
-        //    }
-        //}
+        private void UsedObjectTick(float dt)
+        {
+            foreach (KeyValuePair<Agent, UsedObject> keyValuePair in defenderAgentObjects)
+            {
+                if (keyValuePair.Value.IsMachineAITicked)
+                {
+                    keyValuePair.Value.MachineAI.Tick(keyValuePair.Key, null, null, dt);
+                }
+            }
+        }
 
         //public override void OnFocusGained(Agent agent, IFocusable focusableObject, bool isInteractable)
         //{
@@ -150,23 +123,27 @@ namespace RealmsForgotten.RFCustomSettlements
                                  orderby area.AreaIndex
                                  select area);
             animalSpawnPositions.AddRange(Mission.Current.Scene.FindEntitiesWithTag("spawnpoint_herdanimal"));
-            //npcSpawnPositions.AddRange(Mission.Current.Scene.FindEntitiesWithTag("rf_npc"));
-            npcSpawnPositions.AddRange(Mission.Current.ActiveMissionObjects.FindAllWithType<UsableMachine>().Where((UsableMachine um) => um.GameEntity.Tags.Contains("rf_npc")).ToList());
+            //NpcSpawnPositions.AddRange(Mission.Current.Scene.FindEntitiesWithTag("rf_Npc"));
+            //NpcSpawnPositions.AddRange(Mission.Current.ActiveMissionObjects.FindAllWithType<UsableMachine>().Where((UsableMachine um) => um.GameEntity.Tags.Contains("rf_Npc")).ToList());
             var test = Mission.Current.ActiveMissionObjects.FindAllWithType<UsableMachine>().Where((UsableMachine um) => um.GameEntity.GlobalPosition == new Vec3(732.197f, 209.987f, 41.885f)).ToList(); //;
             base.Mission.MakeDefaultDeploymentPlans();
-            List<Vec3> aa = new();
-            foreach(var a in Mission.Current.ActiveMissionObjects.FindAllWithType<UsableMachine>())
+            NpcSpawnPositions = new();
+            int i = 1;
+            GameEntity gameEntity;
+            do
             {
-                aa.Add(a.GameEntity.GlobalPosition);
-            }
+                gameEntity = base.Mission.Scene.FindEntityWithTag("rf_Npc_" + i);
+                if (gameEntity != null) NpcSpawnPositions.Add(i, gameEntity);
+                ++i;
+            } while (gameEntity != null);
             SpawnPatrollingTroops(patrolAreas);
             SpawnStandingTroops(areaMarkers);
             SpawnHuntableHerdsAnimals();
-            SpawnNPCs();
+            SpawnNpcs();
             SpawnPlayerTroops();
         }
 
-        private void SpawnNPCs()
+        private void SpawnNpcs()
         {
 
             Dictionary<string, List<UsableMachine>> _usablePoints = new();
@@ -181,25 +158,40 @@ namespace RealmsForgotten.RFCustomSettlements
                     _usablePoints[key].Add(usableMachine);
                 }
             }
-            if (npcSpawnPositions.Count == 0) return;
-            foreach (UsableMachine usableMachine in npcSpawnPositions)
+            if (NpcSpawnPositions.Count == 0) return;
+            foreach (KeyValuePair<int, GameEntity>  pair in NpcSpawnPositions)
             {
-                GameEntity npcSpawnPoint = usableMachine.GameEntity;
+                var NpcSpawnPoint = pair.Value.GetChildren().FirstOrDefault();
                 Team team = base.Mission.PlayerAllyTeam;
-                string? characterId = Helper.GetCharacterIdfromEntityName(npcSpawnPoint.Name);
                 try
                 {
-                    Vec3 position = npcSpawnPoint.GetGlobalFrame().origin;
+                    NpcData currentNpcData = NpcsInSettlement[pair.Key];
+                    string characterId = currentNpcData.Id;
+                    //string? characterId = Helper.GetCharacterIdfromEntityName(pair.Value.Name);
+                    Vec3 position = NpcSpawnPoint.GetGlobalFrame().origin;
                     CharacterObject troop = MBObjectManager.Instance.GetObject<CharacterObject>(characterId);
                     AgentBuildData agentBuildData = new AgentBuildData(troop).InitialPosition(position);
-                    Vec2 vec = new(-npcSpawnPoint.GetGlobalFrame().rotation.f.AsVec2.x, -npcSpawnPoint.GetGlobalFrame().rotation.f.AsVec2.y);
+                    Vec2 vec = new(NpcSpawnPoint.GetGlobalFrame().rotation.f.AsVec2.x, NpcSpawnPoint.GetGlobalFrame().rotation.f.AsVec2.y);
                     AgentBuildData agentBuildData2 = agentBuildData.InitialDirection(vec).TroopOrigin(new SimpleAgentOrigin(troop, -1, null, default)).Team(team);
                     Agent agent = Mission.Current.SpawnAgent(agentBuildData2, false);
-                    agent.UseGameObject(usableMachine.StandingPoints[0]);
+
+                    AnimationSystemData animationSystemData = agentBuildData.AgentMonster.FillAnimationSystemData(MBGlobals.GetActionSetWithSuffix(agentBuildData.AgentMonster, agentBuildData.AgentIsFemale, currentNpcData.ActionSet), agent.Character.GetStepSize(), false);
+                    agent.SetActionSet(ref animationSystemData);
+
+
+                    //MatrixFrame globalFrame;
+                    //globalFrame = NpcSpawnPoint.GetGlobalFrame();
+                    //globalFrame.rotation.OrthonormalizeAccordingToForwardAndKeepUpAsZAxis();
+                    //RFAgentOrigin agentToSpawn = new(PartyBase.MainParty, new UniqueTroopDescriptor(), 1, troop, false);
+                    //Agent agent = Mission.Current.SpawnTroop(agentToSpawn, true, false, false, false, 0, 0, false, false, false, new Vec3?(globalFrame.origin), new Vec2?(globalFrame.rotation.f.AsVec2.Normalized()), "_hideout_bandit", null, FormationClass.NumberOfAllFormations, false);
+
                     agent.GetComponent<CampaignAgentComponent>().CreateAgentNavigator();
-                    this.SimulateTick(agent);
+                    //agent.GetComponent<CampaignAgentComponent>().AgentNavigator.SetTarget(entity.GetFirstScriptOfType<UsableMachine>(), true);
+                    StandingPoint animationPoint = NpcSpawnPoint.GetFirstScriptOfType<StandingPoint>();
+                    agent.UseGameObject(animationPoint);
+                    SimulateTick(agent);
                 }
-                catch { HuntableHerds.SubModule.PrintDebugMessage($"ERROR, could not spawn npc from game entity of name: {npcSpawnPoint.Name}"); }
+                catch { HuntableHerds.SubModule.PrintDebugMessage($"ERROR, could not spawn Npc from game entity of name: {pair.Value.Name}"); }
             }
         }
 
@@ -276,7 +268,7 @@ namespace RealmsForgotten.RFCustomSettlements
                     usableMachinesInArea.AddRange(usableMachine.StandingPoints);
                 }
                 usableMachinesInArea.Shuffle();
-                Queue<StandingPoint> usableMachinesQueue = new((IEnumerable<StandingPoint>)usableMachinesInArea);
+                Queue<StandingPoint> usableMachinesQueue = new(usableMachinesInArea);
 
                 for(int i = 0; i < allBandits; i++)
                 {

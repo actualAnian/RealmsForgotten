@@ -69,6 +69,7 @@ namespace RealmsForgotten.Patches.CulturedStart
             {
                 if (__instance.RaceSelector != null && __instance.RaceSelector.ItemList != null)
                 {
+                    if (__instance.RaceSelector.ItemList.Count() == Globals.PlayerSelectableRaces.Count) return;
                     var realRaceList = from item in __instance.RaceSelector.ItemList where Globals.PlayerSelectableRaces.Contains(item.StringItem) select item;
                     TaleWorlds.Library.MBBindingList<SelectorItemVM> list = new();
                     foreach ( var item in realRaceList ) { list.Add(item); }

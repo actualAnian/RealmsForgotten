@@ -12,9 +12,9 @@ namespace RFCustomSettlements
         private static List<string> listOfTalkableNpcs = new List<string>();
         public ConversationManager ConversationManager { get; private set; }
 
-        public static void AddNpcAsTalkable(string npcId)
+        public static void AddNpcAsTalkable(string NpcId)
         {
-            listOfTalkableNpcs.Add(npcId);
+            listOfTalkableNpcs.Add(NpcId);
         }
         public override void OnAgentInteraction(Agent userAgent, Agent agent)
         {

@@ -1,48 +1,2541 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Items>
 
+		<CraftedItem id="vortiak_magic_lance_rfpolearm50" name="Ancient Vortiak Lance [+50 Polearm]" crafting_template="TwoHandedPolearm" culture="Culture.vlandia" is_merchandise="false" modifier_group="polearm">
+			<Pieces>
+				<Piece id="vortiak_lance_head" Type="Blade" scale_factor="100" />
+				<Piece id="vortiak_lance_handle" Type="Handle" scale_factor="100" />
+			</Pieces>
+		</CraftedItem>
 
-   <Item id="flame_stone_fire_rfthrowing100"
-        name="{=1CPdu9K0}Fire Stone [+100 Throwing]"
-        is_merchandise="true"
-        body_name="bo_throwing_stone"
-        holster_body_name="bo_axe_short"
-        holster_mesh="stone_holster"
-        holster_mesh_with_weapon="stone_holster"
-        mesh="throwing_stone"
-        flying_mesh="throwing_stone"
-        value="2"
-        weight="0.1"
-        appearance="0.1"
-        Type="Thrown"
-        item_holsters="throwing_stone:throwing_stone_2">
-    <ItemComponent>
-      <Weapon weapon_class="Stone"
-              ammo_class="Stone"
-              stack_amount="14"
-              physics_material="missile"
-              accuracy="45"
-              thrust_speed="102"
-              speed_rating="102"
-              missile_speed="40"
-              weapon_length="10"
-              thrust_damage="15"
-              item_usage="stone"
-              rotation="100,30,20"
-              passby_sound_code=""
-              trail_particle_name="psys_flaming_weapon"
-              rotation_speed="0, -3.0, 0">
-        <WeaponFlags RangedWeapon="true"
-                     Consumable="true"
-                     AutoReload="true"
-                     LeavesTrail="true"
-                     CanKnockDown="true"
-                     AffectsArea="true"
-                     Burning="true"
-                     UnloadWhenSheathed="true"
-                     UseHandAsThrowBase="true" />
-      </Weapon>
-    </ItemComponent>
-    <Flags QuickFadeOut="true" />
-  </Item>
+		<CraftedItem id="vortiak_king_rftwohanded150"
+					   name="{=vortiakundeadkingaxe}Vortiak undead King Axe [+150 Two Handed Axe]"
+					   crafting_template="TwoHandedAxe"
+					   is_merchandise="false">
+			<Pieces>
+				<Piece id="vortiak_king_axe_head"
+					   Type="Blade" />
+				<Piece id="vortiak_king_axe_handle"
+					   Type="Handle" />
+			</Pieces>
+		</CraftedItem>
+
+		<CraftedItem id="fantasy_axe_7_rftwohanded100"
+					   name="{=dreadlordaxe}Dreadlord Axe [+100 Two Handed Axe]"
+					   crafting_template="TwoHandedAxe"
+					   is_merchandise="true">
+			<Pieces>
+				<Piece id="fantasy_axe_7_head"
+					   Type="Blade" />
+				<Piece id="fantasy_axe_7_handle"
+					   Type="Handle" />
+			</Pieces>
+		</CraftedItem>
+
+		<CraftedItem id="fantasy_axe_6_rftwohanded50"
+					   name="{=vortyakaxe}Vortyak Axe [+50 Two Handed Axe]"
+					   crafting_template="TwoHandedAxe"
+					   is_merchandise="true">
+			<Pieces>
+				<Piece id="fantasy_axe_6_head"
+					   Type="Blade" />
+				<Piece id="fantasy_axe_6_handle"
+					   Type="Handle" />
+			</Pieces>
+		</CraftedItem>
+
+		<CraftedItem id="sting_sword_rfonehanded100"
+					   name="Elvean Evil Slaughter [+100 One-Handed]"
+					   is_merchandise="false"
+					   crafting_template="OneHandedSword"
+					   has_modifier="false">
+			<Pieces>
+				<Piece id="sting_sword_blade"
+					   Type="Blade"
+					   scale_factor="100" />
+				<Piece id="sting_sword_guard"
+					   Type="Guard" />
+				<Piece id="sting_sword_grip"
+					   Type="Handle"
+					   scale_factor="100" />
+				<Piece id="sting_sword_pommel"
+					   Type="Pommel" />
+			</Pieces>
+		</CraftedItem>
+
+		<CraftedItem id="orcrist_sword_rftwohanded50"
+					   name="Orcrist Sword [+50 Two-Handed]"
+					   crafting_template="TwoHandedSword"
+					   culture="Culture.battania">
+			<Pieces>
+				<Piece id="orcrist_blade"
+					   Type="Blade"
+					   scale_factor="100" />
+				<Piece id="orcrist_guard"
+					   Type="Guard"
+					   scale_factor="100" />
+				<Piece id="orcrist_grip"
+					   Type="Handle"
+					   scale_factor="100" />
+				<Piece id="orcrist_pommel"
+					   Type="Pommel"
+					   scale_factor="100" />
+			</Pieces>
+		</CraftedItem>
+
+		<CraftedItem id="hadhafang_sword_rftwohanded150"
+				   name="Hadhafang Enchanted Two Handed Sword [+150 Two-Handed]"
+				   crafting_template="TwoHandedSword"
+				   culture="Culture.battania">
+			<Pieces>
+				<Piece id="hadhafang_blade"
+					   Type="Blade"
+					   scale_factor="120" />
+				<Piece id="hadhafang_grip"
+					   Type="Handle"
+					   scale_factor="120" />
+				<Piece id="hadhafang_pommel"
+					   Type="Pommel"
+					   scale_factor="120" />
+			</Pieces>
+		</CraftedItem>
+
+		<CraftedItem id="blackheart_sword_rfonehanded150"
+					 name="{=blackheartswordenchanted+150onehanded}Black Heart Sword Enchanted [+150 One-Handed]"
+					 crafting_template="OneHandedSword"
+					 is_merchandise="false">
+			<Pieces>
+				<Piece id="black_heart_blade"
+					   Type="Blade" />
+				<Piece id="black_heart_guard"
+					   Type="Guard" />
+				<Piece id="black_heart_handle"
+					   Type="Handle" />
+				<Piece id="black_heart_pommel"
+					   Type="Pommel" />
+			</Pieces>
+		</CraftedItem>
+
+		<CraftedItem id="nazghul_rftwohanded100"
+					  name="{=nazghultwohandedswordenchanted+100twohanded}Nazghul Two Handed Sword Enchanted [+100 Two-Handed]"
+					  crafting_template="TwoHandedSword"
+					  is_merchandise="false">
+			<Pieces>
+				<Piece id="nazghul_blade"
+					   Type="Blade" />
+				<Piece id="nazghul_guard"
+					   Type="Guard" />
+				<Piece id="nazghul_handle"
+					   Type="Handle" />
+				<Piece id="nazghul_pommel"
+					   Type="Pommel" />
+			</Pieces>
+		</CraftedItem>
+
+		<CraftedItem id="athas_ancient_sword_rfonehanded200"
+					  name="{=athasancientflameenchantedsword+200twohanded}Athas Ancient Flame Enchanted Sword [+200 Two-Handed]"
+					  crafting_template="OneHandedSword"
+					  is_merchandise="false">
+			<Pieces>
+				<Piece id="ancient_flame_blade"
+					   Type="Blade"
+					   scale_factor="100" />
+				<Piece id="ancient_flame_guard"
+					   Type="Guard"
+					   scale_factor="100" />
+				<Piece id="ancient_flame_grip"
+					   Type="Handle"
+					   scale_factor="100" />
+				<Piece id="ancient_flame_pommel"
+					   Type="Pommel"
+					   scale_factor="100" />
+			</Pieces>
+		</CraftedItem>
+
+		<!-- #region magic bows  -->
+
+		<Item id="legolas_longbow_rfbow100" name="{=Legolaslongbow}Legolas Longbow [+100 Bow]"
+	   body_name="bo_composite_longbow_e"
+	   mesh="longbow_f"
+	   culture="Culture.battania" weight="0.5"
+	   difficulty="100"
+	   appearance="1" Type="Bow" item_holsters="bow_back:bow_back_2:bow_hip:bow_hip_2">
+			<ItemComponent>
+				<Weapon weapon_class="Bow" ammo_class="Arrow" ammo_limit="1" thrust_speed="90" speed_rating="100"
+				missile_speed="100" weapon_length="50" accuracy="100" thrust_damage="95" thrust_damage_type="Pierce" item_usage="bow" physics_material="wood_weapon" center_of_mass="0.15,0,0">
+					<WeaponFlags RangedWeapon="true" HasString="true" StringHeldByHand="true" NotUsableWithOneHand="true" TwoHandIdleOnMount="true" AutoReload="true" UnloadWhenSheathed="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags ForceAttachOffHandPrimaryItemBone="true" />
+		</Item>
+		<Item id="legolas_galadhrim_bow_rfbow150" name="{=galadhrimbow}Galadhrim Bow [+200 Bow]"
+			  body_name="bo_composite_longbow_e"
+			  mesh="longbow_f"
+			  culture="Culture.battania" weight="0.3"
+			  difficulty="150"
+			  appearance="1" Type="Bow" item_holsters="bow_back:bow_back_2:bow_hip:bow_hip_2">
+			<ItemComponent>
+				<Weapon weapon_class="Bow" ammo_class="Arrow" ammo_limit="1" thrust_speed="100"
+				speed_rating="100"
+				missile_speed="100" weapon_length="50" accuracy="120" thrust_damage="110" thrust_damage_type="Pierce" item_usage="bow" physics_material="wood_weapon" center_of_mass="0.15,0,0">
+					<WeaponFlags RangedWeapon="true" HasString="true" StringHeldByHand="true" NotUsableWithOneHand="true" TwoHandIdleOnMount="true" AutoReload="true" UnloadWhenSheathed="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags ForceAttachOffHandPrimaryItemBone="true" />
+		</Item>
+
+		<CraftedItem
+			id="magic_northern_javelin_3_t4"
+			name="Magic Tipped Javelin "
+			crafting_template="Javelin"
+			culture="Culture.sturgia"
+			modifier_group="spear_dart_throwing">
+			<Pieces>
+				<Piece
+					id="spear_blade_42"
+					Type="Blade"
+					scale_factor="100" />
+				<Piece
+					id="default_polearm_guard"
+					Type="Guard"
+					scale_factor="100" />
+				<Piece
+					id="spear_handle_11"
+					Type="Handle"
+					scale_factor="100" />
+				<Piece
+					id="spear_pommel_5"
+					Type="Pommel"
+					scale_factor="100" />
+			</Pieces>
+		</CraftedItem>
+
+		<!-- #region magic spheres  -->
+
+		<Item id="fire_ball"
+	   name="Fire Ball"
+	   is_merchandise="false"
+	   body_name="bo_throwing_stone"
+	   holster_body_name="bo_axe_short"
+	   holster_mesh="stone_holster"
+	   holster_mesh_with_weapon="stone_holster"
+	   mesh="flame_ball"
+	   flying_mesh="flame_ball"
+	   value="15000"
+	   weight="0.1"
+	   appearance="0.1"
+	   Type="Bullets"
+	   item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Cartridge"
+						stack_amount="10"
+						physics_material="missile"
+						accuracy="65"
+						thrust_speed="102"
+						speed_rating="102"
+						missile_speed="50"
+						weapon_length="10"
+						thrust_damage="20"
+						item_usage="stone"
+						rotation="100,30,20"
+						passby_sound_code=""
+						trail_particle_name="fire_ground"
+						rotation_speed="0, -3.0, 0">
+					<WeaponFlags RangedWeapon="true"
+								 Consumable="true"
+								 AutoReload="true"
+								 LeavesTrail="true"
+								 CanKnockDown="false"
+								 AffectsArea="false"
+								 Burning="true"
+								 UnloadWhenSheathed="true"
+								 UseHandAsThrowBase="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags QuickFadeOut="true" />
+		</Item>
+
+		<Item id="flame_wall_fire"
+		   name="Flame Wall"
+		   is_merchandise="false"
+		   body_name="bo_throwing_stone"
+		   holster_body_name="bo_axe_short"
+		   holster_mesh="stone_holster"
+		   holster_mesh_with_weapon="stone_holster"
+		   mesh="flame_ball"
+		   flying_mesh="flame_ball"
+		   value="25000"
+		   weight="0.1"
+		   appearance="0.1"
+		   Type="Bullets"
+		   item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Cartridge"
+						stack_amount="14"
+						physics_material="missile"
+						accuracy="45"
+						thrust_speed="102"
+						speed_rating="102"
+						missile_speed="40"
+						weapon_length="10"
+						thrust_damage="25"
+						item_usage="stone"
+						rotation="100,30,20"
+						passby_sound_code=""
+						trail_particle_name="fire_ground"
+						rotation_speed="0, -3.0, 0">
+					<WeaponFlags RangedWeapon="true"
+								 Consumable="true"
+								 AutoReload="true"
+								 LeavesTrail="true"
+								 CanKnockDown="false"
+								 AffectsArea="true"
+								 Burning="true"
+								 UnloadWhenSheathed="true"
+								 UseHandAsThrowBase="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags QuickFadeOut="true" />
+		</Item>
+
+		<Item id="flame_breath"
+			 name="Flame Breath"
+			 is_merchandise="false"
+			 body_name="bo_throwing_stone"
+			 holster_body_name="bo_axe_short"
+			 holster_mesh="stone_holster"
+			 holster_mesh_with_weapon="stone_holster"
+			 mesh="flame_ball"
+			 flying_mesh="flame_ball"
+			 value="30000"
+			 weight="0.1"
+			 appearance="0.1"
+			 Type="Bullets"
+			 item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Cartridge"
+						stack_amount="10"
+						physics_material="missile"
+						accuracy="45"
+						thrust_speed="80"
+						speed_rating="80"
+						missile_speed="40"
+						weapon_length="20"
+						thrust_damage="35"
+						item_usage="stone"
+						rotation="100,30,20"
+						passby_sound_code=""
+						trail_particle_name="flame_breath"
+						rotation_speed="0, -3.0, 0">
+					<WeaponFlags RangedWeapon="true"
+								 Consumable="true"
+								 AutoReload="true"
+								 LeavesTrail="true"
+								 CanKnockDown="true"
+								 AffectsArea="true"
+								 Burning="true"
+								 UnloadWhenSheathed="true"
+								 UseHandAsThrowBase="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags QuickFadeOut="true" />
+		</Item>
+
+		<Item id="flame_stone_fire_rfthrowing100"
+			  name="{=firestone}Fire Stone [+100 Throwing]"
+			  is_merchandise="true"
+			  body_name="bo_throwing_stone"
+			  holster_body_name="bo_axe_short"
+			  holster_mesh="stone_holster"
+			  holster_mesh_with_weapon="stone_holster"
+			  mesh="flame_ball"
+			  flying_mesh="flame_ball"
+			  value="10000"
+			  weight="0.1"
+			  appearance="0.1"
+			  Type="Thrown"
+			  item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Stone"
+						ammo_class="Stone"
+						stack_amount="14"
+						physics_material="missile"
+						accuracy="45"
+						thrust_speed="102"
+						speed_rating="102"
+						missile_speed="40"
+						weapon_length="10"
+						thrust_damage="15"
+						item_usage="stone"
+						rotation="100,30,20"
+						passby_sound_code=""
+						trail_particle_name="psys_flaming_weapon"
+						rotation_speed="0, -3.0, 0">
+					<WeaponFlags RangedWeapon="true"
+								 Consumable="true"
+								 AutoReload="true"
+								 LeavesTrail="true"
+								 CanKnockDown="true"
+								 AffectsArea="true"
+								 Burning="true"
+								 UnloadWhenSheathed="true"
+								 UseHandAsThrowBase="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags QuickFadeOut="true" />
+		</Item>
+
+		<Item id="Silver_light_wand"
+			 name="{=silverlightwand}Silver Light Wand"
+			 body_name="bo_mace_a"
+			 recalculate_body="true"
+			 mesh="lightbringer_staff02"
+			 culture="Culture.empire"
+			 weight="1.0"
+			 appearance="0.8"
+			 difficulty="0"
+			 Type="Musket"
+			 AmmoOffset="0.0, 0.02131, 0.24650"
+			 item_holsters="crossbow_back:bow_hip:mace_right_hip:bow_hip_2"
+			 holster_position_shift="0.02,0,-0.4">
+			<ItemComponent>
+				<Weapon weapon_class="Musket"
+						ammo_class="Cartridge"
+						missile_speed="60"
+						accuracy="150"
+						thrust_damage="67"
+						thrust_speed="80"
+						speed_rating="100"
+						weapon_length="168"
+						ammo_limit="1"
+						thrust_damage_type="Pierce"
+						item_usage="stone_staff"
+						reload_phase_count="1"
+						physics_material="wood_weapon"
+						center_of_mass="0,0,0.4">
+					<WeaponFlags RangedWeapon="true"
+								 HasString="true"
+								 NotUsableWithOneHand="true"
+								 TwoHandIdleOnMount="true" />
+				</Weapon>
+				<Weapon weapon_class="TwoHandedPolearm"
+							weapon_balance="100"
+							thrust_speed="80"
+							speed_rating="80"
+							physics_material="metal_weapon"
+							weapon_length="150"
+							swing_damage="100"
+							thrust_damage="100"
+							swing_damage_type="Cut"
+							thrust_damage_type="Cut"
+							item_usage="polearm_block_swing">
+					<WeaponFlags MeleeWeapon="true"
+								 PenaltyWithShield="true"
+								 NotUsableWithOneHand="true"
+								 TwoHandIdleOnMount="true"
+								 WideGrip="false"/>
+				</Weapon>
+			</ItemComponent>
+		</Item>
+
+		<Item
+			  id="silver_bolt"
+			  name="Silver Light Blast"
+			  body_name="bo_capsule_arrow"
+			  holster_body_name="bo_axe_short"
+			  mesh="bolt_bl_e"
+			  holster_mesh="stone_holster"
+			  holster_mesh_with_weapon="stone_holster"
+			  flying_mesh="bolt_bl_flying"
+			  culture="Culture.empire"
+			  weight="0.04"
+			  appearance="1"
+			  Type="Bullets"
+			  item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon
+					weapon_class="Cartridge"
+			stack_amount="8"
+					thrust_speed="30"
+					thrust_damage="200"
+					thrust_damage_type="Pierce"
+					speed_rating="80"
+					missile_speed="20"
+					weapon_length="37"
+					item_usage=""
+			 trail_particle_name="radiance_pillar"
+					passby_sound_code="event:/mission/combat/missile/passby"
+					rotation="180, 0, 0"
+					physics_material="missile"
+					sticking_position="0,-0.37,0"
+					sticking_rotation="90,0,0"
+					center_of_mass="0,0,-0.1"
+					modifier_group="bolt">
+					<WeaponFlags
+						AttachAmmoToVisual="true"
+						Consumable="true"
+			   LeavesTrail="true"
+			  Burning="true"
+			  AffectsArea="true"
+						AmmoSticksWhenShot="true"
+						AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags
+				ForceAttachOffHandPrimaryItemBone="true" />
+		</Item>
+
+		<Item
+			  id="ice_bolt_lv1"
+			  name="Ice Bolt"
+			  body_name="bo_capsule_arrow"
+			  holster_body_name="bo_axe_short"
+			  mesh="bolt_bl_e"
+			  holster_mesh="stone_holster"
+			  holster_mesh_with_weapon="stone_holster"
+			  flying_mesh="bolt_bl_flying"
+			  culture="Culture.empire"
+			  weight="0.04"
+			  appearance="1"
+			  Type="Bullets"
+			  item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon
+					weapon_class="Cartridge"
+			stack_amount="8"
+					thrust_speed="30"
+					thrust_damage="200"
+					thrust_damage_type="Pierce"
+					speed_rating="80"
+					missile_speed="20"
+					weapon_length="37"
+					item_usage=""
+			 trail_particle_name="radiance_pillar"
+					passby_sound_code="event:/mission/combat/missile/passby"
+					rotation="180, 0, 0"
+					physics_material="missile"
+					sticking_position="0,-0.37,0"
+					sticking_rotation="90,0,0"
+					center_of_mass="0,0,-0.1"
+					modifier_group="bolt">
+					<WeaponFlags
+						AttachAmmoToVisual="true"
+						Consumable="true"
+			   LeavesTrail="true"
+			  Burning="true"
+			  AffectsArea="true"
+						AmmoSticksWhenShot="true"
+						AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags
+				ForceAttachOffHandPrimaryItemBone="true" />
+		</Item>
+
+		<Item
+			  id="ice_bolt_lv2"
+			  name="Ice Blast"
+			  body_name="bo_capsule_arrow"
+			  holster_body_name="bo_axe_short"
+			  mesh="bolt_bl_e"
+			  holster_mesh="stone_holster"
+			  holster_mesh_with_weapon="stone_holster"
+			  flying_mesh="bolt_bl_flying"
+			  culture="Culture.empire"
+			  weight="0.04"
+			  appearance="1"
+			  Type="Bullets"
+			  item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon
+					weapon_class="Cartridge"
+			stack_amount="8"
+					thrust_speed="30"
+					thrust_damage="200"
+					thrust_damage_type="Pierce"
+					speed_rating="80"
+					missile_speed="20"
+					weapon_length="37"
+					item_usage=""
+			 trail_particle_name="radiance_pillar"
+					passby_sound_code="event:/mission/combat/missile/passby"
+					rotation="180, 0, 0"
+					physics_material="missile"
+					sticking_position="0,-0.37,0"
+					sticking_rotation="90,0,0"
+					center_of_mass="0,0,-0.1"
+					modifier_group="bolt">
+					<WeaponFlags
+						AttachAmmoToVisual="true"
+						Consumable="true"
+			   LeavesTrail="true"
+			  Burning="true"
+			  AffectsArea="true"
+						AmmoSticksWhenShot="true"
+						AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags
+				ForceAttachOffHandPrimaryItemBone="true" />
+		</Item>
+
+		<Item
+			  id="ice_bolt_lv3"
+			  name="Ice Wave"
+			  body_name="bo_capsule_arrow"
+			  holster_body_name="bo_axe_short"
+			  mesh="bolt_bl_e"
+			  holster_mesh="stone_holster"
+			  holster_mesh_with_weapon="stone_holster"
+			  flying_mesh="bolt_bl_flying"
+			  culture="Culture.empire"
+			  weight="0.04"
+			  appearance="1"
+			  Type="Bullets"
+			  item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon
+					weapon_class="Cartridge"
+			stack_amount="8"
+					thrust_speed="30"
+					thrust_damage="200"
+					thrust_damage_type="Pierce"
+					speed_rating="80"
+					missile_speed="20"
+					weapon_length="37"
+					item_usage=""
+			 trail_particle_name="radiance_pillar"
+					passby_sound_code="event:/mission/combat/missile/passby"
+					rotation="180, 0, 0"
+					physics_material="missile"
+					sticking_position="0,-0.37,0"
+					sticking_rotation="90,0,0"
+					center_of_mass="0,0,-0.1"
+					modifier_group="bolt">
+					<WeaponFlags
+						AttachAmmoToVisual="true"
+						Consumable="true"
+			   LeavesTrail="true"
+			  Burning="true"
+			  AffectsArea="true"
+						AmmoSticksWhenShot="true"
+						AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags
+				ForceAttachOffHandPrimaryItemBone="true" />
+		</Item>
+
+		<Item
+			  id="ice_purge_lv1"
+			  name="Ice Purge"
+			  body_name="bo_capsule_arrow"
+			  holster_body_name="bo_axe_short"
+			  mesh="bolt_bl_e"
+			  holster_mesh="stone_holster"
+			  holster_mesh_with_weapon="stone_holster"
+			  flying_mesh="bolt_bl_flying"
+			  culture="Culture.empire"
+			  weight="0.04"
+			  appearance="1"
+			  Type="Bullets"
+			  item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon
+					weapon_class="Cartridge"
+			stack_amount="8"
+					thrust_speed="30"
+					thrust_damage="200"
+					thrust_damage_type="Pierce"
+					speed_rating="80"
+					missile_speed="20"
+					weapon_length="37"
+					item_usage=""
+			 trail_particle_name="radiance_pillar"
+					passby_sound_code="event:/mission/combat/missile/passby"
+					rotation="180, 0, 0"
+					physics_material="missile"
+					sticking_position="0,-0.37,0"
+					sticking_rotation="90,0,0"
+					center_of_mass="0,0,-0.1"
+					modifier_group="bolt">
+					<WeaponFlags
+						AttachAmmoToVisual="true"
+						Consumable="true"
+			   LeavesTrail="true"
+			  Burning="true"
+			  AffectsArea="true"
+						AmmoSticksWhenShot="true"
+						AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags
+				ForceAttachOffHandPrimaryItemBone="true" />
+		</Item>
+
+		<Item
+			  id="ice_purge_lv2"
+			  name="Ice Curse"
+			  body_name="bo_capsule_arrow"
+			  holster_body_name="bo_axe_short"
+			  mesh="bolt_bl_e"
+			  holster_mesh="stone_holster"
+			  holster_mesh_with_weapon="stone_holster"
+			  flying_mesh="bolt_bl_flying"
+			  culture="Culture.empire"
+			  weight="0.04"
+			  appearance="1"
+			  Type="Bullets"
+			  item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon
+					weapon_class="Cartridge"
+			stack_amount="8"
+					thrust_speed="30"
+					thrust_damage="200"
+					thrust_damage_type="Pierce"
+					speed_rating="80"
+					missile_speed="20"
+					weapon_length="37"
+					item_usage=""
+			 trail_particle_name="radiance_pillar"
+					passby_sound_code="event:/mission/combat/missile/passby"
+					rotation="180, 0, 0"
+					physics_material="missile"
+					sticking_position="0,-0.37,0"
+					sticking_rotation="90,0,0"
+					center_of_mass="0,0,-0.1"
+					modifier_group="bolt">
+					<WeaponFlags
+						AttachAmmoToVisual="true"
+						Consumable="true"
+			   LeavesTrail="true"
+			  Burning="true"
+			  AffectsArea="true"
+						AmmoSticksWhenShot="true"
+						AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags
+				ForceAttachOffHandPrimaryItemBone="true" />
+		</Item>
+
+		<Item
+			  id="ice_purge_lv3"
+			  name="Ice Vegeance"
+			  body_name="bo_capsule_arrow"
+			  holster_body_name="bo_axe_short"
+			  mesh="bolt_bl_e"
+			  holster_mesh="stone_holster"
+			  holster_mesh_with_weapon="stone_holster"
+			  flying_mesh="bolt_bl_flying"
+			  culture="Culture.empire"
+			  weight="0.04"
+			  appearance="1"
+			  Type="Bullets"
+			  item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon
+					weapon_class="Cartridge"
+			stack_amount="8"
+					thrust_speed="30"
+					thrust_damage="200"
+					thrust_damage_type="Pierce"
+					speed_rating="80"
+					missile_speed="20"
+					weapon_length="37"
+					item_usage=""
+			 trail_particle_name="radiance_pillar"
+					passby_sound_code="event:/mission/combat/missile/passby"
+					rotation="180, 0, 0"
+					physics_material="missile"
+					sticking_position="0,-0.37,0"
+					sticking_rotation="90,0,0"
+					center_of_mass="0,0,-0.1"
+					modifier_group="bolt">
+					<WeaponFlags
+						AttachAmmoToVisual="true"
+						Consumable="true"
+			   LeavesTrail="true"
+			  Burning="true"
+			  AffectsArea="true"
+						AmmoSticksWhenShot="true"
+						AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags
+				ForceAttachOffHandPrimaryItemBone="true" />
+		</Item>
+
+		<Item
+			  id="flame_breath_fire_rfcrossbow100"
+			  name="{=flamebreath}Flame Breath"
+		  is_merchandise="false"
+			  body_name="bo_capsule_arrow"
+			  holster_body_name="bo_axe_short"
+			  mesh="flame_cone"
+			  flying_mesh="flame_cone"
+			  holster_mesh="stone_holster"
+			  holster_mesh_with_weapon="stone_holster"
+			  culture="Culture.empire"
+			  value="8000"
+			  weight="0.04"
+			  appearance="1"
+			  Type="Bullets"
+			  item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon
+					weapon_class="Cartridge"
+					stack_amount="10"
+					thrust_speed="20"
+					thrust_damage="80"
+					thrust_damage_type="Pierce"
+					speed_rating="0"
+					missile_speed="10"
+					weapon_length="37"
+					item_usage=""
+					passby_sound_code="event:/mission/combat/missile/passby"
+					rotation="180, 0, 0"
+					trail_particle_name="psys_sear"
+					physics_material="missile"
+					sticking_position="0,-0.37,0"
+					sticking_rotation="90,0,0"
+					center_of_mass="0,0,-0.1"
+					modifier_group="bolt">
+					<WeaponFlags
+						AttachAmmoToVisual="true"
+						Consumable="true"
+						LeavesTrail="true"
+						Burning="true"
+						AmmoSticksWhenShot="true"
+						AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags
+				ForceAttachOffHandPrimaryItemBone="true" />
+		</Item>
+
+		<Item id="force_sphere"
+				name="{=forcesphere}Force Sphere"
+				is_merchandise="false"
+				body_name="bo_throwing_stone"
+				holster_body_name="bo_axe_short"
+				holster_mesh="stone_holster"
+				holster_mesh_with_weapon="stone_holster"
+				mesh="deepflame_bolt_mesh"
+				flying_mesh="deepflame_bolt_inflight_mesh"
+				culture="Culture.empire"
+				value="6000"
+				weight="0.04"
+				appearance="1"
+				Type="Bullets"
+				item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon
+				 weapon_class="Cartridge"
+					stack_amount="10"
+					thrust_speed="15"
+					thrust_damage="60"
+					thrust_damage_type="Pierce"
+					speed_rating="5"
+					missile_speed="10"
+					weapon_length="37"
+					item_usage=""
+					passby_sound_code="event:/mission/combat/missile/passby"
+					rotation="180, 0, 0"
+					trail_particle_name="comet_force"
+					physics_material="missile"
+					sticking_position="0,-0.37,0"
+					sticking_rotation="90,0,0"
+					center_of_mass="0,0,-0.1"
+					modifier_group="bolt">
+					<WeaponFlags
+						AttachAmmoToVisual="true"
+						Consumable="true"
+						LeavesTrail="true"
+						Burning="true"
+						AmmoSticksWhenShot="true"
+						AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags
+				ForceAttachOffHandPrimaryItemBone="true" />
+		</Item>
+
+		<Item id="kinetic_force_rfcrossbow50"
+			  name="Kinetic Force"
+			  is_merchandise="false"
+			  body_name="bo_throwing_stone"
+			  holster_body_name="bo_axe_short"
+			  holster_mesh="stone_holster"
+			  holster_mesh_with_weapon="stone_holster"
+			  mesh="invisible_bolt"
+			  flying_mesh="invisible_bolt"
+			  culture="Culture.battania"
+			  value="4000"
+			  weight="0.04"
+			  appearance="1"
+			  Type="Bullets"
+			  item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon
+					weapon_class="Cartridge"
+					stack_amount="10"
+					thrust_speed="0"
+					thrust_damage="40"
+					thrust_damage_type="Pierce"
+					speed_rating="0"
+					missile_speed="5"
+					weapon_length="37"
+					item_usage=""
+					passby_sound_code="event:/mission/combat/missile/passby"
+					rotation="180, 0, 0"
+					trail_particle_name="psys_dust_storm"
+					physics_material="missile"
+					sticking_position="0,-0.37,0"
+					sticking_rotation="90,0,0"
+					center_of_mass="0,0,-0.1"
+					modifier_group="bolt">
+					<WeaponFlags
+						AttachAmmoToVisual="true"
+						Consumable="true"
+						CanKnockDown="true"
+						LeavesTrail="true"
+						Burning="true"
+			  AffectsArea="true"
+						AmmoSticksWhenShot="true"
+						AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags
+				ForceAttachOffHandPrimaryItemBone="true" />
+		</Item>
+
+		<Item id="comet_stone_rfcrossbow50"
+				name="Comet Sphere"
+				is_merchandise="false"
+				body_name="bo_throwing_stone"
+				holster_body_name="bo_axe_short"
+				holster_mesh="stone_holster"
+				holster_mesh_with_weapon="stone_holster"
+				mesh="deepflame_bolt_mesh"
+				flying_mesh="deepflame_bolt_inflight_mesh"
+				culture="Culture.battania"
+				value="2000"
+				weight="0.04"
+				appearance="1"
+				Type="Bullets"
+				item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon
+					weapon_class="Cartridge"
+					stack_amount="10"
+					thrust_speed="5"
+					thrust_damage="20"
+					thrust_damage_type="Pierce"
+					speed_rating="5"
+					missile_speed="10"
+					weapon_length="37"
+					item_usage=""
+					passby_sound_code="event:/mission/combat/missile/passby"
+					rotation="180, 0, 0"
+					physics_material="missile"
+					trail_particle_name="energy_bolt"
+					sticking_position="0,-0.37,0"
+					sticking_rotation="90,0,0"
+					center_of_mass="0,0,-0.1"
+					modifier_group="bolt">
+					<WeaponFlags
+						AttachAmmoToVisual="true"
+						Consumable="true"
+						CanKnockDown="true"
+						LeavesTrail="true"
+						Burning="true"
+						MissileWithPhysics="true"
+						AmmoSticksWhenShot="true"
+						AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags
+				ForceAttachOffHandPrimaryItemBone="true" />
+		</Item>
+
+		<Item id="white_stone_rfcrossbow50"
+				name="{=1CPdu9K0}White Particle"
+				is_merchandise="false"
+				body_name="bo_throwing_stone"
+				holster_body_name="bo_axe_short"
+				holster_mesh="stone_holster"
+				holster_mesh_with_weapon="stone_holster"
+				mesh="deepflame_bolt_mesh"
+				culture="Culture.battania"
+				value="2000"
+				weight="0.04"
+				appearance="1"
+				Type="Bullets"
+				item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon
+				weapon_class="Cartridge"
+					stack_amount="10"
+					thrust_speed="5"
+					thrust_damage="20"
+					thrust_damage_type="Pierce"
+					speed_rating="5"
+					missile_speed="10"
+					weapon_length="37"
+					item_usage=""
+					passby_sound_code="event:/mission/combat/missile/passby"
+					rotation="180, 0, 0"
+					trail_particle_name="spirit_flame"
+					physics_material="missile"
+					sticking_position="0,-0.37,0"
+					sticking_rotation="90,0,0"
+					center_of_mass="0,0,-0.1"
+					modifier_group="bolt">
+					<WeaponFlags
+						AttachAmmoToVisual="true"
+						Consumable="true"
+						CanKnockDown="true"
+						LeavesTrail="true"
+						Burning="true"
+						MissileWithPhysics="true"
+						AmmoSticksWhenShot="true"
+						AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags
+				ForceAttachOffHandPrimaryItemBone="true" />
+		</Item>
+
+		<Item id="blue_arcane_rfcrossbow150"
+			  name="Blue Arcane Force [+150 crossbow]"
+			  is_merchandise="false"
+			  body_name="bo_capsule_arrow"
+			  holster_body_name="bo_axe_short"
+			  holster_mesh="stone_holster"
+			  holster_mesh_with_weapon="stone_holster"
+			  mesh="bolt_bl_a"
+			  flying_mesh="magic_mandala"
+			  value="15000"
+			  weight="0.04"
+			  appearance="1"
+			  Type="Bullets"
+			  item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon
+		   weapon_class="Cartridge"
+						stack_amount="15"
+						physics_material="missile"
+						thrust_speed="102"
+						speed_rating="102"
+						missile_speed="40"
+						weapon_length="37"
+						thrust_damage="15"
+						thrust_damage_type="Pierce"
+					item_usage=""
+					passby_sound_code="event:/mission/combat/missile/passby"
+					rotation="180, 0, 0"
+					trail_particle_name="magic_circle_green"
+					sticking_position="0,-0.37,0"
+					sticking_rotation="90,0,0"
+					center_of_mass="0,0,-0.1"
+					modifier_group="bolt">
+					<WeaponFlags
+						AttachAmmoToVisual="true"
+						Consumable="true"
+						CanKnockDown="true"
+						LeavesTrail="true"
+						Burning="true"
+						MissileWithPhysics="true"
+						AmmoSticksWhenShot="true"
+						AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags
+				ForceAttachOffHandPrimaryItemBone="true" />
+		</Item>
+
+		<Item id="green_arcane_rfcrossbow150"
+			  name="{=1CPdu9K0}Arcane Force"
+			  is_merchandise="false"
+			  body_name="bo_capsule_arrow"
+			  holster_body_name="bo_axe_short"
+			  holster_mesh="stone_holster"
+			  holster_mesh_with_weapon="stone_holster"
+			  mesh="bolt_bl_a"
+			  flying_mesh="magic_circle_a"
+			  value="15000"
+			  weight="0.04"
+			  appearance="1"
+			  Type="Bullets"
+			  item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon
+			 weapon_class="Cartridge"
+						stack_amount="15"
+						physics_material="missile"
+						thrust_speed="102"
+						speed_rating="102"
+						missile_speed="40"
+						weapon_length="37"
+						thrust_damage="15"
+						thrust_damage_type="Pierce"
+					item_usage=""
+					passby_sound_code="event:/mission/combat/missile/passby"
+					rotation="180, 0, 0"
+					trail_particle_name="magic_circle_green"
+					sticking_position="0,-0.37,0"
+					sticking_rotation="90,0,0"
+					center_of_mass="0,0,-0.1"
+					modifier_group="bolt">
+					<WeaponFlags
+						AttachAmmoToVisual="true"
+						Consumable="true"
+						CanKnockDown="true"
+						LeavesTrail="true"
+						Burning="true"
+						MissileWithPhysics="true"
+						AmmoSticksWhenShot="true"
+						AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags
+				ForceAttachOffHandPrimaryItemBone="true" />
+		</Item>
+
+		<Item id="radiance_rfcrossbow100"
+			  name="{=1CPdu9K0}White Particle"
+			  is_merchandise="false"
+			  body_name="bo_throwing_stone"
+			  holster_body_name="bo_axe_short"
+			  holster_mesh="stone_holster"
+			  holster_mesh_with_weapon="stone_holster"
+			  mesh="briliant_lance_mesh"
+			  culture="Culture.battania"
+			  value="8000"
+			  weight="0.04"
+			  appearance="1"
+			  Type="Bullets"
+			  item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon
+				weapon_class="Cartridge"
+					stack_amount="10"
+					thrust_speed="15"
+					thrust_damage="50"
+					thrust_damage_type="Pierce"
+					speed_rating="0"
+					missile_speed="5"
+					weapon_length="50"
+					item_usage=""
+					passby_sound_code="event:/mission/combat/missile/passby"
+					rotation="180, 0, 0"
+					trail_particle_name="radiant_gaze"
+					physics_material="missile"
+					sticking_position="0,-0.37,0"
+					sticking_rotation="90,0,0"
+					center_of_mass="0,0,-0.1"
+					modifier_group="bolt">
+					<WeaponFlags
+						AttachAmmoToVisual="true"
+						Consumable="true"
+						CanKnockDown="true"
+						LeavesTrail="true"
+						Burning="true"
+						MissileWithPhysics="true"
+						AmmoSticksWhenShot="true"
+						AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags
+				ForceAttachOffHandPrimaryItemBone="true" />
+		</Item>
+
+		<Item id="spell_magic_force"
+			  name="Spell Magic Force"
+			 is_merchandise="false"
+			  body_name="bo_projectile_rock"
+			  holster_body_name="bo_axe_short"
+			  holster_mesh="stone_holster"
+			  holster_mesh_with_weapon="stone_holster"
+			  mesh="brilliant_lance_mesh"
+			  flying_mesh="brilliant_lance_inflight_mesh"
+			  value="7000"
+			  weight="0.1"
+			  appearance="1"
+			  difficulty="20"
+			  Type="Bullets"
+			  item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon
+					   weapon_class="Cartridge"
+						stack_amount="30"
+						physics_material="missile"
+						accuracy="90"
+						thrust_speed="60"
+						speed_rating="90"
+						missile_speed="70"
+						weapon_length="80"
+						thrust_damage="50"
+						thrust_damage_type="Cut"
+						item_usage="stone"
+						rotation="100,30,20"
+						flying_sound_code="event:/mission/combat/boulder/passby"
+						passby_sound_code=""
+						trail_particle_name="magic_explosion"
+						rotation_speed="0, 0.0, 0">
+					<WeaponFlags RangedWeapon="true"
+								 Consumable="true"
+								 PenaltyWithShield="true"
+								 MissileWithPhysics="true"
+								 CanPenetrateShield="true"
+								 LeavesTrail="true"
+								 Burning="true"
+								 UseHandAsThrowBase="true"
+								 AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags Civilian="false"/>
+		</Item>
+
+		<Item id="spell_healing_force"
+			  name="Spell Healing Force"
+			 is_merchandise="false"
+			  body_name="bo_projectile_rock"
+			  holster_body_name="bo_axe_short"
+			  holster_mesh="stone_holster"
+			  holster_mesh_with_weapon="stone_holster"
+			  mesh="brilliant_lance_mesh"
+			  flying_mesh="brilliant_lance_inflight_mesh"
+			  value="7000"
+			  weight="0.1"
+			  appearance="1"
+			  difficulty="20"
+			  Type="Bullets"
+			  item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Cartridge"
+						stack_amount="10"
+						physics_material="missile"
+						accuracy="90"
+						thrust_speed="60"
+						speed_rating="90"
+						missile_speed="70"
+						weapon_length="80"
+						thrust_damage="50"
+						thrust_damage_type="Cut"
+						item_usage="stone"
+						rotation="100,30,20"
+						flying_sound_code="event:/mission/combat/boulder/passby"
+						passby_sound_code=""
+						trail_particle_name="harmonic_convergence"
+						rotation_speed="0, 0.0, 0">
+					<WeaponFlags RangedWeapon="true"
+								 Consumable="true"
+								 PenaltyWithShield="true"
+								 MissileWithPhysics="true"
+								 CanPenetrateShield="true"
+								 LeavesTrail="true"
+								 Burning="true"
+								 UseHandAsThrowBase="true"
+								 AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags Civilian="false"/>
+		</Item>
+
+		<Item id="spell_healing_field"
+			  name="Spell Healing Force Field"
+			 is_merchandise="false"
+			  body_name="bo_projectile_rock"
+			  holster_body_name="bo_axe_short"
+			  holster_mesh="stone_holster"
+			  holster_mesh_with_weapon="stone_holster"
+			  mesh="brilliant_lance_mesh"
+			  flying_mesh="brilliant_lance_inflight_mesh"
+			  value="12000"
+			  weight="0.1"
+			  appearance="1"
+			  difficulty="80"
+			  Type="Bullets"
+			  item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Cartridge"
+						stack_amount="10"
+						physics_material="missile"
+						accuracy="90"
+						thrust_speed="60"
+						speed_rating="90"
+						missile_speed="70"
+						weapon_length="100"
+						thrust_damage="0"
+						thrust_damage_type="Cut"
+						item_usage="stone"
+						rotation="100,30,20"
+						flying_sound_code="event:/mission/combat/boulder/passby"
+						passby_sound_code=""
+						trail_particle_name="harmonic_convergence"
+						rotation_speed="0, 0.0, 0">
+					<WeaponFlags RangedWeapon="true"
+								 Consumable="true"
+								 PenaltyWithShield="true"
+								 MissileWithPhysics="true"
+								 CanPenetrateShield="true"
+								 LeavesTrail="true"
+								 Burning="true"
+								 UseHandAsThrowBase="true"
+								 AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags Civilian="false"/>
+		</Item>
+
+		<Item id="spell_healing_force_area_big"
+			  name="Spell Healing Force Wave"
+			 is_merchandise="false"
+			  body_name="bo_projectile_rock"
+			  holster_body_name="bo_axe_short"
+			  holster_mesh="stone_holster"
+			  holster_mesh_with_weapon="stone_holster"
+			  mesh="brilliant_lance_mesh"
+			  flying_mesh="brilliant_lance_inflight_mesh"
+			  value="20000"
+			  weight="0.1"
+			  appearance="1"
+			  difficulty="100"
+			  Type="Bullets"
+			  item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Cartridge"
+						stack_amount="10"
+						physics_material="missile"
+						accuracy="90"
+						thrust_speed="60"
+						speed_rating="90"
+						missile_speed="90"
+						weapon_length="80"
+						thrust_damage="5"
+						thrust_damage_type="Cut"
+						item_usage="stone"
+						rotation="100,30,20"
+						flying_sound_code="event:/mission/combat/boulder/passby"
+						passby_sound_code=""
+						trail_particle_name="harmonic_convergence"
+						rotation_speed="0, 0.0, 0">
+					<WeaponFlags RangedWeapon="true"
+								 Consumable="true"
+								 PenaltyWithShield="true"
+								 MissileWithPhysics="true"
+								 CanPenetrateShield="true"
+								 LeavesTrail="true"
+								 Burning="true"
+								 UseHandAsThrowBase="true"
+								 AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags Civilian="false"/>
+		</Item>
+
+		<Item id="spell_ground_fire_rfthrowing50"
+			  name="Spell Ground Fire"
+			 is_merchandise="false"
+			  body_name="bo_projectile_rock"
+			  holster_body_name="bo_axe_short"
+			  holster_mesh="stone_holster"
+			  holster_mesh_with_weapon="stone_holster"
+			  mesh="flame_ball"
+			  flying_mesh="flame_ball"
+			  value="7000"
+			  weight="0.1"
+			  appearance="1"
+			  difficulty="20"
+			  Type="Bullets"
+			  item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Cartridge"
+						stack_amount="30"
+						physics_material="missile"
+						accuracy="90"
+						thrust_speed="60"
+						speed_rating="90"
+						missile_speed="70"
+						weapon_length="80"
+						thrust_damage="50"
+						thrust_damage_type="Cut"
+						item_usage="stone"
+						rotation="100,30,20"
+						flying_sound_code="event:/mission/combat/boulder/passby"
+						passby_sound_code=""
+						trail_particle_name="fire_ground"
+						rotation_speed="0, 0.0, 0">
+					<WeaponFlags RangedWeapon="true"
+								 Consumable="true"
+								 PenaltyWithShield="true"
+								 MissileWithPhysics="true"
+								 CanPenetrateShield="true"
+								 LeavesTrail="true"
+								 Burning="true"
+								 UseHandAsThrowBase="true"
+								 AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags Civilian="false"/>
+		</Item>
+
+		<Item id="spell_blood_wave_rfthrowing50"
+			  name="Spell Blood Wave"
+			 is_merchandise="false"
+			  body_name="bo_projectile_rock"
+			  holster_body_name="bo_axe_short"
+			  holster_mesh="stone_holster"
+			  holster_mesh_with_weapon="stone_holster"
+			  mesh="flame_ball"
+			  flying_mesh="flame_ball"
+			  value="7000"
+			  weight="0.1"
+			  appearance="1"
+			  difficulty="20"
+			  Type="Bullets"
+			  item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Cartridge"
+						stack_amount="30"
+						physics_material="missile"
+						accuracy="90"
+						thrust_speed="60"
+						speed_rating="90"
+						missile_speed="70"
+						weapon_length="80"
+						thrust_damage="50"
+						thrust_damage_type="Cut"
+						item_usage="stone"
+						rotation="100,30,20"
+						flying_sound_code="event:/mission/combat/boulder/passby"
+						passby_sound_code=""
+						trail_particle_name="fire_ground"
+						rotation_speed="0, 0.0, 0">
+					<WeaponFlags RangedWeapon="true"
+								 Consumable="true"
+								 PenaltyWithShield="true"
+								 MissileWithPhysics="true"
+								 CanPenetrateShield="true"
+								 LeavesTrail="true"
+								 Burning="true"
+								 UseHandAsThrowBase="true"
+								 AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags Civilian="false"/>
+		</Item>
+
+		<Item id="spell_earth_rocks_rfthrowing50"
+			  name="Spell Earth Rocks"
+			 is_merchandise="false"
+			  body_name="bo_projectile_rock"
+			  holster_body_name="bo_axe_short"
+			  holster_mesh="stone_holster"
+			  holster_mesh_with_weapon="stone_holster"
+			  mesh="forceblast_mesh"
+			  flying_mesh="forceblast_mesh"
+			  value="7000"
+			  weight="0.1"
+			  appearance="1"
+			  difficulty="20"
+			  Type="Bullets"
+			  item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Cartridge"
+						stack_amount="30"
+						physics_material="missile"
+						accuracy="90"
+						thrust_speed="60"
+						speed_rating="90"
+						missile_speed="70"
+						weapon_length="80"
+						thrust_damage="50"
+						thrust_damage_type="Cut"
+						item_usage="stone"
+						rotation="100,30,20"
+						flying_sound_code="event:/mission/combat/boulder/passby"
+						passby_sound_code=""
+						trail_particle_name="earth_particles"
+						rotation_speed="0, 0.0, 0">
+					<WeaponFlags RangedWeapon="true"
+								 Consumable="true"
+								 PenaltyWithShield="true"
+								 MissileWithPhysics="true"
+								 CanPenetrateShield="true"
+								 LeavesTrail="true"
+								 Burning="true"
+								 UseHandAsThrowBase="true"
+								 AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags Civilian="false"/>
+		</Item>
+
+		<Item id="spell_light_bolt"
+			  name="Spell Light Bolt"
+			 is_merchandise="false"
+			  body_name="bo_projectile_rock"
+			  holster_body_name="bo_axe_short"
+			  holster_mesh="stone_holster"
+			  holster_mesh_with_weapon="stone_holster"
+			  mesh="light_bolt"
+			  flying_mesh="light_bolt"
+			  value="7000"
+			  weight="0.1"
+			  appearance="1"
+			  difficulty="20"
+			  Type="Bullets"
+			  item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Cartridge"
+						stack_amount="30"
+						physics_material="missile"
+						accuracy="90"
+						thrust_speed="60"
+						speed_rating="90"
+						missile_speed="70"
+						weapon_length="80"
+						thrust_damage="50"
+						thrust_damage_type="Cut"
+						item_usage="stone"
+						rotation="100,30,20"
+						flying_sound_code="event:/mission/combat/boulder/passby"
+						passby_sound_code=""
+						trail_particle_name="lighting_bolt_2"
+						rotation_speed="0, 0.0, 0">
+					<WeaponFlags RangedWeapon="true"
+								 Consumable="true"
+								 PenaltyWithShield="true"
+								 MissileWithPhysics="true"
+								 CanPenetrateShield="true"
+								 LeavesTrail="true"
+								 Burning="true"
+								 UseHandAsThrowBase="true"
+								 AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags Civilian="false"/>
+		</Item>
+
+		<Item id="spell_skull_terror"
+			  name="Spell Terror"
+			 is_merchandise="false"
+			  body_name="bo_projectile_rock"
+			  holster_body_name="bo_axe_short"
+			  holster_mesh="stone_holster"
+			  holster_mesh_with_weapon="stone_holster"
+			  mesh="skull_magic"
+			  flying_mesh="skull_magic_flying"
+			  value="7000"
+			  weight="0.1"
+			  appearance="1"
+			  difficulty="20"
+			  Type="Bullets"
+			  item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Cartridge"
+						stack_amount="30"
+						physics_material="missile"
+						accuracy="90"
+						thrust_speed="60"
+						speed_rating="10"
+						missile_speed="10"
+						weapon_length="80"
+						thrust_damage="50"
+						thrust_damage_type="Cut"
+						item_usage="stone"
+						rotation="100,30,20"
+						flying_sound_code="event:/mission/combat/boulder/passby"
+						passby_sound_code=""
+						trail_particle_name="skull_terror"
+						rotation_speed="0, 0.0, 0">
+					<WeaponFlags RangedWeapon="true"
+								 Consumable="true"
+								 PenaltyWithShield="true"
+								 MissileWithPhysics="true"
+								 CanPenetrateShield="true"
+								 LeavesTrail="true"
+								 Burning="true"
+								 UseHandAsThrowBase="true"
+								 AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags Civilian="false"/>
+		</Item>
+
+		<Item id="spell_arcane_shot_rfthrowing50"
+			  name="Spell Arcane Shot [+50 throwing]"
+			 is_merchandise="false"
+			  body_name="bo_projectile_rock"
+			  holster_body_name="bo_axe_short"
+			  holster_mesh="stone_holster"
+			  holster_mesh_with_weapon="stone_holster"
+			  mesh="arcane_shot_mesh"
+			  flying_mesh="arcane_shot_mesh"
+			  value="7000"
+			  weight="0.1"
+			  appearance="1"
+			  difficulty="20"
+			  Type="Thrown"
+			  item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Stone"
+						ammo_class="Stone"
+						stack_amount="30"
+						physics_material="missile"
+						accuracy="90"
+						thrust_speed="60"
+						speed_rating="90"
+						missile_speed="70"
+						weapon_length="80"
+						thrust_damage="50"
+						thrust_damage_type="Cut"
+						item_usage="stone"
+						rotation="100,30,20"
+						flying_sound_code="event:/mission/combat/boulder/passby"
+						passby_sound_code=""
+						trail_particle_name="harmonic_convergence"
+						rotation_speed="0, 0.0, 0">
+					<WeaponFlags RangedWeapon="true"
+								 Consumable="true"
+								 PenaltyWithShield="true"
+								 MissileWithPhysics="true"
+								 CanPenetrateShield="true"
+								 LeavesTrail="true"
+								 Burning="true"
+								 UseHandAsThrowBase="true"
+								 AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags Civilian="false"/>
+		</Item>
+
+		<Item id="necromancer_staff"
+			  name="Necromancer Staff"
+			  body_name="bo_necromancer_staff"
+			  recalculate_body="true"
+			  mesh="necromancer_staff"
+			  culture="Culture.sturgia"
+			  weight="1.0"
+			  appearance="0.8"
+			  difficulty="5"
+			  Type="Musket"
+			  AmmoOffset="0.0, 0.02131, 0.24650"
+			  item_holsters="crossbow_back:bow_hip:mace_right_hip:bow_hip_2"
+			  holster_position_shift="0.02,0,-0.4">
+			<ItemComponent>
+				<Weapon weapon_class="Musket"
+						ammo_class="Cartridge"
+						missile_speed="80"
+						accuracy="150"
+						thrust_damage="97"
+						thrust_speed="80"
+						speed_rating="100"
+						weapon_length="212"
+						ammo_limit="8"
+						thrust_damage_type="Pierce"
+						item_usage="stone_staff"
+						reload_phase_count="1"
+						physics_material="metal_weapon"
+						center_of_mass="0,0,0.4">
+					<WeaponFlags RangedWeapon="true"
+								 HasString="true"
+								 NotUsableWithOneHand="false"
+								 TwoHandIdleOnMount="true" />
+				</Weapon>
+				<Weapon weapon_class="TwoHandedPolearm"
+							weapon_balance="100"
+							thrust_speed="80"
+							speed_rating="80"
+							physics_material="metal_weapon"
+							weapon_length="150"
+							swing_damage="100"
+							thrust_damage="100"
+							swing_damage_type="Cut"
+							thrust_damage_type="Cut"
+							item_usage="polearm_block_swing">
+					<WeaponFlags MeleeWeapon="true"
+								 PenaltyWithShield="true"
+								 NotUsableWithOneHand="true"
+								 TwoHandIdleOnMount="true"
+								 WideGrip="false"/>
+				</Weapon>
+			</ItemComponent>
+		</Item>
+
+		<Item id="old_wood_wand"
+			  name="Old Wood Wand"
+			  body_name="bo_mace_a"
+			  recalculate_body="true"
+			  mesh="druid_staff"
+			  culture="Culture.empire"
+			  weight="1.0"
+			  appearance="0.8"
+			  difficulty="0"
+			  Type="Musket"
+			  AmmoOffset="0.0, 0.02131, 0.24650"
+			  item_holsters="crossbow_back:bow_hip:mace_right_hip:bow_hip_2"
+			  holster_position_shift="0.02,0,-0.4">
+			<ItemComponent>
+				<Weapon weapon_class="Musket"
+						ammo_class="Cartridge"
+						missile_speed="60"
+						accuracy="150"
+						thrust_damage="67"
+						thrust_speed="80"
+						speed_rating="100"
+						weapon_length="168"
+						ammo_limit="1"
+						thrust_damage_type="Pierce"
+						item_usage="stone"
+						reload_phase_count="1"
+						physics_material="wood_weapon"
+						center_of_mass="0,0,0.4"
+						modifier_group="crossbow">
+					<WeaponFlags RangedWeapon="true"
+								 HasString="true"
+								 NotUsableWithOneHand="true"
+								 TwoHandIdleOnMount="true" />
+				</Weapon>
+			</ItemComponent>
+		</Item>
+
+		<Item id="gandalf_staff_a"
+			 name="Elminster Staff"
+			 body_name="bo_push_fork"
+			  is_merchandise="false"
+			 mesh="gandalf_staff"
+			 culture="Culture.neutral_culture"
+			 weight="3.0"
+			 appearance="0.8"
+			 difficulty="0"
+			 Type="Musket"
+			 AmmoOffset="0.0, 0.02131, 0.24650"
+			 item_holsters="crossbow_back:bow_hip:mace_right_hip:bow_hip_2"
+			 holster_position_shift="0.02,0,-0.4">
+			<ItemComponent>
+				<Weapon weapon_class="Musket"
+						ammo_class="Cartridge"
+						missile_speed="177"
+						accuracy="120"
+						thrust_damage="175"
+						thrust_speed="92"
+						speed_rating="62"
+						weapon_length="95"
+						ammo_limit="25"
+						thrust_damage_type="Pierce"
+						item_usage="stone"
+						reload_phase_count="2"
+						physics_material="wood_weapon"
+						center_of_mass="0,0,0.4"
+						modifier_group="crossbow">
+					<WeaponFlags RangedWeapon="true"
+								 HasString="true"
+								 NotUsableWithOneHand="true"
+								 AffectsAreaBig="true"
+								 CanKnockDown="true"
+								 LeavesTrail="true"
+								 CanPenetrateShield="true"
+								 Burning="true"
+								 MultiplePenetration="true"
+								 TwoHandIdleOnMount="true" />
+				</Weapon>
+			</ItemComponent>
+			<!--flag name="AmmoOffset" value="0.0, 0.02131, -0.15" /-->
+		</Item>
+
+		<Item id="magic_wand_fire_cristal"
+			  name="Fire Crystal Magic Wand"
+			  body_name="bo_mace_a"
+			  recalculate_body="true"
+			  mesh="crystal_wand"
+			  culture="Culture.empire"
+			  weight="1.0"
+			  appearance="0.8"
+			  difficulty="0"
+			  Type="Musket"
+			  AmmoOffset="0.0, 0.02131, 0.24650"
+			  item_holsters="crossbow_back:bow_hip:mace_right_hip:bow_hip_2"
+			  holster_position_shift="0.02,0,-0.4">
+			<ItemComponent>
+				<Weapon weapon_class="Musket"
+						ammo_class="Cartridge"
+						missile_speed="60"
+						accuracy="150"
+						thrust_damage="67"
+						thrust_speed="80"
+						speed_rating="100"
+						weapon_length="168"
+						ammo_limit="1"
+						thrust_damage_type="Pierce"
+						item_usage="stone"
+						reload_phase_count="1"
+						physics_material="wood_weapon"
+						center_of_mass="0,0,0.4"
+						modifier_group="crossbow">
+					<WeaponFlags RangedWeapon="true"
+								 HasString="true"
+								 NotUsableWithOneHand="true"
+								 TwoHandIdleOnMount="true" />
+				</Weapon>
+				<Weapon weapon_class="TwoHandedPolearm"
+							  weapon_balance="100"
+							  thrust_speed="80"
+							  speed_rating="80"
+							  physics_material="metal_weapon"
+							  weapon_length="150"
+							  swing_damage="100"
+							  thrust_damage="100"
+							  swing_damage_type="Cut"
+							  thrust_damage_type="Cut"
+							  item_usage="polearm_block_thrust">
+					<WeaponFlags MeleeWeapon="true"
+								 PenaltyWithShield="true"
+								 NotUsableWithOneHand="true"
+								 TwoHandIdleOnMount="true"
+								 WideGrip="true"/>
+				</Weapon>
+			</ItemComponent>
+		</Item>
+
+		<Item id="wand_magic_fire"
+			  name="{=DI9P2HDG}Wand Fire Ball"
+			  body_name="bo_capsule_arrow"
+			  holster_body_name="bo_axe_short"
+			  mesh="throwing_stone"
+			  holster_mesh="arrow_bl_b_quiver"
+			  holster_mesh_with_weapon="arrow_bl_b_quiver"
+			  flying_mesh="throwing_stone"
+			  value="13000"
+			  weight="0.1"
+			  appearance="2"
+			  difficulty="20"
+			  Type="Bullets"
+			  item_holsters="quiver_back_middle:quiver_bolts_2:quiver_bolts"
+			  holster_position_shift="0.0,0.0,0.15">
+			<ItemComponent>
+				<Weapon weapon_class="Cartridge"
+						stack_amount="5"
+						thrust_speed="30"
+						speed_rating="50"
+						physics_material="missile"
+						missile_speed="60"
+						weapon_length="30"
+						thrust_damage="100"
+						thrust_damage_type="Pierce"
+						item_usage="stone"
+						flying_sound_code="event:/mission/ambient/detail/fire/fire_medium"
+						passby_sound_code="event:/mission/ambient/detail/fire/fire_medium"
+						trail_particle_name="psys_game_burning_jar_trail"
+						rotation="0, -80, 25"
+						sticking_position="0,-0.97,0"
+						sticking_rotation="90,0,0"
+						center_of_mass="0,0,-0.13"
+						modifier_group="arrow">
+					<WeaponFlags Consumable="true"
+								 LeavesTrail="true"
+								 Burning="true"
+								 AmmoSticksWhenShot="true"
+								 AffectsAreaBig="true"
+								 CanPenetrateShield="true"
+								 MissileWithPhysics="true"
+								 AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags />
+		</Item>
+
+		<Item id="wand_magic_fire_green_rfcrossbow100"
+			  name="{=DI9P2HDG}Wand Energy Ball"
+			  body_name="bo_capsule_arrow"
+			  holster_body_name="bo_axe_short"
+			  mesh="throwing_stone"
+			  holster_mesh="arrow_bl_b_quiver"
+			  holster_mesh_with_weapon="arrow_bl_b_quiver"
+			  flying_mesh="throwing_stone"
+			  value="13000"
+			  weight="0.1"
+			  appearance="2"
+			  difficulty="20"
+			  Type="Bullets"
+			  item_holsters="quiver_back_middle:quiver_bolts_2:quiver_bolts"
+			  holster_position_shift="0.0,0.0,0.15">
+			<ItemComponent>
+				<Weapon weapon_class="Cartridge"
+						stack_amount="5"
+						thrust_speed="30"
+						speed_rating="50"
+						physics_material="missile"
+						missile_speed="60"
+						weapon_length="30"
+						thrust_damage="100"
+						thrust_damage_type="Pierce"
+						item_usage="stone"
+						flying_sound_code="event:/mission/ambient/detail/fire/fire_medium"
+						passby_sound_code="event:/mission/ambient/detail/fire/fire_medium"
+						trail_particle_name="psys_electric_sphere"
+						rotation="0, -80, 25"
+						sticking_position="0,-0.97,0"
+						sticking_rotation="90,0,0"
+						center_of_mass="0,0,-0.13"
+						modifier_group="arrow">
+					<WeaponFlags Consumable="true"
+								 LeavesTrail="true"
+								 Burning="true"
+								 MissileWithPhysics="true"
+								 AmmoSticksWhenShot="true"
+								 AffectsArea="true"
+								 AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags />
+		</Item>
+
+		<Item id="dark_sun_helmet_rfmoralizing50" name="Bahkun Anuar Helmet [+50 troop morale]" mesh="darksun_helmet" culture="Culture.aserai" subtype="head_armor" weight="1.4" difficulty="0" appearance="0.2" Type="headArmor">
+			<ItemComponent>
+				<Armor head_armor="75" has_gender_variations="false" hair_cover_type="all" modifier_group="plate" material_type="Plate" />
+			</ItemComponent>
+			<Flags UseTeamColor="false" />
+		</Item>
+
+		<Item id="ulvor_helmet_rfmoralizing40" name="Ulvor Helmet [+40 troop morale]" mesh="ulvor_helmet" culture="Culture.empire" subtype="head_armor" weight="2.4" difficulty="0" appearance="0.2" Type="headArmor">
+			<ItemComponent>
+				<Armor head_armor="75" has_gender_variations="false" hair_cover_type="all" modifier_group="plate" material_type="Plate" />
+			</ItemComponent>
+			<Flags UseTeamColor="false" />
+		</Item>
+
+		<Item id="loki_helmet_rfdemoralizing40" name="Erenduil Helmet [-40 enemy troop morale]" mesh="loki_helmet" culture="Culture.vlandia" subtype="head_armor" weight="2.4" difficulty="0" appearance="0.2" Type="headArmor">
+			<ItemComponent>
+				<Armor head_armor="85" has_gender_variations="false" hair_cover_type="all" modifier_group="plate" material_type="Plate" />
+			</ItemComponent>
+			<Flags UseTeamColor="false" />
+		</Item>
+
+		<Item id="lord_soth_armor_rfdemoralizing20"
+			 name="{=lordsoertharmor}Lord Soerth Armor [-20 enemy troop morale]"
+			 mesh="lord_soth_armor"
+			 culture="Culture.sturgia"
+			 subtype="body_armor"
+			 weight="18.0"
+			 difficulty="0"
+			 appearance="2"
+			 Type="BodyArmor">
+			<ItemComponent>
+				<Armor body_armor="46"
+					  leg_armor="16"
+					  arm_armor="14"
+					  has_gender_variations="true"
+					  covers_body="true"
+					  modifier_group="plate"
+					  material_type="Plate" />
+			</ItemComponent>
+			<Flags UseTeamColor="true" />
+		</Item>
+
+		<Item id="lord_soth_helmet_rfdemoralizing15"
+			  name="{=lordsoerthhelmet}Lord Soerth Helmet [-15 enemy troop morale]"
+			  mesh="lord_soth_helmet"
+			  culture="Culture.sturgia"
+			  is_merchandise="true"
+			  subtype="head_armor"
+			  weight="3.4"
+			  difficulty="0"
+			  appearance="5"
+			  Type="HeadArmor">
+			<ItemComponent>
+				<Armor head_armor="50"
+					   has_gender_variations="false"
+					   hair_cover_type="all"
+					   beard_cover_type="type2"
+					   modifier_group="plate"
+					   material_type="Plate" />
+			</ItemComponent>
+			<Flags />
+		</Item>
+
+		<Item id="lord_soth_shoulder_rfdemoralizing15"
+			  name="{=lordsoerthshoulder}Lord Soerth Shoulder [-15 enemy troop morale]"
+			  subtype="body_armor"
+			  mesh="lord_soth_shoulder"
+			  culture="Culture.sturgia"
+			  weight="4.5"
+			  difficulty="0"
+			  appearance="1.8"
+			  Type="Cape">
+			<ItemComponent>
+				<Armor body_armor="15"
+					   modifier_group="plate"
+					   material_type="Plate" />
+			</ItemComponent>
+			<Flags />
+		</Item>
+
+		<Item id="lord_soth_boots_rfdemoralizing10"
+			  name="{=lordsoerthboots}Lord Soerth Boots [-10 enemy troop morale]"
+			  mesh="lord_soth_boots"
+			  culture="Culture.sturgia"
+			  weight="1.5"
+			  difficulty="0"
+			  appearance="1"
+			  Type="LegArmor">
+			<ItemComponent>
+				<Armor leg_armor="22"
+						covers_legs="true"
+					   modifier_group="plate"
+					   material_type="Plate" />
+			</ItemComponent>
+			<Flags Civilian="true" />
+		</Item>
+
+		<Item id="lord_soth_bracers_rfdemoralizing10"
+			  name="{=lordsoerthvambraces}Lord Soerth Vambraces [-10 enemy troop morale]"
+			  mesh="lord_soth_hands"
+			  culture="Culture.sturgia"
+			  weight="0.6"
+			  difficulty="0"
+			  appearance="3"
+			  Type="HandArmor">
+			<ItemComponent>
+				<Armor arm_armor="22"
+						covers_hands="true"
+					  modifier_group="plate"
+					  material_type="Plate" />
+			</ItemComponent>
+			<Flags Civilian="true" />
+		</Item>
+
+		<Item id="seraphim_armor_rfmoralizing20"
+			name="{=HKRGEXqy}Ceraph Armor [+20 troop morale]"
+			mesh="seraphin_armor"
+			culture="Culture.battania"
+			is_merchandise="false"
+			subtype="body_armor"
+			weight="18.0"
+			difficulty="0"
+			appearance="2"
+			Type="BodyArmor">
+			<ItemComponent>
+				<Armor body_armor="46"
+					  leg_armor="16"
+					  arm_armor="14"
+					  has_gender_variations="false"
+					  covers_body="true"
+					  modifier_group="plate"
+					  material_type="Plate" />
+			</ItemComponent>
+			<Flags UseTeamColor="true" />
+		</Item>
+
+		<Item id="seraphim_shoulder_rfmoralizing15"
+			  name="{=ceraphshoulder}Ceraph Shoulder [+15 troop morale]"
+			  subtype="body_armor"
+			  mesh="seraphim_shoulder"
+			  is_merchandise="false"
+			  culture="Culture.battania"
+			  weight="4.5"
+			  difficulty="0"
+			  appearance="1.8"
+			  Type="Cape">
+			<ItemComponent>
+				<Armor body_armor="15"
+					   modifier_group="plate"
+					   material_type="Plate" />
+			</ItemComponent>
+			<Flags />
+		</Item>
+
+		<Item id="seraphim_boots_rfmoralizing15"
+			  name="{=ceraphboots}Ceraph Boots [+15 troop morale]"
+			  mesh="seraphim_boots"
+			  culture="Culture.battania"
+			  is_merchandise="false"
+			  weight="1.5"
+			  difficulty="0"
+			  appearance="1"
+			  Type="LegArmor">
+			<ItemComponent>
+				<Armor leg_armor="22"
+						covers_legs="true"
+					   modifier_group="plate"
+					   material_type="Plate" />
+			</ItemComponent>
+			<Flags Civilian="true" />
+		</Item>
+
+		<Item id="seraph_bracers_rfmoralizing10"
+			  name="{=ceraphvambraces}Ceraph Vambraces [+10 troop morale]"
+			  mesh="seraphim_vambraces"
+			  culture="Culture.battania"
+			  is_merchandise="false"
+			  weight="0.6"
+			  difficulty="0"
+			  appearance="3"
+			  Type="HandArmor">
+			<ItemComponent>
+				<Armor arm_armor="22"
+						covers_hands="false"
+					  modifier_group="plate"
+					  material_type="Plate" />
+			</ItemComponent>
+			<Flags Civilian="true" />
+		</Item>
+
+		<Item id="seraphim_helmet_rfmoralizing15"
+			  name="{=ceraphhelmet}Ceraph Helmet [+15 troop morale]"
+			  mesh="seraphim_helmet"
+			  culture="Culture.battania"
+			  is_merchandise="false"
+			  subtype="head_armor"
+			  weight="3.4"
+			  difficulty="0"
+			  appearance="5"
+			  Type="HeadArmor">
+			<ItemComponent>
+				<Armor head_armor="50"
+					   has_gender_variations="false"
+					   hair_cover_type="all"
+					   beard_cover_type="type2"
+					   modifier_group="plate"
+					   material_type="Plate" />
+			</ItemComponent>
+			<Flags />
+		</Item>
+
+		<Item multiplayer_item="false"
+			id="magic_fire_stone_t3_rfthrowing50"
+			name="Flame Stone Magic"
+			is_merchandise="false"
+			body_name="bo_throwing_stone"
+			holster_body_name="bo_axe_short"
+			mesh="flame_cone"
+		  flying_mesh="flame_cone"
+			holster_mesh="projectile_pot"
+			holster_mesh_with_weapon="projectile_pot"
+			weight="0.1"
+			difficulty="75"
+			value="15000"
+			appearance="1"
+			Type="Thrown"
+			item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Stone"
+				ammo_class="Stone"
+				stack_amount="5"
+				position="0.01, -0.03, 0"
+				center_of_mass="0,0,0"
+				physics_material="boulder_stone"
+				accuracy="97"
+				thrust_speed="102"
+				speed_rating="102"
+				missile_speed="36"
+				weapon_length="10"
+				thrust_damage="20"
+				item_usage="stone"
+				rotation="100,30,20"
+				flying_sound_code="event:/mission/combat/boulder/passby"
+				trail_particle_name="psys_sear"
+				rotation_speed="0, -3.0, 0">
+					<WeaponFlags RangedWeapon="true"
+					NotUsableWithOneHand="true"
+					TwoHandIdleOnMount="true"
+					CanPenetrateShield="false"
+					CanKnockDown="true"
+					MissileWithPhysics="true"
+					UseHandAsThrowBase="true"
+					Consumable="true"
+					AutoReload="true"
+					UnloadWhenSheathed="true"
+					LeavesTrail="true"
+					Burning="true"
+					AffectsAreaBig="true"
+					AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags QuickFadeOut="true" />
+		</Item>
+
+		<Item id="throwing_summon_stone_rfthrowing50" name="{=throwing_summon_stone}Summon Undead Stone" is_merchandise="false" body_name="bo_throwing_stone" holster_body_name="bo_axe_short" holster_mesh="stone_holster" holster_mesh_with_weapon="stone_holster" mesh="summon_undead" value="2000" weight="0.1" appearance="0.1" Type="Thrown" item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Stone" ammo_class="Stone" stack_amount="6" physics_material="missile" accuracy="100" thrust_speed="102" speed_rating="102" missile_speed="100" trail_particle_name="summon_particle_trail" weapon_length="10" thrust_damage="1" item_usage="stone" rotation="100,30,20" passby_sound_code="" rotation_speed="0, -3.0, 0">
+					<WeaponFlags RangedWeapon="true" Consumable="true" AutoReload="true" UseHandAsThrowBase="true" Burning="true" LeavesTrail="true" AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags />
+		</Item>
+
+
+		<Item id="throwing_summon_demon_stone_rfthrowing50" name="{=throwing_summon_demon_stone}Summon Demon Stone" is_merchandise="false" body_name="bo_throwing_stone" holster_body_name="bo_axe_short" holster_mesh="stone_holster" holster_mesh_with_weapon="stone_holster" mesh="summon_demon" value="6000" weight="0.1" appearance="0.1" Type="Thrown" item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Stone" ammo_class="Stone" stack_amount="6" physics_material="missile" accuracy="100" thrust_speed="102" speed_rating="102" missile_speed="100" trail_particle_name="summon_particle_trail" weapon_length="10" thrust_damage="1" item_usage="stone" rotation="100,30,20" passby_sound_code="" rotation_speed="0, -3.0, 0">
+					<WeaponFlags RangedWeapon="true" Consumable="true" AutoReload="true" UseHandAsThrowBase="true" Burning="true" LeavesTrail="true" AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags />
+		</Item>
+
+		<Item id="throwing_summon_ghost_stone_rfthrowing50" name="{=throwing_summon_ghost_stone}Summon Ghost Stone" is_merchandise="false" body_name="bo_throwing_stone" holster_body_name="bo_axe_short" holster_mesh="stone_holster" holster_mesh_with_weapon="stone_holster" mesh="summon_ghost" value="1000" weight="0.1" appearance="0.1" Type="Thrown" item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Stone" ammo_class="Stone" stack_amount="6" physics_material="missile" accuracy="100" thrust_speed="102" speed_rating="102" missile_speed="100" trail_particle_name="summon_particle_trail" weapon_length="10" thrust_damage="1" item_usage="stone" rotation="100,30,20" passby_sound_code="" rotation_speed="0, -3.0, 0">
+					<WeaponFlags RangedWeapon="true" Consumable="true" AutoReload="true" UseHandAsThrowBase="true" Burning="true" LeavesTrail="true" AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags />
+		</Item>
+
+		<Item id="throwing_summon_ghost_knight_stone_rfthrowing50" name="{=throwing_summon_ghost_knight_stone}Summon Ghost Knight Stone" is_merchandise="false" body_name="bo_throwing_stone" holster_body_name="bo_axe_short" holster_mesh="stone_holster" holster_mesh_with_weapon="stone_holster" mesh="summon_ghost" value="2000" weight="0.1" appearance="0.1" Type="Thrown" item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Stone" ammo_class="Stone" stack_amount="6" physics_material="missile" accuracy="100" thrust_speed="102" speed_rating="102" missile_speed="100" trail_particle_name="summon_particle_trail" weapon_length="10" thrust_damage="1" item_usage="stone" rotation="100,30,20" passby_sound_code="" rotation_speed="0, -3.0, 0">
+					<WeaponFlags RangedWeapon="true" Consumable="true" AutoReload="true" UseHandAsThrowBase="true" Burning="true" LeavesTrail="true" AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags />
+		</Item>
+
+		<Item id="throwing_druid_stone_rfthrowing50" name="{=throwing_druid_stone}Druid Stone" is_merchandise="false" body_name="bo_throwing_stone" holster_body_name="bo_axe_short" holster_mesh="stone_holster" holster_mesh_with_weapon="stone_holster" mesh="cristal_low" value="2000" weight="0.1" appearance="0.1" Type="Thrown" item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Stone" ammo_class="Stone" stack_amount="6" physics_material="missile" accuracy="100" thrust_speed="102" speed_rating="102" missile_speed="100" trail_particle_name="summon_particle_trail" weapon_length="10" thrust_damage="1" item_usage="stone" rotation="100,30,20" passby_sound_code="" rotation_speed="0, -3.0, 0">
+					<WeaponFlags RangedWeapon="true" Consumable="true" AutoReload="true" UseHandAsThrowBase="true" Burning="true" LeavesTrail="true" AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags />
+		</Item>
+
+		<Item id="throwing_druid_stone_rfthrowing100" name="{=throwing_bear_stone}Druid Werebear Stone" is_merchandise="false" body_name="bo_throwing_stone" holster_body_name="bo_axe_short" holster_mesh="stone_holster" holster_mesh_with_weapon="stone_holster" mesh="cristal_low" value="4000" weight="0.1" appearance="0.1" Type="Thrown" item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Stone" ammo_class="Stone" stack_amount="6" physics_material="missile" accuracy="100" thrust_speed="102" speed_rating="102" missile_speed="100" trail_particle_name="summon_particle_trail" weapon_length="10" thrust_damage="1" item_usage="stone" rotation="100,30,20" passby_sound_code="" rotation_speed="0, -3.0, 0">
+					<WeaponFlags RangedWeapon="true" Consumable="true" AutoReload="true" UseHandAsThrowBase="true" Burning="true" LeavesTrail="true" AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags />
+		</Item>
+
+		<Item id="throwing_druid_stone_rfthrowing150" name="{=throwing_entherion_stone}Druid Entherion Stone" is_merchandise="false" body_name="bo_throwing_stone" holster_body_name="bo_axe_short" holster_mesh="stone_holster" holster_mesh_with_weapon="stone_holster" mesh="cristal_low" value="6000" weight="0.1" appearance="0.1" Type="Thrown" item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Stone" ammo_class="Stone" stack_amount="6" physics_material="missile" accuracy="100" thrust_speed="102" speed_rating="102" missile_speed="100" trail_particle_name="summon_particle_trail" weapon_length="10" thrust_damage="1" item_usage="stone" rotation="100,30,20" passby_sound_code="" rotation_speed="0, -3.0, 0">
+					<WeaponFlags RangedWeapon="true" Consumable="true" AutoReload="true" UseHandAsThrowBase="true" Burning="true" LeavesTrail="true" AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags />
+		</Item>
+
+		<Item multiplayer_item="false"
+		  id="flame_fire_rfthrowing50"
+		  name="Flame Breath Fire Magic"
+		  is_merchandise="false"
+		  body_name="bo_throwing_stone"
+		  holster_body_name="bo_axe_short"
+		  mesh="flame_cone"
+		flying_mesh="flame_cone"
+		  holster_mesh="projectile_pot"
+		  holster_mesh_with_weapon="projectile_pot"
+		  weight="0.1"
+		  difficulty="25"
+		  value="5000"
+		  appearance="1"
+		  Type="Thrown"
+		  item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Stone"
+				ammo_class="Stone"
+				stack_amount="5"
+				position="0.01, -0.03, 0"
+				center_of_mass="0,0,0"
+				physics_material="boulder_stone"
+				accuracy="77"
+				thrust_speed="102"
+				speed_rating="102"
+				missile_speed="36"
+				weapon_length="10"
+				thrust_damage="25"
+				item_usage="stone"
+				rotation="100,30,20"
+				flying_sound_code="event:/mission/combat/boulder/passby"
+				trail_particle_name="psys_sear"
+				rotation_speed="0, -3.0, 0">
+					<WeaponFlags RangedWeapon="true"
+					NotUsableWithOneHand="true"
+					TwoHandIdleOnMount="true"
+					CanKnockDown="true"
+					MissileWithPhysics="true"
+					UseHandAsThrowBase="true"
+					Consumable="true"
+					AutoReload="true"
+					UnloadWhenSheathed="true"
+					LeavesTrail="true"
+					Burning="true"
+					AffectsArea="true"
+			AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags QuickFadeOut="true" />
+		</Item>
+
+		<Item multiplayer_item="false"
+		  id="anorit_fire_stone_t1_rfthrowing50"
+		  name="Alchemist Weak Fire Stone"
+		  is_merchandise="false"
+		  body_name="bo_throwing_stone"
+		  holster_body_name="bo_axe_short"
+		  flying_mesh="throwing_stone"
+		  mesh="flame_ball"
+		  holster_mesh="projectile_pot"
+		  holster_mesh_with_weapon="projectile_pot"
+		  weight="0.1"
+		  difficulty="25"
+		  value="5000"
+		  appearance="1"
+		  Type="Thrown"
+		  item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Stone"
+				ammo_class="Stone"
+				stack_amount="5"
+				position="0.01, -0.03, 0"
+				center_of_mass="0,0,0"
+				physics_material="boulder_stone"
+				accuracy="77"
+				thrust_speed="102"
+				speed_rating="102"
+				missile_speed="36"
+				weapon_length="10"
+				thrust_damage="25"
+				item_usage="stone"
+				rotation="100,30,20"
+				flying_sound_code="event:/mission/combat/boulder/passby"
+				trail_particle_name="mangonel_grapeshot_burning_projectile"
+				rotation_speed="0, -3.0, 0">
+					<WeaponFlags RangedWeapon="true"
+					NotUsableWithOneHand="true"
+					TwoHandIdleOnMount="true"
+					CanPenetrateShield="true"
+					CanKnockDown="true"
+					MissileWithPhysics="true"
+					UseHandAsThrowBase="true"
+					Consumable="true"
+					AutoReload="true"
+					UnloadWhenSheathed="true"
+					LeavesTrail="true"
+					Burning="true"
+					AffectsAreaBig="true"
+			AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags
+			CannotBePickedUp="false"
+			QuickFadeOut="true" />
+		</Item>
+
+		<Item multiplayer_item="false"
+		id="anorit_fire_stone_t2_rfthrowing50"
+		name="Alchemist Medium Fire Stone"
+		is_merchandise="false"
+		body_name="bo_throwing_stone"
+		holster_body_name="bo_axe_short"
+		flying_mesh="throwing_stone"
+		mesh="flame_ball"
+		holster_mesh="projectile_pot"
+		holster_mesh_with_weapon="projectile_pot"
+		weight="0.1"
+		difficulty="50"
+		value="10000"
+		appearance="1"
+		Type="Thrown"
+		item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Stone"
+				ammo_class="Stone"
+				stack_amount="5"
+				position="0.01, -0.03, 0"
+				center_of_mass="0,0,0"
+				physics_material="boulder_stone"
+				accuracy="77"
+				thrust_speed="102"
+				speed_rating="102"
+				missile_speed="36"
+				weapon_length="10"
+				thrust_damage="45"
+				item_usage="stone"
+				rotation="100,30,20"
+				flying_sound_code="event:/mission/combat/boulder/passby"
+				trail_particle_name="mangonel_grapeshot_burning_projectile"
+				rotation_speed="0, -3.0, 0">
+					<WeaponFlags RangedWeapon="true"
+					NotUsableWithOneHand="true"
+					TwoHandIdleOnMount="true"
+					CanPenetrateShield="true"
+					CanKnockDown="true"
+					MissileWithPhysics="true"
+					UseHandAsThrowBase="true"
+					Consumable="true"
+					AutoReload="true"
+					UnloadWhenSheathed="true"
+					LeavesTrail="true"
+					Burning="true"
+					AffectsAreaBig="true"
+					AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags QuickFadeOut="true" />
+		</Item>
+		<Item multiplayer_item="false"
+		id="anorit_fire_stone_t3_rfthrowing50"
+		name="Alchemist Strong Fire Stone"
+		is_merchandise="false"
+		body_name="bo_throwing_stone"
+		holster_body_name="bo_axe_short"
+		flying_mesh="throwing_stone"
+		mesh="flame_ball"
+		holster_mesh="projectile_pot"
+		holster_mesh_with_weapon="projectile_pot"
+		weight="0.1"
+		difficulty="75"
+		value="15000"
+		appearance="1"
+		Type="Thrown"
+		item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Stone"
+				ammo_class="Stone"
+				stack_amount="5"
+				position="0.01, -0.03, 0"
+				center_of_mass="0,0,0"
+				physics_material="boulder_stone"
+				accuracy="77"
+				thrust_speed="102"
+				speed_rating="102"
+				missile_speed="36"
+				weapon_length="10"
+				thrust_damage="65"
+				item_usage="stone"
+				rotation="100,30,20"
+				flying_sound_code="event:/mission/combat/boulder/passby"
+				trail_particle_name="mangonel_grapeshot_burning_projectile"
+				rotation_speed="0, -3.0, 0">
+					<WeaponFlags RangedWeapon="true"
+					NotUsableWithOneHand="true"
+					TwoHandIdleOnMount="true"
+					CanPenetrateShield="true"
+					CanKnockDown="true"
+					MissileWithPhysics="true"
+					UseHandAsThrowBase="true"
+					Consumable="true"
+					AutoReload="true"
+					UnloadWhenSheathed="true"
+					LeavesTrail="true"
+					Burning="true"
+					AffectsAreaBig="true"
+					AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags QuickFadeOut="true" />
+		</Item>
+		<Item multiplayer_item="false"
+		id="anorit_fire_stone_t4_rfthrowing50"
+		name="Alchemist Harsh Fire Stone"
+		is_merchandise="false"
+		body_name="bo_throwing_stone"
+		holster_body_name="bo_axe_short"
+		flying_mesh="throwing_stone"
+		mesh="flame_ball"
+		holster_mesh="projectile_pot"
+		holster_mesh_with_weapon="projectile_pot"
+		weight="0.1"
+		difficulty="100"
+		value="20000"
+		appearance="1"
+		Type="Thrown"
+		item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Stone"
+				ammo_class="Stone"
+				stack_amount="5"
+				position="0.01, -0.03, 0"
+				center_of_mass="0,0,0"
+				physics_material="boulder_stone"
+				accuracy="77"
+				thrust_speed="102"
+				speed_rating="102"
+				missile_speed="36"
+				weapon_length="10"
+				thrust_damage="80"
+				item_usage="stone"
+				rotation="100,30,20"
+				flying_sound_code="event:/mission/combat/boulder/passby"
+				trail_particle_name="mangonel_grapeshot_burning_projectile"
+				rotation_speed="0, -3.0, 0">
+					<WeaponFlags RangedWeapon="true"
+					NotUsableWithOneHand="true"
+					TwoHandIdleOnMount="true"
+					CanPenetrateShield="true"
+					CanKnockDown="true"
+					MissileWithPhysics="true"
+					UseHandAsThrowBase="true"
+					Consumable="true"
+					AutoReload="true"
+					UnloadWhenSheathed="true"
+					LeavesTrail="true"
+					Burning="true"
+					AffectsAreaBig="true"
+					AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags QuickFadeOut="true" />
+		</Item>
+		<Item multiplayer_item="false"
+		id="anorit_fire_magic_t4_rfthrowing50"
+		name="Alchemist Fire Spell"
+		is_merchandise="false"
+		body_name="bo_throwing_stone"
+		holster_body_name="bo_axe_short"
+		flying_mesh="throwing_stone"
+		mesh="flame_ball"
+		holster_mesh="stone_holster"
+		holster_mesh_with_weapon="stone_holster"
+		weight="0.1"
+		difficulty="100"
+		value="20000"
+		appearance="1"
+		Type="Thrown"
+		item_holsters="throwing_stone:throwing_stone_2">
+			<ItemComponent>
+				<Weapon weapon_class="Stone"
+				ammo_class="Stone"
+				stack_amount="8"
+				position="0.01, -0.03, 0"
+				center_of_mass="0,0,0"
+				physics_material="missile"
+				accuracy="77"
+				thrust_speed="102"
+				speed_rating="102"
+				missile_speed="36"
+				weapon_length="10"
+				thrust_damage="80"
+				item_usage="stone"
+				rotation="100,30,20"
+				flying_sound_code="event:/mission/combat/boulder/passby"
+				trail_particle_name="psys_sear"
+				rotation_speed="0, -3.0, 0">
+					<WeaponFlags RangedWeapon="true"
+					NotUsableWithOneHand="true"
+					TwoHandIdleOnMount="true"
+					CanPenetrateShield="true"
+					CanKnockDown="true"
+					MissileWithPhysics="true"
+					UseHandAsThrowBase="true"
+					Consumable="true"
+					AutoReload="true"
+					UnloadWhenSheathed="true"
+					LeavesTrail="true"
+					Burning="true"
+					AffectsAreaBig="true"
+					AmmoBreaksOnBounceBack="true" />
+				</Weapon>
+			</ItemComponent>
+			<Flags QuickFadeOut="true" />
+		</Item>
 </Items>
