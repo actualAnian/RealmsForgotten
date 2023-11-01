@@ -97,12 +97,10 @@ namespace RealmsForgotten.Quest
             escapedPrison = true;
                 
         }
-
         public override void RegisterEvents()
         {
 
         }
-
         public override void SyncData(IDataStore dataStore)
         {
             dataStore.SyncData("questStoppedAt", ref questStoppedAt);

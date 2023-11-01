@@ -51,16 +51,9 @@ namespace RealmsForgotten.Quest
         private static readonly string UliahId = "questGiver";
         private static readonly int PrisonersAmount = 5;
         private bool isNewGame;
-        private static Hero Uliah
-        {
-            get { return Hero.AllAliveHeroes.Find(x=>x.StringId==UliahId); }
-        }
+        private static Hero Uliah => Hero.AllAliveHeroes.Find(x=>x.StringId==UliahId); 
 
-        private static Hero Queen
-        {
-            get { return Kingdom.All.First(x => x.StringId == "empire").Leader.Spouse; }
-        }
-        private static bool _hideoutDefeated = false;
+        private static Hero Queen => Kingdom.All.First(x => x.StringId == "empire").Leader.Spouse;
         private static Vec2 _hideoutPosition = Vec2.Invalid;
         public RescueUliahBehavior(bool isNewGame)
         {
@@ -73,29 +66,14 @@ namespace RealmsForgotten.Quest
         private void HandleBandits()
         {
             new RescueUliahQuest("rescue_uliah_quest", Uliah, CampaignTime.Never, 0).StartQuest();
-            Hideout nearestHideout = Hideout.All.Find(x => x.StringId == "hideout_mountain_7");
-            if (!nearestHideout.IsInfested)
-            {
-          
-                Clan clan = Clan.All.Find(x=>x.StringId== "mountain_bandits");
-                for(int i = 0; i <= 2; i++)
-                {
-                    MobileParty bandits = BanditPartyComponent.CreateBanditParty("bandits_quest_" + i, clan, nearestHideout, i==2 ? true : false);
-                    bandits.InitializeMobilePartyAtPosition(clan.DefaultPartyTemplate, nearestHideout.Settlement.Position2D);
-                    bandits.Ai.SetMoveGoToSettlement(nearestHideout.Settlement);
-                    bandits.Ai.RecalculateShortTermAi();
-                    EnterSettlementAction.ApplyForParty(bandits, nearestHideout.Settlement);
-                }
-                AccessTools.Field(typeof(Hideout), "_nextPossibleAttackTime").SetValue(nearestHideout, CampaignTime.Now);
-                
-                nearestHideout.IsSpotted = true;
+            Hideout hideout = Hideout.All.Find(x => x.StringId == "hideout_mountain_7");
 
+            Tools.Tools.InitializeHideoutIfNeeded(hideout);
 
-            }
-            nearestHideout.Settlement.IsVisible = true;
-            _hideoutPosition = nearestHideout.Settlement.Position2D;
-            
+            _hideoutPosition = hideout.Settlement.Position2D;
+
         }
+
 
         public void AfterLoad()
         {
@@ -117,13 +95,10 @@ namespace RealmsForgotten.Quest
         public override void RegisterEvents()
         {
             //Check if this quest has already started
-            if (!Campaign.Current.QuestManager.Quests.Any(x => x.GetType() == typeof(RescueUliahQuest)))
-            {
-                
+            if (!Campaign.Current.QuestManager.Quests.Any(x => x is RescueUliahQuest))
                 CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, HourlyTickForNewGame);
-            }
+            
             CampaignEvents.OnGameLoadFinishedEvent.AddNonSerializedListener(this, AfterLoad);
-            CampaignEvents.OnHideoutBattleCompletedEvent.AddNonSerializedListener(this, OnHideoutDefeat);
 
         }
         private void HourlyTickForNewGame()
@@ -138,17 +113,9 @@ namespace RealmsForgotten.Quest
                 Queen.HomeSettlement.Notables[0].SetHasMet();
                 StartQuest();
                 isNewGame = false;
-                _hideoutDefeated = false;
             }
         }
-        private void OnHideoutDefeat(BattleSideEnum side, HideoutEventComponent hideout)
-        {
-            if (hideout.MapEvent != null && side == BattleSideEnum.Attacker && hideout.MapEvent.MapEventSettlement.StringId== "hideout_mountain_7" && !_hideoutDefeated)
-            {
-                _hideoutDefeated = true;
-                AddHeroToPartyAction.Apply(Uliah, MobileParty.MainParty, true);
-            }
-        }
+
         private void StartQuest()
         {
             InformationManager.ShowInquiry(new InquiryData(GameTexts.FindText("rf_event").ToString(), GameTexts.FindText("rf_main_quest_start_inquiry_1").ToString(), true, false, new TextObject("{=continue}Continue").ToString(), "", () =>
@@ -165,7 +132,6 @@ namespace RealmsForgotten.Quest
         }
         public override void SyncData(IDataStore dataStore)
         {
-            dataStore.SyncData("_hideoutDefeated", ref _hideoutDefeated);
         }
 
                        
@@ -185,16 +151,19 @@ namespace RealmsForgotten.Quest
             private JournalLog? _smallPlayerArmyJournalLog;
             [SaveableField(7)]
             private CampaignTime _deliveredToAlchemistsTime;
+            [SaveableField(8)]
+            private JournalLog? _rescueUliahJournalLog;
 
             private readonly int minimumSoldiersAmountForQuest = 50;
 
+            private static Hideout questHideout => Hideout.All.Find(x => x.StringId == "hideout_mountain_7");
+
             public RescueUliahQuest(string questId, Hero questGiver, CampaignTime duration, int rewardGold) : base(questId, questGiver, duration, rewardGold)
             {
-                this.SetDialogs();
+                SetDialogs();
                 base.InitializeQuestOnCreation();
-                this.AddLog(GameTexts.FindText("rf_first_quest_objective_1"));
-                Hideout hideout = Hideout.All.Find(x => x.StringId == "hideout_mountain_7");
-                this.AddTrackedObject((ITrackableCampaignObject)hideout.Settlement);
+                _rescueUliahJournalLog = AddLog(GameTexts.FindText("rf_first_quest_objective_1"));
+                AddTrackedObject(questHideout.Settlement);
                 _deliveredToAlchemistsTime = CampaignTime.Zero;
             }
             public override bool IsSpecialQuest => true;
@@ -214,8 +183,28 @@ namespace RealmsForgotten.Quest
                         _smallPlayerArmyJournalLog.UpdateCurrentProgress(party.NumberOfAllMembers);
                     }
                 });
+                CampaignEvents.OnPlayerBattleEndEvent.AddNonSerializedListener(this, BattleEnd);
             }
 
+            private void BattleEnd(MapEvent mapEvent)
+            {
+                if (_rescueUliahJournalLog?.CurrentProgress == 0 && Settlement.CurrentSettlement == questHideout.Settlement)
+                {
+                    if (mapEvent.DefeatedSide == mapEvent.DefenderSide.MissionSide)
+                    {
+                        ConversationCharacterData playerData = new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty);
+                        Uliah.MakeWounded();
+                        ConversationCharacterData manData = new ConversationCharacterData(Uliah.CharacterObject);
+                        CampaignMapConversation.OpenConversation(playerData, manData);
+                        AddHeroToPartyAction.Apply(Uliah, MobileParty.MainParty, true);
+                        _rescueUliahJournalLog.UpdateCurrentProgress(1);
+                    }
+                    else
+                    {
+                        Tools.Tools.InitializeHideoutIfNeeded(questHideout);
+                    }
+                }
+            }
             private void MakePartyEngage(PartyBase party)
             {
                 if (!_hiddenHandSpawned
@@ -273,7 +262,7 @@ namespace RealmsForgotten.Quest
                 Campaign.Current.ConversationManager.AddDialogFlow(this.SetSecondPhaseHiddenHandDialog(), this);
                 Campaign.Current.ConversationManager.AddDialogFlow(this.SetSecondPhaseHiddenHandDialog2(), this);
                 Campaign.Current.ConversationManager.AddDialogFlow(this.SetQueenDialog(), this); 
-                    Campaign.Current.ConversationManager.AddDialogFlow(this.SetOwlDialog(), this);
+                Campaign.Current.ConversationManager.AddDialogFlow(this.SetOwlDialog(), this);
 
             }
 
@@ -454,10 +443,10 @@ namespace RealmsForgotten.Quest
             private DialogFlow SetOwlDialog() => DialogFlow.CreateDialogFlow("start", 125).NpcLine(GameTexts.FindText("rf_the_owl_after_alchemist_text_1")).Condition(()=>Hero.OneToOneConversationHero?.StringId=="the_owl_hero" && Hero.OneToOneConversationHero?.PartyBelongedTo != null).PlayerLine(GameTexts.FindText("rf_the_owl_after_alchemist_text_2"))
                 .NpcLine(GameTexts.FindText("rf_the_owl_after_alchemist_text_3")).BeginPlayerOptions().PlayerOption(GameTexts.FindText("rf_the_owl_after_alchemist_text_4")).NpcLine(GameTexts.FindText("rf_the_owl_after_alchemist_text_6")).Consequence(() => CompleteWithBetrayal(true)).CloseDialog()
                 .PlayerOption(GameTexts.FindText("rf_the_owl_after_alchemist_text_5")).NpcLine(GameTexts.FindText("rf_the_owl_after_alchemist_text_7")).Consequence(()=>CompleteWithBetrayal(false)).CloseDialog().EndPlayerOptions();
-            private void CompleteWithBetrayal(bool mergeparty)
+            private void CompleteWithBetrayal(bool mergeParty)
             {
                 
-                if (mergeparty)
+                if (mergeParty)
                 {
                     MobileParty owlparty = Hero.OneToOneConversationHero.PartyBelongedTo;
                     Tools.Tools.MergeDisbandParty(owlparty, MobileParty.MainParty.Party);
@@ -511,14 +500,6 @@ namespace RealmsForgotten.Quest
             {
                 if (_bringZombiesJournalLog != null)
                     this._bringZombiesJournalLog.UpdateCurrentProgress(MobileParty.MainParty.PrisonRoster.GetTroopRoster().Where(x => !x.Character.IsHero && x.Character?.Culture?.StringId == "sea_raiders").Sum(x => x.Number));
-                if (_hideoutDefeated)
-                {
-                    ConversationCharacterData playerData = new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty);
-                    Uliah.MakeWounded();
-                    ConversationCharacterData manData = new ConversationCharacterData(Uliah.CharacterObject);
-                    Campaign.Current.ConversationManager.OpenMapConversation(playerData, manData);
-                    _hideoutDefeated = false;
-                }
                 else if (!_thirdTextBox && _hideoutPosition.IsValid)
                 {
                     int radius = 8;
@@ -531,7 +512,6 @@ namespace RealmsForgotten.Quest
                     }
 
                 }
-
                 if (_deliveredToAlchemistsTime != CampaignTime.Zero && _deliveredToAlchemistsTime.ElapsedHoursUntilNow >= 24)
                 {
                     SpawnOwlParty();

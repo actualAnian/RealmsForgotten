@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using HarmonyLib;
 using Helpers;
+using RealmsForgotten.Quest.SecondUpdate;
 using SandBox.Issues.IssueQuestTasks;
 using SandBox.Missions.MissionLogics.Towns;
 using StoryMode.Quests.PlayerClanQuests;
@@ -53,29 +54,26 @@ namespace RealmsForgotten.Quest
         [SaveableField(0)]
         public bool HasTalkedToOwl;
         [SaveableField(1)]
-        public JournalLog FindMapJournalLog;
+        private JournalLog? findMapJournalLog;
         [SaveableField(2)]
         private bool hasTalkedToOwl2;
         [SaveableField(3)] 
         private CampaignTime lastHideoutTime;
         [SaveableField(4)]
-        private bool _willTalkToAnoritLord;
-        [SaveableField(5)]
         private CampaignTime anoritLordConversationTime;
+        [SaveableField(5)]
+        private bool _isPlayerInOwlArmy;
         [SaveableField(6)]
-        public static bool escapedPrison;
-        
-
+        private bool escapedPrison;
         public QueenQuest(string text, Hero hero, CampaignTime time, int number, bool alreadyTalkedToOwl) : base(text, hero, time, number)
         {
             if(alreadyTalkedToOwl)
                 HasTalkedToOwl = true;
             else
-                this.AddLog(GameTexts.FindText("rf_second_quest_first_log"));
-            this.SetDialogs();
-            HasTalkedToOwl = false;
-            hasTalkedToOwl2 = false;
-            _willTalkToAnoritLord = false;
+                AddLog(GameTexts.FindText("rf_second_quest_first_log"));
+
+            SetDialogs();
+
             lastHideoutTime = CampaignTime.Never;
             anoritLordConversationTime = CampaignTime.Never;
         }
@@ -84,20 +82,20 @@ namespace RealmsForgotten.Quest
         {
             CampaignEvents.LocationCharactersAreReadyToSpawnEvent.AddNonSerializedListener(this, LocationCharactersAreReadyToSpawn);
             CampaignEvents.OnHideoutDeactivatedEvent.AddNonSerializedListener(this, OnHideoutDefeat);
-            CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, HourTick);
-            CampaignEvents.TickEvent.AddNonSerializedListener(this, TickEvent);
+            CampaignEvents.SettlementEntered.AddNonSerializedListener(this, OnSettlementEntered);
             CampaignEvents.OnMissionStartedEvent.AddNonSerializedListener(this, imission =>
             {
                 Mission mission = (Mission)imission;
-                if(FindMapJournalLog != null &&  HasTalkedToOwl && FindMapJournalLog.CurrentProgress < 3 && mission != null && PlayerEncounter.InsideSettlement && Settlement.CurrentSettlement?.IsHideout == true &&
+                if(HasTalkedToOwl && findMapJournalLog?.CurrentProgress < 3 && mission != null && PlayerEncounter.InsideSettlement && Settlement.CurrentSettlement?.IsHideout == true &&
                    (Settlement.CurrentSettlement.Hideout.StringId == "hideout_seaside_11" ||
                     Settlement.CurrentSettlement.Hideout.StringId == "hideout_seaside_13" ||
                     Settlement.CurrentSettlement.Hideout.StringId == "hideout_seaside_14"))
-                    mission.AddMissionBehavior(new FindRelicsHideoutMissionBehavior(FindMapJournalLog));
+
+                    mission.AddMissionBehavior(new FindRelicsHideoutMissionBehavior(findMapJournalLog));
             });
 
             CampaignEvents.OnSettlementLeftEvent.AddNonSerializedListener(this,
-                (MobileParty mobileParty, Settlement settlement) =>
+                (mobileParty, settlement) =>
                 {
                     if (mobileParty.LeaderHero == Hero.MainHero && settlement.StringId == "town_B4" && escapedPrison)
                         SaveCurrentQuestCampaignBehavior.Instance.SaveQuestState("queen");
@@ -105,47 +103,29 @@ namespace RealmsForgotten.Quest
 
         }
 
-        private bool isOwlOnPlayerParty => PartyBase.MainParty.MemberRoster.GetTroopRoster().Any(x => x.Character.HeroObject?.StringId == "the_owl_hero");
-        private void HourTick()
+        private void OnSettlementEntered(MobileParty mobileParty, Settlement settlement, Hero hero)
         {
-            if (FindMapJournalLog?.CurrentProgress == 3 && !hasTalkedToOwl2 && lastHideoutTime != CampaignTime.Never && lastHideoutTime.ElapsedHoursUntilNow >= 2 && !PlayerEncounter.InsideSettlement)
+            if (_isPlayerInOwlArmy && mobileParty == MobileParty.MainParty && settlement == mobileParty.Army.AiBehaviorObject)
             {
-                if(!isOwlOnPlayerParty)
-                {
-                    Clan clan = Clan.FindFirst(x => x.StringId == "clan_empire_north_7");
-                    Hero hero;
-                    if (!Hero.AllAliveHeroes.Any(x => x.StringId == "the_owl_hero"))
-                    {
-                        
-                        hero = HeroCreator.CreateSpecialHero(
-                        MBObjectManager.Instance.GetObject<CharacterObject>(TheOwlId), QuestGiver.HomeSettlement, clan,
-                        clan, 30);
-                        hero.StringId = "the_owl_hero";
-                        
-                    }
-                    else
-                        hero = Hero.AllAliveHeroes.First(x => x.StringId == "the_owl_hero");
+                Hero anoritHero = Hero.FindFirst(x => x.StringId == "lord_WE9_l");
 
-                    MobileParty mobileParty = MobileParty.All.FirstOrDefault(x => x.StringId == "owl_party") ?? LordPartyComponent.CreateLordParty("owl_party", hero,
-                        MobileParty.MainParty.Position2D, 1f, QuestGiver.HomeSettlement, hero);
+                EnterSettlementAction.ApplyForCharacterOnly(anoritHero, settlement);
 
-                    mobileParty.InitializeMobilePartyAroundPosition(QuestGiver.Clan.DefaultPartyTemplate, MobileParty.MainParty.Position2D, 1f, 0, 80);
-                    mobileParty.StringId = "owl_party";
-                    mobileParty.Ai.SetMoveEngageParty(MobileParty.MainParty);
-                }
-                else
-                {
-                    Campaign.Current.ConversationManager.OpenMapConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty), new ConversationCharacterData(PartyBase.MainParty.MemberRoster.GetTroopRoster().First(x => x.Character.HeroObject?.StringId == "the_owl_hero").Character, null));
-                }
-                lastHideoutTime = CampaignTime.Never;
-                anoritLordConversationTime = CampaignTime.Never;
-            }
-            if(anoritLordConversationTime != CampaignTime.Never && anoritLordConversationTime.ElapsedHoursUntilNow >= 40 && !PlayerEncounter.InsideSettlement && CampaignTime.Now.IsNightTime)
-            {
-                GameStateManager.Current.PushState(GameStateManager.Current.CreateState<RFNotificationState>(GameTexts.FindText("rf_kidnapped_text").ToString(), 40, () => { OpenPrisonBreak();  }));
-                anoritLordConversationTime = CampaignTime.Never;
+                ConversationCharacterData playerData = new(CharacterObject.PlayerCharacter, PartyBase.MainParty);
+                ConversationCharacterData anoritData = new(anoritHero.CharacterObject, anoritHero.PartyBelongedTo.Party);
+                Campaign.Current.ConversationManager.OpenMapConversation(playerData, anoritData);
+
+                
+                _isPlayerInOwlArmy = false;
+
+                AvoidQuestArmyDisbandingPatch.AvoidDisbanding = false;
+
+                
             }
         }
+
+        private bool isOwlOnPlayerParty => PartyBase.MainParty.MemberRoster.GetTroopRoster().Any(x => x.Character.HeroObject?.StringId == "the_owl_hero");
+
         public void OnHideoutDefeat(Settlement hideout)
         {
 
@@ -156,7 +136,7 @@ namespace RealmsForgotten.Quest
                 {
 
                     case "hideout_seaside_13":
-                        if (FindMapJournalLog.CurrentProgress == 0)
+                        if (findMapJournalLog?.CurrentProgress == 0)
                         {
                             InformationManager.ShowInquiry(new InquiryData(GameTexts.FindText("rf_event").ToString(), GameTexts.FindText("rf_map_not_found_inquiry").ToString(), true, false, new TextObject("{=continue}Continue").ToString(), "", null, null), true);
                             ActivateHideout("hideout_seaside_13");
@@ -167,7 +147,7 @@ namespace RealmsForgotten.Quest
                         this.AddTrackedObject(nextHideout.Settlement);
                         break;
                     case "hideout_seaside_14":
-                        if (FindMapJournalLog.CurrentProgress == 1)
+                        if (findMapJournalLog?.CurrentProgress == 1)
                         {
                             InformationManager.ShowInquiry(new InquiryData(GameTexts.FindText("rf_event").ToString(), GameTexts.FindText("rf_map_not_found_inquiry").ToString(), true, false, new TextObject("{=continue}Continue").ToString(), "", null, null), true);
                             ActivateHideout("hideout_seaside_14");
@@ -178,7 +158,7 @@ namespace RealmsForgotten.Quest
                         this.AddTrackedObject(nextHideout.Settlement);
                         break;
                     case "hideout_seaside_11":
-                        if (FindMapJournalLog.CurrentProgress == 2)
+                        if (findMapJournalLog?.CurrentProgress == 2)
                         {
                             InformationManager.ShowInquiry(new InquiryData(GameTexts.FindText("rf_event").ToString(), GameTexts.FindText("rf_map_not_found_inquiry").ToString(), true, false, new TextObject("{=continue}Continue").ToString(), "", null, null), true);
                             ActivateHideout("hideout_seaside_11");
@@ -197,8 +177,10 @@ namespace RealmsForgotten.Quest
 
         protected override void InitializeQuestOnGameLoad()
         {
-            this.SetDialogs();
-
+            SetDialogs();
+            AvoidQuestArmyDisbandingPatch.AvoidDisbanding = _isPlayerInOwlArmy;
+            if (_isPlayerInOwlArmy)
+                CreateOwlArmy(MobileParty.All.Find(x=>x.LeaderHero== Hero.FindFirst(x=>x.StringId== "the_owl_hero")));
         }
         private void LocationCharactersAreReadyToSpawn(Dictionary<string, int> unusedUsablePointCount)
         {
@@ -224,7 +206,6 @@ namespace RealmsForgotten.Quest
             var owl = new LocationCharacter(agentData, SandBoxManager.Instance.AgentBehaviorManager.AddWandererBehaviors, "sp_tavern_townsman", true, relation, null, true, false, null, false, false, false);
             owl.PrefabNamesForBones.Add(agentData.AgentMonster.OffHandItemBoneIndex, "kitchen_pitcher_b_tavern");
             return owl;
-            //
         }
 
         protected override void SetDialogs()
@@ -232,10 +213,7 @@ namespace RealmsForgotten.Quest
             Campaign.Current.ConversationManager.AddDialogFlow(TheOwlInterceptDialog);
             Campaign.Current.ConversationManager.AddDialogFlow(TheOwlDialog);
             Campaign.Current.ConversationManager.AddDialogFlow(TheOwlDialogGoodLuck);
-            
             Campaign.Current.ConversationManager.AddDialogFlow(AnoritLordDialog);
-
-            
         }
 
 
@@ -244,7 +222,7 @@ namespace RealmsForgotten.Quest
             HasTalkedToOwl = true;
             Hideout hideout = ActivateHideout("hideout_seaside_13");
 
-            FindMapJournalLog = this.AddDiscreteLog(GameTexts.FindText("rf_second_quest_find_map_log"), GameTexts.FindText("rf_second_quest_first_part_log_task"), 0, 3);
+            findMapJournalLog = this.AddDiscreteLog(GameTexts.FindText("rf_second_quest_find_map_log"), GameTexts.FindText("rf_second_quest_first_part_log_task"), 0, 3);
             this.AddTrackedObject((ITrackableCampaignObject)hideout.Settlement);
         }
 
@@ -286,74 +264,60 @@ namespace RealmsForgotten.Quest
             PlayerEncounter.Current.SetupFields(PartyBase.MainParty, settlement.Party);
             
             RFPrisonBreakMissionController.OpenPrisonBreakMission(settlement.LocationComplex.GetScene("prison", 0), settlement.LocationComplex.GetLocationWithId("prison"));
-            escapedPrison = true;
-        }
-
-        private void GoToAnoritLord(Hero owl)
-        {
-            Hero anoritLord = Hero.FindFirst(x => x.StringId == "lord_WE9_l");
-            Settlement settlement = Settlement.Find("town_EW3");
-
-
-
-            Vec2 mainPartyPos = settlement.Position2D;
-
-            MobileParty anoritLordParty;
-
-            if (anoritLord.PartyBelongedTo != null)
-                anoritLordParty = anoritLord.PartyBelongedTo;
-            else
-            {
-                anoritLordParty = LordPartyComponent.CreateLordParty("anorit_lord_party", anoritLord, mainPartyPos, 1f, settlement, anoritLord);
-                anoritLordParty.InitializeMobilePartyAroundPosition(anoritLord.Clan.DefaultPartyTemplate, mainPartyPos, 1f, 0f, 150);
-            }
-
-            EnterSettlementAction.ApplyForParty(anoritLordParty, settlement);
-            anoritLordParty.Ai.RecalculateShortTermAi();
-
             
+        }
 
-            if (owl != null)
-            {
-                EnterSettlementAction.ApplyForParty(owl.PartyBelongedTo, settlement);
-                Vec2 pos = owl.PartyBelongedTo.Position2D;
-                pos.x += 1;
-                pos.y += 1;
-                MobileParty.MainParty.Position2D = pos;
+        private void CreateOwlArmy(MobileParty owlParty)
+        {
+            Settlement settlement = Settlement.Find("town_EW3");
+            owlParty.Army = new Army(QuestGiver.Clan.Kingdom, owlParty, Army.ArmyTypes.Patrolling);
 
-                owl.PartyBelongedTo.Ai.SetMoveGoToSettlement(settlement);
-            }
+            MobileParty.MainParty.Army = owlParty.Army;
+
+            MobileParty.MainParty.Army.AddPartyToMergedParties(MobileParty.MainParty);
+
+            MobileParty.MainParty.Army.AiBehaviorObject = settlement;
+            MobileParty.MainParty.Army.AIBehavior = Army.AIBehaviorFlags.GoToSettlement;
+            MobileParty.MainParty.Army.LeaderParty.Ai.SetMoveGoToSettlement(settlement);
+
+            MobileParty.MainParty.Army.LeaderParty.Ai.SetDoNotMakeNewDecisions(true);
+
+            MobileParty.MainParty.Army.LeaderParty.IgnoreByOtherPartiesTill(CampaignTime.Never);
+            MobileParty.MainParty.IgnoreByOtherPartiesTill(CampaignTime.Never);
+
+            MobileParty.MainParty.Army.LeaderParty.SpeedExplained.AddFactor(1.0f);
+            MobileParty.MainParty.Army.Cohesion = 100f;
+            MobileParty.MainParty.Army.DailyCohesionChangeExplanation.Add(100f);
+
+            AvoidQuestArmyDisbandingPatch.AvoidDisbanding = true;
+            _isPlayerInOwlArmy = true;
+        }
+        private void GoToAnoritLord()
+        {
+            MobileParty owlParty;
+            if (!isOwlOnPlayerParty && MobileParty.All.Any(x=>x.LeaderHero==Hero.OneToOneConversationHero))
+                owlParty = MobileParty.All.First(x=>x.LeaderHero== Hero.OneToOneConversationHero);
             else
             {
-                if(isOwlOnPlayerParty)
-                TeleportHeroAction.ApplyDelayedTeleportToSettlement(Hero.FindFirst(x => x.StringId == "the_owl_hero"), QuestGiver.HomeSettlement);
-                Vec2 pos = anoritLordParty.Position2D;
-                pos.x += 0.2f;
-                pos.x += 0.2f;
-                MobileParty.MainParty.Position2D = pos;
+                owlParty = LordPartyComponent.CreateLordParty("owl_party", Hero.OneToOneConversationHero,
+                    MobileParty.MainParty.Position2D, 1f, QuestGiver.HomeSettlement, Hero.OneToOneConversationHero);
+                owlParty.InitializeMobilePartyAroundPosition(TroopRoster.CreateDummyTroopRoster(), TroopRoster.CreateDummyTroopRoster(), MobileParty.MainParty.Position2D, 1f);
             }
 
-            PlayerEncounter.Finish();
 
-            _willTalkToAnoritLord = true;
+
             hasTalkedToOwl2 = true;
-       
         }
-        
-        private void TickEvent(float delta)
+
+
+        protected override void OnStartQuest()
         {
-            if(_willTalkToAnoritLord)
-            {
-                Hero anoritHero = Hero.FindFirst(x => x.StringId == "lord_WE9_l");
-                ConversationCharacterData playerData = new(CharacterObject.PlayerCharacter, PartyBase.MainParty);
-                ConversationCharacterData anoritData = new(anoritHero.CharacterObject, anoritHero.PartyBelongedTo.Party);
-                Campaign.Current.ConversationManager.OpenMapConversation(playerData, anoritData);
-                _willTalkToAnoritLord = false;
-            }
+            SetDialogs();
         }
 
         private void BetrayQueenConsequence(Hero anoritLord)
         {
+            DisbandArmyAction.ApplyByObjectiveFinished(MobileParty.MainParty.Army);
             this.CompleteQuestWithBetrayal();
             DeclareWarAction.ApplyByDefault(Clan.PlayerClan.Kingdom ?? (IFaction)Clan.PlayerClan, QuestGiver.Clan.Kingdom);
             ChangeRelationAction.ApplyPlayerRelation(QuestGiver, -40, false);
@@ -362,11 +326,10 @@ namespace RealmsForgotten.Quest
         }
         private void NotBetrayQueenConsequence()
         {
+            DisbandArmyAction.ApplyByObjectiveFinished(MobileParty.MainParty.Army);
             ChangeRelationAction.ApplyPlayerRelation(Hero.FindFirst(x=>x.StringId=="the_owl_hero"), -20, false);
             PlayerEncounter.Finish();
             anoritLordConversationTime = CampaignTime.Now;
-            
-            //Declarar guerra aos anorit
         }
         private DialogFlow TheOwlDialog => DialogFlow.CreateDialogFlow("start", 125)
             .PlayerLine(GameTexts.FindText("rf_the_owl_text_1"))
@@ -382,16 +345,16 @@ namespace RealmsForgotten.Quest
 
 
         private DialogFlow TheOwlInterceptDialog => DialogFlow.CreateDialogFlow("start", 125).BeginNpcOptions().NpcOption(GameTexts.FindText("rf_the_owl_intercept_text_4").ToString(),
-            () => MobileParty.ConversationParty?.LeaderHero?.StringId == "the_owl_hero" && !hasTalkedToOwl2 && FindMapJournalLog?.CurrentProgress == 3 && !isOwlOnPlayerParty)
+            () => MobileParty.ConversationParty?.LeaderHero?.StringId == "the_owl_hero" && !hasTalkedToOwl2 && findMapJournalLog?.CurrentProgress == 3 && !isOwlOnPlayerParty)
             .PlayerLine(GameTexts.FindText("rf_the_owl_intercept_text_2")).NpcLine(GameTexts.FindText("rf_the_owl_intercept_text_3"))
-            .Consequence(() =>GoToAnoritLord(isOwlOnPlayerParty ? null : Hero.OneToOneConversationHero)).CloseDialog()
-                .NpcOption(GameTexts.FindText("rf_the_owl_intercept_text").ToString(), ()=> Hero.OneToOneConversationHero?.StringId == "the_owl_hero" && !hasTalkedToOwl2 && FindMapJournalLog?.CurrentProgress == 3 
+            .Consequence(GoToAnoritLord).CloseDialog()
+                .NpcOption(GameTexts.FindText("rf_the_owl_intercept_text").ToString(), ()=> Hero.OneToOneConversationHero?.StringId == "the_owl_hero" && !hasTalkedToOwl2 && findMapJournalLog?.CurrentProgress == 3 
                 && isOwlOnPlayerParty).PlayerLine(GameTexts.FindText("rf_the_owl_intercept_text_2")).NpcLine(GameTexts.FindText("rf_the_owl_intercept_text_3"))
-            .Consequence(() => GoToAnoritLord(isOwlOnPlayerParty ? null : Hero.OneToOneConversationHero)).CloseDialog().EndNpcOptions();
+            .Consequence(GoToAnoritLord).CloseDialog().EndNpcOptions();
                 
         
         private DialogFlow AnoritLordDialog => DialogFlow.CreateDialogFlow("start", 125)
-            .PlayerLine(GameTexts.FindText("rf_anorit_lord_text_1")).Condition(() => Hero.OneToOneConversationHero?.StringId == "lord_WE9_l" && _willTalkToAnoritLord).NpcLine(GameTexts.FindText("rf_anorit_lord_text_2")).
+            .PlayerLine(GameTexts.FindText("rf_anorit_lord_text_1")).Condition(() => Hero.OneToOneConversationHero?.StringId == "lord_WE9_l" && _isPlayerInOwlArmy).NpcLine(GameTexts.FindText("rf_anorit_lord_text_2")).
             PlayerLine(GameTexts.FindText("rf_anorit_lord_text_3")).NpcLine(GameTexts.FindText("rf_anorit_lord_text_4")).PlayerLine(GameTexts.FindText("rf_anorit_lord_text_5"))
             .NpcLine(GameTexts.FindText("rf_anorit_lord_text_6")).NpcLine(GameTexts.FindText("rf_anorit_lord_text_7")).NpcLine(GameTexts.FindText("rf_anorit_lord_text_8"))
             .PlayerLine(GameTexts.FindText("rf_anorit_lord_text_9")).NpcLine(GameTexts.FindText("rf_anorit_lord_text_10")).PlayerLine(GameTexts.FindText("rf_anorit_lord_text_11"))
@@ -403,6 +366,46 @@ namespace RealmsForgotten.Quest
 
         protected override void HourlyTick()
         {
+            if (findMapJournalLog?.CurrentProgress == 3 && !hasTalkedToOwl2 && lastHideoutTime != CampaignTime.Never && lastHideoutTime.ElapsedHoursUntilNow >= 2 && !PlayerEncounter.InsideSettlement)
+            {
+                Hero hero;
+                if (!isOwlOnPlayerParty)
+                {
+                    Clan clan = Clan.FindFirst(x => x.StringId == "clan_empire_north_7");
+
+                    if (!Hero.AllAliveHeroes.Any(x => x.StringId == "the_owl_hero"))
+                    {
+
+                        hero = HeroCreator.CreateSpecialHero(
+                        MBObjectManager.Instance.GetObject<CharacterObject>(TheOwlId), QuestGiver.HomeSettlement, clan,
+                        clan, 30);
+                        hero.StringId = "the_owl_hero";
+
+                    }
+                    else
+                        hero = Hero.AllAliveHeroes.First(x => x.StringId == "the_owl_hero");
+
+                    MobileParty mobileParty = MobileParty.All.FirstOrDefault(x => x.StringId == "owl_party") ?? LordPartyComponent.CreateLordParty("owl_party", hero,
+                        MobileParty.MainParty.Position2D, 1f, QuestGiver.HomeSettlement, hero);
+
+                    mobileParty.InitializeMobilePartyAroundPosition(QuestGiver.Clan.DefaultPartyTemplate, MobileParty.MainParty.Position2D, 1f, 0, 80);
+                    mobileParty.StringId = "owl_party";
+                    mobileParty.Ai.SetMoveEngageParty(MobileParty.MainParty);
+                }
+                else
+                {
+                    hero = Hero.AllAliveHeroes.First(x => x.StringId == "the_owl_hero");
+                    Campaign.Current.ConversationManager.OpenMapConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty), new ConversationCharacterData(hero.CharacterObject, null));
+                }
+                lastHideoutTime = CampaignTime.Never;
+                anoritLordConversationTime = CampaignTime.Never;
+            }
+            if (anoritLordConversationTime != CampaignTime.Never && anoritLordConversationTime.ElapsedHoursUntilNow >= 40 && !PlayerEncounter.InsideSettlement && CampaignTime.Now.IsNightTime)
+            {
+                escapedPrison = true;
+                GameStateManager.Current.PushState(GameStateManager.Current.CreateState<RFNotificationState>(GameTexts.FindText("rf_kidnapped_text").ToString(), 40, () => { OpenPrisonBreak(); }));
+                anoritLordConversationTime = CampaignTime.Never;
+            }
         }
     }
 }

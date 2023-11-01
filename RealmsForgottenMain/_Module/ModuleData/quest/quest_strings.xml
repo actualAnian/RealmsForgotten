@@ -151,7 +151,9 @@
 	<string id="rf_anorit_message" text='{=rf_anorit_message}A messenger approached you while your troops were camped, taking a break from the march. "Some progress have been made at the translation. It is time to meet again. Find your way back into my presence."' />
 	<string id="rf_ityr_arrive_message" text="{=rf_ityr_arrive_message}Your caravan enters Ityr and you surreptitiously leave the caravan and enter the lords hall." />
 	<string id="rf_decipher_finished_message" text='{=rf_decipher_finished_message}A messenger approaches you and delivers a message. "The deciphering is complete, come at me when you are ready." ' />
-	
+	<string id="rf_near_hideout_message" text='{=rf_near_hideout_message}As you neared the gate, the howling winds above the mountain peaks grew louder, and the rocky walls seemed to watch your party as if a hidden presence had taken hold of them. A shiver ran down the spines of you and your companions, but there was no doubt that this was the very place marked on the map.' />
+	<string id="rf_third_quest_cannot_leave" text="{=rf_third_quest_cannot_leave}You need to find the scholar first!." />
+
 	<string id="rf_third_quest_anorit_objective_1" text="{=rf_third_quest_anorit_objective_1}Go talk to {ANORIT.LINK}." />
 
 	<string id="rf_third_quest_anorit_objective_2_a" text="{=rf_third_quest_anorit_objective_2_a}Wait until your caravan arrives at {SETTLEMENT}." />
@@ -163,7 +165,7 @@
 	<string id="rf_third_quest_anorit_objective_5" text="{=rf_third_quest_anorit_objective_5}Escort the scholar to {QUESTGIVER.LINK}." />
 	<string id="rf_third_quest_anorit_objective_5_defeated" text="{=rf_third_quest_anorit_objective_5_defeated}Find {SCHOLAR.LINK} and capture him." />
 	<string id="rf_third_quest_anorit_objective_6" text="{=rf_third_quest_anorit_objective_6}Wait until the scholar deciphers the text." />
-	<string id="rf_third_quest_anorit_objective_7" text="{=rf_third_quest_anorit_objective_7}Go to the hiding place indicated by {QUESTGIVER.LINK}." />
+	<string id="rf_third_quest_anorit_objective_7" text="{=rf_third_quest_anorit_objective_7}Go to the hiding place indicated by {QUESTGIVER.LINK} and defeat the boss." />
 	
 
 	<string id="rf_third_quest_anorit_dialog_1" text="{=rf_third_quest_anorit_dialog_1}Hello, i'm here." />
@@ -203,6 +205,13 @@
 	<string id="rf_third_quest_anorit_dialog_2_3" text="{=rf_third_quest_anorit_dialog_2_3}Yes. Lets do it!" />
 	<string id="rf_third_quest_anorit_dialog_2_4" text="{=rf_third_quest_anorit_dialog_2_4}No, i need more time" />
 	<string id="rf_third_quest_anorit_dialog_2_5" text="{=rf_third_quest_anorit_dialog_2_5}Come back to me when you are ready." />
+
+	<string id="rf_third_quest_boss_dialog_1" text="{=rf_third_quest_boss_dialog_1}Your victory means nothing. The gate is already open, and they roam the world freely. Your future is bleak." />
+	<string id="rf_third_quest_boss_dialog_2" text="{=rf_third_quest_boss_dialog_2}They? Who are you referring to?" />
+	<string id="rf_third_quest_boss_dialog_3" text="{=rf_third_quest_boss_dialog_3}You're naive. The time of reckoning is upon us. The dark lords shall bring our vengeance. Soon, you will understand." />
+	<string id="rf_third_quest_boss_dialog_4" text="{=rf_third_quest_boss_dialog_4}I've had enough of your ramblings. You'll pay for your crimes with your life." />
+	<string id="rf_third_quest_boss_dialog_5" text="{=rf_third_quest_boss_dialog_5}You'll have ample time to explain everything from the confines of a dungeon cell." />
+	<string id="rf_third_quest_boss_dialog_4_owl" text="{=rf_third_quest_boss_dialog_6}My lord, it isn't worth it. We need him alive to reveal the truth about all of this. Please, let's bring him to face royal justice." />
 
 
 

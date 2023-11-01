@@ -45,6 +45,8 @@ using SandBox.Missions.MissionLogics;
 using TaleWorlds.MountAndBlade.View.Screens;
 using TaleWorlds.ScreenSystem;
 using System.Timers;
+using TaleWorlds.CampaignSystem.MapEvents;
+using CharacterObject = TaleWorlds.CampaignSystem.CharacterObject;
 
 namespace RealmsForgotten.Quest.SecondUpdate
 {
@@ -63,11 +65,12 @@ namespace RealmsForgotten.Quest.SecondUpdate
     }
 
     [HarmonyPatch(typeof(DisbandArmyAction), "ApplyInternal")]
-    public static class PersuadeAthasNpcQuest_DisbandArmyPatch
+    public static class AvoidQuestArmyDisbandingPatch
     {
+        public static bool AvoidDisbanding = false;
         public static bool Prefix(Army army, Army.ArmyDispersionReason reason)
         {
-            if (PersuadeAthasNpcQuest.IsPlayerInOwlArmy && army.Parties.Any(x => x.LeaderHero == Hero.MainHero))
+            if (AvoidDisbanding && army.Parties.Any(x => x == MobileParty.MainParty))
             {
                 return false;
             }
@@ -78,11 +81,11 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
 
     [HarmonyPatch(typeof(PlayerArmyWaitBehavior), "wait_menu_army_leave_on_condition")]
-    public static class PersuadeAthasNpcQuest_wait_menu_army_leave_on_conditionPatch
+    public static class RemoveLeaveOptionFromArmyMenuPatch
     {
         public static void Postfix(MenuCallbackArgs args, ref bool __result)
         {
-            if (PersuadeAthasNpcQuest.IsPlayerInOwlArmy)
+            if (AvoidQuestArmyDisbandingPatch.AvoidDisbanding)
             {
                 __result = false;
             }
@@ -98,7 +101,8 @@ namespace RealmsForgotten.Quest.SecondUpdate
         private void CheckIfFirstQuestHasEnded()
         {
             SaveCurrentQuestCampaignBehavior currentQuestCampaignBehavior = SaveCurrentQuestCampaignBehavior.Instance;
-            if (currentQuestCampaignBehavior != null && currentQuestCampaignBehavior.questStoppedAt != null && !Campaign.Current.QuestManager.Quests.Any(x=>x is PersuadeAthasNpcQuest))
+
+            if (currentQuestCampaignBehavior?.questStoppedAt != null && !Campaign.Current.QuestManager.Quests.Any(x=>x is PersuadeAthasNpcQuest))
             {
                 Hero hero = null;
                 if (currentQuestCampaignBehavior.questStoppedAt == "anorit")
@@ -152,7 +156,18 @@ namespace RealmsForgotten.Quest.SecondUpdate
         private JournalLog waitUntilDecipherLog;
         [SaveableField(13)]
         private JournalLog goToHideoutLog;
+        [SaveableField(14)]
+        private Settlement questHideout;
 
+        private bool IsPlayerInOwlArmy
+        {
+            get => _isPlayerInOwlArmy;
+            set
+            {
+                _isPlayerInOwlArmy = value;
+                AvoidQuestArmyDisbandingPatch.AvoidDisbanding = value;
+            }
+        }
 
         private Agent scholarAgent;
         private bool scholarDefeated = false;
@@ -162,9 +177,10 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
         private PersuasionTask _persuasionTask;
         private Hero TheOwl => Hero.FindFirst(x => x.StringId == "the_owl_hero");
-        public static bool IsPlayerInOwlArmy => Instance?._isPlayerInOwlArmy == true;
         public static bool IsAthasPrisoner => Instance?.escortAthasScholarLog?.CurrentProgress == 1 || Instance?.failedPersuasionLog?.CurrentProgress == 2;
-        public static Hero AthasHero => Instance?.athasScholarHero;
+        public static Hero? AthasHero => Instance?.athasScholarHero;
+
+        
 
         public PersuadeAthasNpcQuest(string questId, Hero questGiver, CampaignTime duration, int rewardGold) : base(questId, questGiver, duration, rewardGold)
         {
@@ -197,7 +213,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             CampaignEvents.OnMissionStartedEvent.AddNonSerializedListener(this, OnMissionStarted);
             CampaignEvents.BeforeMissionOpenedEvent.AddNonSerializedListener(this, OnBeforeMissionOpened);
             CampaignEvents.TickEvent.AddNonSerializedListener(this, OnTick);
-
+            CampaignEvents.OnPlayerBattleEndEvent.AddNonSerializedListener(this, BattleEnd);
             CampaignEvents.HeroPrisonerTaken.AddNonSerializedListener(this, (partyBase, hero) =>
             {
                 if (defeatedByScholarLog?.CurrentProgress == 1 || (persuadeAthasScholarLog?.CurrentProgress == 1 && failedPersuasionLog?.CurrentProgress == 1) && partyBase == PartyBase.MainParty &&
@@ -221,11 +237,33 @@ namespace RealmsForgotten.Quest.SecondUpdate
             });
         }
 
+        private void BattleEnd(MapEvent mapEvent)
+        {
+
+            if (goToHideoutLog?.CurrentProgress == 1  && Settlement.CurrentSettlement == questHideout)
+            {
+                if (mapEvent.DefeatedSide == mapEvent.DefenderSide.MissionSide)
+                {
+                    goToHideoutLog.UpdateCurrentProgress(2);
+                    CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty), new ConversationCharacterData(CharacterObject.Find("forest_bandits_boss")));
+                    goToHideoutLog.UpdateCurrentProgress(3);
+                }
+                else
+                {
+                    Tools.Tools.InitializeHideoutIfNeeded(questHideout.Hideout);
+                }
+
+            }
+        }
+
         private void OnTick(float obj)
         {
-            if (goToHideoutLog?.CurrentProgress == 0)
+            if (goToHideoutLog?.CurrentProgress == 0 && questHideout.GatePosition.DistanceSquared(MobileParty.MainParty.Position2D) <= 5)
             {
-                
+                InformationManager.ShowInquiry(new InquiryData(GameTexts.FindText("rf_event").ToString(), GameTexts.FindText("rf_near_hideout_message").ToString(), true, false, GameTexts.FindText("str_done").ToString(), "",
+                    null, null), true);
+                goToHideoutLog.UpdateCurrentProgress(1);
+
             }
         }
 
@@ -261,21 +299,31 @@ namespace RealmsForgotten.Quest.SecondUpdate
         {
             if (Settlement.CurrentSettlement == Ityr && persuadeAthasScholarLog?.CurrentProgress == 1)
             {
+                IsPlayerInOwlArmy = false;
                 DisbandArmyAction.ApplyByObjectiveFinished(MobileParty.MainParty.Army);
             }
         }
 
         private void OnMissionStarted(IMission imission)
         {
-            if (imission is Mission mission && Settlement.CurrentSettlement == Ityr.BoundVillages[0].Settlement)
+            if (imission is Mission mission)
             {
-                mission.AddMissionBehavior(new PersuadeAthasNpcMissionBehavior((victim, attacker, damage) =>
+                if (Settlement.CurrentSettlement == Ityr &&
+                    (persuadeAthasScholarLog?.CurrentProgress == 1 || failedPersuasionLog != null))
                 {
-                    if (victim == scholarAgent && damage >= scholarAgent.Health)
-                        scholarDefeated = true;
-                    if (victim == Agent.Main && damage >= Agent.Main?.Health)
-                        playerDefeated = true;
-                }));
+                    mission.AddMissionBehavior(new PersuadeScholarMissionLogic());
+                }
+                if (Settlement.CurrentSettlement == Ityr.BoundVillages[0].Settlement && waitAthasScholarLog?.HasBeenCompleted() == true && captureAthasScholarLog?.CurrentProgress == 0)
+                {
+                    mission.AddMissionBehavior(new FightScholarMissionLogic((victim, attacker, damage) =>
+                    {
+                        if (victim == scholarAgent && damage >= scholarAgent.Health)
+                            scholarDefeated = true;
+                        if (victim == Agent.Main && damage >= Agent.Main?.Health)
+                            playerDefeated = true;
+                    }));
+                }
+
             }
         }
 
@@ -311,11 +359,12 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
         private void OnSettlementEntered(MobileParty mobileParty, Settlement settlement, Hero hero)
         {
-            if (_isPlayerInOwlArmy && hero == Hero.MainHero && settlement == Ityr && persuadeAthasScholarLog.CurrentProgress == 1 && failedPersuasionLog == null)
+            if (IsPlayerInOwlArmy && hero == Hero.MainHero && settlement == Ityr && persuadeAthasScholarLog.CurrentProgress == 1 && failedPersuasionLog == null)
             {
                 InformationManager.ShowInquiry(new InquiryData(GameTexts.FindText("rf_event").ToString(), GameTexts.FindText("rf_ityr_arrive_message").ToString(), true, false, GameTexts.FindText("str_done").ToString(), "",
                     PrepareScholarHeroAndEvent, null), true);
-                _isPlayerInOwlArmy = false;
+                IsPlayerInOwlArmy = false;
+                goToAnoritLordLog.UpdateCurrentProgress(2);
             }
         }
 
@@ -431,8 +480,11 @@ namespace RealmsForgotten.Quest.SecondUpdate
         {
             SetDialogs();
             Instance = this;
+
             if(goToAnoritLordLog?.CurrentProgress == 1)
-            SetCaravanObjective(TheOwl.PartyBelongedTo);
+             SetCaravanObjective(MobileParty.All.Find(x => x.LeaderHero == TheOwl));
+
+            AvoidQuestArmyDisbandingPatch.AvoidDisbanding = _isPlayerInOwlArmy;
         }
 
         private void MakeCaravanForQuest()
@@ -443,17 +495,15 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 QuestCaravanPartyComponent.CreateQuestCaravanParty(Owl, QuestGiver.HomeSettlement);
 
             caravanParty.InitializeMobilePartyAtPosition(TroopRoster.CreateDummyTroopRoster(), TroopRoster.CreateDummyTroopRoster(), MobileParty.MainParty.Position2D);
-
-            caravanParty.AddElementToMemberRoster(Owl.CharacterObject, 1);
-            caravanParty.ChangePartyLeader(Owl);
-
+            caravanParty.AddElementToMemberRoster(TheOwl.CharacterObject, 1);
+            caravanParty.ChangePartyLeader(TheOwl);
             SetCaravanObjective(caravanParty);
 
         }
 
         private void SetCaravanObjective(MobileParty caravanParty)
         {
-            caravanParty.Army = new Army(Hero.MainHero.Clan.Kingdom, caravanParty, Army.ArmyTypes.Patrolling);
+            caravanParty.Army = new Army(QuestGiver.Clan.Kingdom, caravanParty, Army.ArmyTypes.Patrolling);
 
             MobileParty.MainParty.Army = caravanParty.Army;
 
@@ -472,7 +522,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             MobileParty.MainParty.Army.Cohesion = 100f;
             MobileParty.MainParty.Army.DailyCohesionChangeExplanation.Add(100f);
 
-            _isPlayerInOwlArmy = true;
+            IsPlayerInOwlArmy = true;
         }
         private void AnoritFirstDialogConsequence(bool willGoAsCaravan)
         {
@@ -492,6 +542,8 @@ namespace RealmsForgotten.Quest.SecondUpdate
             Campaign.Current.ConversationManager.AddDialogFlow(AthasPersuasionDialogFlow(), this);
             Campaign.Current.ConversationManager.AddDialogFlow(AthasAttackDialogFlow, this);
             Campaign.Current.ConversationManager.AddDialogFlow(DeliverScholarDialogFlow(), this);
+            Campaign.Current.ConversationManager.AddDialogFlow(HideoutBossDialog(), this);
+            Campaign.Current.ConversationManager.AddDialogFlow(HideoutOwlDialogFlow, this);
         }
 
         private void StartScholarFightInVillage()
@@ -550,6 +602,10 @@ namespace RealmsForgotten.Quest.SecondUpdate
             .Condition(()=> Campaign.Current.ConversationManager.ConversationAgents[0].Character as CharacterObject == athasScholarHero.CharacterObject && captureAthasScholarLog?.CurrentProgress == 0)
             .Consequence(StartScholarFightInVillage).CloseDialog();
 
+        private DialogFlow HideoutOwlDialogFlow => DialogFlow.CreateDialogFlow("start", 125)
+            .NpcLine(GameTexts.FindText("rf_third_quest_boss_dialog_4_owl"))
+            .Condition(() => goToHideoutLog?.CurrentProgress == 4).Consequence(()=>goToHideoutLog?.UpdateCurrentProgress(3));
+
         private DialogFlow DeliverScholarDialogFlow()
         {
             DialogFlow dialogFlow = DialogFlow.CreateDialogFlow("start", 125);
@@ -561,7 +617,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 GameTexts.FindText("rf_ok").ToString(), null, WaitUntilDecipher, this);
 
             dialogFlow.AddDialogLine("postponed_dialog", "start", "deliver_scholar_output_3",
-                GameTexts.FindText("rf_third_quest_anorit_dialog_2_2").ToString(), () => Hero.OneToOneConversationHero == QuestGiver && escortAthasScholarLog?.CurrentProgress == 2 || waitUntilDecipherLog?.CurrentProgress == 1, null, this);
+                GameTexts.FindText("rf_third_quest_anorit_dialog_2_2").ToString(), () => Hero.OneToOneConversationHero == QuestGiver && (escortAthasScholarLog?.CurrentProgress == 2 || waitUntilDecipherLog?.CurrentProgress == 1), null, this);
 
             dialogFlow.AddPlayerLine("deliver_scholar_dialog_4", "deliver_scholar_output_3", "close_window",
                 GameTexts.FindText("rf_third_quest_anorit_dialog_2_3").ToString(), null, GoToHideoutLog, this);
@@ -603,8 +659,29 @@ namespace RealmsForgotten.Quest.SecondUpdate
             textObject.SetCharacterProperties("QUESTGIVER", QuestGiver.CharacterObject);
 
             goToHideoutLog = AddLog(textObject);
+            questHideout = Settlement.Find("hideout_forest_13");
+            Tools.Tools.InitializeHideoutIfNeeded(questHideout.Hideout);
+            AddTrackedObject(questHideout);
+        }
 
-            AddTrackedObject(Settlement.Find("hideout_forest_13"));
+        private DialogFlow HideoutBossDialog()
+        {
+            DialogFlow dialogFlow = DialogFlow.CreateDialogFlow("start", 125);
+
+            dialogFlow.AddDialogLine("quest_hideout_boss_dialog_1", "start", "hideout_boss_output_1",GameTexts.FindText("rf_third_quest_boss_dialog_1").ToString(),
+                () => CharacterObject.OneToOneConversationCharacter?.StringId== "forest_bandits_boss" && Settlement.CurrentSettlement == questHideout && goToHideoutLog?.CurrentProgress == 2, null, this);
+
+            dialogFlow.AddPlayerLine("quest_hideout_boss_dialog_2", "hideout_boss_output_1", "hideout_boss_output_2", GameTexts.FindText("rf_third_quest_boss_dialog_2").ToString(), null, null, this);
+            dialogFlow.AddDialogLine("quest_hideout_boss_dialog_3", "hideout_boss_output_2", "hideout_boss_output_3", GameTexts.FindText("rf_third_quest_boss_dialog_3").ToString(), null, null, this);
+            dialogFlow.AddPlayerLine("quest_hideout_boss_dialog_4", "hideout_boss_output_3", "close_window", GameTexts.FindText("rf_third_quest_boss_dialog_4").ToString(), null,
+                () =>
+                {
+                    goToHideoutLog?.UpdateCurrentProgress(4);
+                    CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty), new ConversationCharacterData(TheOwl.CharacterObject));
+                }, this);
+            dialogFlow.AddPlayerLine("quest_hideout_boss_dialog_5", "hideout_boss_output_3", "close_window", GameTexts.FindText("rf_third_quest_boss_dialog_5").ToString(), null, null, this);
+
+            return dialogFlow;
         }
         private DialogFlow AthasPersuasionDialogFlow()
         {
@@ -668,7 +745,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             dialogFlow.AddDialogLine("athas_persuasion_success", "athas_persuasion_outcome", "close_window",
                 GameTexts.FindText("rf_third_quest_scholar_dialog_persuasion_success").ToString(), () =>
                 {
-                    GameTexts.SetVariable("SETTLEMENT", Ityr.EncyclopediaLinkWithName);
+                    GameTexts.SetVariable("SETTLEMENT", Ityr.Name.ToString());
                     return ConversationManager.GetPersuasionProgressSatisfied();
                 }, () => PersuasionComplete(true), this);
 
@@ -771,10 +848,23 @@ namespace RealmsForgotten.Quest.SecondUpdate
             Campaign.Current.GameMenuManager.NextLocation = null;
             Campaign.Current.GameMenuManager.PreviousLocation = null;
         }
-
-        public class PersuadeAthasNpcMissionBehavior : MissionLogic
+        private class PersuadeScholarMissionLogic : MissionLogic
         {
-            public PersuadeAthasNpcMissionBehavior(Action<Agent, Agent, int> agentHitAction)
+            public override InquiryData OnEndMissionRequest(out bool canLeave)
+            {
+                canLeave = true;
+                if (Instance?.persuadeAthasScholarLog?.CurrentProgress == 1 || Instance?.failedPersuasionLog != null)
+                {
+                    canLeave = false;
+                    MBInformationManager.AddQuickInformation(GameTexts.FindText("rf_third_quest_cannot_leave"));
+                }
+                return null;
+            }
+        }
+        private class FightScholarMissionLogic : MissionLogic
+        {
+            
+            public FightScholarMissionLogic(Action<Agent, Agent, int> agentHitAction)
             {
                 OnAgentHitAction = agentHitAction;
             }
