@@ -4,27 +4,24 @@ using System.Xml.Linq;
 using System.IO;
 using TaleWorlds.ObjectSystem;
 using TaleWorlds.CampaignSystem;
-using System.Linq;
-using TaleWorlds.MountAndBlade;
 using TaleWorlds.Core;
+using System;
+using Z.Expressions;
 
 namespace RFCustomSettlements
 {
-
-    public interface IBuildData
-    {
-
-    }
-    public class ArenaBuildData : IBuildData
+    public class ArenaBuildData
     {
         public class StageData
         {
-            public Equipment playerEquipment;
-            public List<ArenaTeam> ArenaTeams;
-            public StageData(List<ArenaTeam> teams, Equipment playerEquipment)
+            public Equipment PlayerEquipment { get; private set; }
+            public List<ArenaTeam> ArenaTeams { get; private set; }
+            public string ArenaSceneId { get; private set; }
+            public StageData(List<ArenaTeam> teams, Equipment playerEquipment, string arenaId)
             {
                 ArenaTeams = teams;
-                this.playerEquipment = playerEquipment;
+                this.PlayerEquipment = playerEquipment;
+                ArenaSceneId = arenaId;
             }
         }
         public List<ArenaChallenge> Challenges { get; private set; }
@@ -35,11 +32,36 @@ namespace RFCustomSettlements
 
         public class ArenaChallenge
         {
-            public ArenaChallenge(string challengeName, List<StageData> stagedatas)
+            public ArenaChallenge(string challengeName, List<StageData> stagedatas, string? conditionToParse = null)
             {
                 ChallengeName = challengeName;
                 StageDatas = stagedatas;
+                ChallengeCondition = CreateCondition(challengeName, conditionToParse);
             }
+
+            private Func<CharacterObject, int, bool> CreateCondition(string challengeName, string? conditionToParse = null)
+            {
+                if (conditionToParse == null) return (character, clanTier) => true;
+                var context = new EvalContext
+                {
+                    SafeMode = true
+                };
+                context.UnregisterAll();
+                context.RegisterExtensionMethod(typeof(Globals));
+                try
+                {
+                    return context.Compile<Func<CharacterObject, int, bool>>(conditionToParse, "Player", "PlayerClanTier");
+                }
+                catch (Exception)
+                {
+                    RealmsForgotten.HuntableHerds.SubModule.PrintDebugMessage($"Error parsing the condition for arena challenge {challengeName}");
+                    return (character, clanTier) => false;
+                };
+                //return context.Compile<Func<CharacterObject, int, bool>>("Player.IsGiant() && PlayerClanTier >= 1 && PlayerClanTier <= 2", "Player", "PlayerClanTier");
+            }
+
+
+            public Func<CharacterObject, int, bool> ChallengeCondition { get; private set; }
             public string ChallengeName { get; private set; }
             public List<StageData> StageDatas { get; private set; }
         }
@@ -53,13 +75,18 @@ namespace RFCustomSettlements
 
             foreach (XElement element in arenaConfig.Descendants("ArenaChallenge"))
             {
-                string ChallengeName = element.Element("ChallengeName").Value;
+                string challengeName = element.Element("ChallengeName").Value;
+                XElement challengeCon = element.Element("ChallengeCondition");
+                string? challengeCondition = default;
+                if (challengeCon != null) challengeCondition = challengeCon.Value;
+                //else challengeCondition = "";
                 List<StageData> stageDatas = new();
 
                 for (int i = 1; ;i++)
                 {
                     XElement stage = element.Element("Stage" + i);
                     if (stage == null) break;
+                    string arenaId = stage.Element("ArenaId").Value;
                     List<ArenaTeam> teamList = new();
                     Equipment equipment = new Equipment();
                     for (int j = 1; ; j++)
@@ -85,9 +112,9 @@ namespace RFCustomSettlements
                         }
                         teamList.Add(arenaTeam);
                     }
-                    stageDatas.Add(new StageData(teamList, equipment));
+                    stageDatas.Add(new StageData(teamList, equipment, arenaId));
                 }
-                challenges.Add(new(ChallengeName, stageDatas));
+                challenges.Add(new(challengeName, stageDatas, challengeCondition));
             }
             return new ArenaBuildData(challenges);
         }

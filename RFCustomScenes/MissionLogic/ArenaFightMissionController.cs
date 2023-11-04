@@ -27,7 +27,7 @@ namespace RFCustomSettlements
             foreach (ArenaTeam team in stageData.ArenaTeams)
                 aliveTeams.Add(((ArenaTeam)team.Clone()));
             OnBattleEnd = onbattleend;
-            playerEquipment = stageData.playerEquipment;
+            playerEquipment = stageData.PlayerEquipment;
         }
         public void StartArenaBattle()
         {

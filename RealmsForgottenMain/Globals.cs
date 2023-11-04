@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.Remoting.Messaging;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 
 namespace RealmsForgotten
@@ -68,7 +71,7 @@ namespace RealmsForgotten
         //        }
         //    }
         //}
-        public static bool IsGiant(this BasicCharacterObject character) {return character.Race == FaceGen.GetRaceOrDefault("half_giant"); }
+        public static bool IsGiant(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("half_giant"); }
         public static bool IsUndead(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("undead"); }
         public static bool IsHuman(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("human"); }
         public static bool IsMull(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("mull"); }
