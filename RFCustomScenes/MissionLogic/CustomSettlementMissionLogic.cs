@@ -68,7 +68,7 @@ namespace RealmsForgotten.RFCustomSettlements
                 if (!NpcsInSettlement.ContainsKey(data.TagId))
                     NpcsInSettlement[data.TagId] = data;
                 else
-                    HuntableHerds.SubModule.PrintDebugMessage($"Error, multiple Npcs with same tag: {data.TagId}", 1, 0, 0);
+                    HuntableHerds.SubModule.PrintDebugMessage($"Error, multiple Npcs with same tag: {data.TagId}", 255, 0, 0);
             }
             BanditsData = buildData;
             NextSceneData.Instance.shouldSwitchScenes = false;

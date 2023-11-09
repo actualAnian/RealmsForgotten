@@ -194,7 +194,7 @@ namespace RealmsForgotten.RFCustomSettlements
             _errorHasHappened = false;
             hasToWait = false;
             currentState = ArenaState.Visiting;
-            HuntableHerds.SubModule.PrintDebugMessage("error with arena settlemenent, leaving the settlement", 1, 0, 0);
+            HuntableHerds.SubModule.PrintDebugMessage("error with arena settlemenent, leaving the settlement", 255, 0, 0);
             PlayerEncounter.LeaveSettlement();
             PlayerEncounter.Finish(true);
         }
