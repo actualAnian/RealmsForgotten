@@ -674,37 +674,37 @@
 		<id>road_tavern</id>
 		<Npcs>
 			<Npc>
-				<NpcId>rf_npc_medicine_woman_a</NpcId>
+				<NpcId>medicine_woman_a</NpcId>
 				<TagId>8</TagId>
 				<ActionSet>_hideout_bandit</ActionSet>
 			</Npc>
 			<Npc>
-				<NpcId>rf_npc_beggar_vlandia</NpcId>
+				<NpcId>beggar_vlandia</NpcId>
 				<TagId>1</TagId>
 				<ActionSet>_hideout_bandit</ActionSet>
 			</Npc>
 			<Npc>
-				<NpcId>rf_npc_caravan_master_battania</NpcId>
+				<NpcId>caravan_master_battania</NpcId>
 				<TagId>2</TagId>
 				<ActionSet>_hideout_bandit</ActionSet>
 			</Npc>
 			<Npc>
-				<NpcId>rf_npc_townsman_vlandia</NpcId>
+				<NpcId>townsman_vlandia</NpcId>
 				<TagId>3</TagId>
 				<ActionSet>_hideout_bandit</ActionSet>
 			</Npc>
 			<Npc>
-				<NpcId>rf_npc_villager_vlandia</NpcId>
+				<NpcId>villager_vlandia</NpcId>
 				<TagId>4</TagId>
 				<ActionSet>_hideout_bandit</ActionSet>
 			</Npc>
 			<Npc>
-				<NpcId>rf_npc_tavernkeeper_vlandia</NpcId>
+				<NpcId>tavernkeeper_vlandia</NpcId>
 				<TagId>5</TagId>
 				<ActionSet>_hideout_bandit</ActionSet>
 			</Npc>
 			<Npc>
-				<NpcId>rf_npc_tavern_wench_vlandia</NpcId>
+				<NpcId>tavern_wench_vlandia</NpcId>
 				<TagId>6</TagId>
 				<ActionSet>_hideout_bandit</ActionSet>
 			</Npc>
