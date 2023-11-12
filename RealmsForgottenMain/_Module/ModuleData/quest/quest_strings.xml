@@ -213,11 +213,42 @@
 	<string id="rf_third_quest_boss_dialog_5" text="{=rf_third_quest_boss_dialog_5}You'll have ample time to explain everything from the confines of a dungeon cell." />
 	<string id="rf_third_quest_boss_dialog_4_owl" text="{=rf_third_quest_boss_dialog_6}My lord, it isn't worth it. We need him alive to reveal the truth about all of this. Please, let's bring him to face royal justice." />
 
-
-
-
-
 	<string id="town_athas_quest_option" text="{=town_athas_quest_option}Try to persuade the scholar" />
+
+
+	<string id="rf_quest_title_part_four" text="{=rf_quest_title_part_four}Realms Forgotten Quest: Part Four" />
+
+	<string id="rf_last_quest_first_log" text="{=rf_last_quest_first_log}Take the hideout boss to the {LORD.LINK}." />
+	<string id="rf_last_quest_second_log" text="{=rf_last_quest_second_log}Go to the monastery ant talk to the monks." />
+
+	<string id="rf_last_quest_first_dialog_1" text="{=rf_last_quest_first_dialog_1}What was that? Not only are these lands plagued by rising undead, but now demons threaten the world of the living! We are damned..." />
+	<string id="rf_last_quest_first_dialog_2" text="{=rf_last_quest_first_dialog_2}We've survived thus far by sheer luck, or perchance some force watches over us. There's no time to lament; we must find a way to confront this evil... but who are they?" />
+	<string id="rf_last_quest_first_dialog_3" text="{=rf_last_quest_first_dialog_3}Hmmm... As I told you when we first met, I have seen these black-robed cultists around their hideout where you retrieved the maps. The sigil they carry on their robes do not relate to any faction I have seen before." />
+	<string id="rf_last_quest_first_dialog_4" text="{=rf_last_quest_first_dialog_4}Their leader spoke of avenging themselves... Could that be a clue?" />
+	<string id="rf_last_quest_first_dialog_5" text="{=rf_last_quest_first_dialog_5}It could be. We need to find out where they hide and seek more answers. Let us pick up their trail." />
+	<string id="rf_last_quest_first_dialog_6" text="{=rf_last_quest_first_dialog_6}We could, but we need to alert the Queens and Kings about this matter. I see no other way." />
+	<string id="rf_last_quest_first_dialog_7" text="{=rf_last_quest_first_dialog_7}Yes, but how? Without any proof, we will be ridiculed!" />
+	<string id="rf_last_quest_first_dialog_8" text="{=rf_last_quest_first_dialog_8}True... capturing the undead caught the Queen's attention. We need to find a similar way to convince them." />
+	<string id="rf_last_quest_first_dialog_9" text="{=rf_last_quest_first_dialog_9}And not only the Realms of Men... We need to look after all the kingdoms." />
+	<string id="rf_last_quest_first_dialog_10" text="{=rf_last_quest_first_dialog_10}So we need something bigger, something that will leave no doubt... we need to capture some of these evil beings. But these cultists are something else. We need more than just a few soldiers." />
+	<string id="rf_last_quest_first_dialog_11" text="{=rf_last_quest_first_dialog_11}Maybe a weapon? A weapon strong enough to counter their dark nature?" />
+	<string id="rf_last_quest_first_dialog_12" text="{=rf_last_quest_first_dialog_12}A weapon?" />
+	<string id="rf_last_quest_first_dialog_13" text="{=rf_last_quest_first_dialog_13}I've traveled far and wide, for many years serving as a spy and messenger for Queen Rinaia. Once I had come across a misterious monastic order; they were known for some miraculous deeds. The common folk claimed they were holy people... What if not holy but sorcerers?" />
+	<string id="rf_last_quest_first_dialog_14" text="{=rf_last_quest_first_dialog_14}Do you mean Magic? We know that any form of magic is prohibited, and under penalty of death." />
+	<string id="rf_last_quest_first_dialog_15" text="{=rf_last_quest_first_dialog_15}And yet, undead and demons? Do they make any more sense? They must be creatures born of magic, albeit a dark one...Magic or Faith, Holy Men or Sorcerers, whats the diference? They sounded at least to have a good nature. We have nothing to loose. Come, we already have an idea of where to locate the Cultists; we can address that later. First, we need to seek assistance." />
+	<string id="rf_last_quest_first_dialog_16" text="{=rf_last_quest_first_dialog_16}That sounds like a plan. Where are we heading to?" />
+	<string id="rf_last_quest_first_dialog_17" text="{=rf_last_quest_first_dialog_17}A monastery... a long-forgotten sanctuary." />
+
+	<string id="rf_last_quest_monk_dialog_1" text="{=rf_last_quest_monk_dialog_1}Excuse me, sir. We've heard a lot about your deeds through the folk around these parts. They say you are holy men and women..." />
+	<string id="rf_last_quest_monk_dialog_2" text="{=rf_last_quest_monk_dialog_2}Good day, brother. These are kind words, but we are no holy people, only dedicated hermits. How can we serve you?" />
+	<string id="rf_last_quest_monk_dialog_3" text="{=rf_last_quest_monk_dialog_3}What we have to say may be difficult to accept at first... We have recently been in battle, facing an enemy with an otherworldly nature... Aware that this probably would not reach the ears of Lords and Kings, we have no other choice but to seek those who walk the path of knowledge in spiritual matters..." />
+	<string id="rf_last_quest_monk_dialog_4" text="{=rf_last_quest_monk_dialog_4}Hmmm, I see. And to what otherworldly nature are you referring?" />
+	<string id="rf_last_quest_monk_dialog_5" text="{=rf_last_quest_monk_dialog_5}Beings not from this world. Demons." />
+	<string id="rf_last_quest_monk_dialog_6" text="{=rf_last_quest_monk_dialog_6}Demons?... I sense enough seriousness in both your gazes that gives me the impression you are not bringing this matter forth merely out of imagination." />
+	<string id="rf_last_quest_monk_dialog_7" text="{=rf_last_quest_monk_dialog_7}Absolutely, sir. We confronted them and barely escaped with our lives." />
+	<string id="rf_last_quest_monk_dialog_8" text="{=rf_last_quest_monk_dialog_8}If that is true, you need to bring your claim to our council. But they will ask for more proof." />
+	<string id="rf_last_quest_monk_dialog_9" text="{=rf_last_quest_monk_dialog_9}I have found that in one of their hideouts. Take it." />
+
 
 	<string id="rf_leave" text="{=rf_leave}Leave" />
     <string id="rf_event" text="{=rf_event}Event" />

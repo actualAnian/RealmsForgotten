@@ -45,6 +45,7 @@ using SandBox.Missions.MissionLogics;
 using TaleWorlds.MountAndBlade.View.Screens;
 using TaleWorlds.ScreenSystem;
 using System.Timers;
+using SandBox.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.MapEvents;
 using CharacterObject = TaleWorlds.CampaignSystem.CharacterObject;
 
@@ -56,7 +57,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
     {
         public static bool Prefix(Hero hero)
         {
-            if (PersuadeAthasNpcQuest.IsAthasPrisoner && hero == PersuadeAthasNpcQuest.AthasHero)
+            if (PersuadeAthasNpcQuest.MustAvoidPrisonerEscape && hero.CharacterObject == PersuadeAthasNpcQuest.PrisonerCharacter)
             {
                 return false;
             }
@@ -91,43 +92,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             }
         }
     }
-    public class PersuadeAthasNpcBehavior : CampaignBehaviorBase
-    {
-        public override void RegisterEvents()
-        {
-            CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, CheckIfFirstQuestHasEnded);
-        }
 
-        private void CheckIfFirstQuestHasEnded()
-        {
-            SaveCurrentQuestCampaignBehavior currentQuestCampaignBehavior = SaveCurrentQuestCampaignBehavior.Instance;
-
-            if (currentQuestCampaignBehavior?.questStoppedAt != null && !Campaign.Current.QuestManager.Quests.Any(x=>x is PersuadeAthasNpcQuest))
-            {
-                Hero hero = null;
-                if (currentQuestCampaignBehavior.questStoppedAt == "anorit")
-                
-                    hero = Hero.FindFirst(x => x.StringId == "lord_WE9_l");
-                
-                else if (currentQuestCampaignBehavior.questStoppedAt == "queen")
-                
-                    hero = Kingdom.All.First(x => x.StringId == "empire").Leader.Spouse;
-
-                    
-
-                new PersuadeAthasNpcQuest("athas_quest", hero, CampaignTime.Never, 0).StartQuest();
-                Campaign.Current.CampaignBehaviorManager.RemoveBehavior<PersuadeAthasNpcBehavior>();
-
-
-                
-            }
-        }
-
-        public override void SyncData(IDataStore dataStore)
-        {
-        }
-    }
-    
     public class PersuadeAthasNpcQuest : QuestBase
     {
         [SaveableField(1)] 
@@ -177,9 +142,30 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
         private PersuasionTask _persuasionTask;
         private Hero TheOwl => Hero.FindFirst(x => x.StringId == "the_owl_hero");
-        public static bool IsAthasPrisoner => Instance?.escortAthasScholarLog?.CurrentProgress == 1 || Instance?.failedPersuasionLog?.CurrentProgress == 2;
+        public static bool MustAvoidPrisonerEscape
+        {
+            get
+            {
+                if (Instance?.escortAthasScholarLog?.CurrentProgress == 1 ||
+                    Instance?.failedPersuasionLog?.CurrentProgress == 2)
+                {
+                    PrisonerCharacter = AthasHero.CharacterObject;
+                    return true;
+                }
+                else if (Instance?.goToHideoutLog?.CurrentProgress == 5)
+                {
+                    PrisonerCharacter = CharacterObject.Find(hideoutBossCharacterId);
+                    return true;
+                }
+                return false;
+            }
+        }
+
         public static Hero? AthasHero => Instance?.athasScholarHero;
 
+        private static readonly string hideoutBossCharacterId = "necromancer_boss";
+
+        public static CharacterObject PrisonerCharacter;
         
 
         public PersuadeAthasNpcQuest(string questId, Hero questGiver, CampaignTime duration, int rewardGold) : base(questId, questGiver, duration, rewardGold)
@@ -245,14 +231,14 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 if (mapEvent.DefeatedSide == mapEvent.DefenderSide.MissionSide)
                 {
                     goToHideoutLog.UpdateCurrentProgress(2);
-                    CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty), new ConversationCharacterData(CharacterObject.Find("forest_bandits_boss")));
+                    CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty), new ConversationCharacterData(CharacterObject.Find(hideoutBossCharacterId)));
                     goToHideoutLog.UpdateCurrentProgress(3);
                 }
                 else
                 {
-                    Tools.Tools.InitializeHideoutIfNeeded(questHideout.Hideout);
+                    QuestLibrary.InitializeHideoutIfNeeded(questHideout.Hideout);
                 }
-
+                
             }
         }
 
@@ -263,7 +249,6 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 InformationManager.ShowInquiry(new InquiryData(GameTexts.FindText("rf_event").ToString(), GameTexts.FindText("rf_near_hideout_message").ToString(), true, false, GameTexts.FindText("str_done").ToString(), "",
                     null, null), true);
                 goToHideoutLog.UpdateCurrentProgress(1);
-
             }
         }
 
@@ -301,6 +286,16 @@ namespace RealmsForgotten.Quest.SecondUpdate
             {
                 IsPlayerInOwlArmy = false;
                 DisbandArmyAction.ApplyByObjectiveFinished(MobileParty.MainParty.Army);
+            }
+
+            if (Settlement.CurrentSettlement == questHideout && goToHideoutLog?.CurrentProgress == 1)
+            {
+                CharacterObject bossCharacterObject = CharacterObject.Find("forest_bandits_boss");
+                MobileParty bossParty = questHideout.Parties.Find(x => x.MemberRoster.Contains(bossCharacterObject));
+
+
+                bossParty.MemberRoster.RemoveIf(x => x.Character.StringId.Contains("boss"));
+                bossParty.Party.AddMember(CharacterObject.Find(hideoutBossCharacterId), 1);
             }
         }
 
@@ -478,6 +473,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
         protected override void InitializeQuestOnGameLoad()
         {
+            QuestLibrary.InitializeVariables();
             SetDialogs();
             Instance = this;
 
@@ -544,6 +540,8 @@ namespace RealmsForgotten.Quest.SecondUpdate
             Campaign.Current.ConversationManager.AddDialogFlow(DeliverScholarDialogFlow(), this);
             Campaign.Current.ConversationManager.AddDialogFlow(HideoutBossDialog(), this);
             Campaign.Current.ConversationManager.AddDialogFlow(HideoutOwlDialogFlow, this);
+            
+            Campaign.Current.ConversationManager.AddDialogFlow(HideoutBossDialogFix(), this);
         }
 
         private void StartScholarFightInVillage()
@@ -583,6 +581,18 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
         }
 
+        private void OnCapturedHideoutBoss()
+        {
+            goToHideoutLog?.UpdateCurrentProgress(5);
+
+            CharacterObject hideoutBoss = CharacterObject.Find(hideoutBossCharacterId);
+
+            if (!PartyBase.MainParty.PrisonRoster.Contains(hideoutBoss))
+                PartyBase.MainParty.AddPrisoner(hideoutBoss, 1);
+
+            new LastQuest("rf_last_quest", QuestGiver, CampaignTime.Never, 100000).StartQuest();
+            CompleteQuestWithSuccess();
+        }
         private void AddEscortLog()
         {
             TextObject textObject = GameTexts.FindText("rf_third_quest_anorit_objective_5");
@@ -604,7 +614,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
         private DialogFlow HideoutOwlDialogFlow => DialogFlow.CreateDialogFlow("start", 125)
             .NpcLine(GameTexts.FindText("rf_third_quest_boss_dialog_4_owl"))
-            .Condition(() => goToHideoutLog?.CurrentProgress == 4).Consequence(()=>goToHideoutLog?.UpdateCurrentProgress(3));
+            .Condition(() => goToHideoutLog?.CurrentProgress == 4).Consequence(OnCapturedHideoutBoss);
 
         private DialogFlow DeliverScholarDialogFlow()
         {
@@ -660,16 +670,24 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
             goToHideoutLog = AddLog(textObject);
             questHideout = Settlement.Find("hideout_forest_13");
-            Tools.Tools.InitializeHideoutIfNeeded(questHideout.Hideout);
+            QuestLibrary.InitializeHideoutIfNeeded(questHideout.Hideout);
             AddTrackedObject(questHideout);
         }
+        private DialogFlow HideoutBossDialogFix()
+        {
+            DialogFlow dialogFlow = DialogFlow.CreateDialogFlow("start", 125);
 
+            dialogFlow.AddDialogLine("quest_hideout_boss_dialog_fix", "start", "bandit_hideout_defender", "{=nYCXzAYH}You! You've cut quite a swathe through my men there, damn you. How about we settle this, one-on-one?",
+                () => CharacterObject.OneToOneConversationCharacter?.StringId == hideoutBossCharacterId && Settlement.CurrentSettlement == questHideout && goToHideoutLog?.CurrentProgress == 1, null, this);
+
+            return dialogFlow;
+        }
         private DialogFlow HideoutBossDialog()
         {
             DialogFlow dialogFlow = DialogFlow.CreateDialogFlow("start", 125);
 
             dialogFlow.AddDialogLine("quest_hideout_boss_dialog_1", "start", "hideout_boss_output_1",GameTexts.FindText("rf_third_quest_boss_dialog_1").ToString(),
-                () => CharacterObject.OneToOneConversationCharacter?.StringId== "forest_bandits_boss" && Settlement.CurrentSettlement == questHideout && goToHideoutLog?.CurrentProgress == 2, null, this);
+                () => CharacterObject.OneToOneConversationCharacter?.StringId == hideoutBossCharacterId && Settlement.CurrentSettlement == questHideout && goToHideoutLog?.CurrentProgress == 2, null, this);
 
             dialogFlow.AddPlayerLine("quest_hideout_boss_dialog_2", "hideout_boss_output_1", "hideout_boss_output_2", GameTexts.FindText("rf_third_quest_boss_dialog_2").ToString(), null, null, this);
             dialogFlow.AddDialogLine("quest_hideout_boss_dialog_3", "hideout_boss_output_2", "hideout_boss_output_3", GameTexts.FindText("rf_third_quest_boss_dialog_3").ToString(), null, null, this);
@@ -679,7 +697,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                     goToHideoutLog?.UpdateCurrentProgress(4);
                     CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty), new ConversationCharacterData(TheOwl.CharacterObject));
                 }, this);
-            dialogFlow.AddPlayerLine("quest_hideout_boss_dialog_5", "hideout_boss_output_3", "close_window", GameTexts.FindText("rf_third_quest_boss_dialog_5").ToString(), null, null, this);
+            dialogFlow.AddPlayerLine("quest_hideout_boss_dialog_5", "hideout_boss_output_3", "close_window", GameTexts.FindText("rf_third_quest_boss_dialog_5").ToString(), null, OnCapturedHideoutBoss, this);
 
             return dialogFlow;
         }

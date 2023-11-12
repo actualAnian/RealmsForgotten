@@ -44,6 +44,7 @@ using TaleWorlds.ObjectSystem;
 using TaleWorlds.SaveSystem;
 using static TaleWorlds.CampaignSystem.Issues.IssueBase;
 using FaceGen = TaleWorlds.Core.FaceGen;
+using static RealmsForgotten.Quest.QuestLibrary;
 
 namespace RealmsForgotten.Quest
 {
@@ -107,12 +108,11 @@ namespace RealmsForgotten.Quest
         {
             if (_isPlayerInOwlArmy && mobileParty == MobileParty.MainParty && settlement == mobileParty.Army.AiBehaviorObject)
             {
-                Hero anoritHero = Hero.FindFirst(x => x.StringId == "lord_WE9_l");
 
-                EnterSettlementAction.ApplyForCharacterOnly(anoritHero, settlement);
+                EnterSettlementAction.ApplyForCharacterOnly(AnoritLord, settlement);
 
                 ConversationCharacterData playerData = new(CharacterObject.PlayerCharacter, PartyBase.MainParty);
-                ConversationCharacterData anoritData = new(anoritHero.CharacterObject, anoritHero.PartyBelongedTo.Party);
+                ConversationCharacterData anoritData = new(AnoritLord.CharacterObject, AnoritLord.PartyBelongedTo.Party);
                 Campaign.Current.ConversationManager.OpenMapConversation(playerData, anoritData);
 
                 
@@ -124,7 +124,7 @@ namespace RealmsForgotten.Quest
             }
         }
 
-        private bool isOwlOnPlayerParty => PartyBase.MainParty.MemberRoster.GetTroopRoster().Any(x => x.Character.HeroObject?.StringId == "the_owl_hero");
+        private bool isOwlOnPlayerParty => PartyBase.MainParty.MemberRoster.GetTroopRoster().Any(x => x.Character?.HeroObject == TheOwl);
 
         public void OnHideoutDefeat(Settlement hideout)
         {
@@ -180,7 +180,8 @@ namespace RealmsForgotten.Quest
             SetDialogs();
             AvoidQuestArmyDisbandingPatch.AvoidDisbanding = _isPlayerInOwlArmy;
             if (_isPlayerInOwlArmy)
-                CreateOwlArmy(MobileParty.All.Find(x=>x.LeaderHero== Hero.FindFirst(x=>x.StringId== "the_owl_hero")));
+                CreateOwlArmy(MobileParty.All.Find(x=>x.LeaderHero == TheOwl));
+            QuestLibrary.InitializeVariables();
         }
         private void LocationCharactersAreReadyToSpawn(Dictionary<string, int> unusedUsablePointCount)
         {
@@ -327,7 +328,7 @@ namespace RealmsForgotten.Quest
         private void NotBetrayQueenConsequence()
         {
             DisbandArmyAction.ApplyByObjectiveFinished(MobileParty.MainParty.Army);
-            ChangeRelationAction.ApplyPlayerRelation(Hero.FindFirst(x=>x.StringId=="the_owl_hero"), -20, false);
+            ChangeRelationAction.ApplyPlayerRelation(TheOwl, -20, false);
             PlayerEncounter.Finish();
             anoritLordConversationTime = CampaignTime.Now;
         }
@@ -348,13 +349,13 @@ namespace RealmsForgotten.Quest
             () => MobileParty.ConversationParty?.LeaderHero?.StringId == "the_owl_hero" && !hasTalkedToOwl2 && findMapJournalLog?.CurrentProgress == 3 && !isOwlOnPlayerParty)
             .PlayerLine(GameTexts.FindText("rf_the_owl_intercept_text_2")).NpcLine(GameTexts.FindText("rf_the_owl_intercept_text_3"))
             .Consequence(GoToAnoritLord).CloseDialog()
-                .NpcOption(GameTexts.FindText("rf_the_owl_intercept_text").ToString(), ()=> Hero.OneToOneConversationHero?.StringId == "the_owl_hero" && !hasTalkedToOwl2 && findMapJournalLog?.CurrentProgress == 3 
+                .NpcOption(GameTexts.FindText("rf_the_owl_intercept_text").ToString(), ()=> Hero.OneToOneConversationHero == TheOwl && !hasTalkedToOwl2 && findMapJournalLog?.CurrentProgress == 3 
                 && isOwlOnPlayerParty).PlayerLine(GameTexts.FindText("rf_the_owl_intercept_text_2")).NpcLine(GameTexts.FindText("rf_the_owl_intercept_text_3"))
             .Consequence(GoToAnoritLord).CloseDialog().EndNpcOptions();
                 
         
         private DialogFlow AnoritLordDialog => DialogFlow.CreateDialogFlow("start", 125)
-            .PlayerLine(GameTexts.FindText("rf_anorit_lord_text_1")).Condition(() => Hero.OneToOneConversationHero?.StringId == "lord_WE9_l" && _isPlayerInOwlArmy).NpcLine(GameTexts.FindText("rf_anorit_lord_text_2")).
+            .PlayerLine(GameTexts.FindText("rf_anorit_lord_text_1")).Condition(() => Hero.OneToOneConversationHero == AnoritLord && _isPlayerInOwlArmy).NpcLine(GameTexts.FindText("rf_anorit_lord_text_2")).
             PlayerLine(GameTexts.FindText("rf_anorit_lord_text_3")).NpcLine(GameTexts.FindText("rf_anorit_lord_text_4")).PlayerLine(GameTexts.FindText("rf_anorit_lord_text_5"))
             .NpcLine(GameTexts.FindText("rf_anorit_lord_text_6")).NpcLine(GameTexts.FindText("rf_anorit_lord_text_7")).NpcLine(GameTexts.FindText("rf_anorit_lord_text_8"))
             .PlayerLine(GameTexts.FindText("rf_anorit_lord_text_9")).NpcLine(GameTexts.FindText("rf_anorit_lord_text_10")).PlayerLine(GameTexts.FindText("rf_anorit_lord_text_11"))

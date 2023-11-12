@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RealmsForgotten.Quest.SecondUpdate;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,7 +58,7 @@ namespace RealmsForgotten.Quest
 
         protected override void InitializeQuestOnGameLoad()
         {
-
+            QuestLibrary.InitializeVariables();
         }
 
         protected override void SetDialogs()
@@ -99,7 +100,30 @@ namespace RealmsForgotten.Quest
         }
         public override void RegisterEvents()
         {
+            CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, CheckIfFirstQuestHasEnded);
+        }
 
+        private void CheckIfFirstQuestHasEnded()
+        {
+            SaveCurrentQuestCampaignBehavior currentQuestCampaignBehavior = SaveCurrentQuestCampaignBehavior.Instance;
+
+            if (currentQuestCampaignBehavior?.questStoppedAt != null && !Campaign.Current.QuestManager.Quests.Any(x => x is PersuadeAthasNpcQuest))
+            {
+                Hero hero = null;
+                if (currentQuestCampaignBehavior.questStoppedAt == "anorit")
+
+                    hero = Hero.FindFirst(x => x.StringId == "lord_WE9_l");
+
+                else if (currentQuestCampaignBehavior.questStoppedAt == "queen")
+
+                    hero = Kingdom.All.First(x => x.StringId == "empire").Leader.Spouse;
+
+
+
+                new PersuadeAthasNpcQuest("athas_quest", hero, CampaignTime.Never, 0).StartQuest();
+
+                questStoppedAt = null;
+            }
         }
         public override void SyncData(IDataStore dataStore)
         {

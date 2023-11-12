@@ -13,9 +13,9 @@ using TaleWorlds.Core;
 using TaleWorlds.Localization;
 using HarmonyLib;
 
-namespace RealmsForgotten.Quest.Tools
+namespace RealmsForgotten.Quest
 {
-    class Tools
+    class QuestLibrary
     {
         public static void InitializeHideoutIfNeeded(Hideout hideout)
         {
@@ -68,8 +68,16 @@ namespace RealmsForgotten.Quest.Tools
                 }
             }
             disbandParty.AddElementToMemberRoster(CharacterObject.Find("imperial_equite"), 1);
-            
-           // disbandParty.RemoveParty();
+
+            // disbandParty.RemoveParty();
+        }
+        public static Hero QuestQueen;
+        public static Hero AnoritLord;
+        public static Hero TheOwl => Hero.FindFirst(x => x.StringId == "the_owl_hero");
+        public static void InitializeVariables()
+        {
+            QuestQueen = Kingdom.All.First(x => x.StringId == "empire").Leader.Spouse;
+            AnoritLord = Hero.FindFirst(x => x.StringId == "lord_WE9_l");
         }
     }
 
