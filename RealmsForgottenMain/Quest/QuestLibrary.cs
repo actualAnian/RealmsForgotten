@@ -11,11 +11,35 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
+using HarmonyLib;
 
-namespace RealmsForgotten.Quest.Tools
+namespace RealmsForgotten.Quest
 {
-    class Tools
+    class QuestLibrary
     {
+        public static void InitializeHideoutIfNeeded(Hideout hideout)
+        {
+            if (!hideout.IsInfested)
+            {
+
+                Clan clan = Clan.All.Find(x => x.StringId == "mountain_bandits");
+                for (int i = 0; i <= 2; i++)
+                {
+                    MobileParty bandits = BanditPartyComponent.CreateBanditParty("bandits_quest_" + i, clan, hideout, i == 2 ? true : false);
+                    bandits.InitializeMobilePartyAtPosition(clan.DefaultPartyTemplate, hideout.Settlement.Position2D);
+                    bandits.Ai.SetMoveGoToSettlement(hideout.Settlement);
+                    bandits.Ai.RecalculateShortTermAi();
+                    EnterSettlementAction.ApplyForParty(bandits, hideout.Settlement);
+                }
+                AccessTools.Field(typeof(Hideout), "_nextPossibleAttackTime").SetValue(hideout, CampaignTime.Now);
+
+                hideout.IsSpotted = true;
+
+
+            }
+            hideout.Settlement.IsVisible = true;
+            
+        }
         public static void MergeDisbandParty(MobileParty disbandParty, PartyBase mergeToParty)
         {
             mergeToParty.ItemRoster.Add(disbandParty.ItemRoster.AsEnumerable());
@@ -44,8 +68,16 @@ namespace RealmsForgotten.Quest.Tools
                 }
             }
             disbandParty.AddElementToMemberRoster(CharacterObject.Find("imperial_equite"), 1);
-            
-           // disbandParty.RemoveParty();
+
+            // disbandParty.RemoveParty();
+        }
+        public static Hero QuestQueen;
+        public static Hero AnoritLord;
+        public static Hero TheOwl => Hero.FindFirst(x => x.StringId == "the_owl_hero");
+        public static void InitializeVariables()
+        {
+            QuestQueen = Kingdom.All.First(x => x.StringId == "empire").Leader.Spouse;
+            AnoritLord = Hero.FindFirst(x => x.StringId == "lord_WE9_l");
         }
     }
 

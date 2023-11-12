@@ -144,6 +144,7 @@ namespace RealmsForgotten.Behaviors
         }
 
         private BasicCharacterObject[] modifiedCharacterObjects = { };
+        
         public override void OnAgentBuild(Agent agent, Banner banner)
         {
             if (agent.Character == null || agent.IsMount)
@@ -165,10 +166,20 @@ namespace RealmsForgotten.Behaviors
                 if (basicCharacterObject is CharacterObject characterObject)
                 {
                     string skillString;
-                    for (EquipmentIndex equipmentIndex = EquipmentIndex.Weapon0; equipmentIndex <= EquipmentIndex.Weapon3; equipmentIndex++)
+                    foreach (string skill in skillsKeys)
                     {
-                        skillString = skillsKeys.FirstOrDefault(x => characterObject.Equipment[equipmentIndex].Item?.StringId.Contains(x) == true);
-                        if (skillString != null)
+                        bool found = false;
+                        ItemObject weapon = characterObject.GetUsingWeapons().ToList().MaxBy(x=>
+                        {
+                            if (x?.StringId?.Contains(skill) == true)
+                            {
+                                found = true;
+                                return RFUtility.GetNumberAfterSkillWord(x.StringId, skill);
+                            }
+                            return 0;
+                        });
+
+                        if (found)
                         {
                             Hero hero = characterObject.HeroObject;
                             if (heroesInitialSkills.ContainsKey(agent.Index))
@@ -178,10 +189,10 @@ namespace RealmsForgotten.Behaviors
                                 heroesInitialSkills.Remove(agent.Index);
                             }
                             else
-                                heroesInitialSkills.Add(agent.Index, (skillsDic[skillString], agent.Character.GetSkillValue(skillsDic[skillString])));
+                                heroesInitialSkills.Add(agent.Index, (skillsDic[skill], agent.Character.GetSkillValue(skillsDic[skill])));
 
-                            hero.SetSkillValue(skillsDic[skillString], characterObject.GetSkillValue(skillsDic[skillString]) +
-                                                                      RFUtility.GetNumberAfterSkillWord(characterObject.Equipment[equipmentIndex].Item?.StringId, skillString, hero == Hero.MainHero));
+                            hero.SetSkillValue(skillsDic[skill], characterObject.GetSkillValue(skillsDic[skill]) +
+                                                                 RFUtility.GetNumberAfterSkillWord(weapon.StringId, skill, hero == Hero.MainHero));
                         }
                     }
                 }

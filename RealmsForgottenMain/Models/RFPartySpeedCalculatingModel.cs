@@ -21,7 +21,7 @@ namespace RealmsForgotten.Models
                 additionalTroopOnHorseCount);
             if (party.Owner?.CharacterObject.Race == FaceGen.GetRaceOrDefault("Xilantlacay"))
                 baseValue.AddFactor(0.20f, new TextObject("Xilantlacay's Speedness"));
-            if(PersuadeAthasNpcQuest.IsPlayerInOwlArmy && party.Army?.Parties.Contains(MobileParty.MainParty) == true)
+            if(AvoidQuestArmyDisbandingPatch.AvoidDisbanding && party.Army?.Parties.Contains(MobileParty.MainParty) == true)
                 baseValue.AddFactor(2.0f);
             return baseValue;
 

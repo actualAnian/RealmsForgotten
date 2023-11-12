@@ -6,7 +6,6 @@ using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.Conversation;
 using TaleWorlds.CampaignSystem.Extensions;
-using TaleWorlds.CampaignSystem.Issues;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Party.PartyComponents;
@@ -17,20 +16,10 @@ using TaleWorlds.Localization;
 using TaleWorlds.ObjectSystem;
 using TaleWorlds.SaveSystem;
 using HarmonyLib;
-using TaleWorlds.TwoDimension;
-using TaleWorlds.MountAndBlade;
-using TaleWorlds.CampaignSystem.CampaignBehaviors;
-using TaleWorlds.CampaignSystem.ViewModelCollection.GameMenu.TownManagement;
 using TaleWorlds.CampaignSystem.Roster;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using System.Threading;
 using TaleWorlds.CampaignSystem.Encounters;
-using TaleWorlds.InputSystem;
-using TaleWorlds.CampaignSystem.Map;
-using TaleWorlds.CampaignSystem.Settlements.Locations;
-using System.Collections;
-using System.Timers;
+using static RealmsForgotten.Quest.QuestLibrary;
 
 namespace RealmsForgotten.Quest
 {
@@ -51,16 +40,8 @@ namespace RealmsForgotten.Quest
         private static readonly string UliahId = "questGiver";
         private static readonly int PrisonersAmount = 5;
         private bool isNewGame;
-        private static Hero Uliah
-        {
-            get { return Hero.AllAliveHeroes.Find(x=>x.StringId==UliahId); }
-        }
+        private static Hero Uliah => Hero.AllAliveHeroes.Find(x=>x.StringId==UliahId); 
 
-        private static Hero Queen
-        {
-            get { return Kingdom.All.First(x => x.StringId == "empire").Leader.Spouse; }
-        }
-        private static bool _hideoutDefeated = false;
         private static Vec2 _hideoutPosition = Vec2.Invalid;
         public RescueUliahBehavior(bool isNewGame)
         {
@@ -73,82 +54,56 @@ namespace RealmsForgotten.Quest
         private void HandleBandits()
         {
             new RescueUliahQuest("rescue_uliah_quest", Uliah, CampaignTime.Never, 0).StartQuest();
-            Hideout nearestHideout = Hideout.All.Find(x => x.StringId == "hideout_mountain_7");
-            if (!nearestHideout.IsInfested)
-            {
-          
-                Clan clan = Clan.All.Find(x=>x.StringId== "mountain_bandits");
-                for(int i = 0; i <= 2; i++)
-                {
-                    MobileParty bandits = BanditPartyComponent.CreateBanditParty("bandits_quest_" + i, clan, nearestHideout, i==2 ? true : false);
-                    bandits.InitializeMobilePartyAtPosition(clan.DefaultPartyTemplate, nearestHideout.Settlement.Position2D);
-                    bandits.Ai.SetMoveGoToSettlement(nearestHideout.Settlement);
-                    bandits.Ai.RecalculateShortTermAi();
-                    EnterSettlementAction.ApplyForParty(bandits, nearestHideout.Settlement);
-                }
-                AccessTools.Field(typeof(Hideout), "_nextPossibleAttackTime").SetValue(nearestHideout, CampaignTime.Now);
-                
-                nearestHideout.IsSpotted = true;
+            Hideout hideout = Hideout.All.Find(x => x.StringId == "hideout_mountain_7");
 
+            InitializeHideoutIfNeeded(hideout);
 
-            }
-            nearestHideout.Settlement.IsVisible = true;
-            _hideoutPosition = nearestHideout.Settlement.Position2D;
-            
+            _hideoutPosition = hideout.Settlement.Position2D;
+
         }
+
 
         public void AfterLoad()
         {
             
             if (Uliah == null)
             {
-                Queen.HomeSettlement.Notables[0].StringId = UliahId;
-                Queen.HomeSettlement.Notables[0].StringId = UliahId;
-                if (Queen.HomeSettlement.Notables[0].IsFemale)
-                    Queen.HomeSettlement.Notables[0].UpdatePlayerGender(false);
-                Queen.HomeSettlement.Notables[0].SetName(new TextObject("Uliah"), new TextObject("Uliah"));
-                Queen.HomeSettlement.Notables[0].SetHasMet();
+                QuestQueen.HomeSettlement.Notables[0].StringId = UliahId;
+                QuestQueen.HomeSettlement.Notables[0].StringId = UliahId;
+                if (QuestQueen.HomeSettlement.Notables[0].IsFemale)
+                    QuestQueen.HomeSettlement.Notables[0].UpdatePlayerGender(false);
+                QuestQueen.HomeSettlement.Notables[0].SetName(new TextObject("Uliah"), new TextObject("Uliah"));
+                QuestQueen.HomeSettlement.Notables[0].SetHasMet();
                 StartQuest();
                 
             }
-
+            QuestLibrary.InitializeVariables();
         }
 
         public override void RegisterEvents()
         {
             //Check if this quest has already started
-            if (!Campaign.Current.QuestManager.Quests.Any(x => x.GetType() == typeof(RescueUliahQuest)))
-            {
-                
+            if (!Campaign.Current.QuestManager.Quests.Any(x => x is RescueUliahQuest))
                 CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, HourlyTickForNewGame);
-            }
+            
             CampaignEvents.OnGameLoadFinishedEvent.AddNonSerializedListener(this, AfterLoad);
-            CampaignEvents.OnHideoutBattleCompletedEvent.AddNonSerializedListener(this, OnHideoutDefeat);
 
         }
         private void HourlyTickForNewGame()
         {
             if (isNewGame)
             {
-                Queen.HomeSettlement.Notables[0].StringId = UliahId;
-                Queen.HomeSettlement.Notables[0].StringId = UliahId;
-                if (Queen.HomeSettlement.Notables[0].IsFemale)
-                    Queen.HomeSettlement.Notables[0].UpdatePlayerGender(false);
-                Queen.HomeSettlement.Notables[0].SetName(new TextObject("Uliah"), new TextObject("Uliah"));
-                Queen.HomeSettlement.Notables[0].SetHasMet();
+                QuestQueen.HomeSettlement.Notables[0].StringId = UliahId;
+                QuestQueen.HomeSettlement.Notables[0].StringId = UliahId;
+                if (QuestQueen.HomeSettlement.Notables[0].IsFemale)
+                    QuestQueen.HomeSettlement.Notables[0].UpdatePlayerGender(false);
+                QuestQueen.HomeSettlement.Notables[0].SetName(new TextObject("Uliah"), new TextObject("Uliah"));
+                QuestQueen.HomeSettlement.Notables[0].SetHasMet();
                 StartQuest();
                 isNewGame = false;
-                _hideoutDefeated = false;
             }
         }
-        private void OnHideoutDefeat(BattleSideEnum side, HideoutEventComponent hideout)
-        {
-            if (hideout.MapEvent != null && side == BattleSideEnum.Attacker && hideout.MapEvent.MapEventSettlement.StringId== "hideout_mountain_7" && !_hideoutDefeated)
-            {
-                _hideoutDefeated = true;
-                AddHeroToPartyAction.Apply(Uliah, MobileParty.MainParty, true);
-            }
-        }
+
         private void StartQuest()
         {
             InformationManager.ShowInquiry(new InquiryData(GameTexts.FindText("rf_event").ToString(), GameTexts.FindText("rf_main_quest_start_inquiry_1").ToString(), true, false, new TextObject("{=continue}Continue").ToString(), "", () =>
@@ -165,7 +120,6 @@ namespace RealmsForgotten.Quest
         }
         public override void SyncData(IDataStore dataStore)
         {
-            dataStore.SyncData("_hideoutDefeated", ref _hideoutDefeated);
         }
 
                        
@@ -185,17 +139,22 @@ namespace RealmsForgotten.Quest
             private JournalLog? _smallPlayerArmyJournalLog;
             [SaveableField(7)]
             private CampaignTime _deliveredToAlchemistsTime;
+            [SaveableField(8)]
+            private JournalLog? _rescueUliahJournalLog;
 
             private readonly int minimumSoldiersAmountForQuest = 50;
 
+            private static Hideout questHideout => Hideout.All.Find(x => x.StringId == "hideout_mountain_7");
+
             public RescueUliahQuest(string questId, Hero questGiver, CampaignTime duration, int rewardGold) : base(questId, questGiver, duration, rewardGold)
             {
-                this.SetDialogs();
+                SetDialogs();
                 base.InitializeQuestOnCreation();
-                this.AddLog(GameTexts.FindText("rf_first_quest_objective_1"));
-                Hideout hideout = Hideout.All.Find(x => x.StringId == "hideout_mountain_7");
-                this.AddTrackedObject((ITrackableCampaignObject)hideout.Settlement);
+                _rescueUliahJournalLog = AddLog(GameTexts.FindText("rf_first_quest_objective_1"));
+                AddTrackedObject(questHideout.Settlement);
                 _deliveredToAlchemistsTime = CampaignTime.Zero;
+
+            
             }
             public override bool IsSpecialQuest => true;
 
@@ -214,8 +173,28 @@ namespace RealmsForgotten.Quest
                         _smallPlayerArmyJournalLog.UpdateCurrentProgress(party.NumberOfAllMembers);
                     }
                 });
+                CampaignEvents.OnPlayerBattleEndEvent.AddNonSerializedListener(this, BattleEnd);
             }
 
+            private void BattleEnd(MapEvent mapEvent)
+            {
+                if (_rescueUliahJournalLog?.CurrentProgress == 0 && Settlement.CurrentSettlement == questHideout.Settlement)
+                {
+                    if (mapEvent.DefeatedSide == mapEvent.DefenderSide.MissionSide)
+                    {
+                        ConversationCharacterData playerData = new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty);
+                        Uliah.MakeWounded();
+                        ConversationCharacterData manData = new ConversationCharacterData(Uliah.CharacterObject);
+                        CampaignMapConversation.OpenConversation(playerData, manData);
+                        AddHeroToPartyAction.Apply(Uliah, MobileParty.MainParty, true);
+                        _rescueUliahJournalLog.UpdateCurrentProgress(1);
+                    }
+                    else
+                    {
+                        InitializeHideoutIfNeeded(questHideout);
+                    }
+                }
+            }
             private void MakePartyEngage(PartyBase party)
             {
                 if (!_hiddenHandSpawned
@@ -224,7 +203,7 @@ namespace RealmsForgotten.Quest
                     this.AddLog(GameTexts.FindText("rf_first_quest_objective_4"));
                     Clan clan = Clan.FindFirst(x => x.StringId == "hidden_hand");
                     Hero hero = clan.Heroes.GetRandomElement();
-                    MobileParty hiddenHandParty = MobileParty.AllLordParties.First(x => x.ActualClan == clan) ?? LordPartyComponent.CreateLordParty("attacker_party_quest", hero, MobileParty.MainParty.Position2D, 1f, Queen.HomeSettlement, hero);
+                    MobileParty hiddenHandParty = MobileParty.AllLordParties.First(x => x.ActualClan == clan) ?? LordPartyComponent.CreateLordParty("attacker_party_quest", hero, MobileParty.MainParty.Position2D, 1f, QuestQueen.HomeSettlement, hero);
                     hiddenHandParty.StringId = "attacker_party_quest";
 
 
@@ -251,6 +230,7 @@ namespace RealmsForgotten.Quest
 
             protected override void InitializeQuestOnGameLoad()
             {
+                QuestLibrary.InitializeVariables();
                 this.SetDialogs();
             }
             protected override void SetDialogs()
@@ -264,7 +244,7 @@ namespace RealmsForgotten.Quest
                 null).NpcLine(GameTexts.FindText("rf_uliah_text_7").ToString(), null, null)
                 .NpcLine(GameTexts.FindText("rf_uliah_text_8").ToString(), null, null).Consequence(this.QuestAcceptedConsequences).CloseDialog()
                 .EndPlayerOptions();
-                Campaign.Current.ConversationManager.AddDialogFlow(DialogFlow.CreateDialogFlow("start", 125).PlayerLine(GameTexts.FindText("rf_first_quest_queen_small_player_army_1")).Condition(() => Hero.OneToOneConversationHero == Queen && _bringZombiesJournalLog == null && _smallPlayerArmyPendentQuest)
+                Campaign.Current.ConversationManager.AddDialogFlow(DialogFlow.CreateDialogFlow("start", 125).PlayerLine(GameTexts.FindText("rf_first_quest_queen_small_player_army_1")).Condition(() => Hero.OneToOneConversationHero == QuestQueen && _bringZombiesJournalLog == null && _smallPlayerArmyPendentQuest)
                     .BeginNpcOptions().NpcOption(GameTexts.FindText("rf_first_quest_queen_text_2").ToString(), () => PartyBase.MainParty?.NumberOfAllMembers >= minimumSoldiersAmountForQuest && _smallPlayerArmyPendentQuest)
                     .BeginPlayerOptions().PlayerOption(GameTexts.FindText("rf_first_quest_queen_text_4").ToString()).NpcLine(GameTexts.FindText("rf_first_quest_queen_text_3").ToString()).BeginPlayerOptions().PlayerOption(GameTexts.FindText("rf_first_quest_queen_text_7").ToString()).NpcLine(GameTexts.FindText("rf_first_quest_queen_text_5").ToString()).Consequence(AddSecondPhase)
                     .CloseDialog().PlayerOption(GameTexts.FindText("rf_first_quest_queen_text_8").ToString()).Consequence(() => Success(100000)).CloseDialog().EndPlayerOptions().CloseDialog()
@@ -273,7 +253,7 @@ namespace RealmsForgotten.Quest
                 Campaign.Current.ConversationManager.AddDialogFlow(this.SetSecondPhaseHiddenHandDialog(), this);
                 Campaign.Current.ConversationManager.AddDialogFlow(this.SetSecondPhaseHiddenHandDialog2(), this);
                 Campaign.Current.ConversationManager.AddDialogFlow(this.SetQueenDialog(), this); 
-                    Campaign.Current.ConversationManager.AddDialogFlow(this.SetOwlDialog(), this);
+                Campaign.Current.ConversationManager.AddDialogFlow(this.SetOwlDialog(), this);
 
             }
 
@@ -332,34 +312,34 @@ namespace RealmsForgotten.Quest
                     {
                         for (int i = 0; i < prisoner.Number; i++)
                         {
-                            TransferPrisonerAction.Apply(prisoner.Character, PartyBase.MainParty, Queen.CurrentSettlement?.Party ?? Queen.PartyBelongedTo.Party);
+                            TransferPrisonerAction.Apply(prisoner.Character, PartyBase.MainParty, QuestQueen.CurrentSettlement?.Party ?? QuestQueen.PartyBelongedTo.Party);
                         }
                     }
                 }
             }
 
 
-            private bool PlayerHavePrisoners => Hero.OneToOneConversationHero == Queen && _bringZombiesJournalLog != null && _bringZombiesJournalLog.HasBeenCompleted();
+            private bool PlayerHavePrisoners => Hero.OneToOneConversationHero == QuestQueen && _bringZombiesJournalLog != null && _bringZombiesJournalLog.HasBeenCompleted();
             private void QuestAcceptedConsequences()
             {
                 TextObject questObjectiveText = GameTexts.FindText("rf_first_quest_objective_2");
-                questObjectiveText.SetCharacterProperties("QUEEN", Queen.CharacterObject, false);
+                questObjectiveText.SetCharacterProperties("QUEEN", QuestQueen.CharacterObject, false);
                 this.AddLog(questObjectiveText);
             }
             private void AddSecondPhase()
             {
-                GiveGoldAction.ApplyBetweenCharacters(Queen, Hero.MainHero, 10000, false);
+                GiveGoldAction.ApplyBetweenCharacters(QuestQueen, Hero.MainHero, 10000, false);
                 TextObject questObjectiveText = GameTexts.FindText("rf_first_quest_objective_3");
-                questObjectiveText.SetCharacterProperties("QUEEN", Queen.CharacterObject, false);
+                questObjectiveText.SetCharacterProperties("QUEEN", QuestQueen.CharacterObject, false);
                 _bringZombiesJournalLog = this.AddDiscreteLog(questObjectiveText, GameTexts.FindText("rf_first_quest_objective_3_task"), 0, PrisonersAmount);
 
                 if (MobileParty.MainParty.MemberRoster.GetTroopRoster()
                     .Any(x => x.Character?.HeroObject?.StringId == UliahId))
                 {
-                    if (Queen.PartyBelongedTo != null)
-                        AddHeroToPartyAction.Apply(Uliah, Queen.PartyBelongedTo);
+                    if (QuestQueen.PartyBelongedTo != null)
+                        AddHeroToPartyAction.Apply(Uliah, QuestQueen.PartyBelongedTo);
                     else
-                        AddHeroToPartyAction.Apply(MobileParty.MainParty.MemberRoster.GetTroopRoster().First(x => x.Character?.HeroObject?.StringId == UliahId).Character?.HeroObject, Queen.HomeSettlement.Parties[0]);
+                        AddHeroToPartyAction.Apply(MobileParty.MainParty.MemberRoster.GetTroopRoster().First(x => x.Character?.HeroObject?.StringId == UliahId).Character?.HeroObject, QuestQueen.HomeSettlement.Parties[0]);
                 }
 
             }
@@ -379,25 +359,25 @@ namespace RealmsForgotten.Quest
                     new(DefaultTraits.Mercy, 50),
                     new(DefaultTraits.Generosity, 30)
                 });
-                GiveGoldAction.ApplyBetweenCharacters(Queen, Hero.MainHero, reward, false);
+                GiveGoldAction.ApplyBetweenCharacters(QuestQueen, Hero.MainHero, reward, false);
                 this.RelationshipChangeWithQuestGiver = 10;
-                ChangeRelationAction.ApplyPlayerRelation(Queen, 10, true, true);
+                ChangeRelationAction.ApplyPlayerRelation(QuestQueen, 10, true, true);
                 ChangeRelationAction.ApplyPlayerRelation(this.QuestGiver, RelationshipChangeWithQuestGiver, true, true);
 
-                if (Queen.PartyBelongedTo != null)
-                    AddHeroToPartyAction.Apply(Uliah, Queen.PartyBelongedTo);
+                if (QuestQueen.PartyBelongedTo != null)
+                    AddHeroToPartyAction.Apply(Uliah, QuestQueen.PartyBelongedTo);
                 else
-                    TeleportHeroAction.ApplyImmediateTeleportToSettlement(Uliah, Queen.CurrentSettlement);
+                    TeleportHeroAction.ApplyImmediateTeleportToSettlement(Uliah, QuestQueen.CurrentSettlement);
             }
 
             private void SmallPlayerArmyConsequence()
             {
-                if (Queen.PartyBelongedTo != null)
-                    AddHeroToPartyAction.Apply(Uliah, Queen.PartyBelongedTo);
+                if (QuestQueen.PartyBelongedTo != null)
+                    AddHeroToPartyAction.Apply(Uliah, QuestQueen.PartyBelongedTo);
                 else
-                    AddHeroToPartyAction.Apply(MobileParty.MainParty.MemberRoster.GetTroopRoster().First(x => x.Character?.HeroObject?.StringId == UliahId).Character?.HeroObject, Queen.HomeSettlement.Parties[0]);
+                    AddHeroToPartyAction.Apply(MobileParty.MainParty.MemberRoster.GetTroopRoster().First(x => x.Character?.HeroObject?.StringId == UliahId).Character?.HeroObject, QuestQueen.HomeSettlement.Parties[0]);
 
-                GiveGoldAction.ApplyBetweenCharacters(Queen, Hero.MainHero, 10000, false);
+                GiveGoldAction.ApplyBetweenCharacters(QuestQueen, Hero.MainHero, 10000, false);
                 _smallPlayerArmyPendentQuest = true;
 
                 _smallPlayerArmyJournalLog = this.AddDiscreteLog(SmallPlayerArmyText,
@@ -417,11 +397,11 @@ namespace RealmsForgotten.Quest
             private void StartSecondQuest()
             {
                 this.CompleteQuestWithSuccess();
-                GiveGoldAction.ApplyBetweenCharacters(Queen, Hero.MainHero, 20000, false);
-                new QueenQuest("rf_queen_quest", Queen, CampaignTime.Never, 50000, false).StartQuest();
+                GiveGoldAction.ApplyBetweenCharacters(QuestQueen, Hero.MainHero, 20000, false);
+                new QueenQuest("rf_queen_quest", QuestQueen, CampaignTime.Never, 50000, false).StartQuest();
             }
             private DialogFlow SetQueenDialog() => DialogFlow.CreateDialogFlow("start", 125).PlayerLine(GameTexts.FindText("rf_first_quest_queen_text_1").ToString())
-         .Condition(() => MobileParty.MainParty.MemberRoster.GetTroopRoster().Any(x => x.Character.HeroObject?.StringId == UliahId) && Hero.OneToOneConversationHero == Queen && _bringZombiesJournalLog == null && !_smallPlayerArmyPendentQuest).BeginNpcOptions().NpcOption(GameTexts.FindText("rf_first_quest_queen_text_2").ToString(), () => PartyBase.MainParty?.NumberOfAllMembers >= minimumSoldiersAmountForQuest)
+         .Condition(() => MobileParty.MainParty.MemberRoster.GetTroopRoster().Any(x => x.Character.HeroObject?.StringId == UliahId) && Hero.OneToOneConversationHero == QuestQueen && _bringZombiesJournalLog == null && !_smallPlayerArmyPendentQuest).BeginNpcOptions().NpcOption(GameTexts.FindText("rf_first_quest_queen_text_2").ToString(), () => PartyBase.MainParty?.NumberOfAllMembers >= minimumSoldiersAmountForQuest)
          .BeginPlayerOptions().PlayerOption(GameTexts.FindText("rf_first_quest_queen_text_4").ToString()).NpcLine(GameTexts.FindText("rf_first_quest_queen_text_3").ToString()).BeginPlayerOptions().PlayerOption(GameTexts.FindText("rf_first_quest_queen_text_7").ToString()).NpcLine(GameTexts.FindText("rf_first_quest_queen_text_5").ToString()).Consequence(AddSecondPhase)
          .CloseDialog().PlayerOption(GameTexts.FindText("rf_first_quest_queen_text_8").ToString()).Consequence(() => Success(100000)).CloseDialog().EndPlayerOptions().CloseDialog()
          .PlayerOption(GameTexts.FindText("rf_first_quest_queen_text_6").ToString()).Consequence(() => Success(100000)).CloseDialog().EndPlayerOptions().NpcOption(GameTexts.FindText("rf_first_quest_queen_small_player_army").ToString(), () => PartyBase.MainParty?.NumberOfAllMembers < minimumSoldiersAmountForQuest).PlayerLine(GameTexts.FindText("rf_ok")).Consequence(SmallPlayerArmyConsequence).CloseDialog().EndNpcOptions();
@@ -454,14 +434,14 @@ namespace RealmsForgotten.Quest
             private DialogFlow SetOwlDialog() => DialogFlow.CreateDialogFlow("start", 125).NpcLine(GameTexts.FindText("rf_the_owl_after_alchemist_text_1")).Condition(()=>Hero.OneToOneConversationHero?.StringId=="the_owl_hero" && Hero.OneToOneConversationHero?.PartyBelongedTo != null).PlayerLine(GameTexts.FindText("rf_the_owl_after_alchemist_text_2"))
                 .NpcLine(GameTexts.FindText("rf_the_owl_after_alchemist_text_3")).BeginPlayerOptions().PlayerOption(GameTexts.FindText("rf_the_owl_after_alchemist_text_4")).NpcLine(GameTexts.FindText("rf_the_owl_after_alchemist_text_6")).Consequence(() => CompleteWithBetrayal(true)).CloseDialog()
                 .PlayerOption(GameTexts.FindText("rf_the_owl_after_alchemist_text_5")).NpcLine(GameTexts.FindText("rf_the_owl_after_alchemist_text_7")).Consequence(()=>CompleteWithBetrayal(false)).CloseDialog().EndPlayerOptions();
-            private void CompleteWithBetrayal(bool mergeparty)
+            private void CompleteWithBetrayal(bool mergeParty)
             {
                 
-                if (mergeparty)
+                if (mergeParty)
                 {
                     MobileParty owlparty = Hero.OneToOneConversationHero.PartyBelongedTo;
-                    Tools.Tools.MergeDisbandParty(owlparty, MobileParty.MainParty.Party);
-                    owlparty.Ai.SetMoveGoToSettlement(Queen.HomeSettlement);
+                    MergeDisbandParty(owlparty, MobileParty.MainParty.Party);
+                    owlparty.Ai.SetMoveGoToSettlement(QuestQueen.HomeSettlement);
                     Vec2 pos = owlparty.Position2D;
                     pos.x += 1;
                     owlparty.Position2D = pos;
@@ -472,14 +452,14 @@ namespace RealmsForgotten.Quest
                     Vec2 position = Hero.OneToOneConversationHero.PartyBelongedTo.Position2D;
                     position.x += 0.5f;
 
-                    Hero.OneToOneConversationHero.PartyBelongedTo.Ai.SetMoveGoToSettlement(Queen.HomeSettlement);
+                    Hero.OneToOneConversationHero.PartyBelongedTo.Ai.SetMoveGoToSettlement(QuestQueen.HomeSettlement);
                     Hero.OneToOneConversationHero.PartyBelongedTo.Ai.RecalculateShortTermAi();
                 }
 
 
                 PlayerEncounter.Finish();
                 this.CompleteQuestWithBetrayal();
-                QueenQuest queenQuest = new QueenQuest("rf_queen_quest", Queen, CampaignTime.Never, 50000, true);
+                QueenQuest queenQuest = new QueenQuest("rf_queen_quest", QuestQueen, CampaignTime.Never, 50000, true);
                 queenQuest.StartQuest();
                 queenQuest.OwlDialogConsequence();
             }
@@ -499,7 +479,7 @@ namespace RealmsForgotten.Quest
             private void RefusedQueenMapQuest()
             {
                 Campaign.Current.ConversationManager.AddDialogFlow(DialogFlow.CreateDialogFlow("start", 125).NpcLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_7").ToString())
-                    .Condition(() => Hero.OneToOneConversationHero == Queen).BeginPlayerOptions()
+                    .Condition(() => Hero.OneToOneConversationHero == QuestQueen).BeginPlayerOptions()
                     .PlayerOption(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_8").ToString())
                     .NpcLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_11").ToString()).Consequence(StartSecondQuest).CloseDialog()
                     .PlayerOption(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_9").ToString())
@@ -511,14 +491,6 @@ namespace RealmsForgotten.Quest
             {
                 if (_bringZombiesJournalLog != null)
                     this._bringZombiesJournalLog.UpdateCurrentProgress(MobileParty.MainParty.PrisonRoster.GetTroopRoster().Where(x => !x.Character.IsHero && x.Character?.Culture?.StringId == "sea_raiders").Sum(x => x.Number));
-                if (_hideoutDefeated)
-                {
-                    ConversationCharacterData playerData = new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty);
-                    Uliah.MakeWounded();
-                    ConversationCharacterData manData = new ConversationCharacterData(Uliah.CharacterObject);
-                    Campaign.Current.ConversationManager.OpenMapConversation(playerData, manData);
-                    _hideoutDefeated = false;
-                }
                 else if (!_thirdTextBox && _hideoutPosition.IsValid)
                 {
                     int radius = 8;
@@ -531,7 +503,6 @@ namespace RealmsForgotten.Quest
                     }
 
                 }
-
                 if (_deliveredToAlchemistsTime != CampaignTime.Zero && _deliveredToAlchemistsTime.ElapsedHoursUntilNow >= 24)
                 {
                     SpawnOwlParty();
