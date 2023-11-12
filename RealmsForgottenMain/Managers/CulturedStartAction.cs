@@ -156,6 +156,7 @@ namespace RealmsForgotten.Managers
                     break;
                 case 8:
                     startingSettlement = Settlement.All.Where(settlement => settlement.Culture == mainHero.Culture && settlement.IsCastle).GetRandomElementInefficiently();
+                    ChangeOwnerOfSettlementAction.ApplyByBarter(Hero.MainHero, startingSettlement);
                     break;
                 default:
                     break;

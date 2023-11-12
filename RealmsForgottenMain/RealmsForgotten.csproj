@@ -60,8 +60,4 @@
     <PackageReference Include="BUTR.Harmony.Analyzer" Version="1.0.1.44" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="_Module\bin\Win64_Shipping_Client\" />
-  </ItemGroup>
-
 </Project>

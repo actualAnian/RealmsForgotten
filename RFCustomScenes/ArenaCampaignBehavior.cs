@@ -13,9 +13,6 @@ using RealmsForgotten;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.Core;
 using TaleWorlds.ObjectSystem;
-using RealmsForgotten.Managers;
-using static RealmsForgotten.Globals;
-using static RFCustomSettlements.ArenaBuildData;
 
 namespace RFCustomSettlements
 {
@@ -56,14 +53,20 @@ namespace RFCustomSettlements
         }
         private void AddGameMenus(CampaignGameStarter campaignGameStarter)
         {
-            campaignGameStarter.AddGameMenu("rf_taken_to_arena", "The camp of your captors stirs, as the captives are rounded and you hear rumours - you are to be taken to the infamous colossum, where slaves fight for the enjoyment of the masses!", delegate(MenuCallbackArgs args) { args.MenuContext.SetBackgroundMeshName("wait_captive_female"); },
+            campaignGameStarter.AddGameMenu("rf_taken_to_arena", "The camp of your captors stirs, as the captives are rounded and you hear rumours - you are to be taken to the infamous colossum, where slaves fight for the enjoyment of the masses!", delegate(MenuCallbackArgs args) { args.MenuContext.SetBackgroundMeshName(Hero.MainHero.IsFemale? "arena_captured_female" : "arena_male_captured_b"); },
                 GameOverlays.MenuOverlayType.None, GameMenu.MenuFlags.None, null);
             campaignGameStarter.AddGameMenuOption("rf_taken_to_arena", "rf_taken_to_arena_continue", "I will need all my strength to survive what's to come...", delegate(MenuCallbackArgs args) { return true; },
                 new GameMenuOption.OnConsequenceDelegate(this.game_menu_taken_to_arena_on_consequence), false, -1, false, null);
-            campaignGameStarter.AddGameMenu("rf_arena_finish", "You are victorious yet again! As a clear audience favourite, the arena master returns your freedom, amidst a grand ceremony. There are more ways to keep the public engaged than just through bloodshed, eh?", delegate(MenuCallbackArgs args) { }, GameOverlays.MenuOverlayType.None, GameMenu.MenuFlags.None, null);
+            campaignGameStarter.AddGameMenu("rf_arena_finish", "You are victorious yet again! As a clear audience favourite, the arena master returns your freedom, amidst a grand ceremony. There are more ways to keep the public engaged than just through bloodshed, eh?", new OnInitDelegate(rf_arena_finish_init), GameOverlays.MenuOverlayType.None, GameMenu.MenuFlags.None, null);
             campaignGameStarter.AddGameMenuOption("rf_arena_finish", "rf_start_battle_continue", "Now I know the value of freedom.", null, new GameMenuOption.OnConsequenceDelegate(rf_arena_finish_consequence));
             campaignGameStarter.AddGameMenu("rf_arena_player_lost", "{=!}{RF_ARENA_LOSE_TEXT}", new OnInitDelegate(rf_arena_lost_on_init), GameOverlays.MenuOverlayType.None, GameMenu.MenuFlags.None, null);
             campaignGameStarter.AddGameMenuOption("rf_arena_player_lost", "rf_arena_player_lost_continue", "{=!}{RF_ARENA_LOSE_CONTINUE_TEXT}", null, new GameMenuOption.OnConsequenceDelegate(rf_arena_player_lost_consequence));
+        }
+
+        private void rf_arena_finish_init(MenuCallbackArgs args)
+        {
+            args.MenuContext.SetBackgroundMeshName(Hero.MainHero.IsFemale ? "arena_female_win" : "arena_male_win");
+            Hero.MainHero.Clan.AddRenown(20);
         }
 
         private void rf_arena_lost_on_init(MenuCallbackArgs args)
@@ -75,8 +78,11 @@ namespace RFCustomSettlements
             }
             else
             {
+                args.MenuContext.SetBackgroundMeshName(Hero.MainHero.IsFemale ? "arena_looser_female" : "arena_looser_male");
                 GameTexts.SetVariable("RF_ARENA_LOSE_TEXT", "Your fate is in the hands of your opponent... the crowd is silent as he approaches you, you wouldn't give him any mercy, why would he? The blade rises before a strike...");
                 GameTexts.SetVariable("RF_ARENA_LOSE_CONTINUE_TEXT", "You haven't heard the last word from me...");
+                Hero.MainHero.Clan.AddRenown(-10);
+
             }
         }
 
@@ -123,7 +129,7 @@ namespace RFCustomSettlements
 
         private void AddDialogs(CampaignGameStarter campaignGameStarter)
         {
-            campaignGameStarter.AddDialogLine("rf_arena_explain", "start", "rf_arena_understood", "Explain what happens in the arena", new ConversationSentence.OnConditionDelegate(this.test), null, 100, null);
+            campaignGameStarter.AddDialogLine("rf_arena_explain", "start", "rf_arena_understood", "Explain what happens in the arena", new ConversationSentence.OnConditionDelegate(this.condition_start_arena_talk), null, 100, null);
             campaignGameStarter.AddPlayerLine("rf_arena_understood", "rf_arena_understood", "close_window", "I see", null, new ConversationSentence.OnConsequenceDelegate(this.StartArenaMission), 100, null, null);
         }
         private void StartArenaMission()
@@ -131,7 +137,9 @@ namespace RFCustomSettlements
             Mission.Current.EndMission();
             ArenaSettlementStateHandler.currentState = ArenaSettlementStateHandler.ArenaState.FightStage1;
         }
-        private bool test()
+#pragma warning disable IDE1006 // Naming Styles
+        private bool condition_start_arena_talk()
+#pragma warning restore IDE1006 // Naming Styles
         {
             //return false;
             return Settlement.CurrentSettlement != null &&  Settlement.CurrentSettlement.SettlementComponent != null && Settlement.CurrentSettlement.SettlementComponent is RFCustomSettlement && CharacterObject.OneToOneConversationCharacter.StringId == "caravan_master_aserai";

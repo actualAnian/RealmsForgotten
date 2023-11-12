@@ -85,7 +85,7 @@ namespace RealmsForgotten.RFCustomSettlements
 
         internal static string? GetCharacterIdfromEntityName(string name)
         {
-            if (!name.Contains("rf_npc")) return null;
+            if (!name.Contains("rf_Npc")) return null;
             return name.Remove(0, 7);
         }
     }

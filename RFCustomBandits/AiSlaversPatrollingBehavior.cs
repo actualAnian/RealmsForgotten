@@ -71,7 +71,7 @@ namespace RealmsForgotten.RFCustomBandits
             }
             public override void SyncData(IDataStore dataStore)
             {
-            dataStore.SyncData("hours_since_decision_dict", ref hoursSincelastDecision);
+            dataStore.SyncData("rf_hours_since_decision_dict", ref hoursSincelastDecision);
             }
         }
 }

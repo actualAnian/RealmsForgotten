@@ -22,10 +22,10 @@ using Newtonsoft.Json.Linq;
 using RealmsForgotten.Quest;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.GameMenus;
+using RealmsForgotten.Patches;
 
 namespace RealmsForgotten
 {
-
     public class SubModule : MBSubModuleBase
     {
         public static readonly Harmony harmony = new("RealmsForgotten");
@@ -35,6 +35,7 @@ namespace RealmsForgotten
         internal static Dictionary<string, Tuple<string, string, string, string>> villagerMax = new();
         internal static Dictionary<string, Tuple<string, string, string, string>> fighterMin = new();
         internal static Dictionary<string, Tuple<string, string, string, string>> fighterMax = new();
+        private bool manualPatchesHaveFired;
         internal static readonly string[] cultures = new string[]
         {
             "battania",
@@ -44,8 +45,6 @@ namespace RealmsForgotten
             "sturgia",
             "vlandia"
         };
-
-
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
             if (game.GameType is Campaign)
@@ -89,17 +88,24 @@ namespace RealmsForgotten
                 if (!elixir.IsEmpty || !berserker.IsEmpty)
                     mission.AddMissionBehavior(new PotionsMissionBehavior(elixir, berserker));
             }
-
         }
-        protected override void OnBeforeInitialModuleScreenSetAsRoot()
-        {
-            //ICustomSettingsProvider instance = RFSettings.Instance;
-            //Globals.Settings = instance;
-        }
+        protected override void OnBeforeInitialModuleScreenSetAsRoot() { }
         public override void OnGameInitializationFinished(Game game)
         {
             base.OnGameInitializationFinished(game);
-            Globals.SetGiantRaceId();
+            //Globals.SetRacesIds();
+            if (!manualPatchesHaveFired)
+            {
+                manualPatchesHaveFired = true;
+                RunManualPatches();
+            }
+        }
+        private void RunManualPatches()
+        {
+#pragma warning disable BHA0003 // Type was not found
+            MethodInfo originalMethod = AccessTools.Method("PartyVM:PopulatePartyListLabel");
+#pragma warning restore BHA0003 // Type was not found
+            harmony.Patch(originalMethod, transpiler: new HarmonyMethod(typeof(PartyVMPatch), nameof(PartyVMPatch.PartyVMPopulatePartyListLabelPatch)));
         }
 
         private void RemoveSandboxAndStoryOptions()
@@ -222,7 +228,9 @@ namespace RealmsForgotten
         class ArrangeDestructedMeshesPatch
         {
             [HarmonyFinalizer]
+#pragma warning disable IDE0051 // Remove unused private members
             static Exception Finalizer(Exception __exception, DefaultMapWeatherModel __instance)
+#pragma warning restore IDE0051 // Remove unused private members
             {
                 return null;
             }

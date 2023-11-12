@@ -9,6 +9,8 @@ using RFCustomSettlements;
 using static RFCustomSettlements.ArenaBuildData;
 using System.Linq;
 using TaleWorlds.Library;
+using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.CampaignSystem.Encounters;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -22,7 +24,7 @@ namespace RealmsForgotten.RFCustomSettlements
         private float waitHours = 0;
         internal bool hasToWait = false;
         private float waitProgress;
-
+        private bool _errorHasHappened = false;
         private static readonly int arenaBattlesStartTime = 18;
 
         internal ArenaBuildData BuildData { get => _buildData; set => _buildData = value; }
@@ -55,6 +57,8 @@ namespace RealmsForgotten.RFCustomSettlements
             else
                 GameTexts.SetVariable("RF_SETTLEMENT_EXPLORE_TEXT", "Kill to stay alive");
             if (currentState == ArenaState.Visiting) { args.IsEnabled = false; args.Tooltip = new TextObject("{=rf_arena_visiting}Consider yourself lucky, that you are not one of those poor sods enslaved and hurled into the arena for the enjoyment of the masses", null); }
+
+            args.MenuContext.SetBackgroundMeshName("arena_generic");
             return !hasToWait;
         }
 
@@ -65,22 +69,22 @@ namespace RealmsForgotten.RFCustomSettlements
                 RFMissions.StartExploreMission(currentSettlement.CustomScene, CurrentBuildData, new Action(OnArenaMasterTalkEnd));
             }
             else
-                RFMissions.OpenArenaMission("arena_test", ChooseNextStageData(), OnBattleEnd);
+            {
+                StageData stageData = ChooseNextStageData();
+                RFMissions.OpenArenaMission(stageData.ArenaSceneId ?? "arena_test", stageData , OnBattleEnd);
+            }
         }
 
-        private ArenaBuildData.StageData ChooseNextStageData()
+        private StageData ChooseNextStageData()
         {
-            switch (currentState)
+            return currentState switch
             {
-                case ArenaState.FightStage1:
-                    return currentChallenge.StageDatas[0];
-                case ArenaState.FightStage2:
-                    return currentChallenge.StageDatas[1];
-                case ArenaState.FightStage3:
-                    return currentChallenge.StageDatas[2];
-                default:
-                    return currentChallenge.StageDatas[0];
+                ArenaState.FightStage1 => currentChallenge.StageDatas[0],
+                ArenaState.FightStage2 => currentChallenge.StageDatas[1],
+                ArenaState.FightStage3 => currentChallenge.StageDatas[2],
+                _ => currentChallenge.StageDatas[0],
             };
+            ;
         }
 
         private void OnBattleEnd(bool isPlayerWinner)
@@ -110,11 +114,14 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             SetWaitTimer((int)Math.Floor(ChooseWaitTime()));
             ChooseChallenge();
+            currentState = ArenaState.FightStage1;
         }
 
         private void ChooseChallenge()
         {
-            currentChallenge = BuildData.Challenges.GetRandomElementInefficiently();
+            IEnumerable<ArenaChallenge> possibleChallenges = BuildData.Challenges.Where(c => c.ChallengeCondition(Hero.MainHero.CharacterObject, Clan.PlayerClan.Tier) == true);
+            if (!possibleChallenges.Any()) _errorHasHappened = true;
+            currentChallenge = possibleChallenges.GetRandomElementInefficiently();
         }
 
         private float ChooseWaitTime()
@@ -128,6 +135,7 @@ namespace RealmsForgotten.RFCustomSettlements
 
         public void OnSettlementStartOnInit(MenuCallbackArgs args)
         {
+            if (_errorHasHappened) ForceLeaveArena();
             GameTexts.SetVariable("RF_SETTLEMENT_MAIN_TEXT", "You are in the arena!");
             if (hasToWait && waitHours == 0) SetWaitTimer(24);
             switch(currentState)
@@ -136,30 +144,61 @@ namespace RealmsForgotten.RFCustomSettlements
                     break;
                 case ArenaState.Captured:
                     GameTexts.SetVariable("RF_SETTLEMENT_MAIN_TEXT", "You are thrown into a prison cell, and left alone. Assessing the situation, you take a look at your cell - it must have been occupied till recently, you shudder when you think about what happened to the previous prisoner. The noise of footsteps makes you come back from your thought, as a silhouette appears on the other side of your cell's bars");
+                    args.MenuContext.SetBackgroundMeshName(Hero.MainHero.IsFemale? "arena_fighter_wait_female" : "arena_fighter_wait_male");
                     break;
                 case ArenaState.FightStage1:
-                    if(!hasToWait)
+                    if (!hasToWait)
+                    {
                         GameTexts.SetVariable("RF_SETTLEMENT_MAIN_TEXT", "You are too numb to laugh when you are brought your armor and weapon for the battle, it's clear they want a show, with you as a main actor!");
-                    else
+                        args.MenuContext.SetBackgroundMeshName(Hero.MainHero.IsFemale? "arena_enters_female" : "arena_enters_male");
+                    }
+                    else 
+                    { 
                         GameTexts.SetVariable("RF_SETTLEMENT_MAIN_TEXT", "You are left in your cell to wait for your first battle the following day");
+                        args.MenuContext.SetBackgroundMeshName(Hero.MainHero.IsFemale? "arena_fighter_wait_female" : "arena_fighter_wait_male");
+                    }
                     break;
                 case ArenaState.FightStage2:
-                    if(!hasToWait)
+                    if (!hasToWait) 
+                    { 
                         GameTexts.SetVariable("RF_SETTLEMENT_MAIN_TEXT", "Servants come to take you to the arena again, you know what to expect by now...");
+                        args.MenuContext.SetBackgroundMeshName(Hero.MainHero.IsFemale? "arena_enters_female" : "arena_enters_male");
+                    }
                     else
+                    { 
                         GameTexts.SetVariable("RF_SETTLEMENT_MAIN_TEXT", "As if nothing has changed, you are unceremoniously thrown into your cell, to wait for the next battle.");
+                        args.MenuContext.SetBackgroundMeshName(Hero.MainHero.IsFemale? "arena_fighter_wait_female" : "arena_fighter_wait_male");
+                    }
                     break;
                 case ArenaState.FightStage3:
                     if(!hasToWait)
+                    { 
                         GameTexts.SetVariable("RF_SETTLEMENT_MAIN_TEXT", "You hear rumour that the best fighters are given freedom, could it be the chance for you?");
+                        args.MenuContext.SetBackgroundMeshName(Hero.MainHero.IsFemale? "arena_enters_female" : "arena_enters_]male");
+                    }
                     else
+                    {
+
                         GameTexts.SetVariable("RF_SETTLEMENT_MAIN_TEXT", "This is starting to become a routine you realise, while resting before another match. Regardless, you are too tired to dwell on it");
+                        args.MenuContext.SetBackgroundMeshName(Hero.MainHero.IsFemale? "arena_fighter_wait_female" : "arena_fighter_wait_male");
+                    }
                     break;
                 case ArenaState.Finishing:
                     GameMenu.SwitchToMenu("rf_arena_finish");
                     break;
             }
         }
+
+        private void ForceLeaveArena()
+        {
+            _errorHasHappened = false;
+            hasToWait = false;
+            currentState = ArenaState.Visiting;
+            HuntableHerds.SubModule.PrintDebugMessage("error with arena settlemenent, leaving the settlement", 255, 0, 0);
+            PlayerEncounter.LeaveSettlement();
+            PlayerEncounter.Finish(true);
+        }
+
         public void OnWaitMenuTillEnterTick(MenuCallbackArgs args, CampaignTime dt)
         {
             waitProgress += (float)dt.ToHours;
@@ -179,7 +218,7 @@ namespace RealmsForgotten.RFCustomSettlements
 
         internal void SetWaitTimer(int time)
         {
-            waitHours = time; 
+            waitHours = time;
             hasToWait = true;
         }
         public bool OnSettlementLeaveCondition(MenuCallbackArgs args)

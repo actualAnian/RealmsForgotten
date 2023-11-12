@@ -220,8 +220,84 @@
 			</CommonArea>
 			</Bandits>
 	</CustomScene>
+	
 	<CustomScene>
 		<id>slave_prison</id>
-
 	</CustomScene>
+
+	<CustomScene>
+		<id>road_tavern</id>
+		<Npcs>
+			<Npc>
+				<NpcId>caravan_master_aserai</NpcId>
+				<TagId>8</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+			<Npc>
+				<NpcId>caravan_master_aserai</NpcId>
+				<TagId>1</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+			<Npc>
+				<NpcId>caravan_master_aserai</NpcId>
+				<TagId>2</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+			<Npc>
+				<NpcId>caravan_master_aserai</NpcId>
+				<TagId>3</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+			<Npc>
+				<NpcId>caravan_master_aserai</NpcId>
+				<TagId>4</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+			<Npc>
+				<NpcId>caravan_master_aserai</NpcId>
+				<TagId>5</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+			<Npc>
+				<NpcId>caravan_master_aserai</NpcId>
+				<TagId>6</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+		</Npcs>
+		<Bandits>
+			<CommonArea>
+				<areaIndex>1</areaIndex>
+				<Bandit>
+					<id>looter</id>
+					<amount>3</amount>
+				</Bandit>
+			</CommonArea>
+			<PatrolArea>
+				<areaIndex>1</areaIndex>
+				<Bandit>
+					<id>looter</id>
+					<amount>3</amount>
+				</Bandit>
+			</PatrolArea>
+			<PatrolArea>
+				<areaIndex>3</areaIndex>
+				<Bandit>
+					<id>looter</id>
+					<amount>1</amount>
+				</Bandit>
+			</PatrolArea>
+		</Bandits>
+	</CustomScene>
+	
+	<CustomScene>
+		<id>exploration_test</id>
+		<Npcs>
+			<Npc>
+				<NpcId>caravan_master_aserai</NpcId>
+				<TagId>1</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+		</Npcs>
+	</CustomScene>
+	
 </RFCustomScenes>
