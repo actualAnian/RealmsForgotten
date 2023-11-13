@@ -9,6 +9,8 @@ using RFCustomSettlements;
 using static RFCustomSettlements.ArenaBuildData;
 using System.Linq;
 using TaleWorlds.Library;
+using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.CampaignSystem.Encounters;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -16,13 +18,13 @@ namespace RealmsForgotten.RFCustomSettlements
     {
         private CustomSettlementBuildData? CurrentBuildData;
         internal ArenaState currentState = ArenaState.Visiting;
-        internal ArenaBuildData.ArenaChallenge currentChallenge;
+        internal ArenaBuildData.ArenaChallenge? currentChallenge;
         private readonly RFCustomSettlement currentSettlement;
         private ArenaBuildData? _buildData;
         private float waitHours = 0;
         internal bool hasToWait = false;
         private float waitProgress;
-
+        private bool _errorHasHappened = false;
         private static readonly int arenaBattlesStartTime = 18;
 
         internal ArenaBuildData BuildData { get => _buildData; set => _buildData = value; }
@@ -67,10 +69,13 @@ namespace RealmsForgotten.RFCustomSettlements
                 RFMissions.StartExploreMission(currentSettlement.CustomScene, CurrentBuildData, new Action(OnArenaMasterTalkEnd));
             }
             else
-                RFMissions.OpenArenaMission("arena_test", ChooseNextStageData(), OnBattleEnd);
+            {
+                StageData stageData = ChooseNextStageData();
+                RFMissions.OpenArenaMission(stageData.ArenaSceneId ?? "arena_test", stageData , OnBattleEnd);
+            }
         }
 
-        private ArenaBuildData.StageData ChooseNextStageData()
+        private StageData ChooseNextStageData()
         {
             return currentState switch
             {
@@ -109,11 +114,14 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             SetWaitTimer((int)Math.Floor(ChooseWaitTime()));
             ChooseChallenge();
+            currentState = ArenaState.FightStage1;
         }
 
         private void ChooseChallenge()
         {
-            currentChallenge = BuildData.Challenges.GetRandomElementInefficiently();
+            IEnumerable<ArenaChallenge> possibleChallenges = BuildData.Challenges.Where(c => c.ChallengeCondition(Hero.MainHero.CharacterObject, Clan.PlayerClan.Tier) == true);
+            if (!possibleChallenges.Any()) _errorHasHappened = true;
+            currentChallenge = possibleChallenges.GetRandomElementInefficiently();
         }
 
         private float ChooseWaitTime()
@@ -127,6 +135,7 @@ namespace RealmsForgotten.RFCustomSettlements
 
         public void OnSettlementStartOnInit(MenuCallbackArgs args)
         {
+            if (_errorHasHappened) ForceLeaveArena();
             GameTexts.SetVariable("RF_SETTLEMENT_MAIN_TEXT", "You are in the arena!");
             if (hasToWait && waitHours == 0) SetWaitTimer(24);
             switch(currentState)
@@ -179,6 +188,17 @@ namespace RealmsForgotten.RFCustomSettlements
                     break;
             }
         }
+
+        private void ForceLeaveArena()
+        {
+            _errorHasHappened = false;
+            hasToWait = false;
+            currentState = ArenaState.Visiting;
+            HuntableHerds.SubModule.PrintDebugMessage("error with arena settlemenent, leaving the settlement", 255, 0, 0);
+            PlayerEncounter.LeaveSettlement();
+            PlayerEncounter.Finish(true);
+        }
+
         public void OnWaitMenuTillEnterTick(MenuCallbackArgs args, CampaignTime dt)
         {
             waitProgress += (float)dt.ToHours;

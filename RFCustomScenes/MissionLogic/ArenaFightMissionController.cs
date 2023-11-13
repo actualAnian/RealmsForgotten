@@ -27,7 +27,7 @@ namespace RFCustomSettlements
             foreach (ArenaTeam team in stageData.ArenaTeams)
                 aliveTeams.Add(((ArenaTeam)team.Clone()));
             OnBattleEnd = onbattleend;
-            playerEquipment = stageData.playerEquipment;
+            playerEquipment = stageData.PlayerEquipment;
         }
         public void StartArenaBattle()
         {
@@ -80,14 +80,24 @@ namespace RFCustomSettlements
         }
         public override void AfterStart()
         {
-            for (int i = 0; i < 4; i++)
+            int id = 1;
+            bool continueLoop = true;
+            do
             {
-                GameEntity gameEntity = base.Mission.Scene.FindEntityWithTag("sp_arena_" + (i + 1));
-                if (gameEntity != null)
-                {
-                    spawnPoints.Add(gameEntity);
-                }
+                GameEntity gameEntity = base.Mission.Scene.FindEntityWithTag("sp_arena_" + (id + 1));
+                if (gameEntity == null) continueLoop = false;
+                else spawnPoints.Add(gameEntity);
+                id++;
             }
+            while (continueLoop); 
+            //for (int i = 0; i < 4; i++)
+            //{
+            //    GameEntity gameEntity = base.Mission.Scene.FindEntityWithTag("sp_arena_" + (i + 1));
+            //    if (gameEntity != null)
+            //    {
+
+            //    }
+            //}
             StartArenaBattle();
         }
         private void SpawnTroop(GameEntity spawnPoint, Team team, CharacterObject troop)

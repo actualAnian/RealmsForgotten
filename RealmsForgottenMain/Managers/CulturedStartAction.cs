@@ -43,14 +43,14 @@ namespace RealmsForgotten.Managers
             },
             [StartType.Exiled] = new Dictionary<string, string>
             {
-                ["aserai"] = "rf_looter",
-                ["empire"] = "rf_looter",
-                ["khuzait"] = "rf_looter",
-                ["sturgia"] = "rf_looter",
-                ["battania"] = "rf_looter",
-                ["vlandia"] = "rf_looter",
-                ["giant"] = "rf_looter",
-                ["aqarun"] = "rf_looter"
+                ["aserai"] = "rf_lord_exiled",
+                ["empire"] = "rf_lord_exiled",
+                ["khuzait"] = "rf_lord_exiled",
+                ["sturgia"] = "rf_lord_exiled",
+                ["battania"] = "rf_lord_exiled",
+                ["vlandia"] = "rf_lord_exiled",
+                ["giant"] = "rf_lord_exiled",
+                ["aqarun"] = "rf_lord_exiled"
             },
             [StartType.Looter] = new Dictionary<string, string>
             {
@@ -156,6 +156,7 @@ namespace RealmsForgotten.Managers
                     break;
                 case 8:
                     startingSettlement = Settlement.All.Where(settlement => settlement.Culture == mainHero.Culture && settlement.IsCastle).GetRandomElementInefficiently();
+                    ChangeOwnerOfSettlementAction.ApplyByBarter(Hero.MainHero, startingSettlement);
                     break;
                 default:
                     break;
