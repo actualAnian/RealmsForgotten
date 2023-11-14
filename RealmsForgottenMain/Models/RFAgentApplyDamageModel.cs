@@ -18,6 +18,7 @@ using static HarmonyLib.Code;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using static TaleWorlds.MountAndBlade.Mission;
+using TaleWorlds.CampaignSystem.ComponentInterfaces;
 
 namespace RealmsForgotten.Models
 {
@@ -61,7 +62,8 @@ namespace RealmsForgotten.Models
         public override float CalculateDamage(in AttackInformation attackInformation, in AttackCollisionData collisionData, in MissionWeapon weapon, float baseDamage)
         {
             float baseNumber = base.CalculateDamage(attackInformation, collisionData, weapon, baseDamage);
-
+            CharacterObject captainCharacterObject =
+                attackInformation.AttackerAgent?.Formation?.Captain?.Character as CharacterObject;
 
             if (weapon.Item != null)
             {
@@ -69,6 +71,7 @@ namespace RealmsForgotten.Models
                 CalculateEffectsDamage(attackInformation, ref baseNumber);
 
                 CharacterObject attackerCharacterObject = attackInformation.AttackerAgentCharacter as CharacterObject;
+
                 //If weapon is a spell, do additional damage based on the alchemy skill of the attacker
                 if (weapon.Item.StringId.Contains("anorit_fire"))
                 {
@@ -82,6 +85,12 @@ namespace RealmsForgotten.Models
                         if (factor > 0 &&
                             weapon.CurrentUsageItem.WeaponClass == WeaponClass.Stone)
                             baseNumber *= factor;
+
+
+                        Campaign.Current.Models.CombatXpModel.GetXpFromHit(attackerCharacterObject, captainCharacterObject, (CharacterObject)attackInformation.VictimAgent?.Character, attackerCharacterObject.HeroObject?.PartyBelongedTo?.Party, (int)baseDamage, baseDamage >= attackInformation.VictimAgentHealth,
+                            CombatXpModel.MissionTypeEnum.Battle, out int xpAmount);
+
+                        attackerCharacterObject.HeroObject?.AddSkillXp(RFSkills.Alchemy, xpAmount);
                     }
                 } 
                 else if (weapon.CurrentUsageItem.WeaponClass == WeaponClass.Cartridge)

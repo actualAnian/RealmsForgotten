@@ -45,6 +45,7 @@ namespace RealmsForgotten.Quest
         {
             CampaignGameStarter gameStarter = (CampaignGameStarter)initializerObject;
             AddQuestBehaviors(gameStarter, false);
+            
         }
         private static void AddQuestBehaviors(CampaignGameStarter gameStarter, bool isNewGame)
         {
@@ -52,7 +53,6 @@ namespace RealmsForgotten.Quest
             {
 
                 gameStarter.AddBehavior(new RescueUliahBehavior(isNewGame));
-                gameStarter.AddBehavior(new PersuadeAthasNpcBehavior());
                 gameStarter.AddBehavior(new SaveCurrentQuestCampaignBehavior());
             }
         }
@@ -72,6 +72,7 @@ namespace RealmsForgotten.Quest
             base.AddClassDefinition(typeof(AnoritFindRelicsQuest), 3);
             base.AddClassDefinition(typeof(PersuadeAthasNpcQuest), 4);
             base.AddClassDefinition(typeof(QuestCaravanPartyComponent), 5);
+            base.AddClassDefinition(typeof(LastQuest), 6);
 
         }
     }

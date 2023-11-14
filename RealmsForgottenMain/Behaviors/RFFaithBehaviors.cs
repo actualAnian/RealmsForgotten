@@ -6,11 +6,16 @@ using System.Threading.Tasks;
 using RealmsForgotten.CustomSkills;
 using RealmsForgotten.Utility;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
+using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameComponents;
+using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.MapEvents;
+using TaleWorlds.CampaignSystem.Overlay;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
+using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
@@ -65,8 +70,45 @@ namespace RealmsForgotten.Behaviors
         {
            CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnMapEventEnd);
            CampaignEvents.OnMissionStartedEvent.AddNonSerializedListener(this, OnMissionStarted);
+           CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, MakeFaithLearnMenu);
         }
 
+        private CampaignTime studyStartTime;
+
+        private void MakeFaithLearnMenu(CampaignGameStarter campaignGameStarter) //Will be replaced
+        {
+            campaignGameStarter.AddWaitGameMenu("studying_faith", "Learning...", args => studyStartTime = CampaignTime.Now, null, null, (args, dt) =>
+            {
+                if (studyStartTime.ElapsedHoursUntilNow >= 1)
+                {
+                    Hero.MainHero.AddSkillXp(RFSkills.Faith, (Hero.MainHero.GetSkillValue(RFSkills.Faith) + 1) * 20);
+                    studyStartTime = CampaignTime.Now;
+                }
+
+            }, GameMenu.MenuAndOptionType.WaitMenuHideProgressAndHoursOption, GameOverlays.MenuOverlayType.SettlementWithBoth);
+
+            campaignGameStarter.AddGameMenuOption("studying_faith", "study_leave", "Stop studying", args =>
+            {
+                args.optionLeaveType = GameMenuOption.LeaveType.Leave;
+                return true;
+            }, delegate (MenuCallbackArgs args)
+            {
+                PlayerEncounter.Current.IsPlayerWaiting = false;
+                GameMenu.ExitToLast();
+            }, true);
+
+            campaignGameStarter.AddGameMenuOption("town", "learn_faith", "Study faith", args =>
+                {
+                    args.optionLeaveType = GameMenuOption.LeaveType.Wait;
+                    return Settlement.CurrentSettlement.IsTown;
+                },
+                args =>
+                {
+                    GameMenu.SwitchToMenu("studying_faith");
+
+                });
+
+        }
         private void OnMissionStarted(IMission imission)
         {
             Mission mission = imission as Mission;
