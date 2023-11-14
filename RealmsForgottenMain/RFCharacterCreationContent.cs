@@ -12,6 +12,7 @@ using TaleWorlds.Library;
 using RealmsForgotten.Managers;
 using static RealmsForgotten.Globals;
 using TaleWorlds.ObjectSystem;
+using RealmsForgotten.CustomSkills;
 
 namespace RealmsForgotten
 {
@@ -846,10 +847,10 @@ namespace RealmsForgotten
             {
                 DefaultSkills.Steward
             }, null, 1, 50, 0, null, new(this.LandedVassalStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart26}A young noble who came into an arrangement with the king for land." + $"\n{startingSkillMult[StartType.VassalFief]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 150, 0, 0, 0);
-            characterCreationCategory.AddCategoryOption(new("{=CulturedStart27}An escaped prisoner of a lord of {CULTURE}", null), new MBList<SkillObject>
+            characterCreationCategory.AddCategoryOption(new("{=CulturedStart27}A wanderer mystic of {CULTURE}", null), new MBList<SkillObject>
             {
-                DefaultSkills.Roguery
-            }, null, 1, 10, 0, null, new(this.EscapedStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart28}A poor prisoner of petty crimes who managed to break their shackles with a rock and fled." + $"\n{startingSkillMult[StartType.EscapedPrisoner]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 0, 0, 0, 0);
+                RFSkills.Arcane
+            }, null, 1, 10, 0, null, new(this.EscapedStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart28}A mystic peregrin in pursuit of arcane misteries." + $"\n{startingSkillMult[StartType.EscapedPrisoner]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 0, 0, 0, 0);
             characterCreation.AddNewMenu(characterCreationMenu);
         }
         protected bool GiantParentsOnCondition()

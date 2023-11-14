@@ -32,25 +32,36 @@ namespace RealmsForgotten.Managers
             },
             [StartType.Merchant] = new Dictionary<string, string>
             {
-                ["aserai"] = "father_char_creation_3_aserai",
-                ["empire"] = "father_char_creation_2_empire",
-                ["khuzait"] = "father_char_creation_2_khuzait",
-                ["sturgia"] = "father_char_creation_2_sturgia",
+                ["aserai"] = "merchant_start_aserai",
+                ["empire"] = "merchant_start_empire",
+                ["khuzait"] = "merchant_start_khuzait",
+                ["sturgia"] = "merchant_start_sturgia",
                 ["battania"] = "rf_elvean_merchant",
-                ["vlandia"] = "father_char_creation_2_vlandia",
-                ["giant"] = "rf_elvean_merchant",
-                ["aqarun"] = "father_char_creation_3_aserai"
+                ["vlandia"] = "merchant_start_vlandia",
+                ["giant"] = "merchant_start_xilan",
+                ["aqarun"] = "merchant_start_aqarun"
             },
             [StartType.Exiled] = new Dictionary<string, string>
             {
-                ["aserai"] = "rf_lord_exiled",
-                ["empire"] = "rf_lord_exiled",
-                ["khuzait"] = "rf_lord_exiled",
-                ["sturgia"] = "rf_lord_exiled",
-                ["battania"] = "rf_lord_exiled",
-                ["vlandia"] = "rf_lord_exiled",
-                ["giant"] = "rf_lord_exiled",
-                ["aqarun"] = "rf_lord_exiled"
+                ["aserai"] = "rf_exiled_equip",
+                ["empire"] = "rf_exiled_equip",
+                ["khuzait"] = "rf_exiled_equip",
+                ["sturgia"] = "rf_exiled_equip",
+                ["battania"] = "rf_exiled_equip",
+                ["vlandia"] = "rf_exiled_equip",
+                ["giant"] = "rf_exiled_equip",
+                ["aqarun"] = "rf_exiled_equip"
+            },
+            [StartType.EscapedPrisoner] = new Dictionary<string, string>
+            {
+                ["aserai"] = "rf_athas_mistic",
+                ["empire"] = "rf_empire_mistic",
+                ["khuzait"] = "rf_khuzait_mistic",
+                ["sturgia"] = "rf_sturgia_mistic",
+                ["battania"] = "rf_elvean_mistic",
+                ["vlandia"] = "rf_nasoria_mistic",
+                ["giant"] = "rf_giant_mistic",
+                ["aqarun"] = "rf_aqarun_mistic"
             },
             [StartType.Looter] = new Dictionary<string, string>
             {

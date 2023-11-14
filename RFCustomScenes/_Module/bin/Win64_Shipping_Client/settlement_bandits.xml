@@ -497,6 +497,13 @@
 	</CustomScene>
 	<CustomScene>
 		<id>slave_prison</id>
+		<Npcs>
+			<Npc>
+				<NpcId>slave_arena_master</NpcId>
+				<TagId>1</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+		</Npcs>
 	</CustomScene>
 	<CustomScene>
 		<id>mountain_city_entrance</id>
@@ -1074,6 +1081,65 @@
 					<amount>3</amount>
 				</Bandit>
 			</CommonArea>
+		</Bandits>
+	</CustomScene>
+	<CustomScene>
+		<id>xilan_temple_interior_b</id>
+		<Bandits>
+			<PatrolArea>
+				<areaIndex>3</areaIndex>
+				<Bandit>
+					<id>xilan_temple_priest</id>
+					<amount>1</amount>
+				</Bandit>
+			</PatrolArea>
+			<PatrolArea>
+				<areaIndex>2</areaIndex>
+				<Bandit>
+					<id>xilan_temple_demons</id>
+					<amount>2</amount>
+				</Bandit>
+			</PatrolArea>
+			<PatrolArea>
+				<areaIndex>1</areaIndex>
+				<Bandit>
+					<id>xilan_temple_demons</id>
+					<amount>2</amount>
+				</Bandit>
+			</PatrolArea>
+			<CommonArea>
+				<areaIndex>1</areaIndex>
+				<Bandit>
+					<id>xilan_temple_demons</id>
+					<amount>2</amount>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
+				<areaIndex>2</areaIndex>
+				<Bandit>
+					<id>xilan_temple_demons</id>
+					<amount>2</amount>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
+				<areaIndex>3</areaIndex>
+				<Bandit>
+					<id>xilan_temple_demons</id>
+					<amount>2</amount>
+				</Bandit>
+			</CommonArea>
+		</Bandits>
+	</CustomScene>
+	<CustomScene>
+		<id>swamp_fortress</id>
+		<Bandits>
+			<PatrolArea>
+				<areaIndex>1</areaIndex>
+				<Bandit>
+					<id>ruined_keep_guard</id>
+					<amount>1</amount>
+				</Bandit>
+			</PatrolArea>
 		</Bandits>
 	</CustomScene>
 </RFCustomScenes>
