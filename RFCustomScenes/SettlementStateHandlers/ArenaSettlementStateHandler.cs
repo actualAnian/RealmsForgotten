@@ -184,6 +184,7 @@ namespace RealmsForgotten.RFCustomSettlements
                     }
                     break;
                 case ArenaState.Finishing:
+                    PlayerArenaRewardEquipment = currentChallenge.StageDatas.Last().PlayerEquipment;
                     GameMenu.SwitchToMenu("rf_arena_finish");
                     break;
             }
@@ -279,5 +280,6 @@ namespace RealmsForgotten.RFCustomSettlements
             }
             hasToWait = isWaiting;
         }
+        public static Equipment? PlayerArenaRewardEquipment { get; private set; }
     }
 }

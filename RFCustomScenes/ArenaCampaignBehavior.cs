@@ -66,6 +66,8 @@ namespace RFCustomSettlements
         private void rf_arena_finish_init(MenuCallbackArgs args)
         {
             args.MenuContext.SetBackgroundMeshName(Hero.MainHero.IsFemale ? "arena_female_win" : "arena_male_win");
+            Equipment playerEquipment = ArenaSettlementStateHandler.PlayerArenaRewardEquipment != null ? ArenaSettlementStateHandler.PlayerArenaRewardEquipment : MBObjectManager.Instance.GetObject<CharacterObject>("aserai_infantry").Equipment;
+            if(playerEquipment != null) Hero.MainHero.BattleEquipment.FillFrom(playerEquipment);
             Hero.MainHero.Clan.AddRenown(20);
         }
 
@@ -79,9 +81,9 @@ namespace RFCustomSettlements
             else
             {
                 args.MenuContext.SetBackgroundMeshName(Hero.MainHero.IsFemale ? "arena_looser_female" : "arena_looser_male");
-                GameTexts.SetVariable("RF_ARENA_LOSE_TEXT", "Your fate is in the hands of your opponent... the crowd is silent as he approaches you, you wouldn't give him any mercy, why would he? The blade rises before a strike...");
+                GameTexts.SetVariable("RF_ARENA_LOSE_TEXT", "Your fate is in the hands of your opponent... the crowd is silent as he approaches you, 'Pathetic' you hear him say, as he spits and walks away from you. You may have been spared, but not for long. As a disgraced warrior, you are taken into the great desert, to perish under the scorching sun");
                 GameTexts.SetVariable("RF_ARENA_LOSE_CONTINUE_TEXT", "You haven't heard the last word from me...");
-                Hero.MainHero.Clan.AddRenown(-10);
+                Hero.MainHero.Clan.AddRenown(-20);
 
             }
         }
@@ -103,12 +105,15 @@ namespace RFCustomSettlements
             Hero.MainHero.BattleEquipment.FillFrom(equipmentRoster.DefaultEquipment);
             PlayerEncounter.LeaveSettlement();
             PlayerEncounter.Finish(true);
+            Clan.PlayerClan.AddRenown(-10);
+            ArenaSettlementStateHandler.currentState = ArenaSettlementStateHandler.ArenaState.Visiting;
         }
 
         private void rf_arena_finish_consequence(MenuCallbackArgs args)
         {
             ArenaSettlementStateHandler.currentState = ArenaSettlementStateHandler.ArenaState.Visiting;
             GameMenu.SwitchToMenu("rf_settlement_start");
+            
         }
 
         private void game_menu_taken_to_arena_on_consequence(MenuCallbackArgs args)

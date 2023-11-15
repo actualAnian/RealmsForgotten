@@ -21,36 +21,47 @@ namespace RealmsForgotten.Managers
         {
             [StartType.Default] = new Dictionary<string, string>
             {
-                ["aserai"] = "rf_looter",
-                ["empire"] = "rf_looter",
-                ["khuzait"] = "rf_looter",
-                ["sturgia"] = "rf_looter",
-                ["battania"] = "rf_looter",
-                ["vlandia"] = "rf_looter",
-                ["giant"] = "rf_looter",
-                ["aqarun"] = "rf_looter"
+                ["aserai"] = "player_char_creation_default",
+                ["empire"] = "player_char_creation_default",
+                ["khuzait"] = "player_char_creation_default",
+                ["sturgia"] = "player_char_creation_default",
+                ["battania"] = "player_char_creation_default",
+                ["vlandia"] = "player_char_creation_default",
+                ["giant"] = "rf_xilan_default",
+                ["aqarun"] = "rf_aqarun_default"
             },
             [StartType.Merchant] = new Dictionary<string, string>
             {
-                ["aserai"] = "rf_looter",
-                ["empire"] = "rf_looter",
-                ["khuzait"] = "rf_looter",
-                ["sturgia"] = "rf_looter",
-                ["battania"] = "rf_looter",
-                ["vlandia"] = "rf_looter",
-                ["giant"] = "rf_looter",
-                ["aqarun"] = "rf_looter"
+                ["aserai"] = "merchant_start_aserai",
+                ["empire"] = "merchant_start_empire",
+                ["khuzait"] = "merchant_start_khuzait",
+                ["sturgia"] = "merchant_start_sturgia",
+                ["battania"] = "rf_elvean_merchant",
+                ["vlandia"] = "merchant_start_vlandia",
+                ["giant"] = "merchant_start_xilan",
+                ["aqarun"] = "merchant_start_aqarun"
             },
             [StartType.Exiled] = new Dictionary<string, string>
             {
-                ["aserai"] = "rf_looter",
-                ["empire"] = "rf_looter",
-                ["khuzait"] = "rf_looter",
-                ["sturgia"] = "rf_looter",
-                ["battania"] = "rf_looter",
-                ["vlandia"] = "rf_looter",
-                ["giant"] = "rf_looter",
-                ["aqarun"] = "rf_looter"
+                ["aserai"] = "rf_exiled_equip",
+                ["empire"] = "rf_exiled_equip",
+                ["khuzait"] = "rf_exiled_equip",
+                ["sturgia"] = "rf_exiled_equip",
+                ["battania"] = "rf_exiled_equip",
+                ["vlandia"] = "rf_exiled_equip",
+                ["giant"] = "rf_exiled_equip",
+                ["aqarun"] = "rf_exiled_equip"
+            },
+            [StartType.EscapedPrisoner] = new Dictionary<string, string>
+            {
+                ["aserai"] = "rf_athas_mistic",
+                ["empire"] = "rf_empire_mistic",
+                ["khuzait"] = "rf_khuzait_mistic",
+                ["sturgia"] = "rf_sturgia_mistic",
+                ["battania"] = "rf_elvean_mistic",
+                ["vlandia"] = "rf_nasoria_mistic",
+                ["giant"] = "rf_giant_mistic",
+                ["aqarun"] = "rf_aqarun_mistic"
             },
             [StartType.Looter] = new Dictionary<string, string>
             {
@@ -116,7 +127,7 @@ namespace RealmsForgotten.Managers
                 ["battania"] = "lord_elvean_start",
                 ["vlandia"] = "ruler_nasoria_start",
                 ["giant"] = "ruler_giant_start",
-                ["giant"] = "ruler_aqarun_start"
+                ["aqarun"] = "ruler_aqarun_start"
             },
          };
         public static void Apply(int storyOption, int locationOption)

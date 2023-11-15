@@ -25,7 +25,36 @@ using static RealmsForgotten.Quest.QuestLibrary;
 
 namespace RealmsForgotten.Quest.SecondUpdate
 {
+<<<<<<< HEAD
 
+=======
+    [HarmonyPatch(typeof(EncounterGameMenuBehavior))]
+    public static class AvoidPlayerSendTroops
+    {
+        //[HarmonyPatch("game_menu_encounter_order_attack_on_condition")]
+        //[HarmonyPostfix]
+        //public static void game_menu_encounter_order_attack_on_condition(MenuCallbackArgs args, ref bool __result)
+        //{
+        //    if (LastQuest.DisableSendTroops)
+        //    {
+        //        args.IsEnabled = false;
+        //        __result = false;
+        //    }
+        //}
+
+        //[HarmonyPatch("game_menu_encounter_leave_your_soldiers_behind_on_condition")]
+        //[HarmonyPostfix]
+        //public static void game_menu_encounter_leave_your_soldiers_behind_on_condition(MenuCallbackArgs args, ref bool __result)
+        //{
+        //    if (LastQuest.DisableSendTroops)
+        //    {
+        //        args.IsEnabled = false;
+        //        __result = false;
+        //    }
+        //}
+
+    }
+>>>>>>> 7a22113956c2e93288bd32812465822f417dc9cc
     internal class HellBoundAmbushLogic : MissionLogic
     {
         public override void OnAgentHit(Agent affectedAgent, Agent affectorAgent, in MissionWeapon affectorWeapon, in Blow blow,
