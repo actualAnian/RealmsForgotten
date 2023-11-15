@@ -13,6 +13,8 @@ using RealmsForgotten.Managers;
 using static RealmsForgotten.Globals;
 using TaleWorlds.ObjectSystem;
 using RealmsForgotten.CustomSkills;
+using TaleWorlds.CampaignSystem.Extensions;
+using System.Linq;
 
 namespace RealmsForgotten
 {
@@ -902,47 +904,31 @@ namespace RealmsForgotten
             ChooseCharacterEquipment(characterCreation, StartType.Mercenary);
             this.Manager.SetStoryOption(3);
         }
-
+        private Equipment getMaleEquipment(IEnumerable<Equipment> eq) { return eq.FirstOrDefault(); }
+        private Equipment getFemaleEquipment(IEnumerable<Equipment> eq) { return eq.LastOrDefault(); }
         protected void ChooseCharacterEquipment(CharacterCreation characterCreation, StartType startType)
         {
             MBEquipmentRoster equipmentRoster;
             try
             { 
                 equipmentRoster = MBObjectManager.Instance.GetObject<MBEquipmentRoster>(CulturedStartAction.mainHeroStartingEquipment[startType][Hero.MainHero.Culture.StringId]);
-                if(equipmentRoster != null)
-                { 
-                    characterCreation.ChangeCharactersEquipment(equipmentRoster.AllEquipments);
-                    ApplyEquipments(characterCreation, equipmentRoster.AllEquipments.GetRandomElement());
+                IEnumerable<Equipment> battleEquipments = equipmentRoster.GetBattleEquipments();
+                IEnumerable<Equipment> civillianEquipments = equipmentRoster.GetCivilianEquipments();
+                Equipment battleEquipment = CharacterObject.PlayerCharacter.IsFemale? getFemaleEquipment(battleEquipments) : getMaleEquipment(battleEquipments);
+                Equipment civillianEquipment = CharacterObject.PlayerCharacter.IsFemale ? getFemaleEquipment(civillianEquipments) : getMaleEquipment(civillianEquipments);
+                if (battleEquipment != null)
+                {
+                    var a = new List<int> { 1 };
+                    characterCreation.ChangeCharactersEquipment(new List<Equipment>{ battleEquipment });
+                    CharacterObject.PlayerCharacter.FirstBattleEquipment.FillFrom(battleEquipment);
+                    ChangePlayerMount(characterCreation, Hero.MainHero);
                 }
+                if (civillianEquipment != null) CharacterObject.PlayerCharacter.FirstCivilianEquipment.FillFrom(civillianEquipment);
             }
-            catch(Exception)
+            catch
             {
-                characterCreation.ChangeCharactersEquipment(new List<Equipment>() { Hero.MainHero.CivilianEquipment });
-                this.ApplyEquipments(characterCreation);
-
+                InformationManager.DisplayMessage(new InformationMessage("Error while giving player the equipment", new Color(255, 0, 0)));
             }
-        }
-        protected void ApplyEquipments(CharacterCreation characterCreation, Equipment? newEquipment = null)
-        {
-            SandboxCharacterCreationContent.ClearMountEntity(characterCreation);
-            string text = string.Concat(new object[]
-            {
-                "player_char_creation_",
-                base.GetSelectedCulture().StringId,
-                "_",
-                base.SelectedTitleType
-            });
-            text += (Hero.MainHero.IsFemale ? "_f" : "_m");
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(text);
-
-            if (newEquipment != null) PlayerStartEquipment = newEquipment;
-            else if ((@object != null)) PlayerStartEquipment = @object.DefaultEquipment;
-            else PlayerStartEquipment = MBEquipmentRoster.EmptyEquipment;
-            if (base.PlayerStartEquipment != null)
-            {
-                CharacterObject.PlayerCharacter.Equipment.FillFrom(base.PlayerStartEquipment, true);
-            }
-            SandboxCharacterCreationContent.ChangePlayerMount(characterCreation, Hero.MainHero);
         }
         protected void LooterStartOnConsequence(CharacterCreation characterCreation)
         {

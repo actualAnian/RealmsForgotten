@@ -26,27 +26,27 @@ namespace RealmsForgotten.Quest.SecondUpdate
     [HarmonyPatch(typeof(EncounterGameMenuBehavior))]
     public static class AvoidPlayerSendTroops
     {
-        [HarmonyPatch("game_menu_encounter_order_attack_on_condition")]
-        [HarmonyPostfix]
-        public static void game_menu_encounter_order_attack_on_condition(MenuCallbackArgs args, ref bool __result)
-        {
-            if (LastQuest.DisableSendTroops)
-            {
-                args.IsEnabled = false;
-                __result = false;
-            }
-        }
+        //[HarmonyPatch("game_menu_encounter_order_attack_on_condition")]
+        //[HarmonyPostfix]
+        //public static void game_menu_encounter_order_attack_on_condition(MenuCallbackArgs args, ref bool __result)
+        //{
+        //    if (LastQuest.DisableSendTroops)
+        //    {
+        //        args.IsEnabled = false;
+        //        __result = false;
+        //    }
+        //}
 
-        [HarmonyPatch("game_menu_encounter_leave_your_soldiers_behind_on_condition")]
-        [HarmonyPostfix]
-        public static void game_menu_encounter_leave_your_soldiers_behind_on_condition(MenuCallbackArgs args, ref bool __result)
-        {
-            if (LastQuest.DisableSendTroops)
-            {
-                args.IsEnabled = false;
-                __result = false;
-            }
-        }
+        //[HarmonyPatch("game_menu_encounter_leave_your_soldiers_behind_on_condition")]
+        //[HarmonyPostfix]
+        //public static void game_menu_encounter_leave_your_soldiers_behind_on_condition(MenuCallbackArgs args, ref bool __result)
+        //{
+        //    if (LastQuest.DisableSendTroops)
+        //    {
+        //        args.IsEnabled = false;
+        //        __result = false;
+        //    }
+        //}
 
     }
     internal class HellBoundAmbushLogic : MissionLogic
