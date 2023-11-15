@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HarmonyLib;
+using RealmsForgotten.Quest.UI;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
@@ -18,37 +19,13 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
+using TaleWorlds.ObjectSystem;
 using TaleWorlds.SaveSystem;
 using static RealmsForgotten.Quest.QuestLibrary;
 
 namespace RealmsForgotten.Quest.SecondUpdate
 {
-    [HarmonyPatch(typeof(EncounterGameMenuBehavior))]
-    public static class AvoidPlayerSendTroops
-    {
-        [HarmonyPatch("game_menu_encounter_order_attack_on_condition")]
-        [HarmonyPostfix]
-        public static void game_menu_encounter_order_attack_on_condition(MenuCallbackArgs args, ref bool __result)
-        {
-            if (LastQuest.DisableSendTroops)
-            {
-                args.IsEnabled = false;
-                __result = false;
-            }
-        }
 
-        [HarmonyPatch("game_menu_encounter_leave_your_soldiers_behind_on_condition")]
-        [HarmonyPostfix]
-        public static void game_menu_encounter_leave_your_soldiers_behind_on_condition(MenuCallbackArgs args, ref bool __result)
-        {
-            if (LastQuest.DisableSendTroops)
-            {
-                args.IsEnabled = false;
-                __result = false;
-            }
-        }
-
-    }
     internal class HellBoundAmbushLogic : MissionLogic
     {
         public override void OnAgentHit(Agent affectedAgent, Agent affectorAgent, in MissionWeapon affectorWeapon, in Blow blow,
@@ -167,6 +144,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
         protected override void SetDialogs()
         {
             Campaign.Current.ConversationManager.AddDialogFlow(FirstDialogFlow, this);
+            Campaign.Current.ConversationManager.AddDialogFlow(MonkDialogFlow, this);
         }
 
         private void FirstDialogConsequence()
@@ -176,8 +154,27 @@ namespace RealmsForgotten.Quest.SecondUpdate
             questMonastery = Settlement.Find("retreat_monastery");
             AddTrackedObject(questMonastery);
             goToMonasteryLog = AddLog(GameTexts.FindText("rf_last_quest_second_log"));
+            questMonastery.IsVisible = true;
         }
 
+        private void ShowWaitScreen()
+        {
+            QuestUIManager.ShowNotification("After a while...", ()=>{}, false);
+        }
+
+        private void MonkDialogConsequence()
+        {
+            PartyBase.MainParty.AddMember(CharacterObject.Find("anorite_monastery_militia"), 20);
+            PartyBase.MainParty.ItemRoster.AddToCounts(new EquipmentElement(MBObjectManager.Instance.GetObject<ItemObject>("anorit_fire_stone_t3_rfthrowing50")), 10);
+            goToMonasteryLog.UpdateCurrentProgress(1);
+        }
+
+        private TextObject LineWithPlayerLink()
+        {
+            TextObject text = GameTexts.FindText("rf_last_quest_monk_dialog_11");
+            text.SetCharacterProperties("PLAYER", CharacterObject.PlayerCharacter);
+            return text;
+        }
         private DialogFlow FirstDialogFlow => DialogFlow.CreateDialogFlow("start", 125)
             .NpcLine(GameTexts.FindText("rf_last_quest_first_dialog_1"))
             .Condition(() => takeBossToLordLog?.CurrentProgress == 2 && Hero.OneToOneConversationHero == TheOwl)
@@ -198,5 +195,26 @@ namespace RealmsForgotten.Quest.SecondUpdate
             .PlayerLine(GameTexts.FindText("rf_last_quest_first_dialog_16"))
             .NpcLine(GameTexts.FindText("rf_last_quest_first_dialog_17"))
             .Consequence(FirstDialogConsequence).CloseDialog();
+
+        private DialogFlow MonkDialogFlow => DialogFlow.CreateDialogFlow("start", 125).PlayerLine(GameTexts.FindText("rf_last_quest_monk_dialog_1"))
+            .Condition(() => CharacterObject.OneToOneConversationCharacter?.StringId == "quest_monastery_priest" && goToMonasteryLog?.CurrentProgress == 0 && Settlement.CurrentSettlement == questMonastery)
+            .NpcLine(GameTexts.FindText("rf_last_quest_monk_dialog_2"))
+            .PlayerLine(GameTexts.FindText("rf_last_quest_monk_dialog_3"))
+            .NpcLine(GameTexts.FindText("rf_last_quest_monk_dialog_4"))
+            .PlayerLine(GameTexts.FindText("rf_last_quest_monk_dialog_5"))
+            .NpcLine(GameTexts.FindText("rf_last_quest_monk_dialog_6"))
+            .PlayerLine(GameTexts.FindText("rf_last_quest_monk_dialog_7"))
+            .NpcLine(GameTexts.FindText("rf_last_quest_monk_dialog_8"))
+            .PlayerLine(GameTexts.FindText("rf_last_quest_monk_dialog_9")).Consequence(ShowWaitScreen)
+            .NpcLine(GameTexts.FindText("rf_last_quest_monk_dialog_10"))
+            .PlayerLine(LineWithPlayerLink())
+            .NpcLine(GameTexts.FindText("rf_last_quest_monk_dialog_12"))
+            .NpcLine(GameTexts.FindText("rf_last_quest_monk_dialog_13"))
+            .PlayerLine(GameTexts.FindText("rf_last_quest_monk_dialog_14"))
+            .NpcLine(GameTexts.FindText("rf_last_quest_monk_dialog_15"))
+            .PlayerLine(GameTexts.FindText("rf_last_quest_monk_dialog_16"))
+            .NpcLine(GameTexts.FindText("rf_last_quest_monk_dialog_17"))
+            .PlayerLine(GameTexts.FindText("rf_last_quest_monk_dialog_18"))
+            .NpcLine(GameTexts.FindText("rf_last_quest_monk_dialog_19")).Consequence(MonkDialogConsequence).CloseDialog();
     }
 }

@@ -44,7 +44,7 @@
 
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-	  <Exec Command="xcopy /y /d &quot;$(ProjectDir)\\bin\x64\Debug\net472\\RFCustomSettlements.*&quot; &quot;$(BANNERLORD_GAME_DIR)\Modules\RealmsForgotten\bin\Win64_Shipping_Client&quot;&#xD;&#xA;xcopy /y /d &quot;$(ProjectDir)\\bin\x64\Debug\net472\\Z.Expressions.Eval.dll&quot; &quot;$(BANNERLORD_GAME_DIR)\Modules\RealmsForgotten\bin\Win64_Shipping_Client&quot;&#xD;&#xA;xcopy /y /d /e &quot;$(ProjectDir)\_Module\*&quot; &quot;$(BANNERLORD_GAME_DIR)\Modules\RealmsForgotten\&quot;" />
+	  <Exec Command="xcopy /y /d &quot;$(ProjectDir)\\bin\x64\Debug\net472\\RFCustomSettlements.*&quot; &quot;$(BANNERLORD_GAME_DIR)\Modules\RealmsForgotten\bin\Win64_Shipping_Client&quot;&#xD;&#xA;xcopy /y /d &quot;$(ProjectDir)\\bin\x64\Debug\net472\\Z.Expressions.Eval.dll&quot; &quot;$(BANNERLORD_GAME_DIR)\Modules\RealmsForgotten\bin\Win64_Shipping_Client&quot;&#xD;&#xA;" />
 	</Target>
 
 </Project>

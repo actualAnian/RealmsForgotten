@@ -9,6 +9,7 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
+using RealmsForgotten.Quest;
 
 namespace RealmsForgotten.Models
 {
@@ -21,7 +22,7 @@ namespace RealmsForgotten.Models
                 additionalTroopOnHorseCount);
             if (party.Owner?.CharacterObject.Race == FaceGen.GetRaceOrDefault("Xilantlacay"))
                 baseValue.AddFactor(0.20f, new TextObject("Xilantlacay's Speedness"));
-            if(AvoidQuestArmyDisbandingPatch.AvoidDisbanding && party.Army?.Parties.Contains(MobileParty.MainParty) == true)
+            if(QuestPatches.AvoidDisbanding && party.Army?.Parties.Contains(MobileParty.MainParty) == true)
                 baseValue.AddFactor(2.0f);
             return baseValue;
 

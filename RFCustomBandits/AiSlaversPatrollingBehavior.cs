@@ -28,7 +28,7 @@ namespace RealmsForgotten.RFCustomBandits
             {
                 if (mobileParty.Party == null || !mobileParty.IsSlaverParty()) return;
 
-                if (mobileParty.MapFaction.Culture.CanHaveSettlement && (mobileParty.Ai.NeedTargetReset || (mobileParty.HomeSettlement.IsHideout && !mobileParty.HomeSettlement.Hideout.IsInfested)))
+                if (mobileParty.MapFaction?.Culture?.CanHaveSettlement == true && (mobileParty.Ai?.NeedTargetReset == true || (mobileParty.HomeSettlement?.IsHideout == true && mobileParty.HomeSettlement?.Hideout?.IsInfested == false)))
                 {
                     Settlement settlement = SettlementHelper.FindNearestHideout(null, null);
                     if (settlement != null)

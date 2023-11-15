@@ -14,41 +14,45 @@ using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade.View.Screens;
 using TaleWorlds.ScreenSystem;
 
-namespace RealmsForgotten.Quest
+namespace RealmsForgotten.Quest.UI
 {
-    public class RFNotificationState : GameState
+    public class QuestNotificationState : GameState
     {
-        public int fontSize;
+        public int FontSize;
         public string Text;
-        public Action onLeaveVoid;
-        public RFNotificationState(string text, int fontsize, Action onLeaveAction)
+        public Action OnLeaveVoid;
+        public string SpriteID;
+        public bool HaveImage;
+        public QuestNotificationState(string text, int fontsize, Action onLeaveAction, bool haveImage, string spriteId)
         {
             Text = text;
-            if(fontsize > 0 && fontsize <= 100)
-                fontSize = fontsize;
-            onLeaveVoid = onLeaveAction;
+            if (fontsize > 0 && fontsize <= 100)
+                FontSize = fontsize;
+            OnLeaveVoid = onLeaveAction;
+            SpriteID = spriteId;
+            HaveImage = haveImage;
         }
-        public RFNotificationState() { throw new ArgumentException(); }
+        public QuestNotificationState() { throw new ArgumentException(); }
     }
 
-    [GameStateScreen(typeof(RFNotificationState))]
-    public class RFNotificationScreen : ScreenBase, IGameStateListener
+    [GameStateScreen(typeof(QuestNotificationState))]
+    public class QuestNotificationScreen : ScreenBase, IGameStateListener
     {
-        RFNotificationState _RFNotificationState;
-        public RFNotificationScreen(RFNotificationState rfNotificationState)
+        QuestNotificationState questNotificationState;
+        public QuestNotificationScreen(QuestNotificationState questNotificationState)
         {
-            _RFNotificationState = rfNotificationState;
-            _RFNotificationState.RegisterListener(this);
+            this.questNotificationState = questNotificationState;
+            this.questNotificationState.RegisterListener(this);
         }
 
         GauntletLayer _layer;
-        RFNotificationVM _dataSource;
+        QuestNotificationVm _dataSource;
 
         void IGameStateListener.OnActivate()
         {
             _layer = new GauntletLayer(1, "GauntletLayer", true);
-            _dataSource = new RFNotificationVM(_RFNotificationState);
-            _layer.LoadMovie("RFNotification", _dataSource);
+            _dataSource = new QuestNotificationVm(questNotificationState);
+            _layer.LoadMovie(questNotificationState.HaveImage ? "RFNotificationWithImage" : "RFNotification", _dataSource);
             _layer.Input.RegisterHotKeyCategory(HotKeyManager.GetCategory("PartyHotKeyCategory"));
             _layer.InputRestrictions.SetInputRestrictions(true, InputUsageMask.All);
             _layer.IsFocusLayer = true;
@@ -78,16 +82,18 @@ namespace RealmsForgotten.Quest
         void IGameStateListener.OnInitialize() { }
     }
 
-    public class RFNotificationVM : ViewModel
+    public class QuestNotificationVm : ViewModel
     {
         private int FontSize = 60;
         private string CurrentText;
         private Action onLeaveAction;
-        public RFNotificationVM(RFNotificationState RFNotificationState)
+        private string SpriteID;
+        public QuestNotificationVm(QuestNotificationState questNotificationState)
         {
-            CurrentText = RFNotificationState.Text;
-            FontSize = RFNotificationState.fontSize;
-            onLeaveAction = RFNotificationState.onLeaveVoid;
+            CurrentText = questNotificationState.Text;
+            FontSize = questNotificationState.FontSize;
+            onLeaveAction = questNotificationState.OnLeaveVoid;
+            SpriteID = questNotificationState.SpriteID;
         }
 
         [DataSourceProperty]
@@ -98,13 +104,17 @@ namespace RealmsForgotten.Quest
 
         [DataSourceProperty]
         public string RFFontSize => FontSize.ToString();
+
+        [DataSourceProperty]
+        public string SpriteId => SpriteID;
+
         [DataSourceProperty]
         public string TextLabel => CurrentText;
-        
+
         public void ExecuteDone()
         {
             GameStateManager.Current.PopState();
-            if(onLeaveAction != null)
+            if (onLeaveAction != null)
                 onLeaveAction();
         }
     }

@@ -23,6 +23,7 @@ using RealmsForgotten.Quest;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.GameMenus;
 using RealmsForgotten.Patches;
+using RealmsForgotten.Quest.SecondUpdate;
 
 namespace RealmsForgotten
 {
@@ -106,6 +107,9 @@ namespace RealmsForgotten
             MethodInfo originalMethod = AccessTools.Method("PartyVM:PopulatePartyListLabel");
 #pragma warning restore BHA0003 // Type was not found
             harmony.Patch(originalMethod, transpiler: new HarmonyMethod(typeof(PartyVMPatch), nameof(PartyVMPatch.PartyVMPopulatePartyListLabelPatch)));
+
+            QuestPatches.PatchAll();
+
         }
 
         private void RemoveSandboxAndStoryOptions()

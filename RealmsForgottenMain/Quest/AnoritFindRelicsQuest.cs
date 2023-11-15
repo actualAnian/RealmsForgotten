@@ -1,4 +1,5 @@
 ﻿using RealmsForgotten.Quest.SecondUpdate;
+using RealmsForgotten.Quest.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -49,7 +50,7 @@ namespace RealmsForgotten.Quest
         {
             if (!escapedPrison && anoritLordConversationTime != CampaignTime.Never && anoritLordConversationTime.ElapsedHoursUntilNow >= 40 && !PlayerEncounter.InsideSettlement && CampaignTime.Now.IsNightTime)
             {
-                GameStateManager.Current.PushState(GameStateManager.Current.CreateState<RFNotificationState>(GameTexts.FindText("rf_kidnapped_text").ToString(), 40, () => { QueenQuest.OpenPrisonBreak(); }));
+                QuestUIManager.ShowNotification(GameTexts.FindText("rf_kidnapped_text").ToString(), QueenQuest.OpenPrisonBreak, true, "prisoner_image");
                 anoritLordConversationTime = CampaignTime.Never;
                 escapedPrison = true;
 
