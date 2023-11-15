@@ -9,7 +9,6 @@ using HarmonyLib;
 using Helpers;
 using RealmsForgotten.Quest.SecondUpdate;
 using SandBox.Issues.IssueQuestTasks;
-using SandBox.Missions.MissionLogics.Towns;
 using StoryMode.Quests.PlayerClanQuests;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
@@ -45,6 +44,8 @@ using TaleWorlds.SaveSystem;
 using static TaleWorlds.CampaignSystem.Issues.IssueBase;
 using FaceGen = TaleWorlds.Core.FaceGen;
 using static RealmsForgotten.Quest.QuestLibrary;
+using RealmsForgotten.Quest.UI;
+using RealmsForgotten.Quest.MissionBehaviors;
 
 namespace RealmsForgotten.Quest
 {
@@ -82,7 +83,7 @@ namespace RealmsForgotten.Quest
         protected override void RegisterEvents()
         {
             CampaignEvents.LocationCharactersAreReadyToSpawnEvent.AddNonSerializedListener(this, LocationCharactersAreReadyToSpawn);
-            CampaignEvents.OnHideoutDeactivatedEvent.AddNonSerializedListener(this, OnHideoutDefeat);
+            CampaignEvents.OnMissionEndedEvent.AddNonSerializedListener(this, OnHideoutDefeat);
             CampaignEvents.SettlementEntered.AddNonSerializedListener(this, OnSettlementEntered);
             CampaignEvents.OnMissionStartedEvent.AddNonSerializedListener(this, imission =>
             {
@@ -118,7 +119,7 @@ namespace RealmsForgotten.Quest
                 
                 _isPlayerInOwlArmy = false;
 
-                AvoidQuestArmyDisbandingPatch.AvoidDisbanding = false;
+                QuestPatches.AvoidDisbanding = false;
 
                 
             }
@@ -126,46 +127,50 @@ namespace RealmsForgotten.Quest
 
         private bool isOwlOnPlayerParty => PartyBase.MainParty.MemberRoster.GetTroopRoster().Any(x => x.Character?.HeroObject == TheOwl);
 
-        public void OnHideoutDefeat(Settlement hideout)
+        public void OnHideoutDefeat(IMission iMission)
         {
-
-            if (hideout.IsHideout && !hideout.Hideout.IsInfested && HasTalkedToOwl)
+            if (Settlement.CurrentSettlement?.IsHideout == true)
             {
-                Hideout nextHideout;
-                switch (hideout.Hideout.StringId)
+                Settlement hideout = Settlement.CurrentSettlement;
+                if (hideout.IsHideout && HasTalkedToOwl)
                 {
+                    Hideout nextHideout;
+                    switch (hideout.Hideout.StringId)
+                    {
 
-                    case "hideout_seaside_13":
-                        if (findMapJournalLog?.CurrentProgress == 0)
-                        {
-                            InformationManager.ShowInquiry(new InquiryData(GameTexts.FindText("rf_event").ToString(), GameTexts.FindText("rf_map_not_found_inquiry").ToString(), true, false, new TextObject("{=continue}Continue").ToString(), "", null, null), true);
-                            ActivateHideout("hideout_seaside_13");
-                            return;
-                        }
-                        this.RemoveTrackedObject(hideout);
-                        nextHideout = ActivateHideout("hideout_seaside_14");
-                        this.AddTrackedObject(nextHideout.Settlement);
-                        break;
-                    case "hideout_seaside_14":
-                        if (findMapJournalLog?.CurrentProgress == 1)
-                        {
-                            InformationManager.ShowInquiry(new InquiryData(GameTexts.FindText("rf_event").ToString(), GameTexts.FindText("rf_map_not_found_inquiry").ToString(), true, false, new TextObject("{=continue}Continue").ToString(), "", null, null), true);
-                            ActivateHideout("hideout_seaside_14");
-                            return;
-                        }
-                        this.RemoveTrackedObject(hideout);
-                        nextHideout = ActivateHideout("hideout_seaside_11");
-                        this.AddTrackedObject(nextHideout.Settlement);
-                        break;
-                    case "hideout_seaside_11":
-                        if (findMapJournalLog?.CurrentProgress == 2)
-                        {
-                            InformationManager.ShowInquiry(new InquiryData(GameTexts.FindText("rf_event").ToString(), GameTexts.FindText("rf_map_not_found_inquiry").ToString(), true, false, new TextObject("{=continue}Continue").ToString(), "", null, null), true);
-                            ActivateHideout("hideout_seaside_11");
-                            return;
-                        }
-                        lastHideoutTime = CampaignTime.Now;
-                        break;
+                        case "hideout_seaside_13":
+                            if (findMapJournalLog?.CurrentProgress == 0)
+                            {
+                                InformationManager.ShowInquiry(new InquiryData(GameTexts.FindText("rf_event").ToString(), GameTexts.FindText("rf_map_not_found_inquiry").ToString(), true, false, new TextObject("{=continue}Continue").ToString(), "", null, null), true);
+                                ActivateHideout("hideout_seaside_13");
+                                return;
+                            }
+                            this.RemoveTrackedObject(hideout);
+                            nextHideout = ActivateHideout("hideout_seaside_14");
+                            this.AddTrackedObject(nextHideout.Settlement);
+                            break;
+                        case "hideout_seaside_14":
+                            if (findMapJournalLog?.CurrentProgress == 1)
+                            {
+                                InformationManager.ShowInquiry(new InquiryData(GameTexts.FindText("rf_event").ToString(), GameTexts.FindText("rf_map_not_found_inquiry").ToString(), true, false, new TextObject("{=continue}Continue").ToString(), "", null, null), true);
+                                ActivateHideout("hideout_seaside_14");
+                                return;
+                            }
+                            this.RemoveTrackedObject(hideout);
+                            nextHideout = ActivateHideout("hideout_seaside_11");
+                            this.AddTrackedObject(nextHideout.Settlement);
+                            break;
+                        case "hideout_seaside_11":
+                            if (findMapJournalLog?.CurrentProgress == 2)
+                            {
+                                InformationManager.ShowInquiry(new InquiryData(GameTexts.FindText("rf_event").ToString(), GameTexts.FindText("rf_map_not_found_inquiry").ToString(), true, false, new TextObject("{=continue}Continue").ToString(), "", null, null), true);
+                                ActivateHideout("hideout_seaside_11");
+                                return;
+                            }
+                            this.RemoveTrackedObject(hideout);
+                            lastHideoutTime = CampaignTime.Now;
+                            break;
+                    }
                 }
             }
         }
@@ -178,7 +183,7 @@ namespace RealmsForgotten.Quest
         protected override void InitializeQuestOnGameLoad()
         {
             SetDialogs();
-            AvoidQuestArmyDisbandingPatch.AvoidDisbanding = _isPlayerInOwlArmy;
+            QuestPatches.AvoidDisbanding = _isPlayerInOwlArmy;
             if (_isPlayerInOwlArmy)
                 CreateOwlArmy(MobileParty.All.Find(x=>x.LeaderHero == TheOwl));
             QuestLibrary.InitializeVariables();
@@ -290,7 +295,7 @@ namespace RealmsForgotten.Quest
             MobileParty.MainParty.Army.Cohesion = 100f;
             MobileParty.MainParty.Army.DailyCohesionChangeExplanation.Add(100f);
 
-            AvoidQuestArmyDisbandingPatch.AvoidDisbanding = true;
+            QuestPatches.AvoidDisbanding = true;
             _isPlayerInOwlArmy = true;
         }
         private void GoToAnoritLord()
@@ -305,7 +310,7 @@ namespace RealmsForgotten.Quest
                 owlParty.InitializeMobilePartyAroundPosition(TroopRoster.CreateDummyTroopRoster(), TroopRoster.CreateDummyTroopRoster(), MobileParty.MainParty.Position2D, 1f);
             }
 
-
+            CreateOwlArmy(owlParty);
 
             hasTalkedToOwl2 = true;
         }
@@ -404,7 +409,9 @@ namespace RealmsForgotten.Quest
             if (anoritLordConversationTime != CampaignTime.Never && anoritLordConversationTime.ElapsedHoursUntilNow >= 40 && !PlayerEncounter.InsideSettlement && CampaignTime.Now.IsNightTime)
             {
                 escapedPrison = true;
-                GameStateManager.Current.PushState(GameStateManager.Current.CreateState<RFNotificationState>(GameTexts.FindText("rf_kidnapped_text").ToString(), 40, () => { OpenPrisonBreak(); }));
+
+                QuestUIManager.ShowNotification(GameTexts.FindText("rf_kidnapped_text").ToString(), OpenPrisonBreak, true, "prisoner_image" );
+
                 anoritLordConversationTime = CampaignTime.Never;
             }
         }

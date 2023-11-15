@@ -21,6 +21,8 @@ using TaleWorlds.MountAndBlade.Source.Missions.Handlers;
 using TaleWorlds.MountAndBlade.Source.Missions;
 
 using HarmonyLib;
+using SandBox;
+using SandBox.Missions.MissionLogics;
 using TaleWorlds.MountAndBlade.View.Screens;
 using TaleWorlds.CampaignSystem.Settlements.Locations;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -28,7 +30,7 @@ using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.AgentOrigins;
 
-namespace SandBox.Missions.MissionLogics.Towns
+namespace RealmsForgotten.Quest.MissionBehaviors
 {
     public class RFPrisonBreakMissionController : MissionLogic
     {
