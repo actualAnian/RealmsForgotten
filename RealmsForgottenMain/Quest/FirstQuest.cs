@@ -67,7 +67,6 @@ namespace RealmsForgotten.Quest
                 StartQuest();
 
             }
-            InitializeVariables();
         }
 
         public override void RegisterEvents()
@@ -83,7 +82,7 @@ namespace RealmsForgotten.Quest
         {
             if (isNewGame)
             {
-
+                InitializeVariables();
                 QuestQueen.HomeSettlement.Notables[0].StringId = UliahId;
                 QuestQueen.HomeSettlement.Notables[0].StringId = UliahId;
                 if (QuestQueen.HomeSettlement.Notables[0].IsFemale)
