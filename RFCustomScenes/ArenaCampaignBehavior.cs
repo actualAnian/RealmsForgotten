@@ -13,6 +13,7 @@ using RealmsForgotten;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.Core;
 using TaleWorlds.ObjectSystem;
+using System.Collections.Generic;
 
 namespace RFCustomSettlements
 {
@@ -30,8 +31,8 @@ namespace RFCustomSettlements
                 return _arenaSettlementStateHandler;
             }
         }
-        private readonly string playerInArenaEquipmentId = "rf_looter";
-        private readonly string playerInArenaLostEquipmentId = "rf_looter";
+        private readonly string playerArenMasterTalkEquipmentId = "rf_arena_prisoner";
+        private readonly string playerArenaLostEquipmentId = "rf_arena_prisoner";
 
         internal static string? currentChallengeToSync;
         internal static ArenaSettlementStateHandler.ArenaState currentArenaState;
@@ -47,7 +48,7 @@ namespace RFCustomSettlements
         }
         public void OnSessionLaunched(CampaignGameStarter campaignGameStarter)
         {
-            this.AddDialogs(campaignGameStarter); 
+            //this.AddDialogs(campaignGameStarter); 
             this.AddGameMenus(campaignGameStarter); 
             arenaSettlement = Settlement.All.Single(s => s.SettlementComponent is RFCustomSettlement settlement && settlement.StateHandler is ArenaSettlementStateHandler);
         }
@@ -101,8 +102,10 @@ namespace RFCustomSettlements
 
         private void ExpelPlayerFromArena()
         {
-            MBEquipmentRoster equipmentRoster = MBObjectManager.Instance.GetObject<MBEquipmentRoster>(playerInArenaLostEquipmentId);
-            Hero.MainHero.BattleEquipment.FillFrom(equipmentRoster.DefaultEquipment);
+            MBEquipmentRoster equipmentRoster = MBObjectManager.Instance.GetObject<MBEquipmentRoster>(playerArenaLostEquipmentId);
+            try { Hero.MainHero.BattleEquipment.FillFrom(equipmentRoster.DefaultEquipment); }
+            catch { RealmsForgotten.HuntableHerds.SubModule.PrintDebugMessage($"Error giving the player equipment {playerArenMasterTalkEquipmentId}", 255, 0, 0); }
+            
             PlayerEncounter.LeaveSettlement();
             PlayerEncounter.Finish(true);
             Clan.PlayerClan.AddRenown(-10);
@@ -126,17 +129,19 @@ namespace RFCustomSettlements
                 EnterSettlementAction.ApplyForParty(MobileParty.MainParty, arenaSettlement);
                 ArenaSettlementStateHandler.currentState = ArenaSettlementStateHandler.ArenaState.Captured;
                 GameMenu.ActivateGameMenu("rf_settlement_start");
-
-                MBEquipmentRoster equipmentRoster = MBObjectManager.Instance.GetObject<MBEquipmentRoster>(playerInArenaEquipmentId);
+                try { 
+                MBEquipmentRoster equipmentRoster = MBObjectManager.Instance.GetObject<MBEquipmentRoster>(playerArenMasterTalkEquipmentId);
                 Hero.MainHero.BattleEquipment.FillFrom(equipmentRoster.DefaultEquipment);
+                }
+                catch { RealmsForgotten.HuntableHerds.SubModule.PrintDebugMessage($"Error giving the player equipment {playerArenMasterTalkEquipmentId}", 255, 0, 0); }
             }
         }
 
-        private void AddDialogs(CampaignGameStarter campaignGameStarter)
-        {
-            campaignGameStarter.AddDialogLine("rf_arena_explain", "start", "rf_arena_understood", "Explain what happens in the arena", new ConversationSentence.OnConditionDelegate(this.condition_start_arena_talk), null, 100, null);
-            campaignGameStarter.AddPlayerLine("rf_arena_understood", "rf_arena_understood", "close_window", "I see", null, new ConversationSentence.OnConsequenceDelegate(this.StartArenaMission), 100, null, null);
-        }
+        //private void AddDialogs(CampaignGameStarter campaignGameStarter)
+        //{
+        //    campaignGameStarter.AddDialogLine("rf_arena_explain", "start", "rf_arena_understood", "Explain what happens in the arena", new ConversationSentence.OnConditionDelegate(this.condition_start_arena_talk), null, 100, null);
+        //    campaignGameStarter.AddPlayerLine("rf_arena_understood", "rf_arena_understood", "close_window", "I see", null, new ConversationSentence.OnConsequenceDelegate(this.StartArenaMission), 100, null, null);
+        //}
         private void StartArenaMission()
         {
             Mission.Current.EndMission();
