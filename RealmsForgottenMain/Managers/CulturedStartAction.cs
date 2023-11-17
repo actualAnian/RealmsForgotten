@@ -43,14 +43,14 @@ namespace RealmsForgotten.Managers
             },
             [StartType.Exiled] = new Dictionary<string, string>
             {
-                ["aserai"] = "rf_exiled_equip",
-                ["empire"] = "rf_exiled_equip",
-                ["khuzait"] = "rf_exiled_equip",
-                ["sturgia"] = "rf_exiled_equip",
-                ["battania"] = "rf_exiled_equip",
-                ["vlandia"] = "rf_exiled_equip",
-                ["giant"] = "rf_exiled_equip",
-                ["aqarun"] = "rf_exiled_equip"
+                ["aserai"] = "rf_exiled_aserai",
+                ["empire"] = "rf_exiled_empire",
+                ["khuzait"] = "rf_exiled_khuzait",
+                ["sturgia"] = "rf_exiled_sturgia",
+                ["battania"] = "rf_exiled_battania",
+                ["vlandia"] = "rf_exiled_vlandia",
+                ["giant"] = "rf_exiled_battania",
+                ["aqarun"] = "rf_exiled_aserai"
             },
             [StartType.EscapedPrisoner] = new Dictionary<string, string>
             {
@@ -166,6 +166,22 @@ namespace RealmsForgotten.Managers
                     startingSettlement = Settlement.Find("town_V3");
                     break;
                 case 8:
+                    if (mainHero.Culture.StringId == "giant")
+                    {
+                        startingSettlement = Settlement.Find("town_G1");
+                        if (startingSettlement == null)
+                        {
+                            // Handle the case where "town_G1" does not exist or is not found
+                            // For example, log an error or assign a default settlement
+                        }
+                    }
+                    else
+                    {
+                        // Fallback for other cultures or default handling
+                        // You can define what happens for non-giant cultures here
+                    }
+                    break;
+                case 9:  // New case for starting at a specific location based on culture
                     startingSettlement = Settlement.All.Where(settlement => settlement.Culture == mainHero.Culture && settlement.IsCastle).GetRandomElementInefficiently();
                     ChangeOwnerOfSettlementAction.ApplyByBarter(Hero.MainHero, startingSettlement);
                     break;
@@ -224,7 +240,7 @@ namespace RealmsForgotten.Managers
                     ApplyInternal(mainHero, gold: 35000, grain: 80, tier: 2, troops: new int[] { 40, 20, 20, 5 }, companions: 1, companionParties: 1, ruler: ruler, startingSettlement: startingSettlement, startOption: StartType.VassalFief);
                     break;
                 case StartType.EscapedPrisoner: // Escaped Prisoner
-                    ApplyInternal(mainHero, gold: 0, grain: 1, startOption: StartType.EscapedPrisoner);
+                    ApplyInternal(mainHero, gold: 1000, grain: 15, startOption: StartType.EscapedPrisoner);
                     if (captor != null)
                     {
                         CharacterRelationManager.SetHeroRelation(mainHero, captor, -50);
