@@ -166,24 +166,7 @@ namespace RealmsForgotten.Managers
                     startingSettlement = Settlement.Find("town_V3");
                     break;
                 case 8:
-                    if (mainHero.Culture.StringId == "giant")
-                    {
-                        startingSettlement = Settlement.Find("town_G1");
-                        if (startingSettlement == null)
-                        {
-                            // Handle the case where "town_G1" does not exist or is not found
-                            // For example, log an error or assign a default settlement
-                        }
-                    }
-                    else
-                    {
-                        // Fallback for other cultures or default handling
-                        // You can define what happens for non-giant cultures here
-                    }
-                    break;
-                case 9:  // New case for starting at a specific location based on culture
                     startingSettlement = Settlement.All.Where(settlement => settlement.Culture == mainHero.Culture && settlement.IsCastle).GetRandomElementInefficiently();
-                    ChangeOwnerOfSettlementAction.ApplyByBarter(Hero.MainHero, startingSettlement);
                     break;
                 default:
                     break;
