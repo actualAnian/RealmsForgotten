@@ -62,5 +62,9 @@ namespace RealmsForgotten
         [SettingPropertyBool("Stronger athas enslavers", RequireRestart = false, HintText = "You are not the only one who realised infantry moves faster on campaign map when there are spare horses, now enslavers will make use of this")]
         [SettingPropertyGroup("{=CustomSettings_General}General")]
         public bool SmartAthasEnslavers { get; set; } = false;
+
+        [SettingPropertyBool("Enable influence cost for recruiting from different cultures.", RequireRestart = false, HintText = "Lords will spent influence for recruiting from different cultures.")]
+        [SettingPropertyGroup("{=CustomSettings_General}General")]
+        public bool InfluenceCostForDifferentCultures { get; set; } = true;
     }
 }

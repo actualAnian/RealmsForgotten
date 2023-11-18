@@ -18,6 +18,7 @@ using TaleWorlds.SaveSystem;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem.Roster;
 using System.Linq;
+using RealmsForgotten.Quest.SecondUpdate;
 using TaleWorlds.CampaignSystem.Encounters;
 using static RealmsForgotten.Quest.QuestLibrary;
 
@@ -225,7 +226,7 @@ namespace RealmsForgotten.Quest
             }
             protected override void SetDialogs()
             {
-
+    
                 QuestCharacterDialogFlow = DialogFlow.CreateDialogFlow("start", 125).NpcLine(GameTexts.FindText("rf_uliah_text_1").ToString(), null, null)
                 .Condition(() => Hero.OneToOneConversationHero == Uliah && JournalEntries.Count == 1).BeginPlayerOptions()
                 .PlayerOption(GameTexts.FindText("rf_uliah_text_2").ToString(), null).NpcLine(GameTexts.FindText("rf_uliah_text_3").ToString(), null, null).GotoDialogState("start").PlayerOption(GameTexts.FindText("rf_uliah_text_4").ToString())

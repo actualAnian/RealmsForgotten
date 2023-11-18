@@ -16,11 +16,13 @@ using TaleWorlds.Localization;
 
 namespace RealmsForgotten.Patches
 {
-        [HarmonyPatch(typeof(RecruitmentCampaignBehavior), "GetRecruitVolunteerFromIndividual")]
-        static class GetRecruitVolunteerFromIndividualPatch
+    [HarmonyPatch(typeof(RecruitmentCampaignBehavior), "GetRecruitVolunteerFromIndividual")]
+    static class GetRecruitVolunteerFromIndividualPatch
+    {
+        [HarmonyPostfix]
+        static void Postfix(MobileParty side1Party, CharacterObject subject, Hero individual, int bitCode)
         {
-            [HarmonyPostfix]
-            static void Postfix(MobileParty side1Party, CharacterObject subject, Hero individual, int bitCode)
+            if (CustomSettings.Instance?.InfluenceCostForDifferentCultures == true)
             {
                 if (subject.Culture != side1Party.LeaderHero.Culture && !side1Party.ActualClan.IsMinorFaction && !side1Party.ActualClan.IsClanTypeMercenary)
                 {
@@ -28,14 +30,18 @@ namespace RealmsForgotten.Patches
 
                 }
             }
+
         }
-        [HarmonyPatch(typeof(RecruitmentVM), "OnDone")]
-        static class OnDonePatch
+    }
+    [HarmonyPatch(typeof(RecruitmentVM), "OnDone")]
+    static class OnDonePatch
+    {
+        private static MethodInfo originalMethod = AccessTools.Method(typeof(RecruitmentVM), "OnDone");
+        static bool isOriginalMethod;
+        [HarmonyPrefix]
+        static bool Prefix(MBBindingList<RecruitVolunteerTroopVM> ____troopsInCart, RecruitmentVM __instance)
         {
-            private static MethodInfo originalMethod = AccessTools.Method(typeof(RecruitmentVM), "OnDone");
-            static bool isOriginalMethod;
-            [HarmonyPrefix]
-            static bool Prefix(MBBindingList<RecruitVolunteerTroopVM> ____troopsInCart, RecruitmentVM __instance)
+            if (CustomSettings.Instance?.InfluenceCostForDifferentCultures == true)
             {
                 if (isOriginalMethod)
                 {
@@ -64,35 +70,43 @@ namespace RealmsForgotten.Patches
                     }, null));
                 return false;
             }
-        }
 
-        [HarmonyPatch(typeof(PlayerTownVisitCampaignBehavior), "game_menu_recruit_volunteers_on_condition")]
-        static class game_menu_town_recruit_troops_on_conditionPatch
+            return true;
+
+        }
+    }
+
+    [HarmonyPatch(typeof(PlayerTownVisitCampaignBehavior), "game_menu_recruit_volunteers_on_condition")]
+    static class game_menu_town_recruit_troops_on_conditionPatch
+    {
+        [HarmonyPostfix]
+        static void Postfix(ref MenuCallbackArgs args)
         {
-            [HarmonyPostfix]
-            static void Postfix(ref MenuCallbackArgs args)
+            if (CustomSettings.Instance?.InfluenceCostForDifferentCultures == true)
             {
                 if (Settlement.CurrentSettlement.MapFaction.IsAtWarWith(Hero.MainHero.MapFaction) && Settlement.CurrentSettlement.Culture != Hero.MainHero.Culture)
                 {
                     args.IsEnabled = false;
                     args.Tooltip = new TextObject("{=recruitment_war_condition_tooltip_1}You are in war with this faction.");
                 }
-                else if(Clan.PlayerClan.Influence < 0)
+                else if (Clan.PlayerClan.Influence < 0)
                 {
                     args.IsEnabled = false;
                     args.Tooltip = new TextObject("{=recruitment_war_condition_tooltip_2}You have negative influence.");
                 }
             }
-        }
 
-        [HarmonyPatch(typeof(AiVisitSettlementBehavior), "ApproximateNumberOfVolunteersCanBeRecruitedFromSettlement")]
-        static class ApproximateNumberOfVolunteersCanBeRecruitedFromSettlementPatch
-        {
-            [HarmonyPostfix]
-            static void Postfix(Hero hero, Settlement settlement, ref int __result)
-            {
-                if (hero.Clan != null && !hero.Clan.IsClanTypeMercenary && !hero.Clan.IsMinorFaction && settlement.MapFaction.IsAtWarWith(hero.MapFaction))
-                    __result = 0;
-            }
         }
+    }
+
+    [HarmonyPatch(typeof(AiVisitSettlementBehavior), "ApproximateNumberOfVolunteersCanBeRecruitedFromSettlement")]
+    static class ApproximateNumberOfVolunteersCanBeRecruitedFromSettlementPatch
+    {
+        [HarmonyPostfix]
+        static void Postfix(Hero hero, Settlement settlement, ref int __result)
+        {
+            if (CustomSettings.Instance?.InfluenceCostForDifferentCultures == true && ((hero.Clan != null && !hero.Clan.IsClanTypeMercenary && !hero.Clan.IsMinorFaction && settlement.MapFaction.IsAtWarWith(hero.MapFaction)) || hero.Clan.Influence <= 0))
+                __result = 0;
+        }
+    }
 }
