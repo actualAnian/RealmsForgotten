@@ -552,7 +552,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             if (!PartyBase.MainParty.PrisonRoster.Contains(hideoutBoss))
                 PartyBase.MainParty.AddPrisoner(hideoutBoss, 1);
 
-            new LastQuest("rf_last_quest", QuestGiver, CampaignTime.Never, 100000).StartQuest();
+            new FourthQuest("rf_fourth_quest", QuestGiver, CampaignTime.Never, 100000).StartQuest();
             CompleteQuestWithSuccess();
         }
         private void AddEscortLog()
