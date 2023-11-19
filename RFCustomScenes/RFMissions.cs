@@ -6,6 +6,7 @@ using SandBox.View;
 using SandBox.View.Missions;
 using System;
 using System.Collections.Generic;
+using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.Source.Missions;
@@ -92,8 +93,10 @@ namespace RealmsForgotten.RFCustomSettlements
                     new SandboxHighlightsController(),
 
 
-                    ViewCreator.CreateMissionAgentLabelUIHandler(mission),
+                    new MissionAudienceHandler(0.4f + MBRandom.RandomFloat * 0.6f),
 
+
+                    ViewCreator.CreateMissionAgentLabelUIHandler(mission),
                     ViewCreator.CreateMissionSingleplayerEscapeMenu(false),
                     ViewCreator.CreateOptionsUIHandler(),
                     ViewCreator.CreatePhotoModeView(),
