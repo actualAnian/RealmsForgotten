@@ -14,6 +14,7 @@ using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.Core;
 using TaleWorlds.ObjectSystem;
 using System.Collections.Generic;
+using TaleWorlds.Library;
 
 namespace RFCustomSettlements
 {
@@ -69,7 +70,9 @@ namespace RFCustomSettlements
             args.MenuContext.SetBackgroundMeshName(Hero.MainHero.IsFemale ? "arena_female_win" : "arena_male_win");
             Equipment playerEquipment = ArenaSettlementStateHandler.PlayerArenaRewardEquipment != null ? ArenaSettlementStateHandler.PlayerArenaRewardEquipment : MBObjectManager.Instance.GetObject<CharacterObject>("aserai_infantry").Equipment;
             if(playerEquipment != null) Hero.MainHero.BattleEquipment.FillFrom(playerEquipment);
-            Hero.MainHero.Clan.AddRenown(20);
+            int amount = 20;
+            Hero.MainHero.Clan.AddRenown(amount);
+            InformationManager.DisplayMessage(new InformationMessage("Your renown increases by: " + amount));
         }
 
         private void rf_arena_lost_on_init(MenuCallbackArgs args)
@@ -84,8 +87,9 @@ namespace RFCustomSettlements
                 args.MenuContext.SetBackgroundMeshName(Hero.MainHero.IsFemale ? "arena_looser_female" : "arena_looser_male");
                 GameTexts.SetVariable("RF_ARENA_LOSE_TEXT", "Your fate is in the hands of your opponent... the crowd is silent as he approaches you, 'Pathetic' you hear him say, as he spits and walks away from you. You may have been spared, but not for long. As a disgraced warrior, you are taken into the great desert, to perish under the scorching sun");
                 GameTexts.SetVariable("RF_ARENA_LOSE_CONTINUE_TEXT", "You haven't heard the last word from me...");
-                Hero.MainHero.Clan.AddRenown(-20);
-
+                int amount = -20;
+                Hero.MainHero.Clan.AddRenown(amount);
+                InformationManager.DisplayMessage(new InformationMessage("Your renown decreases by: " + MathF.Abs(amount)));
             }
         }
 
@@ -105,7 +109,7 @@ namespace RFCustomSettlements
             MBEquipmentRoster equipmentRoster = MBObjectManager.Instance.GetObject<MBEquipmentRoster>(playerArenaLostEquipmentId);
             try { Hero.MainHero.BattleEquipment.FillFrom(equipmentRoster.DefaultEquipment); }
             catch { RealmsForgotten.HuntableHerds.SubModule.PrintDebugMessage($"Error giving the player equipment {playerArenMasterTalkEquipmentId}", 255, 0, 0); }
-            
+            Hero.MainHero.HitPoints = Hero.MainHero.MaxHitPoints * 1 / 10;
             PlayerEncounter.LeaveSettlement();
             PlayerEncounter.Finish(true);
             Clan.PlayerClan.AddRenown(-10);

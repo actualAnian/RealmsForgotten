@@ -36,7 +36,7 @@ namespace RealmsForgotten.Quest
         {
             public static void game_menu_encounter_order_attack_on_condition_postfix(MenuCallbackArgs args, ref bool __result)
             {
-                if (LastQuest.DisableSendTroops)
+                if (FourthQuest.DisableSendTroops)
                 {
                     args.IsEnabled = false;
                     __result = false;
@@ -44,7 +44,7 @@ namespace RealmsForgotten.Quest
             }
             public static void game_menu_encounter_leave_your_soldiers_behind_on_condition_postfix(MenuCallbackArgs args, ref bool __result)
             {
-                if (LastQuest.DisableSendTroops)
+                if (FourthQuest.DisableSendTroops)
                 {
                     args.IsEnabled = false;
                     __result = false;
@@ -52,7 +52,7 @@ namespace RealmsForgotten.Quest
             }
             public static void game_menu_encounter_surrender_on_condition_postfix(MenuCallbackArgs args, ref bool __result)
             {
-                if (LastQuest.DisableSendTroops)
+                if (FourthQuest.DisableSendTroops)
                 {
                     args.IsEnabled = false;
                     __result = false;
@@ -64,7 +64,7 @@ namespace RealmsForgotten.Quest
         {
             public static void Postfix(ref bool __result)
             {
-                if (LastQuest.DisableSendTroops)
+                if (FourthQuest.DisableSendTroops)
                     __result = false;
             }
         }

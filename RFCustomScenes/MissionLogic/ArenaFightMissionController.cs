@@ -142,7 +142,11 @@ namespace RFCustomSettlements
         {
             Mission.Current.EndMission();
         }
-
+        public override InquiryData OnEndMissionRequest(out bool canLeave)
+        {
+            canLeave = MatchEnded();
+            return null;
+        }
         private bool MatchEnded()
         {
             if (endTimer != null && endTimer.ElapsedTime > 6f) return true;
