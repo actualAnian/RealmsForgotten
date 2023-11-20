@@ -805,6 +805,8 @@ namespace RealmsForgotten
             characterCreationCategory.AddCategoryOption(new("{=CulturedStart40}In a caravan to the Dread city of Nippura", null), new(), null, 0, 0, 0, null, new(this.BalgardLocationOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart36}You leave the caravan right at the gates", null), null, 0, 0, 0, 0, 0);
             characterCreationCategory.AddCategoryOption(new("{=CulturedStart41}In a caravan to the All Khuur city of Ortongard", null), new(), null, 0, 0, 0, null, new(this.OrtongardLocationOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart36}You leave the caravan right at the gates", null), null, 0, 0, 0, 0, 0);
             characterCreationCategory.AddCategoryOption(new("{=CulturedStart42}On a river boat to the Nasoria city of Valendia", null), new(), null, 0, 0, 0, null, new(this.PravendLocationOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart43}You leave the boat and arrive right at the gates", null), null, 0, 0, 0, 0, 0);
+            characterCreationCategory.AddCategoryOption(new("{=CulturedStart48}In a caravan to the Xilantlacay city of Uztlecot", null), new(), null, 0, 0, 0, null, new(UztlecotLocationOnConsequence), new(DoNothingOnApply), new("{=CulturedStart36}You leave the caravan right at the gates", null), null, 0, 0, 0, 0, 0);
+            characterCreationCategory.AddCategoryOption(new("{=CulturedStart50}In a caravan to the free state of Balik", null), new(), null, 0, 0, 0, null, new(this.BalikLocationOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart36}You leave the caravan right at the gates", null), null, 0, 0, 0, 0, 0);
             characterCreationCategory.AddCategoryOption(new("{=CulturedStart44}At your castle", null), new(), null, 0, 0, 0, new(this.CastleLocationOnCondition), new(this.CastleLocationOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart45}At your newly acquired castle", null), null, 0, 0, 0, 0, 0);
             characterCreationCategory.AddCategoryOption(new("{=CulturedStart46}Escaping from your captor", null), new(), null, 0, 0, 0, new(this.EscapingLocationOnCondition), new(this.EscapingLocationOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart47}Having just escaped", null), null, 0, 0, 0, 0, 0);
             characterCreation.AddNewMenu(characterCreationMenu);
@@ -1019,7 +1021,15 @@ namespace RealmsForgotten
         {
             this.Manager.SetLocationOption(9);
         }
-
+        
+        protected void UztlecotLocationOnConsequence(CharacterCreation characterCreation)
+        {
+            this.Manager.SetLocationOption(10);
+        }
+        protected void BalikLocationOnConsequence(CharacterCreation characterCreation)
+        {
+            this.Manager.SetLocationOption(11);
+        }
         protected void DoNothingOnApply(CharacterCreation characterCreation)
         {
         }
