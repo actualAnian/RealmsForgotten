@@ -229,7 +229,7 @@ namespace RealmsForgotten.Managers
                     break;
                 case StartType.VassalFief: // Landed Vassal
                     ApplyInternal(mainHero, gold: 35000, grain: 80, tier: 2, troops: new int[] { 40, 20, 20, 5 }, companions: 1, companionParties: 1, ruler: ruler, startingSettlement: startingSettlement, startOption: StartType.VassalFief);
-                    ownedSettlement ??= Settlement.All.Where(settlement => mainHero.Clan.Kingdom == ruler.Clan.Kingdom && settlement.IsCastle).GetRandomElementInefficiently();
+                    ownedSettlement ??= Settlement.All.Where(settlement => mainHero.Clan?.Kingdom == ruler.Clan?.Kingdom && settlement.IsCastle).GetRandomElementInefficiently();
                     break;
                 case StartType.EscapedPrisoner: // Escaped Prisoner
                     ApplyInternal(mainHero, gold: 0, grain: 1, startOption: StartType.EscapedPrisoner);
@@ -290,7 +290,7 @@ namespace RealmsForgotten.Managers
                                                where settlement.Culture == wanderer.Culture && settlement.IsTown
                                                select settlement).GetRandomElementInefficiently();
                 Hero companion = HeroCreator.CreateSpecialHero(wanderer, randomSettlement, null, null, 33);
-                companion.HeroDeveloper.DeriveSkillsFromTraits(false, wanderer);
+
                 //companion.HasMet = true;
                 companion.Clan = randomSettlement.OwnerClan;
                 companion.ChangeState(Hero.CharacterStates.Active);

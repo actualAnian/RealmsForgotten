@@ -54,6 +54,8 @@ namespace RealmsForgotten.Quest.SecondUpdate
         private float initialDistanceToMonastery;
         [SaveableField(5)]
         private JournalLog captureHellboundLog;
+        [SaveableField(6)] 
+        private bool successInPersuasion;
 
         public static bool DisableSendTroops => Instance?.takeBossToLordLog?.CurrentProgress == 1;
 
@@ -228,7 +230,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 GameTexts.FindText("rf_fourth_quest_hellbound_dialog_2").ToString(), null, ()=>StartPersuasion(true), this);
 
             dialogFlow.AddDialogLine("quest_hellbound_id_2", "quest_hellbound_dialog_1", "quest_hellbound_dialog_options_1",
-                GameTexts.FindText("rf_fourth_quest_hellbound_dialog_2").ToString(), () => !ConversationManager.GetPersuasionProgressSatisfied(), null, this);
+                GameTexts.FindText("rf_fourth_quest_hellbound_dialog_2").ToString(), () => !ConversationManager.GetPersuasionProgressSatisfied(), ()=> successInPersuasion = false, this);
 
 
 
@@ -270,6 +272,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
         private void OnPersuasionComplete()
         {
             captureHellboundLog.UpdateCurrentProgress(2);
+            successInPersuasion = true;
         }
         private void RestartPersuasionTask()
         {

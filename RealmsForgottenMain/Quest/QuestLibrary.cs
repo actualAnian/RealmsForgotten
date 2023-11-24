@@ -68,12 +68,10 @@ namespace RealmsForgotten.Quest
                 }
             }
             disbandParty.AddElementToMemberRoster(CharacterObject.Find("imperial_equite"), 1);
-
-            // disbandParty.RemoveParty();
         }
         public static Hero QuestQueen;
         public static Hero AnoritLord;
-        public static Hero TheOwl => Hero.FindFirst(x => x.StringId == "the_owl_hero");
+        public static Hero TheOwl => Hero.FindFirst(x => x.StringId == "rf_the_owl");
         public static void InitializeVariables()
         {
             QuestQueen = Kingdom.All.First(x => x.StringId == "empire").Leader.Spouse;
