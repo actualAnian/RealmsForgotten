@@ -22,37 +22,11 @@ namespace RealmsForgotten.Patches
         {
             AttackInformation attackInformation = new AttackInformation(attackerAgent, victimAgent, hitObject, in attackCollisionData, in attackerWeapon);
             shieldOnBack = attackInformation.ShieldOnBack;
-            MPPerkObject.MPCombatPerkHandler combatPerkHandler = MPPerkObject.GetCombatPerkHandler(attackerAgent, victimAgent);
-            MissionCombatMechanicsHelper.GetAttackCollisionResults(in attackInformation, crushedThrough, momentumRemaining, in attackerWeapon, cancelDamage, ref attackCollisionData, out combatLog, out var speedBonus);
+            MissionCombatMechanicsHelper.GetAttackCollisionResults(in attackInformation, crushedThrough, momentumRemaining, in attackerWeapon, cancelDamage, ref attackCollisionData, out combatLog, out var _);
             float num = attackCollisionData.InflictedDamage;
-            float num2 = num;
-            if (combatPerkHandler != null && !attackCollisionData.IsFallDamage && !attackCollisionData.IsHorseCharge && speedBonus > 0)
-            {
-                float num3 = (float)speedBonus / 100f;
-                float num4 = num3 * combatPerkHandler.GetSpeedBonusEffectiveness() + num3;
-                attackCollisionData.BaseMagnitude *= (num4 + 1f) / (num3 + 1f);
-            }
-
             if (num > 0f)
             {
-                if (attackCollisionData.AttackBlockedWithShield && combatPerkHandler != null)
-                {
-                    float num5 = 1f + combatPerkHandler.GetShieldDamage(attackCollisionData.CorrectSideShieldBlock) + combatPerkHandler.GetShieldDamageTaken(attackCollisionData.CorrectSideShieldBlock);
-                    num2 = MathF.Max(0f, num2 * num5);
-                }
-
-                num2 = MissionGameModels.Current.AgentApplyDamageModel.CalculateDamage(in attackInformation, in attackCollisionData, in attackerWeapon, num2);
-                if (combatPerkHandler != null)
-                {
-                    float num6 = MathF.Max(0f, 1f + combatPerkHandler.GetDamage(attackerWeapon.CurrentUsageItem, combatLog.DamageType, attackCollisionData.IsAlternativeAttack) + combatPerkHandler.GetDamageTaken(attackerWeapon.CurrentUsageItem, combatLog.DamageType));
-                    if (attackInformation.IsHeadShot && attackerWeapon.CurrentUsageItem != null && (attackerWeapon.CurrentUsageItem.IsConsumable || attackerWeapon.CurrentUsageItem.IsRangedWeapon))
-                    {
-                        num6 += combatPerkHandler.GetRangedHeadShotDamage();
-                    }
-
-                    num2 *= num6;
-                }
-
+                float num2 = MissionGameModels.Current.AgentApplyDamageModel.CalculateDamage(in attackInformation, in attackCollisionData, in attackerWeapon, num);
                 combatLog.ModifiedDamage = MathF.Round(num2 - num);
                 attackCollisionData.InflictedDamage = MathF.Round(num2);
             }
@@ -66,10 +40,10 @@ namespace RealmsForgotten.Patches
             {
                 if (!attackInformation.IsAttackerAIControlled && GameNetwork.IsSessionActive)
                 {
-                    int num7 = (attackCollisionData.IsMissile ? MultiplayerOptions.OptionType.FriendlyFireDamageRangedSelfPercent.GetIntValue() : MultiplayerOptions.OptionType.FriendlyFireDamageMeleeSelfPercent.GetIntValue());
-                    attackCollisionData.SelfInflictedDamage = MathF.Round((float)attackCollisionData.InflictedDamage * ((float)num7 * 0.01f));
-                    int num8 = (attackCollisionData.IsMissile ? MultiplayerOptions.OptionType.FriendlyFireDamageRangedFriendPercent.GetIntValue() : MultiplayerOptions.OptionType.FriendlyFireDamageMeleeFriendPercent.GetIntValue());
-                    attackCollisionData.InflictedDamage = MathF.Round((float)attackCollisionData.InflictedDamage * ((float)num8 * 0.01f));
+                    int num3 = (attackCollisionData.IsMissile ? MultiplayerOptions.OptionType.FriendlyFireDamageRangedSelfPercent.GetIntValue() : MultiplayerOptions.OptionType.FriendlyFireDamageMeleeSelfPercent.GetIntValue());
+                    attackCollisionData.SelfInflictedDamage = MathF.Round((float)attackCollisionData.InflictedDamage * ((float)num3 * 0.01f));
+                    int num4 = (attackCollisionData.IsMissile ? MultiplayerOptions.OptionType.FriendlyFireDamageRangedFriendPercent.GetIntValue() : MultiplayerOptions.OptionType.FriendlyFireDamageMeleeFriendPercent.GetIntValue());
+                    attackCollisionData.InflictedDamage = MathF.Round((float)attackCollisionData.InflictedDamage * ((float)num4 * 0.01f));
                     combatLog.InflictedDamage = attackCollisionData.InflictedDamage;
                 }
 

@@ -276,15 +276,10 @@ namespace RealmsForgotten.Quest
             private void SpawnOwlParty()
             {
                 Clan clan = Clan.FindFirst(x => x.StringId == "clan_empire_north_7");
-                Hero hero = HeroCreator.CreateSpecialHero(
-                    MBObjectManager.Instance.GetObject<CharacterObject>(QueenQuest.TheOwlId), QuestGiver.HomeSettlement, clan,
-                    clan, 30);
-                hero.StringId = "the_owl_hero";
-                hero.CharacterObject.StringId = "the_owl_hero";
 
 
-                MobileParty mobileParty = LordPartyComponent.CreateLordParty("owl_party", hero, MobileParty.MainParty.Position2D, 1f, QuestGiver.HomeSettlement, hero);
-                mobileParty.MemberRoster.RemoveIf(x => x.Character.HeroObject?.StringId != hero.StringId);
+                MobileParty mobileParty = LordPartyComponent.CreateLordParty("owl_party", TheOwl, MobileParty.MainParty.Position2D, 1f, QuestGiver.HomeSettlement, TheOwl);
+                mobileParty.MemberRoster.RemoveIf(x => x.Character.HeroObject?.StringId != TheOwl.StringId);
 
                 mobileParty.InitializeMobilePartyAroundPosition(clan.DefaultPartyTemplate, MobileParty.MainParty.Position2D, 1f, 0, 0);
                 mobileParty.StringId = "owl_party";
@@ -422,7 +417,7 @@ namespace RealmsForgotten.Quest
                 return HiddenHandDialog;
             }
 
-            private DialogFlow SetOwlDialog() => DialogFlow.CreateDialogFlow("start", 125).NpcLine(GameTexts.FindText("rf_the_owl_after_alchemist_text_1")).Condition(() => Hero.OneToOneConversationHero?.StringId == "the_owl_hero" && Hero.OneToOneConversationHero?.PartyBelongedTo != null).PlayerLine(GameTexts.FindText("rf_the_owl_after_alchemist_text_2"))
+            private DialogFlow SetOwlDialog() => DialogFlow.CreateDialogFlow("start", 125).NpcLine(GameTexts.FindText("rf_the_owl_after_alchemist_text_1")).Condition(() => Hero.OneToOneConversationHero?.StringId == "rf_the_owl" && Hero.OneToOneConversationHero?.PartyBelongedTo != null).PlayerLine(GameTexts.FindText("rf_the_owl_after_alchemist_text_2"))
                 .NpcLine(GameTexts.FindText("rf_the_owl_after_alchemist_text_3")).BeginPlayerOptions().PlayerOption(GameTexts.FindText("rf_the_owl_after_alchemist_text_4")).NpcLine(GameTexts.FindText("rf_the_owl_after_alchemist_text_6")).Consequence(() => CompleteWithBetrayal(true)).CloseDialog()
                 .PlayerOption(GameTexts.FindText("rf_the_owl_after_alchemist_text_5")).NpcLine(GameTexts.FindText("rf_the_owl_after_alchemist_text_7")).Consequence(() => CompleteWithBetrayal(false)).CloseDialog().EndPlayerOptions();
             private void CompleteWithBetrayal(bool mergeParty)
