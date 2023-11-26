@@ -18,21 +18,15 @@ namespace RealmsForgotten
 
         private void RegisterAll()
         {
-
             athasFasterConstructions = this.Create("athas_faster_constructions");
-
 
             elveanForestMorale = this.Create("elvean_forest_morale_bonus");
 
-
             empireAdittionalTier = this.Create("empire_additional_tier");
-
 
             allkhuurPrisonersJoinMilitia = this.Create("allkhuur_prisoners_join_militia");
 
-
             dreadrealmSoldiersRevive = this.Create("dreadrealm_soldiers_revive");
-
 
             nasoriaCheaperMercenaries = this.Create("nasoria_cheaper_mercenaries");
 

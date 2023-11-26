@@ -1,4 +1,5 @@
 ﻿
+using System;
 using RealmsForgotten.Utility;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace RealmsForgotten.RFEffects
             else
                 MagicEffectsBehavior.Instance.BurningEffectStopwatch[affectedAgent.Index] = fireHitTimer;
 
-            if (affectorAgent == Agent.Main)
+            if (affectorAgent.IsMainAgent)
             {
                 TextObject fireTextObject = new("{=magic_fire_report}Enemy set on fire!");
 
@@ -42,7 +43,7 @@ namespace RealmsForgotten.RFEffects
         {
             WeaponEffectData weaponEffectData = RFEffectsLibrary.CurrentWeaponEffects[affectorWeapon.Item.StringId];
 
-            List<Agent> agentsInRadius = GetRadiusAgentsOrSingle(affectedAgent, affectorAgent, weaponEffectData, blow);
+            List<Agent> agentsInRadius = GetRadiusAgentsOrSingle(affectedAgent, affectorAgent, weaponEffectData, blow, agent => !affectorAgent.IsEnemyOf(agent));
 
 
 
@@ -62,9 +63,8 @@ namespace RealmsForgotten.RFEffects
                 InformationManager.DisplayMessage(new InformationMessage());
             }
 
-            if (affectorAgent == Agent.Main)
+            if (affectorAgent.IsMainAgent && amount > 0)
             {
-
                 TextObject greensparkTextObject = new("{=greenspark_heal_report}{AMOUNT} troops were speeded!");
                 greensparkTextObject.SetTextVariable("AMOUNT", amount);
 
@@ -76,7 +76,8 @@ namespace RealmsForgotten.RFEffects
         {
             WeaponEffectData weaponEffectData = RFEffectsLibrary.CurrentWeaponEffects[affectorWeapon.Item.StringId];
 
-            List<Agent> agentsInRadius = GetRadiusAgentsOrSingle(affectedAgent, affectorAgent, weaponEffectData, blow);
+
+            List<Agent> agentsInRadius = GetRadiusAgentsOrSingle(affectedAgent, affectorAgent, weaponEffectData, blow, agent => affectorAgent.IsEnemyOf(agent));
 
 
             int amount = 0;
@@ -84,11 +85,15 @@ namespace RealmsForgotten.RFEffects
             {
                 ApplyParticleOnSingleAgent(agentsInRadius[amount], weaponEffectData, agentsInRadius[amount] == affectedAgent ? gameEntity : null);
 
+                if (RFAgentApplyDamageModel.Instance.ModifiedDamageAgents.ContainsKey(agentsInRadius[amount].Index))
+                    RFAgentApplyDamageModel.Instance.ModifiedDamageAgents.Remove(agentsInRadius[amount].Index);
+
                 RFAgentApplyDamageModel.Instance.ModifiedDamageAgents.Add(agentsInRadius[amount].Index, -0.25f);
+
                 agentsInRadius[amount].UpdateCustomDrivenProperties();
             }
 
-            if (affectorAgent == Agent.Main)
+            if (affectorAgent.IsMainAgent && amount > 0)
             {
                 TextObject purplesparkTextObject = new("{=purplespark_heal_report}{AMOUNT} enemies were weakened!");
                 purplesparkTextObject.SetTextVariable("AMOUNT", amount);
@@ -108,7 +113,7 @@ namespace RealmsForgotten.RFEffects
 
 
 
-            if (affectorAgent == Agent.Main)
+            if (affectorAgent.IsMainAgent)
             {
                 TextObject terrorTextObject;
                 if (affectedAgent.GetMorale() <= 0)
@@ -123,19 +128,23 @@ namespace RealmsForgotten.RFEffects
         {
             WeaponEffectData weaponEffectData = RFEffectsLibrary.CurrentWeaponEffects[affectorWeapon.Item.StringId];
 
-            List<Agent> agentsInRadius = GetRadiusAgentsOrSingle(affectedAgent, affectorAgent, weaponEffectData, blow);
+            List<Agent> agentsInRadius = GetRadiusAgentsOrSingle(affectedAgent, affectorAgent, weaponEffectData, blow, agent => !affectorAgent.IsEnemyOf(agent));
 
             int amount = 0;
             for (; amount < agentsInRadius.Count; amount++)
             {
                 ApplyParticleOnSingleAgent(agentsInRadius[amount], weaponEffectData, agentsInRadius[amount] == affectedAgent ? gameEntity : null);
 
+
+                if (RFAgentApplyDamageModel.Instance.ModifiedDamageAgents.ContainsKey(agentsInRadius[amount].Index))
+                    RFAgentApplyDamageModel.Instance.ModifiedDamageAgents.Remove(agentsInRadius[amount].Index);
+
                 RFAgentApplyDamageModel.Instance.ModifiedDamageAgents.Add(agentsInRadius[amount].Index, 0.25f);
 
                 agentsInRadius[amount].UpdateCustomDrivenProperties();
             }
 
-            if (affectorAgent == Agent.Main)
+            if (affectorAgent.IsMainAgent && amount > 0)
             {
                 TextObject healTextObject = new("{=force_heal_report}{AMOUNT} troops were strengthened!");
                 healTextObject.SetTextVariable("AMOUNT", amount);
@@ -150,6 +159,7 @@ namespace RealmsForgotten.RFEffects
         {
             affectedAgent.AgentDrivenProperties.MaxSpeedMultiplier = 0.01f;
             affectedAgent.AgentDrivenProperties.CombatMaxSpeedMultiplier = 0.01f;
+            affectedAgent.AgentDrivenProperties.MountSpeed = 0.01f;
 
             affectedAgent.UpdateCustomDrivenProperties();
 
@@ -158,7 +168,7 @@ namespace RealmsForgotten.RFEffects
 
             MagicEffectsBehavior.Instance.AgentsUnderEffect.Add(new AgentEffectData(affectedAgent, RFEffectsLibrary.CurrentWeaponEffects[affectorWeapon.Item.StringId].Effect, timer, gameEntity));
 
-            if (affectorAgent == Agent.Main)
+            if (affectorAgent.IsMainAgent)
             {
                 TextObject iceTextObject = new("{=ice_heal_report}Enemy freezed!");
                 InformationManager.DisplayMessage(new InformationMessage(iceTextObject.ToString(), Color.FromUint(2147280)));
@@ -169,23 +179,23 @@ namespace RealmsForgotten.RFEffects
         {
             WeaponEffectData weaponEffectData = RFEffectsLibrary.CurrentWeaponEffects[affectorWeapon.Item.StringId];
 
-            List<Agent> agentsInRadius = GetRadiusAgentsOrSingle(affectedAgent, affectorAgent, weaponEffectData, blow);
+            List<Agent> agentsInRadius = GetRadiusAgentsOrSingle(affectedAgent, affectorAgent, weaponEffectData, blow, agent => !affectorAgent.IsEnemyOf(agent));
 
-            int i = 0;
+            int amount = 0;
 
-            for (; i < agentsInRadius.Count; i++)
+            for (; amount < agentsInRadius.Count; amount++)
             {
-                ApplyParticleOnSingleAgent(agentsInRadius[i], weaponEffectData, agentsInRadius[i] == affectedAgent ? gameEntity : null);
+                ApplyParticleOnSingleAgent(agentsInRadius[amount], weaponEffectData, agentsInRadius[amount] == affectedAgent ? gameEntity : null);
 
-                float HealedAgentHealth = agentsInRadius[i].Health + 20f;
-                agentsInRadius[i].Health = HealedAgentHealth > 100 ? 100 : HealedAgentHealth;
-                i++;
+                float HealedAgentHealth = agentsInRadius[amount].Health + 20f;
+                agentsInRadius[amount].Health = HealedAgentHealth > 100 ? 100 : HealedAgentHealth;
+                amount++;
             }
 
-            if (affectorAgent == Agent.Main)
+            if (affectorAgent.IsMainAgent && amount > 0)
             {
                 TextObject healTextObject = new("{=magic_heal_report}{AMOUNT} troops were healed!");
-                healTextObject.SetTextVariable("AMOUNT", i);
+                healTextObject.SetTextVariable("AMOUNT", amount);
                 InformationManager.DisplayMessage(new InformationMessage(healTextObject.ToString(), Color.FromUint(9690633)));
             }
         }
@@ -199,14 +209,14 @@ namespace RealmsForgotten.RFEffects
 
             MagicEffectsBehavior.Instance.AgentsUnderEffect.Add(new AgentEffectData(agent, weaponEffectData.Effect, timer, firstAffectedGameEntity));
         }
-        private static List<Agent> GetRadiusAgentsOrSingle(Agent affectedAgent, Agent affectorAgent, WeaponEffectData weaponEffectData, Blow blow)
+        private static List<Agent> GetRadiusAgentsOrSingle(Agent affectedAgent, Agent affectorAgent, WeaponEffectData weaponEffectData, Blow blow, Func<Agent, bool> condition)
         {
             float areaOfEffect = weaponEffectData.AreaOfEffect;
 
             if (areaOfEffect <= 0)
                 return new List<Agent>() { affectedAgent };
 
-            return RFUtility.GetAgentsInRadius(blow.GlobalPosition.AsVec2, areaOfEffect).Where(agent => !agent.IsEnemyOf(affectorAgent)).ToList();
+            return RFUtility.GetAgentsInRadius(blow.GlobalPosition.AsVec2, areaOfEffect).Where(condition).ToList();
         }
     }
 }
