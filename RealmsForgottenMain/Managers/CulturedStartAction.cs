@@ -225,7 +225,7 @@ namespace RealmsForgotten.Managers
                                                where settlement.Culture == wanderer.Culture && settlement.IsTown
                                                select settlement).GetRandomElementInefficiently();
                 Hero companion = HeroCreator.CreateSpecialHero(wanderer, randomSettlement, null, null, 33);
-                companion.HeroDeveloper.DeriveSkillsFromTraits(false, wanderer);
+                //companion.HeroDeveloper.DeriveSkillsFromTraits(false, wanderer);
                 //companion.HasMet = true;
                 companion.Clan = randomSettlement.OwnerClan;
                 companion.ChangeState(Hero.CharacterStates.Active);

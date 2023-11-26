@@ -49,7 +49,7 @@ namespace SandBox.Missions.MissionLogics.Towns
                 list.Add(new LeaveMissionLogic());
                 list.Add(new SandBoxMissionHandler());
                 list.Add(new MissionAgentLookHandler());
-                list.Add(new MissionAgentHandler(location, "sp_prison_break"));
+                list.Add(new MissionAgentHandler(location, null, "sp_prison_break"));
                 list.Add(new HeroSkillHandler());
                 list.Add(new MissionFightHandler());
                 list.Add(new BattleAgentLogic());
