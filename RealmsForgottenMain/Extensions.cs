@@ -48,5 +48,13 @@ namespace RealmsForgotten
                 yield return basicCharacterObject.Equipment[equipmentIndex].Item;
             }
         }
+
+
+        public static void SetWeaponAmount(this MissionEquipment equipment, EquipmentIndex index, short count)
+        {
+            MissionWeapon weapon = equipment[index];
+            weapon.Amount = count;
+            equipment[index] = weapon;
+        }
     }
 }

@@ -19,7 +19,4 @@ namespace RealmsForgotten.Patches
                 __result = RFSkills.Arcane;
         }
     }
-
-    //MissionWeapon SetAmmo
-    //Gui
 }
