@@ -83,6 +83,7 @@ namespace RealmsForgotten
             if (mission != null)
             {
                 mission.AddMissionBehavior(new RFEnchantedWeaponsMissionBehavior());
+                mission.AddMissionBehavior(new SpellAmmoMissionBehavior());
 
                 ItemRosterElement elixir = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("elixir_rfmisc"));
                 ItemRosterElement berserker = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("berzerker_potion"));
@@ -127,6 +128,7 @@ namespace RealmsForgotten
             base.OnSubModuleLoad();
             TextObject coreContentDisabledReason = new("Disabled during installation.", null);
             UIConfig.DoNotUseGeneratedPrefabs = true;
+            
             RemoveSandboxAndStoryOptions();
 
             Module.CurrentModule.AddInitialStateOption(

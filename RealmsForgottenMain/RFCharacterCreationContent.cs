@@ -15,6 +15,8 @@ using TaleWorlds.ObjectSystem;
 using RealmsForgotten.CustomSkills;
 using TaleWorlds.CampaignSystem.Extensions;
 using System.Linq;
+using System.Reflection;
+using HarmonyLib;
 
 namespace RealmsForgotten
 {
@@ -135,6 +137,12 @@ namespace RealmsForgotten
             foreach (CultureObject cultureObject in MBObjectManager.Instance.GetObjectTypeList<CultureObject>())
             {
                 string cultureId = cultureObject.StringId;
+
+                FieldInfo _description = AccessTools.Field(typeof(PropertyObject), "_description");
+                
+                _description.SetValue(DefaultCulturalFeats.BattanianMilitiaFeat, new TextObject("Towns owned by Xilantlacay rulers have +1 militia production."));
+                _description.SetValue(DefaultCulturalFeats.KhuzaitAnimalProductionFeat, new TextObject("25% production bonus to horse, mule, cow and sheep in villages owned by All Khuur rulers."));
+
                 switch (cultureId)
                 {
                     case "vlandia":
