@@ -67,8 +67,6 @@ namespace RealmsForgotten.RFEffects
                     BurningEffectStopwatch.Remove(agentEffect.Agent.Index);
                 }
             }
-
-
         }
 
 
@@ -86,7 +84,6 @@ namespace RealmsForgotten.RFEffects
 
             }
         }
-
 
         private void ModifyDamageTick(AgentEffectData agentEffect)
         {

@@ -13,6 +13,7 @@ using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.Conversation;
 using TaleWorlds.CampaignSystem.Conversation.Persuasion;
+using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.Extensions;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.GameMenus;
@@ -22,6 +23,7 @@ using TaleWorlds.CampaignSystem.Party.PartyComponents;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
+using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
@@ -35,7 +37,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
         public override void OnAgentHit(Agent affectedAgent, Agent affectorAgent, in MissionWeapon affectorWeapon, in Blow blow,
             in AttackCollisionData attackCollisionData)
         {
-            if(affectedAgent.Character?.Culture.StringId == "hellbound_outlaw" && affectedAgent.Team == Mission.AttackerTeam)
+            if(affectedAgent.Team == Mission.AttackerTeam)
                 affectedAgent.Health += blow.InflictedDamage + 10;
         }
     }
@@ -45,17 +47,20 @@ namespace RealmsForgotten.Quest.SecondUpdate
         [SaveableField(0)]
         private JournalLog takeBossToLordLog;
         [SaveableField(1)] 
-        private float initialDistanceFromAnoritLord;
+        private float initialDistanceFromQuestGiver;
         [SaveableField(2)]
         private JournalLog goToMonasteryLog;
-        [SaveableField(3)]
-        private Settlement questMonastery;
+
+        public static Settlement QuestMonastery => Settlement.Find("retreat_monastery");
+
         [SaveableField(4)]
         private float initialDistanceToMonastery;
         [SaveableField(5)]
         private JournalLog captureHellboundLog;
         [SaveableField(6)] 
         private bool successInPersuasion;
+        [SaveableField(7)]
+        private JournalLog nextUpdateLog;
 
         public static bool DisableSendTroops => Instance?.takeBossToLordLog?.CurrentProgress == 1;
 
@@ -124,29 +129,30 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
         protected override void HourlyTick()
         {
-            if (MobileParty.MainParty.Position2D.DistanceSquared(AnoritLord.PartyBelongedTo.Position2D) <=
-                initialDistanceFromAnoritLord * 0.7 && takeBossToLordLog?.CurrentProgress == 0)
+            if (MobileParty.MainParty.Position2D.DistanceSquared(QuestGiver.PartyBelongedTo != null ? QuestGiver.PartyBelongedTo.Position2D : QuestGiver.CurrentSettlement.GatePosition) <= initialDistanceFromQuestGiver * 0.7 && takeBossToLordLog?.CurrentProgress == 0)
             {
                 takeBossToLordLog?.UpdateCurrentProgress(1);
                 Clan hellboundClan =
-                    Clan.FindFirst(x => x.StringId == "hellbound_outlaw");
+                    Clan.FindFirst(x => x.StringId == "nelrog_raiders");
 
                 MobileParty hellboundParty = BanditPartyComponent.CreateBanditParty("quest_hellbound_party", hellboundClan, Settlement.Find("hideout_forest_13").Hideout,
                     true);
                 TroopRoster hellBoundTroopRoster = TroopRoster.CreateDummyTroopRoster();
-                PartyTemplateObject partyTemplate = hellboundClan.DefaultPartyTemplate;
 
+                string[] characters = new[] { "cs_nelrog_bandits_bandit", "cs_nelrog_bandits_raider", "cs_nelrog_bandits_chief" };
+                hellBoundTroopRoster.AddToCounts(CharacterObject.Find("cs_nelrog_bandits_boss"), 1);
                 for (int i = 0; i < MobileParty.MainParty.MemberRoster.TotalManCount; i++)
                 {
-                    hellBoundTroopRoster.AddToCounts(partyTemplate.Stacks[MBRandom.RandomInt(0, partyTemplate.Stacks.Count-1)].Character, 5);
+                    hellBoundTroopRoster.AddToCounts(CharacterObject.Find(characters.GetRandomElement()), 3);
                 }
 
-                hellboundParty.InitializeMobilePartyAtPosition(hellBoundTroopRoster, TroopRoster.CreateDummyTroopRoster(), MobileParty.MainParty.Position2D);
+                hellboundParty.InitializeMobilePartyAtPosition(hellBoundTroopRoster,
+                    TroopRoster.CreateDummyTroopRoster(), MobileParty.MainParty.Position2D);
+
                 hellboundParty.Ai.SetMoveEngageParty(MobileParty.MainParty);
-                hellboundParty.Aggressiveness = 10f;
             }
 
-            if (MobileParty.MainParty.Position2D.DistanceSquared(questMonastery.GatePosition) <= initialDistanceToMonastery * 0.7 && takeBossToLordLog?.CurrentProgress == 3)
+            if (MobileParty.MainParty.Position2D.DistanceSquared(QuestMonastery.GatePosition) <= initialDistanceToMonastery * 0.7 && takeBossToLordLog?.CurrentProgress == 3)
             {
                 takeBossToLordLog.UpdateCurrentProgress(4);
                 CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter), new ConversationCharacterData(TheOwl.CharacterObject));
@@ -157,11 +163,10 @@ namespace RealmsForgotten.Quest.SecondUpdate
         {
             SetDialogs();
             TextObject textObject = GameTexts.FindText("rf_fourth_quest_first_log");
-            textObject.SetCharacterProperties("LORD", AnoritLord.CharacterObject);
+            textObject.SetCharacterProperties("LORD", QuestGiver.CharacterObject);
             takeBossToLordLog = AddLog(textObject);
 
-            initialDistanceFromAnoritLord =
-                MobileParty.MainParty.Position2D.DistanceSquared(AnoritLord.PartyBelongedTo.Position2D);
+            initialDistanceFromQuestGiver = MobileParty.MainParty.Position2D.DistanceSquared(QuestGiver.PartyBelongedTo != null ? QuestGiver.PartyBelongedTo.Position2D : QuestGiver.CurrentSettlement.GatePosition);
         }
 
         protected override void InitializeQuestOnGameLoad()
@@ -185,11 +190,11 @@ namespace RealmsForgotten.Quest.SecondUpdate
         {
             takeBossToLordLog.UpdateCurrentProgress(3);
             AddHeroToPartyAction.Apply(TheOwl, MobileParty.MainParty);
-            questMonastery = Settlement.Find("retreat_monastery");
-            AddTrackedObject(questMonastery);
+            AddTrackedObject(QuestMonastery);
             goToMonasteryLog = AddLog(GameTexts.FindText("rf_fourth_quest_second_log"));
-            questMonastery.IsVisible = true;
-            initialDistanceToMonastery = MobileParty.MainParty.Position2D.DistanceSquared(questMonastery.GetPosition2D);
+            QuestMonastery.IsVisible = true;
+            QuestMonastery.IsInspected = true;
+            initialDistanceToMonastery = MobileParty.MainParty.Position2D.DistanceSquared(QuestMonastery.GetPosition2D);
         }
 
         private void ShowWaitScreen()
@@ -227,7 +232,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 .GotoDialogState("quest_hellbound_dialog_start");
 
             dialogFlow.AddDialogLine("quest_hellbound_id_1", "quest_hellbound_dialog_start", "quest_hellbound_dialog_1",
-                GameTexts.FindText("rf_fourth_quest_hellbound_dialog_2").ToString(), null, ()=>StartPersuasion(true), this);
+                GameTexts.FindText("rf_fourth_quest_hellbound_dialog_2").ToString(), null, StartPersuasion, this);
 
             dialogFlow.AddDialogLine("quest_hellbound_id_2", "quest_hellbound_dialog_1", "quest_hellbound_dialog_options_1",
                 GameTexts.FindText("rf_fourth_quest_hellbound_dialog_2").ToString(), () => !ConversationManager.GetPersuasionProgressSatisfied(), ()=> successInPersuasion = false, this);
@@ -244,7 +249,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
 
             dialogFlow.AddDialogLine("quest_hellbound_id_5", "quest_hellbound_dialog_outcome_1", "quest_hellbound_dialog_options_2",
-                GameTexts.FindText("rf_fourth_quest_hellbound_dialog_npc_1").ToString(), ConversationManager.GetPersuasionProgressSatisfied, RestartPersuasionTask, this);
+                GameTexts.FindText("rf_fourth_quest_hellbound_dialog_npc_1").ToString(),()=> ConversationManager.GetPersuasionProgress() == 1, null, this);
 
             dialogFlow.AddDialogLine("quest_hellbound_id_6", "quest_hellbound_dialog_outcome_1", "quest_hellbound_dialog_options_2",
                 GameTexts.FindText("rf_fourth_quest_hellbound_dialog_npc_1_wrong").ToString(), () => !ConversationManager.GetPersuasionProgressSatisfied(), null, this);
@@ -252,17 +257,17 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
 
             dialogFlow.AddPlayerLine("quest_hellbound_id_7", "quest_hellbound_dialog_options_2", "quest_hellbound_dialog_outcome_2",
-                "{=!}{PERSUADE_ATTEMPT_1}", PersuasionOptionCondition_1, PersuasionOptionConsequence_1, this, 100, null, () => _persuasionTask.Options.ElementAt(0));
+                "{=!}{PERSUADE_ATTEMPT_3}", PersuasionOptionCondition_3, PersuasionOptionConsequence_3, this, 100, null, () => _persuasionTask.Options.ElementAt(0));
 
             dialogFlow.AddPlayerLine("quest_hellbound_id_8", "quest_hellbound_dialog_options_2", "quest_hellbound_dialog_outcome_2",
-                "{=!}{PERSUADE_ATTEMPT_2}", PersuasionOptionCondition_2, PersuasionOptionConsequence_2, this, 100, null, () => _persuasionTask.Options.ElementAt(1));
+                "{=!}{PERSUADE_ATTEMPT_4}", PersuasionOptionCondition_4, PersuasionOptionConsequence_4, this, 100, null, () => _persuasionTask.Options.ElementAt(1));
 
 
             dialogFlow.AddDialogLine("quest_hellbound_id_9", "quest_hellbound_dialog_outcome_2", "close_window",
-                GameTexts.FindText("rf_fourth_quest_hellbound_dialog_npc_1").ToString(), ConversationManager.GetPersuasionProgressSatisfied, OnPersuasionComplete, this);
+                GameTexts.FindText("rf_fourth_quest_hellbound_dialog_npc_2").ToString(), ConversationManager.GetPersuasionProgressSatisfied, OnPersuasionComplete, this);
 
             dialogFlow.AddDialogLine("quest_hellbound_id_10", "quest_hellbound_dialog_outcome_2", "close_window",
-                GameTexts.FindText("rf_fourth_quest_hellbound_dialog_npc_1_wrong").ToString(), () => !ConversationManager.GetPersuasionProgressSatisfied(), OnPersuasionComplete, this);
+                GameTexts.FindText("rf_fourth_quest_hellbound_dialog_npc_2_wrong").ToString(), () => !ConversationManager.GetPersuasionProgressSatisfied(), OnPersuasionComplete, this);
 
 
             return dialogFlow;
@@ -273,11 +278,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
         {
             captureHellboundLog.UpdateCurrentProgress(2);
             successInPersuasion = true;
-        }
-        private void RestartPersuasionTask()
-        {
-            _persuasionTask = null;
-            StartPersuasion(false);
+            nextUpdateLog = AddLog(GameTexts.FindText("rf_last_quest_notification"));
         }
         private bool PersuasionOptionCondition_1()
         {
@@ -303,6 +304,30 @@ namespace RealmsForgotten.Quest.SecondUpdate
             }
             return false;
         }
+        private bool PersuasionOptionCondition_3()
+        {
+            if (this._persuasionTask.Options.Count > 0)
+            {
+                TextObject textObject = new TextObject("{=bSo9hKwr}{PERSUASION_OPTION_LINE} {SUCCESS_CHANCE}", null);
+                textObject.SetTextVariable("SUCCESS_CHANCE", PersuasionHelper.ShowSuccess(this._persuasionTask.Options.ElementAt(2), false));
+                textObject.SetTextVariable("PERSUASION_OPTION_LINE", this._persuasionTask.Options.ElementAt(2).Line);
+                MBTextManager.SetTextVariable("PERSUADE_ATTEMPT_3", textObject, false);
+                return true;
+            }
+            return false;
+        }
+        private bool PersuasionOptionCondition_4()
+        {
+            if (_persuasionTask.Options.Count > 1)
+            {
+                TextObject textObject = new TextObject("{=bSo9hKwr}{PERSUASION_OPTION_LINE} {SUCCESS_CHANCE}");
+                textObject.SetTextVariable("SUCCESS_CHANCE", PersuasionHelper.ShowSuccess(_persuasionTask.Options.ElementAt(3), false));
+                textObject.SetTextVariable("PERSUASION_OPTION_LINE", _persuasionTask.Options.ElementAt(3).Line);
+                MBTextManager.SetTextVariable("PERSUADE_ATTEMPT_4", textObject);
+                return true;
+            }
+            return false;
+        }
         private void PersuasionOptionConsequence_1()
         {
             if (_persuasionTask.Options.Count > 0)
@@ -318,25 +343,47 @@ namespace RealmsForgotten.Quest.SecondUpdate
             }
         }
 
+        private void PersuasionOptionConsequence_3()
+        {
+            if (_persuasionTask.Options.Count > 2)
+            {
+                _persuasionTask.Options[2].BlockTheOption(true);
+            }
+        }
+        private void PersuasionOptionConsequence_4()
+        {
+            if (_persuasionTask.Options.Count > 3)
+            {
+                _persuasionTask.Options[3].BlockTheOption(true);
+            }
+        }
+
         private PersuasionTask _persuasionTask;
 
-        private void StartPersuasion(bool isFirstPersuasion)
+        private void StartPersuasion()
         {
             PersuasionTask persuasionTask = new PersuasionTask(0);
 
-            persuasionTask.FinalFailLine = GameTexts.FindText(isFirstPersuasion ? "rf_fourth_quest_hellbound_dialog_npc_1_wrong" : "rf_fourth_quest_hellbound_dialog_npc_2_wrong");
+            persuasionTask.FinalFailLine = GameTexts.FindText("rf_fourth_quest_hellbound_dialog_npc_2_wrong");
             persuasionTask.TryLaterLine = null;
-            persuasionTask.SpokenLine = GameTexts.FindText(isFirstPersuasion ? "rf_fourth_quest_hellbound_dialog_2" : "rf_fourth_quest_hellbound_dialog_npc_1");
+            persuasionTask.SpokenLine = GameTexts.FindText("rf_fourth_quest_hellbound_dialog_2");
 
-            PersuasionOptionArgs option = new PersuasionOptionArgs(DefaultSkills.Charm, DefaultTraits.Calculating, TraitEffect.Positive, PersuasionArgumentStrength.ExtremelyEasy, true,
-                GameTexts.FindText(isFirstPersuasion ? "rf_fourth_quest_hellbound_dialog_player_1" : "rf_fourth_quest_hellbound_dialog_player_2"), null, false, false, false);
+            PersuasionOptionArgs option = new PersuasionOptionArgs(DefaultSkills.Charm, DefaultTraits.Calculating, TraitEffect.Positive, PersuasionArgumentStrength.ExtremelyEasy, false,
+                GameTexts.FindText("rf_fourth_quest_hellbound_dialog_player_1"), null, false, false, false);
             persuasionTask.AddOptionToTask(option);
             PersuasionOptionArgs option2 = new PersuasionOptionArgs(DefaultSkills.Charm, DefaultTraits.Calculating, TraitEffect.Negative, PersuasionArgumentStrength.ExtremelyHard, false,
-                GameTexts.FindText(isFirstPersuasion ?"rf_fourth_quest_hellbound_dialog_player_1_wrong" : "rf_fourth_quest_hellbound_dialog_player_2_wrong"), null, false, false, false);
+                GameTexts.FindText("rf_fourth_quest_hellbound_dialog_player_1_wrong"), null, false, false, false);
             persuasionTask.AddOptionToTask(option2);
 
-            _persuasionTask = persuasionTask;
+            PersuasionOptionArgs option3 = new PersuasionOptionArgs(DefaultSkills.Charm, DefaultTraits.Calculating, TraitEffect.Positive, PersuasionArgumentStrength.ExtremelyEasy, false,
+                GameTexts.FindText("rf_fourth_quest_hellbound_dialog_player_2"), null, false, false, false);
+            persuasionTask.AddOptionToTask(option3);
+            PersuasionOptionArgs option4 = new PersuasionOptionArgs(DefaultSkills.Charm, DefaultTraits.Calculating, TraitEffect.Negative, PersuasionArgumentStrength.ExtremelyHard, false,
+                GameTexts.FindText("rf_fourth_quest_hellbound_dialog_player_2_wrong"), null, false, false, false);
+            persuasionTask.AddOptionToTask(option4);
 
+            _persuasionTask = persuasionTask;
+            
             ConversationManager.StartPersuasion(2f, 1f, 1f, 1f, 1f, 0f, PersuasionDifficulty.MediumHard);
         }
         private DialogFlow FirstDialogFlow => DialogFlow.CreateDialogFlow("start", 125)
@@ -368,7 +415,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             .NpcLine(GameTexts.FindText("rf_fourth_quest_owl_dialog_5")).Consequence(OwlGivesTableConsequence);
 
         private DialogFlow MonkDialogFlow => DialogFlow.CreateDialogFlow("start", 125).PlayerLine(GameTexts.FindText("rf_fourth_quest_monk_dialog_1"))
-            .Condition(() => CharacterObject.OneToOneConversationCharacter?.StringId == "quest_monastery_priest" && goToMonasteryLog?.CurrentProgress == 0 && Settlement.CurrentSettlement == questMonastery)
+            .Condition(() => CharacterObject.OneToOneConversationCharacter?.StringId == "quest_monastery_priest" && goToMonasteryLog?.CurrentProgress == 0 && Settlement.CurrentSettlement == QuestMonastery)
             .NpcLine(GameTexts.FindText("rf_fourth_quest_monk_dialog_2"))
             .PlayerLine(GameTexts.FindText("rf_fourth_quest_monk_dialog_3"))
             .NpcLine(GameTexts.FindText("rf_fourth_quest_monk_dialog_4"))
