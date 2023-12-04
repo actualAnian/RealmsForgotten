@@ -50,7 +50,7 @@ namespace RealmsForgotten.Quest
         {
             if (!escapedPrison && anoritLordConversationTime != CampaignTime.Never && anoritLordConversationTime.ElapsedHoursUntilNow >= 40 && !PlayerEncounter.InsideSettlement && CampaignTime.Now.IsNightTime)
             {
-                QuestUIManager.ShowNotification(GameTexts.FindText("rf_kidnapped_text").ToString(), QueenQuest.OpenPrisonBreak, true, "prisoner_image");
+                QuestUIManager.ShowNotification(GameTexts.FindText("rf_kidnapped_text").ToString(), SecondQuest.OpenPrisonBreak, true, "prisoner_image");
                 anoritLordConversationTime = CampaignTime.Never;
                 escapedPrison = true;
 
@@ -91,7 +91,7 @@ namespace RealmsForgotten.Quest
             }
             else
             {
-                QueenQuest qb = (QueenQuest)Campaign.Current.QuestManager.Quests.FirstOrDefault(x => x.GetType() == typeof(QueenQuest));
+                SecondQuest qb = (SecondQuest)Campaign.Current.QuestManager.Quests.FirstOrDefault(x => x.GetType() == typeof(SecondQuest));
 
                 if (qb != null)
                     qb.CompleteQuestWithSuccess();
@@ -108,7 +108,7 @@ namespace RealmsForgotten.Quest
         {
             SaveCurrentQuestCampaignBehavior currentQuestCampaignBehavior = SaveCurrentQuestCampaignBehavior.Instance;
 
-            if (currentQuestCampaignBehavior?.questStoppedAt != null && !Campaign.Current.QuestManager.Quests.Any(x => x is PersuadeAthasNpcQuest))
+            if (currentQuestCampaignBehavior?.questStoppedAt != null && !Campaign.Current.QuestManager.Quests.Any(x => x is ThirdQuest))
             {
                 Hero hero = null;
                 if (currentQuestCampaignBehavior.questStoppedAt == "anorit")
@@ -121,7 +121,7 @@ namespace RealmsForgotten.Quest
 
 
 
-                new PersuadeAthasNpcQuest("athas_quest", hero, CampaignTime.Never, 0).StartQuest();
+                new ThirdQuest("athas_quest", hero, CampaignTime.Never, 0).StartQuest();
 
                 questStoppedAt = null;
             }

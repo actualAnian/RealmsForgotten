@@ -81,8 +81,8 @@ namespace RealmsForgotten.Behaviors
             {
                 if (studyStartTime.ElapsedHoursUntilNow >= 1)
                 {
-                    Hero.MainHero.AddSkillXp(RFSkills.Faith, (Hero.MainHero.GetSkillValue(RFSkills.Faith) + 1) * 20);
-                    Hero.MainHero.ChangeHeroGold(-12);
+                    Hero.MainHero.AddSkillXp(RFSkills.Faith, (Hero.MainHero.GetSkillValue(RFSkills.Faith) + 1) * 15);
+                    Hero.MainHero.ChangeHeroGold(-20);
                     studyStartTime = CampaignTime.Now;
                 }
 

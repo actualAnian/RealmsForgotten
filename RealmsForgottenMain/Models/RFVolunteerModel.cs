@@ -19,7 +19,7 @@ namespace RealmsForgotten.Models
                 IFaction buyerKingdom = buyerHero.MapFaction;
                 if (buyerKingdom == null || buyerHero.Clan != null && buyerHero.Clan.IsClanTypeMercenary && buyerHero.Clan.IsMinorFaction)
                     return baseValue;
-                if (buyerKingdom.IsAtWarWith(sellerHero.HomeSettlement.MapFaction))
+                if (buyerKingdom.IsAtWarWith(sellerHero.HomeSettlement.MapFaction) || (buyerHero.Clan?.Influence <= 0 && buyerHero?.Culture != sellerHero?.Culture))
                     return 0;
             }
 

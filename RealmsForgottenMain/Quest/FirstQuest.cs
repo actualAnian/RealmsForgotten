@@ -384,7 +384,7 @@ namespace RealmsForgotten.Quest
             {
                 CompleteQuestWithSuccess();
                 GiveGoldAction.ApplyBetweenCharacters(QuestQueen, Hero.MainHero, 20000, false);
-                new QueenQuest("rf_queen_quest", QuestQueen, CampaignTime.Never, 50000, false).StartQuest();
+                new SecondQuest("rf_queen_quest", QuestQueen, CampaignTime.Never, 50000, false).StartQuest();
             }
             private DialogFlow SetQueenDialog() => DialogFlow.CreateDialogFlow("start", 125).PlayerLine(GameTexts.FindText("rf_first_quest_queen_text_1").ToString())
          .Condition(() => MobileParty.MainParty.MemberRoster.GetTroopRoster().Any(x => x.Character.HeroObject?.StringId == UliahId) && Hero.OneToOneConversationHero == QuestQueen && _bringZombiesJournalLog == null && !_smallPlayerArmyPendentQuest).BeginNpcOptions().NpcOption(GameTexts.FindText("rf_first_quest_queen_text_2").ToString(), () => PartyBase.MainParty?.NumberOfAllMembers >= minimumSoldiersAmountForQuest)
@@ -445,7 +445,7 @@ namespace RealmsForgotten.Quest
 
                 PlayerEncounter.Finish();
                 CompleteQuestWithBetrayal();
-                QueenQuest queenQuest = new QueenQuest("rf_queen_quest", QuestQueen, CampaignTime.Never, 50000, true);
+                SecondQuest queenQuest = new SecondQuest("rf_queen_quest", QuestQueen, CampaignTime.Never, 50000, true);
                 queenQuest.StartQuest();
                 queenQuest.OwlDialogConsequence();
             }
