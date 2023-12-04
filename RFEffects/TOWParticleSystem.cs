@@ -6,6 +6,7 @@ using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.RFEffects
 {
+    //Thanks to TOW for providing this class
     public class TOWParticleSystem
     {
         public static ParticleSystem ApplyParticleToAgent(Agent agent, string particleId, out GameEntity childEntities, ParticleIntensity intensity = ParticleIntensity.Low, bool rootOnly = false)

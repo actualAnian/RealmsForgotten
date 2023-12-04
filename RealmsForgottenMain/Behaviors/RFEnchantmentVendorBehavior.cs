@@ -107,8 +107,15 @@ namespace RealmsForgotten.Behaviors
                     }
                 }).GotoDialogState("start").PlayerOption("{=leave}Leave.").CloseDialog().EndPlayerOptions();
 
+
+            DialogFlow wandererDialogFix = DialogFlow.CreateDialogFlow("wanderer_preintroduction", 115);
+            wandererDialogFix.AddDialogLine("wanderer_fix", "wanderer_preintroduction", "close_window", GameTexts.FindText("wanderer_dialog_fix").ToString(),
+                ()=>Hero.OneToOneConversationHero?.StringId == "rf_the_owl" || Hero.OneToOneConversationHero?.StringId == "rf_athas_scholar", null, this, 115);
+
+
             Campaign.Current.ConversationManager.AddDialogFlow(dialog, this);
             Campaign.Current.ConversationManager.AddDialogFlow(dialog2, this);
+            Campaign.Current.ConversationManager.AddDialogFlow(wandererDialogFix, this);
 
         }
         

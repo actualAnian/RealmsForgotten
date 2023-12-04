@@ -81,7 +81,7 @@ namespace RealmsForgotten.Quest
         {
             public static bool Prefix(Hero hero)
             {
-                if (PersuadeAthasNpcQuest.MustAvoidPrisonerEscape && hero.CharacterObject == PersuadeAthasNpcQuest.PrisonerCharacter)
+                if (ThirdQuest.MustAvoidPrisonerEscape && hero.CharacterObject == ThirdQuest.PrisonerCharacter)
                 {
                     return false;
                 }
