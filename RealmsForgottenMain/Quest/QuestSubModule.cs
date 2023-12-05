@@ -68,9 +68,9 @@ namespace RealmsForgotten.Quest
         protected override void DefineClassTypes()
         {
             base.AddClassDefinition(typeof(RescueUliahBehavior.RescueUliahQuest), 1);
-            base.AddClassDefinition(typeof(QueenQuest), 2);
+            base.AddClassDefinition(typeof(SecondQuest), 2);
             base.AddClassDefinition(typeof(AnoritFindRelicsQuest), 3);
-            base.AddClassDefinition(typeof(PersuadeAthasNpcQuest), 4);
+            base.AddClassDefinition(typeof(ThirdQuest), 4);
             base.AddClassDefinition(typeof(QuestCaravanPartyComponent), 5);
             base.AddClassDefinition(typeof(FourthQuest), 6);
 

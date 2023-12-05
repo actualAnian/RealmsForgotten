@@ -49,7 +49,7 @@ using RealmsForgotten.Quest.MissionBehaviors;
 
 namespace RealmsForgotten.Quest
 {
-    public class QueenQuest : QuestBase
+    public class SecondQuest : QuestBase
     {
         public static readonly string TheOwlId = "rf_the_owl";
 
@@ -67,7 +67,7 @@ namespace RealmsForgotten.Quest
         private bool _isPlayerInOwlArmy;
         [SaveableField(6)]
         private bool escapedPrison;
-        public QueenQuest(string text, Hero hero, CampaignTime time, int number, bool alreadyTalkedToOwl) : base(text, hero, time, number)
+        public SecondQuest(string text, Hero hero, CampaignTime time, int number, bool alreadyTalkedToOwl) : base(text, hero, time, number)
         {
             if(alreadyTalkedToOwl)
                 HasTalkedToOwl = true;

@@ -1,5 +1,4 @@
-﻿using RealmsForgotten.RFCustomSettlements;
-using System;
+﻿using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Localization;
 using TaleWorlds.CampaignSystem.GameMenus;
@@ -9,8 +8,9 @@ using RFCustomSettlements;
 using static RFCustomSettlements.ArenaBuildData;
 using System.Linq;
 using TaleWorlds.Library;
-using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Encounters;
+using CodingSeb.ExpressionEvaluator;
+using HarmonyLib;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -119,9 +119,30 @@ namespace RealmsForgotten.RFCustomSettlements
 
         private void ChooseChallenge()
         {
-            IEnumerable<ArenaChallenge> possibleChallenges = BuildData.Challenges.Where(c => c.ChallengeCondition(Hero.MainHero.CharacterObject, Clan.PlayerClan.Tier) == true);
-            if (!possibleChallenges.Any()) _errorHasHappened = true;
-            currentChallenge = possibleChallenges.GetRandomElementInefficiently();
+            ExpressionEvaluator evaluator = new ExpressionEvaluator();
+            evaluator.Types.Add(typeof(Globals));
+            evaluator.Types.Add(typeof(CharacterObject));
+            evaluator.Types.Add(typeof(Hero));
+            evaluator.Types.Add(typeof(Clan));
+            evaluator.StaticTypesForExtensionsMethods.Add(typeof(Globals));
+
+            List<ArenaChallenge> possibleChallenges = new();
+            
+            foreach(ArenaChallenge challenge in BuildData.Challenges)
+            {
+                string curChallengeName = challenge.ChallengeName;
+                try
+                {
+                    if ((bool)evaluator.Evaluate(challenge.ChallengeCondition) == true)
+                                        possibleChallenges.Add(challenge);
+                }
+                catch (Exception)
+                {
+                    HuntableHerds.SubModule.PrintDebugMessage($"Error parsing the condition for arena challenge {curChallengeName}");
+                }
+            }
+            if (possibleChallenges == null || !possibleChallenges.Any()) _errorHasHappened = true;
+                else currentChallenge = possibleChallenges.GetRandomElementInefficiently();
         }
 
         private float ChooseWaitTime()

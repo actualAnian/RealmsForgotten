@@ -71,11 +71,12 @@ namespace RealmsForgotten.Models
                 CalculateEffectsDamage(attackInformation, ref baseNumber);
 
                 CharacterObject attackerCharacterObject = attackInformation.AttackerAgentCharacter as CharacterObject;
+                CharacterObject attackedCharacterObject = attackInformation.VictimAgent?.Character as CharacterObject;
 
                 //If weapon is a spell, do additional damage based on the alchemy skill of the attacker
                 if (weapon.Item.StringId.Contains("anorit_fire"))
                 {
-                    if (attackerCharacterObject != null)
+                    if (attackerCharacterObject != null && attackedCharacterObject != null)
                     {
                         float factor = attackerCharacterObject.GetPerkValue(RFPerks.Alchemy.NovicesLuck) ? RFPerks.Alchemy.NovicesLuck.PrimaryBonus :
                             (attackerCharacterObject.GetPerkValue(RFPerks.Alchemy.ApprenticesLuck) ? RFPerks.Alchemy.ApprenticesLuck.PrimaryBonus :
@@ -87,7 +88,7 @@ namespace RealmsForgotten.Models
                             baseNumber *= factor;
 
 
-                        Campaign.Current.Models.CombatXpModel.GetXpFromHit(attackerCharacterObject, captainCharacterObject, (CharacterObject)attackInformation.VictimAgent?.Character, attackerCharacterObject.HeroObject?.PartyBelongedTo?.Party, (int)baseDamage, baseDamage >= attackInformation.VictimAgentHealth,
+                        Campaign.Current.Models.CombatXpModel.GetXpFromHit(attackerCharacterObject, captainCharacterObject, attackedCharacterObject, attackerCharacterObject.HeroObject?.PartyBelongedTo?.Party, (int)baseDamage, baseDamage >= attackInformation.VictimAgentHealth,
                             CombatXpModel.MissionTypeEnum.Battle, out int xpAmount);
 
                         attackerCharacterObject.HeroObject?.AddSkillXp(RFSkills.Alchemy, xpAmount);
@@ -107,18 +108,16 @@ namespace RealmsForgotten.Models
             return baseNumber;
         }
 
-        private float CalculateEffectsDamage(in AttackInformation attackInformation, ref float baseDamage)
+        private void CalculateEffectsDamage(in AttackInformation attackInformation, ref float baseDamage)
         {
             //If in berserker mode disables damage
             if (attackInformation.VictimAgent == Agent.Main && PotionsMissionBehavior.berserkerMode)
-                return 0;
+                baseDamage = 0;
 
             if (ModifiedDamageAgents.TryGetValue(attackInformation.AttackerAgent.Index, out float factor))
             {
-                return baseDamage + (baseDamage * factor);
+                baseDamage += baseDamage * factor;
             }
-
-            return baseDamage;
 
         }
         private void CalculateRaceDamages(AttackInformation attackInformation, MissionWeapon weapon, ref float baseNumber)
