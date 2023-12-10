@@ -128,7 +128,7 @@ namespace RealmsForgotten
             harmony.PatchAll();
             TextObject coreContentDisabledReason = new("Disabled during installation.", null);
             UIConfig.DoNotUseGeneratedPrefabs = true;
-            
+
             RemoveSandboxAndStoryOptions();
 
             Module.CurrentModule.AddInitialStateOption(
