@@ -17,34 +17,42 @@ namespace RealmsForgotten.Quest.UI
     {
         public static void ShowNotification(string text, Action onDone, bool haveImage, string spriteId = "")
         {
+            
             GameStateManager.Current.PushState(GameStateManager.Current.CreateState<QuestNotificationState>(text, 40, onDone, haveImage, spriteId));
         }
     }
 
-    sealed class Cheats
+    /*sealed class Cheats
     {
         [CommandLineFunctionality.CommandLineArgumentFunction("show_notification", "rfui")]
         [UsedImplicitly]
         private static string ShowNot(List<string> strings)
         {
-
-
             QuestUIManager.ShowNotification("What was that? Not only are these lands plagued by rising undead, but now demons threaten the world of the living! We are damned...", ()=>{}, false);
 
-
             return "Done!";
+        }
+
+        [CommandLineFunctionality.CommandLineArgumentFunction("show_negative", "rfui")]
+        [UsedImplicitly]
+        private static string ShowNegativeInfluenceHeroes(List<string> strings)
+        {
+            string text = "";
+            foreach (var hero in Hero.AllAliveHeroes)
+            {
+                if(hero?.Clan?.Influence < 0)
+                    text += $"Hero: {hero.Name.ToString()} | Influence: {hero.Clan.Influence}\n";
+            }
+
+            return text;
         }
 
         [CommandLineFunctionality.CommandLineArgumentFunction("show_notification_image", "rfui")]
         [UsedImplicitly]
         private static string ShowImg(List<string> strings)
         {
-
-
             QuestUIManager.ShowNotification("What was that? Not only are these lands plagued by rising undead, but now demons threaten the world of the living! We are damned...", () => { }, true, "prisoner_image");
-
-
             return "Done!";
         }
-    }
+    }*/
 }
