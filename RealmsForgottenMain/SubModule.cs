@@ -125,7 +125,7 @@ namespace RealmsForgotten
         }
         protected override void OnSubModuleLoad()
         {
-            base.OnSubModuleLoad();
+            harmony.PatchAll();
             TextObject coreContentDisabledReason = new("Disabled during installation.", null);
             UIConfig.DoNotUseGeneratedPrefabs = true;
             
@@ -136,7 +136,6 @@ namespace RealmsForgotten
                 () => MBGameManager.StartNewGame(new RFCampaignManager()),
                 () => (Module.CurrentModule.IsOnlyCoreContentEnabled, coreContentDisabledReason))
             );
-            harmony.PatchAll();
         }
         public static Dictionary<string, int> undeadRespawnConfig { get; private set; }
         private void ReadConfigFile()

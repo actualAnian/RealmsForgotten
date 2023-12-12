@@ -26,7 +26,7 @@ namespace RealmsForgotten.Models
         public override MBReadOnlyList<(ItemObject, float)> GetCommonLootItemScores()
         {
             MBReadOnlyList<(ItemObject, float)> baseValue = base.GetCommonLootItemScores();
-            if (baseValue == null || baseValue.Count < 1 || currentRaidParty.Owner?.Culture.StringId != "giant")
+            if (baseValue == null || baseValue.Count < 1 || currentRaidParty?.Owner?.Culture?.StringId != "giant")
                 return baseValue;
             for (int i = 0; i < baseValue.Count; i++)
             {
