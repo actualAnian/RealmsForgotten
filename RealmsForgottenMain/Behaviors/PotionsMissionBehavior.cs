@@ -94,8 +94,9 @@ namespace RealmsForgotten.Behaviors
             mainHero.SetSkillValue(DefaultSkills.Polearm, oldSkillsValues.Item3 + value);
             mainHero.SetSkillValue(DefaultSkills.Athletics, oldSkillsValues.Item4 + value);
 
-            
-
+            ma.UpdateCustomDrivenProperties();
+            ma.UpdateAgentStats();
+            ma.UpdateAgentProperties();
         }
         private void DrinkBerserker()
         {
