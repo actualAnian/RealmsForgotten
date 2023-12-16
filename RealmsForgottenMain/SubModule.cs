@@ -129,7 +129,7 @@ namespace RealmsForgotten
             base.OnSubModuleLoad();
             TextObject coreContentDisabledReason = new("Disabled during installation.", null);
             UIConfig.DoNotUseGeneratedPrefabs = true;
-
+            
             RemoveSandboxAndStoryOptions();
 
             Module.CurrentModule.AddInitialStateOption(
