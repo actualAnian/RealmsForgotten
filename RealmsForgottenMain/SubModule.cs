@@ -54,6 +54,7 @@ namespace RealmsForgotten
                 campaignGameStarter.AddBehavior(new BaseGameDebugCampaignBehavior());
                 campaignGameStarter.AddBehavior(new RFEnchantmentVendorBehavior());
                 campaignGameStarter.AddBehavior(new RFFaithCampaignBehavior());
+               
 
                 campaignGameStarter.AddModel(new RFAgentApplyDamageModel());
                 campaignGameStarter.AddModel(new RFAgentStatCalculateModel());
@@ -84,6 +85,7 @@ namespace RealmsForgotten
             {
                 mission.AddMissionBehavior(new RFEnchantedWeaponsMissionBehavior());
                 mission.AddMissionBehavior(new SpellAmmoMissionBehavior());
+                mission.AddMissionBehavior(new NecromancerStaffMissionBehavior());
 
                 ItemRosterElement elixir = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("elixir_rfmisc"));
                 ItemRosterElement berserker = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("berzerker_potion"));
