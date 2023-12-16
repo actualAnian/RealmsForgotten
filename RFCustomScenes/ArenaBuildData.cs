@@ -5,8 +5,7 @@ using System.IO;
 using TaleWorlds.ObjectSystem;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
-using System;
-using Z.Expressions;
+
 
 namespace RFCustomSettlements
 {
@@ -32,38 +31,48 @@ namespace RFCustomSettlements
 
         public class ArenaChallenge
         {
+            public string ChallengeCondition { get; private set; }
+            public string ChallengeName { get; private set; }
+            public List<StageData> StageDatas { get; private set; }
             public ArenaChallenge(string challengeName, List<StageData> stagedatas, string? conditionToParse = null)
             {
                 ChallengeName = challengeName;
                 StageDatas = stagedatas;
-                ChallengeCondition = CreateCondition(challengeName, conditionToParse);
+                ChallengeCondition = PrepareCondition(conditionToParse);
             }
 
-            private Func<CharacterObject, int, bool> CreateCondition(string challengeName, string? conditionToParse = null)
+            private string PrepareCondition(string? condition)
             {
-                if (conditionToParse == null) return (character, clanTier) => true;
-                var context = new EvalContext
-                {
-                    SafeMode = true
-                };
-                context.UnregisterAll();
-                context.RegisterExtensionMethod(typeof(Globals));
-                try
-                {
-                    return context.Compile<Func<CharacterObject, int, bool>>(conditionToParse, "Player", "PlayerClanTier");
-                }
-                catch (Exception)
-                {
-                    RealmsForgotten.HuntableHerds.SubModule.PrintDebugMessage($"Error parsing the condition for arena challenge {challengeName}");
-                    return (character, clanTier) => false;
-                };
-                //return context.Compile<Func<CharacterObject, int, bool>>("Player.IsGiant() && PlayerClanTier >= 1 && PlayerClanTier <= 2", "Player", "PlayerClanTier");
+                if (condition == null) return "false";
+                condition = condition.Trim();
+                condition = condition.Replace("PlayerClanTier", "Clan.PlayerClan.Tier"); // player clan tier has to be before player
+                condition = condition.Replace("Player.", "Hero.MainHero.CharacterObject.");
+                return condition;
             }
 
+            //private Func<CharacterObject, int, bool> CreateCondition(string challengeName, string? conditionToParse = null)
+            //{
 
-            public Func<CharacterObject, int, bool> ChallengeCondition { get; private set; }
-            public string ChallengeName { get; private set; }
-            public List<StageData> StageDatas { get; private set; }
+                ////Expression<Func<int, bool>> lambda = num => num < 5;
+                ////Expression<Func<CharacterObject, int, bool>> mylambda = (a,b) => ;
+                //if (conditionToParse == null) return (character, clanTier) => true;
+                //var context = new EvalContext
+                //{
+                //    SafeMode = true
+                //};
+                //context.UnregisterAll();
+                //context.RegisterExtensionMethod(typeof(Globals));
+                //try
+                //{
+                //    return context.Compile<Func<CharacterObject, int, bool>>(conditionToParse, "Player", "PlayerClanTier");
+                //}
+                //catch (Exception)
+                //{
+                //    RealmsForgotten.HuntableHerds.SubModule.PrintDebugMessage($"Error parsing the condition for arena challenge {challengeName}");
+                //    return (character, clanTier) => false;
+                //};
+                ////return context.Compile<Func<CharacterObject, int, bool>>("Player.IsGiant() && PlayerClanTier >= 1 && PlayerClanTier <= 2", "Player", "PlayerClanTier");
+            //}
         }
         public static ArenaBuildData BuildArenaData()
         {

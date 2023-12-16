@@ -17,28 +17,29 @@ using TaleWorlds.Localization;
 namespace RealmsForgotten.Patches
 {
     [HarmonyPatch(typeof(RecruitmentCampaignBehavior), "GetRecruitVolunteerFromIndividual")]
-    public static class GetRecruitVolunteerFromIndividualPatch
+    static class GetRecruitVolunteerFromIndividualPatch
     {
         [HarmonyPostfix]
-        public static void Postfix(MobileParty side1Party, CharacterObject subject, Hero individual, int bitCode)
+        static void Postfix(MobileParty side1Party, CharacterObject subject, Hero individual, int bitCode)
         {
             if (CustomSettings.Instance?.InfluenceCostForDifferentCultures == true)
             {
-                if (subject.Culture != side1Party.LeaderHero.Culture && !side1Party.ActualClan.IsMinorFaction && side1Party.ActualClan?.IsClanTypeMercenary == false)
+                if (subject.Culture != side1Party.LeaderHero.Culture && !side1Party.ActualClan.IsMinorFaction && !side1Party.ActualClan.IsClanTypeMercenary)
                 {
-                    ChangeClanInfluenceAction.Apply(side1Party.ActualClan, -(subject.Tier * (10 - side1Party.ActualClan.Influence / 10000)));
+                    ChangeClanInfluenceAction.Apply(side1Party.ActualClan, -(subject.Tier * (10 - (side1Party.ActualClan.Renown / 10000))));
+
                 }
             }
 
         }
     }
     [HarmonyPatch(typeof(RecruitmentVM), "OnDone")]
-    public static class OnDonePatch
+    static class OnDonePatch
     {
         private static MethodInfo originalMethod = AccessTools.Method(typeof(RecruitmentVM), "OnDone");
         static bool isOriginalMethod;
         [HarmonyPrefix]
-        public static bool Prefix(MBBindingList<RecruitVolunteerTroopVM> ____troopsInCart, RecruitmentVM __instance)
+        static bool Prefix(MBBindingList<RecruitVolunteerTroopVM> ____troopsInCart, RecruitmentVM __instance)
         {
             if (CustomSettings.Instance?.InfluenceCostForDifferentCultures == true)
             {
@@ -76,10 +77,10 @@ namespace RealmsForgotten.Patches
     }
 
     [HarmonyPatch(typeof(PlayerTownVisitCampaignBehavior), "game_menu_recruit_volunteers_on_condition")]
-    public static class game_menu_town_recruit_troops_on_conditionPatch
+    static class game_menu_town_recruit_troops_on_conditionPatch
     {
         [HarmonyPostfix]
-        public static void Postfix(ref MenuCallbackArgs args)
+        static void Postfix(ref MenuCallbackArgs args)
         {
             if (CustomSettings.Instance?.InfluenceCostForDifferentCultures == true)
             {
@@ -99,10 +100,10 @@ namespace RealmsForgotten.Patches
     }
 
     [HarmonyPatch(typeof(AiVisitSettlementBehavior), "ApproximateNumberOfVolunteersCanBeRecruitedFromSettlement")]
-    public static class ApproximateNumberOfVolunteersCanBeRecruitedFromSettlementPatch
+    static class ApproximateNumberOfVolunteersCanBeRecruitedFromSettlementPatch
     {
         [HarmonyPostfix]
-        public static void Postfix(Hero hero, Settlement settlement, ref int __result)
+        static void Postfix(Hero hero, Settlement settlement, ref int __result)
         {
             if (CustomSettings.Instance?.InfluenceCostForDifferentCultures == true && ((hero.Clan != null && !hero.Clan.IsClanTypeMercenary && !hero.Clan.IsMinorFaction && settlement.MapFaction.IsAtWarWith(hero.MapFaction)) || hero.Clan.Influence <= 0))
                 __result = 0;
