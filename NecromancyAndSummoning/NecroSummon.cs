@@ -20,6 +20,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
+using TaleWorlds.MountAndBlade.Diamond;
 using TaleWorlds.ObjectSystem;
 
 
@@ -74,6 +75,7 @@ namespace RealmsForgotten.NecromancyAndSummoning
             }
             else
             {
+                
                 TextObject textObject = new TextObject("{=dead_invalid_reanimated_troop}{enemy_troop} cannot reanimated as a invalid troop", (Dictionary<string, object>)null);
                 textObject.SetTextVariable("enemy_troop", ((BasicCharacterObject)characterObject2).Name);
                 InformationManager.DisplayMessage(new InformationMessage(((object)textObject).ToString(), new Color(0.0f, 10f, 0.0f, 1f)));
