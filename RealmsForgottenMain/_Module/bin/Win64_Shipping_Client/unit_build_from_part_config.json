@@ -1,8 +1,0 @@
-{
-  "boneParts": [
-    "head_bone", "body_bone", "hand_bone", "leg_bone"
-  ],
-  "unitBuildFromPart": [
-    {"UnitId":["zombie_looter"], "BoneNeeded": [1,1,2,2], "Amount": 1}
-  ]
-}

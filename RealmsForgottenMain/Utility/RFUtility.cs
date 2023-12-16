@@ -1,38 +1,96 @@
-﻿using System;
+﻿using HarmonyLib;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text.RegularExpressions;
+using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.Utility
 {
-    internal class RFUtility
+    public static class RFUtility
     {
-        public static void RemoveInitialStateOption(string name)
+        public static IEnumerable<Agent> GetAgentsInRadius(Vec2 searchPoint, float radius)
         {
-            try
+            AgentProximityMap.ProximityMapSearchStruct searchStruct = AgentProximityMap.BeginSearch(Mission.Current, searchPoint, radius, extendRangeByBiggestAgentCollisionPadding: true);
+            while (searchStruct.LastFoundAgent != null)
             {
-                FieldInfo field = typeof(TaleWorlds.MountAndBlade.Module).GetField("_initialStateOptions", BindingFlags.Instance | BindingFlags.NonPublic);
-                object value = field.GetValue(TaleWorlds.MountAndBlade.Module.CurrentModule);
-                //bool flag = !(value.GetType() == typeof(List<InitialStateOption>));
-                if (value.GetType() == typeof(List<InitialStateOption>))
+                Agent lastFoundAgent = searchStruct.LastFoundAgent;
+                if (lastFoundAgent.CurrentMortalityState != Agent.MortalityState.Invulnerable)
                 {
-                    List<InitialStateOption> list = (List<InitialStateOption>)value;
-                    foreach (InitialStateOption initialStateOption in list)
-                    {
-                        bool flag2 = initialStateOption.Id.Contains(name);
-                        if (flag2)
-                        {
-                            list.Remove(initialStateOption);
-                        }
-                    }
-                    field.SetValue(typeof(TaleWorlds.MountAndBlade.Module).GetField("_initialStateOptions", BindingFlags.Instance | BindingFlags.NonPublic), list);
+                    yield return lastFoundAgent;
+                }
+
+                AgentProximityMap.FindNext(Mission.Current, ref searchStruct);
+            }
+        }
+
+        public static void ModifyCharacterSkillAttribute(BasicCharacterObject character, SkillObject skill, int value)
+        {
+
+            FieldInfo characterSkillsProperty = AccessTools.Field(typeof(BasicCharacterObject), "DefaultCharacterSkills");
+            if (characterSkillsProperty == null)
+                return;
+            if (value < 0)
+                value = 0;
+            object characterSkills = characterSkillsProperty.GetValue(character);
+
+            PropertyInfo skillsInfo = AccessTools.Property(characterSkills.GetType(), "Skills");
+            object skillValue = skillsInfo.GetValue(characterSkills);
+            FieldInfo attributesField = AccessTools.Field(skillValue.GetType(), "_attributes");
+            Dictionary<SkillObject, int> attributes = (Dictionary<SkillObject, int>)attributesField.GetValue(skillValue);
+
+            attributes[skill] = value;
+            attributesField.SetValue(skillValue, attributes);
+        }
+        public static int GetNumberAfterSkillWord(string inputString, string word, bool reportSKillIncrease = false)
+        {
+            int result = -1;
+            int wordIndex = inputString.IndexOf(word);
+
+            if (wordIndex >= 0)
+            {
+                string textAfterWord = inputString.Substring(wordIndex + word.Length);
+
+                Match match = Regex.Match(textAfterWord, @"\d+");
+
+                if (match.Success)
+                {
+                    result = int.Parse(match.Value);
                 }
             }
-            catch (Exception ex)
+
+            if (reportSKillIncrease)
             {
-                InformationManager.DisplayMessage(new InformationMessage(ex.Message));
+                string skill = null;
+                switch (word)
+                {
+                    case "rfonehanded":
+                        skill = "One Handed";
+                        break;
+                    case "rftwohanded":
+                        skill = "Two Handed";
+                        break;
+                    case "rfpolearm":
+                        skill = "Polearm";
+                        break;
+                    case "rfbow":
+                        skill = "Bow";
+                        break;
+                    case "rfcrossbow":
+                        skill = "Crossbow";
+                        break;
+                    case "rfthrowing":
+                        skill = "Throwing";
+                        break;
+
+                }
+
+                InformationManager.DisplayMessage(new InformationMessage($"A weapon you're carrying has enhanced your skill in combat, increasing your {skill} by {result} points.", Color.FromUint(9424384)));
             }
+
+            return result;
         }
     }
 }

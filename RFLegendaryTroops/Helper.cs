@@ -16,7 +16,10 @@ namespace RealmsForgotten.RFLegendaryTroops
             {"sturgia", "legendary_zombie"},
             {"khuzait", "legendary_steppe_horseman"},
             {"vlandia", "legendary_warlord"},
-            {"aserai", "legendary_mull"}
+            {"aserai", "legendary_mull"},
+            {"giant", "legendary_xilantlacay"},
+            {"aqarun", "legendary_aqarun"},
+
         }; 
         public static CharacterObject ChooseLegendaryTroop(CultureObject culture)
         {
@@ -50,7 +53,6 @@ namespace RealmsForgotten.RFLegendaryTroops
         {
             return 1;
             //return settlement.Town.GetWallLevel();    //  possible other way to spawn notables
-
         }
 
         public static bool CanRecruitIfInCastle(MobileParty party, Settlement settlement)

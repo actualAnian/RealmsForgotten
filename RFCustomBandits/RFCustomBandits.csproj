@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Version>1.0.0</Version>
+		<TargetFramework>net472</TargetFramework>
+		<Platforms>x64</Platforms>
+		<LangVersion>10.0</LangVersion>
+		<Nullable>enable</Nullable>
+		<ModuleId>$(MSBuildProjectName)</ModuleId>
+		<ModuleName>$(MSBuildProjectName)</ModuleName>
+		<GameFolder>$(BANNERLORD_GAME_DIR)</GameFolder>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Reference Include="$(GameFolder)\Modules\Bannerlord.Harmony\bin\Win64_Shipping_Client\0Harmony.dll">
+		  <HintPath>%(Identity)</HintPath>
+		  <Private>False</Private>
+	  </Reference>
+		
+		<Reference Include="$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.*.dll">
+			<HintPath>%(Identity)</HintPath>
+			<Private>False</Private>
+		</Reference>
+		
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\RealmsForgottenMain\RealmsForgotten.csproj" />
+	  <ProjectReference Include="..\RFCustomScenes\RFCustomSettlements.csproj" />
+	</ItemGroup>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+	  <Exec Command="xcopy /y /d  &quot;$(ProjectDir)\\bin\x64\Debug\net472\RFCustomBandits.*&quot; &quot;$(BANNERLORD_GAME_DIR)\Modules\RealmsForgotten\bin\Win64_Shipping_Client&quot;" />
+	</Target>
+
+</Project>

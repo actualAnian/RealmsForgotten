@@ -1,10 +1,33 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.CampaignBehaviors;
+using TaleWorlds.Library;
 
 namespace RealmsForgotten.Patches.CulturedStart.Patches
 {
+    [HarmonyPatch(typeof(CraftingCampaignBehavior), "CreateTownOrder")]
+    public static class ErrorPatch
+    {
+        private static Hero hero;
+        [HarmonyPrefix]
+        public static void Prefix(Hero orderOwner, int orderSlot)
+        {
+            hero = orderOwner;
+        }
+        [HarmonyFinalizer]
+        public static Exception Finalizer(Exception __exception)
+        {
+            if (__exception != null)
+                InformationManager.DisplayMessage(new InformationMessage("CREATETOWNORDER ERROR: " + hero?.StringId));
+
+            return null;
+        }
+    }
+
     // This transpiler does not appear to be called. Copied from original version so I left it in.
     public class CSPatchGameManager
     {

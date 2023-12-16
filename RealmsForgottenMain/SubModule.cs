@@ -5,23 +5,38 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using RealmsForgotten.Behaviors;
+using RealmsForgotten.CustomSkills;
+using RealmsForgotten.Models;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameComponents;
+using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 using TaleWorlds.ModuleManager;
 using TaleWorlds.MountAndBlade;
+using System.Reflection;
+using TaleWorlds.Engine.GauntletUI;
+using Module = TaleWorlds.MountAndBlade.Module;
+using Newtonsoft.Json.Linq;
+using RealmsForgotten.Quest;
+using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.CampaignSystem.GameMenus;
+using RealmsForgotten.Patches;
+using RealmsForgotten.Quest.SecondUpdate;
 
 namespace RealmsForgotten
 {
-    internal class SubModule : MBSubModuleBase
+    public class SubModule : MBSubModuleBase
     {
+        public static readonly Harmony harmony = new("RealmsForgotten");
+
         internal static readonly Random random = new();
         internal static Dictionary<string, Tuple<string, string, string, string>> villagerMin = new();
         internal static Dictionary<string, Tuple<string, string, string, string>> villagerMax = new();
         internal static Dictionary<string, Tuple<string, string, string, string>> fighterMin = new();
         internal static Dictionary<string, Tuple<string, string, string, string>> fighterMax = new();
+        private bool manualPatchesHaveFired;
         internal static readonly string[] cultures = new string[]
         {
             "battania",
@@ -37,8 +52,69 @@ namespace RealmsForgotten
             {
                 CampaignGameStarter campaignGameStarter = (CampaignGameStarter)gameStarterObject;
                 campaignGameStarter.AddBehavior(new BaseGameDebugCampaignBehavior());
+                campaignGameStarter.AddBehavior(new RFEnchantmentVendorBehavior());
+                campaignGameStarter.AddBehavior(new RFFaithCampaignBehavior());
+               
+
+                campaignGameStarter.AddModel(new RFAgentApplyDamageModel());
+                campaignGameStarter.AddModel(new RFAgentStatCalculateModel());
+                campaignGameStarter.AddModel(new RFBuildingConstructionModel());
+                campaignGameStarter.AddModel(new RFCombatXpModel());
+                campaignGameStarter.AddModel(new RFDefaultCharacterDevelopmentModel());
+                campaignGameStarter.AddModel(new RFPartyMoraleModel());
+                campaignGameStarter.AddModel(new RFPartySpeedCalculatingModel());
+                campaignGameStarter.AddModel(new RFPrisonerRecruitmentCalculationModel());
+                campaignGameStarter.AddModel(new RFRaidModel());
+                campaignGameStarter.AddModel(new RFVolunteerModel());
+                campaignGameStarter.AddModel(new RFWageModel());
+
+
+                new RFAttribute().Initialize();
+                new RFSkills().Initialize();
+                new RFSkillEffects().InitializeAll();
+                new RFPerks().Initialize();
+
+
             }
         }
+
+
+        public override void OnMissionBehaviorInitialize(Mission mission)
+        {
+            if (mission != null)
+            {
+                mission.AddMissionBehavior(new RFEnchantedWeaponsMissionBehavior());
+                mission.AddMissionBehavior(new SpellAmmoMissionBehavior());
+                mission.AddMissionBehavior(new NecromancerStaffMissionBehavior());
+
+                ItemRosterElement elixir = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("elixir_rfmisc"));
+                ItemRosterElement berserker = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("berzerker_potion"));
+                if (!elixir.IsEmpty || !berserker.IsEmpty)
+                    mission.AddMissionBehavior(new PotionsMissionBehavior(elixir, berserker));
+            }
+        }
+        protected override void OnBeforeInitialModuleScreenSetAsRoot() { }
+        public override void OnGameInitializationFinished(Game game)
+        {
+            base.OnGameInitializationFinished(game);
+            //Globals.SetRacesIds();
+            if (!manualPatchesHaveFired)
+            {
+                manualPatchesHaveFired = true;
+                RunManualPatches();
+            }
+        }
+        private void RunManualPatches()
+        {
+#pragma warning disable BHA0003 // Type was not found
+            MethodInfo originalMethod = AccessTools.Method("PartyVM:PopulatePartyListLabel");
+#pragma warning restore BHA0003 // Type was not found
+            harmony.Patch(originalMethod, transpiler: new HarmonyMethod(typeof(PartyVMPatch), nameof(PartyVMPatch.PartyVMPopulatePartyListLabelPatch)));
+
+            QuestPatches.PatchAll();
+
+        }
+
         private void RemoveSandboxAndStoryOptions()
         {
             List<InitialStateOption> initialOptionsList = Module.CurrentModule.GetInitialStateOptions().ToList();
@@ -51,9 +127,11 @@ namespace RealmsForgotten
         }
         protected override void OnSubModuleLoad()
         {
+            harmony.PatchAll();
             base.OnSubModuleLoad();
             TextObject coreContentDisabledReason = new("Disabled during installation.", null);
-
+            UIConfig.DoNotUseGeneratedPrefabs = true;
+            
             RemoveSandboxAndStoryOptions();
 
             Module.CurrentModule.AddInitialStateOption(
@@ -61,7 +139,47 @@ namespace RealmsForgotten
                 () => MBGameManager.StartNewGame(new RFCampaignManager()),
                 () => (Module.CurrentModule.IsOnlyCoreContentEnabled, coreContentDisabledReason))
             );
-            new Harmony("mods.bannerlord.realmsforgotten").PatchAll();
+        }
+        public static Dictionary<string, int> undeadRespawnConfig { get; private set; }
+        private void ReadConfigFile()
+        {
+            string jsonFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "undead_respawn_config.json");
+            JObject jsonObject = JObject.Parse(File.ReadAllText(jsonFilePath));
+
+            if (jsonObject.TryGetValue("characters", out JToken charactersToken))
+            {
+                JObject charactersObject = (JObject)charactersToken;
+                undeadRespawnConfig = new();
+                foreach (var character in charactersObject)
+                {
+
+                    string characterName = character.Key;
+                    int characterValue = character.Value.Value<int>();
+                    if (characterValue > 100)
+                        characterValue = 100;
+                    if (characterValue < 1)
+                        characterValue = 1;
+                    undeadRespawnConfig.Add(characterName, characterValue);
+                }
+
+            }
+            else
+            {
+                Console.WriteLine("Error in undead_respawn_config.json");
+            }
+        }
+
+        public override void OnGameLoaded(Game game, object initializerObject)
+        {
+            base.OnGameLoaded(game, initializerObject);
+            QuestSubModule.OnGameLoaded(game, initializerObject);
+            
+        }
+
+        public override void OnNewGameCreated(Game game, object initializerObject)
+        {
+            base.OnNewGameCreated(game, initializerObject);
+            QuestSubModule.OnNewGameCreated(game, initializerObject);
         }
 
         protected override void InitializeGameStarter(Game game, IGameStarter starterObject)
@@ -118,11 +236,10 @@ namespace RealmsForgotten
         class ArrangeDestructedMeshesPatch
         {
             [HarmonyFinalizer]
+#pragma warning disable IDE0051 // Remove unused private members
             static Exception Finalizer(Exception __exception, DefaultMapWeatherModel __instance)
+#pragma warning restore IDE0051 // Remove unused private members
             {
-                //If there is a exception it will increase the _weatherDataCache size
-                if (__exception != null)
-                    AccessTools.Field(typeof(DefaultMapWeatherModel), "_weatherDataCache").SetValue(__instance, new MapWeatherModel.WeatherEvent[4096]);
                 return null;
             }
         }

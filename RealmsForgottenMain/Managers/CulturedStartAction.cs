@@ -17,8 +17,52 @@ namespace RealmsForgotten.Managers
 {
     public static class CulturedStartAction
     {
-        private static readonly Dictionary<StartType, Dictionary<string, string>> mainHeroStartingEquipment = new()
+        public static readonly Dictionary<StartType, Dictionary<string, string>> mainHeroStartingEquipment = new()
         {
+            [StartType.Default] = new Dictionary<string, string>
+            {
+                ["aserai"] = "player_char_creation_default",
+                ["empire"] = "player_char_creation_default",
+                ["khuzait"] = "player_char_creation_default",
+                ["sturgia"] = "player_char_creation_default",
+                ["battania"] = "player_char_creation_default",
+                ["vlandia"] = "player_char_creation_default",
+                ["giant"] = "rf_xilan_default",
+                ["aqarun"] = "rf_aqarun_default"
+            },
+            [StartType.Merchant] = new Dictionary<string, string>
+            {
+                ["aserai"] = "merchant_start_aserai",
+                ["empire"] = "merchant_start_empire",
+                ["khuzait"] = "merchant_start_khuzait",
+                ["sturgia"] = "merchant_start_sturgia",
+                ["battania"] = "rf_elvean_merchant",
+                ["vlandia"] = "merchant_start_vlandia",
+                ["giant"] = "merchant_start_xilan",
+                ["aqarun"] = "merchant_start_aqarun"
+            },
+            [StartType.Exiled] = new Dictionary<string, string>
+            {
+                ["aserai"] = "rf_exiled_aserai",
+                ["empire"] = "rf_exiled_empire",
+                ["khuzait"] = "rf_exiled_khuzait",
+                ["sturgia"] = "rf_exiled_sturgia",
+                ["battania"] = "rf_exiled_battania",
+                ["vlandia"] = "rf_exiled_vlandia",
+                ["giant"] = "rf_exiled_battania",
+                ["aqarun"] = "rf_exiled_aserai"
+            },
+            [StartType.EscapedPrisoner] = new Dictionary<string, string>
+            {
+                ["aserai"] = "rf_athas_mistic",
+                ["empire"] = "rf_empire_mistic",
+                ["khuzait"] = "rf_khuzait_mistic",
+                ["sturgia"] = "rf_sturgia_mistic",
+                ["battania"] = "rf_elvean_mistic",
+                ["vlandia"] = "rf_nasoria_mistic",
+                ["giant"] = "rf_giant_mistic",
+                ["aqarun"] = "rf_aqarun_mistic"
+            },
             [StartType.Looter] = new Dictionary<string, string>
             {
                 ["aserai"] = "rf_looter",
@@ -26,7 +70,9 @@ namespace RealmsForgotten.Managers
                 ["khuzait"] = "rf_looter",
                 ["sturgia"] = "rf_looter",
                 ["battania"] = "rf_looter",
-                ["vlandia"] = "rf_looter"
+                ["vlandia"] = "rf_looter",
+                ["giant"] = "rf_looter",
+                ["aqarun"] = "rf_looter"
             },
             [StartType.Mercenary] = new Dictionary<string, string>
             {
@@ -35,7 +81,9 @@ namespace RealmsForgotten.Managers
                 ["khuzait"] = "merc_allkhuur_start",
                 ["sturgia"] = "merc_vortiak_start",
                 ["battania"] = "merc_elvean_start",
-                ["vlandia"] = "merc_nasoria_start"
+                ["vlandia"] = "merc_nasoria_start",
+                ["giant"] = "merc_giant_start",
+                ["aqarun"] = "merc_athas_start"
             },
             [StartType.VassalNoFief] = new Dictionary<string, string>
             {
@@ -44,7 +92,9 @@ namespace RealmsForgotten.Managers
                 ["khuzait"] = "khuzait_vassal_nofief",
                 ["sturgia"] = "dreadrealms_vassal_nofief",
                 ["battania"] = "elvean_vassal_nofief",
-                ["vlandia"] = "nasoria_vassal_nofief"
+                ["vlandia"] = "nasoria_vassal_nofief",
+                ["giant"] = "giant_vassal_nofief",
+                ["aqarun"] = "vassalnofief_aqarun_start"
             },
             [StartType.KingdomRuler] = new Dictionary<string, string>
             {
@@ -53,7 +103,9 @@ namespace RealmsForgotten.Managers
                 ["khuzait"] = "king_allkhuur_start",
                 ["sturgia"] = "king_vortiak_start",
                 ["battania"] = "king_elvean_start",
-                ["vlandia"] = "king_nasoria_start"
+                ["vlandia"] = "king_nasoria_start",
+                ["giant"] = "king_giant_start",
+                ["aqarun"] = "king_aqarun_start"
             },
             [StartType.CastleRuler] = new Dictionary<string, string>
             {
@@ -62,7 +114,9 @@ namespace RealmsForgotten.Managers
                 ["khuzait"] = "vassal_allkhuur_start",
                 ["sturgia"] = "vassal_vortiak_start",
                 ["battania"] = "vassal_elvean_start",
-                ["vlandia"] = "vassal_nasoria_start"
+                ["vlandia"] = "vassal_nasoria_start",
+                ["giant"] = "vassal_giant_start",
+                ["aqarun"] = "vassal_aqarun_start"
             },
             [StartType.VassalFief] = new Dictionary<string, string>
             {
@@ -71,16 +125,20 @@ namespace RealmsForgotten.Managers
                 ["khuzait"] = "ruler_allkhuur_start",
                 ["sturgia"] = "ruler_dreadrealms_start",
                 ["battania"] = "lord_elvean_start",
-                ["vlandia"] = "ruler_nasoria_start"
+                ["vlandia"] = "ruler_nasoria_start",
+                ["giant"] = "ruler_giant_start",
+                ["aqarun"] = "ruler_aqarun_start"
             },
-        };
+         };
         public static void Apply(int storyOption, int locationOption)
         {
+            StartType startOption = (StartType)storyOption;
             Hero mainHero = Hero.MainHero;
             Hero ruler = Hero.FindAll(hero => hero.Culture == mainHero.Culture && hero.IsAlive && hero.IsFactionLeader && !hero.MapFaction.IsMinorFaction).GetRandomElementInefficiently();
             Hero captor = Hero.FindAll(hero => hero.Culture == mainHero.Culture && hero.IsAlive && hero.MapFaction != null && !hero.MapFaction.IsMinorFaction && hero.IsPartyLeader && hero.PartyBelongedTo.DefaultBehavior != AiBehavior.Hold).GetRandomElementInefficiently();
 
             Settlement? startingSettlement = null;
+            Settlement? ownedSettlement = null;
             GiveGoldAction.ApplyBetweenCharacters(mainHero, null, mainHero.Gold, true);
             mainHero.PartyBelongedTo.ItemRoster.Clear();
             switch (locationOption)
@@ -109,8 +167,15 @@ namespace RealmsForgotten.Managers
                 case 7:
                     startingSettlement = Settlement.Find("town_V3");
                     break;
-                case 8:
-                    startingSettlement = Settlement.All.Where(settlement => settlement.Culture == mainHero.Culture && settlement.IsCastle).GetRandomElementInefficiently();
+                case 8: // only for castle start
+                    startingSettlement = ownedSettlement = Settlement.All.Where(settlement => settlement.Culture == mainHero.Culture && settlement.IsCastle).GetRandomElementInefficiently();
+                    ChangeOwnerOfSettlementAction.ApplyByBarter(Hero.MainHero, startingSettlement);
+                    break;
+                case 10:
+                    startingSettlement = Settlement.Find("town_G1");
+                    break;
+                case 11:
+                    startingSettlement = Settlement.Find("town_A5");
                     break;
                 default:
                     break;
@@ -122,7 +187,6 @@ namespace RealmsForgotten.Managers
                 mapState.Handler.TeleportCameraToMainParty();
             }
 
-            StartType startOption = (StartType)storyOption;
             switch (startOption)
             {
                 case StartType.Default: // Default
@@ -162,12 +226,14 @@ namespace RealmsForgotten.Managers
                     break;
                 case StartType.CastleRuler: // Holding
                     ApplyInternal(mainHero, gold: 60000, grain: 30, tier: 3, troops: new int[] { 31, 20, 14, 10, 6 }, companions: 1, companionParties: 1, startingSettlement: startingSettlement, startOption: StartType.CastleRuler);
+                    ownedSettlement ??= Settlement.All.Where(settlement => settlement.Culture == mainHero.Culture && settlement.IsCastle).GetRandomElementInefficiently();
                     break;
                 case StartType.VassalFief: // Landed Vassal
                     ApplyInternal(mainHero, gold: 35000, grain: 80, tier: 2, troops: new int[] { 40, 20, 20, 5 }, companions: 1, companionParties: 1, ruler: ruler, startingSettlement: startingSettlement, startOption: StartType.VassalFief);
+                    ownedSettlement ??= Settlement.All.Where(settlement => mainHero.Clan?.Kingdom == ruler.Clan?.Kingdom && settlement.IsCastle).GetRandomElementInefficiently();
                     break;
                 case StartType.EscapedPrisoner: // Escaped Prisoner
-                    ApplyInternal(mainHero, gold: 0, grain: 1, startOption: StartType.EscapedPrisoner);
+                    ApplyInternal(mainHero, gold: 1000, grain: 15, startOption: StartType.EscapedPrisoner);
                     if (captor != null)
                     {
                         CharacterRelationManager.SetHeroRelation(mainHero, captor, -50);
@@ -176,29 +242,29 @@ namespace RealmsForgotten.Managers
                 default:
                     break;
             }
+            if(ownedSettlement != null)
+                ChangeOwnerOfSettlementAction.ApplyByBarter(Hero.MainHero, ownedSettlement);
         }
 
         private static void ApplyInternal(Hero mainHero, int gold, int grain, int mules = 0, int tier = -1, int[]? troops = null, int companions = 0, int companionParties = 0, Hero? ruler = null, Settlement? startingSettlement = null, StartType startOption = StartType.Default)
         {
-            Settlement? givenCastle = null;
-            MBEquipmentRoster? idealEquipment = null;
             GiveGoldAction.ApplyBetweenCharacters(null, mainHero, gold, true);
             mainHero.PartyBelongedTo.ItemRoster.AddToCounts(DefaultItems.Grain, grain);
             mainHero.PartyBelongedTo.ItemRoster.AddToCounts(MBObjectManager.Instance.GetObject<ItemObject>("mule"), mules);
 
-            try
-            {
-                idealEquipment = MBObjectManager.Instance.GetObject<MBEquipmentRoster>(mainHeroStartingEquipment[startOption][mainHero.Culture.StringId]);
-            }
-            catch (Exception)
-            {
-                //idealEquipment = MBObjectManager.Instance.GetObject<CharacterObject>("rf_looter").AllEquipments;
-                idealEquipment = MBObjectManager.Instance.GetObject<MBEquipmentRoster>("rf_looter");
-            }
-            if (idealEquipment != null)
-            {
-                mainHero.BattleEquipment.FillFrom(idealEquipment.AllEquipments.GetRandomElement());
-            }
+            //try
+            //{
+            //    idealEquipment = MBObjectManager.Instance.GetObject<MBEquipmentRoster>(mainHeroStartingEquipment[startOption][mainHero.Culture.StringId]);
+            //}
+            //catch (Exception)
+            //{
+            //    //idealEquipment = MBObjectManager.Instance.GetObject<CharacterObject>("rf_looter").AllEquipments;
+            //    idealEquipment = MBObjectManager.Instance.GetObject<MBEquipmentRoster>("rf_looter");
+            //}
+            //if (idealEquipment != null)
+            //{
+            //    mainHero.BattleEquipment.FillFrom(idealEquipment.AllEquipments.GetRandomElement());
+            //}
             foreach (SkillObject skill in Skills.All)
             {
                 mainHero.SetSkillValue(skill, (int)(mainHero.GetSkillValue(skill) * startingSkillMult[startOption]));
@@ -225,7 +291,7 @@ namespace RealmsForgotten.Managers
                                                where settlement.Culture == wanderer.Culture && settlement.IsTown
                                                select settlement).GetRandomElementInefficiently();
                 Hero companion = HeroCreator.CreateSpecialHero(wanderer, randomSettlement, null, null, 33);
-                //companion.HeroDeveloper.DeriveSkillsFromTraits(false, wanderer);
+
                 //companion.HasMet = true;
                 companion.Clan = randomSettlement.OwnerClan;
                 companion.ChangeState(Hero.CharacterStates.Active);
@@ -248,14 +314,6 @@ namespace RealmsForgotten.Managers
                 CharacterRelationManager.SetHeroRelation(mainHero, ruler, 10);
                 ChangeKingdomAction.ApplyByJoinToKingdom(mainHero.Clan, ruler.Clan.Kingdom, false);
                 mainHero.Clan.Influence = 10;
-                if (startOption == StartType.VassalFief)
-                {
-                    givenCastle = (from settlement in Settlement.All
-                                   where settlement.IsCastle && mainHero.Clan.Kingdom == ruler.Clan.Kingdom
-                                   select settlement).GetRandomElementInefficiently();
-                    ChangeOwnerOfSettlementAction.ApplyByKingDecision(mainHero, givenCastle);
-                }
-
             }
 
             if (startOption == StartType.KingdomRuler || startOption == StartType.CastleRuler)
