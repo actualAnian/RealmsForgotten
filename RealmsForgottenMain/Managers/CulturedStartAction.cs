@@ -43,14 +43,14 @@ namespace RealmsForgotten.Managers
             },
             [StartType.Exiled] = new Dictionary<string, string>
             {
-                ["aserai"] = "rf_exiled_aserai",
-                ["empire"] = "rf_exiled_empire",
-                ["khuzait"] = "rf_exiled_khuzait",
-                ["sturgia"] = "rf_exiled_sturgia",
-                ["battania"] = "rf_exiled_battania",
-                ["vlandia"] = "rf_exiled_vlandia",
-                ["giant"] = "rf_exiled_battania",
-                ["aqarun"] = "rf_exiled_aserai"
+                ["aserai"] = "rf_exiled_equip",
+                ["empire"] = "rf_exiled_equip",
+                ["khuzait"] = "rf_exiled_equip",
+                ["sturgia"] = "rf_exiled_equip",
+                ["battania"] = "rf_exiled_equip",
+                ["vlandia"] = "rf_exiled_equip",
+                ["giant"] = "rf_exiled_equip",
+                ["aqarun"] = "rf_exiled_equip"
             },
             [StartType.EscapedPrisoner] = new Dictionary<string, string>
             {
@@ -169,7 +169,6 @@ namespace RealmsForgotten.Managers
                     break;
                 case 8: // only for castle start
                     startingSettlement = ownedSettlement = Settlement.All.Where(settlement => settlement.Culture == mainHero.Culture && settlement.IsCastle).GetRandomElementInefficiently();
-                    ChangeOwnerOfSettlementAction.ApplyByBarter(Hero.MainHero, startingSettlement);
                     break;
                 case 10:
                     startingSettlement = Settlement.Find("town_G1");
@@ -233,7 +232,7 @@ namespace RealmsForgotten.Managers
                     ownedSettlement ??= Settlement.All.Where(settlement => mainHero.Clan?.Kingdom == ruler.Clan?.Kingdom && settlement.IsCastle).GetRandomElementInefficiently();
                     break;
                 case StartType.EscapedPrisoner: // Escaped Prisoner
-                    ApplyInternal(mainHero, gold: 1000, grain: 15, startOption: StartType.EscapedPrisoner);
+                    ApplyInternal(mainHero, gold: 0, grain: 1, startOption: StartType.EscapedPrisoner);
                     if (captor != null)
                     {
                         CharacterRelationManager.SetHeroRelation(mainHero, captor, -50);
