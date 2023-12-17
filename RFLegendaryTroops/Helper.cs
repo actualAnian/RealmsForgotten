@@ -14,7 +14,7 @@ namespace RealmsForgotten.RFLegendaryTroops
             {"empire", "legendary_men"},
             {"battania", "legendary_elvean"},
             {"sturgia", "legendary_zombie"},
-            {"khuzait", "Legendary_steppe_horseman"},
+            {"khuzait", "legendary_steppe_horseman"},
             {"vlandia", "legendary_warlord"},
             {"aserai", "legendary_mull"},
             {"giant", "legendary_xilantlacay"},
@@ -53,6 +53,13 @@ namespace RealmsForgotten.RFLegendaryTroops
         {
             return 1;
             //return settlement.Town.GetWallLevel();    //  possible other way to spawn notables
+        }
+
+        public static bool CanRecruitIfInCastle(MobileParty party, Settlement settlement)
+        {
+            if (!settlement.IsCastle) return true;
+            if(party.Owner != null && party.IsRulerParty()) return true; 
+            else return false;
         }
 
     }
