@@ -87,10 +87,13 @@ namespace RealmsForgotten
                 mission.AddMissionBehavior(new SpellAmmoMissionBehavior());
                 mission.AddMissionBehavior(new NecromancerStaffMissionBehavior());
 
-                ItemRosterElement elixir = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("elixir_rfmisc"));
-                ItemRosterElement berserker = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("berzerker_potion"));
-                if (!elixir.IsEmpty || !berserker.IsEmpty)
-                    mission.AddMissionBehavior(new PotionsMissionBehavior(elixir, berserker));
+                if (Campaign.Current != null)
+                {
+                    ItemRosterElement elixir = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("elixir_rfmisc"));
+                    ItemRosterElement berserker = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("berzerker_potion"));
+                    if (!elixir.IsEmpty || !berserker.IsEmpty)
+                        mission.AddMissionBehavior(new PotionsMissionBehavior(elixir, berserker));
+                }
             }
         }
         protected override void OnBeforeInitialModuleScreenSetAsRoot() { }

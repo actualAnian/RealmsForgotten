@@ -198,7 +198,7 @@ namespace RealmsForgotten.Quest
                     hiddenHandParty.StringId = "attacker_party_quest";
 
 
-                    hiddenHandParty.InitializeMobilePartyAroundPosition(clan.DefaultPartyTemplate, MobileParty.MainParty.Position2D, 0.3f, 0.1f, 100);
+                    hiddenHandParty.InitializeMobilePartyAroundPosition(clan.DefaultPartyTemplate, MobileParty.MainParty.Position2D, 0.1f, 0.0f, 40);
 
 
                     SetPartyAiAction.GetActionForEngagingParty(hiddenHandParty, MobileParty.MainParty);
@@ -290,7 +290,7 @@ namespace RealmsForgotten.Quest
             {
                 List<TroopRosterElement> prisoners = MobileParty.MainParty.PrisonRoster.GetTroopRoster()
                     .Where(x => !x.Character.IsHero && x.Character?.Culture?.StringId == "sea_raiders").ToList();
-
+                GiveGoldAction.ApplyBetweenCharacters(null, Hero.MainHero, 15000);
                 if (prisoners != null && !prisoners.IsEmpty())
 
                 {
