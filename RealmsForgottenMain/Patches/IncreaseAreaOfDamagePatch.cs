@@ -171,6 +171,8 @@ namespace RealmsForgotten.Patches
                         b.SelfInflictedDamage = MathF.Round((float)b.SelfInflictedDamage * num8);
                         combatLog.ModifiedDamage = MathF.Round((float)combatLog.ModifiedDamage * num8);
 
+                        b.BoneIndex = item.IsHuman ? blowInput.BoneIndex : Game.Current.DefaultMonster.SpineUpperBoneIndex;
+
                         CurrentBlow = blowInput;
 
                         RegisterBlow.Invoke(__instance, new object[] { (object)shooterAgent, (object)item, (object)null, (object)b, (object)attackCollisionData, (object)attackerWeapon, (object)combatLog });

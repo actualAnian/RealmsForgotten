@@ -113,7 +113,7 @@ namespace RealmsForgotten.Quest
                 EnterSettlementAction.ApplyForCharacterOnly(AnoritLord, settlement);
 
                 ConversationCharacterData playerData = new(CharacterObject.PlayerCharacter, PartyBase.MainParty);
-                ConversationCharacterData anoritData = new(AnoritLord.CharacterObject, AnoritLord.PartyBelongedTo.Party);
+                ConversationCharacterData anoritData = new(AnoritLord.CharacterObject, AnoritLord.PartyBelongedTo?.Party);
                 Campaign.Current.ConversationManager.OpenMapConversation(playerData, anoritData);
 
                 
@@ -371,7 +371,7 @@ namespace RealmsForgotten.Quest
                 {
                     Clan clan = Clan.FindFirst(x => x.StringId == "clan_empire_north_7");
 
-                    mobileParty = MobileParty.All.FirstOrDefault(x => x.StringId == "owl_party") ?? LordPartyComponent.CreateLordParty("owl_party", TheOwl,
+                    mobileParty = MobileParty.All.FirstOrDefault(x => x?.StringId == "owl_party") ?? LordPartyComponent.CreateLordParty("owl_party", TheOwl,
                         MobileParty.MainParty.Position2D, 1f, QuestGiver.HomeSettlement, TheOwl);
 
                     mobileParty.InitializeMobilePartyAroundPosition(QuestGiver.Clan.DefaultPartyTemplate, MobileParty.MainParty.Position2D, 1f, 0, 80);

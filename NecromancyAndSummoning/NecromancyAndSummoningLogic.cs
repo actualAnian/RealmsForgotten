@@ -7,17 +7,14 @@ using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.NecromancyAndSummoning
 {
-	// Token: 0x02000004 RID: 4
-	internal class NecromancyAndSummoningLogic : MissionLogic
+    internal class NecromancyAndSummoningLogic : MissionLogic
 	{
-		// Token: 0x06000014 RID: 20 RVA: 0x00002A10 File Offset: 0x00000C10
-		public override void AfterStart()
+        public override void AfterStart()
 		{
 			NecroSummon.ResetCount();
 		
 		}
 
-		// Token: 0x06000015 RID: 21 RVA: 0x00002A1C File Offset: 0x00000C1C
 		public override void OnMissionResultReady(MissionResult missionResult)
 		{
 			bool playerVictory = missionResult.PlayerVictory;
@@ -30,9 +27,7 @@ namespace RealmsForgotten.NecromancyAndSummoning
 				NecromancyAndSummoningLogic.battleVictory = false;
 			}
 		}
-
-		// Token: 0x06000016 RID: 22 RVA: 0x00002A48 File Offset: 0x00000C48
-		public override void OnEndMissionInternal()
+        public override void OnEndMissionInternal()
 		{
 			bool flag = NecromancyAndSummoningLogic.battleVictory;
 			if (flag)
@@ -61,9 +56,7 @@ namespace RealmsForgotten.NecromancyAndSummoning
 				}
 			}
 		}
-
-		// Token: 0x06000017 RID: 23 RVA: 0x00002ADC File Offset: 0x00000CDC
-		public override void OnAgentPanicked(Agent affectedAgent)
+        public override void OnAgentPanicked(Agent affectedAgent)
 		{
 			bool flag = affectedAgent != null;
 			if (flag)
@@ -83,7 +76,6 @@ namespace RealmsForgotten.NecromancyAndSummoning
 			}
 		}
 
-		// Token: 0x06000018 RID: 24 RVA: 0x00002B48 File Offset: 0x00000D48
 		public override void OnAgentFleeing(Agent affectedAgent)
 		{
 			bool flag = affectedAgent != null;
@@ -102,13 +94,11 @@ namespace RealmsForgotten.NecromancyAndSummoning
 			}
 		}
 
-		// Token: 0x06000019 RID: 25 RVA: 0x00002B94 File Offset: 0x00000D94
 		public static bool IsInBattle()
 		{
 			return Mission.Current.Mode == MissionMode.Battle || Mission.Current.Mode == MissionMode.Deployment;
 		}
 
-		// Token: 0x04000002 RID: 2
 		private static bool battleVictory;
 	}
 }

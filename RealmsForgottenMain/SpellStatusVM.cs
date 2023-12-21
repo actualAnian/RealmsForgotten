@@ -10,16 +10,21 @@ namespace RealmsForgotten
 {
     public class SpellStatusVM : ViewModel
     {
-        public SpellStatusVM(string spellText, bool isVisible)
+        public SpellStatusVM(string spellText, bool isVisible, int height, int fontSize)
         {
             SpellText = spellText;
             Visible = isVisible;
+            Height = height;
+            FontSize = fontSize;
         }
         public const string red = "#CC0000FF";
 
         private TextObject _spellTextObject;
         private string _spellText;
         private bool _visible;
+        private int _height;
+        private int _fontSize;
+        
         [DataSourceProperty]
         public string SpellText
         {
@@ -39,6 +44,29 @@ namespace RealmsForgotten
             {
                 _visible = value;
                 OnPropertyChanged("Visible");
+            }
+        }
+        
+        [DataSourceProperty]
+        public int Height
+        {
+            get => _height;
+            
+            set
+            {
+                _height = value;
+                OnPropertyChanged("Height");
+            }
+        }
+        [DataSourceProperty]
+        public int FontSize
+        {
+            get => _fontSize;
+            
+            set
+            {
+                _fontSize = value;
+                OnPropertyChanged("FontSize");
             }
         }
     }
