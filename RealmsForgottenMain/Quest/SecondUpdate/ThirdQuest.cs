@@ -232,7 +232,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
         private void OnBeforeMissionOpened()
         {
-            if (Settlement.CurrentSettlement == Ityr && persuadeAthasScholarLog?.CurrentProgress == 1)
+            if (Settlement.CurrentSettlement == Ityr && persuadeAthasScholarLog?.CurrentProgress == 1 && _willGoAsCaravan && MobileParty.MainParty.Army != null)
             {
                 IsPlayerInOwlArmy = false;
                 DisbandArmyAction.ApplyByObjectiveFinished(MobileParty.MainParty.Army);
@@ -427,7 +427,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             SetDialogs();
             Instance = this;
 
-            if(goToAnoritLordLog?.CurrentProgress == 1)
+            if(goToAnoritLordLog?.CurrentProgress == 1 && _willGoAsCaravan)
              SetCaravanObjective(MobileParty.All.Find(x => x.LeaderHero == TheOwl));
 
             AvoidDisbanding = _isPlayerInOwlArmy;
@@ -474,15 +474,17 @@ namespace RealmsForgotten.Quest.SecondUpdate
         {
             TextObject textObject = GameTexts.FindText("rf_third_quest_anorit_objective_2_" + (willGoAsCaravan ? 'a' : 'b'));
             _willGoAsCaravan = willGoAsCaravan;
-
             textObject.SetTextVariable("SETTLEMENT", Ityr.EncyclopediaLinkWithName);
             persuadeAthasScholarLog = this.AddLog(textObject);
+            
+            if(!_willGoAsCaravan)
+                persuadeAthasScholarLog.UpdateCurrentProgress(1);
             goToAnoritLordLog.UpdateCurrentProgress(1);
             this.AddTrackedObject(Ityr);
 
             AvoidBattleAfterConversation();
         }
-        protected override void SetDialogs()
+        protected override void SetDialogs()    
         {
             Campaign.Current.ConversationManager.AddDialogFlow(AnoritFirstDialogFlow, this);
             Campaign.Current.ConversationManager.AddDialogFlow(AthasPersuasionDialogFlow(), this);
@@ -708,7 +710,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             dialogFlow.AddDialogLine("athas_persuasion_success", "athas_persuasion_outcome", "close_window",
                 GameTexts.FindText("rf_third_quest_scholar_dialog_persuasion_success").ToString(), () =>
                 {
-                    GameTexts.SetVariable("SETTLEMENT", Ityr.Name.ToString());
+                    GameTexts.SetVariable("SETTLEMENT", Ityr.EncyclopediaLinkWithName);
                     return ConversationManager.GetPersuasionProgressSatisfied();
                 }, () => PersuasionComplete(true), this);
 
