@@ -30,7 +30,6 @@ namespace RealmsForgotten.Patches
 
                 }
             }
-
         }
     }
     [HarmonyPatch(typeof(RecruitmentVM), "OnDone")]
