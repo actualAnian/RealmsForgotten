@@ -28,7 +28,6 @@ namespace RealmsForgotten.Behaviors
         private GauntletLayer _gauntletLayer;
         private TextObject necromancyTextObject = new TextObject("{=necromancer_staff_status}Necromancy revivals: {AMOUNT}");
         public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;
-
         public override void AfterStart()
         {
             if (Campaign.Current != null)

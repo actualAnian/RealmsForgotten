@@ -10,7 +10,6 @@ namespace RealmsForgotten.Models
 {
     internal class RFVolunteerModel : DefaultVolunteerModel
     {
-
         public override int MaximumIndexHeroCanRecruitFromHero(Hero buyerHero, Hero sellerHero, int useValueAsRelation = -101)
         {
             int baseValue = base.MaximumIndexHeroCanRecruitFromHero(buyerHero, sellerHero, useValueAsRelation);
