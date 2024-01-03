@@ -10,14 +10,13 @@ namespace RealmsForgotten.Models
 {
     internal class RFVolunteerModel : DefaultVolunteerModel
     {
-
         public override int MaximumIndexHeroCanRecruitFromHero(Hero buyerHero, Hero sellerHero, int useValueAsRelation = -101)
         {
             int baseValue = base.MaximumIndexHeroCanRecruitFromHero(buyerHero, sellerHero, useValueAsRelation);
             if (CustomSettings.Instance?.InfluenceCostForDifferentCultures == true)
             {
                 IFaction buyerKingdom = buyerHero.MapFaction;
-                if (buyerKingdom == null || buyerHero.Clan != null && buyerHero.Clan.IsClanTypeMercenary && buyerHero.Clan.IsMinorFaction)
+                if (buyerKingdom == null || buyerHero.Clan != null && buyerHero.Clan.IsClanTypeMercenary && buyerHero.Clan.IsMinorFaction || sellerHero.HomeSettlement.Owner == buyerHero)
                     return baseValue;
                 if (buyerKingdom.IsAtWarWith(sellerHero.HomeSettlement.MapFaction) || (buyerHero.Clan?.Influence <= 0 && buyerHero?.Culture != sellerHero?.Culture))
                     return 0;

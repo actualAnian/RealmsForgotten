@@ -28,7 +28,6 @@ namespace RealmsForgotten.Behaviors
         private GauntletLayer _gauntletLayer;
         private TextObject necromancyTextObject = new TextObject("{=necromancer_staff_status}Necromancy revivals: {AMOUNT}");
         public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;
-
         public override void AfterStart()
         {
             if (Campaign.Current != null)
@@ -40,7 +39,7 @@ namespace RealmsForgotten.Behaviors
         public override void OnMissionTick(float dt)
         {
             base.OnMissionTick(dt);
-            if (Agent.Main != null && Agent.Main.WieldedWeapon.Item?.StringId == "rfmisc_necromancer_staff")
+            if (Agent.Main != null && Agent.Main.WieldedWeapon.Item?.StringId.Contains("necromancer_staff") == true)
             {
                 Agent main = Agent.Main;
                 if (isSpawning)
@@ -83,6 +82,10 @@ namespace RealmsForgotten.Behaviors
                 return false;
             }
             
+            string troop = "sea_raiders_raider";
+            bool isDruidWand = main.WieldedWeapon.Item?.StringId.Contains("druid") == true;
+            
+            
             CharacterObject zombieTroop = CharacterObject.Find("sea_raiders_raider");
             
             int refactoredNumber = (int)((float)killedAllies * (150f / 300f) * (0.35f + MBRandom.RandomFloat));
@@ -101,6 +104,11 @@ namespace RealmsForgotten.Behaviors
                 
                 while (positions.Any(x => position.DistanceSquared(x) < 0.3f))
                     position = Mission.GetRandomPositionAroundPoint(main.Position, 1f, 6f);
+                
+                if (isDruidWand)
+                    troop = MBRandom.RandomFloat > 0.5 ? "werewolf" : "werebear";
+                
+                CharacterObject characterObject = CharacterObject.Find(troop);
 
                 PartyBase.MainParty?.AddMember(zombieTroop, 1);
 
@@ -132,7 +140,7 @@ namespace RealmsForgotten.Behaviors
             {
                 MissionScreen? missionScreen = TaleWorlds.ScreenSystem.ScreenManager.TopScreen as MissionScreen;
                 necromancyTextObject.SetTextVariable("AMOUNT", maxUses);
-                _dataSource = new SpellStatusVM(necromancyTextObject.ToString(),agent.WieldedWeapon.Item?.StringId == "rfmisc_necromancer_staff", 20, 22);
+                _dataSource = new SpellStatusVM(necromancyTextObject.ToString(),agent.WieldedWeapon.Item?.StringId.Contains("necromancer_staff") == true, 20, 22);
                 _gauntletLayer = new GauntletLayer(-1);
                 missionScreen.AddLayer(_gauntletLayer);
                 _gauntletLayer.LoadMovie("SpellStatus", _dataSource);
@@ -143,7 +151,7 @@ namespace RealmsForgotten.Behaviors
         }
         private void OnMainAgentWieldedItemChange()
         {
-            _dataSource.Visible = Agent.Main?.WieldedWeapon.Item?.StringId == "rfmisc_necromancer_staff";
+            _dataSource.Visible = Agent.Main?.WieldedWeapon.Item?.StringId.Contains("necromancer_staff") == true;
         }
     }
 }
