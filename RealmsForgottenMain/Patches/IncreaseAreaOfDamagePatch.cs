@@ -18,9 +18,18 @@ namespace RealmsForgotten.Patches
     [HarmonyPatch(typeof(Mission), "MissileAreaDamageCallback")]
     public static class IncreaseAreaOfDamagePatch
     {
+        private static FieldInfo _attackBlockedWithShield =
+            AccessTools.Field(typeof(AttackCollisionData), "_attackBlockedWithShield");
         private static CombatLogData GetAttackCollisionResults(Agent attackerAgent, Agent victimAgent, GameEntity hitObject, float momentumRemaining, in MissionWeapon attackerWeapon, bool crushedThrough, bool cancelDamage, bool crushedThroughWithoutAgentCollision, ref AttackCollisionData attackCollisionData, out WeaponComponentData shieldOnBack, out CombatLogData combatLog)
         {
             AttackInformation attackInformation = new AttackInformation(attackerAgent, victimAgent, hitObject, in attackCollisionData, in attackerWeapon);
+
+            object checkShieldCollisionData = attackCollisionData;
+            if (attackInformation.VictimShield.CurrentUsageItem == null)
+                _attackBlockedWithShield.SetValue(checkShieldCollisionData, false);
+
+            attackCollisionData = (AttackCollisionData)checkShieldCollisionData;
+            
             shieldOnBack = attackInformation.ShieldOnBack;
             MissionCombatMechanicsHelper.GetAttackCollisionResults(in attackInformation, crushedThrough, momentumRemaining, in attackerWeapon, cancelDamage, ref attackCollisionData, out combatLog, out var _);
             float num = attackCollisionData.InflictedDamage;

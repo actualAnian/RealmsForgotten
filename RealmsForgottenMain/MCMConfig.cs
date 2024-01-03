@@ -66,5 +66,20 @@ namespace RealmsForgotten
         [SettingPropertyBool("Enable influence cost for recruiting from different cultures.", RequireRestart = false, HintText = "Lords will spent influence for recruiting from different cultures.")]
         [SettingPropertyGroup("{=CustomSettings_General}General")]
         public bool InfluenceCostForDifferentCultures { get; set; } = true;
+        
+        [DefaultKey("V")]
+        [SettingPropertyText("Change spells", RequireRestart = true)] 
+        [SettingPropertyGroup("{=CustomSettings_KeyMapping}Key Mapping")]
+        public string ChangeSpellKey { get; set; } = "V";
+        
+        [DefaultKey("Numpad8")]
+        [SettingPropertyText("Use berserker potion", RequireRestart = true)] 
+        [SettingPropertyGroup("{=CustomSettings_KeyMapping}Key Mapping")]
+        public string UseBerserkerKey { get; set; } = "Numpad8";
+        
+        [DefaultKey("Numpad5")]
+        [SettingPropertyText("Use heal potion", RequireRestart = true)] 
+        [SettingPropertyGroup("{=CustomSettings_KeyMapping}Key Mapping")]
+        public string UseHealKey { get; set; } = "Numpad5";
     }
 }

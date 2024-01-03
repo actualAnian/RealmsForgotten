@@ -2,7 +2,7 @@
 	<Window>
 		<Widget WidthSizePolicy = "StretchToParent" HeightSizePolicy = "StretchToParent" IsVisible="true">
 			<Children>
-				<TextWidget HorizontalAlignment="Right" Brush.FontColor="#f4e1c4ff" Brush.FontSize="@FontSize" VerticalAlignment="Bottom" SuggestedWidth="300" SuggestedHeight="120" MarginBottom="@Height" IsVisible="@Visible" MarginRight="300" Text="@SpellText"/>
+				<TextWidget HorizontalAlignment="Right" Brush.FontColor="#f4e1c4ff" Brush.FontSize="@FontSize" VerticalAlignment="Bottom" SuggestedWidth="350" SuggestedHeight="150" MarginBottom="@Height" IsVisible="@Visible" MarginRight="300" Text="@SpellText"/>
 			</Children>
 		</Widget>
 	</Window>
