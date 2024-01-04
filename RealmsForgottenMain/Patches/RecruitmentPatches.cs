@@ -81,7 +81,7 @@ namespace RealmsForgotten.Patches
         [HarmonyPostfix]
         static void Postfix(ref MenuCallbackArgs args)
         {
-            if (CustomSettings.Instance?.InfluenceCostForDifferentCultures == true)
+            if (CustomSettings.Instance?.InfluenceCostForDifferentCultures == true && Settlement.CurrentSettlement.Owner != Hero.MainHero)
             {
                 if (Settlement.CurrentSettlement.MapFaction.IsAtWarWith(Hero.MainHero.MapFaction) && Settlement.CurrentSettlement.Culture != Hero.MainHero.Culture)
                 {

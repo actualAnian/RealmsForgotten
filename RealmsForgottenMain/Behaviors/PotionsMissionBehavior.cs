@@ -52,12 +52,12 @@ namespace RealmsForgotten.Behaviors
             base.OnMissionTick(dt);
             if (Agent.Main == null)
                 return;
-            if (elixir.Amount > 0 && Input.IsKeyReleased(InputKey.Numpad5) && Agent.Main.Health < 100)
+            if (elixir.Amount > 0 && Input.IsKeyReleased(SubModule.Instance.KeysConfig[nameof(CustomSettings.UseHealKey)]) && Agent.Main.Health < 100)
             {
                 DrinkElixir();
             }
 
-            if (berserker.Amount > 0 && Input.IsKeyReleased(InputKey.Numpad8))
+            if (berserker.Amount > 0 && Input.IsKeyReleased(SubModule.Instance.KeysConfig[nameof(CustomSettings.UseBerserkerKey)]))
             {
                 if(timer.Check(Time.ApplicationTime))
                 {
