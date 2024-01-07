@@ -86,7 +86,7 @@ namespace RealmsForgotten.Behaviors
                             spellTextObject.SetTextVariable("CURRENT_SPELL", agent.Equipment[index].Item.Name);
                             spellTextObject.SetTextVariable("AMOUNT", agent.Equipment[index].Amount);
                             MissionScreen? missionScreen = TaleWorlds.ScreenSystem.ScreenManager.TopScreen as MissionScreen;
-                            _dataSource = new SpellStatusVM(spellTextObject.ToString(), agent.WieldedWeapon.Item?.StringId.Contains("staff") == true, 65, 100);
+                            _dataSource = new SpellStatusVM(spellTextObject.ToString(), agent.WieldedWeapon.Item?.StringId.Contains("staff") == true, 65, 120);
                             _gauntletLayer = new GauntletLayer(-1);
                             missionScreen.AddLayer(_gauntletLayer);
                             _gauntletLayer.LoadMovie("SpellStatus", _dataSource);
@@ -115,7 +115,7 @@ namespace RealmsForgotten.Behaviors
         public override void OnMissionTick(float dt)
         {
             base.OnMissionTick(dt);
-            if (Input.IsKeyReleased(InputKey.V) && Agent.Main?.WieldedWeapon.Item?.Type == ItemObject.ItemTypeEnum.Musket)
+            if (Input.IsKeyReleased(SubModule.Instance.KeysConfig[nameof(CustomSettings.ChangeSpellKey)]) && Agent.Main?.WieldedWeapon.Item?.Type == ItemObject.ItemTypeEnum.Musket)
             {
                 SetNextAmmoSlot();
             }

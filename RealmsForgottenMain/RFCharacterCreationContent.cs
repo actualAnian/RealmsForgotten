@@ -140,7 +140,7 @@ namespace RealmsForgotten
 
                 FieldInfo _description = AccessTools.Field(typeof(PropertyObject), "_description");
                 
-                _description.SetValue(DefaultCulturalFeats.BattanianMilitiaFeat, new TextObject("Towns owned by Xilantlacay rulers have +1 militia production."));
+                _description.SetValue(DefaultCulturalFeats.BattanianMilitiaFeat, new TextObject("Towns owned by rulers with the current culture have +1 militia production."));
                 _description.SetValue(DefaultCulturalFeats.KhuzaitAnimalProductionFeat, new TextObject("25% production bonus to horse, mule, cow and sheep in villages owned by All Khuur rulers."));
 
                 switch (cultureId)

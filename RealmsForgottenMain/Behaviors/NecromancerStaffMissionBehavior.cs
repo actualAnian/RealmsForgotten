@@ -31,13 +31,16 @@ namespace RealmsForgotten.Behaviors
 
         public override void AfterStart()
         {
-            maxUses = (int)(Math.Round(Hero.MainHero.GetSkillValue(RFSkills.Arcane) / 100.0) * 100) / 100;
+            if (Campaign.Current != null)
+                maxUses = (int)(Math.Round(Hero.MainHero.GetSkillValue(RFSkills.Arcane) / 100.0) * 100) / 100;
+            else
+                maxUses = 3;
         }
         
         public override void OnMissionTick(float dt)
         {
             base.OnMissionTick(dt);
-            if (Agent.Main != null && Agent.Main.WieldedWeapon.Item?.StringId == "necromancer_staff")
+            if (Agent.Main != null && Agent.Main.WieldedWeapon.Item?.StringId.Contains("necromancer_staff") == true)
             {
                 Agent main = Agent.Main;
                 if (isSpawning)
@@ -69,8 +72,9 @@ namespace RealmsForgotten.Behaviors
                 return false;
             }
 
-            int killedAllies = playerEvent.PartiesOnSide(playerEvent.PlayerSide).SelectMany(x => x.Troops.ToList())
-                .Where(x=>x.IsKilled && x.Troop?.StringId != "sea_raiders_raider").Count();
+            int killedAllies = playerEvent.PartiesOnSide(playerEvent.PlayerSide)
+                .SelectMany(x=>x.Troops.ToList()).Count(x => x.IsKilled && x.Troop?.StringId != "sea_raiders_raider");
+            
             killedAllies -= totalRevived;
             
             if (killedAllies <= 0)
@@ -79,9 +83,13 @@ namespace RealmsForgotten.Behaviors
                 return false;
             }
             
+            string troop = "sea_raiders_raider";
+            bool isDruidWand = main.WieldedWeapon.Item?.StringId.Contains("druid") == true;
+            
+            
             CharacterObject zombieTroop = CharacterObject.Find("sea_raiders_raider");
             
-            int refactoredNumber = (int)(killedAllies * (Hero.MainHero.GetSkillValue(RFSkills.Arcane) / 300) * (0.35 + MBRandom.RandomFloat));
+            int refactoredNumber = (int)((float)killedAllies * (150f / 300f) * (0.35f + MBRandom.RandomFloat));
 
             if(refactoredNumber > killedAllies)
                 refactoredNumber = killedAllies;
@@ -97,15 +105,23 @@ namespace RealmsForgotten.Behaviors
                 
                 while (positions.Any(x => position.DistanceSquared(x) < 0.3f))
                     position = Mission.GetRandomPositionAroundPoint(main.Position, 1f, 6f);
+                
+                if (isDruidWand)
+                    troop = MBRandom.RandomFloat > 0.5 ? "werewolf" : "werebear";
+                
+                CharacterObject characterObject = CharacterObject.Find(troop);
 
-                PartyBase.MainParty.AddMember(zombieTroop, 1);
+                PartyBase.MainParty?.AddMember(zombieTroop, 1);
 
-                Agent agent = Mission.Current.SpawnTroop(new PartyAgentOrigin(PartyBase.MainParty, zombieTroop), true, true,
+                IAgentOriginBase agentOriginBase = Campaign.Current != null
+                    ? new PartyAgentOrigin(PartyBase.MainParty, zombieTroop)
+                    : new SimpleAgentOrigin(zombieTroop);
+                
+                Agent agent = Mission.Current.SpawnTroop(agentOriginBase, true, true,
                     zombieTroop.IsMounted, false, 1, 1, true, true, false, position, position.AsVec2);
 
                 agent.TeleportToPosition(position);
-                agent.SetActionChannel(0, ActionIndexCache.Create("act_stand_up_floor_1"), true);
-                
+                agent.SetMorale(100);
                 positions.Add(position);
                 revivedNow++;
             }
@@ -125,7 +141,7 @@ namespace RealmsForgotten.Behaviors
             {
                 MissionScreen? missionScreen = TaleWorlds.ScreenSystem.ScreenManager.TopScreen as MissionScreen;
                 necromancyTextObject.SetTextVariable("AMOUNT", maxUses);
-                _dataSource = new SpellStatusVM(necromancyTextObject.ToString(),agent.WieldedWeapon.Item?.StringId == "necromancer_staff", 20, 22);
+                _dataSource = new SpellStatusVM(necromancyTextObject.ToString(),agent.WieldedWeapon.Item?.StringId.Contains("necromancer_staff") == true, 20, 22);
                 _gauntletLayer = new GauntletLayer(-1);
                 missionScreen.AddLayer(_gauntletLayer);
                 _gauntletLayer.LoadMovie("SpellStatus", _dataSource);
@@ -136,7 +152,7 @@ namespace RealmsForgotten.Behaviors
         }
         private void OnMainAgentWieldedItemChange()
         {
-            _dataSource.Visible = Agent.Main?.WieldedWeapon.Item?.StringId == "necromancer_staff";
+            _dataSource.Visible = Agent.Main?.WieldedWeapon.Item?.StringId.Contains("necromancer_staff") == true;
         }
     }
 }

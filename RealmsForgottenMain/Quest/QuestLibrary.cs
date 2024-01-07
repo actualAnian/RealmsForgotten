@@ -12,6 +12,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 using HarmonyLib;
+using TaleWorlds.Library;
 
 namespace RealmsForgotten.Quest
 {
@@ -70,12 +71,53 @@ namespace RealmsForgotten.Quest
             disbandParty.AddElementToMemberRoster(CharacterObject.Find("imperial_equite"), 1);
         }
         public static Hero QuestQueen;
-        public static Hero AnoritLord;
-        public static Hero TheOwl => Hero.FindFirst(x => x.StringId == "rf_the_owl");
+        public static Hero AnoritLord
+        {
+            get
+            {
+                try
+                {
+                    return Hero.FindFirst(x => x.StringId == "lord_WE9_l");
+                }
+                catch (Exception)
+                {
+                    InformationManager.ShowInquiry(new InquiryData("Error", "Error initializing the quest hero AnoritLord", true, false, GameTexts.FindText("str_done").ToString(), "",
+                        null, null), true);
+                    return null;
+                }
+            }
+        }
+
+        public static Hero TheOwl
+        {
+            get
+            {
+                try
+                {
+                    return Hero.FindFirst(x => x.StringId == "rf_the_owl");
+                }
+                catch (Exception)
+                {
+                    InformationManager.ShowInquiry(new InquiryData("Error", "Error initializing the quest hero Owl", true, false, GameTexts.FindText("str_done").ToString(), "",
+                        null, null), true);
+                    return null;
+                }
+            }
+        }
         public static void InitializeVariables()
         {
-            QuestQueen = Kingdom.All.First(x => x.StringId == "empire").Leader.Spouse;
-            AnoritLord = Hero.FindFirst(x => x.StringId == "lord_WE9_l");
+            try
+            {
+                QuestQueen = Kingdom.All.First(x => x.StringId == "empire").Leader.Spouse;
+                if (QuestQueen == null)
+                    throw new Exception();
+            }
+            catch (Exception)
+            {
+                InformationManager.ShowInquiry(new InquiryData("Error", "Error initializing the quest hero QuestQueen", true, false, GameTexts.FindText("str_done").ToString(), "",
+                    null, null), true);
+            }
+            
         }
     }
 

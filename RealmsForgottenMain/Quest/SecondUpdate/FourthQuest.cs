@@ -135,15 +135,15 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 Clan hellboundClan =
                     Clan.FindFirst(x => x.StringId == "nelrog_raiders");
 
-                MobileParty hellboundParty = BanditPartyComponent.CreateBanditParty("quest_hellbound_party", hellboundClan, Settlement.Find("hideout_forest_13").Hideout,
+                MobileParty hellboundParty = BanditPartyComponent.CreateBanditParty("quest_hellbound_party", hellboundClan, null,
                     true);
                 TroopRoster hellBoundTroopRoster = TroopRoster.CreateDummyTroopRoster();
 
                 string[] characters = new[] { "cs_nelrog_bandits_bandit", "cs_nelrog_bandits_raider", "cs_nelrog_bandits_chief" };
                 hellBoundTroopRoster.AddToCounts(CharacterObject.Find("cs_nelrog_bandits_boss"), 1);
-                for (int i = 0; i < MobileParty.MainParty.MemberRoster.TotalManCount; i++)
+                for (int i = 0; i < 60; i++)
                 {
-                    hellBoundTroopRoster.AddToCounts(CharacterObject.Find(characters.GetRandomElement()), 3);
+                    hellBoundTroopRoster.AddToCounts(CharacterObject.Find(characters.GetRandomElement()), 1);
                 }
 
                 hellboundParty.InitializeMobilePartyAtPosition(hellBoundTroopRoster,
@@ -206,7 +206,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
         private void MonkDialogConsequence()
         {
             PartyBase.MainParty.AddMember(CharacterObject.Find("monk_knight"), 20);
-            PartyBase.MainParty.ItemRoster.AddToCounts(new EquipmentElement(MBObjectManager.Instance.GetObject<ItemObject>("anorit_fire_stone_t3_rfthrowing50")), 10);
+            PartyBase.MainParty.ItemRoster.AddToCounts(new EquipmentElement(MBObjectManager.Instance.GetObject<ItemObject>("rfmisc_anorit_fire_stone_t3_rfthrowing50")), 10);
 
             captureHellboundLog = AddLog(GameTexts.FindText("rf_fourth_quest_third_log"));
 

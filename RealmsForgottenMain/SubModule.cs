@@ -2,6 +2,7 @@
 using RealmsForgotten.Managers;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -16,6 +17,7 @@ using TaleWorlds.Localization;
 using TaleWorlds.ModuleManager;
 using TaleWorlds.MountAndBlade;
 using System.Reflection;
+using MCM.Abstractions.Attributes;
 using TaleWorlds.Engine.GauntletUI;
 using Module = TaleWorlds.MountAndBlade.Module;
 using Newtonsoft.Json.Linq;
@@ -24,6 +26,8 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.GameMenus;
 using RealmsForgotten.Patches;
 using RealmsForgotten.Quest.SecondUpdate;
+using TaleWorlds.InputSystem;
+using TaleWorlds.Library;
 
 namespace RealmsForgotten
 {
@@ -37,6 +41,16 @@ namespace RealmsForgotten
         internal static Dictionary<string, Tuple<string, string, string, string>> fighterMin = new();
         internal static Dictionary<string, Tuple<string, string, string, string>> fighterMax = new();
         private bool manualPatchesHaveFired;
+        public Dictionary<string, InputKey> KeysConfig;
+
+        public static SubModule Instance;
+
+        public SubModule()
+        {
+            KeysConfig = new();
+            Instance = this;
+        }
+
         internal static readonly string[] cultures = new string[]
         {
             "battania",
@@ -74,11 +88,48 @@ namespace RealmsForgotten
                 new RFSkillEffects().InitializeAll();
                 new RFPerks().Initialize();
 
-
+                if (CustomSettings.Instance != null)
+                    CheckInvalidKeys();
             }
         }
 
+        private void CheckInvalidKeys()
+        {
+            string[] keys = Enum.GetNames(typeof(InputKey));
+            foreach (var property in AccessTools.GetDeclaredProperties(typeof(CustomSettings)))
+                if (Attribute.GetCustomAttribute(property, typeof(SettingPropertyGroupAttribute))
+                    is SettingPropertyGroupAttribute keyAttribute && keyAttribute.GroupName.Contains("KeyMapping"))
+                {
+                    if (property.GetValue(CustomSettings.Instance) is string key)
+                    {
+                        bool valid = false;
+                        if (key.Length == 1 && keys.Contains(key.ToUpper()))
+                        {
+                            property.SetValue(CustomSettings.Instance, key.ToUpper());
+                            key = key.ToUpper();
+                            valid = true;
+                        }
+                        else if (key.Length > 1 && keys.Contains(key))
+                            valid = true;
+                        else if (!keys.Contains(key))
+                        {
+                            DefaultKey defaultKey = (DefaultKey)Attribute.GetCustomAttribute(property, typeof(DefaultKey));
+                            
+                            InformationManager.ShowInquiry(new InquiryData("Error", $"Invalid key at {property.Name}, setting to default ({defaultKey.DefaultValue})", true,
+                                false, GameTexts.FindText("str_done").ToString(), "", null, null), true);
+                            property.SetValue(CustomSettings.Instance, defaultKey.DefaultValue);
+                        }
 
+                        if (valid)
+                        {
+                            if (!KeysConfig.ContainsKey(property.Name))
+                                KeysConfig.Add(property.Name, (InputKey)Enum.Parse(typeof(InputKey), key));
+                            else
+                                KeysConfig[property.Name] = (InputKey)Enum.Parse(typeof(InputKey), key);
+                        }
+                    }
+                }
+        }
         public override void OnMissionBehaviorInitialize(Mission mission)
         {
             if (mission != null)
@@ -87,10 +138,13 @@ namespace RealmsForgotten
                 mission.AddMissionBehavior(new SpellAmmoMissionBehavior());
                 mission.AddMissionBehavior(new NecromancerStaffMissionBehavior());
 
-                ItemRosterElement elixir = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("elixir_rfmisc"));
-                ItemRosterElement berserker = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("berzerker_potion"));
-                if (!elixir.IsEmpty || !berserker.IsEmpty)
-                    mission.AddMissionBehavior(new PotionsMissionBehavior(elixir, berserker));
+                if (Campaign.Current != null)
+                {
+                    ItemRosterElement elixir = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("elixir_rfmisc"));
+                    ItemRosterElement berserker = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("berzerker_potion"));
+                    if (!elixir.IsEmpty || !berserker.IsEmpty)
+                        mission.AddMissionBehavior(new PotionsMissionBehavior(elixir, berserker));
+                }
             }
         }
         protected override void OnBeforeInitialModuleScreenSetAsRoot() { }
