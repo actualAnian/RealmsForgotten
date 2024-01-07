@@ -13,6 +13,8 @@ using RealmsForgotten.RFCustomSettlements;
 using SandBox.Objects.Usables;
 using System.Reflection;
 using TaleWorlds.MountAndBlade.View.Screens;
+using TaleWorlds.Localization;
+using System;
 
 namespace RFCustomSettlements.Patches
 {
@@ -58,7 +60,15 @@ namespace RFCustomSettlements.Patches
                             __instance.PrimaryInteractionMessage = button + GetNameOfGoldObject(amount);
                         }
                         else
-                            __instance.PrimaryInteractionMessage = button + " " + MBObjectManager.Instance.GetObject<ItemObject>(itemId).Name;
+                            try
+                            {
+                                TextObject itemName = MBObjectManager.Instance.GetObject<ItemObject>(itemId).Name;
+                                __instance.PrimaryInteractionMessage = button + " " + itemName;
+                            }
+                            catch (NullReferenceException)
+                            {
+                                RealmsForgotten.HuntableHerds.SubModule.PrintDebugMessage($"Error, can not find an item with id \"{itemId}\"", 255, 0, 0);
+                            }
                         break;
                     case RFUsableObjectType.Passage:
                         __instance.PrimaryInteractionMessage = button + " Go Through";

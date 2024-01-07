@@ -208,20 +208,35 @@ namespace RealmsForgotten.RFCustomSettlements
 
             foreach (KeyValuePair<int, CustomSettlementBuildData.RFBanditData> pair in bd.patrolAreasBandits)
             {
-                if(!banditIDs.Contains(pair.Value.Id))
+                try
                 {
-                    banditIDs.Add(pair.Value.Id);
-                    var troop = MBObjectManager.Instance.GetObject<CharacterObject>(pair.Value.Id);
-                    mparty.AddElementToMemberRoster(troop, 1);
+
+                    if (!banditIDs.Contains(pair.Value.Id))
+                    {
+                        banditIDs.Add(pair.Value.Id);
+                        var troop = MBObjectManager.Instance.GetObject<CharacterObject>(pair.Value.Id);
+                        mparty.AddElementToMemberRoster(troop, 1);
+                    }
+                }
+                catch
+                {
+                    HuntableHerds.SubModule.PrintDebugMessage($"Error, there is no character with id \"{pair.Value.Id}\"", 255, 0, 0);
                 }
             }
             foreach(KeyValuePair<int, List<CustomSettlementBuildData.RFBanditData>> pair in bd.stationaryAreasBandits)
             {
                 foreach(CustomSettlementBuildData.RFBanditData banditData in pair.Value)
                 {
-                    banditIDs.Add(banditData.Id);
-                    var troop = MBObjectManager.Instance.GetObject<CharacterObject>(banditData.Id);
-                    mparty.AddElementToMemberRoster(troop, 1);
+                    try
+                    {
+                        banditIDs.Add(banditData.Id);
+                        CharacterObject troop = MBObjectManager.Instance.GetObject<CharacterObject>(banditData.Id);
+                        mparty.AddElementToMemberRoster(troop, 1);
+                    }
+                    catch
+                    {
+                        HuntableHerds.SubModule.PrintDebugMessage($"Error, there is no character with id \"{banditData.Id}\"", 255, 0, 0);
+                    }
                 }
             }
             mparty.ActualClan = Clan.All.Where(c => c.StringId == "looters").ElementAt(0);
@@ -554,7 +569,7 @@ namespace RealmsForgotten.RFCustomSettlements
             }
             catch
             {
-                string str = "Error in game entity name" + usablePlace.GameEntity.Name;
+                string str = "Error in game entity name " + usablePlace.GameEntity.Name;
                 HuntableHerds.SubModule.PrintDebugMessage(str, 255, 0, 0);
             }
         }

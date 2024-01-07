@@ -119,7 +119,7 @@ namespace RealmsForgotten.RFCustomSettlements
 
         private void ChooseChallenge()
         {
-            ExpressionEvaluator evaluator = new ExpressionEvaluator();
+            ExpressionEvaluator evaluator = new();
             evaluator.Types.Add(typeof(Globals));
             evaluator.Types.Add(typeof(CharacterObject));
             evaluator.Types.Add(typeof(Hero));

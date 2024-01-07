@@ -937,12 +937,6 @@ namespace RealmsForgotten
             }
             catch
             {
-                equipmentRoster = MBObjectManager.Instance.GetObject<MBEquipmentRoster>("rf_looter");
-                Equipment backupEquipment = equipmentRoster.GetBattleEquipments().GetRandomElementInefficiently();
-                characterCreation.ChangeCharactersEquipment(new List<Equipment> { backupEquipment });
-                CharacterObject.PlayerCharacter.FirstBattleEquipment.FillFrom(backupEquipment);
-                CharacterObject.PlayerCharacter.FirstCivilianEquipment.FillFrom(backupEquipment);
-
                 InformationManager.DisplayMessage(new InformationMessage("Error while giving player the equipment", new Color(255, 0, 0)));
             }
         }
