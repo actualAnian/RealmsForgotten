@@ -222,10 +222,10 @@ namespace RealmsForgotten.Behaviors
         protected override void OnEndMission()
         {
             if (heroesInitialSkills != null)
-                foreach (Agent agent in Mission.AllAgents.Where(x => x.IsHero))
+                foreach (Agent agent in Mission.AllAgents.Where(x => x?.IsHero == true))
                 {
-                    if (agent.Character is CharacterObject character && heroesInitialSkills.ContainsKey(agent.Index))
-                        character.HeroObject.SetSkillValue(heroesInitialSkills[agent.Index].Item1, heroesInitialSkills[agent.Index].Item2);
+                    if (agent.Character is CharacterObject character && heroesInitialSkills?.TryGetValue(agent.Index, out var value) == true)
+                        character.HeroObject?.SetSkillValue(value.Item1, value.Item2);
                 }
 
         }

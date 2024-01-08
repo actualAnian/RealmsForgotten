@@ -10,6 +10,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 using RealmsForgotten.Quest;
+using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
 namespace RealmsForgotten.Models
 {
@@ -25,7 +26,6 @@ namespace RealmsForgotten.Models
             if(QuestPatches.AvoidDisbanding && party.Army?.Parties.Contains(MobileParty.MainParty) == true)
                 baseValue.AddFactor(2.0f);
             return baseValue;
-
         }
     }
 }

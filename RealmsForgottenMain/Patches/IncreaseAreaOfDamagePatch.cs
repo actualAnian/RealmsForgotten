@@ -180,7 +180,7 @@ namespace RealmsForgotten.Patches
                         b.SelfInflictedDamage = MathF.Round((float)b.SelfInflictedDamage * num8);
                         combatLog.ModifiedDamage = MathF.Round((float)combatLog.ModifiedDamage * num8);
 
-                        b.BoneIndex = item.IsHuman ? blowInput.BoneIndex : Game.Current.DefaultMonster.SpineUpperBoneIndex;
+                        b.BoneIndex = item.GetRandomPairOfRealBloodBurstBoneIndices().Item1;
 
                         CurrentBlow = blowInput;
 
