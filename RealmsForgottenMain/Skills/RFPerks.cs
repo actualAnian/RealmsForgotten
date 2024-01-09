@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.Core;
+using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.CustomSkills
 {
@@ -159,7 +160,7 @@ namespace RealmsForgotten.CustomSkills
 
             _apprenticesLuck.Initialize("{=!}Apprentices Luck", RFSkills.Alchemy, 100, _apprenticesDedication,
                 "{=!}Increase all throwable bombs damage in x3.5.",
-                SkillEffect.PerkRole.PartyLeader, 3.5f, SkillEffect.EffectIncrementType.AddFactor);
+                SkillEffect.PerkRole.PartyLeader, 2.5f, SkillEffect.EffectIncrementType.AddFactor);
 
             _apprenticesDedication.Initialize("{=!}Apprentices Dedication", RFSkills.Alchemy, 100, _apprenticesLuck,
                 "{=!}Increase all throwable bombs area of damage in x3.5.",
@@ -167,7 +168,7 @@ namespace RealmsForgotten.CustomSkills
 
             _adeptsLuck.Initialize("{=!}Adept's Luck", RFSkills.Alchemy, 150, _adeptsDedication,
                 "{=!}Increase all throwable bombs damage in x5.5.",
-                SkillEffect.PerkRole.PartyLeader, 5.5f, SkillEffect.EffectIncrementType.AddFactor);
+                SkillEffect.PerkRole.PartyLeader, 4.5f, SkillEffect.EffectIncrementType.AddFactor);
 
             _adeptsDedication.Initialize("{=!}Adept's Dedication", RFSkills.Alchemy, 150, _adeptsLuck,
                 "{=!}Increase all throwable bombs area of damage in x5.5.",
@@ -175,7 +176,7 @@ namespace RealmsForgotten.CustomSkills
 
             _mastersLuck.Initialize("{=!}Master's Luck", RFSkills.Alchemy, 250, _mastersDedication,
                 "{=!}Increase all throwable bombs damage in x8.5.",
-                SkillEffect.PerkRole.PartyLeader, 8.5f, SkillEffect.EffectIncrementType.AddFactor);
+                SkillEffect.PerkRole.PartyLeader, 6.5f, SkillEffect.EffectIncrementType.AddFactor);
 
             _mastersDedication.Initialize("{=!}Master's Dedication", RFSkills.Alchemy, 250, _mastersLuck,
                 "{=!}Increase all throwable bombs area of damage in x8.5.",

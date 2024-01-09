@@ -335,15 +335,9 @@ namespace RealmsForgotten.Quest
         {
             DialogFlow dialogFlow = DialogFlow.CreateDialogFlow("start", 125).BeginNpcOptions()
                 .NpcOption(GameTexts.FindText("rf_the_owl_intercept_text_4").ToString(), () => MobileParty.ConversationParty?.LeaderHero?.StringId == TheOwl?.StringId && !hasTalkedToOwl2 && findMapJournalLog?.CurrentProgress == 3 && !isOwlOnPlayerParty)
-                .GotoDialogState("owl_intercept_start")
+                .PlayerLine(GameTexts.FindText("rf_the_owl_intercept_text_2").ToString()).NpcLine(GameTexts.FindText("rf_the_owl_intercept_text_3").ToString()).Consequence(GoToAnoritLord).CloseDialog()
                 .NpcOption(GameTexts.FindText("rf_the_owl_intercept_text").ToString(), () => Hero.OneToOneConversationHero == TheOwl && !hasTalkedToOwl2 && findMapJournalLog?.CurrentProgress == 3 && isOwlOnPlayerParty)
-                .GotoDialogState("owl_intercept_start").EndNpcOptions();
-
-            dialogFlow.AddPlayerLine("owl_intercept_1", "owl_intercept_start", "owl_intercept_option_1_out_1",
-                GameTexts.FindText("rf_the_owl_intercept_text_2").ToString(), null, null, this);
-
-            dialogFlow.AddDialogLine("owl_intercept_2", "owl_intercept_option_1_out_1", "close_window",
-                GameTexts.FindText("rf_the_owl_intercept_text_3").ToString(), null, GoToAnoritLord, this);
+                .PlayerLine(GameTexts.FindText("rf_the_owl_intercept_text_2").ToString()).NpcLine(GameTexts.FindText("rf_the_owl_intercept_text_3").ToString()).Consequence(GoToAnoritLord).CloseDialog().EndNpcOptions();
 
             return dialogFlow;
 
