@@ -1,4 +1,5 @@
 ﻿using RealmsForgotten.CustomSkills;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
@@ -77,9 +78,10 @@ namespace RealmsForgotten.RFEffects
             }
 
             
-            int arcaneLevel = agent.Character.GetSkillValue(RFSkills.Arcane) / 30;
+            int arcaneLevel = Campaign.Current != null ? agent.Character.GetSkillValue(RFSkills.Arcane) / 30 : 1;
             if (arcaneLevel < 1)
                 arcaneLevel = 1;
+            
             for (int i = 1; i <= arcaneLevel; i++)
                 skeleton.AddComponentToBone(Game.Current.DefaultMonster.MainHandItemBoneIndex, component);
 

@@ -62,9 +62,8 @@ namespace RealmsForgotten
         };
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
-            if (game.GameType is Campaign)
+            if (gameStarterObject is CampaignGameStarter campaignGameStarter)
             {
-                CampaignGameStarter campaignGameStarter = (CampaignGameStarter)gameStarterObject;
                 campaignGameStarter.AddBehavior(new BaseGameDebugCampaignBehavior());
                 campaignGameStarter.AddBehavior(new RFEnchantmentVendorBehavior());
                 campaignGameStarter.AddBehavior(new RFFaithCampaignBehavior());
@@ -81,16 +80,15 @@ namespace RealmsForgotten
                 campaignGameStarter.AddModel(new RFRaidModel());
                 campaignGameStarter.AddModel(new RFVolunteerModel());
                 campaignGameStarter.AddModel(new RFWageModel());
-
+                campaignGameStarter.AddModel(new RFBattleCaptainModel());
 
                 new RFAttribute().Initialize();
                 new RFSkills().Initialize();
                 new RFSkillEffects().InitializeAll();
                 new RFPerks().Initialize();
-
-                if (CustomSettings.Instance != null)
-                    CheckInvalidKeys();
             }
+            if (CustomSettings.Instance != null)
+                CheckInvalidKeys();
         }
 
         private void CheckInvalidKeys()
