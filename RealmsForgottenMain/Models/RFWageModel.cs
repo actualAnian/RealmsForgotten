@@ -12,7 +12,7 @@ namespace RealmsForgotten.Models
     {
         public override int GetCharacterWage(CharacterObject character)
         {
-            return base.GetCharacterWage(character) * (character.IsGiant() ? 2 : 1);
+            return base.GetCharacterWage(character) * (character.IsGiant() ? Globals.GiantsCostMult : 1);
         }
         public override int GetTroopRecruitmentCost(CharacterObject troop, Hero buyerHero, bool withoutItemCost = false)
         {

@@ -34,8 +34,8 @@ namespace RealmsForgotten.Behaviors
             if (characterObject != null && characterObject.GetPerkValue(RFPerks.Faith.DruidsWave))
             {
                 affectorAgent.Health += blow.InflictedDamage * 0.3f;
-                if (affectorAgent.Health > 100)
-                    affectorAgent.Health = 100;
+                if (affectorAgent.Health > affectorAgent.HealthLimit)
+                    affectorAgent.Health = affectorAgent.HealthLimit;
             }
             
         }

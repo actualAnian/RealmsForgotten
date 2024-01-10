@@ -569,14 +569,14 @@ namespace RealmsForgotten.Quest.SecondUpdate
         private DialogFlow DeliverScholarDialogFlow()
         {
             DialogFlow dialogFlow = DialogFlow.CreateDialogFlow("start", 125).NpcLine(GameTexts.FindText("rf_third_quest_anorit_dialog_2_1"))
-                .Condition(() => Hero.OneToOneConversationHero == QuestGiver && escortAthasScholarLog?.CurrentProgress == 1)
+                .Condition(() => Hero.OneToOneConversationHero == QuestGiver && escortAthasScholarLog?.CurrentProgress < 3 && !(waitUntilDecipherLog?.CurrentProgress > 0))
                 .GotoDialogState("deliver_scholar_dialog_start");
 
             dialogFlow.AddPlayerLine("deliver_scholar_dialog_2", "deliver_scholar_dialog_start", "close_window",
                 GameTexts.FindText("rf_ok").ToString(), null, WaitUntilDecipher, this);
 
             dialogFlow.AddDialogLine("postponed_dialog", "start", "deliver_scholar_output_3",
-                GameTexts.FindText("rf_third_quest_anorit_dialog_2_2").ToString(), () => Hero.OneToOneConversationHero == QuestGiver && (escortAthasScholarLog?.CurrentProgress == 2 || waitUntilDecipherLog?.CurrentProgress == 1), null, this);
+                GameTexts.FindText("rf_third_quest_anorit_dialog_2_2").ToString(), () => Hero.OneToOneConversationHero == QuestGiver && (escortAthasScholarLog?.CurrentProgress < 3 && waitUntilDecipherLog?.CurrentProgress == 1), null, this, 150);
 
             dialogFlow.AddPlayerLine("deliver_scholar_dialog_4", "deliver_scholar_output_3", "close_window",
                 GameTexts.FindText("rf_third_quest_anorit_dialog_2_3").ToString(), null, GoToHideoutLog, this);
