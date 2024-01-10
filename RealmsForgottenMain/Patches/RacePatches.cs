@@ -118,27 +118,31 @@ namespace RealmsForgotten.Patches
             __result += noGiants * (Globals.GiantCountsAs -1);
         }
     }
-    [HarmonyPatch(typeof(RecruitVolunteerTroopVM), "RefreshValues")]
-    static class RecruitVolunteerTroopVMRefreshValuesPatch
-    {
-        // adds the "costs 2 to the viewmodel while adding a troop"
-        public static void Postfix(RecruitVolunteerTroopVM __instance)
-        {
-            if(__instance.Character != null)
-            {
-                __instance.Wage = 10000;
-                __instance.NameText += "aaaaaaaaaaaa";
+    //[HarmonyPatch(typeof(RecruitVolunteerTroopVM), "RefreshValues")]
+    //static class RecruitVolunteerTroopVMRefreshValuesPatch
+    //{
+    //    // adds the "costs 2 to the viewmodel while adding a troop"
+    //    public static void Postfix(RecruitVolunteerTroopVM __instance)
+    //    {
+//            if(__instance.Character != null)
+//            {
+//                if(__instance.Character.IsGiant())
+//                {
+//                    __instance.Wage = __instance.Wage * Globals.GiantsCostMult;
+//                }
+//                //__instance.Wage = 10000;
+//                //__instance.NameText += "aaaaaaaaaaaa";
 //                __instance.NameText += "\n lololo";
-                __instance.Level += "\n lololo";
-            }
+//                //__instance.Level += "\n lololo";
+//            }
             //int noGiants = 0;
             //foreach (RecruitVolunteerTroopVM troop in __instance.TroopsInCart)
             //{
             //    if (troop.Character.IsGiant()) noGiants++;
             //}
             //__result += noGiants * (Globals.GiantCountsAs - 1);
-        }
-    }
+    //    }
+    //}
         // adds the "costs 2 to the viewmodel while adding a troop"
         //used for information screen when hovering over a troop
     [HarmonyPatch(typeof(TooltipRefresherCollection), "RefreshCharacterTooltip")]
