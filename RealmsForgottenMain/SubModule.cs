@@ -28,6 +28,7 @@ using RealmsForgotten.Patches;
 using RealmsForgotten.Quest.SecondUpdate;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
+using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
 namespace RealmsForgotten
 {
@@ -67,7 +68,6 @@ namespace RealmsForgotten
                 campaignGameStarter.AddBehavior(new BaseGameDebugCampaignBehavior());
                 campaignGameStarter.AddBehavior(new RFEnchantmentVendorBehavior());
                 campaignGameStarter.AddBehavior(new RFFaithCampaignBehavior());
-               
 
                 campaignGameStarter.AddModel(new RFAgentApplyDamageModel());
                 campaignGameStarter.AddModel(new RFAgentStatCalculateModel());

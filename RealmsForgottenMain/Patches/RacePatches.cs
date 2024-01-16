@@ -119,7 +119,7 @@ namespace RealmsForgotten.Patches
         }
     }
     //[HarmonyPatch(typeof(RecruitVolunteerTroopVM), "RefreshValues")]
-    //static class RecruitVolunteerTroopVMRefreshValuesPatch
+    //static class w    
     //{
     //    // adds the "costs 2 to the viewmodel while adding a troop"
     //    public static void Postfix(RecruitVolunteerTroopVM __instance)
