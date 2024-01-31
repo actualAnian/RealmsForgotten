@@ -82,8 +82,8 @@ namespace RealmsForgotten.Behaviors
 
         private void AddDialogs(CampaignGameStarter starter)
         {
-            DialogFlow dialog = DialogFlow.CreateDialogFlow("start", 125).PlayerLine(new TextObject("{=playervendorask}Hi, i heard you deal with special items, is that true ?").ToString()).Condition(() => CharacterObject.OneToOneConversationCharacter?.StringId == "enchanted_vendor" && lastMeetingTime == default)
-                .Consequence(()=> lastMeetingTime = CampaignTime.Now).NpcLine(new TextObject("{=playervendoranswer}Yes, what can i do for you ?").ToString()).BeginPlayerOptions().PlayerOption(new TextObject("{=playervendoranswer2}What do you have to offer ?").ToString()).Consequence(() =>
+            DialogFlow dialog = DialogFlow.CreateDialogFlow("start", 125).PlayerLine(new TextObject("{=vendor_ask}Hi, i heard you deal with special items, is that true ?").ToString()).Condition(() => CharacterObject.OneToOneConversationCharacter?.StringId == "enchanted_vendor" && lastMeetingTime == default)
+                .Consequence(()=> lastMeetingTime = CampaignTime.Now).NpcLine(new TextObject("{=vendor_answer}Yes, what can i do for you ?").ToString()).BeginPlayerOptions().PlayerOption(new TextObject("{=vendor_answer_2}What do you have to offer ?").ToString()).Consequence(() =>
                 {
                     Settlement currentSettlement = Settlement.CurrentSettlement;
                     if (Mission.Current != null && currentSettlement != null)
@@ -93,8 +93,8 @@ namespace RealmsForgotten.Behaviors
                     }
                 }).GotoDialogState("start").PlayerOption("{=leave}Leave.").CloseDialog().EndPlayerOptions();
 
-            DialogFlow dialog2 = DialogFlow.CreateDialogFlow("start", 125).NpcLine(new TextObject("{=playervendorask2}How can i serve you sir ?").ToString()).Condition(() => CharacterObject.OneToOneConversationCharacter?.StringId == "enchanted_vendor")
-                .BeginPlayerOptions().PlayerOption(new TextObject("{=playervendoranswer2}What do you have to offer ?").ToString()).Consequence(() =>
+            DialogFlow dialog2 = DialogFlow.CreateDialogFlow("start", 125).NpcLine(new TextObject("{=vendor_ask_2}How can i serve you sir ?").ToString()).Condition(() => CharacterObject.OneToOneConversationCharacter?.StringId == "enchanted_vendor")
+                .BeginPlayerOptions().PlayerOption(new TextObject("{=vendor_answer_2}What do you have to offer ?").ToString()).Consequence(() =>
                 {
                     Settlement currentSettlement = Settlement.CurrentSettlement;
                     if (Mission.Current != null && currentSettlement != null)

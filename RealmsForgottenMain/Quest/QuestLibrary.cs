@@ -16,11 +16,11 @@ using TaleWorlds.Library;
 
 namespace RealmsForgotten.Quest
 {
-    class QuestLibrary
+    public static class QuestLibrary
     {
-        public static void InitializeHideoutIfNeeded(Hideout hideout)
+        public static void InitializeHideoutIfNeeded(Hideout hideout, bool reset = false)
         {
-            if (!hideout.IsInfested)
+            if (reset || !hideout.IsInfested)
             {
 
                 Clan clan = Clan.All.Find(x => x.StringId == "mountain_bandits");

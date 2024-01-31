@@ -78,7 +78,7 @@ namespace RealmsForgotten.Behaviors
                         }
                         if (party.Party == PartyBase.MainParty)
                         {
-                            var textObject = new TextObject("{=sf4yHsh3JKw}{AMOUNT} undead soldiers rejoined your army");
+                            var textObject = new TextObject("{=undead_soldier_rejoin}{AMOUNT} undead soldiers rejoined your army");
                             textObject.SetTextVariable("AMOUNT", recovered);
                             MBInformationManager.AddQuickInformation(textObject);
                         }

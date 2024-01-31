@@ -19,7 +19,7 @@ namespace RealmsForgotten.CustomSkills
         public void Initialize()
         {
             _discipline = Game.Current.ObjectManager.RegisterPresumedObject(new CharacterAttribute("discipline"));
-            _discipline.Initialize(new TextObject("{=!}Discipline", null), new TextObject("{=!}Discipline is the ability to refine your skill in certain skills which require practice or focus.", null), new TextObject("{=!}DIS", null));
+            _discipline.Initialize(new TextObject("{=discipline}Discipline", null), new TextObject("{=discipline_desc}Discipline is the ability to refine your skill in certain skills which require practice or focus.", null), new TextObject("{=!}DIS", null));
         }
         public RFAttribute()
         {

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using RealmsForgotten.Utility;
 using TaleWorlds.CampaignSystem;
@@ -14,12 +13,13 @@ using TaleWorlds.MountAndBlade;
 using RealmsForgotten.CustomSkills;
 using RealmsForgotten.Patches;
 using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.Localization;
 
 namespace RealmsForgotten.Behaviors
 {
     internal class RFEnchantedWeaponsMissionBehavior : MissionBehavior
     {
-        private static Dictionary<int, (SkillObject, int)> heroesInitialSkills = new();
+        private Dictionary<Agent, Dictionary<SkillObject, int>> heroesInitialSkills = new();
         private static Dictionary<string, SkillObject> skillsDic = new()
         {
             { "rfonehanded", DefaultSkills.OneHanded}, { "rftwohanded", DefaultSkills.TwoHanded }, { "rfpolearm", DefaultSkills.Polearm }, {"rfbow", DefaultSkills.Bow}, {"rfcrossbow", DefaultSkills.Crossbow},
@@ -37,7 +37,7 @@ namespace RealmsForgotten.Behaviors
 
         public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;
 
-        public override void OnDeploymentFinished()
+        public override void OnDeploymentFinished() 
         {
             skillsDic = new()
             {
@@ -78,8 +78,13 @@ namespace RealmsForgotten.Behaviors
                             agent.ChangeMorale(amount);
                         }
                     }
+
                     if (ismainagent && amount != 0)
-                        InformationManager.DisplayMessage(new InformationMessage($"Your armor intimidated the enemies and lowered their morale by {amount} points.", Color.FromUint(16711680)));
+                    {
+                        TextObject txt = new TextObject("{=enchanted_item_text.1}Your armor intimidated the enemies and lowered their morale by {AMOUNT} points.");
+                        txt.SetTextVariable("AMOUNT", amount);
+                        InformationManager.DisplayMessage(new InformationMessage(txt.ToString(), Color.FromUint(16711680)));
+                    }
                     HaveDemoralizingArmor = (true, amount);
                 }
 
@@ -114,7 +119,11 @@ namespace RealmsForgotten.Behaviors
                         }
                     }
                     if (ismainagent && amount2 != 0)
-                        InformationManager.DisplayMessage(new InformationMessage($"Your armor instilled confidence in your army boosting their morale by {amount2} points.", Color.FromUint(9424384)));
+                    {
+                        TextObject txt = new TextObject("{=enchanted_item_text.2}Your armor instilled confidence in your army boosting their morale by {AMOUNT} points.");
+                        txt.SetTextVariable("AMOUNT", amount2);
+                        InformationManager.DisplayMessage(new InformationMessage(txt.ToString(), Color.FromUint(9424384)));
+                    }
                     HaveMoralizingArmor = (true, amount2);
                 }
             }
@@ -180,19 +189,24 @@ namespace RealmsForgotten.Behaviors
                         });
 
                         if (found)
-                        {
+                        {   
                             Hero hero = characterObject.HeroObject;
-                            if (heroesInitialSkills.ContainsKey(agent.Index))
+                            SkillObject currentSkill = skillsDic[skill];
+                            if (heroesInitialSkills.ContainsKey(agent))
                             {
-                                hero.SetSkillValue(heroesInitialSkills[agent.Index].Item1,
-                                    heroesInitialSkills[agent.Index].Item2);
-                                heroesInitialSkills.Remove(agent.Index);
+                                if (heroesInitialSkills[agent].ContainsKey(currentSkill))
+                                    heroesInitialSkills[agent][currentSkill] =
+                                        agent.Character.GetSkillValue(currentSkill);
+                                else
+                                    heroesInitialSkills[agent].Add(currentSkill, agent.Character.GetSkillValue(currentSkill));
+                                
+                                hero.SetSkillValue(currentSkill, heroesInitialSkills[agent][currentSkill]);
                             }
                             else
-                                heroesInitialSkills.Add(agent.Index, (skillsDic[skill], agent.Character.GetSkillValue(skillsDic[skill])));
+                                heroesInitialSkills.Add(agent, new());
 
-                            hero.SetSkillValue(skillsDic[skill], characterObject.GetSkillValue(skillsDic[skill]) +
-                                                                 RFUtility.GetNumberAfterSkillWord(weapon.StringId, skill, hero == Hero.MainHero));
+                            hero.SetSkillValue(currentSkill, characterObject.GetSkillValue(currentSkill) +
+                                                             RFUtility.GetNumberAfterSkillWord(weapon.StringId, skill, hero == Hero.MainHero));
                         }
                     }
                 }
@@ -221,12 +235,14 @@ namespace RealmsForgotten.Behaviors
             this.Mission.IsFieldBattle || this.Mission.IsSiegeBattle || this.Mission.IsSallyOutBattle;
         protected override void OnEndMission()
         {
-            if (heroesInitialSkills != null)
-                foreach (Agent agent in Mission.AllAgents.Where(x => x?.IsHero == true))
-                {
-                    if (agent.Character is CharacterObject character && heroesInitialSkills?.TryGetValue(agent.Index, out var value) == true)
-                        character.HeroObject?.SetSkillValue(value.Item1, value.Item2);
-                }
+            foreach (Agent agent in Mission.AllAgents.Where(x => x?.IsHero == true))
+            {
+                if (agent.Character is CharacterObject character && heroesInitialSkills?.TryGetValue(agent, out var dictionary) == true)
+                    foreach (var keyValue in dictionary)
+                    {
+                        character.HeroObject?.SetSkillValue(keyValue.Key, keyValue.Value);
+                    }
+            }
 
         }
 

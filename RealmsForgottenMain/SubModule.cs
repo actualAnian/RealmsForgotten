@@ -132,10 +132,14 @@ namespace RealmsForgotten
         {
             if (mission != null)
             {
-                mission.AddMissionBehavior(new RFEnchantedWeaponsMissionBehavior());
+                if ((mission.Mode == MissionMode.Battle || mission.Mode == MissionMode.StartUp) && mission.CombatType != Mission.MissionCombatType.ArenaCombat);
+                {
+                    mission.AddMissionBehavior(new RFEnchantedWeaponsMissionBehavior());
+                    mission.AddMissionBehavior(new NecromancerStaffMissionBehavior());
+                }
+                
                 mission.AddMissionBehavior(new SpellAmmoMissionBehavior());
-                mission.AddMissionBehavior(new NecromancerStaffMissionBehavior());
-
+                
                 if (Campaign.Current != null)
                 {
                     ItemRosterElement elixir = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("elixir_rfmisc"));

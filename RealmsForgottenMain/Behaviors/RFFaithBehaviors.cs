@@ -77,7 +77,7 @@ namespace RealmsForgotten.Behaviors
 
         private void MakeFaithLearnMenu(CampaignGameStarter campaignGameStarter) //Will be replaced
         {
-            campaignGameStarter.AddWaitGameMenu("studying_faith", "Learning...", args => studyStartTime = CampaignTime.Now, null, null, (args, dt) =>
+            campaignGameStarter.AddWaitGameMenu("studying_faith", "{=faith_menu_text.1}Learning...", args => studyStartTime = CampaignTime.Now, null, null, (args, dt) =>
             {
                 if (studyStartTime.ElapsedHoursUntilNow >= 1)
                 {
@@ -88,7 +88,7 @@ namespace RealmsForgotten.Behaviors
 
             }, GameMenu.MenuAndOptionType.WaitMenuHideProgressAndHoursOption, GameOverlays.MenuOverlayType.SettlementWithBoth);
 
-            campaignGameStarter.AddGameMenuOption("studying_faith", "study_leave", "Stop studying", args =>
+            campaignGameStarter.AddGameMenuOption("studying_faith", "study_leave", "{=faith_menu_text.2}Stop studying", args =>
             {
                 args.optionLeaveType = GameMenuOption.LeaveType.Leave;
                 return true;
@@ -99,7 +99,7 @@ namespace RealmsForgotten.Behaviors
 
             }, true);
 
-            campaignGameStarter.AddGameMenuOption("town", "learn_faith", "Study faith", args =>
+            campaignGameStarter.AddGameMenuOption("town", "learn_faith", "{=faith_menu_text.3}Study faith", args =>
                 {
                     args.optionLeaveType = GameMenuOption.LeaveType.Wait;
                     return Settlement.CurrentSettlement.IsTown;

@@ -17,17 +17,22 @@ namespace RealmsForgotten.Models
         {
             ExplainedNumber baseNumber = base.GetEffectivePartyMorale(party, includeDescription);
 
+            if (party.PartyComponent.MobileParty == null)
+            {
+                return baseNumber;
+            }
+            
             //Tlachiquiy
-            if (party.Owner?.CharacterObject.Race == FaceGen.GetRaceOrDefault("tlachiquiy") &&
+            if (!party.IsBandit && party.Owner?.CharacterObject.Race == FaceGen.GetRaceOrDefault("tlachiquiy") &&
                 baseNumber.ResultNumber < 100)
-                baseNumber = new ExplainedNumber(100, true, new TextObject("Tlachiquiy's Boldness"));
+                baseNumber = new ExplainedNumber(100, true, new TextObject("{=tc_boldness}Tlachiquiy's Boldness"));
 
             //Elvean
             if (party?.Party?.Culture == null)
                 return baseNumber;
             TerrainType faceTerrainType = Campaign.Current.MapSceneWrapper.GetFaceTerrainType(party.CurrentNavigationFace);
             if (party.Party.Culture.StringId == "battania" && faceTerrainType == TerrainType.Forest)
-                baseNumber.AddFactor(0.15f, new TextObject("{=SAvbh23had3}Elvean Forest Morale Bonus"));
+                baseNumber.AddFactor(0.15f, new TextObject("{=elvean_morale_bonus}Elvean Forest Morale Bonus"));
 
 
             return baseNumber;
