@@ -98,7 +98,7 @@ namespace RealmsForgotten.Behaviors
                 GameMenu.ExitToLast();
 
             }, true);
-
+            
             campaignGameStarter.AddGameMenuOption("town", "learn_faith", "{=faith_menu_text.3}Study faith", args =>
                 {
                     args.optionLeaveType = GameMenuOption.LeaveType.Wait;

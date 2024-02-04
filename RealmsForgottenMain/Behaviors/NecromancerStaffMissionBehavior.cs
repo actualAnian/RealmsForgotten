@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RealmsForgotten.CustomSkills;
+using SandBox.Tournaments.MissionLogics;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.AgentOrigins;
 using TaleWorlds.CampaignSystem.MapEvents;
@@ -82,11 +83,10 @@ namespace RealmsForgotten.Behaviors
                 MBInformationManager.AddQuickInformation(new TextObject("{=no_dead_allies}No dead allies to revive."));
                 return false;
             }
-            
+
             string troop = "sea_raiders_raider";
             bool isDruidWand = main.WieldedWeapon.Item?.StringId.Contains("druid") == true;
-            
-            
+
             CharacterObject zombieTroop = CharacterObject.Find("sea_raiders_raider");
             
             int refactoredNumber = (int)((float)killedAllies * (150f / 300f) * (0.45f + MBRandom.RandomFloat));

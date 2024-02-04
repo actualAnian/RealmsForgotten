@@ -129,7 +129,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
         protected override void HourlyTick()
         {
-            if (MobileParty.MainParty.Position2D.DistanceSquared(QuestGiver.PartyBelongedTo != null ? QuestGiver.PartyBelongedTo.Position2D : QuestGiver.CurrentSettlement.GatePosition) <= initialDistanceFromQuestGiver * 0.7 && takeBossToLordLog?.CurrentProgress == 0)
+            if (QuestGiver.IsActive && MobileParty.MainParty.Position2D.DistanceSquared(QuestGiver.PartyBelongedTo != null ? QuestGiver.PartyBelongedTo.Position2D : QuestGiver.CurrentSettlement.GatePosition) <= initialDistanceFromQuestGiver * 0.7 && takeBossToLordLog?.CurrentProgress == 0)
             {
                 takeBossToLordLog?.UpdateCurrentProgress(1);
                 Clan hellboundClan =
