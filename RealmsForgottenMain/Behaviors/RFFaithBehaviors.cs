@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RealmsForgotten.CustomSkills;
+using RealmsForgotten.UI;
 using RealmsForgotten.Utility;
+using SandBox.View.Map;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
@@ -17,8 +19,13 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
+using TaleWorlds.Engine.GauntletUI;
+using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
+using TaleWorlds.MountAndBlade.GauntletUI;
+using TaleWorlds.ScreenSystem;
 
 namespace RealmsForgotten.Behaviors
 {
@@ -66,49 +73,58 @@ namespace RealmsForgotten.Behaviors
     }
     internal class RFFaithCampaignBehavior : CampaignBehaviorBase
     {
+        public static readonly int NecessaryFaithForTemple = 180;
+        GauntletLayer _layer;
+        FaithUIVM _dataSource;
+
         public override void RegisterEvents()
         {
            CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnMapEventEnd);
            CampaignEvents.OnMissionStartedEvent.AddNonSerializedListener(this, OnMissionStarted);
            CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, MakeFaithLearnMenu);
+           CampaignEvents.TickEvent.AddNonSerializedListener(this, OnTickEvent);
+        }
+
+        private void OnTickEvent(float dt)
+        {
+            if (_layer?.Input != null)
+            {
+                if (_layer.Input.IsKeyReleased(InputKey.Enter))
+                {
+                    _dataSource.ExecuteDonate();
+                }
+                if (_layer.Input.IsKeyReleased(InputKey.Escape))
+                {
+                    _dataSource.ExecuteLeave();
+                }
+            }
         }
 
         private CampaignTime studyStartTime;
 
         private void MakeFaithLearnMenu(CampaignGameStarter campaignGameStarter) //Will be replaced
         {
-            campaignGameStarter.AddWaitGameMenu("studying_faith", "{=faith_menu_text.1}Learning...", args => studyStartTime = CampaignTime.Now, null, null, (args, dt) =>
+            campaignGameStarter.AddGameMenu("town_temple", "{=temple_desc}The place where people of local culture praise their gods.", null, GameOverlays.MenuOverlayType.SettlementWithCharacters);
+
+            campaignGameStarter.AddGameMenuOption("town", "enter_temple", "{=visit_temple}Go to the temple", args =>
             {
-                if (studyStartTime.ElapsedHoursUntilNow >= 1)
-                {
-                    Hero.MainHero.AddSkillXp(RFSkills.Faith, (Hero.MainHero.GetSkillValue(RFSkills.Faith) + 1) * 15);
-                    Hero.MainHero.ChangeHeroGold(-20);
-                    studyStartTime = CampaignTime.Now;
-                }
+                args.optionLeaveType = GameMenuOption.LeaveType.Submenu;
+                return true;
+            }, args => GameMenu.SwitchToMenu("town_temple"), false, 4);
 
-            }, GameMenu.MenuAndOptionType.WaitMenuHideProgressAndHoursOption, GameOverlays.MenuOverlayType.SettlementWithBoth);
-
-            campaignGameStarter.AddGameMenuOption("studying_faith", "study_leave", "{=faith_menu_text.2}Stop studying", args =>
+            campaignGameStarter.AddGameMenuOption("town_temple", "donate_to_temple",
+    "{=donate_to_temple}Donate to temple", args =>
+            {
+                args.optionLeaveType = GameMenuOption.LeaveType.Bribe;
+                return true;
+            },
+    args => OpenTempleDonation());
+            
+            campaignGameStarter.AddGameMenuOption("town_temple", "go_back", "{=qWAmxyYz}Back to town center", args =>
             {
                 args.optionLeaveType = GameMenuOption.LeaveType.Leave;
                 return true;
-            }, delegate (MenuCallbackArgs args)
-            {
-                PlayerEncounter.Current.IsPlayerWaiting = false;
-                GameMenu.ExitToLast();
-
-            }, true);
-            
-            campaignGameStarter.AddGameMenuOption("town", "learn_faith", "{=faith_menu_text.3}Study faith", args =>
-                {
-                    args.optionLeaveType = GameMenuOption.LeaveType.Wait;
-                    return Settlement.CurrentSettlement.IsTown;
-                },
-                args =>
-                {
-                    GameMenu.SwitchToMenu("studying_faith");
-
-                });
+            }, args => GameMenu.SwitchToMenu("town"), true);
 
         }
         private void OnMissionStarted(IMission imission)
@@ -120,7 +136,26 @@ namespace RealmsForgotten.Behaviors
             }
         }
 
+        private void OpenTempleDonation()
+        {
+            _layer = new GauntletLayer(1000);
+            _dataSource = new FaithUIVM(40, () =>
+            {
+                _layer.InputRestrictions.ResetInputRestrictions();
+                _layer.IsFocusLayer = false;
+                ScreenManager.TopScreen.RemoveLayer(_layer);
+                ScreenManager.TryLoseFocus(_layer);
+                _dataSource = null;
+            });
 
+            _layer.LoadMovie("FaithUI", _dataSource);
+            _layer.InputRestrictions.SetInputRestrictions();
+            ScreenManager.TopScreen.AddLayer(_layer);
+            ScreenManager.TrySetFocus(_layer);
+            _dataSource.RefreshValues();
+
+        }
+        
         private void OnMapEventEnd(MapEvent mapEvent)
         {
             if (mapEvent == null) return;
@@ -156,9 +191,6 @@ namespace RealmsForgotten.Behaviors
                             float healAmount = mapEventSide.LeaderParty.NumberOfWoundedTotalMembers / 2;
                             HealRegulars(mapEventSide.LeaderParty.MobileParty, ref healAmount);
                         }
-
-
-
                     }
                 }
             }

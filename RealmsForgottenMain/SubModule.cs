@@ -26,6 +26,8 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.GameMenus;
 using RealmsForgotten.Patches;
 using RealmsForgotten.Quest.SecondUpdate;
+using TaleWorlds.CampaignSystem.CharacterDevelopment;
+using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 
@@ -60,13 +62,17 @@ namespace RealmsForgotten
             "sturgia",
             "vlandia"
         };
+        
+        
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
             if (gameStarterObject is CampaignGameStarter campaignGameStarter)
             {
                 campaignGameStarter.AddBehavior(new BaseGameDebugCampaignBehavior());
                 campaignGameStarter.AddBehavior(new RFEnchantmentVendorBehavior());
+                //Faith bhv comes before cultures bhv
                 campaignGameStarter.AddBehavior(new RFFaithCampaignBehavior());
+                campaignGameStarter.AddBehavior(new CulturesCampaignBehavior());
                
 
                 campaignGameStarter.AddModel(new RFAgentApplyDamageModel());
@@ -81,11 +87,14 @@ namespace RealmsForgotten
                 campaignGameStarter.AddModel(new RFVolunteerModel());
                 campaignGameStarter.AddModel(new RFWageModel());
                 campaignGameStarter.AddModel(new RFBattleCaptainModel());
-
+                campaignGameStarter.AddModel(new RFInventoryCapacityModel());
+                
                 new RFAttribute().Initialize();
                 new RFSkills().Initialize();
                 new RFSkillEffects().InitializeAll();
                 new RFPerks().Initialize();
+
+                ReadConfigFile();
             }
             if (CustomSettings.Instance != null)
                 CheckInvalidKeys();
