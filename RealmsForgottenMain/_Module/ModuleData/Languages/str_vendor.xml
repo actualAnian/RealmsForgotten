@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="string">
+  <tags>
+    <tag language="English" />
+  </tags>
+  <strings>
+    <string id="vendor_ask" text="Hi, i heard you deal with special items, is that true ?" />
+	<string id="vendor_answer" text="Yes, what can i do for you ?" />
+	<string id="vendor_ask_2" text="How can i serve you sir ?" />
+	<string id="vendor_answer_2" text="What do you have to offer ?" />
+ 	<string id="enhanced_seller_name" text="Askel, The Enhanced Seller" />
+  </strings>
+</base>
