@@ -33,7 +33,7 @@ internal class MercenaryData
     public void ResetSoldiers(int newAmount)
     {
         Amount = newAmount;
-        NextReset = CampaignTime.DaysFromNow(MBRandom.RandomInt(2, 8));
+        NextReset = CampaignTime.DaysFromNow(MBRandom.RandomInt(2, 7));
     }
 }
 internal class CulturesCampaignBehavior : CampaignBehaviorBase
@@ -42,7 +42,7 @@ internal class CulturesCampaignBehavior : CampaignBehaviorBase
     private readonly string khuzaitId = "khuzait";
     private (int currentCost, int currentAmount) currentSlaveValues;
     private (int currentCost, int currentAmount) currentMonkValues;
-    private readonly int _warriorMonkCost = 1000;
+    private readonly int _warriorMonkCost = 2400;
     
     public static CharacterObject SlaveCharacter => CharacterObject.Find("athas_common_slave");
     public static CharacterObject WarriorMonkCharacter => CharacterObject.Find("warrior_priest");
@@ -65,7 +65,7 @@ internal class CulturesCampaignBehavior : CampaignBehaviorBase
         {
             if (data.NextReset.IsPast)
             {
-                data.ResetSoldiers(MBRandom.RandomInt(8, 30));
+                data.ResetSoldiers(MBRandom.RandomInt(1, 5));
             }
         }
         
@@ -73,7 +73,8 @@ internal class CulturesCampaignBehavior : CampaignBehaviorBase
         {
             if (monksData.NextReset.IsPast)
             {
-                monksData.ResetSoldiers(MBRandom.RandomInt(1, 5));
+                monksData.ResetSoldiers((int)(Hero.MainHero.GetSkillValue(RFSkills.Faith) /
+                                         RFFaithCampaignBehavior.NecessaryFaithForPriests));
             }
         }
     }
@@ -148,11 +149,11 @@ internal class CulturesCampaignBehavior : CampaignBehaviorBase
                         GameTexts.SetVariable("COST", currentMonkValues.currentCost);
                         GameTexts.SetVariable("AMOUNT", data.Amount);
                     }
-                    if (Hero.MainHero.GetSkillValue(RFSkills.Faith) < RFFaithCampaignBehavior.NecessaryFaithForTemple)
+                    if (Hero.MainHero.GetSkillValue(RFSkills.Faith) < RFFaithCampaignBehavior.NecessaryFaithForPriests)
                     {
                         args.IsEnabled = false;
                         TextObject textObject = new TextObject("{=low_faith_temple}You must have at least {AMOUNT} faith to recruit priests.");
-                        textObject.SetTextVariable("AMOUNT", RFFaithCampaignBehavior.NecessaryFaithForTemple);
+                        textObject.SetTextVariable("AMOUNT", RFFaithCampaignBehavior.NecessaryFaithForPriests);
                         args.Tooltip = textObject;
                         return true;
                     }

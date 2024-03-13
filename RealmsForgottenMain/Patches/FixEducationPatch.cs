@@ -22,12 +22,12 @@ public static class FixEducationPatch
 {
     public static void Prefix(Hero child)
     {
-        Attributes.All.Remove(RFAttribute.Discipline);
+        Attributes.All.Remove(RFAttributes.Discipline);
     }
     
     public static void Postfix(Hero child)
     {
-        Attributes.All.Add(RFAttribute.Discipline);
+        Attributes.All.Add(RFAttributes.Discipline);
     }
 }
 [HarmonyPatch(typeof(EducationGainedPropertiesVM), "PopulateInitialValues")]
@@ -37,7 +37,7 @@ public static class FixGetItemFromAttribute
         Dictionary<SkillObject, Tuple<int, int>> ____affectedSkillFocusMap,
         Dictionary<SkillObject, Tuple<int, int>> ____affectedSkillValueMap)
     {
-        ____affectedAttributesMap.Remove(RFAttribute.Discipline);
+        ____affectedAttributesMap.Remove(RFAttributes.Discipline);
         var toRemove1 = ____affectedSkillFocusMap.Where(x => x.Key.StringId == "faith" ||
                                                              x.Key.StringId == "arcane" ||
                                                              x.Key.StringId == "alchemy").Select(x=>x.Key);
@@ -90,7 +90,7 @@ public static class FixPickAll2
         }
         if (result)
         {
-            __result.Remove(RFAttribute.Discipline);
+            __result.Remove(RFAttributes.Discipline);
         }
     }
 }

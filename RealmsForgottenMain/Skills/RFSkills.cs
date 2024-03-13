@@ -28,15 +28,15 @@ namespace RealmsForgotten.CustomSkills
 
             _faith = Game.Current.ObjectManager.RegisterPresumedObject(new SkillObject("faith"));
             _faith.Initialize(new TextObject("{=faith}Faith", null), new TextObject("{=faith_desc}Faith is your deeply held belief on  your chosen religion or a deep trust on your spiritual convictions."), SkillObject.SkillTypeEnum.Personal)
-                .SetAttribute(RFAttribute.Discipline);
+                .SetAttribute(RFAttributes.Discipline);
 
             _arcane = Game.Current.ObjectManager.RegisterPresumedObject(new SkillObject("arcane"));
             _arcane.Initialize(new TextObject("{=arcane}Arcane", null), new TextObject("{=arcane_desc}Represents your knowledge in the ancient rites and supernatural phenomena, including the use of organic and inorganic materials in incantations. It defines your capacity to to access magic."), SkillObject.SkillTypeEnum.Personal)
-                .SetAttribute(RFAttribute.Discipline);
+                .SetAttribute(RFAttributes.Discipline);
 
             _alchemy = Game.Current.ObjectManager.RegisterPresumedObject(new SkillObject("alchemy"));
             _alchemy.Initialize(new TextObject("{=alchemy}Alchemy", null), new TextObject("{=alchemy_desc}Alchemy represents your  understanding in manipulating matter and mixing base substances into higher or more purified forms."), SkillObject.SkillTypeEnum.Personal)
-                .SetAttribute(RFAttribute.Discipline);
+                .SetAttribute(RFAttributes.Discipline);
         }
         public RFSkills()
         {

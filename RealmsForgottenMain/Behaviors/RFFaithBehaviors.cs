@@ -73,9 +73,9 @@ namespace RealmsForgotten.Behaviors
     }
     internal class RFFaithCampaignBehavior : CampaignBehaviorBase
     {
-        public static readonly int NecessaryFaithForTemple = 180;
-        GauntletLayer _layer;
-        FaithUIVM _dataSource;
+        public static readonly int NecessaryFaithForPriests = 140;
+        private GauntletLayer? _layer;
+        private FaithUIVM? _dataSource;
 
         public override void RegisterEvents()
         {
@@ -185,9 +185,7 @@ namespace RealmsForgotten.Behaviors
                                 if (companion.Character.IsHero)
                                     companion.Character.HeroObject?.Heal((int)(companion.Character.HeroObject?.HitPoints * partyHealFactor));
                             }
-
-                            List<TroopRosterElement> troopRoster = mapEventSide.LeaderParty.MemberRoster
-                                .GetTroopRoster().FindAll(x => x.Character?.IsHero == false);
+                            
                             float healAmount = mapEventSide.LeaderParty.NumberOfWoundedTotalMembers / 2;
                             HealRegulars(mapEventSide.LeaderParty.MobileParty, ref healAmount);
                         }

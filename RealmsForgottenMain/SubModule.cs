@@ -26,6 +26,7 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.GameMenus;
 using RealmsForgotten.Patches;
 using RealmsForgotten.Quest.SecondUpdate;
+using SandBox.GameComponents;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 using TaleWorlds.InputSystem;
@@ -63,7 +64,6 @@ namespace RealmsForgotten
             "vlandia"
         };
         
-        
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
             if (gameStarterObject is CampaignGameStarter campaignGameStarter)
@@ -74,9 +74,8 @@ namespace RealmsForgotten
                 campaignGameStarter.AddBehavior(new RFFaithCampaignBehavior());
                 campaignGameStarter.AddBehavior(new CulturesCampaignBehavior());
                
-
+                
                 campaignGameStarter.AddModel(new RFAgentApplyDamageModel());
-                campaignGameStarter.AddModel(new RFAgentStatCalculateModel());
                 campaignGameStarter.AddModel(new RFBuildingConstructionModel());
                 campaignGameStarter.AddModel(new RFCombatXpModel());
                 campaignGameStarter.AddModel(new RFDefaultCharacterDevelopmentModel());
@@ -89,7 +88,7 @@ namespace RealmsForgotten
                 campaignGameStarter.AddModel(new RFBattleCaptainModel());
                 campaignGameStarter.AddModel(new RFInventoryCapacityModel());
                 
-                new RFAttribute().Initialize();
+                new RFAttributes().Initialize();
                 new RFSkills().Initialize();
                 new RFSkillEffects().InitializeAll();
                 new RFPerks().Initialize();
@@ -239,7 +238,15 @@ namespace RealmsForgotten
         {
             base.OnGameLoaded(game, initializerObject);
             QuestSubModule.OnGameLoaded(game, initializerObject);
-            
+
+            if (initializerObject is CampaignGameStarter campaignGameStarter)
+            {
+                RFAgentStatCalculateModel rfAgentStatCalculateModel = new RFAgentStatCalculateModel();
+                campaignGameStarter.AddModel(rfAgentStatCalculateModel);
+                
+                AccessTools.Property(typeof(MissionGameModels), "AgentStatCalculateModel").SetValue(MissionGameModels.Current, rfAgentStatCalculateModel);
+            }
+
         }
 
         public override void OnNewGameCreated(Game game, object initializerObject)
