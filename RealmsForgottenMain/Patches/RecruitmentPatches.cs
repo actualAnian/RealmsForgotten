@@ -33,18 +33,18 @@ namespace RealmsForgotten.Patches
         }
     }
     [HarmonyPatch(typeof(RecruitmentVM), "OnDone")]
-    static class OnDonePatch
+    public static class OnDonePatch
     {
         private static MethodInfo originalMethod = AccessTools.Method(typeof(RecruitmentVM), "OnDone");
-        static bool isOriginalMethod;
+        private static int originalMethodCount = 1;
         [HarmonyPrefix]
-        static bool Prefix(MBBindingList<RecruitVolunteerTroopVM> ____troopsInCart, RecruitmentVM __instance)
+        public static bool Prefix(MBBindingList<RecruitVolunteerTroopVM> ____troopsInCart, RecruitmentVM __instance)
         {
             if (CustomSettings.Instance?.InfluenceCostForDifferentCultures == true)
             {
-                if (isOriginalMethod)
+                if (originalMethodCount >= 2)
                 {
-                    isOriginalMethod = false;
+                    originalMethodCount++;
                     return true;
                 }
                 if (Settlement.CurrentSettlement.Culture == Hero.MainHero.Culture || Settlement.CurrentSettlement.Owner == Hero.MainHero || ____troopsInCart.Count == 0)
@@ -62,7 +62,7 @@ namespace RealmsForgotten.Patches
                 InformationManager.ShowInquiry(new InquiryData(title, descriptionTO.ToString(), true, true,
                     "Accept", "Cancel", () =>
                     {
-                        isOriginalMethod = true;
+                        originalMethodCount++;
                         ChangeClanInfluenceAction.Apply(Hero.MainHero.Clan, total);
                         originalMethod.Invoke(__instance, null);
 
@@ -72,6 +72,11 @@ namespace RealmsForgotten.Patches
 
             return true;
 
+        }
+        [HarmonyPostfix]
+        public static void Postfix()
+        {
+            originalMethodCount = 1;
         }
     }
 

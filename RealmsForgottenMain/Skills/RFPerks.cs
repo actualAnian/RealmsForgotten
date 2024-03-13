@@ -92,94 +92,94 @@ namespace RealmsForgotten.CustomSkills
         {
             //Se for perk dupla só dá pra ter um nome
             //Faith perks
-            _ilacsPrayer.Initialize("{=!}Ilac's Prayer", RFSkills.Faith, 50, _druidsSong,
-                "{=!}Augment the morale of your troop by x1.5.",
+            _ilacsPrayer.Initialize("{=faith_perk_title.1}Ilac's Prayer", RFSkills.Faith, 50, _druidsSong,
+                "{=faith_perk_desc.1}Augment the morale of your troop by x1.5.",
                 SkillEffect.PerkRole.PartyLeader, 0.15f, SkillEffect.EffectIncrementType.AddFactor);
 
-            _druidsSong.Initialize("{=!}Druids Song", RFSkills.Faith, 50, _ilacsPrayer,
-                "{=!}Heals 20% of the player hit points after battle.",
+            _druidsSong.Initialize("{=faith_perk_title.2}Druids Song", RFSkills.Faith, 50, _ilacsPrayer,
+                "{=faith_perk_desc.2}Heals 20% of the player hit points after battle.",
                 SkillEffect.PerkRole.Personal, 0.2f, SkillEffect.EffectIncrementType.AddFactor);
 
-            _thuriksPrayer.Initialize("{=!}Thurik's Prayer", RFSkills.Faith, 100, _druidsSongII,
-                "{=!}Augment the morale of your troops by x3.5.",
+            _thuriksPrayer.Initialize("{=faith_perk_title.3}Thurik's Prayer", RFSkills.Faith, 100, _druidsSongII,
+                "{=faith_perk_desc.3}Augment the morale of your troops by x3.5.",
                 SkillEffect.PerkRole.PartyLeader, 0.35f, SkillEffect.EffectIncrementType.AddFactor);
 
-            _druidsSongII.Initialize("{=!}Druids Song II", RFSkills.Faith, 100, _thuriksPrayer,
-                "{=!}Heals 50% of the player hit points after battle.",
+            _druidsSongII.Initialize("{=faith_perk_title.4}Druids Song II", RFSkills.Faith, 100, _thuriksPrayer,
+                "{=faith_perk_desc.4}Heals 50% of the player hit points after battle.",
                 SkillEffect.PerkRole.Personal, 0.5f, SkillEffect.EffectIncrementType.AddFactor);
 
-            _quatzulsPrayer.Initialize("{=!}Quatzul's Prayer", RFSkills.Faith, 150, _druidsWave,
-                "{=!}Increases troops athletics in x3.",
+            _quatzulsPrayer.Initialize("{=faith_perk_title.5}Quatzul's Prayer", RFSkills.Faith, 150, _druidsWave,
+                "{=faith_perk_desc.5}Increases troops athletics in x3.",
                 SkillEffect.PerkRole.PartyLeader, 3f, SkillEffect.EffectIncrementType.AddFactor);
 
-            _druidsWave.Initialize("{=!}Druids Wave", RFSkills.Faith, 150, _quatzulsPrayer,
-                "{=!}Every damage made on battle regenerates your hit points.",
+            _druidsWave.Initialize("{=faith_perk_title.6}Druids Wave", RFSkills.Faith, 150, _quatzulsPrayer,
+                "{=faith_perk_desc.6}Every damage made on battle regenerates your hit points.",
                 SkillEffect.PerkRole.Personal, 0f, SkillEffect.EffectIncrementType.Invalid);
 
-            _igathurilsPrayer.Initialize("{=!}Igathuril's Prayer", RFSkills.Faith, 250, _druidsBlessing,
-                "{=!}Increases the combat skills of all the troops in 30%.",
+            _igathurilsPrayer.Initialize("{=faith_perk_title.7}Igathuril's Prayer", RFSkills.Faith, 250, _druidsBlessing,
+                "{=faith_perk_desc.7}Increases the combat skills of all the troops in 30%.",
                 SkillEffect.PerkRole.PartyLeader, 5.0f, SkillEffect.EffectIncrementType.AddFactor);
 
-            _druidsBlessing.Initialize("{=!}Druids Blessing", RFSkills.Faith, 250, _igathurilsPrayer,
-                "{=!}Regenerates 50% of the wounded troops after battle.",
+            _druidsBlessing.Initialize("{=faith_perk_title.8}Druids Blessing", RFSkills.Faith, 250, _igathurilsPrayer,
+                "{=faith_perk_desc.8}Regenerates 50% of the wounded troops after battle.",
                 SkillEffect.PerkRole.PartyLeader, 0.5f, SkillEffect.EffectIncrementType.AddFactor);
 
             //Arcane perks
-            _neophytesTalisman.Initialize("{=!}Neophytes Talisman", RFSkills.Arcane, 50, _neophytesStaff,
-    "{=!}Augments the effectiveness of your magic damage by x1.5.",
+            _neophytesTalisman.Initialize("{=arcane_perk_title.1}Neophytes Talisman", RFSkills.Arcane, 50, _neophytesStaff,
+    "{=arcane_perk_desc.1}Augments the effectiveness of your magic damage by x1.5.",
             SkillEffect.PerkRole.Personal, 1.5f, SkillEffect.EffectIncrementType.AddFactor);
 
-            _neophytesStaff.Initialize("{=!}Neophytes Staff", RFSkills.Arcane, 50, _neophytesTalisman,
-                "{=!}Augments the area damage by x1.5.",
+            _neophytesStaff.Initialize("{=arcane_perk_title.2}Neophytes Staff", RFSkills.Arcane, 50, _neophytesTalisman,
+                "{=arcane_perk_desc.2}Augments the area damage by x1.5.",
                 SkillEffect.PerkRole.Personal, 1.5f, SkillEffect.EffectIncrementType.AddFactor);
 
-            _initiatesTalisman.Initialize("{=!}Initiates Talisman", RFSkills.Arcane, 100, _initiatesStaff,
-                "{=!}Augments the effectiveness your magic damage by x2.5.",
+            _initiatesTalisman.Initialize("{=arcane_perk_title.3}Initiates Talisman", RFSkills.Arcane, 100, _initiatesStaff,
+                "{=arcane_perk_desc.3}Augments the effectiveness your magic damage by x2.5.",
                 SkillEffect.PerkRole.Personal, 2.5f, SkillEffect.EffectIncrementType.AddFactor);
 
-            _initiatesStaff.Initialize("{=!}Initiates Staff", RFSkills.Arcane, 100, _initiatesTalisman,
-                "{=!}Augments the area damage by x3.0.",
+            _initiatesStaff.Initialize("{=arcane_perk_title.4}Initiates Staff", RFSkills.Arcane, 100, _initiatesTalisman,
+                "{=arcane_perk_desc.4}Augments the area damage by x3.0.",
                 SkillEffect.PerkRole.Personal, 3.0f, SkillEffect.EffectIncrementType.AddFactor);
 
-            _hierophantsTalisman.Initialize("{=!}Hierophant's Talisman", RFSkills.Arcane, 150, _hierophantsStaff,
-                "{=!}Augments the  effectiveness your magic items by 2.5x (must be equipped with a magic item).",
+            _hierophantsTalisman.Initialize("{=arcane_perk_title.5}Hierophant's Talisman", RFSkills.Arcane, 150, _hierophantsStaff,
+                "{=arcane_perk_desc.5}Augments the  effectiveness your magic items by 2.5x (must be equipped with a magic item).",
                 SkillEffect.PerkRole.Personal, 2.5f, SkillEffect.EffectIncrementType.AddFactor);
 
-            _hierophantsStaff.Initialize("{=!}Hierophant's Staff", RFSkills.Arcane, 150, _hierophantsTalisman,
-                "{=!}Augments the area damage by x4.5.",
+            _hierophantsStaff.Initialize("{=arcane_perk_title.6}Hierophant's Staff", RFSkills.Arcane, 150, _hierophantsTalisman,
+                "{=arcane_perk_desc.6}Augments the area damage by x4.5.",
                 SkillEffect.PerkRole.Personal, 4.5f, SkillEffect.EffectIncrementType.AddFactor);
 
             //Alchemy perks
-            _novicesLuck.Initialize("{=!}Novice's Luck", RFSkills.Alchemy, 50, _novicesDedication,
-                "{=!}Increase all throwable bombs damage in x1.5.",
+            _novicesLuck.Initialize("{=alchemy_perk_title.1}Novice's Luck", RFSkills.Alchemy, 50, _novicesDedication,
+                "{=alchemy_perk_desc.1}Increase all throwable bombs damage in x1.5.",
                 SkillEffect.PerkRole.PartyLeader, 1.5f, SkillEffect.EffectIncrementType.AddFactor);
 
-            _novicesDedication.Initialize("{=!}Novice's Dedication", RFSkills.Alchemy, 50, _novicesLuck,
-                "{=!}Increase all throwable bombs area of damage in x1.5.",
+            _novicesDedication.Initialize("{=alchemy_perk_title.2}Novice's Dedication", RFSkills.Alchemy, 50, _novicesLuck,
+                "{=alchemy_perk_desc.2}Increase all throwable bombs area of damage in x1.5.",
                 SkillEffect.PerkRole.PartyLeader, 1.5f, SkillEffect.EffectIncrementType.AddFactor);
 
-            _apprenticesLuck.Initialize("{=!}Apprentices Luck", RFSkills.Alchemy, 100, _apprenticesDedication,
-                "{=!}Increase all throwable bombs damage in x3.5.",
+            _apprenticesLuck.Initialize("{=alchemy_perk_title.3}Apprentices Luck", RFSkills.Alchemy, 100, _apprenticesDedication,
+                "{=alchemy_perk_desc.3}Increase all throwable bombs damage in x3.5.",
                 SkillEffect.PerkRole.PartyLeader, 2.5f, SkillEffect.EffectIncrementType.AddFactor);
 
-            _apprenticesDedication.Initialize("{=!}Apprentices Dedication", RFSkills.Alchemy, 100, _apprenticesLuck,
-                "{=!}Increase all throwable bombs area of damage in x3.5.",
+            _apprenticesDedication.Initialize("{=alchemy_perk_title.4}Apprentices Dedication", RFSkills.Alchemy, 100, _apprenticesLuck,
+                "{=alchemy_perk_desc.4}Increase all throwable bombs area of damage in x3.5.",
                 SkillEffect.PerkRole.PartyLeader, 3.5f, SkillEffect.EffectIncrementType.AddFactor);
 
-            _adeptsLuck.Initialize("{=!}Adept's Luck", RFSkills.Alchemy, 150, _adeptsDedication,
-                "{=!}Increase all throwable bombs damage in x5.5.",
+            _adeptsLuck.Initialize("{=alchemy_perk_title.5}Adept's Luck", RFSkills.Alchemy, 150, _adeptsDedication,
+                "{=alchemy_perk_desc.5}Increase all throwable bombs damage in x5.5.",
                 SkillEffect.PerkRole.PartyLeader, 4.5f, SkillEffect.EffectIncrementType.AddFactor);
 
-            _adeptsDedication.Initialize("{=!}Adept's Dedication", RFSkills.Alchemy, 150, _adeptsLuck,
-                "{=!}Increase all throwable bombs area of damage in x5.5.",
+            _adeptsDedication.Initialize("{=alchemy_perk_title.6}Adept's Dedication", RFSkills.Alchemy, 150, _adeptsLuck,
+                "{=alchemy_perk_desc.6}Increase all throwable bombs area of damage in x5.5.",
                 SkillEffect.PerkRole.PartyLeader, 5.5f, SkillEffect.EffectIncrementType.AddFactor);
 
-            _mastersLuck.Initialize("{=!}Master's Luck", RFSkills.Alchemy, 250, _mastersDedication,
-                "{=!}Increase all throwable bombs damage in x8.5.",
+            _mastersLuck.Initialize("{=alchemy_perk_title.7}Master's Luck", RFSkills.Alchemy, 250, _mastersDedication,
+                "{=alchemy_perk_desc.7}Increase all throwable bombs damage in x8.5.",
                 SkillEffect.PerkRole.PartyLeader, 6.5f, SkillEffect.EffectIncrementType.AddFactor);
 
-            _mastersDedication.Initialize("{=!}Master's Dedication", RFSkills.Alchemy, 250, _mastersLuck,
-                "{=!}Increase all throwable bombs area of damage in x8.5.",
+            _mastersDedication.Initialize("{=alchemy_perk_title.8}Master's Dedication", RFSkills.Alchemy, 250, _mastersLuck,
+                "{=alchemy_perk_desc.8}Increase all throwable bombs area of damage in x8.5.",
                 SkillEffect.PerkRole.PartyLeader, 8.5f, SkillEffect.EffectIncrementType.AddFactor);
 
 

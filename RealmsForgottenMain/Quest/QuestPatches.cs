@@ -72,7 +72,7 @@ namespace RealmsForgotten.Quest
         {
             public static void CanHaveQuestsOrIssuesPostfix(ref bool __result, Hero __instance)
             {
-                if (Kingdom.All.First(x => x.StringId == "empire").Leader.Spouse.HomeSettlement.Notables[0].StringId == __instance.StringId)
+                if (Kingdom.All?.First(x => x?.StringId == "empire").Leader?.Spouse?.HomeSettlement?.Notables[0]?.StringId == __instance.StringId)
                     __result = false;
             }
         }

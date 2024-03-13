@@ -1,0 +1,32 @@
+<Prefab>
+  <Window>
+    <Widget HorizontalAlignment="Center" VerticalAlignment="Center"  SuggestedWidth="800" SuggestedHeight="500">
+      <Children>
+        <RealmsForgotten.Window>
+          <Children>
+
+            <TextWidget MarginTop="-20" Brush.FontSize="20" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" Text="@DonateDescription" />
+
+            <TextWidget MarginTop="100" Brush.FontSize="@RFFontSize" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" Text="@FaithAmountText" />
+
+            <TextWidget Brush.FontSize="25" SuggestedWidth="100" WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" HorizontalAlignment="Center" Text="@CurrentOfferedAmountText" MarginLeft="610" MarginBottom="8" />
+
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" VerticalAlignment="Center" HorizontalAlignment="Center" MarginLeft="530" MarginBottom="8" SuggestedWidth="40" SuggestedHeight="40" Sprite="Barter\Gold" />
+            <Widget HeightSizePolicy="Fixed" SuggestedWidth="500" SuggestedHeight="15" HorizontalAlignment="Center" VerticalAlignment="Center" MarginLeft="5" MarginRight="5" MarginBottom="5" Sprite="Barter\slider_boxy_canvas">
+              <Children>
+                <SliderWidget Id="ScrollBar" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="10" VerticalAlignment="Center" MarginLeft="4" MarginRight="2" DoNotUpdateHandleSize="true" Filler="Filler" Handle="Handle" IsDiscrete="true" MaxValueInt="50000" MinValueInt="20" ValueInt="@CurrentOfferedAmount" DoNotPassEventsToChildren="true">
+                  <Children>
+                    <Widget Id="Filler" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="11" SuggestedHeight="10" HorizontalAlignment="Left" VerticalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#8B5C22FF"/>
+                    <ImageWidget Id="Handle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="3" SuggestedHeight="18" HorizontalAlignment="Left" VerticalAlignment="Center" Brush="Barter.Slider.Handle"/>
+                  </Children>
+                </SliderWidget>
+              </Children>
+            </Widget>
+          </Children>
+        </RealmsForgotten.Window>
+        <RealmsForgotten.DialogLeaveButton MarginLeft="-350" Parameter.DoneButtonAction="ExecuteDonate" Parameter.DoneButtonText="@DonateLabel" />
+        <RealmsForgotten.DialogLeaveButton MarginLeft="350" Parameter.DoneButtonAction="ExecuteLeave" Parameter.DoneButtonText="@LeaveLabel" />
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

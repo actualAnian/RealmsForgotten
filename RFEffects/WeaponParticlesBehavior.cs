@@ -24,18 +24,24 @@ namespace RealmsForgotten.RFEffects
         private static bool dropLock;
         public override void OnAgentHit(Agent affectedAgent, Agent affectorAgent, in MissionWeapon affectorWeapon, in Blow blow, in AttackCollisionData attackCollisionData)
         {
-            if (blow.InflictedDamage < 1 || affectorWeapon.Item == null) return;
-
-            if (RFEffectsLibrary.CurrentWeaponEffects.TryGetValue(affectorWeapon.Item.StringId, out WeaponEffectData effect) && effect.Effect != null)
+            Blow b = blow;
+            MissionWeapon attackerWeapon = affectorWeapon;
+            AttackCollisionData collisionData = attackCollisionData;
+            ExceptionHandler.HandleMethod(() =>
             {
-                TOWParticleSystem.ApplyParticleToAgent(affectedAgent, effect.VictimParticle, out GameEntity childEntity);
+                if (b.InflictedDamage < 1 || attackerWeapon.Item == null) return;
+
+                if (RFEffectsLibrary.CurrentWeaponEffects.TryGetValue(attackerWeapon.Item.StringId, out WeaponEffectData effect) && effect.Effect != null)
+                {
+                    TOWParticleSystem.ApplyParticleToAgent(affectedAgent, effect.VictimParticle, out GameEntity childEntity);
 
 
-                if (WeaponEffectConsequences.Methods.TryGetValue(effect.Effect, out VictimAgentConsequence method))
-                    method?.Invoke(affectedAgent, affectorAgent, affectorWeapon, blow, attackCollisionData, childEntity);
+                    if (WeaponEffectConsequences.Methods.TryGetValue(effect.Effect, out VictimAgentConsequence method))
+                        method?.Invoke(affectedAgent, affectorAgent, attackerWeapon, b, collisionData, childEntity);
 
 
-            }
+                }
+            });
         }
         public override void OnAgentShootMissile(Agent shooterAgent, EquipmentIndex weaponIndex, Vec3 position, Vec3 velocity, Mat3 orientation, bool hasRigidBody, int forcedMissileIndex)
         {
@@ -64,7 +70,6 @@ namespace RealmsForgotten.RFEffects
                     skeleton.AddComponentToBone((sbyte)0, particle);
                 }
             }
-
         }
         public class AgentWeaponEffectData
         {
@@ -111,122 +116,125 @@ namespace RealmsForgotten.RFEffects
 
             public void SetFireSwordEnable(bool enable)
             {
-                if (agent == null)
+                ExceptionHandler.HandleMethod(() =>
                 {
-                    return;
-                }
-
-                if (enable)
-                {
-                    if (agent.State == AgentState.Routed)
+                    if (agent == null)
                     {
                         return;
                     }
 
-                    SetFireSwordEnable(enable: false);
-                    EquipmentIndex wieldedItemIndex = agent.GetWieldedItemIndex(Agent.HandIndex.MainHand);
-                    if (wieldedItemIndex == EquipmentIndex.None)
+                    if (enable)
                     {
-                        return;
-                    }
-
-
-                    MissionWeapon wieldedWeapon = agent.WieldedWeapon;
-                    if (wieldedWeapon.IsEmpty)
-                    {
-                        return;
-                    }
-
-                    if (!RFEffectsLibrary.CurrentWeaponEffects.TryGetValue(wieldedWeapon.Item?.StringId, out WeaponEffectData Effects))
-                    {
-                        return;
-                    }
-
-
-                    int WeaponLength = (int)Math.Round((double)wieldedWeapon.GetWeaponStatsData()[0].WeaponLength / 10.0);
-
-                    MBAgentVisuals agentVisuals = agent.AgentVisuals;
-                    if (agentVisuals is null)
-                    {
-                        return;
-                    }
-
-
-                    GameEntity weaponEntityFromEquipmentSlot = null;
-                    Skeleton skeleton = agentVisuals.GetSkeleton();
-
-                    switch (wieldedWeapon.CurrentUsageItem.WeaponClass)
-                    {
-                        default:
+                        if (agent.State == AgentState.Routed)
+                        {
                             return;
-                        case WeaponClass.Javelin:
-                            for (int i = -(WeaponLength / 2); i < WeaponLength / 2; i++)
-                            {
-                                TOWParticleSystem.ApplyParticleToWeapon(agent, Effects.ItemParticle, wieldedItemIndex, i * 0.1f, skeleton, out weaponEntityFromEquipmentSlot);
-                            }
-                            break;
-                        case WeaponClass.OneHandedSword:
-                        case WeaponClass.TwoHandedSword:
-                        case WeaponClass.Mace:
-                        case WeaponClass.TwoHandedMace:
-                        case WeaponClass.ThrowingKnife:
-                        case WeaponClass.Boulder:
-                        case WeaponClass.Stone:
-                        case WeaponClass.Bow:
-                        case WeaponClass.Dagger:
-                            for (int i = 1; i < WeaponLength; i++)
-                            {
-                                TOWParticleSystem.ApplyParticleToWeapon(agent, Effects.ItemParticle, wieldedItemIndex, i * 0.1f, skeleton, out weaponEntityFromEquipmentSlot);
-                            }
-                            break;
+                        }
 
-                        case WeaponClass.Arrow:
-                        case WeaponClass.Bolt:
-                        case WeaponClass.OneHandedAxe:
-                        case WeaponClass.TwoHandedAxe:
-                        case WeaponClass.ThrowingAxe:
-                        case WeaponClass.OneHandedPolearm:
-                        case WeaponClass.TwoHandedPolearm:
-                        case WeaponClass.LowGripPolearm:
-                        case WeaponClass.Pick:
+                        SetFireSwordEnable(enable: false);
+                        EquipmentIndex wieldedItemIndex = agent.GetWieldedItemIndex(Agent.HandIndex.MainHand);
+                        if (wieldedItemIndex == EquipmentIndex.None)
+                        {
+                            return;
+                        }
 
-                            {
-                                int num = WeaponLength - 1;
-                                while (num > 0 && num > WeaponLength - 4)
+
+                        MissionWeapon wieldedWeapon = agent.WieldedWeapon;
+                        if (wieldedWeapon.IsEmpty)
+                        {
+                            return;
+                        }
+
+                        if (!RFEffectsLibrary.CurrentWeaponEffects.TryGetValue(wieldedWeapon.Item?.StringId, out WeaponEffectData Effects))
+                        {
+                            return;
+                        }
+
+
+                        int WeaponLength = (int)Math.Round((double)wieldedWeapon.GetWeaponStatsData()[0].WeaponLength / 10.0);
+
+                        MBAgentVisuals agentVisuals = agent.AgentVisuals;
+                        if (agentVisuals is null)
+                        {
+                            return;
+                        }
+
+
+                        GameEntity weaponEntityFromEquipmentSlot = null;
+                        Skeleton skeleton = agentVisuals.GetSkeleton();
+
+                        switch (wieldedWeapon.CurrentUsageItem.WeaponClass)
+                        {
+                            default:
+                                return;
+                            case WeaponClass.Javelin:
+                                for (int i = -(WeaponLength / 2); i < WeaponLength / 2; i++)
                                 {
-                                    TOWParticleSystem.ApplyParticleToWeapon(agent, Effects.ItemParticle, wieldedItemIndex, num * 0.1f, skeleton, out weaponEntityFromEquipmentSlot);
-                                    num--;
+                                    TOWParticleSystem.ApplyParticleToWeapon(agent, Effects.ItemParticle, wieldedItemIndex, i * 0.1f, skeleton, out weaponEntityFromEquipmentSlot);
                                 }
-
                                 break;
-                            }
-                    }
+                            case WeaponClass.OneHandedSword:
+                            case WeaponClass.TwoHandedSword:
+                            case WeaponClass.Mace:
+                            case WeaponClass.TwoHandedMace:
+                            case WeaponClass.ThrowingKnife:
+                            case WeaponClass.Boulder:
+                            case WeaponClass.Stone:
+                            case WeaponClass.Bow:
+                            case WeaponClass.Dagger:
+                                for (int i = 1; i < WeaponLength; i++)
+                                {
+                                    TOWParticleSystem.ApplyParticleToWeapon(agent, Effects.ItemParticle, wieldedItemIndex, i * 0.1f, skeleton, out weaponEntityFromEquipmentSlot);
+                                }
+                                break;
 
-                    if (weaponEntityFromEquipmentSlot == null)
+                            case WeaponClass.Arrow:
+                            case WeaponClass.Bolt:
+                            case WeaponClass.OneHandedAxe:
+                            case WeaponClass.TwoHandedAxe:
+                            case WeaponClass.ThrowingAxe:
+                            case WeaponClass.OneHandedPolearm:
+                            case WeaponClass.TwoHandedPolearm:
+                            case WeaponClass.LowGripPolearm:
+                            case WeaponClass.Pick:
+
+                                {
+                                    int num = WeaponLength - 1;
+                                    while (num > 0 && num > WeaponLength - 4)
+                                    {
+                                        TOWParticleSystem.ApplyParticleToWeapon(agent, Effects.ItemParticle, wieldedItemIndex, num * 0.1f, skeleton, out weaponEntityFromEquipmentSlot);
+                                        num--;
+                                    }
+
+                                    break;
+                                }
+                        }
+
+                        if (weaponEntityFromEquipmentSlot == null)
+                            return;
+                        dropLock = true;
+                        agent.DropItem(wieldedItemIndex);
+                        SpawnedItemEntity firstScriptOfType = weaponEntityFromEquipmentSlot.GetFirstScriptOfType<SpawnedItemEntity>();
+                        if (firstScriptOfType != null)
+                        {
+                            agent.OnItemPickup(firstScriptOfType, EquipmentIndex.None, out var _);
+                        }
+
+                        dropLock = false;
+
+                        entity = weaponEntityFromEquipmentSlot;
+                        enabled = true;
                         return;
-                    dropLock = true;
-                    agent.DropItem(wieldedItemIndex);
-                    SpawnedItemEntity firstScriptOfType = weaponEntityFromEquipmentSlot.GetFirstScriptOfType<SpawnedItemEntity>();
-                    if (firstScriptOfType != null)
-                    {
-                        agent.OnItemPickup(firstScriptOfType, EquipmentIndex.None, out var _);
                     }
 
-                    dropLock = false;
-
-                    entity = weaponEntityFromEquipmentSlot;
-                    enabled = true;
-                    return;
-                }
-
-                enabled = false;
-                if (entity is null || agent is null)
-                {
-                    return;
-                }
+                    enabled = false;
+                    if (entity is null || agent is null)
+                    {
+                        return;
+                    }
 
 
-                entity.RemoveAllParticleSystems();
+                    entity.RemoveAllParticleSystems();
+                });
             }
         }
 

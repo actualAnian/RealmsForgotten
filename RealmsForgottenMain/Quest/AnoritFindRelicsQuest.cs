@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.Extensions;
 using TaleWorlds.CampaignSystem.Party;
@@ -102,6 +103,13 @@ namespace RealmsForgotten.Quest
         public override void RegisterEvents()
         {
             CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, CheckIfFirstQuestHasEnded);
+            CampaignEvents.CanHeroDieEvent.AddNonSerializedListener(this, AvoidOwlDying);
+        }
+
+        private void AvoidOwlDying(Hero hero, KillCharacterAction.KillCharacterActionDetail detail, ref bool can)
+        {
+            if (hero == QuestLibrary.TheOwl)
+                can = false;
         }
 
         private void CheckIfFirstQuestHasEnded()

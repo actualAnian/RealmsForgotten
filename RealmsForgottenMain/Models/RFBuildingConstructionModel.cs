@@ -16,7 +16,7 @@ namespace RealmsForgotten.Models
         {
             ExplainedNumber baseNumber = base.CalculateDailyConstructionPower(town, includeDescriptions);
             if (town.Owner.Culture.StringId == "aserai")
-                baseNumber.AddFactor(0.20f, new TextObject("{=SADf3gmami3g}Athas Slavery"));
+                baseNumber.AddFactor(0.20f, new TextObject("{=athas_slavery}Athas Slavery"));
             return baseNumber;
         }
     }

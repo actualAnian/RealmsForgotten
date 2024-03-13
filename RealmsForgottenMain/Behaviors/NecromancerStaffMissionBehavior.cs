@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RealmsForgotten.CustomSkills;
+using SandBox.Tournaments.MissionLogics;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.AgentOrigins;
 using TaleWorlds.CampaignSystem.MapEvents;
@@ -68,7 +69,7 @@ namespace RealmsForgotten.Behaviors
             
             if(maxUses <= 0)
             {
-                MBInformationManager.AddQuickInformation(new TextObject("You already spend the entire staff energy."));
+                MBInformationManager.AddQuickInformation(new TextObject("{=staff_energy_spent}You already spend the entire staff energy."));
                 return false;
             }
 
@@ -79,17 +80,16 @@ namespace RealmsForgotten.Behaviors
             
             if (killedAllies <= 0)
             {
-                MBInformationManager.AddQuickInformation(new TextObject("No dead allies to revive."));
+                MBInformationManager.AddQuickInformation(new TextObject("{=no_dead_allies}No dead allies to revive."));
                 return false;
             }
-            
+
             string troop = "sea_raiders_raider";
             bool isDruidWand = main.WieldedWeapon.Item?.StringId.Contains("druid") == true;
-            
-            
+
             CharacterObject zombieTroop = CharacterObject.Find("sea_raiders_raider");
             
-            int refactoredNumber = (int)((float)killedAllies * (150f / 300f) * (0.35f + MBRandom.RandomFloat));
+            int refactoredNumber = (int)((float)killedAllies * (150f / 300f) * (0.45f + MBRandom.RandomFloat));
 
             if(refactoredNumber > killedAllies)
                 refactoredNumber = killedAllies;
@@ -107,10 +107,8 @@ namespace RealmsForgotten.Behaviors
                     position = Mission.GetRandomPositionAroundPoint(main.Position, 1f, 6f);
                 
                 if (isDruidWand)
-                    troop = MBRandom.RandomFloat > 0.5 ? "werewolf" : "werebear";
+                    zombieTroop = CharacterObject.Find(MBRandom.RandomFloat > 0.5 ? "werewolf" : "werebear");
                 
-                CharacterObject characterObject = CharacterObject.Find(troop);
-
                 PartyBase.MainParty?.AddMember(zombieTroop, 1);
 
                 IAgentOriginBase agentOriginBase = Campaign.Current != null

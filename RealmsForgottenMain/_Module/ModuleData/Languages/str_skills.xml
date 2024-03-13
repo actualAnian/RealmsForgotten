@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="string">
+  <tags>
+    <tag language="English" />
+  </tags>
+  <strings>
+	<string id="discipline" text="Discipline" />
+	<string id="discipline_desc" text="Discipline is the ability to refine your skill in certain skills which require practice or focus." />
+	
+	
+    <string id="faith" text="Faith" />
+	<string id="arcane" text="Arcane" />
+	<string id="alchemy" text="Alchemy" />
+	<string id="faith_desc" text="Faith is your deeply held belief on  your chosen religion or a deep trust on your spiritual convictions." />
+	<string id="arcane_desc" text="Represents your knowledge in the ancient rites and supernatural phenomena, including the use of organic and inorganic materials in incantations. It defines your capacity to to access magic." />
+	<string id="alchemy_desc" text="Alchemy represents your  understanding in manipulating matter and mixing base substances into higher or more purified forms." />
+  
+	
+	<string id="arcane_skilleff_1" text="Wand reload speed: +{a0} %" />
+	<string id="arcane_skilleff_2" text="Wand accuracy: +{a0} %" />
+	<string id="arcane_skilleff_3" text="Magic staff power: +{a0} %" />
+	<string id="faith_skilleff_1" text="Perk effect multiplier: +{a0} %" />
+	<string id="alchemy_skilleff_1" text="Bomb stack multiplier: +{a0} %" />
+	
+	<string id="faith_perk_title.1" text="Ilac's Prayer" />
+	<string id="faith_perk_desc.1" text="Augment the morale of your troop by x1.5." />
+
+	<string id="faith_perk_title.2" text="Druids Song" />
+	<string id="faith_perk_desc.2" text="Heals 20% of the player hit points after battle." />
+
+	<string id="faith_perk_title.3" text="Thurik's Prayer" />
+	<string id="faith_perk_desc.3" text="Augment the morale of your troops by x3.5." />
+
+	<string id="faith_perk_title.4" text="Druids Song II" />
+	<string id="faith_perk_desc.4" text="Heals 50% of the player hit points after battle." />
+
+	<string id="faith_perk_title.5" text="Quatzul's Prayer" />
+	<string id="faith_perk_desc.5" text="Increases troops athletics in x3." />
+
+	<string id="faith_perk_title.6" text="Druids Wave" />
+	<string id="faith_perk_desc.6" text="Every damage made on battle regenerates your hit points." />
+
+	<string id="faith_perk_title.7" text="Igathuril's Prayer" />
+	<string id="faith_perk_desc.7" text="Increases the combat skills of all the troops in 30%." />
+
+	<string id="faith_perk_title.8" text="Druids Blessing" />
+	<string id="faith_perk_desc.8" text="Regenerates 50% of the wounded troops after battle." />
+
+	<string id="arcane_perk_title.1" text="Neophytes Talisman" />
+	<string id="arcane_perk_desc.1" text="Augments the effectiveness of your magic damage by x1.5." />
+
+	<string id="arcane_perk_title.2" text="Neophytes Staff" />
+	<string id="arcane_perk_desc.2" text="Augments the area damage by x1.5." />
+
+	<string id="arcane_perk_title.3" text="Initiates Talisman" />
+	<string id="arcane_perk_desc.3" text="Augments the effectiveness your magic damage by x2.5." />
+
+	<string id="arcane_perk_title.4" text="Initiates Staff" />
+	<string id="arcane_perk_desc.4" text="Augments the area damage by x3.0." />
+
+	<string id="arcane_perk_title.5" text="Hierophant's Talisman" />
+	<string id="arcane_perk_desc.5" text="Augments the effectiveness your magic items by 2.5x (must be equipped with a magic item)." />
+
+	<string id="arcane_perk_title.6" text="Hierophant's Staff" />
+	<string id="arcane_perk_desc.6" text="Augments the area damage by x4.5." />
+
+	<string id="alchemy_perk_title.1" text="Novice's Luck" />
+	<string id="alchemy_perk_desc.1" text="Increase all throwable bombs damage in x1.5." />
+
+	<string id="alchemy_perk_title.2" text="Novice's Dedication" />
+	<string id="alchemy_perk_desc.2" text="Increase all throwable bombs area of damage in x1.5." />
+
+	<string id="alchemy_perk_title.3" text="Apprentices Luck" />
+	<string id="alchemy_perk_desc.3" text="Increase all throwable bombs damage in x3.5." />
+
+	<string id="alchemy_perk_title.4" text="Apprentices Dedication" />
+	<string id="alchemy_perk_desc.4" text="Increase all throwable bombs area of damage in x3.5." />
+
+	<string id="alchemy_perk_title.5" text="Adept's Luck" />
+	<string id="alchemy_perk_desc.5" text="Increase all throwable bombs damage in x5.5." />
+
+	<string id="alchemy_perk_title.6" text="Adept's Dedication" />
+	<string id="alchemy_perk_desc.6" text="Increase all throwable bombs area of damage in x5.5." />
+
+	<string id="alchemy_perk_title.7" text="Master's Luck" />
+	<string id="alchemy_perk_desc.7" text="Increase all throwable bombs damage in x8.5." />
+
+	<string id="alchemy_perk_title.8" text="Master's Dedication" />
+	<string id="alchemy_perk_desc.8" text="Increase all throwable bombs area of damage in x8.5." />
+  </strings>
+</base>
