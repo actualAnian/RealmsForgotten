@@ -52,6 +52,7 @@ namespace RealmsForgotten
             [StartType.EscapedPrisoner] = 1,
         };
         internal static int GiantCountsAs { get { return 2; } }
+        internal static int GiantsCostMult {  get { return 2; } }
 
         //internal static void SetRacesIds()
         //{

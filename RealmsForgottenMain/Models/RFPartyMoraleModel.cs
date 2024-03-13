@@ -17,14 +17,17 @@ namespace RealmsForgotten.Models
         public override ExplainedNumber GetEffectivePartyMorale(MobileParty party, bool includeDescription = false)
         {
             ExplainedNumber baseNumber = base.GetEffectivePartyMorale(party, includeDescription);
-
-            if (party.PartyComponent?.MobileParty == null)
+            Hero partyOwner;
+            try
+            {
+                partyOwner = party.Owner;
+            }
+            catch (Exception)
             {
                 return baseNumber;
             }
-            
             //Tlachiquiy
-            if (!party.IsBandit && party.Owner?.CharacterObject.Race == FaceGen.GetRaceOrDefault("tlachiquiy") &&
+            if (partyOwner?.CharacterObject.Race == FaceGen.GetRaceOrDefault("tlachiquiy") &&
                 baseNumber.ResultNumber < 100)
                 baseNumber = new ExplainedNumber(100, true, new TextObject("{=tc_boldness}Tlachiquiy's Boldness"));
 
