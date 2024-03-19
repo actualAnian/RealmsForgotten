@@ -31,6 +31,7 @@ using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
+using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
 namespace RealmsForgotten
 {
@@ -73,7 +74,6 @@ namespace RealmsForgotten
                 //Faith bhv comes before cultures bhv
                 campaignGameStarter.AddBehavior(new RFFaithCampaignBehavior());
                 campaignGameStarter.AddBehavior(new CulturesCampaignBehavior());
-               
                 
                 campaignGameStarter.AddModel(new RFAgentApplyDamageModel());
                 campaignGameStarter.AddModel(new RFBuildingConstructionModel());
