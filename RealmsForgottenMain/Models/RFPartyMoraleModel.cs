@@ -14,20 +14,28 @@ namespace RealmsForgotten.Models
 {
     internal class RFPartyMoraleModel : DefaultPartyMoraleModel
     {
+        public bool IsPartyBandit(MobileParty party)
+        {
+            try
+            {
+                return party.IsBandit;
+            }
+            catch (Exception e)
+            {
+                return true;
+            }
+        }
         public override ExplainedNumber GetEffectivePartyMorale(MobileParty party, bool includeDescription = false)
         {
             ExplainedNumber baseNumber = base.GetEffectivePartyMorale(party, includeDescription);
-            Hero partyOwner;
-            try
-            {
-                partyOwner = party.Owner;
-            }
-            catch (Exception)
+
+            if (party.PartyComponent?.MobileParty == null)
             {
                 return baseNumber;
             }
+            
             //Tlachiquiy
-            if (partyOwner?.CharacterObject.Race == FaceGen.GetRaceOrDefault("tlachiquiy") &&
+            if (!IsPartyBandit(party) && party.Owner?.CharacterObject.Race == FaceGen.GetRaceOrDefault("tlachiquiy") &&
                 baseNumber.ResultNumber < 100)
                 baseNumber = new ExplainedNumber(100, true, new TextObject("{=tc_boldness}Tlachiquiy's Boldness"));
 
