@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="string">
+  <tags>
+    <tag language="English" />
+  </tags>
+  <strings>
+    <string id="heal_notification" text="Healed for {HEAL_AMOUNT} HP" />
+	<string id="berserker_activated" text="Berserker mode activated!" />
+	<string id="berserker_deactivated" text="Berserker mode deactivated!" />
+	<string id="berserker_warning" text="You're already on berserker mode!" />
+	
+	<string id="athas_slavery" text="Athas Slavery" />
+ 	<string id="xilan_speedness" text="Xilantlacay's Speedness" />
+	<string id="tc_boldness" text="Tlachiquiy's Boldness" />
+	<string id="elvean_morale_bonus" text="Elvean Forest Morale Bonus" />
+	
+	<string id="spell_status" text="Current spell: {CURRENT_SPELL} ({AMOUNT})" />
+	<string id="faith_menu_text.1" text="Learning..." />
+	<string id="faith_menu_text.2" text="Stop studying" />
+	<string id="faith_menu_text.3" text="Study faith" />
+	<string id="enchanted_item_text.1" text="Your armor intimidated the enemies and lowered their morale by {AMOUNT} points." />
+	<string id="enchanted_item_text.2" text="Your armor instilled confidence in your army boosting their morale by {AMOUNT} points." />
+	
+	
+	<string id="no_dead_allies" text="No dead allies to revive." />
+	<string id="staff_energy_spent" text="You already spend the entire staff energy." />
+	<string id="necromancer_staff_status" text="Necromancy revivals: {AMOUNT}" />
+	<string id="undead_soldier_rejoin" text="{AMOUNT} undead soldiers rejoined your army" />
+	
+	<string id="recruitment_war_condition_tooltip_1" text="You are in war with this faction." />
+	<string id="recruitment_war_condition_tooltip_2" text="You have negative influence." />
+	<string id="acculturarion_title" text="Acculturation" />
+	<string id="acculturarion_description" text="Due to the volunteers being from a different culture from yours you will invest {INFLUENCE_COST} of influence by recruiting them." />
+	
+	<string id="magic_fire_report" text="Enemy set on fire!" />
+	<string id="greenspark_heal_report" text="{AMOUNT} troops were speeded!" />
+	<string id="purplespark_heal_report" text="{AMOUNT} enemies were weakened!" />
+	<string id="terror_heal_report.1" text="Enemy terrified!" />
+	<string id="terror_heal_report.1" text="Enemy morale decreased, a bit more a he will flee off the combat!" />
+	<string id="force_heal_report" text="{AMOUNT} troops were strengthened!" />
+	<string id="ice_heal_report" text="Enemy freezed!" />
+	<string id="magic_heal_report" text="{AMOUNT} troops were healed!" />
+
+    <string id="slaves" text="Slaves" />
+    <string id="buy_slaves" text="Buy {AMOUNT} slave soldiers ({COST}{GOLD_ICON})" />
+
+    <string id="temple_desc" text="The place where people of local culture praise their gods." />
+    <string id="visit_temple" text="Go to the temple" />
+    <string id="low_faith_temple" text="You must have at least {AMOUNT} faith to recruit priests." />
+    <string id="hire_monks" text="Hire {AMOUNT} warrior priests ({COST}{GOLD_ICON})" />
+    <string id="no_monks_available" text="No warriors available at the moment." />
+    <string id="donate_faith_text" text="+{AMOUNT} Faith XP" />
+    <string id="donate_description" text="Donating to the temple will allow the priests to teach you the theology of the local religion, in addition to increasing your own faith" />
+    <string id="donate_to_temple" text="Donate to temple" />
+    <string id="donate" text="Donate" />
+	  <string id="priest_morale_bonus" text="Priests Morale Bonus" />
+	  <string id="increased_melee" text="A weapon you're carrying has enhanced your skill in combat, increasing your melee skills." />
+	  <string id="increased_ranged" text="A weapon you're carrying has enhanced your skill in combat, increasing your ranged skills." />
+	  
+	<string id="rf_legendary_recruitment" text="You need to be a king, and your faction needs to own this castle to recruit legendary troops." />
+  </strings>
+</base>

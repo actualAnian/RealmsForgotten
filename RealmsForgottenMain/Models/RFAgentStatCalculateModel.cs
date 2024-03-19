@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Helpers;
+using RealmsForgotten.Behaviors;
 using RealmsForgotten.CustomSkills;
 using SandBox.GameComponents;
 using TaleWorlds.CampaignSystem;
@@ -30,6 +31,15 @@ namespace RealmsForgotten.Models
         {
             if (agent.IsHuman)
             {
+                if (RFEnchantedWeaponsMissionBehavior.Instance?.BoostedAgents.TryGetValue(agent, out var properties) == true)
+                {
+                    foreach (var tuple in properties)
+                    {
+                        agent.SetAgentDrivenPropertyValueFromConsole(tuple.property, tuple.amount);
+                        agent.UpdateCustomDrivenProperties();
+                    }
+                }
+                
                 AddSkillEffectsForAgent(agent, agentDrivenProperties);
                 //AddPerkEffectsForAgent(agent, agentDrivenProperties);
             }

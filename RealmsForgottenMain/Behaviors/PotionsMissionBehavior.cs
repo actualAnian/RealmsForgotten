@@ -66,14 +66,14 @@ namespace RealmsForgotten.Behaviors
                 }
                 else
                 {
-                    var msg = new TextObject("{=yCLfH4yhHa1C}You're already on berserker mode!");
+                    var msg = new TextObject("{=berserker_warning}You're already on berserker mode!");
                     InformationManager.DisplayMessage(new InformationMessage(msg.ToString()));
                 }
             }
             if(berserkerMode && timer.Check(Time.ApplicationTime))
             {
                 GiveBerserkerSkills(0, false);
-                var msg = new TextObject("{=aF4ysAfCghwa}Berserker mode deactivated!");
+                var msg = new TextObject("{=berserker_deactivated}Berserker mode deactivated!");
                 InformationManager.DisplayMessage(new InformationMessage(msg.ToString(), Color.FromUint(0xFFFF0000)));
                 berserkerMode = false;
             }
@@ -104,7 +104,7 @@ namespace RealmsForgotten.Behaviors
 
             GiveBerserkerSkills(1000);
 
-            var msg = new TextObject("{=yCLS6x8c04f1C}Berserker mode activated!");
+            var msg = new TextObject("{=berserker_activated}Berserker mode activated!");
             InformationManager.DisplayMessage(new InformationMessage(msg.ToString(), Color.FromUint(0xFFFF0000)));
             Mission.MakeSound(soundIndex, Vec3.Zero, false, true, -1, -1);
             berserker.Amount--;
@@ -118,7 +118,7 @@ namespace RealmsForgotten.Behaviors
             var oldHealth = ma.Health;
             ma.Health += 20;
             if (ma.Health > ma.HealthLimit) ma.Health = ma.HealthLimit;
-            var msg = new TextObject("{=G4jsbashl4t}Healed for {HEAL_AMOUNT} HP").SetTextVariable("HEAL_AMOUNT", ma.Health - oldHealth);
+            var msg = new TextObject("{=heal_notification}Healed for {HEAL_AMOUNT} HP").SetTextVariable("HEAL_AMOUNT", ma.Health - oldHealth);
             InformationManager.DisplayMessage(new InformationMessage(msg.ToString()));
             Mission.MakeSound(soundIndex, Vec3.Zero, false, true, -1, -1);
             elixir.Amount--;

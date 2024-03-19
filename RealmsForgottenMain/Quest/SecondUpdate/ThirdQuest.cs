@@ -102,7 +102,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
         private bool playerDefeated = false;
 
         public static ThirdQuest Instance;
-
+        private bool madeCaravanQuest;
         private PersuasionTask _persuasionTask;
         public static bool MustAvoidPrisonerEscape
         {
@@ -140,20 +140,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
         public override TextObject Title => GameTexts.FindText("rf_quest_title_part_three");
         protected override void RegisterEvents()
         {
-            CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this,
-                (CampaignGameStarter campaignGameStarter) =>
-                {
-                    campaignGameStarter.AddGameMenuOption("town", "town_athas_quest_option", GameTexts.FindText("town_athas_quest_option").ToString(),
-                        x =>
-                        {
-                            x.optionLeaveType = GameMenuOption.LeaveType.ForceToGiveTroops;
-                            return Settlement.CurrentSettlement == Ityr && !_willGoAsCaravan && persuadeAthasScholarLog?.CurrentProgress == 1 && failedPersuasionLog == null;
-                        },
-                        args =>
-                        {
-                            PrepareScholarHeroAndEvent();
-                        });
-                });
+            CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, OnSessionLaunched);
             CampaignEvents.SettlementEntered.AddNonSerializedListener(this, OnSettlementEntered);
             CampaignEvents.OnSettlementLeftEvent.AddNonSerializedListener(this, OnLeaveSettlement);
             CampaignEvents.BeforeMissionOpenedEvent.AddNonSerializedListener(this, OnBeforeMissionStarted);
@@ -183,7 +170,19 @@ namespace RealmsForgotten.Quest.SecondUpdate
             });
         }
 
-
+        private void OnSessionLaunched(CampaignGameStarter campaignGameStarter)
+        {
+            campaignGameStarter.AddGameMenuOption("town", "town_athas_quest_option", GameTexts.FindText("town_athas_quest_option").ToString(),
+                x =>
+                {
+                    x.optionLeaveType = GameMenuOption.LeaveType.ForceToGiveTroops;
+                    return Settlement.CurrentSettlement == Ityr && !_willGoAsCaravan && persuadeAthasScholarLog?.CurrentProgress == 1 && failedPersuasionLog == null;
+                },
+                args =>
+                {
+                    PrepareScholarHeroAndEvent();
+                });
+        }
         private void OnTick(float obj)
         {
             if (goToHideoutLog?.CurrentProgress == 0 && questHideout.GatePosition.DistanceSquared(MobileParty.MainParty.Position2D) <= 5)
@@ -260,7 +259,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                     }));
                 }
 
-                if (Settlement.CurrentSettlement == questHideout && mission.SceneName == "vortiak_hidden_city" && goToHideoutLog.CurrentProgress == 1)
+                if (Settlement.CurrentSettlement == questHideout && mission.SceneName == "vortiak_hidden_city" && goToHideoutLog?.CurrentProgress == 1)
                 {
                     mission.AddMissionBehavior(new RecordDamageMissionLogic((victim, attacker, damage) =>
                     {
@@ -394,7 +393,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 }
             }
 
-            if (_willGoAsCaravan && persuadeAthasScholarLog is { CurrentProgress: 0 } && MobileParty.MainParty.CurrentSettlement == null)
+            if (_willGoAsCaravan && persuadeAthasScholarLog is { CurrentProgress: 0 } && MobileParty.MainParty.CurrentSettlement == null && !madeCaravanQuest)
             {
                 MakeCaravanForQuest();
                 persuadeAthasScholarLog.UpdateCurrentProgress(1);
@@ -428,7 +427,13 @@ namespace RealmsForgotten.Quest.SecondUpdate
             Instance = this;
 
             if(goToAnoritLordLog?.CurrentProgress == 1 && _willGoAsCaravan)
-             SetCaravanObjective(MobileParty.All.Find(x => x.LeaderHero == TheOwl));
+            {
+                MobileParty party = MobileParty.All.Find(x => x.LeaderHero == TheOwl);
+                if (party != null)
+                    SetCaravanObjective(party);
+                else
+                    MakeCaravanForQuest();
+            }
 
             AvoidDisbanding = _isPlayerInOwlArmy;
         }
@@ -445,6 +450,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             caravanParty.ChangePartyLeader(TheOwl);
             SetCaravanObjective(caravanParty);
 
+            madeCaravanQuest = true;
         }
 
         private void SetCaravanObjective(MobileParty caravanParty)
@@ -569,7 +575,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
         private DialogFlow DeliverScholarDialogFlow()
         {
             DialogFlow dialogFlow = DialogFlow.CreateDialogFlow("start", 125).NpcLine(GameTexts.FindText("rf_third_quest_anorit_dialog_2_1"))
-                .Condition(() => Hero.OneToOneConversationHero == QuestGiver && escortAthasScholarLog?.CurrentProgress < 3 && !(waitUntilDecipherLog?.CurrentProgress > 0))
+                .Condition(() => Hero.OneToOneConversationHero == QuestGiver && escortAthasScholarLog?.CurrentProgress < 2 && !(waitUntilDecipherLog?.CurrentProgress > 0))
                 .GotoDialogState("deliver_scholar_dialog_start");
 
             dialogFlow.AddPlayerLine("deliver_scholar_dialog_2", "deliver_scholar_dialog_start", "close_window",
@@ -786,6 +792,8 @@ namespace RealmsForgotten.Quest.SecondUpdate
         private void PersuasionComplete(bool success)
         {
             ConversationManager.EndPersuasion();
+            
+            RemoveTrackedObject(Ityr);
             if (!success)
             {
                 failedPersuasionLog = AddLog(GameTexts.FindText("rf_third_quest_anorit_objective_3_failed"));
@@ -795,14 +803,9 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
             TextObject textObject = GameTexts.FindText("rf_third_quest_anorit_objective_3");
             textObject.SetTextVariable("SETTLEMENT", Ityr.BoundVillages[0].Settlement.EncyclopediaLinkWithName);
-
-            RemoveTrackedObject(Ityr);
-
+            
             waitAthasScholarLog = AddDiscreteLog(textObject, new TextObject(), 0, 1);
             waitAthasScholarTime = CampaignTime.Now;
-            
-
-
         }
 
         private static void OpenMissionWithSettingPreviousLocation(string previousLocationId, string missionLocationId)
@@ -818,7 +821,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             public override InquiryData OnEndMissionRequest(out bool canLeave)
             {
                 canLeave = true;
-                if (Instance?.persuadeAthasScholarLog?.CurrentProgress == 1 || Instance?.failedPersuasionLog != null)
+                if (Instance?.persuadeAthasScholarLog?.CurrentProgress == 1 && Instance?.failedPersuasionLog == null)
                 {
                     canLeave = false;
                     MBInformationManager.AddQuickInformation(GameTexts.FindText("rf_third_quest_cannot_leave"));

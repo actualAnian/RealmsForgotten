@@ -14,10 +14,8 @@ namespace RealmsForgotten.Models
 
         public override float CalculateLearningRate(Hero hero, SkillObject skill)
         {
-            if (skill == null)
-                return 0;
             float baseValue = base.CalculateLearningRate(hero, skill);
-            if (hero.CharacterObject.Race == TaleWorlds.Core.FaceGen.GetRaceOrDefault("elvean") && skill == DefaultSkills.Athletics)
+            if (hero.CharacterObject.Race == FaceGen.GetRaceOrDefault("elvean") && skill == DefaultSkills.Athletics)
                 return ((15f / 100f) * baseValue) + baseValue;
             return baseValue;
         }

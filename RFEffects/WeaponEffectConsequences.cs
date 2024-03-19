@@ -117,9 +117,9 @@ namespace RealmsForgotten.RFEffects
             {
                 TextObject terrorTextObject;
                 if (affectedAgent.GetMorale() <= 0)
-                    terrorTextObject = new("{=terror_heal_report}Enemy terrified!");
+                    terrorTextObject = new("{=terror_heal_report.1}Enemy terrified!");
                 else
-                    terrorTextObject = new("{=terror_heal_report}Enemy morale decreased, a bit more a he will flee off the combat!");
+                    terrorTextObject = new("{=terror_heal_report.2}Enemy morale decreased, a bit more a he will flee off the combat!");
 
                 InformationManager.DisplayMessage(new InformationMessage(terrorTextObject.ToString(), Color.Black));
             }

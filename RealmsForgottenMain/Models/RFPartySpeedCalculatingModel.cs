@@ -21,8 +21,20 @@ namespace RealmsForgotten.Models
         {
             ExplainedNumber baseValue = base.CalculateBaseSpeed(party, includeDescriptions, additionalTroopOnFootCount,
                 additionalTroopOnHorseCount);
-            if (party.Owner?.CharacterObject.Race == FaceGen.GetRaceOrDefault("Xilantlacay"))
+
+            Hero partyOwner;
+            try
+            {
+                partyOwner = party.Owner;
+            }
+            catch (Exception)
+            {
+                return baseValue;
+            }
+
+            if (partyOwner?.CharacterObject.Race == FaceGen.GetRaceOrDefault("Xilantlacay"))
                 baseValue.AddFactor(0.20f, new TextObject("Xilantlacay's Speedness"));
+
             if(QuestPatches.AvoidDisbanding && party.Army?.Parties.Contains(MobileParty.MainParty) == true)
                 baseValue.AddFactor(2.0f);
             return baseValue;

@@ -142,7 +142,7 @@ namespace RealmsForgotten.Quest
                             if (findMapJournalLog?.CurrentProgress == 0)
                             {
                                 InformationManager.ShowInquiry(new InquiryData(GameTexts.FindText("rf_event").ToString(), GameTexts.FindText("rf_map_not_found_inquiry").ToString(), true, false, new TextObject("{=continue}Continue").ToString(), "", null, null), true);
-                                InitializeHideoutIfNeeded(hideout.Hideout);
+                                InitializeHideoutIfNeeded(hideout.Hideout, true);
                                 return;
                             }
                             this.RemoveTrackedObject(hideout);
@@ -154,7 +154,7 @@ namespace RealmsForgotten.Quest
                             if (findMapJournalLog?.CurrentProgress == 1)
                             {
                                 InformationManager.ShowInquiry(new InquiryData(GameTexts.FindText("rf_event").ToString(), GameTexts.FindText("rf_map_not_found_inquiry").ToString(), true, false, new TextObject("{=continue}Continue").ToString(), "", null, null), true);
-                                InitializeHideoutIfNeeded(hideout.Hideout);
+                                InitializeHideoutIfNeeded(hideout.Hideout, true);
                                 return;
                             }
                             this.RemoveTrackedObject(hideout);
@@ -166,7 +166,7 @@ namespace RealmsForgotten.Quest
                             if (findMapJournalLog?.CurrentProgress == 2)
                             {
                                 InformationManager.ShowInquiry(new InquiryData(GameTexts.FindText("rf_event").ToString(), GameTexts.FindText("rf_map_not_found_inquiry").ToString(), true, false, new TextObject("{=continue}Continue").ToString(), "", null, null), true);
-                                InitializeHideoutIfNeeded(hideout.Hideout);
+                                InitializeHideoutIfNeeded(hideout.Hideout, true);
                                 return;
                             }
                             this.RemoveTrackedObject(hideout);
@@ -256,6 +256,14 @@ namespace RealmsForgotten.Quest
         private void CreateOwlArmy(MobileParty owlParty)
         {
             Settlement settlement = Settlement.Find("town_EW3");
+
+            if (owlParty == null)
+            {
+                owlParty = LordPartyComponent.CreateLordParty("the_owl_party", TheOwl, Vec2.Zero, 0f,
+                    QuestGiver.HomeSettlement, TheOwl);
+                owlParty.InitializeMobilePartyAtPosition(QuestGiver.Culture.DefaultPartyTemplate, MobileParty.MainParty.Position2D);
+            }
+            
             owlParty.Army = new Army(QuestGiver.Clan.Kingdom, owlParty, Army.ArmyTypes.Patrolling);
 
             MobileParty.MainParty.Army = owlParty.Army;

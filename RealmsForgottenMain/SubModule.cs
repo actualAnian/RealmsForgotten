@@ -26,8 +26,12 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.GameMenus;
 using RealmsForgotten.Patches;
 using RealmsForgotten.Quest.SecondUpdate;
+using SandBox.GameComponents;
+using TaleWorlds.CampaignSystem.CharacterDevelopment;
+using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
+using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
 namespace RealmsForgotten
 {
@@ -60,17 +64,18 @@ namespace RealmsForgotten
             "sturgia",
             "vlandia"
         };
+        
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
             if (gameStarterObject is CampaignGameStarter campaignGameStarter)
             {
                 campaignGameStarter.AddBehavior(new BaseGameDebugCampaignBehavior());
                 campaignGameStarter.AddBehavior(new RFEnchantmentVendorBehavior());
+                //Faith bhv comes before cultures bhv
                 campaignGameStarter.AddBehavior(new RFFaithCampaignBehavior());
-               
-
+                campaignGameStarter.AddBehavior(new CulturesCampaignBehavior());
+                
                 campaignGameStarter.AddModel(new RFAgentApplyDamageModel());
-                campaignGameStarter.AddModel(new RFAgentStatCalculateModel());
                 campaignGameStarter.AddModel(new RFBuildingConstructionModel());
                 campaignGameStarter.AddModel(new RFCombatXpModel());
                 campaignGameStarter.AddModel(new RFDefaultCharacterDevelopmentModel());
@@ -81,11 +86,14 @@ namespace RealmsForgotten
                 campaignGameStarter.AddModel(new RFVolunteerModel());
                 campaignGameStarter.AddModel(new RFWageModel());
                 campaignGameStarter.AddModel(new RFBattleCaptainModel());
-
-                new RFAttribute().Initialize();
+                campaignGameStarter.AddModel(new RFInventoryCapacityModel());
+                
+                new RFAttributes().Initialize();
                 new RFSkills().Initialize();
                 new RFSkillEffects().InitializeAll();
                 new RFPerks().Initialize();
+
+                ReadConfigFile();
             }
             if (CustomSettings.Instance != null)
                 CheckInvalidKeys();
@@ -132,10 +140,14 @@ namespace RealmsForgotten
         {
             if (mission != null)
             {
-                mission.AddMissionBehavior(new RFEnchantedWeaponsMissionBehavior());
+                if ((mission.Mode == MissionMode.Battle || mission.Mode == MissionMode.StartUp) && mission.CombatType != Mission.MissionCombatType.ArenaCombat);
+                {
+                    mission.AddMissionBehavior(new RFEnchantedWeaponsMissionBehavior());
+                    mission.AddMissionBehavior(new NecromancerStaffMissionBehavior());
+                }
+                
                 mission.AddMissionBehavior(new SpellAmmoMissionBehavior());
-                mission.AddMissionBehavior(new NecromancerStaffMissionBehavior());
-
+                
                 if (Campaign.Current != null)
                 {
                     ItemRosterElement elixir = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("elixir_rfmisc"));
@@ -226,7 +238,15 @@ namespace RealmsForgotten
         {
             base.OnGameLoaded(game, initializerObject);
             QuestSubModule.OnGameLoaded(game, initializerObject);
-            
+
+            if (initializerObject is CampaignGameStarter campaignGameStarter)
+            {
+                RFAgentStatCalculateModel rfAgentStatCalculateModel = new RFAgentStatCalculateModel();
+                campaignGameStarter.AddModel(rfAgentStatCalculateModel);
+                
+                AccessTools.Property(typeof(MissionGameModels), "AgentStatCalculateModel").SetValue(MissionGameModels.Current, rfAgentStatCalculateModel);
+            }
+
         }
 
         public override void OnNewGameCreated(Game game, object initializerObject)

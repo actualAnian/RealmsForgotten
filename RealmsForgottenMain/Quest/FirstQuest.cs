@@ -65,6 +65,7 @@ namespace RealmsForgotten.Quest
                     QuestQueen.HomeSettlement.Notables[0].UpdatePlayerGender(false);
                 QuestQueen.HomeSettlement.Notables[0].SetName(new TextObject("Uliah"), new TextObject("Uliah"));
                 QuestQueen.HomeSettlement.Notables[0].SetHasMet();
+                QuestQueen.HomeSettlement.Notables[0].CompanionOf = QuestQueen.Clan;
                 StartQuest();
 
             }
@@ -90,11 +91,12 @@ namespace RealmsForgotten.Quest
                     QuestQueen.HomeSettlement.Notables[0].UpdatePlayerGender(false);
                 QuestQueen.HomeSettlement.Notables[0].SetName(new TextObject("Uliah"), new TextObject("Uliah"));
                 QuestQueen.HomeSettlement.Notables[0].SetHasMet();
+                QuestQueen.HomeSettlement.Notables[0].CompanionOf = QuestQueen.Clan;
                 StartQuest();
                 isNewGame = false;
             }
         }
-
+    
         private void StartQuest()
         {
             InformationManager.ShowInquiry(new InquiryData(GameTexts.FindText("rf_event").ToString(), GameTexts.FindText("rf_main_quest_start_inquiry_1").ToString(), true, false, new TextObject("{=continue}Continue").ToString(), "", () =>
