@@ -32,10 +32,10 @@ namespace RealmsForgotten.Models
                 return baseValue;
             }
 
-            if (partyOwner?.CharacterObject.Race == FaceGen.GetRaceOrDefault("Xilantlacay"))
+            if (partyOwner?.CharacterObject?.Race == FaceGen.GetRaceOrDefault("Xilantlacay"))
                 baseValue.AddFactor(0.20f, new TextObject("Xilantlacay's Speedness"));
 
-            if(QuestPatches.AvoidDisbanding && party.Army?.Parties.Contains(MobileParty.MainParty) == true)
+            if(QuestPatches.AvoidDisbanding && party?.Army?.Parties?.Contains(MobileParty.MainParty) == true)
                 baseValue.AddFactor(2.0f);
             return baseValue;
         }
