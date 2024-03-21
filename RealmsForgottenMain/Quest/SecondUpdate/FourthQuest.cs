@@ -133,10 +133,11 @@ namespace RealmsForgotten.Quest.SecondUpdate
             {
                 takeBossToLordLog?.UpdateCurrentProgress(1);
                 Clan hellboundClan =
-                    Clan.FindFirst(x => x.StringId == "nelrog_raiders");
+                    Clan.FindFirst(x => x.StringId == "cs_nelrog_raiders");
 
                 MobileParty hellboundParty = BanditPartyComponent.CreateBanditParty("quest_hellbound_party", hellboundClan, null,
                     true);
+                
                 TroopRoster hellBoundTroopRoster = TroopRoster.CreateDummyTroopRoster();
 
                 string[] characters = new[] { "cs_nelrog_bandits_bandit", "cs_nelrog_bandits_raider", "cs_nelrog_bandits_chief" };
