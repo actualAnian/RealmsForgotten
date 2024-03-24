@@ -98,6 +98,9 @@ internal class CulturesCampaignBehavior : CampaignBehaviorBase
             args =>
             {
                 args.optionLeaveType = GameMenuOption.LeaveType.Recruit;
+                if (Hero.MainHero.Culture.StringId != "aserai")
+                    return false;
+                
                 if (townSlaveSoldiersData.TryGetValue(Settlement.CurrentSettlement, out MercenaryData data))
                 {
                     int slaveCost = Campaign.Current.Models.PartyWageModel.GetTroopRecruitmentCost(SlaveCharacter, Hero.MainHero);
