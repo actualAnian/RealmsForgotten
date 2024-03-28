@@ -26,6 +26,7 @@ namespace RealmsForgotten.Managers
             Quantity = quantity;
         }
     }
+
     public static class CulturedStartAction
     {
         public static readonly Dictionary<StartType, Dictionary<string, string>> mainHeroStartingEquipment = new()
@@ -141,10 +142,334 @@ namespace RealmsForgotten.Managers
                 ["aqarun"] = "ruler_aqarun_start"
             },
         };
+        public static readonly Dictionary<(string Culture, StartType StartOption), List<TroopSpawnInfo>> CultureStartTypeToTroops = new()
+        {
+         { ("aserai", StartType.Merchant), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("aserai_trader", 5),
+                new TroopSpawnInfo("aserai_recruit", 10),
+                new TroopSpawnInfo("aserai_archer", 5) }},
+
+           { ("aserai", StartType.Exiled), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("aserai_recruit", 5),
+                new TroopSpawnInfo("aserai_archer", 3) }},
+
+            { ("aserai", StartType.EscapedPrisoner), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("aserai_recruit", 2) }},
+
+            { ("aserai", StartType.Looter), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("aserai_bandit", 8) }},
+
+            { ("aserai", StartType.Mercenary), new List<TroopSpawnInfo> {
+              new TroopSpawnInfo("mercenary_volunteer", 10) }},
+
+            { ("aserai", StartType.VassalNoFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("aserai_veteran_infantry", 10),
+                new TroopSpawnInfo("aserai_master_archer", 5),
+                new TroopSpawnInfo("aserai_mameluke", 3) }},
+
+            { ("aserai", StartType.KingdomRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("aserai_veteran_infantry", 20),
+                new TroopSpawnInfo("aserai_master_archer", 10),
+                new TroopSpawnInfo("aserai_mameluke", 10) }},
+
+            { ("aserai", StartType.CastleRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("aserai_veteran_infantry", 15),
+                new TroopSpawnInfo("aserai_master_archer", 10),
+                new TroopSpawnInfo("aserai_mameluke", 5) }},
+
+            { ("aserai", StartType.VassalFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("aserai_veteran_infantry", 10),
+                new TroopSpawnInfo("aserai_master_archer", 5),
+                new TroopSpawnInfo("aserai_mameluke", 5) }},
+
+            { ("empire", StartType.Merchant), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("empire_trader", 4),
+                new TroopSpawnInfo("empire_recruit", 8),
+                new TroopSpawnInfo("empire_archer", 4) }},
+
+            { ("empire", StartType.Exiled), new List<TroopSpawnInfo> {
+                 new TroopSpawnInfo("imperial_recruit", 4),
+                new TroopSpawnInfo("imperial_archer", 2) }},
+
+            { ("empire", StartType.EscapedPrisoner), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("looter", 2) }},
+
+            { ("empire", StartType.Looter), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("looter", 8) }},
+
+            { ("empire", StartType.Mercenary), new List<TroopSpawnInfo> {
+               new TroopSpawnInfo("mercenary_volunteer", 10) }},
+
+            { ("empire", StartType.VassalNoFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("imperial_legionary", 10),
+                new TroopSpawnInfo("imperial_palatine_guard", 5),
+                new TroopSpawnInfo("imperial_cataphract", 3) }},
+
+            { ("empire", StartType.KingdomRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("imperial_legionary", 20),
+                new TroopSpawnInfo("imperial_palatine_guard", 10),
+                new TroopSpawnInfo("imperial_cataphract", 10) }},
+
+            { ("empire", StartType.CastleRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("imperial_legionary", 15),
+                new TroopSpawnInfo("imperial_palatine_guard", 10),
+                new TroopSpawnInfo("imperial_cataphract", 5) }},
+
+            { ("empire", StartType.VassalFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("imperial_legionary", 10),
+                new TroopSpawnInfo("imperial_palatine_guard", 5),
+                new TroopSpawnInfo("imperial_cataphract", 5) }},
+
+             { ("battania", StartType.Merchant), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("battania_trader", 3),
+                new TroopSpawnInfo("battania_volunteer", 10),
+                new TroopSpawnInfo("battania_skirmisher", 5) }},
+
+            { ("battania", StartType.Exiled), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("battania_volunteer", 5),
+                new TroopSpawnInfo("battania_skirmisher", 3) }},
+
+            { ("battania", StartType.EscapedPrisoner), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("battanian_volunteer", 2) }},
+
+            { ("battania", StartType.Looter), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("looter", 8) }},
+
+            { ("battania", StartType.Mercenary), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("mercenary_volunteer", 10) }},
+
+            { ("battania", StartType.VassalNoFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("battanian_veteran_falxman", 10),
+                new TroopSpawnInfo("battanian_fian_champion", 5),
+                new TroopSpawnInfo("battanian_hero", 3) }},
+
+            { ("battania", StartType.KingdomRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("battanian_veteran_falxman", 20),
+                new TroopSpawnInfo("battanian_fian_champion", 10),
+                new TroopSpawnInfo("battanian_hero", 10) }},
+
+            { ("battania", StartType.CastleRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("battanian_veteran_falxman", 15),
+                new TroopSpawnInfo("battanian_fian_champion", 10),
+                new TroopSpawnInfo("battanian_hero", 5) }},
+
+            { ("battania", StartType.VassalFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("battanian_veteran_falxman", 10),
+                new TroopSpawnInfo("battanian_fian_champion", 5),
+                new TroopSpawnInfo("battanian_heroic_lineage", 5) }},
+
+            { ("sturgia", StartType.Merchant), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("merchant_soldier", 4),
+                new TroopSpawnInfo("merchant_archer", 10),
+                new TroopSpawnInfo("merchant_trained_infantry", 4) }},
+
+            { ("sturgia", StartType.Exiled), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("sturgian_recruit", 5),
+                new TroopSpawnInfo("sturgian_archer", 2) }},
+
+            { ("sturgia", StartType.EscapedPrisoner), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("looter", 2) }},
+
+            { ("sturgia", StartType.Looter), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("looter", 8) }},
+
+            { ("sturgia", StartType.Mercenary), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("mercenary_volunteer", 10) }},
+
+            { ("sturgia", StartType.VassalNoFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("sturgian_veteran_warrior", 10),
+                new TroopSpawnInfo("sturgia_hardened_brigand", 5),
+                new TroopSpawnInfo("sturgia_druzhinnik", 3) }},
+
+            { ("sturgia", StartType.KingdomRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("sturgia_veteran_warrior", 20),
+                new TroopSpawnInfo("sturgian_shock_troop", 10),
+                new TroopSpawnInfo("sturgian_ulfhednar", 10),
+                new TroopSpawnInfo("sturgian_druzhinnik", 10) }},
+
+            { ("sturgia", StartType.CastleRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("sturgian_veteran_warrior", 15),
+                new TroopSpawnInfo("sturgian_shock_troop", 10),
+                new TroopSpawnInfo("druzhinnik", 5) }},
+
+            { ("sturgia", StartType.VassalFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("sturgian_veteran_warrior", 10),
+                new TroopSpawnInfo("sturgian_shock_troop", 5),
+                new TroopSpawnInfo("druzhinnik", 5) }},
+
+            { ("khuzait", StartType.Merchant), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("merchant_trained_infantry", 3),
+                new TroopSpawnInfo("merchant_soldier", 10),
+                new TroopSpawnInfo("merchant_archer", 5) }},
+
+            { ("khuzait", StartType.Exiled), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("khuzait_nomad", 5),
+                new TroopSpawnInfo("khuzait_horse_archer", 2) }},
+
+            { ("khuzait", StartType.EscapedPrisoner), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("khuzait_nomad", 2) }},
+
+            { ("khuzait", StartType.Looter), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("looter", 8) }},
+
+            { ("khuzait", StartType.Mercenary), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("mercenary_volunteer", 10) }},
+
+            { ("khuzait", StartType.VassalNoFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("khuzait_darkhan", 10),
+                new TroopSpawnInfo("khuzait_marksman", 5),
+                new TroopSpawnInfo("khuzait_heavy_lancer", 3) }},
+
+            { ("khuzait", StartType.KingdomRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("khuzait_darkhan", 20),
+                new TroopSpawnInfo("khuzait_marksman", 10),
+                new TroopSpawnInfo("khuzait_heavy_lancer", 10) }},
+
+            { ("khuzait", StartType.CastleRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("khuzait_darkhan", 15),
+                new TroopSpawnInfo("khuzait_marksman", 10),
+                new TroopSpawnInfo("khuzait_heavy_lancer", 5) }},
+
+            { ("khuzait", StartType.VassalFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("khuzait_darkhan", 10),
+                new TroopSpawnInfo("khuzait_marksman", 5),
+                new TroopSpawnInfo("khuzait_heavy_lancer", 5) }},
+
+            { ("vlandia", StartType.Merchant), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("merchant_trained_infantry", 3),
+                new TroopSpawnInfo("merchant_soldier", 10),
+                new TroopSpawnInfo("merchant_archer", 5) }},
+
+            { ("vlandia", StartType.Exiled), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("vlandian_recruit", 5),
+                new TroopSpawnInfo("vlandian_crossbowman", 2) }},
+
+            { ("vlandia", StartType.EscapedPrisoner), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("looter", 2) }},
+
+            { ("vlandia", StartType.Looter), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("looter", 8) }},
+
+            { ("vlandia", StartType.Mercenary), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("vlandian_infantry", 5),
+                new TroopSpawnInfo("vlandian_crossbowman", 5),
+                new TroopSpawnInfo("vlandian_knight", 2) }},
+
+            { ("vlandia", StartType.VassalNoFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("vlandian_sergeant", 10),
+                new TroopSpawnInfo("vlandian_sharpshooter", 5),
+                new TroopSpawnInfo("vlandian_banner_knight", 3) }},
+
+            { ("vlandia", StartType.KingdomRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("vlandian_sergeant", 20),
+                new TroopSpawnInfo("vlandian_sharpshooter", 10),
+                new TroopSpawnInfo("vlandian_banner_knight", 10) }},
+
+            { ("vlandia", StartType.CastleRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("vlandian_sergeant", 15),
+                new TroopSpawnInfo("vlandian_sharpshooter", 10),
+                new TroopSpawnInfo("vlandian_banner_knight", 5) }},
+
+            { ("vlandia", StartType.VassalFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("vlandian_sergeant", 10),
+                new TroopSpawnInfo("vlandian_sharpshooter", 5),
+                new TroopSpawnInfo("vlandian_banner_knight", 5) }},
+
+            { ("giant", StartType.Merchant), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("merchant_trained_infantry", 3),
+                new TroopSpawnInfo("merchant_soldier", 10),
+                new TroopSpawnInfo("merchant_archer", 5) }},
+
+            { ("giant", StartType.Exiled), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("xilan_troop", 3),
+                new TroopSpawnInfo("giant_skirmisher", 2) }},
+
+            { ("giant", StartType.EscapedPrisoner), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("looter", 2) }},
+
+            { ("giant", StartType.Looter), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("looter", 6) }},
+
+            { ("giant", StartType.Mercenary), new List<TroopSpawnInfo> {
+               new TroopSpawnInfo("mercenary_volunteer", 10) }},
+
+            { ("giant", StartType.VassalNoFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("giant_trained_infantry", 5),
+                new TroopSpawnInfo("giant_experienced_infantry", 3),
+                new TroopSpawnInfo("half_giant_archer", 2) }},
+
+            { ("giant", StartType.KingdomRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("giant_trained_infantry", 10),
+                new TroopSpawnInfo("giant_experienced_infantry", 5),
+                new TroopSpawnInfo("giant_berzerker_infantry", 5) }},
+
+            { ("giant", StartType.CastleRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("giant_trained_infantry", 8),
+                new TroopSpawnInfo("giant_experienced_infantry", 5),
+                new TroopSpawnInfo("giant_leader_archer", 2) }},
+
+            { ("giant", StartType.VassalFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("giant_experienced_infantry", 7),
+                new TroopSpawnInfo("giant_berzerker_infantry", 5),
+                new TroopSpawnInfo("giant_leader_archer", 3) }},
+
+            { ("aqarun", StartType.Merchant), new List<TroopSpawnInfo> {
+                 new TroopSpawnInfo("merchant_trained_infantry", 3),
+                new TroopSpawnInfo("merchant_soldier", 10),
+                new TroopSpawnInfo("merchant_archer", 5) }},
+
+            { ("aqarun", StartType.Exiled), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("Aqarun_troop", 6),
+                new TroopSpawnInfo("Aqarun_cavalry", 2) }},
+
+            { ("aqarun", StartType.EscapedPrisoner), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("looter", 8) }},
+
+            { ("aqarun", StartType.Looter), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("looter", 6) }},
+
+            { ("aqarun", StartType.Mercenary), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("athas_arena_fighter_a", 5),
+                new TroopSpawnInfo("athas_arena_ranged_a", 3) }},
+
+            { ("aqarun", StartType.VassalNoFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("Aqarun_infantry", 5),
+                new TroopSpawnInfo("Aqarun_warrior", 3),
+                new TroopSpawnInfo("Aqarun_skirmisher_trained", 2) }},
+
+            { ("aqarun", StartType.KingdomRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("Aqarun_warrior", 8),
+                new TroopSpawnInfo("Aqarun_champion", 4),
+                new TroopSpawnInfo("Aqarun_skirmisher_expert", 2) }},
+
+            { ("aqarun", StartType.CastleRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("Aqarun_infantry", 6),
+                new TroopSpawnInfo("Aqarun_cavalry_veteran", 4),
+                new TroopSpawnInfo("Aqarun_skirmisher_veteran", 2) }},
+
+            { ("aqarun", StartType.VassalFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("Aqarun_fighter", 5),
+                new TroopSpawnInfo("Aqarun_cavalry_master", 3),
+                new TroopSpawnInfo("Aqarun_archer", 2) }},
+
+
+    };
+
+        public static List<TroopSpawnInfo> GetTroopsForStartOption(string culture, StartType startOption)
+        {
+            if (CultureStartTypeToTroops.TryGetValue((culture, startOption), out var troopList))
+            {
+                return troopList;
+            }
+            return new List<TroopSpawnInfo>(); // Return an empty list if no match is found
+        }
+
         public static void Apply(int storyOption, int locationOption)
         {
+            Console.WriteLine("Apply method started");
             StartType startOption = (StartType)storyOption;
             Hero mainHero = Hero.MainHero;
+            Console.WriteLine($"Story option: {storyOption}, Location option: {locationOption}, Start option: {startOption}");
             Hero ruler = Hero.FindAll(hero => hero.Culture == mainHero.Culture && hero.IsAlive && hero.IsFactionLeader && !hero.MapFaction.IsMinorFaction).GetRandomElementInefficiently();
             Hero captor = Hero.FindAll(hero => hero.Culture == mainHero.Culture && hero.IsAlive && hero.MapFaction != null && !hero.MapFaction.IsMinorFaction && hero.IsPartyLeader && hero.PartyBelongedTo.DefaultBehavior != AiBehavior.Hold).GetRandomElementInefficiently();
 
@@ -196,26 +521,24 @@ namespace RealmsForgotten.Managers
                 mapState.Handler.ResetCamera(true, true);
                 mapState.Handler.TeleportCameraToMainParty();
             }
-
+            Console.WriteLine($"Processing start option: {startOption}");
             switch (startOption)
             {
+
                 case StartType.Default: // Default
+                    Console.WriteLine("Processing Default start option");
                     ApplyInternal(mainHero, gold: 1000, grain: 2);
                     break;
                 case StartType.Merchant: // Merchant
-                    List<TroopSpawnInfo> merchantTroops = new List<TroopSpawnInfo>
-        {
-            new TroopSpawnInfo("aserai_recruit", 12),
-            new TroopSpawnInfo("aserai_recruit", 7)
-        };
+                                         // Dynamically retrieve troops for the merchant start based on the hero's culture
+                    Console.WriteLine("Processing Default start option");
+                    List<TroopSpawnInfo> merchantTroops = GetTroopsForStartOption(mainHero.Culture.StringId, StartType.Merchant);
                     ApplyInternal(mainHero, gold: 8000, grain: 250, mules: 25, troops: merchantTroops, startOption: StartType.Merchant);
                     break;
                 case StartType.Exiled: // Exiled
-                    List<TroopSpawnInfo> exiledTroops = new List<TroopSpawnInfo>
-        {
-            // Assuming exiled start type also uses aserai_recruit for simplicity; adjust quantities as desired.
-            new TroopSpawnInfo("aserai_recruit", 10)
-        };
+                                       // Dynamically retrieve troops for the exiled start based on the hero's culture
+                    Console.WriteLine("Processing Default start option");
+                    List<TroopSpawnInfo> exiledTroops = GetTroopsForStartOption(mainHero.Culture.StringId, StartType.Exiled);
                     ApplyInternal(mainHero, gold: 3000, grain: 15, tier: 4, companions: 1, troops: exiledTroops, startOption: StartType.Exiled);
                     if (ruler != null)
                     {
@@ -228,81 +551,68 @@ namespace RealmsForgotten.Managers
                     }
                     break;
                 case StartType.Mercenary: // Mercenary
-                    List<TroopSpawnInfo> mercenaryTroops = new List<TroopSpawnInfo>
-        {
-            new TroopSpawnInfo("aserai_recruit", 10),
-            new TroopSpawnInfo("aserai_recruit", 5),
-            new TroopSpawnInfo("aserai_recruit", 3),
-            new TroopSpawnInfo("aserai_recruit", 1)
-        };
+                                          // Dynamically retrieve troops for the mercenary start based on the hero's culture
+                    Console.WriteLine("Processing Default start option");
+                    List<TroopSpawnInfo> mercenaryTroops = GetTroopsForStartOption(mainHero.Culture.StringId, StartType.Mercenary);
                     ApplyInternal(mainHero, gold: 5000, grain: 25, tier: 2, troops: mercenaryTroops, startOption: StartType.Mercenary);
                     mainHero.PartyBelongedTo.RecentEventsMorale -= 40;
                     break;
+
                 case StartType.Looter: // Looter
-                    List<TroopSpawnInfo> looterTroops = new List<TroopSpawnInfo>
-        {
-            new TroopSpawnInfo("aserai_recruit", 7),
-            new TroopSpawnInfo("aserai_recruit", 5)
-        };
+                                       // Dynamically retrieve troops for the looter start based on the hero's culture
+                    Console.WriteLine("Processing Default start option");
+                    List<TroopSpawnInfo> looterTroops = GetTroopsForStartOption(mainHero.Culture.StringId, StartType.Looter);
                     ApplyInternal(mainHero, gold: 500, grain: 10, troops: looterTroops, startOption: StartType.Looter);
                     foreach (Kingdom kingdom in Campaign.Current.Kingdoms)
                     {
                         ChangeCrimeRatingAction.Apply(kingdom.MapFaction, 50, false);
                     }
                     break;
-                case StartType.VassalNoFief: // Vassal
-                    List<TroopSpawnInfo> vassalNoFiefTroops = new List<TroopSpawnInfo>
-        {
-            new TroopSpawnInfo("aserai_recruit", 30),
-            new TroopSpawnInfo("aserai_recruit", 10),
-            new TroopSpawnInfo("aserai_recruit", 10)
-        };
+
+                case StartType.VassalNoFief: // VassalNoFief
+                                             // Dynamically retrieve troops for the vassal no fief start based on the hero's culture
+                    Console.WriteLine("Processing Default start option");
+                    List<TroopSpawnInfo> vassalNoFiefTroops = GetTroopsForStartOption(mainHero.Culture.StringId, StartType.VassalNoFief);
                     ApplyInternal(mainHero, gold: 15000, grain: 40, tier: 3, troops: vassalNoFiefTroops, ruler: ruler, startOption: StartType.VassalNoFief);
                     break;
-                case StartType.KingdomRuler: // Kingdom
-                    List<TroopSpawnInfo> kingdomRulerTroops = new List<TroopSpawnInfo>
-        {
-            new TroopSpawnInfo("aserai_recruit", 30),
-            new TroopSpawnInfo("aserai_recruit", 50),
-            new TroopSpawnInfo("aserai_recruit", 25),
-            new TroopSpawnInfo("aserai_recruit", 10),
-            new TroopSpawnInfo("aserai_recruit", 10)
-        };
+
+                case StartType.KingdomRuler: // KingdomRuler
+                                             // Dynamically retrieve troops for the kingdom ruler start based on the hero's culture
+                    Console.WriteLine("Processing Default start option");
+                    List<TroopSpawnInfo> kingdomRulerTroops = GetTroopsForStartOption(mainHero.Culture.StringId, StartType.KingdomRuler);
                     ApplyInternal(mainHero, gold: 45000, grain: 150, tier: 5, troops: kingdomRulerTroops, companions: 3, companionParties: 2, startOption: StartType.KingdomRuler);
                     break;
                 case StartType.CastleRuler: // Holding
-                    List<TroopSpawnInfo> castleRulerTroops = new List<TroopSpawnInfo>
-        {
-            new TroopSpawnInfo("aserai_recruit", 31),
-            new TroopSpawnInfo("aserai_recruit", 20),
-            new TroopSpawnInfo("aserai_recruit", 14),
-            new TroopSpawnInfo("aserai_recruit", 10),
-            new TroopSpawnInfo("aserai_recruit", 6)
-        };
+                                            // Dynamically retrieve troops for the castle ruler start based on the hero's culture
+                    Console.WriteLine("Processing Default start option");
+                    List<TroopSpawnInfo> castleRulerTroops = GetTroopsForStartOption(mainHero.Culture.StringId, StartType.CastleRuler);
                     ApplyInternal(mainHero, gold: 60000, grain: 30, tier: 3, troops: castleRulerTroops, companions: 1, companionParties: 1, startingSettlement: startingSettlement, startOption: StartType.CastleRuler);
                     ownedSettlement ??= Settlement.All.Where(settlement => settlement.Culture == mainHero.Culture && settlement.IsCastle).GetRandomElementInefficiently();
                     break;
+
                 case StartType.VassalFief: // Landed Vassal
-                    List<TroopSpawnInfo> vassalFiefTroops = new List<TroopSpawnInfo>
-        {
-            new TroopSpawnInfo("aserai_recruit", 40),
-            new TroopSpawnInfo("aserai_recruit", 20),
-            new TroopSpawnInfo("aserai_recruit", 20),
-            new TroopSpawnInfo("aserai_recruit", 5)
-        };
+                                           // Dynamically retrieve troops for the vassal fief start based on the hero's culture
+                    Console.WriteLine("Processing Default start option");
+                    List<TroopSpawnInfo> vassalFiefTroops = GetTroopsForStartOption(mainHero.Culture.StringId, StartType.VassalFief);
                     ApplyInternal(mainHero, gold: 35000, grain: 80, tier: 2, troops: vassalFiefTroops, companions: 1, companionParties: 1, ruler: ruler, startingSettlement: startingSettlement, startOption: StartType.VassalFief);
                     ownedSettlement ??= Settlement.All.Where(settlement => mainHero.Clan?.Kingdom == ruler.Clan?.Kingdom && settlement.IsCastle).GetRandomElementInefficiently();
                     break;
+
                 case StartType.EscapedPrisoner: // Escaped Prisoner
-                    ApplyInternal(mainHero, gold: 0, grain: 1, startOption: StartType.EscapedPrisoner);
+                                                // No troops to assign for Escaped Prisoner, but applying other effects
+                    Console.WriteLine("Processing Default start option");
+                    ApplyInternal(mainHero, gold: 2000, grain: 10, startOption: StartType.EscapedPrisoner);
                     if (captor != null)
                     {
                         CharacterRelationManager.SetHeroRelation(mainHero, captor, -50);
                     }
                     break;
+
                 default:
+                    Console.WriteLine($"Unhandled start option: {startOption}");
                     break; // This line was missing a semicolon.
             }
+            Console.WriteLine("Apply method completed");
             if (ownedSettlement != null)
                 ChangeOwnerOfSettlementAction.ApplyByBarter(Hero.MainHero, ownedSettlement);
         }
