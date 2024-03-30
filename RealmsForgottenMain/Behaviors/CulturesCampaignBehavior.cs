@@ -30,9 +30,11 @@ internal class MercenaryData
     {
         ResetSoldiers(MBRandom.RandomInt(5, 20));
     }
-    public void ResetSoldiers(int newAmount)
+    public void ResetSoldiers(int newAmount, int limit = 1000)
     {
         Amount = newAmount;
+        if (Amount > limit)
+            Amount = limit;
         NextReset = CampaignTime.DaysFromNow(MBRandom.RandomInt(2, 7));
     }
 }
@@ -65,7 +67,7 @@ internal class CulturesCampaignBehavior : CampaignBehaviorBase
         {
             if (data.NextReset.IsPast)
             {
-                data.ResetSoldiers(MBRandom.RandomInt(1, 5));
+                data.ResetSoldiers(MBRandom.RandomInt(1, 5), 5);
             }
         }
         
