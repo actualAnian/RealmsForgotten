@@ -24,17 +24,17 @@ internal class MercenaryData
 {
     public int Amount;
     public CampaignTime NextReset = CampaignTime.Now;
-
-
-    public MercenaryData()
+    
+    public MercenaryData(int newAmount, int limit = 1000)
     {
-        ResetSoldiers(MBRandom.RandomInt(5, 20));
+        ResetSoldiers(newAmount, limit);
     }
     public void ResetSoldiers(int newAmount, int limit = 1000)
     {
         Amount = newAmount;
         if (Amount > limit)
             Amount = limit;
+        
         NextReset = CampaignTime.DaysFromNow(MBRandom.RandomInt(2, 7));
     }
 }
@@ -87,13 +87,14 @@ internal class CulturesCampaignBehavior : CampaignBehaviorBase
         foreach (var settlement in athasSettlements)
         {
             if (!townSlaveSoldiersData.ContainsKey(settlement))
-                townSlaveSoldiersData.Add(settlement, new MercenaryData());
+                townSlaveSoldiersData.Add(settlement, new MercenaryData(MBRandom.RandomInt(1, 5), 5));
         }
 
         foreach (var settlement in Settlement.All)
         {
             if (!townMonkWarriorsData.ContainsKey(settlement))
-                townMonkWarriorsData.Add(settlement, new MercenaryData());
+                townMonkWarriorsData.Add(settlement, new MercenaryData((int)(Hero.MainHero.GetSkillValue(RFSkills.Faith) /
+                                                                             RFFaithCampaignBehavior.NecessaryFaithForPriests)));
         }
         
         campaignGameStarter.AddGameMenuOption("town_backstreet", "buy_slaves", "{=buy_slaves}Buy {AMOUNT} slave soldiers ({COST}{GOLD_ICON})",
