@@ -15,6 +15,7 @@ using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Overlay;
 using TaleWorlds.Core;
+using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.SaveSystem;
 
@@ -222,7 +223,12 @@ internal class CulturesCampaignBehavior : CampaignBehaviorBase
                         string characterId = SubModule.undeadRespawnConfig.RandomElementByWeight(x => x.Value);
                         CharacterObject characterObject = CharacterObject.Find(characterId);
 
-
+                        if (characterObject == null)
+                        {
+                            InformationManager.DisplayMessage(new InformationMessage($"Character of id {characterId} not found!", Colors.Red));
+                            return;
+                        }
+                        
                         party.Party.AddElementToMemberRoster(characterObject, 1);
                     }
                     if (party.Party == PartyBase.MainParty)
