@@ -133,10 +133,11 @@ namespace RealmsForgotten.Quest.SecondUpdate
         public ThirdQuest(string questId, Hero questGiver, CampaignTime duration, int rewardGold) : base(questId, questGiver, duration, rewardGold)
         {
             Instance = this;
+            OnSessionLaunched(SandBoxManager.Instance.GameStarter);
         }
         Settlement Ityr => Settlement.Find("town_A1");
         public override bool IsSpecialQuest => true;
-       
+        
         public override TextObject Title => GameTexts.FindText("rf_quest_title_part_three");
         protected override void RegisterEvents()
         {
@@ -316,10 +317,10 @@ namespace RealmsForgotten.Quest.SecondUpdate
         {
             athasScholarHero =
                 HeroCreator.CreateSpecialHero(CharacterObject.Find("rf_athas_scholar"), Settlement.CurrentSettlement);
-
+        
             athasScholarHero.Clan = Ityr.OwnerClan;
 
-            athasScholarHero.SetName(new TextObject("{=athas_scholar_name}Athas Scholar"), null);
+            athasScholarHero.SetName(new TextObject("{=athas_scholar_name}Athas Scholar"), new TextObject("Scholar"));
 
             athasScholarHero.StringId = "rf_athas_scholar";
 
@@ -371,7 +372,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             base.OnStartQuest();
             SetDialogs();
             athasScholarHero = HeroCreator.CreateSpecialHero(CharacterObject.Find("rf_athas_scholar"), Ityr, Ityr.OwnerClan);
-
+            athasScholarHero.SetName(new TextObject("{=athas_scholar_name}Athas Scholar"), new TextObject("Scholar"));
             InformationManager.ShowInquiry(new InquiryData(GameTexts.FindText("rf_event").ToString(), QuestGiver == AnoritLord ? GameTexts.FindText("rf_anorit_message").ToString() : GameTexts.FindText("rf_queen_message").ToString(), true, false, GameTexts.FindText("str_done").ToString(), "",
                 () =>
                 {

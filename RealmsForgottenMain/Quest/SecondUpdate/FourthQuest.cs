@@ -110,6 +110,12 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 takeBossToLordLog?.UpdateCurrentProgress(3);
             }
 
+            /*if (captureHellboundLog.CurrentProgress == 2)
+            {
+                new FifthQuest("rf_fifth_quest", QuestGiver, CampaignTime.Never, 50000);
+                CompleteQuestWithSuccess();
+            }*/
+
         }
 
         private void OnCanHeroBecomePrisoner(Hero hero, ref bool canHeroBecome)
@@ -150,6 +156,8 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 hellboundParty.InitializeMobilePartyAtPosition(hellBoundTroopRoster,
                     TroopRoster.CreateDummyTroopRoster(), MobileParty.MainParty.Position2D);
 
+                
+                hellboundParty.IgnoreForHours(24);
                 hellboundParty.Ai.SetMoveEngageParty(MobileParty.MainParty);
             }
 
@@ -279,7 +287,6 @@ namespace RealmsForgotten.Quest.SecondUpdate
         {
             captureHellboundLog.UpdateCurrentProgress(2);
             successInPersuasion = true;
-            nextUpdateLog = AddLog(GameTexts.FindText("rf_last_quest_notification"));
         }
         private bool PersuasionOptionCondition_1()
         {

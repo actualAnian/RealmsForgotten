@@ -85,14 +85,14 @@ namespace RealmsForgotten.Quest
             questStoppedAt = _questStoppedAt;
             if (questStoppedAt == "anorit")
             {
-                AnoritFindRelicsQuest qb = (AnoritFindRelicsQuest)Campaign.Current.QuestManager.Quests.FirstOrDefault(x => x.GetType() == typeof(AnoritFindRelicsQuest));
+                AnoritFindRelicsQuest qb = (AnoritFindRelicsQuest)Campaign.Current.QuestManager.Quests.FirstOrDefault(x => x is AnoritFindRelicsQuest);
 
                 if (qb != null)
                     qb.CompleteQuestWithSuccess();
             }
             else
             {
-                SecondQuest qb = (SecondQuest)Campaign.Current.QuestManager.Quests.FirstOrDefault(x => x.GetType() == typeof(SecondQuest));
+                SecondQuest qb = (SecondQuest)Campaign.Current.QuestManager.Quests.FirstOrDefault(x => x is SecondQuest);
 
                 if (qb != null)
                     qb.CompleteQuestWithSuccess();
@@ -114,7 +114,7 @@ namespace RealmsForgotten.Quest
 
         private void CheckIfFirstQuestHasEnded()
         {
-            SaveCurrentQuestCampaignBehavior currentQuestCampaignBehavior = SaveCurrentQuestCampaignBehavior.Instance;
+            SaveCurrentQuestCampaignBehavior currentQuestCampaignBehavior = Instance;
 
             if (currentQuestCampaignBehavior?.questStoppedAt != null && !Campaign.Current.QuestManager.Quests.Any(x => x is ThirdQuest))
             {
