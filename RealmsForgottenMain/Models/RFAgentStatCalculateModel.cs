@@ -31,7 +31,7 @@ namespace RealmsForgotten.Models
         {
             if (agent.IsHuman)
             {
-                if (RFEnchantedWeaponsMissionBehavior.Instance?.BoostedAgents.TryGetValue(agent, out var properties) == true)
+                if (RFEnchantedWeaponsMissionBehavior.Instance?.ModifiedAgents.TryGetValue(agent, out var properties) == true)
                 {
                     foreach (var tuple in properties)
                     {

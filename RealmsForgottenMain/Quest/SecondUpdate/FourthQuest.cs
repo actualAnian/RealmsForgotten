@@ -110,11 +110,11 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 takeBossToLordLog?.UpdateCurrentProgress(3);
             }
 
-            /*if (captureHellboundLog.CurrentProgress == 2)
+            if (captureHellboundLog?.CurrentProgress == 2)
             {
-                new FifthQuest("rf_fifth_quest", QuestGiver, CampaignTime.Never, 50000);
+                new FifthQuest("rf_fifth_quest", QuestGiver, CampaignTime.Never, 50000).StartQuest();
                 CompleteQuestWithSuccess();
-            }*/
+            }
 
         }
 
@@ -135,7 +135,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
         protected override void HourlyTick()
         {
-            if (QuestGiver.IsActive && MobileParty.MainParty.Position2D.DistanceSquared(QuestGiver.PartyBelongedTo != null ? QuestGiver.PartyBelongedTo.Position2D : QuestGiver.CurrentSettlement.GatePosition) <= initialDistanceFromQuestGiver * 0.7 && takeBossToLordLog?.CurrentProgress == 0)
+            if (QuestGiver.IsActive && GetDistanceFromQuestGiver() <= initialDistanceFromQuestGiver * 0.7 && takeBossToLordLog?.CurrentProgress == 0)
             {
                 takeBossToLordLog?.UpdateCurrentProgress(1);
                 Clan hellboundClan =
@@ -143,7 +143,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
                 MobileParty hellboundParty = BanditPartyComponent.CreateBanditParty("quest_hellbound_party", hellboundClan, null,
                     true);
-                
+        
                 TroopRoster hellBoundTroopRoster = TroopRoster.CreateDummyTroopRoster();
 
                 string[] characters = new[] { "cs_nelrog_bandits_bandit", "cs_nelrog_bandits_raider", "cs_nelrog_bandits_chief" };
@@ -156,17 +156,21 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 hellboundParty.InitializeMobilePartyAtPosition(hellBoundTroopRoster,
                     TroopRoster.CreateDummyTroopRoster(), MobileParty.MainParty.Position2D);
 
-                
+        
                 hellboundParty.IgnoreForHours(24);
                 hellboundParty.Ai.SetMoveEngageParty(MobileParty.MainParty);
             }
 
-            if (MobileParty.MainParty.Position2D.DistanceSquared(QuestMonastery.GatePosition) <= initialDistanceToMonastery * 0.7 && takeBossToLordLog?.CurrentProgress == 3)
+            if (GetDistanceFromMonastery() <= initialDistanceToMonastery * 0.7 && takeBossToLordLog?.CurrentProgress == 3)
             {
                 takeBossToLordLog.UpdateCurrentProgress(4);
                 CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter), new ConversationCharacterData(TheOwl.CharacterObject));
             }
         }
+
+        private float GetDistanceFromQuestGiver() => MobileParty.MainParty.Position2D.DistanceSquared(QuestGiver.PartyBelongedTo != null ? QuestGiver.PartyBelongedTo.Position2D : QuestGiver.CurrentSettlement.GatePosition);
+        private float GetDistanceFromMonastery() => MobileParty.MainParty.Position2D.DistanceSquared(QuestMonastery.GatePosition);
+        
 
         protected override void OnStartQuest()
         {
@@ -211,7 +215,6 @@ namespace RealmsForgotten.Quest.SecondUpdate
             QuestUIManager.ShowNotification("After a while...", ()=>{}, false);
         }
 
-         
         private void MonkDialogConsequence()
         {
             PartyBase.MainParty.AddMember(CharacterObject.Find("monk_knight"), 20);

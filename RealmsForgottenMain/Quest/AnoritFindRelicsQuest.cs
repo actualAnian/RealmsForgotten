@@ -114,16 +114,14 @@ namespace RealmsForgotten.Quest
 
         private void CheckIfFirstQuestHasEnded()
         {
-            SaveCurrentQuestCampaignBehavior currentQuestCampaignBehavior = Instance;
-
-            if (currentQuestCampaignBehavior?.questStoppedAt != null && !Campaign.Current.QuestManager.Quests.Any(x => x is ThirdQuest))
+            if (Instance?.questStoppedAt != null && !Campaign.Current.QuestManager.Quests.Any(x => x is ThirdQuest))
             {
                 Hero hero = null;
-                if (currentQuestCampaignBehavior.questStoppedAt == "anorit")
+                if (Instance.questStoppedAt == "anorit")
 
                     hero = Hero.FindFirst(x => x.StringId == "lord_WE9_l");
 
-                else if (currentQuestCampaignBehavior.questStoppedAt == "queen")
+                else if (Instance.questStoppedAt == "queen")
 
                     hero = Kingdom.All.First(x => x.StringId == "empire").Leader.Spouse;
 

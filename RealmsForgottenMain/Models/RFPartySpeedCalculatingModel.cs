@@ -19,8 +19,16 @@ namespace RealmsForgotten.Models
         public override ExplainedNumber CalculateBaseSpeed(MobileParty party, bool includeDescriptions = false,
             int additionalTroopOnFootCount = 0, int additionalTroopOnHorseCount = 0)
         {
-            ExplainedNumber baseValue = base.CalculateBaseSpeed(party, includeDescriptions, additionalTroopOnFootCount,
-                additionalTroopOnHorseCount);
+            ExplainedNumber baseValue;
+            try
+            {
+                baseValue = base.CalculateBaseSpeed(party, includeDescriptions, additionalTroopOnFootCount,
+                    additionalTroopOnHorseCount);
+            }
+            catch (Exception e)
+            {
+                return party.MoraleExplained;
+            }
 
             Hero partyOwner;
             try
