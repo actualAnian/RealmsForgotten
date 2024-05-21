@@ -613,18 +613,18 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 base.AfterStart();
                 if (FifthQuest.Instance?.takeMysticalWeaponLog?.CurrentProgress == 0 && Mission.Scene?.GetName() == "ice_tower_inside")
                 {
-                    Vec3 position = new(95.54f, 150.13f, 49.42f),
-                        rotation = new(0.34f, -91.21f, -90.24f);
+                    Vec3 position = new(122.42f, 192.97f, 4.03f),
+                        rotation = new(0.00f, 0.00f, -30.00f);
                     MissionWeapon missionWeapon = new MissionWeapon(MBObjectManager.Instance.GetObject<ItemObject>(MysticWeaponId), new ItemModifier(), Banner.CreateOneColoredEmptyBanner(1));
-                    Mission.SpawnWeaponWithNewEntityAux(missionWeapon, Mission.WeaponSpawnFlags.WithStaticPhysics, new MatrixFrame(Mat3.CreateMat3WithForward(rotation), Agent.Main.Position), 0, null, false);
+                    Mission.SpawnWeaponWithNewEntityAux(missionWeapon, Mission.WeaponSpawnFlags.WithStaticPhysics, new MatrixFrame(Mat3.CreateMat3WithForward(rotation), position), 0, null, false);
                 }
                 else if (FifthQuest.Instance?.requireTreasureLog?.CurrentProgress == 0 && Mission.Scene?.GetName() == "allkhuur_temple_inside")
                 {
-                    Vec3 position = new(95.54f, 150.13f, 49.42f),
-                        rotation = new(0.34f, -91.21f, -90.24f);
+                    Vec3 position = new(138.62f, 161.10f, 23.00f, -1f),
+                        rotation = new(0.00f, 0.00f, 177.79f);
                     
                     MissionWeapon missionWeapon = new MissionWeapon(MBObjectManager.Instance.GetObject<ItemObject>(ShieldTreasureId), new ItemModifier(), Banner.CreateOneColoredEmptyBanner(1));
-                    Mission.SpawnWeaponWithNewEntityAux(missionWeapon, Mission.WeaponSpawnFlags.WithStaticPhysics, new MatrixFrame(Mat3.CreateMat3WithForward(rotation), Agent.Main.Position), 0, null, false);
+                    Mission.SpawnWeaponWithNewEntityAux(missionWeapon, Mission.WeaponSpawnFlags.WithStaticPhysics, new MatrixFrame(Mat3.CreateMat3WithForward(rotation), position), 0, null, false);
                 }
                 Mission.Current.OnItemPickUp += OnItemPickup;
             }
