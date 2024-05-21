@@ -33,13 +33,11 @@ namespace RealmsForgotten.RFEffects
                     {
                         GameEntity childEntity;
                         particle = ApplyParticleToAgentBone(agent, particleId, (sbyte)boneIndexes[i], out childEntity);
+                        tempChildEntities = childEntity;
                         if (particle == null)
                         {
                             returnParticle = particle;
-                            return;
                         }
-                        
-                        tempChildEntities = childEntity;
                     }
                 }
             });
