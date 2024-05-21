@@ -1,5 +1,6 @@
 using System;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 
 namespace RealmsForgotten.RFEffects;
 
@@ -16,8 +17,8 @@ public static class ExceptionHandler
         {
             
             if(exception != lastException)
-                InformationManager.ShowInquiry(new InquiryData("{=rf_error}Error", exception.Message, 
-                    true, false, "{=str_done}Done", null, null, null), true);
+                InformationManager.ShowInquiry(new InquiryData(new TextObject("{=rf_error}Error").ToString(), exception.Message, 
+                    true, false, new TextObject("{=str_done}Done").ToString(), null, null, null), true);
             lastException = exception;
         }
     }

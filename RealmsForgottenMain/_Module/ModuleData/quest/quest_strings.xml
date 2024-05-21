@@ -280,10 +280,12 @@
 	<string id="rf_fourth_quest_hellbound_dialog_npc_2_wrong" text="{=rf_fourth_quest_hellbound_dialog_npc_2_wrong}Hahaha, do you think I am afraid of pain? The pain that will unleash over the world is beyond your comprehension." />
 	<string id="rf_fourth_quest_hellbound_dialog_player_5_success" text="{=rf_fourth_quest_hellbound_dialog_player_5_success}Who are the usurpers ?" />
 	<string id="rf_fourth_quest_hellbound_dialog_npc_5_success" text="{=rf_fourth_quest_hellbound_dialog_npc_5_success}You know nothing about this world. Those who call themselves the firstborn, who pretend to be the carriers of light and good. Their forefathers were assassins, erasing thousands of lives to steal a land that did not belong to them. But that's enough, I have nothing else to say. The dawn of time is upon us..." />
-
+	
+	<string id="rf_quest_title_part_five" text="{=rf_quest_title_part_four}Realms Forgotten Quest: Part Five" />
+	
 	<string id="rf_fifth_quest_first_dialog_1" text='We should bring this one to somebody that can loosen his tongue...'/>
 	<string id="rf_fifth_quest_first_dialog_2" text='Aye, i have had to rely in certain recipes to retrieve information before, things a spy must have under his sleeves...'/>
-	<string id="rf_fifth_quest_first_dialog_3" text='and can you do that now?’'/>
+	<string id="rf_fifth_quest_first_dialog_3" text='And can you do that now?'/>
 	<string id="rf_fifth_quest_first_dialog_4" text='I cannot make it myself, but i know somebody that can help us on that. It will not be a short journey, but i trust it will bring a solution.'/>
 	
 	<string id="rf_fifth_quest_second_dialog_1" text="We've captured this one, but we've gleaned naught from him. Might thee have a method?"/>
@@ -316,24 +318,61 @@
 	<string id="rf_fifth_quest_nasorian_king_dialog_1" text='For what reason dost thou intrude upon the lands of the Nasorians, stranger? Speak swiftly and with purpose.'/>
 	<string id="rf_fifth_quest_nasorian_king_dialog_2" text='Hail, Your Majesty. We bring dire tidings. We have faced adversaries beyond mortal ken, beings not bound by this world. We are convinced they muster their forces, a threat to all life.'/>
 	<string id="rf_fifth_quest_nasorian_king_dialog_3" text='Haha, a tale as peculiar as any... And what power could challenge the might of the Nasorians?'/>
-	<string id="rf_fifth_quest_nasorian_king_dialog_4" text='With respect, Your Majesty, demons, spawn of darkness…'/>
+	<string id="rf_fifth_quest_nasorian_king_dialog_4_1" text='With respect, Your Majesty, demons, spawn of darkness…'/>
+	<string id="rf_fifth_quest_nasorian_king_dialog_4_2" text='There is a power that can challenge all the Realms of the world together, and thats no joke.'/>
 	<string id="rf_fifth_quest_nasorian_king_dialog_5" text='Hahahahha... that is all I need to hear. Amidst the strength of the Nasorians, now we must confront unearthly malevolence…'/>
 	<string id="rf_fifth_quest_nasorian_king_dialog_6" text='With respect, Your Majesty, what we speak is true... and we believe they may be kin to ancient adversaries of the Elveans, a folk once known as the Vortiaks...'/>
 	<string id="rf_fifth_quest_nasorian_king_dialog_7" text='Mind thy tongue, stranger, lest thou utter blasphemies that may cost thee dearly!'/>
-	<string id="rf_fifth_quest_nasorian_king_dialog_8" text='And where are these wise men now? The Nasorians value strength and action. Why hath this threat not been brought before me?'/>
-	<string id="rf_fifth_quest_nasorian_king_dialog_9" text='Indeed? And where might this artifact be found?'/>
-	<string id="rf_fifth_quest_nasorian_king_dialog_10" text='They reside far from here, Your Majesty, individuals who possess knowledge from distant lands.'/>
-	<string id="rf_fifth_quest_nasorian_king_dialog_11" text='Behold, Your Majesty, a blade I unearthed from the depths of a mountain, guarded by the most formidable of creatures…'/>
-	<string id="rf_fifth_quest_nasorian_king_dialog_12" text='Do these individuals speak with the stars...? I should have thee removed for bringing such folly to my presence. Depart, or face my wrath!'/>
-	<string id="rf_fifth_quest_nasorian_king_dialog_13" text='What sorcery is this? That blade holds no significance to the Nasorians! If thou seek to sway the hearts of my people, you need to prove yourself the warrior you claim to be'/>
-	<string id="rf_fifth_quest_nasorian_king_dialog_14" text='And what would that be, Your Majesty?'/>
-	<string id="rf_fifth_quest_nasorian_king_dialog_15" text='Bring me the head of this evil. Or one of flesh and bone i can see for myself!.'/>
+	<string id="rf_fifth_quest_nasorian_king_dialog_answer_1" text='Nay, Your Majesty, we have sought counsel from the wise, who vouch for our claims. It is not only me that saw it.'/>
+	<string id="rf_fifth_quest_nasorian_king_dialog_answer_2_wrong" text='Your Majesty, we possess an artifact rare, which may shed light upon this darkness.'/>
+	<string id="rf_fifth_quest_nasorian_king_dialog_reply_1" text='And where are these wise men now? The Nasorians value strength and action. Why hath this threat not been brought before me?'/>
+	<string id="rf_fifth_quest_nasorian_king_dialog_reply_2" text='Indeed? And where might this artifact be found?'/>
+	<string id="rf_fifth_quest_nasorian_king_dialog_answer_3" text='They reside far from here, Your Majesty, individuals who possess knowledge from distant lands.'/>
+	<string id="rf_fifth_quest_nasorian_king_dialog_answer_4" text='Behold, Your Majesty, a blade I unearthed from the depths of a mountain, guarded by the most formidable of creatures…'/>
+	<string id="rf_fifth_quest_nasorian_king_dialog_reply_3" text='Do these individuals speak with the stars...? I should have thee removed for bringing such folly to my presence. Depart, or face my wrath!'/>
+	<string id="rf_fifth_quest_nasorian_king_dialog_reply_4" text='What sorcery is this? That blade holds no significance to the Nasorians! If thou seek to sway the hearts of my people, you need to prove yourself the warrior you claim to be'/>
+	<string id="rf_fifth_quest_nasorian_king_dialog_9" text='And what would that be, Your Majesty?'/>
+	<string id="rf_fifth_quest_nasorian_king_dialog_10" text='Bring me the head of this evil. Or one of flesh and bone i can see for myself!.'/>
 
 	<string id="rf_fifth_quest_third_dialog_1" text="And now, whither shall we fare?"/>
 	<string id="rf_fifth_quest_third_dialog_2" text="I feel a strange power, as though it hath life... If what we know holds true, in the days of yore, the Elveans and the Vortiaks waged dire war. We should seek audience with the Elvean king. But we must tread with care; who knows what peril awaits us..."/>
 	<string id="rf_fifth_quest_third_dialog_3" text="It doth ring true, and I sense the lurking danger. What if this tale is not meant to be unveiled? It could bring doom upon us..."/>
-	<string id="rf_fifth_quest_third_dialog_4" text="'Tis a risk we must brave.”"/>
-	<string id="rf_fifth_quest_third_dialog_5" text="The player and the owl must seek the king of the Elveans."/>
+	<string id="rf_fifth_quest_third_dialog_4" text="'Tis a risk we must brave."/>
+
+	<string id="rf_fifth_quest_belvor_king_dialog_1" text="For what reason do you dare cross my path, stranger? It had better be good."/>
+	<string id="rf_fifth_quest_belvor_king_dialog_2" text="Hail, Your Majesty. We bring dire tidings. We have faced foes beyond mortal ken, beings not of this world. We are convinced they gather their forces, a threat to all life."/>
+	<string id="rf_fifth_quest_belvor_king_dialog_3" text="Haha, a tale as strange as any... And what manner of power could challenge my rule?"/>
+	<string id="rf_fifth_quest_belvor_king_dialog_4" text="With respect, Your Majesty, demons, spawn of darkness…"/>
+	<string id="rf_fifth_quest_belvor_king_dialog_5" text="Hahahahha... that is all I need to hear. Amidst wars aplenty, now I must contend with unearthly malice…"/>
+	<string id="rf_fifth_quest_belvor_king_dialog_6" text="With respect, Your Majesty, what we speak is true... and we believe they may be kin to ancient adversaries of the Elveans, a folk once known as 'the Vortiaks'..."/>
+	<string id="rf_fifth_quest_belvor_king_dialog_7" text="Watch thy tongue, stranger, lest thou spout blasphemies that may cost thee dearly!"/>
+	<string id="rf_fifth_quest_belvor_king_dialog_7_1" text="Nay, Your Majesty, we have sought counsel from the learned, who vouch for our claims!"/>
+	<string id="rf_fifth_quest_belvor_king_dialog_7_2" text="Your Majesty, we possess an artifact rare, which may illuminate this darkness."/>
+	<string id="rf_fifth_quest_belvor_king_dialog_8_1" text="And where are these learned folk now? The wisest sages of Aeurth reside within my domain. Why has this threat not been brought before me?"/>
+	<string id="rf_fifth_quest_belvor_king_dialog_8_2" text="Indeed? And where might this artifact be found?"/>
+	<string id="rf_fifth_quest_belvor_king_dialog_9_1" text="They dwell afar, Your Majesty, members of an order who shun worldly affairs. Yet they hold ancient wisdom."/>
+	<string id="rf_fifth_quest_belvor_king_dialog_9_2" text="Behold, Your Majesty, a blade I unearthed from the depths of a mountain, guarded by the most formidable of creatures…"/>
+	<string id="rf_fifth_quest_belvor_king_dialog_10_1" text="Dost thou claim these sages commune with the dead...? I should have thee removed for bringing such folly to my presence. Depart, or face imprisonment!"/>
+	<string id="rf_fifth_quest_belvor_king_dialog_10_2" text="What sorcery is this? That blade do looks like something rare, but means naught to me! If thou seek to sway my people's hearts, thou must bring forth a treasure dear to them."/>
+	<string id="rf_fifth_quest_belvor_king_dialog_11" text="And what would that be, milord?"/>
+	<string id="rf_fifth_quest_belvor_king_dialog_12" text="A treasure of our people, the crown of King Ulvor...And to sway my will, a head of one of those evil!"/>
+
+	<string id="rf_fifth_quest_owl_treasure_1" text="Well, if we have to find a treasure that could be of importance to the king, the only thing that comes to my mind is to search for somebody I have met."/>
+	<string id="rf_fifth_quest_owl_treasure_2" text="And who would that be?"/>
+	<string id="rf_fifth_quest_owl_treasure_3" text="When we first met, I was chatting with that suspicious figure who claims to deal with relics and items that have magic powers... It sounds like an obvious lead, doesn't it?"/>
+	<string id="rf_fifth_quest_owl_treasure_4" text="Yes, it sounds like it is. Will we find him there again?"/>
+	<string id="rf_fifth_quest_owl_treasure_5" text="I believe so. And I also believe he doesn't work alone."/>
+
+	<string id="rf_fifth_quest_vendor_treasure_1" text="Greetings, stranger. What can I do for you?"/>
+	<string id="rf_fifth_quest_vendor_treasure_2" text="We are looking for a special item, and we heard that's exactly your job. We're searching for the crown of King Ulvor."/>
+	<string id="rf_fifth_quest_vendor_treasure_3" text="Ahhh, this one... You've managed to be both lucky and unlucky at the same time. I did get my hands on that relic, yes, but some time ago... It was actually delivered to someone of noble birth, none other than the Khan of the AllKhuur. It happened to be a gift for his coming of age."/>
+	<string id="rf_fifth_quest_vendor_treasure_4" text="Why him? Why not King Belvor?"/>
+	<string id="rf_fifth_quest_vendor_treasure_5" text="I don't know... Khuurens are a very esoteric folk, with their spirits and entities. Who knows what the Khan would do with that relic? Perhaps indulge in mystical powers over the Realms of Men? Anyway, that's all I have to tell you."/>
+	
+	<string id="rf_fifth_quest_owl_treasure_1_1" text="All Khuurens kings have a tradition to celebrate their birthday at their sacred temple, at the great lake. If we have to go somewhere, we should start there."/>
+	<string id="rf_fifth_quest_owl_treasure_1_2" text="But I suppose that temple will be heavily guarded. So it seems more fight is underway."/>
+	<string id="rf_fifth_quest_owl_treasure_1_3" text="Or maybe we can sneak inside, and if it's there, we steal it and run."/>
+	<string id="rf_fifth_quest_owl_treasure_1_4" text="I hope so."/>
 
 	<string id="rf_fifth_quest_elvean_king_dialog_1" text="For what reason dost thou cross my path, stranger? It must needs be a weighty cause."/>
 	<string id="rf_fifth_quest_elvean_king_dialog_2" text="Hail, Milord. We bear grim tidings. We have encountered foes beyond mortal ken, creatures not of this realm. We are convinced they muster an army that shall oppose all that draws breath."/>
@@ -342,47 +381,54 @@
 	<string id="rf_fifth_quest_elvean_king_dialog_5" text="Hahahahha... that is all I need to hear. Not only do I grapple with wars aplenty, now I must confront supernatural malice…"/>
 	<string id="rf_fifth_quest_elvean_king_dialog_6" text="With due respect, Milord, what we speak is true... and we believe they may be kin to ancient foes of the Elveans, a folk once known as 'the Vortiaks'..."/>
 	<string id="rf_fifth_quest_elvean_king_dialog_7" text="Beware thy tongue, stranger, lest thou utter blasphemies that may cost thee thy head!"/>
-	<string id="rf_fifth_quest_elvean_king_dialog_8" text="And where be these sages now? The greatest savants of Aeurth are the priests of the High Kingdom. Why hath this threat not been brought afore me?"/>
-	<string id="rf_fifth_quest_elvean_king_dialog_9" text="Indeed? And where might it be found?"/>
-	<string id="rf_fifth_quest_elvean_king_dialog_10" text="They reside far hence, Milord, belonging to an order that shuns the world's affairs. Yet they hold ancient wisdom."/>
-	<string id="rf_fifth_quest_elvean_king_dialog_11" text="Behold, Milord, a blade I found in the bowels of a mountain, guarded by the strangest of beasts…"/>
-	<string id="rf_fifth_quest_elvean_king_dialog_12" text="Dost thou claim these sages commune with the departed...? I should tear thy tongue for bringing such folly to my court. Begone, or I shall have thee imprisoned!"/>
-	<string id="rf_fifth_quest_elvean_king_dialog_13" text="What sorcery is this? That blade belongs to mine ancestors! How came it into thy possession?"/>
-	<string id="rf_fifth_quest_elvean_king_dialog_14" text="As thou commandest, Milord, I shall depart forthwith."/>
-	<string id="rf_fifth_quest_elvean_king_dialog_15" text="'Tis a tale of trials and strife, yet through battle and survival against those creatures, I was led to it. I deem it a weapon crucial in our struggle against this evil!"/>
-	<string id="rf_fifth_quest_elvean_king_dialog_16" text="That blade is a relic of our kin, yet if it hath found its way to thee, our ancestors must have willed it so and bestowed their blessings upon thee. Seeing this evil's potency, thou shalt find our forces by thy side. But I make no such promise for other realms…"/>
-	<string id="rf_fifth_quest_elvean_king_dialog_17" text="I take upon myself the mission to spread word and rally the support of other sovereigns."/>
-	<string id="rf_fifth_quest_elvean_king_dialog_18" text="May our ancestors guide thy path!"/>
-
-	<string id="rf_fifth_quest_fail_dialog_1" text="We should not give up. Lets talk to king of Men."/>
-	<string id="rf_fifth_quest_fail_dialog_2" text="These are great deeds! We should now search the support of another king... lets try to have audience with King Belvor II."/>
+	<string id="rf_fifth_quest_elvean_king_dialog_answer_1" text="Nay, Milord, we have delved deep and consulted sages who can vouch for our claims!"/>
+	<string id="rf_fifth_quest_elvean_king_dialog_answer_2" text="Milord, we possess a rarity that may shed light upon this darkness."/>
+	<string id="rf_fifth_quest_elvean_king_dialog_reply_1" text="And where be these sages now? The greatest savants of Aeurth are the priests of the High Kingdom. Why hath this threat not been brought afore me?"/>
+	<string id="rf_fifth_quest_elvean_king_dialog_reply_2" text="Indeed? And where might it be found?"/>
+	<string id="rf_fifth_quest_elvean_king_dialog_answer_3_wrong" text="They reside far hence, Milord, belonging to an order that shuns the world's affairs. Yet they hold ancient wisdom."/>
+	<string id="rf_fifth_quest_elvean_king_dialog_answer_4" text="Behold, Milord, a blade I found in the bowels of a mountain, guarded by the strangest of beasts…"/>
+	<string id="rf_fifth_quest_elvean_king_dialog_reply_3" text="Dost thou claim these sages commune with the departed...? I should tear thy tongue for bringing such folly to my court. Begone, or I shall have thee imprisoned!"/>
+	<string id="rf_fifth_quest_elvean_king_dialog_reply_4" text="What sorcery is this? That blade belongs to mine ancestors! How came it into thy possession?"/>
+	<string id="rf_fifth_quest_elvean_king_dialog_answer_5_wrong" text="As thou commandest, Milord, I shall depart forthwith."/>
+	<string id="rf_fifth_quest_elvean_king_dialog_answer_6" text="'Tis a tale of trials and strife, yet through battle and survival against those creatures, I was led to it. I deem it a weapon crucial in our struggle against this evil!"/>
+	<string id="rf_fifth_quest_elvean_king_dialog_8" text="That blade is a relic of our kin, yet if it hath found its way to thee, our ancestors must have willed it so and bestowed their blessings upon thee. Seeing this evil's potency, thou shalt find our forces by thy side. But I make no such promise for other realms…"/>
+	<string id="rf_fifth_quest_elvean_king_dialog_9" text="I take upon myself the mission to spread word and rally the support of other sovereigns."/>
+	<string id="rf_fifth_quest_elvean_king_dialog_10" text="May our ancestors guide thy path!"/>
+	
+	<string id="rf_fifth_quest_fail_dialog_1" text="We should not give up. Lets talk to king of Men.” the player must them search for King Belvor II."/>
 
 	<string id="rf_fifth_quest_fourth_dialog_1" text="And now, where shall we venture?"/>
 	<string id="rf_fifth_quest_fourth_dialog_2" text="I sense a peculiar power, almost as if it's alive... If what we know holds true, in the ancient annals, the Elveans and the Vortiaks clashed in fierce battle. We must seek audience with King Belvor II. But we must tread carefully; who knows what wrath awaits us..."/>
 	<string id="rf_fifth_quest_fourth_dialog_3" text="It does ring true, and I sense lurking danger. What if this tale is not meant to be revealed? It could spell ruin for us..."/>
 	<string id="rf_fifth_quest_fourth_dialog_4" text="'Tis a risk we must brave."/>
 	
-	<string id="rf_fifth_quest_belvor_king_dialog_1" text="For what reason do you dare cross my path, stranger? It had better be good."/>
-	<string id="rf_fifth_quest_belvor_king_dialog_2" text="Hail, Your Majesty. We bring dire tidings. We have faced foes beyond mortal ken, beings not of this world. We are convinced they gather their forces, a threat to all life."/>
-	<string id="rf_fifth_quest_belvor_king_dialog_3" text="Haha, a tale as strange as any... And what manner of power could challenge my rule?"/>
-	<string id="rf_fifth_quest_belvor_king_dialog_4" text="With respect, Your Majesty, demons, spawn of darkness…"/>
-	<string id="rf_fifth_quest_belvor_king_dialog_5" text="Hahahahha... that is all I need to hear. Amidst wars aplenty, now I must contend with unearthly malice…"/>
-	<string id="rf_fifth_quest_belvor_king_dialog_6" text="With respect, Your Majesty, what we speak is true... and we believe they may be kin to ancient adversaries of the Elveans, a folk once known as 'the Vortiaks'..."/>
-	<string id="rf_fifth_quest_belvor_king_dialog_7" text="Watch thy tongue, stranger, lest thou spout blasphemies that may cost thee dearly!"/>
-	<string id="rf_fifth_quest_belvor_king_dialog_8" text="And where are these learned folk now? The wisest sages of Aeurth reside within my domain. Why has this threat not been brought before me?"/>
-	<string id="rf_fifth_quest_belvor_king_dialog_9" text="Indeed? And where might this artifact be found?"/>
-	<string id="rf_fifth_quest_belvor_king_dialog_10" text="They dwell afar, Your Majesty, members of an order who shun worldly affairs. Yet they hold ancient wisdom."/>
-	<string id="rf_fifth_quest_belvor_king_dialog_11" text="Behold, Your Majesty, a blade I unearthed from the depths of a mountain, guarded by the most formidable of creatures…"/>
-	<string id="rf_fifth_quest_belvor_king_dialog_12" text="Dost thou claim these sages commune with the dead...? I should have thee removed for bringing such folly to my presence. Depart, or face imprisonment!"/>
-	<string id="rf_fifth_quest_belvor_king_dialog_13" text="What sorcery is this? That blade do looks like something rare, but means naught to me! If thou seek to sway my people's hearts, thou must bring forth a treasure dear to them."/>
-	<string id="rf_fifth_quest_belvor_king_dialog_14" text="And what would that be, milord?"/>
-	<string id="rf_fifth_quest_belvor_king_dialog_15" text="A treasure of our people, the crown of King Ulvor...And to sway my will, a head of one of those evil!"/>
-
+	<string id="rf_fifth_quest_elvean_fail_owl" text="Owl dialog if elvean persuasion failed"/>
+	<string id="rf_fifth_quest_belvor_fail_owl" text="Owl dialog if realms of men persuasion failed"/>
+	<string id="rf_fifth_quest_nasorian_fail_owl" text="Owl dialog if nasorian persuasion failed"/>
+	
+	
 	<string id="rf_fifth_quest_fifth_dialog_1" text="Time is passing and i am afraid those demons are growing in power. I am not sure if we have enough time to convince the other kings... what if they follow the same fashion and oblige us to prove our message?"/>
 	<string id="rf_fifth_quest_fifth_dialog_2" text="That is very probable... We need to gather forces with other means, mercenary contracts, persuaded prisoners, it doent matter who. What matters is that we need to bring one of the lords of this evil down and prove our valor. And deliver him as a prisoner to the other kings."/>
 	<string id="rf_fifth_quest_fifth_dialog_3" text="That sounds clearly the most straight of the paths we have to follow. May the gods be at our side."/>
 
+	<string id="rf_fifth_quest_treasure_fight_1" text="What are you doing ? This is sacred relic, put it back now!"/>
+	<string id="rf_fifth_quest_treasure_fight_2" text="Make me."/>
+
+	<string id="rf_fifth_quest_deliver_treasure_1" text="Here is the relic you asked."/>
+	<string id="rf_fifth_quest_deliver_treasure_2" text="I'm rewarding you with some of my soldiers."/>
+
+	<string id="rf_fifth_quest_deliver_nelrog_1" text="Here is the nelrog you asked."/>
+	<string id="rf_fifth_quest_deliver_nelrog_2" text="Splendid."/>
+
 	<string id="rf_fifth_quest_first_objective" text="Go back to the monastery and talk to the monk."/>
+	<string id="rf_fifth_quest_second_objective" text="Find the mystical weapon in the frozen island at North."/>
+	<string id="rf_fifth_quest_third_objective" text="Talk to the elvean king."/>
+	<string id="rf_fifth_quest_fourth_objective" text="Talk to the king of the Realms of Men."/>
+	<string id="rf_fifth_quest_fifth_objective" text="Go talk to the magic seller to find clues about the treasure."/>
+	<string id="rf_fifth_quest_sixth_objective" text="Go to the temple indicated by Owl to require the treasure and deliver it to the king of the Realms of Men, the temple should be near {CLOSEST_SETTLEMENT}."/>
+	<string id="rf_fifth_quest_seventh_objective" text="Talk to the nasorian king."/>
+	<string id="rf_fifth_quest_eighth_objective" text="Deliver one nelrog to the nasorian king."/>
+	<string id="rf_fifth_quest_ninth_objective" text="Take one lord as a prisoner and deliver him to the king of Al Khuur."/>
 
 	<string id="rf_leave" text="{=rf_leave}Leave" />
 	<string id="rf_last_quest_notification" text="{=rf_last_quest_notification}Continues in the next update..." />
@@ -391,5 +437,6 @@
     <string id="rf_influence" text="{=rf_influence}Your influence has decreased" />
     <string id="rf_ok" text="{=rf_ok}Ok." />
 	<string id="rf_greetings" text="{=rf_greetings}Greetings." />
+	<string id="rf_i_agree" text="{=rf_i_agree}I agree." />
 
 </strings>
