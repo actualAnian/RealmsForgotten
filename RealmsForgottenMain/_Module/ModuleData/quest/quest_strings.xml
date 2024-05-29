@@ -430,6 +430,7 @@
 	<string id="rf_fifth_quest_eighth_objective" text="Deliver one nelrog to the nasorian king."/>
 	<string id="rf_fifth_quest_ninth_objective" text="Take one lord as a prisoner and deliver him to the king of Al Khuur."/>
 
+	<string id="rf_owl_tavern_default" text="{=rf_owl_tavern_default}What ?" />
 	<string id="rf_leave" text="{=rf_leave}Leave" />
 	<string id="rf_last_quest_notification" text="{=rf_last_quest_notification}Continues in the next update..." />
 	<string id="rf_leave" text="{=rf_leave}Leave" />
