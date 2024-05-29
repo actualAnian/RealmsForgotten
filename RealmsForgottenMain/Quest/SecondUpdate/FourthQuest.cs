@@ -32,16 +32,6 @@ using static RealmsForgotten.Quest.QuestLibrary;
 
 namespace RealmsForgotten.Quest.SecondUpdate
 {
-    internal class HellBoundAmbushLogic : MissionLogic
-    {
-        public override void OnAgentHit(Agent affectedAgent, Agent affectorAgent, in MissionWeapon affectorWeapon, in Blow blow,
-            in AttackCollisionData attackCollisionData)
-        {
-            if(affectedAgent.Team == Mission.AttackerTeam)
-                affectedAgent.Health += blow.InflictedDamage + 10;
-        }
-    }
-    
     internal class FourthQuest : QuestBase
     {
         [SaveableField(0)]
@@ -74,8 +64,6 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
         public override bool IsRemainingTimeHidden => true;
         public override bool IsSpecialQuest => true;
-
-        
 
 
         protected override void RegisterEvents()
@@ -128,7 +116,6 @@ namespace RealmsForgotten.Quest.SecondUpdate
         {
             if (imission is Mission mission && takeBossToLordLog?.CurrentProgress == 1)
             {
-                mission.AddMissionBehavior(new HellBoundAmbushLogic());
                 takeBossToLordLog.UpdateCurrentProgress(2);
             }
         }

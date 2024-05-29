@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Bannerlord.Module1;
 using HarmonyLib;
 using Helpers;
 using RealmsForgotten.Quest.MissionBehaviors;
@@ -27,6 +28,7 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Party.PartyComponents;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.CampaignSystem.Settlements.Locations;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
@@ -132,18 +134,36 @@ namespace RealmsForgotten.Quest.SecondUpdate
                     }));
                     mission.AddMissionBehavior(new MissionConversationLogic());
                 }
-                mission.AddMissionBehavior(new FifthQuestMissionLogic());
+                mission.AddMissionBehavior(new FifthQuestRelicsLogic());
+
+                if (Settlement.CurrentSettlement.IsTown && IsCurrentLocationTavern && talkToMagicSellerLog?.CurrentProgress == 0)
+                {
+                    Monster monsterWithSuffix = FaceGen.GetMonsterWithSuffix(TheOwl.CharacterObject.Race, "_settlement");
+                    string actionSet = ActionSetCode.GenerateActionSetNameWithSuffix(monsterWithSuffix, TheOwl.IsFemale, ActionSetCode.GuardSuffix);
+                    AgentData agentData = new AgentData(new SimpleAgentOrigin(TheOwl.CharacterObject)).Monster(monsterWithSuffix).NoHorses(true).ClothingColor1(Settlement.CurrentSettlement.MapFaction.Color).ClothingColor2(Settlement.CurrentSettlement.MapFaction.Color2);
+
+                    LocationCharacter locationCharacter = new(agentData, SandBoxManager.Instance.AgentBehaviorManager.AddFixedCharacterBehaviors, CampaignData.Alley2Tag, false,
+                        LocationCharacter.CharacterRelations.Neutral, actionSet, false);
+
+                    Location location = LocationComplex.Current.GetLocationWithId("tavern");
+
+                    location.AddCharacter(locationCharacter);
+                    mission.AddMissionBehavior(new TavernConversationLogic());
+                }
             }
         }
 
-        private bool talkedToElveanKing => talkToElveanKingLog?.CurrentProgress == 1 ||
+        private bool IsCurrentLocationTavern =>
+            Mission.Current != null && Settlement.CurrentSettlement?.IsTown == true && LocationComplex.Current?.GetListOfLocations().FirstOrDefault(x => x.StringId == "tavern")
+                ?.GetSceneName(Settlement.CurrentSettlement.Town.GetWallLevel()) == Mission.Current.Scene.GetName();
+        private bool TalkedToElveanKing => talkToElveanKingLog?.CurrentProgress == 1 ||
                                            (talkToElveanKingLog?.CurrentProgress == 0 && elveanKingPersuasionFailed);
         private void OnTick(float dt)
         {
-            if (talkToMonkLog == null || talkToHumanKingLog?.CurrentProgress == 1 || talkToMagicSellerLog?.CurrentProgress == 1 || talkedToElveanKing || deliverNelrogToNasorianLog?.CurrentProgress == 1)
+            if (talkToMonkLog == null || talkToHumanKingLog?.CurrentProgress == 1 || TalkedToElveanKing || deliverNelrogToNasorianLog?.CurrentProgress == 1)
             {
                 CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter), new ConversationCharacterData(TheOwl.CharacterObject));
-                if (talkedToElveanKing)
+                if (TalkedToElveanKing)
                 {
                     talkToElveanKingLog.UpdateCurrentProgress(2);
                     talkToHumanKingLog = AddLog(GameTexts.FindText("rf_fifth_quest_fourth_objective"));
@@ -182,12 +202,12 @@ namespace RealmsForgotten.Quest.SecondUpdate
             Campaign.Current.ConversationManager.AddDialogFlow(ElveanKingPersuasionDialogFlow(), this);
             Campaign.Current.ConversationManager.AddDialogFlow(NasorianKingPersuasionDialogFlow(), this);
             Campaign.Current.ConversationManager.AddDialogFlow(HumanKingPersuasionDialogFlow(), this);
+            Campaign.Current.ConversationManager.AddDialogFlow(OwlTavernDefaultDialog, this);
         }
 
         protected override void InitializeQuestOnGameLoad()
         {
             SetDialogs();
-            Instance = this;
             Instance = this;
         }
 
@@ -308,7 +328,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
         
         private DialogFlow TreasureDialog_3 => DialogFlow.CreateDialogFlow("start", 125)
             .NpcLine(GameTexts.FindText("rf_fifth_quest_owl_treasure_1_1"))
-            .Condition(() => talkToMagicSellerLog?.CurrentProgress == 1 && Hero.OneToOneConversationHero == TheOwl)
+            .Condition(() => talkToMagicSellerLog?.CurrentProgress == 1 && CharacterObject.OneToOneConversationCharacter == TheOwl?.CharacterObject)
             .PlayerLine(GameTexts.FindText("rf_fifth_quest_owl_treasure_1_2"))
             .NpcLine(GameTexts.FindText("rf_fifth_quest_owl_treasure_1_3"))
             .PlayerLine(GameTexts.FindText("rf_fifth_quest_owl_treasure_1_4"))
@@ -324,7 +344,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
         
         private DialogFlow TreasureFightDialog => DialogFlow.CreateDialogFlow("start", 125)
             .NpcLine(GameTexts.FindText("rf_fifth_quest_treasure_fight_1"))
-            .Condition(() => requireTreasureLog?.CurrentProgress == 0 && Mission.Current != null && MissionConversationLogic.Current?.ConversationManager?.ConversationAgents[0] == FifthQuestMissionLogic.Instance?.TreasureFightAgent)
+            .Condition(() => requireTreasureLog?.CurrentProgress == 0 && Mission.Current != null && MissionConversationLogic.Current?.ConversationManager?.ConversationAgents[0] == FifthQuestRelicsLogic.Instance?.TreasureFightAgent)
             .PlayerLine(GameTexts.FindText("rf_fifth_quest_treasure_fight_2"))
             .Consequence(StartTreasureFight).CloseDialog();
         
@@ -354,7 +374,9 @@ namespace RealmsForgotten.Quest.SecondUpdate
             {
                 deliverNelrogToNasorianLog.UpdateCurrentProgress(1);
             }).CloseDialog();
-        
+        private DialogFlow OwlTavernDefaultDialog => DialogFlow.CreateDialogFlow("start", 115)
+            .PlayerLine(GameTexts.FindText("rf_owl_tavern_default"))
+            .Condition(() => CharacterObject.OneToOneConversationCharacter == TheOwl.CharacterObject && IsCurrentLocationTavern).CloseDialog();
         private DialogFlow DeliverRelicToHumanKingDialog => DialogFlow.CreateDialogFlow("start", 125)
             .PlayerLine(GameTexts.FindText("rf_fifth_quest_deliver_treasure_1"))
             .Condition(() => requireTreasureLog?.CurrentProgress == 1 && Hero.OneToOneConversationHero?.IsKingdomLeader == true && (Hero.OneToOneConversationHero.MapFaction as Kingdom)?.StringId == "empire")
@@ -600,11 +622,42 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 MBObjectManager.Instance.GetObject<ItemObject>(ShieldTreasureId), 1);
         }
 
-        private class FifthQuestMissionLogic : MissionLogic
+        private class TavernConversationLogic : MissionLogic
+        {
+            public override void OnMissionTick(float dt)
+            { 
+                base.OnMissionTick(dt);
+                if (ConversationMission.OneToOneConversationAgent == null && FifthQuest.Instance?.talkToMagicSellerLog?.CurrentProgress == 1)
+                {
+                    Agent owl = Mission.Current.Agents.Find(x=>x.Character==TheOwl.CharacterObject) ?? SpawnOwl();
+                    if (owl.Position.DistanceSquared(Agent.Main.Position) > 4.5f)
+                    {
+                        Vec3 positionBehind = Agent.Main.Position - Agent.Main.LookDirection.NormalizedCopy() * 2f;
+                        positionBehind.z = Agent.Main.Position.z;
+                        owl.TeleportToPosition(positionBehind);
+                    }
+                    Mission.Current.GetMissionBehavior<MissionConversationLogic>().StartConversation(owl, false);
+                }
+            }
+
+            private Agent SpawnOwl()
+            {
+                CharacterObject characterObject = TheOwl.CharacterObject;
+                AgentBuildData agentBuildData = new AgentBuildData(new PartyAgentOrigin(PartyBase.MainParty, characterObject)).Equipment(TheOwl.CivilianEquipment)
+                    .Character(TheOwl.CharacterObject);
+                Vec3 positionBehind = Agent.Main.Position - Agent.Main.LookDirection.NormalizedCopy() * 2f;
+                positionBehind.z = Agent.Main.Position.z;
+                agentBuildData.InitialPosition(in positionBehind).InitialDirection(Agent.Main.Position.AsVec2);
+                Agent agent = Mission.Current.SpawnAgent(agentBuildData, true);
+                agent.TeleportToPosition(positionBehind);
+                return agent;
+            }
+        }
+        private class FifthQuestRelicsLogic : MissionLogic
         {
             public Agent TreasureFightAgent;
-            public static FifthQuestMissionLogic Instance { get; private set; }
-            public FifthQuestMissionLogic()
+            public static FifthQuestRelicsLogic Instance { get; private set; }
+            public FifthQuestRelicsLogic()
             {
                 Instance = this;
             }
@@ -620,8 +673,8 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 }
                 else if (FifthQuest.Instance?.requireTreasureLog?.CurrentProgress == 0 && Mission.Scene?.GetName() == "allkhuur_temple_inside")
                 {
-                    Vec3 position = new(138.62f, 161.10f, 23.00f, -1f),
-                        rotation = new(0.00f, 0.00f, 177.79f);
+                    Vec3 position = new(138.62f, 161.10f, 24.00f, -1f),
+                        rotation = new(45.00f, 0.00f, 45.79f);
                     
                     MissionWeapon missionWeapon = new MissionWeapon(MBObjectManager.Instance.GetObject<ItemObject>(ShieldTreasureId), new ItemModifier(), Banner.CreateOneColoredEmptyBanner(1));
                     Mission.SpawnWeaponWithNewEntityAux(missionWeapon, Mission.WeaponSpawnFlags.WithStaticPhysics, new MatrixFrame(Mat3.CreateMat3WithForward(rotation), position), 0, null, false);
@@ -633,22 +686,35 @@ namespace RealmsForgotten.Quest.SecondUpdate
             {
                 if (agent.IsMainAgent)
                 {
-                    if(FifthQuest.Instance?.takeMysticalWeaponLog?.CurrentProgress == 0 && spawnedItemEntity.WeaponCopy.Item?.StringId == MysticWeaponId)
+                    if (FifthQuest.Instance?.takeMysticalWeaponLog?.CurrentProgress == 0 &&
+                        spawnedItemEntity.WeaponCopy.Item?.StringId == MysticWeaponId)
+                    {
                         FifthQuest.Instance?.takeMysticalWeaponLog?.UpdateCurrentProgress(1);
+                        MBInformationManager.ShowSceneNotification(new MagicItemFoundSceneNotification(
+                            spawnedItemEntity.WeaponCopy.Item.Name.ToString(),
+                            "scn_mage_staff", 
+                            () => PartyBase.MainParty.ItemRoster.AddToCounts(MBObjectManager.Instance.GetObject<ItemObject>(MysticWeaponId), 1)));
+                    }
                     if (FifthQuest.Instance?.requireTreasureLog?.CurrentProgress == 0 && spawnedItemEntity.WeaponCopy.Item?.StringId == ShieldTreasureId)
                     {
-                        CharacterObject characterObject = CharacterObject.Find(TreasureFightCharacter);
-                        Monster monsterWithSuffix = FaceGen.GetMonsterWithSuffix(characterObject.Race, FaceGen.MonsterSuffixSettlement);
-                        Equipment randomEquipmentElements = Equipment.GetRandomEquipmentElements(characterObject, true);
+                        MBInformationManager.ShowSceneNotification(new MagicItemFoundSceneNotification(
+                            spawnedItemEntity.WeaponCopy.Item.Name.ToString(),
+                            "scn_cutscene_meeting_evil_lord",
+                            () =>
+                            {
+                                CharacterObject characterObject = CharacterObject.Find(TreasureFightCharacter);
+                                Monster monsterWithSuffix = FaceGen.GetMonsterWithSuffix(characterObject.Race, FaceGen.MonsterSuffixSettlement);
+                                Equipment randomEquipmentElements = Equipment.GetRandomEquipmentElements(characterObject, true);
                         
-                        AgentBuildData agentBuildData = new AgentBuildData(new SimpleAgentOrigin(characterObject)).Equipment(randomEquipmentElements)
-                            .Monster(monsterWithSuffix);
-                        Vec3 initialPosition = new Vec3(138.69f, 157.79f, 23.82f);
-                        agentBuildData.InitialPosition(in initialPosition).InitialDirection(agent.Position.AsVec2);
+                                AgentBuildData agentBuildData = new AgentBuildData(new SimpleAgentOrigin(characterObject)).Equipment(randomEquipmentElements)
+                                    .Monster(monsterWithSuffix);
+                                Vec3 initialPosition = new Vec3(138.69f, 157.79f, 23.82f);
+                                agentBuildData.InitialPosition(in initialPosition).InitialDirection(agent.Position.AsVec2);
                         
-                        TreasureFightAgent = Mission.Current.SpawnAgent(agentBuildData, true);
-                        TreasureFightAgent.TeleportToPosition(initialPosition);
-                        Mission.Current.GetMissionBehavior<MissionConversationLogic>().StartConversation(TreasureFightAgent, false);
+                                TreasureFightAgent = Mission.Current.SpawnAgent(agentBuildData, true);
+                                TreasureFightAgent.TeleportToPosition(initialPosition);
+                                Mission.Current.GetMissionBehavior<MissionConversationLogic>().StartConversation(TreasureFightAgent, false);
+                            }));
                     }
                 }
             }
