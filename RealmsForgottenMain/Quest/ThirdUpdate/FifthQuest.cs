@@ -72,7 +72,6 @@ namespace RealmsForgotten.Quest.SecondUpdate
         private const string ShieldTreasureId = "ulvor_dec_shield";
         private const string TreasureFightCharacter = "allkhuur_goddess";
         private const string DevilsPartyTemplateId = "cs_devils_raiders_template";
-        
         public override TextObject Title => GameTexts.FindText("rf_quest_title_part_five");
         public override bool IsRemainingTimeHidden => true;
         public override bool IsSpecialQuest => true;
@@ -102,10 +101,21 @@ namespace RealmsForgotten.Quest.SecondUpdate
                     Hideout hideout = Hideout.All.GetRandomElement();
                     MobileParty party = BanditPartyComponent.CreateBanditParty("nelrogs", Clan.FindFirst(x => x.StringId == "cs_nelrog_raiders"),
                         null, true);
+                    TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
+
+                    int random = MBRandom.RandomInt(0, 10);
+                    var nelrogIds = new[]
+                        { "cs_nelrog_bandits_bandit", "cs_nelrog_bandits_raider", "cs_nelrog_bandits_chief" };
+                    for (int j = 0; j < random; j++)
+                    {
+                        troopRoster.AddToCounts(
+                            CharacterObject.Find(nelrogIds[MBRandom.RandomInt(0, nelrogIds.Length - 1)]), 1);
+                    }
+                    
                     party.InitializeMobilePartyAroundPosition(
-                        party.ActualClan.DefaultPartyTemplate,
+                        troopRoster, TroopRoster.CreateDummyTroopRoster(),
                         hideout.Settlement.Position2D,
-                        200f, 10f);
+                        100f, 10f);
                 }
             }
         }
