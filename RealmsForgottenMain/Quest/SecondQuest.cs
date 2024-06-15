@@ -102,7 +102,7 @@ namespace RealmsForgotten.Quest
                     if (mobileParty.LeaderHero == Hero.MainHero && settlement.StringId == "town_B4" && escapedPrison)
                         SaveCurrentQuestCampaignBehavior.Instance.SaveQuestState("queen");
                 });
-
+            RegisterQuestEvents(this);
         }
 
         private void OnSettlementEntered(MobileParty mobileParty, Settlement settlement, Hero hero)

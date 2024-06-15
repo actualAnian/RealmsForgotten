@@ -78,8 +78,8 @@ namespace RealmsForgotten.Quest
                 CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, HourlyTickForNewGame);
 
             CampaignEvents.OnGameLoadFinishedEvent.AddNonSerializedListener(this, AfterLoad);
-
         }
+
         private void HourlyTickForNewGame()
         {
             if (isNewGame)
@@ -167,6 +167,7 @@ namespace RealmsForgotten.Quest
                     }
                 });
                 CampaignEvents.OnPlayerBattleEndEvent.AddNonSerializedListener(this, BattleEnd);
+                RegisterQuestEvents(this);
             }
 
             private void BattleEnd(MapEvent mapEvent)
