@@ -377,8 +377,8 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
         private bool CanDeliverNelrogsToNasorian()
         {
-            bool haveNelrogInParty = MobileParty.MainParty?.PrisonRoster?.GetTroopRoster().Any(x => !x.Character.IsHero && x.Character?.Culture?.StringId == "giant_demons") == true;
-            return deliverNelrogToNasorianLog?.CurrentProgress == 0 && haveNelrogInParty && Hero.OneToOneConversationHero.IsKingdomLeader &&
+            bool haveNelrogInParty = MobileParty.MainParty?.PrisonRoster?.GetTroopRoster().Any(x => x.Character?.Culture?.StringId == "giant_demons" && !x.Character.IsHero) == true;
+            return deliverNelrogToNasorianLog?.CurrentProgress == 0 && haveNelrogInParty && Hero.OneToOneConversationHero?.IsKingdomLeader == true &&
                    (Hero.OneToOneConversationHero.MapFaction as Kingdom)?.StringId == "vlandia";
         }
         private DialogFlow DeliverNelrogToNasorianKingDialog => DialogFlow.CreateDialogFlow("start", 125)
