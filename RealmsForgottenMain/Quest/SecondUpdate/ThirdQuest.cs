@@ -170,6 +170,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                     }
                 }
             });
+            RegisterQuestEvents(this);
         }
 
         private void OnSessionLaunched(CampaignGameStarter campaignGameStarter)
