@@ -72,6 +72,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             CampaignEvents.CanHeroBecomePrisonerEvent.AddNonSerializedListener(this, OnCanHeroBecomePrisoner);
             CampaignEvents.TickEvent.AddNonSerializedListener(this, OnTick);
             CampaignEvents.OnPlayerBattleEndEvent.AddNonSerializedListener(this, BattleEnd);
+            RegisterQuestEvents(this);
         }
 
         private void BattleEnd(MapEvent mapEvent)

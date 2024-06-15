@@ -90,6 +90,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             CampaignEvents.OnMissionStartedEvent.AddNonSerializedListener(this, OnMissionStart);
             CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, OnDailyTick);
             CampaignEvents.WeeklyTickEvent.AddNonSerializedListener(this, OnWeeklyTick);
+            RegisterQuestEvents(this);
         }
 
         private void OnWeeklyTick()
@@ -148,6 +149,10 @@ namespace RealmsForgotten.Quest.SecondUpdate
                     Location location = LocationComplex.Current.GetLocationWithId("tavern");
 
                     location.AddCharacter(locationCharacter);
+                    if (!mission.HasMissionBehavior<MissionConversationLogic>())
+                    {
+                        mission.AddMissionBehavior(new MissionConversationLogic());
+                    }
                     mission.AddMissionBehavior(new TavernConversationLogic());
                 }
             }
@@ -535,7 +540,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
         
         private DialogFlow NasorianKingPersuasionDialogFlow()
         {
-            DialogFlow dialogFlow = DialogFlow.CreateDialogFlow("start", 125).NpcLine(GameTexts.FindText("rf_fifth_quest_elvean_king_dialog_1"))
+            DialogFlow dialogFlow = DialogFlow.CreateDialogFlow("start", 125).NpcLine(GameTexts.FindText("rf_fifth_quest_nasorian_king_dialog_1"))
                 .Condition(()=> talkToNasorianKingLog?.CurrentProgress == 0 && Hero.OneToOneConversationHero?.IsKingdomLeader == true && (Hero.OneToOneConversationHero.MapFaction as Kingdom)?.StringId == "vlandia")
                 .GotoDialogState("quest_nasorian_dialog_start");
 
@@ -545,22 +550,22 @@ namespace RealmsForgotten.Quest.SecondUpdate
             dialogFlow.AddDialogLine("quest_nasorian_id_2", "quest_nasorian_dialog_1", "quest_nasorian_dialog_2", 
                 GameTexts.FindText("rf_fifth_quest_nasorian_king_dialog_3").ToString(), null, null, this);
             
-            dialogFlow.AddPlayerLine("quest_nasorian_id_3_1", "quest_nasorian_dialog_2", "quest_nasorian_dialog_3",
+            dialogFlow.AddPlayerLine("quest_nasorian_id_3_1", "quest_nasorian_dialog_2", "quest_nasorian_dialog_4",
                 GameTexts.FindText("rf_fifth_quest_nasorian_king_dialog_4_1").ToString(), null, null, this);
             
-            dialogFlow.AddPlayerLine("quest_nasorian_id_3_2", "quest_nasorian_dialog_3", "quest_nasorian_dialog_4",
+            dialogFlow.AddPlayerLine("quest_nasorian_id_3_2", "quest_nasorian_dialog_2", "quest_nasorian_dialog_4",
                 GameTexts.FindText("rf_fifth_quest_nasorian_king_dialog_4_2").ToString(), null, null, this);
             
             dialogFlow.AddDialogLine("quest_nasorian_id_4", "quest_nasorian_dialog_4", "quest_nasorian_dialog_5",
                 GameTexts.FindText("rf_fifth_quest_nasorian_king_dialog_5").ToString(), null, null, this);
             
-            dialogFlow.AddDialogLine("quest_nasorian_id_5", "quest_nasorian_dialog_5", "quest_nasorian_dialog_6",
+            dialogFlow.AddPlayerLine("quest_nasorian_id_5", "quest_nasorian_dialog_5", "quest_nasorian_dialog_6",
                 GameTexts.FindText("rf_fifth_quest_nasorian_king_dialog_6").ToString(), null, null, this);
 
-            dialogFlow.AddPlayerLine("quest_nasorian_id_6", "quest_nasorian_dialog_6", "quest_nasorian_dialog_7",
+            dialogFlow.AddDialogLine("quest_nasorian_id_6", "quest_nasorian_dialog_6", "quest_nasorian_dialog_7",
                 GameTexts.FindText("rf_fifth_quest_nasorian_king_dialog_7").ToString(), null, null, this);
             
-            dialogFlow.AddDialogLine("quest_nasorian_id_7", "quest_nasorian_dialog_7", "quest_nasorian_dialog_7_1",
+            dialogFlow.AddPlayerLine("quest_nasorian_id_7", "quest_nasorian_dialog_7", "quest_nasorian_dialog_7_1",
                 GameTexts.FindText("rf_fifth_quest_nasorian_king_dialog_answer_1").ToString(), null, null, this);
             
             dialogFlow.AddPlayerLine("quest_nasorian_id_8", "quest_nasorian_dialog_7", "quest_nasorian_dialog_7_2",
@@ -699,7 +704,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                     {
                         MBInformationManager.ShowSceneNotification(new MagicItemFoundSceneNotification(
                             spawnedItemEntity.WeaponCopy.Item.Name.ToString(),
-                            "scn_cutscene_meeting_evil_lord",
+                            "scn_mage_staff",
                             () =>
                             {
                                 CharacterObject characterObject = CharacterObject.Find(TreasureFightCharacter);

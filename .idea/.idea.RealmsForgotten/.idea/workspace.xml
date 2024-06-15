@@ -12,23 +12,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3faa4014-e50b-4700-8fca-3aa0635acfa2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/RealmsForgottenMain/Quest/MissionBehaviors/RecordDamageMissionLogic.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.RealmsForgotten/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.RealmsForgotten/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RFEffects/ExceptionHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RFEffects/ExceptionHandler.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RFEffects/MagicEffectsBehavior.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RFEffects/MagicEffectsBehavior.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RFEffects/TOWParticleSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RFEffects/TOWParticleSystem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RFEffects/WeaponEffectConsequences.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RFEffects/WeaponEffectConsequences.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/Behaviors/RFEnchantedWeaponsMissionBehavior.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/Behaviors/RFEnchantedWeaponsMissionBehavior.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/Models/RFAgentStatCalculateModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/Models/RFAgentStatCalculateModel.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/Models/RFPartyMoraleModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/Models/RFPartyMoraleModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/Models/RFPartySpeedCalculatingModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/Models/RFPartySpeedCalculatingModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/Properties/launchSettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/Quest/AnoritFindRelicsQuest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/Quest/AnoritFindRelicsQuest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/Quest/QuestSubModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/Quest/QuestSubModule.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/Quest/FirstQuest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/Quest/FirstQuest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/Quest/QuestLibrary.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/Quest/QuestLibrary.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/Quest/SecondQuest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/Quest/SecondQuest.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/Quest/SecondUpdate/FourthQuest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/Quest/SecondUpdate/FourthQuest.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/Quest/SecondUpdate/ThirdQuest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/Quest/SecondUpdate/ThirdQuest.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/Quest/ThirdUpdate/FifthQuest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/Quest/ThirdUpdate/FifthQuest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/_Module/ModuleData/quest/quest_strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/_Module/ModuleData/quest/quest_strings.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -182,6 +173,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/bb43ae713f21464ebce26037e7e90ce4149588/ae/230970de/UpgradeTargetVM.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/bb43ae713f21464ebce26037e7e90ce4149588/b7/99172484/PartyCharacterVM.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/bb43ae713f21464ebce26037e7e90ce4149588/d2/54e8b13a/EducationGainedAttributeItemVM.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/bb43ae713f21464ebce26037e7e90ce4149588/e3/4dbba026/TooltipRefresherCollection.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c23d4c4ad87e4f8e86a53a6e49088a4d3fc390/08/aec7ed10/EducationCampaignBehavior.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c23d4c4ad87e4f8e86a53a6e49088a4d3fc390/16/5116d34e/PregnancyCampaignBehavior.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c23d4c4ad87e4f8e86a53a6e49088a4d3fc390/37/ba6764c7/HeroDeveloper.cs" root0="SKIP_HIGHLIGHTING" />
@@ -210,18 +202,27 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/dc0bd40696764748b9e78e1488e5d2c53c200/c6/7e57fc80/PatchClassProcessor.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e4cbdcdee705469d848a3171a7269d5f9d88/d1/302db471/GauntletView.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e766ee0b9cb7478abf0f0a09589b9d31254d90/4c/3ea60e6f/AttackInformation.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e85f8c154df64e9ca58a29177e40d07a464b88/15/72ffcad6/LocationEncounter.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e85f8c154df64e9ca58a29177e40d07a464b88/1f/8e8e1a80/HeroSpawnCampaignBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e85f8c154df64e9ca58a29177e40d07a464b88/37/9fdb9084/QuestBase.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e85f8c154df64e9ca58a29177e40d07a464b88/40/33e61b9f/ICampaignBehavior.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e85f8c154df64e9ca58a29177e40d07a464b88/54/722c476e/ConversationSentence.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e85f8c154df64e9ca58a29177e40d07a464b88/5b/5647acab/CampaignBehaviorBase.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e85f8c154df64e9ca58a29177e40d07a464b88/5f/fdd828d7/CharacterObject.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e85f8c154df64e9ca58a29177e40d07a464b88/62/ceaac134/SettlementComponent.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e85f8c154df64e9ca58a29177e40d07a464b88/66/5b89f516/DefaultMapDistanceModel.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e85f8c154df64e9ca58a29177e40d07a464b88/91/bc3f078b/CampaignEvents.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e85f8c154df64e9ca58a29177e40d07a464b88/92/131c5489/ConversationManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e85f8c154df64e9ca58a29177e40d07a464b88/93/53a422d7/DefaultPartyTrainingModel.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e85f8c154df64e9ca58a29177e40d07a464b88/95/de825d23/Hero.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e85f8c154df64e9ca58a29177e40d07a464b88/bb/a18bb848/MilitiaPartyComponent.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e85f8c154df64e9ca58a29177e40d07a464b88/c1/3cd020ca/Clan.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e85f8c154df64e9ca58a29177e40d07a464b88/dc/a70ac49d/AiBanditPatrollingBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e85f8c154df64e9ca58a29177e40d07a464b88/e7/ced6421f/MbEvent`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f9d8fa0c0e094cfd89f78cc78f054c9067988/40/c7d58bc0/PropertyOwnerF`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f9d8fa0c0e094cfd89f78cc78f054c9067988/d7/e89b9e2d/MBInformationManager.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ffd6cc5df9df469695ce0beb7e978ff42c188/cb/a8f2311b/GauntletQueryManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ffd6cc5df9df469695ce0beb7e978ff42c188/fc/597dc656/GauntletSceneNotification.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/4f9d46879dd30d2737f8a4a8dfb1f5097662f4d35ae944c598607d22430/ExceptionHandlerSubSystem.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/92f48d84311f226babc6bad8596b842e077ffcb3158ac769b6bf49acb3869fc/BEWPatch.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/97a35accd4b13e1a54c5a2cc503272fd31d7b2b289161ed258aae48321b4a3/ButterLibSubModule.cs" root0="SKIP_HIGHLIGHTING" />
@@ -389,7 +390,18 @@
       <workItem from="1716142851752" duration="8920000" />
       <workItem from="1716221707848" duration="1601000" />
       <workItem from="1716317227241" duration="648000" />
-      <workItem from="1716324334219" duration="7653000" />
+      <workItem from="1716324334219" duration="8110000" />
+      <workItem from="1716612049525" duration="1817000" />
+      <workItem from="1716649310806" duration="8149000" />
+      <workItem from="1716734955154" duration="22000" />
+      <workItem from="1716946428284" duration="2079000" />
+      <workItem from="1716989979097" duration="101000" />
+      <workItem from="1717346137155" duration="2507000" />
+      <workItem from="1718056174195" duration="2560000" />
+      <workItem from="1718060965583" duration="1085000" />
+      <workItem from="1718062405538" duration="646000" />
+      <workItem from="1718124542380" duration="403000" />
+      <workItem from="1718414948705" duration="3009000" />
     </task>
     <task id="LOCAL-00001" summary="Added druid staff behavior and fix on recruitment system">
       <option name="closed" value="true" />
@@ -583,7 +595,31 @@
       <option name="project" value="LOCAL" />
       <updated>1713199206638</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Fixed particle related bug, and add fifth quest files">
+      <option name="closed" value="true" />
+      <created>1716332304577</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1716332304577</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Fix weapons spawn position">
+      <option name="closed" value="true" />
+      <created>1716332421619</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1716332421619</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Quest improvements">
+      <option name="closed" value="true" />
+      <created>1716989998448</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1716989998448</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -612,7 +648,10 @@
     <MESSAGE value="Fix slave limit" />
     <MESSAGE value="Crash fixes" />
     <MESSAGE value="Crash fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="Crash fix" />
+    <MESSAGE value="Fixed particle related bug, and add fifth quest files" />
+    <MESSAGE value="Fix weapons spawn position" />
+    <MESSAGE value="Quest improvements" />
+    <option name="LAST_COMMIT_MESSAGE" value="Quest improvements" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -657,30 +696,17 @@
           <option name="timeStamp" value="134" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/RealmsForgottenMain/Quest/SecondUpdate/FourthQuest.cs</url>
-          <line>69</line>
-          <properties documentPath="C:\Dev\RealmsForgottenGithub\RealmsForgotten\RealmsForgottenMain\Quest\SecondUpdate\FourthQuest.cs" initialLine="69" containingFunctionPresentation="Constructor 'FourthQuest'">
+          <url>file://$PROJECT_DIR$/RealmsForgottenMain/Quest/FirstQuest.cs</url>
+          <line>459</line>
+          <properties documentPath="C:\Dev\RealmsForgottenGithub\RealmsForgotten\RealmsForgottenMain\Quest\FirstQuest.cs" initialLine="458" containingFunctionPresentation="Lambda expression inside Method 'PlayerDeliverPrisonersToQueen'">
             <startOffsets>
-              <option value="2562" />
+              <option value="29247" />
             </startOffsets>
             <endOffsets>
-              <option value="2578" />
+              <option value="29292" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="142" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/RealmsForgottenMain/Quest/ThirdUpdate/FifthQuest.cs</url>
-          <line>101</line>
-          <properties documentPath="C:\Dev\RealmsForgottenGithub\RealmsForgotten\RealmsForgottenMain\Quest\ThirdUpdate\FifthQuest.cs" initialLine="101" containingFunctionPresentation="Method 'OnWeeklyTick'">
-            <startOffsets>
-              <option value="4113" />
-            </startOffsets>
-            <endOffsets>
-              <option value="4309" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="152" />
+          <option name="timeStamp" value="135" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
