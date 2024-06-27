@@ -56,6 +56,8 @@ namespace RealmsForgotten.RFCustomSettlements
         private readonly Action? OnBattleEnd;
         private readonly Dictionary<int, NpcData> NpcsInSettlement = new();
 
+        //private  onStateChangeListeners
+
         public CustomSettlementMissionLogic(CustomSettlementBuildData buildData, Action? onBattleEnd = null)
         {
             defenderAgentObjects = new Dictionary<Agent, CustomSettlementMissionLogic.UsedObject>();
@@ -86,6 +88,7 @@ namespace RealmsForgotten.RFCustomSettlements
             {
                 InitializeMission();
                 isMissionInitialized = true;
+                Globals.IsMissionInitialized = true;
                 return;
             }
         }
@@ -449,6 +452,7 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         public override void OnAgentAlarmedStateChanged(Agent agent, Agent.AIStateFlag flag)
         {
+            //BehaviorTree.Visit
             bool flag2 = flag == Agent.AIStateFlag.Alarmed;
             if (flag2 || flag == Agent.AIStateFlag.Cautious)
             {

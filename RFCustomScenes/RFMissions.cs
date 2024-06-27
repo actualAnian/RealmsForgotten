@@ -15,6 +15,7 @@ using TaleWorlds.MountAndBlade.View;
 using TaleWorlds.MountAndBlade.View.MissionViews;
 using TaleWorlds.MountAndBlade.View.MissionViews.Order;
 using static RFCustomSettlements.ArenaBuildData;
+using BehaviorTreeWrapper;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -70,7 +71,9 @@ namespace RealmsForgotten.RFCustomSettlements
                     ViewCreator.CreateMissionFormationMarkerUIHandler(mission),
 
                     SandBoxViewCreator.CreateMissionNameMarkerUIHandler(mission),
-                    SandBoxViewCreator.CreateMissionConversationView(mission)
+                    SandBoxViewCreator.CreateMissionConversationView(mission),
+
+                    //new BehaviorTreeMissionLogic()
                     }, true, true);
             }
         [MissionMethod]
