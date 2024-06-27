@@ -27,7 +27,15 @@ namespace RealmsForgotten.Models
         }
         public override ExplainedNumber GetEffectivePartyMorale(MobileParty party, bool includeDescription = false)
         {
-            ExplainedNumber baseNumber = base.GetEffectivePartyMorale(party, includeDescription);
+            ExplainedNumber baseNumber;
+            try
+            {
+                baseNumber = base.GetEffectivePartyMorale(party, includeDescription);
+            }
+            catch (Exception ex)
+            {
+                return party.MoraleExplained;
+            }
 
             if (party.PartyComponent?.MobileParty == null)
             {

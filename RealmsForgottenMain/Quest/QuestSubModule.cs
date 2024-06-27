@@ -73,6 +73,7 @@ namespace RealmsForgotten.Quest
             base.AddClassDefinition(typeof(ThirdQuest), 4);
             base.AddClassDefinition(typeof(QuestCaravanPartyComponent), 5);
             base.AddClassDefinition(typeof(FourthQuest), 6);
+            base.AddClassDefinition(typeof(FifthQuest), 7);
 
         }
     }

@@ -85,14 +85,14 @@ namespace RealmsForgotten.Quest
             questStoppedAt = _questStoppedAt;
             if (questStoppedAt == "anorit")
             {
-                AnoritFindRelicsQuest qb = (AnoritFindRelicsQuest)Campaign.Current.QuestManager.Quests.FirstOrDefault(x => x.GetType() == typeof(AnoritFindRelicsQuest));
+                AnoritFindRelicsQuest qb = (AnoritFindRelicsQuest)Campaign.Current.QuestManager.Quests.FirstOrDefault(x => x is AnoritFindRelicsQuest);
 
                 if (qb != null)
                     qb.CompleteQuestWithSuccess();
             }
             else
             {
-                SecondQuest qb = (SecondQuest)Campaign.Current.QuestManager.Quests.FirstOrDefault(x => x.GetType() == typeof(SecondQuest));
+                SecondQuest qb = (SecondQuest)Campaign.Current.QuestManager.Quests.FirstOrDefault(x => x is SecondQuest);
 
                 if (qb != null)
                     qb.CompleteQuestWithSuccess();
@@ -114,16 +114,14 @@ namespace RealmsForgotten.Quest
 
         private void CheckIfFirstQuestHasEnded()
         {
-            SaveCurrentQuestCampaignBehavior currentQuestCampaignBehavior = SaveCurrentQuestCampaignBehavior.Instance;
-
-            if (currentQuestCampaignBehavior?.questStoppedAt != null && !Campaign.Current.QuestManager.Quests.Any(x => x is ThirdQuest))
+            if (Instance?.questStoppedAt != null && !Campaign.Current.QuestManager.Quests.Any(x => x is ThirdQuest))
             {
                 Hero hero = null;
-                if (currentQuestCampaignBehavior.questStoppedAt == "anorit")
+                if (Instance.questStoppedAt == "anorit")
 
                     hero = Hero.FindFirst(x => x.StringId == "lord_WE9_l");
 
-                else if (currentQuestCampaignBehavior.questStoppedAt == "queen")
+                else if (Instance.questStoppedAt == "queen")
 
                     hero = Kingdom.All.First(x => x.StringId == "empire").Leader.Spouse;
 

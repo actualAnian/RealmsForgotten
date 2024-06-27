@@ -17,9 +17,9 @@ using TaleWorlds.Localization;
 
 namespace RealmsForgotten.Behaviors
 {
-    internal class RFEnchantedWeaponsMissionBehavior : MissionBehavior
+    public class RFEnchantedWeaponsMissionBehavior : MissionBehavior
     {
-        public Dictionary<Agent, List<(DrivenProperty property, float amount)>> BoostedAgents = new();
+        public Dictionary<Agent, List<(DrivenProperty property, float amount)>> ModifiedAgents = new();
         private static Dictionary<string, WeaponFlags> weaponFlags = new()
         {
             { "rfonehanded", WeaponFlags.MeleeWeapon}, { "rftwohanded", WeaponFlags.MeleeWeapon }, { "rfpolearm", WeaponFlags.MeleeWeapon },
@@ -177,24 +177,24 @@ namespace RealmsForgotten.Behaviors
                 string skillString = skillsKeys.FirstOrDefault(x => basicCharacterObject.Equipment[equipmentIndex].Item?.StringId.Contains(x) == true);
                 if (skillString != null && weaponFlags.TryGetValue(skillString, out WeaponFlags flag))
                 {
-                    if (!BoostedAgents.ContainsKey(agent))
+                    if (!ModifiedAgents.ContainsKey(agent))
                     {
-                        BoostedAgents.Add(agent, new List<(DrivenProperty property, float amount)>());
+                        ModifiedAgents.Add(agent, new List<(DrivenProperty property, float amount)>());
                     }
                     int increaseAmount = RFUtility.GetNumberAfterSkillWord(basicCharacterObject.Equipment[equipmentIndex].Item?.StringId, skillString, false);
                     
-                    BoostedAgents[agent].Add((DrivenProperty.WeaponsEncumbrance, agent.AgentDrivenProperties.WeaponsEncumbrance + increaseAmount * 0.012f));
+                    ModifiedAgents[agent].Add((DrivenProperty.WeaponsEncumbrance, agent.AgentDrivenProperties.WeaponsEncumbrance + increaseAmount * 0.012f));
                     if (flag == WeaponFlags.MeleeWeapon)
                     {
-                        BoostedAgents[agent].Add((DrivenProperty.SwingSpeedMultiplier, agent.AgentDrivenProperties.SwingSpeedMultiplier + increaseAmount * 0.0125f));
-                        BoostedAgents[agent].Add((DrivenProperty.ThrustOrRangedReadySpeedMultiplier, agent.AgentDrivenProperties.ThrustOrRangedReadySpeedMultiplier + increaseAmount * 0.0125f));
+                        ModifiedAgents[agent].Add((DrivenProperty.SwingSpeedMultiplier, agent.AgentDrivenProperties.SwingSpeedMultiplier + increaseAmount * 0.0125f));
+                        ModifiedAgents[agent].Add((DrivenProperty.ThrustOrRangedReadySpeedMultiplier, agent.AgentDrivenProperties.ThrustOrRangedReadySpeedMultiplier + increaseAmount * 0.0125f));
                         if(agent.IsMainAgent)
                             InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=increased_melee}A weapon you're carrying has enhanced your skill in combat, increasing your melee skills.").ToString(), Color.FromUint(9424384)));
                     }
                     else
                     {
-                        BoostedAgents[agent].Add((DrivenProperty.ReloadSpeed, agent.AgentDrivenProperties.ReloadSpeed + increaseAmount * 0.0009f));
-                        BoostedAgents[agent].Add((DrivenProperty.WeaponInaccuracy, agent.AgentDrivenProperties.WeaponInaccuracy - (increaseAmount * 0.0009f)));
+                        ModifiedAgents[agent].Add((DrivenProperty.ReloadSpeed, agent.AgentDrivenProperties.ReloadSpeed + increaseAmount * 0.0009f));
+                        ModifiedAgents[agent].Add((DrivenProperty.WeaponInaccuracy, agent.AgentDrivenProperties.WeaponInaccuracy - (increaseAmount * 0.0009f)));
                         if(agent.IsMainAgent)
                             InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=increased_ranged}A weapon you're carrying has enhanced your skill in combat, increasing your ranged skills.").ToString(), Color.FromUint(9424384)));
                     }

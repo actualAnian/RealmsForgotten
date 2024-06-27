@@ -3,6 +3,7 @@ using System;
 using RealmsForgotten.Utility;
 using System.Collections.Generic;
 using System.Linq;
+using RealmsForgotten.Behaviors;
 using RealmsForgotten.Models;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
@@ -160,12 +161,19 @@ namespace RealmsForgotten.RFEffects
             affectedAgent.AgentDrivenProperties.MaxSpeedMultiplier = 0.01f;
             affectedAgent.AgentDrivenProperties.CombatMaxSpeedMultiplier = 0.01f;
             affectedAgent.AgentDrivenProperties.MountSpeed = 0.01f;
+            
+            if(RFEnchantedWeaponsMissionBehavior.Instance?.ModifiedAgents.ContainsKey(affectedAgent) == false)
+                RFEnchantedWeaponsMissionBehavior.Instance?.ModifiedAgents.Add(affectedAgent, new()
+                {
+                    ( DrivenProperty.MaxSpeedMultiplier, 0.1f ),
+                    ( DrivenProperty.CombatMaxSpeedMultiplier, 0.1f ),
+                    ( DrivenProperty.MountSpeed, 0.1f )
+                });
 
             affectedAgent.UpdateCustomDrivenProperties();
 
             Timer timer = new(Time.ApplicationTime, RFEffectsLibrary.CurrentWeaponEffects[affectorWeapon.Item.StringId].Duration, false);
-
-
+            
             MagicEffectsBehavior.Instance.AgentsUnderEffect.Add(new AgentEffectData(affectedAgent, RFEffectsLibrary.CurrentWeaponEffects[affectorWeapon.Item.StringId].Effect, timer, gameEntity));
 
             if (affectorAgent.IsMainAgent)
