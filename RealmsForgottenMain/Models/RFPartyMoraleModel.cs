@@ -41,15 +41,23 @@ namespace RealmsForgotten.Models
             {
                 return baseNumber;
             }
-            
-            //Tlachiquiy
-            if (!IsPartyBandit(party) && party.Owner?.CharacterObject.Race == FaceGen.GetRaceOrDefault("tlachiquiy") &&
-                baseNumber.ResultNumber < 100)
-                baseNumber = new ExplainedNumber(100, true, new TextObject("{=tc_boldness}Tlachiquiy's Boldness"));
 
-            //Elvean
-            if (party?.Party?.Culture == null)
+            try
+            {
+                //Tlachiquiy
+                if (!IsPartyBandit(party) && party.Owner?.CharacterObject.Race == FaceGen.GetRaceOrDefault("tlachiquiy") &&
+                    baseNumber.ResultNumber < 100)
+                    baseNumber = new ExplainedNumber(100, true, new TextObject("{=tc_boldness}Tlachiquiy's Boldness"));
+
+                //Elvean
+                if (party?.Party?.Culture == null)
+                    return baseNumber;
+            }
+            catch (Exception e)
+            {
                 return baseNumber;
+            }
+
             TerrainType faceTerrainType = Campaign.Current.MapSceneWrapper.GetFaceTerrainType(party.CurrentNavigationFace);
             if (party.Party.Culture.StringId == "battania" && faceTerrainType == TerrainType.Forest)
                 baseNumber.AddFactor(0.12f, new TextObject("{=elvean_morale_bonus}Elvean Forest Morale Bonus"));
@@ -62,8 +70,8 @@ namespace RealmsForgotten.Models
                 float moraleFactor = amount * 0.015f;
                 baseNumber.AddFactor(moraleFactor, new TextObject("{=priest_morale_bonus}Priests Morale Bonus"));
             }
-            
-            
+
+
             return baseNumber;
         }
     }

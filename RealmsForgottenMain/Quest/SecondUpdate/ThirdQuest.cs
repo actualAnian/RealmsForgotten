@@ -59,9 +59,9 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
     public class ThirdQuest : QuestBase
     {
-        [SaveableField(1)] 
+        [SaveableField(1)]
         private JournalLog goToAnoritLordLog;
-        [SaveableField(2)] 
+        [SaveableField(2)]
         private JournalLog persuadeAthasScholarLog;
         [SaveableField(3)]
         private JournalLog waitAthasScholarLog;
@@ -129,7 +129,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
         private static readonly string hideoutBossCharacterId = "vortiak_necromancer_lord";
 
         public static CharacterObject PrisonerCharacter;
-        
+
 
         public ThirdQuest(string questId, Hero questGiver, CampaignTime duration, int rewardGold) : base(questId, questGiver, duration, rewardGold)
         {
@@ -138,7 +138,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
         }
         Settlement Ityr => Settlement.Find("town_A1");
         public override bool IsSpecialQuest => true;
-        
+
         public override TextObject Title => GameTexts.FindText("rf_quest_title_part_three");
         protected override void RegisterEvents()
         {
@@ -170,6 +170,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                     }
                 }
             });
+            RegisterQuestEvents(this);
         }
 
         private void OnSessionLaunched(CampaignGameStarter campaignGameStarter)
@@ -227,7 +228,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 goToHideoutLog.UpdateCurrentProgress(3);
                 CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty), new ConversationCharacterData(CharacterObject.Find(hideoutBossCharacterId)));
                 goToHideoutLog.UpdateCurrentProgress(4);
-                
+
             }
         }
 
@@ -265,7 +266,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 {
                     mission.AddMissionBehavior(new RecordDamageMissionLogic((victim, attacker, damage) =>
                     {
-                        if(victim.Character?.StringId == "vortiak_necromancer_lord" && damage >= victim.Health)
+                        if (victim.Character?.StringId == "vortiak_necromancer_lord" && damage >= victim.Health)
                             goToHideoutLog.UpdateCurrentProgress(2);
 
                     }));
@@ -289,7 +290,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 location.AddCharacter(locationCharacter);
 
                 location.AddLocationCharacters(CreateBodyGuard, athasScholarHero.Culture, LocationCharacter.CharacterRelations.Neutral, 2);
-                
+
             }
         }
 
@@ -318,7 +319,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
         {
             athasScholarHero =
                 HeroCreator.CreateSpecialHero(CharacterObject.Find("rf_athas_scholar"), Settlement.CurrentSettlement);
-        
+
             athasScholarHero.Clan = Ityr.OwnerClan;
 
             athasScholarHero.SetName(new TextObject("{=athas_scholar_name}Athas Scholar"), new TextObject("Scholar"));
@@ -357,7 +358,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
                 AgentData agentData = new AgentData(new SimpleAgentOrigin(lords[i].CharacterObject)).Monster(actionSetAndMonster.Item2).NoHorses(true).ClothingColor1(lords[i].MapFaction.Color).ClothingColor2(lords[i].MapFaction.Color2);
 
-                LocationCharacter locationCharacter = new(agentData, SandBoxManager.Instance.AgentBehaviorManager.AddFixedCharacterBehaviors, 
+                LocationCharacter locationCharacter = new(agentData, SandBoxManager.Instance.AgentBehaviorManager.AddFixedCharacterBehaviors,
                     lords[i] == Settlement.CurrentSettlement.Owner ? CampaignData.ThroneTag : CampaignData.NotableTag, true,
                     LocationCharacter.CharacterRelations.Neutral, actionSetAndMonster.Item1, true);
 
@@ -428,7 +429,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             SetDialogs();
             Instance = this;
 
-            if(goToAnoritLordLog?.CurrentProgress == 1 && _willGoAsCaravan)
+            if (goToAnoritLordLog?.CurrentProgress == 1 && _willGoAsCaravan)
             {
                 MobileParty party = MobileParty.All.Find(x => x.LeaderHero == TheOwl);
                 if (party != null)
@@ -484,15 +485,15 @@ namespace RealmsForgotten.Quest.SecondUpdate
             _willGoAsCaravan = willGoAsCaravan;
             textObject.SetTextVariable("SETTLEMENT", Ityr.EncyclopediaLinkWithName);
             persuadeAthasScholarLog = this.AddLog(textObject);
-            
-            if(!_willGoAsCaravan)
+
+            if (!_willGoAsCaravan)
                 persuadeAthasScholarLog.UpdateCurrentProgress(1);
             goToAnoritLordLog.UpdateCurrentProgress(1);
             this.AddTrackedObject(Ityr);
 
             AvoidBattleAfterConversation();
         }
-        protected override void SetDialogs()    
+        protected override void SetDialogs()
         {
             Campaign.Current.ConversationManager.AddDialogFlow(AnoritFirstDialogFlow, this);
             Campaign.Current.ConversationManager.AddDialogFlow(AthasPersuasionDialogFlow(), this);
@@ -520,7 +521,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 }
             }
 
-            Mission.Current.GetMissionBehavior<MissionFightHandler>().StartCustomFight(new (){Agent.Main}, enemyAgents, false, false, delegate (bool isPlayerSideWon)
+            Mission.Current.GetMissionBehavior<MissionFightHandler>().StartCustomFight(new() { Agent.Main }, enemyAgents, false, false, delegate (bool isPlayerSideWon)
             {
                 if (scholarDefeated)
                 {
@@ -567,7 +568,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             .EndPlayerOptions();
 
         private DialogFlow AthasAttackDialogFlow => DialogFlow.CreateDialogFlow("start", 125).NpcLine(GameTexts.FindText("rf_third_quest_scholar_dialog_2_1"))
-            .Condition(()=> Campaign.Current.ConversationManager.ConversationAgents[0].Character as CharacterObject == athasScholarHero.CharacterObject && captureAthasScholarLog?.CurrentProgress == 0)
+            .Condition(() => Campaign.Current.ConversationManager.ConversationAgents[0].Character as CharacterObject == athasScholarHero.CharacterObject && captureAthasScholarLog?.CurrentProgress == 0)
             .PlayerLine(GameTexts.FindText("rf_third_quest_scholar_dialog_2_2")).Consequence(StartScholarFightInVillage).CloseDialog();
 
         private DialogFlow HideoutOwlDialogFlow => DialogFlow.CreateDialogFlow("start", 125)
@@ -590,7 +591,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 GameTexts.FindText("rf_third_quest_anorit_dialog_2_3").ToString(), null, GoToHideoutLog, this);
 
             dialogFlow.AddPlayerLine("deliver_scholar_dialog_5", "deliver_scholar_output_3", "deliver_scholar_output_4",
-                GameTexts.FindText("rf_third_quest_anorit_dialog_2_4").ToString(), null, ()=>
+                GameTexts.FindText("rf_third_quest_anorit_dialog_2_4").ToString(), null, () =>
                 {
                     escortAthasScholarLog.UpdateCurrentProgress(2);
                 }, this);
@@ -604,7 +605,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
         private void WaitUntilDecipher()
         {
-            if(Settlement.CurrentSettlement == null)
+            if (Settlement.CurrentSettlement == null)
                 AvoidBattleAfterConversation();
 
             GiveGoldAction.ApplyBetweenCharacters(null, Hero.MainHero, 20000);
@@ -614,7 +615,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             TransferPrisonerAction.Apply(athasScholarHero.CharacterObject, PartyBase.MainParty, partyBase != null ? partyBase : Settlement.CurrentSettlement.Party);
 
             escortAthasScholarLog?.UpdateCurrentProgress(2);
-            waitUntilDecipherLog = AddDiscreteLog(GameTexts.FindText("rf_third_quest_anorit_objective_6"), new TextObject(), 0,1);
+            waitUntilDecipherLog = AddDiscreteLog(GameTexts.FindText("rf_third_quest_anorit_objective_6"), new TextObject(), 0, 1);
         }
         private void AvoidBattleAfterConversation()
         {
@@ -709,7 +710,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
 
             dialogFlow.AddPlayerLine("athas_persuasion_option_1", "athas_persuasion_options", "athas_persuasion_outcome",
-                "{=!}{PERSUADE_ATTEMPT_1}", PersuasionOptionCondition_1, PersuasionOptionConsequence_1, this, 100, null, ()=> _persuasionTask.Options.ElementAt(0));
+                "{=!}{PERSUADE_ATTEMPT_1}", PersuasionOptionCondition_1, PersuasionOptionConsequence_1, this, 100, null, () => _persuasionTask.Options.ElementAt(0));
 
             dialogFlow.AddPlayerLine("athas_persuasion_option_2", "athas_persuasion_options", "athas_persuasion_outcome",
                 "{=!}{PERSUADE_ATTEMPT_2}", PersuasionOptionCondition_2, PersuasionOptionConsequence_2, this, 100, null, () => _persuasionTask.Options.ElementAt(1));
@@ -723,9 +724,9 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 }, () => PersuasionComplete(true), this);
 
             dialogFlow.AddDialogLine("athas_persuasion_failed", "athas_persuasion_outcome", "close_window",
-                GameTexts.FindText("rf_third_quest_scholar_dialog_persuasion_fail").ToString(),()=> !ConversationManager.GetPersuasionProgressSatisfied(), ()=> PersuasionComplete(false), this);
+                GameTexts.FindText("rf_third_quest_scholar_dialog_persuasion_fail").ToString(), () => !ConversationManager.GetPersuasionProgressSatisfied(), () => PersuasionComplete(false), this);
 
-            return dialogFlow;;
+            return dialogFlow; ;
         }
 
         private bool PersuasionOptionCondition_1()
@@ -794,7 +795,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
         private void PersuasionComplete(bool success)
         {
             ConversationManager.EndPersuasion();
-            
+
             RemoveTrackedObject(Ityr);
             if (!success)
             {
@@ -805,7 +806,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
             TextObject textObject = GameTexts.FindText("rf_third_quest_anorit_objective_3");
             textObject.SetTextVariable("SETTLEMENT", Ityr.BoundVillages[0].Settlement.EncyclopediaLinkWithName);
-            
+
             waitAthasScholarLog = AddDiscreteLog(textObject, new TextObject(), 0, 1);
             waitAthasScholarTime = CampaignTime.Now;
         }
@@ -927,6 +928,6 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 base.ChangePartyLeader(newLeader);
         }
 
-        
+
     }
 }

@@ -59,7 +59,7 @@ namespace RealmsForgotten.Quest
         private JournalLog? findMapJournalLog;
         [SaveableField(2)]
         private bool hasTalkedToOwl2;
-        [SaveableField(3)] 
+        [SaveableField(3)]
         private CampaignTime lastHideoutTime;
         [SaveableField(4)]
         private CampaignTime anoritLordConversationTime;
@@ -69,7 +69,7 @@ namespace RealmsForgotten.Quest
         private bool escapedPrison;
         public SecondQuest(string text, Hero hero, CampaignTime time, int number, bool alreadyTalkedToOwl) : base(text, hero, time, number)
         {
-            if(alreadyTalkedToOwl)
+            if (alreadyTalkedToOwl)
                 HasTalkedToOwl = true;
             else
                 AddLog(GameTexts.FindText("rf_second_quest_first_log"));
@@ -88,7 +88,7 @@ namespace RealmsForgotten.Quest
             CampaignEvents.OnMissionStartedEvent.AddNonSerializedListener(this, imission =>
             {
                 Mission mission = (Mission)imission;
-                if(HasTalkedToOwl && findMapJournalLog?.CurrentProgress < 3 && mission != null && PlayerEncounter.InsideSettlement && Settlement.CurrentSettlement?.IsHideout == true &&
+                if (HasTalkedToOwl && findMapJournalLog?.CurrentProgress < 3 && mission != null && PlayerEncounter.InsideSettlement && Settlement.CurrentSettlement?.IsHideout == true &&
                    (Settlement.CurrentSettlement.Hideout.StringId == "hideout_seaside_11" ||
                     Settlement.CurrentSettlement.Hideout.StringId == "hideout_seaside_13" ||
                     Settlement.CurrentSettlement.Hideout.StringId == "hideout_seaside_14"))
@@ -102,7 +102,7 @@ namespace RealmsForgotten.Quest
                     if (mobileParty.LeaderHero == Hero.MainHero && settlement.StringId == "town_B4" && escapedPrison)
                         SaveCurrentQuestCampaignBehavior.Instance.SaveQuestState("queen");
                 });
-
+            RegisterQuestEvents(this);
         }
 
         private void OnSettlementEntered(MobileParty mobileParty, Settlement settlement, Hero hero)
@@ -116,12 +116,12 @@ namespace RealmsForgotten.Quest
                 ConversationCharacterData anoritData = new(AnoritLord.CharacterObject, AnoritLord.PartyBelongedTo?.Party);
                 Campaign.Current.ConversationManager.OpenMapConversation(playerData, anoritData);
 
-                
+
                 _isPlayerInOwlArmy = false;
 
                 QuestPatches.AvoidDisbanding = false;
 
-                
+
             }
         }
 
@@ -187,7 +187,7 @@ namespace RealmsForgotten.Quest
             SetDialogs();
             QuestPatches.AvoidDisbanding = _isPlayerInOwlArmy;
             if (_isPlayerInOwlArmy)
-                CreateOwlArmy(MobileParty.All.Find(x=>x.LeaderHero == TheOwl));
+                CreateOwlArmy(MobileParty.All.Find(x => x.LeaderHero == TheOwl));
             QuestLibrary.InitializeVariables();
         }
         private void LocationCharactersAreReadyToSpawn(Dictionary<string, int> unusedUsablePointCount)
@@ -246,11 +246,11 @@ namespace RealmsForgotten.Quest
             EncounterManager.StartSettlementEncounter(MobileParty.MainParty, settlement);
             EncounterManager.StartPartyEncounter(PartyBase.MainParty, settlement.Party);
             PlayerEncounter.EnterSettlement();
-            
+
             PlayerEncounter.Current.SetupFields(PartyBase.MainParty, settlement.Party);
-            
+
             RFPrisonBreakMissionController.OpenPrisonBreakMission(settlement.LocationComplex.GetScene("prison", 0), settlement.LocationComplex.GetLocationWithId("prison"));
-            
+
         }
 
         private void CreateOwlArmy(MobileParty owlParty)
@@ -263,7 +263,7 @@ namespace RealmsForgotten.Quest
                     QuestGiver.HomeSettlement, TheOwl);
                 owlParty.InitializeMobilePartyAtPosition(QuestGiver.Culture.DefaultPartyTemplate, MobileParty.MainParty.Position2D);
             }
-            
+
             owlParty.Army = new Army(QuestGiver.Clan.Kingdom, owlParty, Army.ArmyTypes.Patrolling);
 
             MobileParty.MainParty.Army = owlParty.Army;
@@ -290,8 +290,8 @@ namespace RealmsForgotten.Quest
         {
             MobileParty owlParty;
 
-            if (!isOwlOnPlayerParty && MobileParty.All.Any(x=>x.LeaderHero==Hero.OneToOneConversationHero))
-                owlParty = MobileParty.All.First(x=>x.LeaderHero== Hero.OneToOneConversationHero);
+            if (!isOwlOnPlayerParty && MobileParty.All.Any(x => x.LeaderHero == Hero.OneToOneConversationHero))
+                owlParty = MobileParty.All.First(x => x.LeaderHero == Hero.OneToOneConversationHero);
             else
             {
                 owlParty = LordPartyComponent.CreateLordParty("owl_party", Hero.OneToOneConversationHero,
@@ -360,7 +360,7 @@ namespace RealmsForgotten.Quest
             .PlayerLine(GameTexts.FindText("rf_anorit_lord_text_9")).NpcLine(GameTexts.FindText("rf_anorit_lord_text_10")).PlayerLine(GameTexts.FindText("rf_anorit_lord_text_11"))
             .NpcLine(GameTexts.FindText("rf_anorit_lord_text_12")).PlayerLine(GameTexts.FindText("rf_anorit_lord_text_13")).NpcLine(GameTexts.FindText("rf_anorit_lord_text_14"))
             .PlayerLine(GameTexts.FindText("rf_anorit_lord_text_15")).NpcLine(GameTexts.FindText("rf_anorit_lord_text_16")).BeginPlayerOptions()
-            .PlayerOption(GameTexts.FindText("rf_anorit_lord_option_1")).NpcLine(GameTexts.FindText("rf_anorit_lord_text_17")).Consequence(()=>BetrayQueenConsequence(Hero.OneToOneConversationHero)).CloseDialog()
+            .PlayerOption(GameTexts.FindText("rf_anorit_lord_option_1")).NpcLine(GameTexts.FindText("rf_anorit_lord_text_17")).Consequence(() => BetrayQueenConsequence(Hero.OneToOneConversationHero)).CloseDialog()
             .PlayerOption(GameTexts.FindText("rf_anorit_lord_option_2")).Consequence(NotBetrayQueenConsequence).CloseDialog().EndPlayerOptions();
 
 
@@ -381,7 +381,7 @@ namespace RealmsForgotten.Quest
                 }
 
                 Campaign.Current.ConversationManager.OpenMapConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty), new ConversationCharacterData(TheOwl.CharacterObject, mobileParty != null ? mobileParty.Party : null));
-                
+
                 lastHideoutTime = CampaignTime.Never;
                 anoritLordConversationTime = CampaignTime.Never;
             }
@@ -389,7 +389,7 @@ namespace RealmsForgotten.Quest
             {
                 escapedPrison = true;
 
-                QuestUIManager.ShowNotification(GameTexts.FindText("rf_kidnapped_text").ToString(), OpenPrisonBreak, true, "prisoner_image" );
+                QuestUIManager.ShowNotification(GameTexts.FindText("rf_kidnapped_text").ToString(), OpenPrisonBreak, true, "prisoner_image");
 
                 anoritLordConversationTime = CampaignTime.Never;
             }

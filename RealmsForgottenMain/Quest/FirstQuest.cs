@@ -78,8 +78,8 @@ namespace RealmsForgotten.Quest
                 CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, HourlyTickForNewGame);
 
             CampaignEvents.OnGameLoadFinishedEvent.AddNonSerializedListener(this, AfterLoad);
-
         }
+
         private void HourlyTickForNewGame()
         {
             if (isNewGame)
@@ -96,7 +96,7 @@ namespace RealmsForgotten.Quest
                 isNewGame = false;
             }
         }
-    
+
         private void StartQuest()
         {
             InformationManager.ShowInquiry(new InquiryData(GameTexts.FindText("rf_event").ToString(), GameTexts.FindText("rf_main_quest_start_inquiry_1").ToString(), true, false, new TextObject("{=continue}Continue").ToString(), "", () =>
@@ -167,6 +167,7 @@ namespace RealmsForgotten.Quest
                     }
                 });
                 CampaignEvents.OnPlayerBattleEndEvent.AddNonSerializedListener(this, BattleEnd);
+                RegisterQuestEvents(this);
             }
 
             private void BattleEnd(MapEvent mapEvent)
@@ -228,7 +229,7 @@ namespace RealmsForgotten.Quest
             }
             protected override void SetDialogs()
             {
-    
+
                 QuestCharacterDialogFlow = DialogFlow.CreateDialogFlow("start", 125).NpcLine(GameTexts.FindText("rf_uliah_text_1").ToString(), null, null)
                 .Condition(() => Hero.OneToOneConversationHero == Uliah && JournalEntries.Count == 1).BeginPlayerOptions()
                 .PlayerOption(GameTexts.FindText("rf_uliah_text_2").ToString(), null).NpcLine(GameTexts.FindText("rf_uliah_text_3").ToString(), null, null).GotoDialogState("start").PlayerOption(GameTexts.FindText("rf_uliah_text_4").ToString())

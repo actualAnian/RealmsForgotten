@@ -45,7 +45,7 @@ namespace RealmsForgotten.Quest
         {
             CampaignGameStarter gameStarter = (CampaignGameStarter)initializerObject;
             AddQuestBehaviors(gameStarter, false);
-            
+
         }
         private static void AddQuestBehaviors(CampaignGameStarter gameStarter, bool isNewGame)
         {
@@ -74,6 +74,7 @@ namespace RealmsForgotten.Quest
             base.AddClassDefinition(typeof(QuestCaravanPartyComponent), 5);
             base.AddClassDefinition(typeof(FourthQuest), 6);
             base.AddClassDefinition(typeof(FifthQuest), 7);
+            base.AddClassDefinition(typeof(SixthQuest), 8);
 
         }
     }
