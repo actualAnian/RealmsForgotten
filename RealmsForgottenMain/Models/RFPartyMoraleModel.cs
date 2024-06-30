@@ -57,7 +57,7 @@ namespace RealmsForgotten.Models
             {
                 return baseNumber;
             }
-
+            
             TerrainType faceTerrainType = Campaign.Current.MapSceneWrapper.GetFaceTerrainType(party.CurrentNavigationFace);
             if (party.Party.Culture.StringId == "battania" && faceTerrainType == TerrainType.Forest)
                 baseNumber.AddFactor(0.12f, new TextObject("{=elvean_morale_bonus}Elvean Forest Morale Bonus"));

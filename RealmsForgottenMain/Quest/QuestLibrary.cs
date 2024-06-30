@@ -54,6 +54,19 @@ namespace RealmsForgotten.Quest
                     }
                 });
         }
+        
+        public static void RegisterQuestEvents(object obj)
+        {
+            CampaignEvents.CanHeroDieEvent.AddNonSerializedListener(obj,
+                (Hero hero, KillCharacterAction.KillCharacterActionDetail detail, ref bool canDie) =>
+                {
+                    if (hero == QuestQueen || hero == QuestQueen.Spouse || hero == TheOwl ||
+                        hero == QuestLibrary.AnoritLord)
+                    {
+                        canDie = false;
+                    }
+                });
+        }
         public static void MergeDisbandParty(MobileParty disbandParty, PartyBase mergeToParty)
         {
             mergeToParty.ItemRoster.Add(disbandParty.ItemRoster.AsEnumerable());
