@@ -64,10 +64,6 @@ namespace RealmsForgotten.Models
 
         public override void OnAgentHit(Agent affectedAgent, Agent affectorAgent, in MissionWeapon affectorWeapon, in Blow blow, in AttackCollisionData attackCollisionData)
         {
-            // @TODO remove this
-            return;
-
-
             // Check if the affected agent has any of the target race IDs and is not the player
             if (affectedAgent.Character?.Race != null && targetRaceIds.Contains(affectedAgent.Character.Race) && !affectedAgent.IsPlayerControlled)
             {

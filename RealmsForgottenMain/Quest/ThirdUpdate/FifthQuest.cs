@@ -319,10 +319,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
             if (isObjectiveCompleted) // Ensure this is only called once
             {
-                //SixthQuest.StartSixthQuest();
-
-                //new SixthQuest("rf_sixth_quest", QuestGiver, CampaignTime.Never, 50000).StartQuest();
-                SixthQuest.Instance.StartSixthQuest();
+                new SixthQuest("rf_sixth_quest", QuestGiver, CampaignTime.Never, 50000).StartQuest();
                 CompleteQuestWithSuccess();
             }
         }
