@@ -39,7 +39,20 @@ namespace RealmsForgotten.Quest
 
             }
             hideout.Settlement.IsVisible = true;
-            
+
+        }
+
+        public static void RegisterQuestEvents(object obj)
+        {
+            CampaignEvents.CanHeroDieEvent.AddNonSerializedListener(obj,
+                (Hero hero, KillCharacterAction.KillCharacterActionDetail detail, ref bool canDie) =>
+                {
+                    if (hero == QuestQueen || hero == QuestQueen.Spouse || hero == TheOwl ||
+                        hero == QuestLibrary.AnoritLord)
+                    {
+                        canDie = false;
+                    }
+                });
         }
         
         public static void RegisterQuestEvents(object obj)
@@ -130,7 +143,7 @@ namespace RealmsForgotten.Quest
                 InformationManager.ShowInquiry(new InquiryData("Error", "Error initializing the quest hero QuestQueen", true, false, GameTexts.FindText("str_done").ToString(), "",
                     null, null), true);
             }
-            
+
         }
     }
 

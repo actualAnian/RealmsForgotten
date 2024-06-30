@@ -10,10 +10,12 @@
 		<ModuleId>$(MSBuildProjectName)</ModuleId>
 		<ModuleName>$(MSBuildProjectName)</ModuleName>
 		<GameFolder>$(BANNERLORD_GAME_DIR)</GameFolder>
+		<Configurations>Debug;Release;ccc</Configurations>
 	</PropertyGroup>
 
 
 	<ItemGroup>
+	  <ProjectReference Include="..\BehaviorTreeWrapper\BehaviorTreeWrapper.csproj" />
 	  <ProjectReference Include="..\HuntableHerds\HuntableHerds.csproj" />
 	  <ProjectReference Include="..\RealmsForgottenMain\RealmsForgotten.csproj" />
 	</ItemGroup>
