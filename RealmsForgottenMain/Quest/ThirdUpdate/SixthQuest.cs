@@ -376,7 +376,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             List<(string troopId, int troopCount)> troopsToAdd = new List<(string troopId, int troopCount)>
             {
                 ("druzhinnik_champion", 30),
-                ("sturgia_veteran_warrior", 50),
+                ("sturgian_veteran_warrior", 50),
                 ("sturgian_veteran_bowman", 25)
             };
 
