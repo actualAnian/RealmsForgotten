@@ -21,6 +21,8 @@ using MCM.Abstractions.Attributes;
 using TaleWorlds.Engine.GauntletUI;
 using Module = TaleWorlds.MountAndBlade.Module;
 using Newtonsoft.Json.Linq;
+using RealmsForgotten.AiMade;
+using RealmsForgotten.AiMade.Career;
 using RealmsForgotten.Quest;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.GameMenus;
@@ -32,6 +34,9 @@ using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
+using RealmsForgotten.UI;
+using TaleWorlds.ScreenSystem;
+
 
 namespace RealmsForgotten
 {
@@ -87,11 +92,14 @@ namespace RealmsForgotten
                 campaignGameStarter.AddModel(new RFWageModel());
                 campaignGameStarter.AddModel(new RFBattleCaptainModel());
                 campaignGameStarter.AddModel(new RFInventoryCapacityModel());
-                
+
                 new RFAttributes().Initialize();
                 new RFSkills().Initialize();
                 new RFSkillEffects().InitializeAll();
                 new RFPerks().Initialize();
+                
+                AiSubModule.AddCampaignBehaviors(campaignGameStarter);
+                AiSubModule.InitializeCareerSystem();
 
                 ReadConfigFile();
             }
@@ -144,8 +152,9 @@ namespace RealmsForgotten
                 {
                     mission.AddMissionBehavior(new RFEnchantedWeaponsMissionBehavior());
                     mission.AddMissionBehavior(new NecromancerStaffMissionBehavior());
+                    mission.AddMissionBehavior(new GandalfStaffMissionBehavior());
                 }
-                
+
                 mission.AddMissionBehavior(new SpellAmmoMissionBehavior());
                 
                 if (Campaign.Current != null)
@@ -191,11 +200,12 @@ namespace RealmsForgotten
         }
         protected override void OnSubModuleLoad()
         {
-            harmony.PatchAll();
             base.OnSubModuleLoad();
+            harmony.PatchAll(); // Ensure Harmony patches are applied
+
             TextObject coreContentDisabledReason = new("Disabled during installation.", null);
             UIConfig.DoNotUseGeneratedPrefabs = true;
-            
+
             RemoveSandboxAndStoryOptions();
 
             Module.CurrentModule.AddInitialStateOption(
@@ -203,7 +213,14 @@ namespace RealmsForgotten
                 () => MBGameManager.StartNewGame(new RFCampaignManager()),
                 () => (Module.CurrentModule.IsOnlyCoreContentEnabled, coreContentDisabledReason))
             );
-            harmony.PatchAll();
+        }
+        protected override void OnApplicationTick(float dt)
+        {
+            base.OnApplicationTick(dt);
+            if (Input.IsKeyPressed(InputKey.F9))
+            {
+                CareerScreenManager.OpenCareerInfoScreen();
+            }
         }
         public static Dictionary<string, int> undeadRespawnConfig { get; private set; }
         private void ReadConfigFile()

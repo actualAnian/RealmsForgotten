@@ -153,7 +153,6 @@ namespace RealmsForgotten.Behaviors
             ScreenManager.TopScreen.AddLayer(_layer);
             ScreenManager.TrySetFocus(_layer);
             _dataSource.RefreshValues();
-
         }
         
         private void OnMapEventEnd(MapEvent mapEvent)

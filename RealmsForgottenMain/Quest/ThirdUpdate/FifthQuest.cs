@@ -62,16 +62,19 @@ namespace RealmsForgotten.Quest.SecondUpdate
         private JournalLog deliverNelrogToNasorianLog;
         [SaveableField(9)] 
         private JournalLog deliverLordToAlKhuurLog;
+        [SaveableField(10)]
+        private JournalLog defeatDevilPartiesLog;
+        
+        private bool isObjectiveCompleted => defeatDevilPartiesLog?.CurrentProgress >= devilPartiesToDefeatTarget;
 
         private Agent _treasureFightWinner;
-
-
 
         private bool _persuasionFailed;
         private const string MysticWeaponId = "rfmisc_mistic_polearm";
         private const string ShieldTreasureId = "ulvor_dec_shield";
         private const string TreasureFightCharacter = "allkhuur_goddess";
-        private const string DevilsPartyTemplateId = "cs_devils_raiders_template";
+        private const int devilPartiesToDefeatTarget = 2;
+
         public override TextObject Title => GameTexts.FindText("rf_quest_title_part_five");
         public override bool IsRemainingTimeHidden => true;
         public override bool IsSpecialQuest => true;
@@ -89,6 +92,8 @@ namespace RealmsForgotten.Quest.SecondUpdate
             CampaignEvents.OnMissionStartedEvent.AddNonSerializedListener(this, OnMissionStart);
             CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, OnDailyTick);
             CampaignEvents.WeeklyTickEvent.AddNonSerializedListener(this, OnWeeklyTick);
+            CampaignEvents.MobilePartyDestroyed.AddNonSerializedListener(this, OnMobilePartyDestroyed);
+
             RegisterQuestEvents(this);
         }
 
@@ -122,15 +127,62 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
         private void OnDailyTick()
         {
-            Hideout hideout = Hideout.All.GetRandomElement();
-            MobileParty party = BanditPartyComponent.CreateBanditParty("devils", Clan.FindFirst(x => x.StringId == "cs_devils_raiders"),
-                null, true);
-            party.InitializeMobilePartyAroundPosition(
-                MBObjectManager.Instance.GetObject<PartyTemplateObject>(DevilsPartyTemplateId),
-                hideout.Settlement.Position2D,
-                200f, 10f);
-        }
+            try
+            {
+                Random rnd = new Random();
+                int devilsAmount = rnd.Next(100, 251);
 
+                // Iterate through all hideouts on the map
+                foreach (Hideout hideout in Hideout.All)
+                {
+                    if (hideout == null || hideout.Settlement == null)
+                    {
+                        InformationManager.DisplayMessage(new InformationMessage("Hideout or its settlement is null."));
+                        continue;
+                    }
+
+                    Clan devilsClan = Clan.FindFirst(x => x.StringId == "cs_devils_raiders");
+                    if (devilsClan == null)
+                    {
+                        InformationManager.DisplayMessage(new InformationMessage("Devils clan not found."));
+                        continue;
+                    }
+
+                    // Create the troop roster
+                    TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
+                    CharacterObject devilsBanditRaider = CharacterObject.Find("cs_devils_bandits_raider");
+                    if (devilsBanditRaider == null)
+                    {
+                        InformationManager.DisplayMessage(new InformationMessage("Devils bandit raider not found."));
+                        continue;
+                    }
+                    troopRoster.AddToCounts(devilsBanditRaider, devilsAmount);
+
+                    // Create the devils party
+                    MobileParty party = BanditPartyComponent.CreateBanditParty("devils", devilsClan, hideout, true);
+                    if (party == null)
+                    {
+                        InformationManager.DisplayMessage(new InformationMessage("Failed to create devils party."));
+                        continue;
+                    }
+
+                    // Set the custom name for the devils party
+                    party.SetCustomName(new TextObject("Devils Party"));
+
+                    // Initialize the party around the hideout position with the defined troop roster
+                    party.InitializeMobilePartyAroundPosition(
+                        troopRoster, TroopRoster.CreateDummyTroopRoster(),
+                        hideout.Settlement.Position2D,
+                        200f, 10f);
+
+                    InformationManager.DisplayMessage(new InformationMessage($"Devils spawned at {hideout.Settlement.Name} with {devilsAmount} raiders."));
+                }
+            }
+            catch (Exception ex)
+            {
+                InformationManager.DisplayMessage(new InformationMessage($"Exception in OnDailyTick: {ex.Message}"));
+            }
+        }
 
         private void OnMissionStart(IMission imission)
         {
@@ -198,7 +250,90 @@ namespace RealmsForgotten.Quest.SecondUpdate
         {
             SetDialogs();
             Instance = this;
+            InitializeDefeatDevilPartiesObjective();
         }
+
+        private void CountDevilPartyDefeat(MobileParty mobileParty, PartyBase destroyer)
+        {
+            if (destroyer.LeaderHero != null && destroyer.LeaderHero == Hero.MainHero)
+            {
+                if (mobileParty.IsBandit && !string.IsNullOrEmpty(mobileParty.StringId) && mobileParty.StringId.Contains("devils") && defeatDevilPartiesLog?.CurrentProgress > -1)
+                {
+                    defeatDevilPartiesLog.UpdateCurrentProgress(defeatDevilPartiesLog.CurrentProgress + 1);
+                    CheckDevilPartyDefeatObjective();
+                }
+            }
+        }
+
+
+
+        private void InitializeDefeatDevilPartiesObjective()
+        {
+            try
+            {
+                defeatDevilPartiesLog = AddDiscreteLog(GameTexts.FindText("rf_fifth_quest_defeat_devil_parties_log"), GameTexts.FindText("rf_fifth_quest_defeat_devil_parties_task"), 0, devilPartiesToDefeatTarget);
+                InformationManager.DisplayMessage(new InformationMessage("New objective: Defeat 10 devil parties."));
+                InformationManager.DisplayMessage(new InformationMessage("Defeated devil parties HashSet initialized."));
+            }
+            catch (Exception ex)
+            {
+                InformationManager.DisplayMessage(new InformationMessage($"Exception in InitializeDefeatDevilPartiesObjective: {ex.Message}\nStackTrace: {ex.StackTrace}"));
+            }
+        }
+
+
+
+        private void OnMobilePartyDestroyed(MobileParty mobileParty, PartyBase destroyer)
+        {
+            try
+            {
+                if (mobileParty == null || destroyer == null)
+                {
+                    return;
+                }
+
+                var mobilePartyName = mobileParty.Party != null ? mobileParty.Party.Name.ToString() : "Unnamed Party";
+                var destroyerName = destroyer.Name != null ? destroyer.Name.ToString() : "Unnamed Party";
+
+                InformationManager.DisplayMessage(new InformationMessage($"OnMobilePartyDestroyed: MobileParty ID: {mobilePartyName}, Destroyer Party: {destroyerName}"));
+            }
+            catch (Exception ex)
+            {
+                InformationManager.DisplayMessage(new InformationMessage($"Exception in OnMobilePartyDestroyed: {ex.Message}\nStackTrace: {ex.StackTrace}"));
+            }
+            CountDevilPartyDefeat(mobileParty, destroyer);
+        }
+
+
+
+
+        private void CheckDevilPartyDefeatObjective()
+        {
+            if (!isObjectiveCompleted)
+            {
+                InformationManager.DisplayMessage(new InformationMessage("Objective complete: You have defeated 10 devil parties!"));
+            }
+
+            deliverLordToAlKhuurLog.UpdateCurrentProgress(1);
+            InformationManager.DisplayMessage(new InformationMessage("Progress updated for deliverLordToAlKhuurLog."));
+
+            if (isObjectiveCompleted) // Ensure this is only called once
+            {
+                SixthQuest.StartSixthQuest();
+                CompleteQuestWithSuccess();
+            }
+        }
+
+        private void GivePlayerTroops(string troopId, int troopCount)
+        {
+            CharacterObject troop = CharacterObject.Find(troopId);
+            if (troop != null)
+            {
+                MobileParty.MainParty.AddElementToMemberRoster(troop, troopCount);
+                InformationManager.DisplayMessage(new InformationMessage($"You have received {troopCount} {troop.Name}."));
+            }
+        }
+
         protected override void SetDialogs()
         {
             Campaign.Current.ConversationManager.AddDialogFlow(OwlPersuasionFailedDialog, this);
@@ -230,8 +365,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
         {
 
         }
-        
-        
+       
         private DialogFlow FirstDialogFlow => DialogFlow.CreateDialogFlow("start", 125)
             .PlayerLine(GameTexts.FindText("rf_fifth_quest_first_dialog_1"))
             .Condition(() => talkToMonkLog == null && Hero.OneToOneConversationHero == TheOwl)
@@ -373,6 +507,9 @@ namespace RealmsForgotten.Quest.SecondUpdate
             {
                 deliverNelrogToNasorianLog.UpdateCurrentProgress(2);
                 deliverLordToAlKhuurLog = AddLog(GameTexts.FindText("rf_fifth_quest_ninth_objective"));
+
+                InitializeDefeatDevilPartiesObjective();
+
             }).CloseDialog();
 
         private bool CanDeliverNelrogsToNasorian()
@@ -388,6 +525,9 @@ namespace RealmsForgotten.Quest.SecondUpdate
             .Consequence(() =>
             {
                 deliverNelrogToNasorianLog.UpdateCurrentProgress(1);
+
+                GivePlayerTroops("vlandian_champion", 30);
+
             }).CloseDialog();
         private DialogFlow OwlTavernDefaultDialog => DialogFlow.CreateDialogFlow("start", 115)
             .PlayerLine(GameTexts.FindText("rf_owl_tavern_default"))
