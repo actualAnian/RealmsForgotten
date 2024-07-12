@@ -18,9 +18,9 @@ namespace RealmsForgotten.AiMade.Career
                 CareerChoices.Add(choice);
             }
 
-            public static CareerObject GetCareerById(string id)
+            public static CareerObject GetCareerById(CareerType type)
             {
-                return Careers.Find(career => career.Id == id);
+                return Careers.Find(career => career.Type == type);
             }
 
             public static List<CareerObject> GetAllCareers()

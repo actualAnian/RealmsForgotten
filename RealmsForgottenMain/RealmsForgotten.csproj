@@ -71,4 +71,11 @@
     <Folder Include="_Module\ModuleData\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="AiMade\Career\InitializeMercenaryContracts.cs" />
+    <Compile Remove="AiMade\Career\ContractNotificationBehavior.cs" />
+    <Compile Remove="AiMade\Career\MercenaryContractManager.cs" />
+    <Compile Remove="AiMade\Career\ContractorBehavior.cs" />
+  </ItemGroup>
+
 </Project>

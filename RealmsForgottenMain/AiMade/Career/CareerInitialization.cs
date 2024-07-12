@@ -8,7 +8,7 @@ namespace RealmsForgotten.AiMade.Career
         {
             var mercenaryCareer = new CareerObject
             {
-                Id = "Mercenary",
+                Type = CareerType.Mercenary,
                 Name = "Mercenary",
                 Tiers = new List<CareerTier>
                 {
@@ -24,7 +24,7 @@ namespace RealmsForgotten.AiMade.Career
 
             var knightCareer = new CareerObject
             {
-                Id = "Knight",
+                Type = CareerType.Knight,
                 Name = "Knight",
                 Tiers = new List<CareerTier>
                 {

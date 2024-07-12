@@ -26,6 +26,12 @@ namespace RealmsForgotten.AiMade
             ConstructContainerDefinition(typeof(Dictionary<string, List<string>>));
         }
 
+        protected override void DefineEnumTypes()
+        {
+            base.DefineEnumTypes();
+            AddEnumDefinition(typeof(CareerType), 100);
+        }
+
         protected override void DefineClassTypes()
         {
             AddClassDefinition(typeof(ExampleConfig), 1);
@@ -47,7 +53,6 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(BanditDefeatChivalryBehavior), 17);
             AddClassDefinition(typeof(CareerProgressionBehavior), 18);
             AddClassDefinition(typeof(ReligionObject), 19);
-            AddClassDefinition(typeof(ContractorBehavior), 20);
             AddClassDefinition(typeof(DefendVillagersOrCaravansBehavior), 22);
             AddClassDefinition(typeof(QuestCompletionBehavior), 23);
             AddClassDefinition(typeof(DivineShieldStateBehavior), 24);

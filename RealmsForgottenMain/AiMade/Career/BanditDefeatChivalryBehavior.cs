@@ -59,8 +59,10 @@ namespace RealmsForgotten.AiMade.Career
             if (pointsToAward > 0)
             {
                 var careerProgressionBehavior = Campaign.Current.GetCampaignBehavior<CareerProgressionBehavior>();
-                careerProgressionBehavior.AddChivalryPoints(pointsToAward, "Knight"); // Specify career
-                InformationManager.DisplayMessage(new InformationMessage($"You have defeated {banditPartiesDefeated} bandit parties and gained {pointsToAward} chivalry points!"));
+                if (careerProgressionBehavior.AddChivalryPoints(pointsToAward, CareerType.Knight))
+                {
+                    InformationManager.DisplayMessage(new InformationMessage($"You have defeated {banditPartiesDefeated} bandit parties and gained {pointsToAward} chivalry points!"));
+                }
             }
         }
 

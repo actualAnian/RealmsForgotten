@@ -11,16 +11,7 @@ namespace RealmsForgotten.AiMade.Career
         private int chivalryPointsGained;
         public override void RegisterEvents()
         {
-            CampaignEvents.MapEventStarted.AddNonSerializedListener(this, OnMapEventStarted);
             CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnMapEventEnded);
-        }
-
-        private void OnMapEventStarted(MapEvent mapEvent, PartyBase attackerParty, PartyBase defenderParty)
-        {
-            if (attackerParty != null && IsBanditParty(attackerParty) && IsVillagerOrCaravanParty(defenderParty))
-            {
-                InformationManager.DisplayMessage(new InformationMessage("Bandits are attacking villagers or a caravan!"));
-            }
         }
 
         private void OnMapEventEnded(MapEvent mapEvent)

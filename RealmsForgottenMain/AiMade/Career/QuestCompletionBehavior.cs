@@ -65,7 +65,7 @@ namespace RealmsForgotten.AiMade.Career
         {
             int pointsToAward = 5; // Award 5 chivalry points for good quests
             var careerProgressionBehavior = Campaign.Current.GetCampaignBehavior<CareerProgressionBehavior>();
-            careerProgressionBehavior.AddChivalryPoints(pointsToAward, "Knight"); // Specify the career ID
+            careerProgressionBehavior.AddChivalryPoints(pointsToAward, CareerType.Knight); // Specify the career ID
             InformationManager.DisplayMessage(new InformationMessage($"You have completed a good quest and gained {pointsToAward} chivalry points!"));
         }
 
@@ -73,7 +73,7 @@ namespace RealmsForgotten.AiMade.Career
         {
             int pointsToDeduct = 5; // Deduct 5 chivalry points for bad quests
             var careerProgressionBehavior = Campaign.Current.GetCampaignBehavior<CareerProgressionBehavior>();
-            careerProgressionBehavior.AddChivalryPoints(-pointsToDeduct, "Knight"); // Specify the career ID
+            careerProgressionBehavior.AddChivalryPoints(-pointsToDeduct, CareerType.Knight); // Specify the career ID
             InformationManager.DisplayMessage(new InformationMessage($"You have completed a bad quest and lost {pointsToDeduct} chivalry points!"));
         }
 

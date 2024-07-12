@@ -7,7 +7,7 @@ namespace RealmsForgotten.AiMade.Career
     public class CareerObject
     {
         [SaveableField(1)]
-        private string _id;
+        private CareerType _type;
 
         [SaveableField(2)]
         private string _name;
@@ -15,10 +15,10 @@ namespace RealmsForgotten.AiMade.Career
         [SaveableField(3)]
         private List<CareerTier> _tiers = new List<CareerTier>();
 
-        public string Id
+        public CareerType Type
         {
-            get => _id;
-            set => _id = value;
+            get => _type;
+            set => _type = value;
         }
 
         public string Name

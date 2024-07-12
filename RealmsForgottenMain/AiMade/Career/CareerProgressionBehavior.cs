@@ -10,39 +10,53 @@ using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.AiMade.Career
 {
+    public enum CareerType
+    {
+        Recruit,
+        Veteran,
+        Elite,
+        Commander,
+        Legendary,
+        Slayer,
+        Squire,
+        Cavalier,
+        Paladin,
+        Crusader,
+        Champion,
+        Mercenary,
+        Knight,
+        None
+    }
     public class CareerProgressionBehavior : CampaignBehaviorBase
     {
         private int playerProgress = 0;
         private int chivalryPoints = 0; // Track chivalry points
         private bool hasLegendaryBattleCry = false;
         private string currentTier = null; // Default to null to avoid wrongly applying any tier
-        private string currentCareerId = null; // Default to null
+
+        private CareerType currentCareer;// Default to null
         private bool isCareerAccepted = false; // Track if career is accepted
         private float nextNotificationTime = float.MaxValue; // Initialize to prevent immediate notifications
-        private List<MercenaryContract> availableContracts = new List<MercenaryContract>();
 
         public CareerProgressionBehavior()
         {
-            MercenaryContractManager.ContractCompleted += OnContractCompleted;
         }
 
-        public void AddChivalryPoints(int points, string careerId)
+        public bool AddChivalryPoints(int points, CareerType career)
         {
-            if (careerId == currentCareerId)
+            if (career == currentCareer)
             {
                 chivalryPoints += points;
-                InformationManager.DisplayMessage(new InformationMessage($"Added {points} chivalry points to the {careerId} career."));
                 CheckAndApplyTierProgression("Chivalry Points");
+                return true;
             }
-            else
-            {
-                InformationManager.DisplayMessage(new InformationMessage($"Attempted to add {points} chivalry points, but the current career is {currentCareerId}. No points added."));
-            }
+            InformationManager.DisplayMessage(new InformationMessage($"Attempted to add {points} chivalry points, but the current career is {currentCareer}. No points added."));
+            return false;
         }
 
         public bool IsCurrentCareerMercenary()
         {
-            return currentCareerId == "Mercenary";
+            return currentCareer == CareerType.Mercenary;
         }
 
         public bool CanRecruitFromCulture(string cultureId, int requiredRelation)
@@ -66,10 +80,17 @@ namespace RealmsForgotten.AiMade.Career
         public override void RegisterEvents()
         {
             CampaignEvents.HeroLevelledUp.AddNonSerializedListener(this, OnHeroLeveledUp);
-            CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnMapEventEnded);
             CampaignEvents.OnMissionStartedEvent.AddNonSerializedListener(this, OnMissionStarted);
             CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, OnDailyTick);
             CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, OnGameLoaded);
+            CampaignEvents.OnCharacterCreationIsOverEvent.AddNonSerializedListener(this, OnCharacterCreationEnd);
+        }
+
+        private void OnCharacterCreationEnd()
+        {
+            isCareerAccepted = true;
+            ApplyInitialCareerTier(currentCareer);
+            InformationManager.DisplayMessage(new InformationMessage($"You started the {currentCareer} career. Initial tier applied: {currentTier}."));
         }
 
         private void OnMissionStarted(IMission imission)
@@ -112,9 +133,9 @@ namespace RealmsForgotten.AiMade.Career
         private void ApplyCareer()
         {
             // Logic to apply career goes here based on game conditions or player choice
-            if (currentCareerId != null && !isCareerAccepted)
+            if (currentCareer != CareerType.None && !isCareerAccepted)
             {
-                StartCareer(currentCareerId);
+                StartCareer(currentCareer);
             }
         }
 
@@ -136,24 +157,7 @@ namespace RealmsForgotten.AiMade.Career
                 CheckAndApplyTierProgression("Reach Level");
             }
         }
-
-        private void OnMapEventEnded(MapEvent mapEvent)
-        {
-            if (mapEvent.IsPlayerMapEvent && Hero.MainHero.PartyBelongedTo.IsActive)
-            {
-                MercenaryContractManager.CheckObjectives(Hero.MainHero);
-                UpdateProgression("Complete Battles", 1);
-            }
-        }
-
-        private void OnContractCompleted(object sender, ContractCompletionEvent e)
-        {
-            if (e.Hero == Hero.MainHero)
-            {
-                UpdateProgression("Complete Contracts", 1);
-            }
-        }
-
+        
         private void UpdateProgression(string requirement, int value)
         {
             playerProgress += value;
@@ -207,14 +211,14 @@ namespace RealmsForgotten.AiMade.Career
 
         private void CheckAndApplyTierProgression(string requirement)
         {
-            var career = CareerManager.GetCareerById(currentCareerId);
+            var career = CareerManager.GetCareerById(currentCareer);
             if (career == null) return;
 
             foreach (var tier in career.Tiers)
             {
                 bool requirementMet = false;
 
-                if (tier.ProgressionRequirement == requirement && tier.Name == GetNextTierName(currentTier, currentCareerId))
+                if (tier.ProgressionRequirement == requirement && tier.Name == GetNextTierName(currentTier, currentCareer))
                 {
                     if (requirement == "Reach Level" && playerProgress >= tier.RequiredValue)
                     {
@@ -240,9 +244,9 @@ namespace RealmsForgotten.AiMade.Career
             }
         }
 
-        private string GetNextTierName(string currentTier, string careerId)
+        private string GetNextTierName(string currentTier, CareerType careerType)
         {
-            var career = CareerManager.GetCareerById(careerId);
+            var career = CareerManager.GetCareerById(careerType);
             if (career == null) return null;
 
             for (int i = 0; i < career.Tiers.Count; i++)
@@ -397,7 +401,7 @@ namespace RealmsForgotten.AiMade.Career
             dataStore.SyncData("playerProgress", ref playerProgress);
             dataStore.SyncData("hasLegendaryBattleCry", ref hasLegendaryBattleCry);
             dataStore.SyncData("currentTier", ref currentTier);
-            dataStore.SyncData("currentCareerId", ref currentCareerId);
+           // dataStore.SyncData("currentCareerId", ref currentCareer);
             dataStore.SyncData("chivalryPoints", ref chivalryPoints);
             ChivalryManager.SyncData(dataStore);
         }
@@ -406,11 +410,6 @@ namespace RealmsForgotten.AiMade.Career
         {
             // Implement logic to check if the hero is a Slayer
             return hero != null && hero.CharacterObject.StringId == "slayer"; // Example check
-        }
-
-        public void SetCurrentCareer(string careerId)
-        {
-            currentCareerId = careerId;
         }
 
         // Add methods to handle gaining Chivalry points
@@ -422,32 +421,29 @@ namespace RealmsForgotten.AiMade.Career
         // Example of gaining Chivalry points on specific events
         private void OnQuestCompleted(QuestBase quest)
         {
-            if (quest.QuestGiver == Hero.MainHero && currentCareerId == "Knight")
+            if (quest.QuestGiver == Hero.MainHero && currentCareer == CareerType.Knight)
             {
                 GainChivalry(Hero.MainHero, 10); // Gain 10 Chivalry points for completing a quest
             }
         }
-        public void StartCareer(string careerId)
+        public void StartCareer(CareerType career)
         {
-            currentCareerId = careerId;
-            isCareerAccepted = true;
-            ApplyInitialCareerTier(careerId);
-            InformationManager.DisplayMessage(new InformationMessage($"You started the {careerId} career. Initial tier applied: {currentTier}."));
+            currentCareer = career;
         }
 
-        private void ApplyInitialCareerTier(string careerId)
+        private void ApplyInitialCareerTier(CareerType careerType)
         {
-            var career = CareerManager.GetCareerById(careerId);
+            var career = CareerManager.GetCareerById(careerType);
             if (career != null)
             {
                 CareerTier initialTier = null;
 
                 // Determine the initial tier based on the career type
-                if (careerId == "Mercenary" && career.Tiers.Count > 0)
+                if (careerType == CareerType.Mercenary && career.Tiers.Count > 0)
                 {
                     initialTier = career.Tiers.FirstOrDefault(t => t.Name == "Recruit");
                 }
-                else if (careerId == "Knight" && career.Tiers.Count > 0)
+                else if (careerType == CareerType.Knight && career.Tiers.Count > 0)
                 {
                     initialTier = career.Tiers.FirstOrDefault(t => t.Name == "Squire");
                 }
@@ -457,16 +453,16 @@ namespace RealmsForgotten.AiMade.Career
                     ApplyTierBenefits(initialTier);
                     currentTier = initialTier.Name;
                     NotifyTierProgression(initialTier);
-                    InformationManager.DisplayMessage(new InformationMessage($"Initial career tier '{initialTier.Name}' applied for career '{careerId}'."));
+                    InformationManager.DisplayMessage(new InformationMessage($"Initial career tier '{initialTier.Name}' applied for career '{careerType}'."));
                 }
                 else
                 {
-                    InformationManager.DisplayMessage(new InformationMessage($"Failed to apply initial career tier for career '{careerId}'."));
+                    InformationManager.DisplayMessage(new InformationMessage($"Failed to apply initial career tier for career '{careerType}'."));
                 }
             }
             else
             {
-                InformationManager.DisplayMessage(new InformationMessage($"Career '{careerId}' not found."));
+                InformationManager.DisplayMessage(new InformationMessage($"Career '{careerType}' not found."));
             }
         }
     }

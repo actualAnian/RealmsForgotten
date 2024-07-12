@@ -30,12 +30,7 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new MerchantEventBehavior());
             campaignGameStarter.AddBehavior(new StorytellerBehavior());
             campaignGameStarter.AddBehavior(new ListeningToStoryBehavior());
-            campaignGameStarter.AddBehavior(new CareerSelectionBehavior());
-            campaignGameStarter.AddBehavior(new CareerProgressionBehavior());
-            campaignGameStarter.AddBehavior(new ContractNotificationBehavior());
-            campaignGameStarter.AddBehavior(new BanditRecruitmentBehavior());
             campaignGameStarter.AddBehavior(new RaidLootBonusBehavior());
-            campaignGameStarter.AddBehavior(new ContractorBehavior());
             campaignGameStarter.AddBehavior(new DefendVillagersOrCaravansBehavior());
             campaignGameStarter.AddBehavior(new QuestCompletionBehavior());
             campaignGameStarter.AddBehavior(new BanditDefeatChivalryBehavior());
@@ -43,16 +38,8 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new BattleCryStateBehavior());
             campaignGameStarter.AddBehavior(new VisitLibrary());
             campaignGameStarter.AddBehavior(new CareerProgressionBehavior());
-            campaignGameStarter.AddBehavior(new CareerSelectionBehavior());
             campaignGameStarter.AddBehavior(new BanditHideoutClearedBehavior());
-            campaignGameStarter.AddBehavior(new BanditDefeatChivalryBehavior());
-            campaignGameStarter.AddBehavior(new ContractNotificationBehavior());
-            campaignGameStarter.AddBehavior(new DefendVillagersOrCaravansBehavior());
-            campaignGameStarter.AddBehavior(new QuestCompletionBehavior());
-            campaignGameStarter.AddBehavior(new DivineShieldStateBehavior());
             campaignGameStarter.AddBehavior(new BanditRecruitmentBehavior());
-            campaignGameStarter.AddBehavior(new BattleCryStateBehavior());
-            campaignGameStarter.AddBehavior(new RealmsForgottenCampaignBehavior());
         }
 
         public static void InitializeCareerSystem()
