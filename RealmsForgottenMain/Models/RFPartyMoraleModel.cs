@@ -70,8 +70,8 @@ namespace RealmsForgotten.Models
                 float moraleFactor = amount * 0.015f;
                 baseNumber.AddFactor(moraleFactor, new TextObject("{=priest_morale_bonus}Priests Morale Bonus"));
             }
-            
-            
+
+
             return baseNumber;
         }
     }

@@ -81,5 +81,7 @@ namespace RealmsForgotten
 
         internal static List<string>  PlayerSelectableRaces { get { return _playerSelectableRaces; } }
         private static List<string> _playerSelectableRaces = new() { "human", "elvean", "undead", "mull", "half_giant", "Xilantlacay" };
+    
+        public static bool IsMissionInitialized = false;
     }
 }

@@ -12,16 +12,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3faa4014-e50b-4700-8fca-3aa0635acfa2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/RealmsForgottenMain/AiMade/Career/CareerScreenManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.RealmsForgotten/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.RealmsForgotten/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RFCustomScenes/ArenaCampaignBehavior.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RFCustomScenes/ArenaCampaignBehavior.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/Behaviors/RFFaithBehaviors.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/Behaviors/RFFaithBehaviors.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/Models/RFAgentApplyDamageModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/Models/RFAgentApplyDamageModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/Models/RFVolunteerModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/Models/RFVolunteerModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/Properties/launchSettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/Quest/ThirdUpdate/FifthQuest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/Quest/ThirdUpdate/FifthQuest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/AiMade/AiSubModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/AiMade/AiSubModule.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/AiMade/Career/BanditDefeatChivalryBehavior.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/AiMade/Career/BanditDefeatChivalryBehavior.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/AiMade/Career/CareerInitialization.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/AiMade/Career/CareerInitialization.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/AiMade/Career/CareerManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/AiMade/Career/CareerManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/AiMade/Career/CareerObject.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/AiMade/Career/CareerObject.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/AiMade/Career/CareerSelectionBehavior.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/AiMade/Career/ContractCompletionEvent.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/AiMade/Career/ContractNotificationBehavior.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/AiMade/Career/ContractorBehavior.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/AiMade/Career/DefendVillagersOrCaravansBehavior.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/AiMade/Career/DefendVillagersOrCaravansBehavior.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/AiMade/Career/InitializeMercenaryContracts.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/AiMade/Career/MercenaryContractManager.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/AiMade/Career/QuestCompletionBehavior.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/AiMade/Career/QuestCompletionBehavior.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/AiMade/Career/RealmsForgottenCareerNotification.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/AiMade/SaveableTypeDefiner.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/AiMade/SaveableTypeDefiner.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/Managers/RFCampaignManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/Managers/RFCampaignManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/Quest/FirstQuest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/Quest/FirstQuest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/RFCharacterCreationContent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/RFCharacterCreationContent.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/RealmsForgotten.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/RealmsForgotten.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RealmsForgottenMain/SubModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RealmsForgottenMain/SubModule.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +41,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="dev" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -50,17 +60,53 @@
 }</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/09142970cf5241eea3e1a44f7b1bd7527788/33/f7574776/GauntletLayer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1d29fe86dd7845ba87632c52f8b3741c24788/ef/bc877ca5/DefinitionContext.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/4e2cc7f930c647b08facdd031052ba4617a660/9c/5267e793/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/64fe2eb825c9440da4938d9a99618c7f24e388/be/592372c9/Module.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/98bbfba5f166460ca758b127f47fc787465188/60/d84551ed/MbEvent`3.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/98bbfba5f166460ca758b127f47fc787465188/75/46bbe514/CampaignBehaviorDataStore.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/98bbfba5f166460ca758b127f47fc787465188/7f/10540e7b/CharacterCreationContentBase.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/98bbfba5f166460ca758b127f47fc787465188/b6/f5a3daf5/CampaignGameStarter.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/98bbfba5f166460ca758b127f47fc787465188/c6/2c7b4c50/SettlementComponent.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/98bbfba5f166460ca758b127f47fc787465188/e1/05ff613b/SandboxCharacterCreationContent.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/b7513305042d41128726d7378f1f9ba4531030/47/a4f55087/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c089a2f022d44d368e35e6e205e99be7d188/84/2d5ec09c/WidgetPrefab.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/4e0457ecf60b9a3ae671f1bb1c1388d494bd62a9c22ddcc89c0554a718e8acc/MFHideoutManager.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/RFEffects/ExceptionHandler.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/RealmsForgottenMain/Quest/SecondUpdate/FourthQuest.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/RealmsForgottenMain/Quest/ThirdUpdate/FifthQuest.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/RealmsForgottenMain/SubModule.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/AiSubModule.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/AiSubModule.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerInitialization.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerProgressionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pedro/Documents/Projects/RealmsForgotten/RealmsForgottenMain/AiMade/Career/CareerSelectionBehavior.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -80,7 +126,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Cephas369&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
