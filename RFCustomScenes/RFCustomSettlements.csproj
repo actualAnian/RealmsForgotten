@@ -15,7 +15,6 @@
 
 
 	<ItemGroup>
-	  <ProjectReference Include="..\BehaviorTreeWrapper\BehaviorTreeWrapper.csproj" />
 	  <ProjectReference Include="..\HuntableHerds\HuntableHerds.csproj" />
 	  <ProjectReference Include="..\RealmsForgottenMain\RealmsForgotten.csproj" />
 	</ItemGroup>
