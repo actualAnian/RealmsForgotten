@@ -32,6 +32,11 @@ using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
+using Bannerlord.Module1.Models;
+using Bannerlord.Module1.Religions;
+using CampaignBehaviors;
+using Bannerlord.Module1;
+
 
 namespace RealmsForgotten
 {
@@ -64,7 +69,7 @@ namespace RealmsForgotten
             "sturgia",
             "vlandia"
         };
-        
+
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
             if (gameStarterObject is CampaignGameStarter campaignGameStarter)
@@ -74,7 +79,12 @@ namespace RealmsForgotten
                 //Faith bhv comes before cultures bhv
                 campaignGameStarter.AddBehavior(new RFFaithCampaignBehavior());
                 campaignGameStarter.AddBehavior(new CulturesCampaignBehavior());
-                
+                var ceremonyQuestBehavior = new CeremonyQuestBehavior();
+                var processionEscortQuestBehavior = new ProcessionEscortQuestBehavior();
+                var priestCampaignBehavior = new PriestCampaignBehavior(ceremonyQuestBehavior, processionEscortQuestBehavior);
+                var customItemCategories = new RealmsForgotten.Behaviors.CustomItemCategories();
+                customItemCategories.Initialize();
+
                 campaignGameStarter.AddModel(new RFAgentApplyDamageModel());
                 campaignGameStarter.AddModel(new RFBuildingConstructionModel());
                 campaignGameStarter.AddModel(new RFCombatXpModel());
@@ -84,19 +94,43 @@ namespace RealmsForgotten
                 campaignGameStarter.AddModel(new RFPrisonerRecruitmentCalculationModel());
                 campaignGameStarter.AddModel(new RFRaidModel());
                 campaignGameStarter.AddModel(new RFVolunteerModel());
-                campaignGameStarter.AddModel(new RFWageModel());
                 campaignGameStarter.AddModel(new RFBattleCaptainModel());
                 campaignGameStarter.AddModel(new RFInventoryCapacityModel());
-                
+                campaignGameStarter.AddModel(new RaceSpeedBonusModel());
+                campaignGameStarter.AddModel(new DemonRaceDamageModel());
+               
                 new RFAttributes().Initialize();
                 new RFSkills().Initialize();
                 new RFSkillEffects().InitializeAll();
                 new RFPerks().Initialize();
 
                 ReadConfigFile();
+
+                // Call the AddCampaignBehaviors method here
+                AddCampaignBehaviors(campaignGameStarter);
             }
             if (CustomSettings.Instance != null)
                 CheckInvalidKeys();
+        }
+
+        private void AddCampaignBehaviors(CampaignGameStarter campaignGameStarter)
+        {
+            campaignGameStarter.AddBehavior(new HouseTroopsTownsBehavior());
+            campaignGameStarter.AddBehavior(new CultureAppropriateTroopsBehavior());
+            campaignGameStarter.AddBehavior(new MaestersTowerBehavior());
+            campaignGameStarter.AddBehavior(new HouseTroopsCastleBehavior());
+            campaignGameStarter.AddBehavior(new HelpPeregrineBehavior());
+            campaignGameStarter.AddBehavior(new MerchantEventBehavior());
+            campaignGameStarter.AddBehavior(new StorytellerBehavior());
+            campaignGameStarter.AddBehavior(new ListeningToStoryBehavior());
+            campaignGameStarter.AddBehavior(new RecruitPrisonersMissionBehavior());
+            campaignGameStarter.AddBehavior(new KeepItemsAfterBattleBehavior());
+            campaignGameStarter.AddBehavior(new TavernRecruitmentBehavior());
+            campaignGameStarter.AddBehavior(new AggressiveSturgiaBehavior());
+            campaignGameStarter.AddBehavior(new HumanCohesionBehavior());
+            campaignGameStarter.AddBehavior(new VisitLibrary());
+            campaignGameStarter.AddBehavior(new BanditPartyGrowthBehavior());
+
         }
 
         private void CheckInvalidKeys()
@@ -140,14 +174,16 @@ namespace RealmsForgotten
         {
             if (mission != null)
             {
-                if ((mission.Mode == MissionMode.Battle || mission.Mode == MissionMode.StartUp) && mission.CombatType != Mission.MissionCombatType.ArenaCombat);
+                if ((mission.Mode == MissionMode.Battle || mission.Mode == MissionMode.StartUp) && mission.CombatType != Mission.MissionCombatType.ArenaCombat)
                 {
                     mission.AddMissionBehavior(new RFEnchantedWeaponsMissionBehavior());
                     mission.AddMissionBehavior(new NecromancerStaffMissionBehavior());
+                    mission.AddMissionBehavior(new SpecialDamageMissionLogic());
+                    mission.AddMissionBehavior(new RealmsForgotten.Models.DemonLordsAmbushLogic());
                 }
-                
+
                 mission.AddMissionBehavior(new SpellAmmoMissionBehavior());
-                
+
                 if (Campaign.Current != null)
                 {
                     ItemRosterElement elixir = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("elixir_rfmisc"));
@@ -155,6 +191,8 @@ namespace RealmsForgotten
                     if (!elixir.IsEmpty || !berserker.IsEmpty)
                         mission.AddMissionBehavior(new PotionsMissionBehavior(elixir, berserker));
                 }
+
+                mission.AddMissionBehavior(new HealOnKillMissionBehavior()); // Add this line
             }
         }
         protected override void OnBeforeInitialModuleScreenSetAsRoot() { }
