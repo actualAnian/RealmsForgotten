@@ -5,6 +5,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using HarmonyLib;
+using RealmsForgotten.AiMade.Career;
+using RealmsForgotten.AiMade.Models;
 using RealmsForgotten.CustomSkills;
 using SandBox.GameComponents;
 using TaleWorlds.Core;
@@ -99,7 +101,11 @@ namespace RealmsForgotten.Models
                     if (DamageFactor > 0)
                         baseNumber *= DamageFactor;
                 }
+                
+               CrusaderDamageModel.CalculateDamage(attackedCharacterObject, attackedCharacterObject, ref baseNumber);
             }
+            DemonRaceDamageModel.CalculateDamage(attackInformation.AttackerAgent, weapon, ref baseNumber);
+            
 
             return baseNumber;
         }

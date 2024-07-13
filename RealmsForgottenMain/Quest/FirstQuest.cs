@@ -457,7 +457,7 @@ namespace RealmsForgotten.Quest
                 .Condition(() => Hero.OneToOneConversationHero?.PartyBelongedTo == null && Hero.OneToOneConversationHero?.Clan?.StringId == "hidden_hand").NpcLine(GameTexts.FindText("rf_first_quest_hidden_hand_text_prisoner_2").ToString())
                 .PlayerLine(GameTexts.FindText("rf_first_quest_hidden_hand_text_prisoner_3").ToString()).NpcLine(GameTexts.FindText("rf_first_quest_hidden_hand_text_prisoner_4").ToString());
             private DialogFlow PlayerDeliverPrisonersToQueen() => DialogFlow.CreateDialogFlow("start", 125).PlayerLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_1").ToString())
-                .Condition(() => PlayerHavePrisoners && !_refusedQueenMapQuest).NpcLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_2").ToString())
+                    .Condition(() => PlayerHavePrisoners && !_refusedQueenMapQuest).NpcLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_2").ToString())
                 .PlayerLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_3").ToString()).NpcLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_4").ToString()).PlayerLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_5").ToString())
                 .NpcLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_6").ToString()).NpcLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_7").ToString()).Consequence(DeliverPrisonersToQueen)
                 .BeginPlayerOptions()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RealmsForgotten.AiMade.Career;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem;
 
@@ -21,6 +22,7 @@ namespace RealmsForgotten.Models
                 if (buyerKingdom.IsAtWarWith(sellerHero.HomeSettlement.MapFaction) || (buyerHero.Clan?.Influence <= 0 && buyerHero?.Culture != sellerHero?.Culture))
                     return 0;
             }
+            MercenaryVolunteerModel.MaximumIndexHeroCanRecruitFromHero(buyerHero, sellerHero, ref baseValue);
 
             return baseValue;
         }

@@ -52,6 +52,9 @@
       <HintPath>%(Identity)</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="MCMv5">
+      <HintPath>_Module\bin\Win64_Shipping_Client\MCMv5.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
@@ -64,22 +67,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="AiMade\" />
     <Folder Include="_Module\ModuleData\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Properties\Settings.Designer.cs">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
+    <Compile Remove="AiMade\Career\InitializeMercenaryContracts.cs" />
+    <Compile Remove="AiMade\Career\ContractNotificationBehavior.cs" />
+    <Compile Remove="AiMade\Career\MercenaryContractManager.cs" />
+    <Compile Remove="AiMade\Career\ContractorBehavior.cs" />
   </ItemGroup>
 
 </Project>

@@ -17,6 +17,7 @@ using TaleWorlds.CampaignSystem.Extensions;
 using System.Linq;
 using System.Reflection;
 using HarmonyLib;
+using RealmsForgotten.AiMade.Career;
 
 namespace RealmsForgotten
 {
@@ -52,6 +53,8 @@ namespace RealmsForgotten
                 yield break;
             }
         }
+
+        private CareerType selectedCareer = CareerType.None;
 
         protected override void OnCultureSelected()
         {
@@ -270,7 +273,7 @@ namespace RealmsForgotten
         {
             SetParentAndOccupationType(characterCreation, 1, OccupationTypes.Retainer);
         }
-
+        
         private void AqarunWariorSlaveOnConsequence(CharacterCreation characterCreation)
         {
             SetParentAndOccupationType(characterCreation, 2, OccupationTypes.Mercenary);
@@ -913,6 +916,7 @@ namespace RealmsForgotten
         {
             ChooseCharacterEquipment(characterCreation, StartType.Mercenary);
             this.Manager.SetStoryOption(3);
+            Campaign.Current.GetCampaignBehavior<CareerProgressionBehavior>().StartCareer(CareerType.Mercenary);
         }
         private Equipment getMaleEquipment(IEnumerable<Equipment> eq) { return eq.FirstOrDefault(); }
         private Equipment getFemaleEquipment(IEnumerable<Equipment> eq) { return eq.LastOrDefault(); }
@@ -971,6 +975,7 @@ namespace RealmsForgotten
         {
             ChooseCharacterEquipment(characterCreation, StartType.VassalFief);
             this.Manager.SetStoryOption(8);
+            Campaign.Current.GetCampaignBehavior<CareerProgressionBehavior>().StartCareer(CareerType.Knight);
         }
 
         protected void EscapedStartOnConsequence(CharacterCreation characterCreation)
