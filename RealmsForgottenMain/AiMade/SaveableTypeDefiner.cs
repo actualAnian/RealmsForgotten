@@ -63,7 +63,6 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(CareerManager), 29);
             AddClassDefinition(typeof(CareerObject), 30);
             AddClassDefinition(typeof(CareerChoiceObject), 31);
-            AddClassDefinition(typeof(BanditRecruitmentBehavior), 32);
             AddClassDefinition(typeof(ReligionsManager), 33);
             AddClassDefinition(typeof(BattleCryStateBehavior), 34);
             AddClassDefinition(typeof(HashSet<string>), 35);

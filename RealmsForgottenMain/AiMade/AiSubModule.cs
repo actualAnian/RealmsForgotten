@@ -39,7 +39,6 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new VisitLibrary());
             campaignGameStarter.AddBehavior(new CareerProgressionBehavior());
             campaignGameStarter.AddBehavior(new BanditHideoutClearedBehavior());
-            campaignGameStarter.AddBehavior(new BanditRecruitmentBehavior());
         }
 
         public static void InitializeCareerSystem()
