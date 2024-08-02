@@ -112,7 +112,7 @@ namespace RealmsForgotten.AiMade.Career
                     ApplyCareer();
                     InformationManager.DisplayMessage(new InformationMessage("Career Accepted"));
                     isCareerAccepted = true;
-                    nextNotificationTime = float.MaxValue; // To prevent further notifications
+                    nextNotificationTime = float.MaxValue;
                 }
                 else
                 {
@@ -129,7 +129,7 @@ namespace RealmsForgotten.AiMade.Career
         private bool CheckCareerConditions()
         {
             // Implement your condition check logic here
-            return true; // Return true if conditions are met
+            return true;
         }
 
         private void ApplyCareer()
