@@ -1,24 +1,27 @@
 ﻿using RealmsForgotten.AiMade.Career;
 using RealmsForgotten.AiMade.Models;
+using RealmsForgotten.AiMade.Patches;
 using RealmsForgotten.AiMade.Religions;
+using RealmsForgotten.Behaviors;
+using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.InputSystem;
 
 namespace RealmsForgotten.AiMade
 {
     public static class AiSubModule
     {
+        public static readonly Dictionary<string, InputKey> PossibleKeys = new();
+        
         public static void AddCampaignBehaviors(CampaignGameStarter campaignGameStarter)
         {
             // Initialize quest behaviors
-            var ceremonyQuestBehavior = new CeremonyQuestBehavior();
-            var processionEscortQuestBehavior = new ProcessionEscortQuestBehavior();
-            var priestCampaignBehavior = new PriestCampaignBehavior(ceremonyQuestBehavior, processionEscortQuestBehavior);
+           
+            var customItemCategories = new RealmsForgotten.Behaviors.CustomItemCategories();
+            customItemCategories.Initialize();
 
             // Add quest behaviors
-            campaignGameStarter.AddBehavior(ceremonyQuestBehavior);
-            campaignGameStarter.AddBehavior(processionEscortQuestBehavior);
-            campaignGameStarter.AddBehavior(priestCampaignBehavior);
-
+          
             // Add other behaviors
             campaignGameStarter.AddBehavior(new MercenaryOfferBehavior());
             campaignGameStarter.AddBehavior(new HouseTroopsTownsBehavior());
@@ -39,6 +42,13 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new VisitLibrary());
             campaignGameStarter.AddBehavior(new CareerProgressionBehavior());
             campaignGameStarter.AddBehavior(new BanditHideoutClearedBehavior());
+            campaignGameStarter.AddBehavior(new AggressiveSturgiaBehavior());
+            campaignGameStarter.AddBehavior(new HumanCohesionBehavior());
+            campaignGameStarter.AddBehavior(new BanditPartyGrowthBehavior());
+            campaignGameStarter.AddBehavior(new BanditHordeBehavior());
+            campaignGameStarter.AddBehavior(new UndeadHordeBehavior());
+            campaignGameStarter.AddBehavior(new BarbarianHordeInvasion());
+            campaignGameStarter.AddBehavior(new ADODInnBehavior());
         }
 
         public static void InitializeCareerSystem()

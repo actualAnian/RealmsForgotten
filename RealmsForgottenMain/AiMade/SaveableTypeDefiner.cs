@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using RealmsForgotten.AiMade.Career;
+using RealmsForgotten.AiMade.Patches;
 using RealmsForgotten.AiMade.Religions;
+using RealmsForgotten.Behaviors;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.SaveSystem;
 
@@ -35,9 +37,7 @@ namespace RealmsForgotten.AiMade
         protected override void DefineClassTypes()
         {
             AddClassDefinition(typeof(ExampleConfig), 1);
-            AddClassDefinition(typeof(CeremonyQuestBehavior), 2);
             AddClassDefinition(typeof(MaestersTowerBehavior), 3);
-            AddClassDefinition(typeof(PriestCampaignBehavior), 4);
             AddClassDefinition(typeof(MerchantEventBehavior), 5);
             AddClassDefinition(typeof(DuelCampaignBehavior), 6);
             AddClassDefinition(typeof(Story2Behavior), 7);
@@ -48,11 +48,11 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(CultureAppropriateTroopsBehavior), 12);
             AddClassDefinition(typeof(HouseTroopsTownsBehavior), 13);
             AddClassDefinition(typeof(RecruitPrisonersMissionBehavior), 14);
-            AddClassDefinition(typeof(ProcessionEscortQuestBehavior), 15);
             AddClassDefinition(typeof(BanditHideoutClearedBehavior), 16);
             AddClassDefinition(typeof(BanditDefeatChivalryBehavior), 17);
             AddClassDefinition(typeof(CareerProgressionBehavior), 18);
             AddClassDefinition(typeof(ReligionObject), 19);
+            AddClassDefinition(typeof(ADODInnBehavior), 20);
             AddClassDefinition(typeof(DefendVillagersOrCaravansBehavior), 22);
             AddClassDefinition(typeof(QuestCompletionBehavior), 23);
             AddClassDefinition(typeof(DivineShieldStateBehavior), 24);
@@ -65,7 +65,14 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(CareerChoiceObject), 31);
             AddClassDefinition(typeof(ReligionsManager), 33);
             AddClassDefinition(typeof(BattleCryStateBehavior), 34);
-            AddClassDefinition(typeof(HashSet<string>), 35);
+            AddClassDefinition(typeof(BanditPartyGrowthBehavior), 35);
+            AddClassDefinition(typeof(AggressiveSturgiaBehavior), 36);
+            AddClassDefinition(typeof(HumanCohesionBehavior), 37);
+            AddClassDefinition(typeof(HashSet<string>), 38);
+            AddClassDefinition(typeof(BanditHordeBehavior), 39);
+            AddClassDefinition(typeof(DuelsBehavior), 41);
+            AddClassDefinition(typeof(BarbarianHordeInvasion), 42);
+            AddClassDefinition(typeof(UndeadHordeBehavior), 43);
         }
     }
 }
