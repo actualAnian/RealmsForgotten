@@ -906,52 +906,59 @@ namespace RealmsForgotten
             characterCreationCategory.AddCategoryOption(new("{=CulturedStart46}Escaping from your captor", null), new(), null, 0, 0, 0, new(this.EscapingLocationOnCondition), new(this.EscapingLocationOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart47}Having just escaped", null), null, 0, 0, 0, 0, 0);
             characterCreation.AddNewMenu(characterCreationMenu);
         }
-        public void AddCultureStartMenu(CharacterCreation characterCreation)
-        {
+     public void AddCultureStartMenu(CharacterCreation characterCreation)
+{
 
-            CharacterCreationMenu characterCreationMenu = new(new("{=CulturedStart07}Start Options", null), new("{=CulturedStart08}Who are you in Aeurth...", null), new CharacterCreationOnInit(this.StartOnInit), CharacterCreationMenu.MenuTypes.MultipleChoice);
-            CharacterCreationCategory characterCreationCategory = characterCreationMenu.AddMenuCategory(null);
-            characterCreationCategory.AddCategoryOption(new("{=CulturedStart09}A commoner (Default Start)", null), new(), null, 0, 0, 0, null, new(this.DefaultStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart10}Setting off with your Father, Mother, Brother and your two younger siblings to a new town you'd heard was safer. But you did not make it.", null), null, 0, 0, 0, 0, 0);
-            characterCreationCategory.AddCategoryOption(new("{=CulturedStart11}A budding caravanner", null), new MBList<SkillObject>
-            {
-                DefaultSkills.Trade
-            }, null, 1, 25, 0, null, new(this.MerchantStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart12}With what savings you could muster you purchased some mules and mercenaries." + $"\n{startingSkillMult[StartType.Merchant]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 0, 0, 0, 0);
-            characterCreationCategory.AddCategoryOption(new("{=CulturedStart13}A noble of {CULTURE} in exile", null), new MBList<SkillObject>
-            {
-                DefaultSkills.Leadership
-            }, null, 1, 50, 0, null, new(this.ExiledStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart14}Forced into exile after your parents were executed for suspected treason. With only your family's bodyguard you set off. Should you return you'd be viewed as a criminal." + $"\n{startingSkillMult[StartType.Exiled]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 150, 0, 0, 0);
-            characterCreationCategory.AddCategoryOption(new("{=CulturedStart15}In a failing mercenary company", null), new MBList<SkillObject>
-            {
-                DefaultSkills.Tactics
-            }, null, 1, 50, 0, null, new(this.MercenaryStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart16}With men deserting over lack of wages, your company leader was found dead, and you decided to take your chance and lead." + $"\n{startingSkillMult[StartType.Mercenary]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 50, 0, 0, 0);
-            characterCreationCategory.AddCategoryOption(new("{=CulturedStart17}A cheap outlaw", null), new MBList<SkillObject>
-            {
-                DefaultSkills.Roguery
-            }, null, 1, 25, 0, null, new(this.LooterStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart18}Left impoverished from war, you found a group of like-minded ruffians who were desperate to get by." + $"\n{startingSkillMult[StartType.Looter]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 0, 0, 0, 0);
-            characterCreationCategory.AddCategoryOption(new("{=CulturedStart19}A new vassal of {CULTURE}", null), new MBList<SkillObject>
-            {
-                DefaultSkills.Steward
-            }, null, 1, 50, 0, null, new(this.VassalStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart20}A young noble who came into an arrangement with the king for a chance at land." + $"\n{startingSkillMult[StartType.VassalNoFief]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 150, 0, 0, 0);
-            characterCreationCategory.AddCategoryOption(new("{=CulturedStart21}Leading part of {CULTURE}", null), new MBList<SkillObject>
-            {
-                DefaultSkills.Leadership,
-                DefaultSkills.Steward
-            }, DefaultCharacterAttributes.Social, 1, 50, 1, null, new(this.KingdomStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart22}With the support of companions you have gathered an army. With limited funds and food you decided it's time for action." + $"\n{startingSkillMult[StartType.KingdomRuler]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 900, 0, 0, 0);
-            characterCreationCategory.AddCategoryOption(new("{=CulturedStart23}You acquired a castle", null), new MBList<SkillObject>
-            {
-                DefaultSkills.Leadership,
-                DefaultSkills.Steward
-            }, DefaultCharacterAttributes.Social, 1, 25, 1, null, new(this.CastleRulerStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart24}You acquired a castle through your own means and declared yourself a kingdom for better or worse." + $"\n{startingSkillMult[StartType.CastleRuler]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 900, 0, 0, 0);
-            characterCreationCategory.AddCategoryOption(new("{=CulturedStart25}A landed vassal of {CULTURE}", null), new MBList<SkillObject>
-            {
-                DefaultSkills.Steward
-            }, null, 1, 50, 0, null, new(this.LandedVassalStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart26}A young noble who came into an arrangement with the king for land." + $"\n{startingSkillMult[StartType.VassalFief]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 150, 0, 0, 0);
-            characterCreationCategory.AddCategoryOption(new("{=CulturedStart27}A wanderer mystic of {CULTURE}", null), new MBList<SkillObject>
-            {
-                RFSkills.Arcane
-            }, null, 1, 10, 0, null, new(this.EscapedStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart28}A mystic peregrin in pursuit of arcane misteries." + $"\n{startingSkillMult[StartType.EscapedPrisoner]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 0, 0, 0, 0);
-            characterCreation.AddNewMenu(characterCreationMenu);
-        }
+    CharacterCreationMenu characterCreationMenu = new(new("{=CulturedStart07}Start Options", null), new("{=CulturedStart08}Who are you in Aeurth...", null), new CharacterCreationOnInit(this.StartOnInit), CharacterCreationMenu.MenuTypes.MultipleChoice);
+    CharacterCreationCategory characterCreationCategory = characterCreationMenu.AddMenuCategory(null);
+    characterCreationCategory.AddCategoryOption(new("{=CulturedStart09}A commoner (Default Start)", null), new(), null, 0, 0, 0, null, new(this.DefaultStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart10}Setting off with your Father, Mother, Brother and your two younger siblings to a new town you'd heard was safer. But you did not make it.", null), null, 0, 0, 0, 0, 0);
+    characterCreationCategory.AddCategoryOption(new("{=CulturedStart11}A budding caravanner", null), new MBList<SkillObject>
+    {
+        DefaultSkills.Trade,
+        DefaultSkills.Charm
+    }, null, 1, 25, 0, null, new(this.MerchantStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart12}With what savings you could muster you purchased some mules and mercenaries." + $"\n{startingSkillMult[StartType.Merchant]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 0, 0, 0, 0);
+    characterCreationCategory.AddCategoryOption(new("{=CulturedStart13}A noble of {CULTURE} in exile", null), new MBList<SkillObject>
+    {
+        DefaultSkills.Leadership,
+        DefaultSkills.Scouting
+    }, null, 1, 50, 0, null, new(this.ExiledStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart14}Forced into exile after your parents were executed for suspected treason. With only your family's bodyguard you set off. Should you return you'd be viewed as a criminal." + $"\n{startingSkillMult[StartType.Exiled]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 150, 0, 0, 0);
+    characterCreationCategory.AddCategoryOption(new("{=CulturedStart15}In a failing mercenary company", null), new MBList<SkillObject>
+    {
+        DefaultSkills.Tactics,
+        DefaultSkills.Roguery
+    }, null, 1, 50, 0, null, new(this.MercenaryStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart16}With men deserting over lack of wages, your company leader was found dead, and you decided to take your chance and lead." + $"\n{startingSkillMult[StartType.Mercenary]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 50, 0, 0, 0);
+    characterCreationCategory.AddCategoryOption(new("{=CulturedStart17}A cheap outlaw", null), new MBList<SkillObject>
+    {
+        DefaultSkills.Roguery,
+        DefaultSkills.Scouting
+    }, null, 1, 25, 0, null, new(this.LooterStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart18}Left impoverished from war, you found a group of like-minded ruffians who were desperate to get by." + $"\n{startingSkillMult[StartType.Looter]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 0, 0, 0, 0);
+    characterCreationCategory.AddCategoryOption(new("{=CulturedStart19}A new vassal of {CULTURE}", null), new MBList<SkillObject>
+    {
+        DefaultSkills.Steward,
+        DefaultSkills.Charm
+    }, null, 1, 50, 0, null, new(this.VassalStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart20}A young noble who came into an arrangement with the king for a chance at land." + $"\n{startingSkillMult[StartType.VassalNoFief]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 150, 0, 0, 0);
+    characterCreationCategory.AddCategoryOption(new("{=CulturedStart21}A knight of {CULTURE}", null), new MBList<SkillObject>
+    {
+        DefaultSkills.Leadership,
+        DefaultSkills.Riding
+    }, DefaultCharacterAttributes.Social, 1, 50, 1, null, new(this.KingdomStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart22}With the support of companions you have gathered an army. With limited funds and food you decided it's time for action." + $"\n{startingSkillMult[StartType.KingdomRuler]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 900, 0, 0, 0);
+    characterCreationCategory.AddCategoryOption(new("{=CulturedStart23}A lord with a castle", null), new MBList<SkillObject>
+    {
+        DefaultSkills.Leadership,
+        DefaultSkills.Steward
+    }, DefaultCharacterAttributes.Social, 1, 25, 1, null, new(this.CastleRulerStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart24}You acquired a castle through your own means and declared yourself a kingdom for better or worse." + $"\n{startingSkillMult[StartType.CastleRuler]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 900, 0, 0, 0);
+    characterCreationCategory.AddCategoryOption(new("{=CulturedStart25}An ursurper of {CULTURE}", null), new MBList<SkillObject>
+    {
+        DefaultSkills.Steward,
+        DefaultSkills.Roguery
+    }, null, 1, 50, 0, null, new(this.LandedVassalStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart26}A young noble who came into an arrangement with the king for land." + $"\n{startingSkillMult[StartType.VassalFief]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 150, 0, 0, 0);
+    characterCreationCategory.AddCategoryOption(new("{=CulturedStart27}A wanderer mystic of {CULTURE}", null), new MBList<SkillObject>
+    {
+        RFSkills.Arcane,
+        DefaultSkills.Scouting
+    }, null, 1, 10, 0, null, new(this.EscapedStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart28}A mystic peregrin in pursuit of arcane misteries." + $"\n{startingSkillMult[StartType.EscapedPrisoner]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 0, 0, 0, 0);
+    characterCreation.AddNewMenu(characterCreationMenu);
+}
         protected bool GiantParentsOnCondition()
         {
             return base.GetSelectedCulture().StringId == "giant";
