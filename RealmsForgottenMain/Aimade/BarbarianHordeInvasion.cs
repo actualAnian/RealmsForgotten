@@ -15,7 +15,7 @@ namespace RealmsForgotten.AiMade
 {
     public class BarbarianHordeInvasion : CampaignBehaviorBase
     {
-        private const int SpawnIntervalDays = 30;
+        private const int SpawnIntervalDays = 100;
         private const float GrowthFactor = 0.10f;
         private List<Settlement> towns;
         private int lastSpawnDay;
@@ -138,9 +138,9 @@ namespace RealmsForgotten.AiMade
             // Define the bandit troop types and their counts
             var banditTroops = new List<(CharacterObject, int)>
             {
-                (CharacterObject.Find("cs_barbarian_bandit_recruit"), 200),
-                (CharacterObject.Find("cs_barbarian_bandit_raider"), 100),
-                (CharacterObject.Find("cs_barbarian_bandit_leader"), 50),
+                (CharacterObject.Find("cs_barbarian_bandit_recruit"), 150),
+                (CharacterObject.Find("cs_barbarian_bandit_raider"), 80),
+                (CharacterObject.Find("cs_barbarian_bandit_leader"), 30),
                 (CharacterObject.Find("cs_barbarian_bandit_boss"), 1),
             };
             return banditTroops;

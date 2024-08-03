@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TaleWorlds.CampaignSystem.Party;
-using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.Core;
 using TaleWorlds.CampaignSystem.Election;
+using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.Core;
 using TaleWorlds.Library;
-
 
 namespace RealmsForgotten.Behaviors
 {
@@ -17,6 +13,9 @@ namespace RealmsForgotten.Behaviors
     {
         // Field to track party aggressiveness
         private Dictionary<string, bool> partyAggressiveness = new Dictionary<string, bool>();
+
+        // Field to track the last war declaration day for each faction
+        private Dictionary<string, int> lastWarDeclarationDays = new Dictionary<string, int>();
 
         public override void RegisterEvents()
         {
@@ -37,7 +36,9 @@ namespace RealmsForgotten.Behaviors
         private void MakePartyAggressive(MobileParty party)
         {
             // Logic to make the party more aggressive
-            var enemyParties = MobileParty.All.Where(p => p.IsActive && p.MapFaction.IsAtWarWith(party.MapFaction) && party.Position2D.DistanceSquared(p.Position2D) < 10000).ToList();
+            var enemyParties = MobileParty.All
+                .Where(p => p.IsActive && p.MapFaction.IsAtWarWith(party.MapFaction) && party.Position2D.DistanceSquared(p.Position2D) < 10000)
+                .ToList();
 
             if (enemyParties.Any())
             {
@@ -48,6 +49,40 @@ namespace RealmsForgotten.Behaviors
                 {
                     partyAggressiveness.Add(party.StringId, true);
                 }
+            }
+            else
+            {
+                // Check the peace duration and declare war if needed
+                var sturgiaKingdom = Kingdom.All.FirstOrDefault(k => k.Culture.StringId == "sturgia");
+                if (sturgiaKingdom != null)
+                {
+                    if (!lastWarDeclarationDays.ContainsKey(sturgiaKingdom.StringId))
+                    {
+                        lastWarDeclarationDays[sturgiaKingdom.StringId] = CampaignTime.Now.GetDayOfYear;
+                    }
+
+                    int daysSinceLastWar = CampaignTime.Now.GetDayOfYear - lastWarDeclarationDays[sturgiaKingdom.StringId];
+                    if (daysSinceLastWar > 15)
+                    {
+                        DeclareWarOnSpecificFactions(sturgiaKingdom);
+                        lastWarDeclarationDays[sturgiaKingdom.StringId] = CampaignTime.Now.GetDayOfYear;
+                    }
+                }
+            }
+        }
+
+        private void DeclareWarOnSpecificFactions(Kingdom sturgiaKingdom)
+        {
+            var potentialEnemies = Kingdom.All
+                .Where(k => k != sturgiaKingdom && !k.IsAtWarWith(sturgiaKingdom) &&
+                            (k.Culture.StringId == "vlandia" || k.Culture.StringId == "battania" || k.Culture.StringId == "empire"))
+                .ToList();
+
+            if (potentialEnemies.Any())
+            {
+                var chosenEnemy = potentialEnemies.GetRandomElement();
+                FactionManager.DeclareWar(sturgiaKingdom, chosenEnemy);
+                InformationManager.DisplayMessage(new InformationMessage($"Sturgia has declared war on {chosenEnemy.Name} after a period of peace."));
             }
         }
 
@@ -74,6 +109,7 @@ namespace RealmsForgotten.Behaviors
         {
             // Sync the partyAggressiveness dictionary
             dataStore.SyncData("partyAggressiveness", ref partyAggressiveness);
+            dataStore.SyncData("lastWarDeclarationDays", ref lastWarDeclarationDays);
         }
     }
 }

@@ -15,11 +15,11 @@ namespace RealmsForgotten.AiMade
 {
     public class UndeadHordeBehavior : CampaignBehaviorBase
     {
-        private const int SpawnIntervalDays = 50;
+        private const int SpawnIntervalDays = 130;
         private const float GrowthFactor = 0.10f;
         private List<string> settlementIds = new List<string>
         {
-            "town_S1", "town_S2", "town_S3", "town_S4", "town_S5", "town_S6"
+            "town_S1", "town_S3", "town_S4", "town_S6"
         };
 
         private int lastSpawnDay;
@@ -138,9 +138,9 @@ namespace RealmsForgotten.AiMade
             // Define the bandit troop types and their counts
             var banditTroops = new List<(CharacterObject, int)>
             {
-                (CharacterObject.Find("cs_undead_bandits_bandit"), 200),
-                (CharacterObject.Find("cs_undead_bandits_raiders"), 100),
-                (CharacterObject.Find("cs_undead_bandits_chief"), 50),
+                (CharacterObject.Find("cs_undead_bandits_bandit"), 120),
+                (CharacterObject.Find("cs_undead_bandits_raiders"), 70),
+                (CharacterObject.Find("cs_undead_bandits_chief"), 25),
                 (CharacterObject.Find("cs_undead_bandits_boss"), 1),
             };
             return banditTroops;

@@ -71,7 +71,7 @@ namespace RealmsForgotten.Models
                 CharacterObject attackerCharacterObject = attackInformation.AttackerAgentCharacter as CharacterObject;
                 CharacterObject attackedCharacterObject = attackInformation.VictimAgent?.Character as CharacterObject;
 
-                //If weapon is a spell, do additional damage based on the alchemy skill of the attacker
+                // If weapon is a spell, do additional damage based on the alchemy skill of the attacker
                 if (weapon.Item.StringId.Contains("anorit_fire"))
                 {
                     if (attackerCharacterObject != null && attackedCharacterObject != null)
@@ -84,7 +84,6 @@ namespace RealmsForgotten.Models
                         if (factor > 0 &&
                             weapon.CurrentUsageItem.WeaponClass == WeaponClass.Stone)
                             baseNumber *= factor;
-
 
                         Campaign.Current.Models.CombatXpModel.GetXpFromHit(attackerCharacterObject, captainCharacterObject, attackedCharacterObject, attackerCharacterObject.HeroObject?.PartyBelongedTo?.Party, (int)baseDamage, baseDamage >= attackInformation.VictimAgentHealth,
                             CombatXpModel.MissionTypeEnum.Battle, out int xpAmount);
@@ -101,18 +100,17 @@ namespace RealmsForgotten.Models
                     if (DamageFactor > 0)
                         baseNumber *= DamageFactor;
                 }
-                
-               CrusaderDamageModel.CalculateDamage(attackedCharacterObject, attackedCharacterObject, ref baseNumber);
+
+                CrusaderDamageModel.CalculateDamage(attackedCharacterObject, attackedCharacterObject, ref baseNumber);
             }
             DemonRaceDamageModel.CalculateDamage(attackInformation.AttackerAgent, weapon, ref baseNumber);
-            
 
             return baseNumber;
         }
 
         private void CalculateEffectsDamage(in AttackInformation attackInformation, ref float baseDamage)
         {
-            //If in berserker mode disables damage
+            // If in berserker mode disables damage
             if (attackInformation.VictimAgent == Agent.Main && PotionsMissionBehavior.berserkerMode)
                 baseDamage = 0;
 
@@ -138,6 +136,9 @@ namespace RealmsForgotten.Models
             int daimo = FaceGen.GetRaceOrDefault("daimo");
             int sillok = FaceGen.GetRaceOrDefault("sillok");
 
+            // Get race ID for zombies
+            int zombie = FaceGen.GetRaceOrDefault("zombie");
+
             // List of races that partake in the same logic
             List<int> standardRaces = new List<int> { thog, shaitan, kharach, brute };
             List<int> specialRaces = new List<int> { bark, nurh, daimo, sillok };
@@ -150,28 +151,24 @@ namespace RealmsForgotten.Models
                 if (attackInformation.VictimAgent?.Character != null && attackInformation.VictimAgent.Character.Race == half_giant)
                 {
                     baseNumber -= ((70f / 100f) * baseNumber);
-                    LogMessage($"CalculateRaceDamages: Victim is a half-giant, reduced damage to {baseNumber}");
                 }
 
                 // If attacker is a half-giant, increase damage by 45%
                 if (attackInformation.AttackerAgent?.Character != null && attackInformation.AttackerAgent.Character.Race == half_giant)
                 {
                     baseNumber += ((45f / 100f) * baseNumber);
-                    LogMessage($"CalculateRaceDamages: Attacker is a half-giant, increased damage to {baseNumber}");
                 }
 
                 // If victim is one of the standard races, reduce damage by 30%
                 if (attackInformation.VictimAgent?.Character != null && standardRaces.Contains(attackInformation.VictimAgent.Character.Race))
                 {
                     baseNumber -= ((30f / 100f) * baseNumber);
-                    LogMessage($"CalculateRaceDamages: Victim is a standard race (thog, shaitan, kharach, brute), reduced damage to {baseNumber}");
                 }
 
                 // If attacker is one of the standard races, increase damage by 30%
                 if (attackInformation.AttackerAgent?.Character != null && standardRaces.Contains(attackInformation.AttackerAgent.Character.Race))
                 {
                     baseNumber += ((30f / 100f) * baseNumber);
-                    LogMessage($"CalculateRaceDamages: Attacker is a standard race (thog, shaitan, kharach, brute), increased damage to {baseNumber}");
                 }
 
                 // If victim is one of the special races
@@ -181,13 +178,11 @@ namespace RealmsForgotten.Models
                     if (weapon.Item.StringId != "rfmisc_mistic_polearm")
                     {
                         baseNumber = 0;
-                        LogMessage($"CalculateRaceDamages: Victim is a special race (bark, nurh, daimo, sillok) and weapon is not rfmisc_mistic_polearm, set damage to 0");
                     }
                     else
                     {
                         // Reduce damage by 90% if it's the special weapon
                         baseNumber -= ((90f / 100f) * baseNumber);
-                        LogMessage($"CalculateRaceDamages: Victim is a special race (bark, nurh, daimo, sillok) and weapon is rfmisc_mistic_polearm, reduced damage by 90% to {baseNumber}");
                     }
                 }
 
@@ -195,17 +190,22 @@ namespace RealmsForgotten.Models
                 if (attackInformation.AttackerAgent?.Character != null && specialRaces.Contains(attackInformation.AttackerAgent.Character.Race))
                 {
                     baseNumber += ((80f / 100f) * baseNumber);
-                    LogMessage($"CalculateRaceDamages: Attacker is a special race (bark, nurh, daimo, sillok), increased damage by 80% to {baseNumber}");
+                }
+
+                // If victim is a zombie, reduce damage by 50%
+                if (attackInformation.VictimAgent?.Character != null && attackInformation.VictimAgent.Character.Race == zombie)
+                {
+                    baseNumber -= ((50f / 100f) * baseNumber);
+                }
+
+                // If attacker is a zombie, increase damage by 20%
+                if (attackInformation.AttackerAgent?.Character != null && attackInformation.AttackerAgent.Character.Race == zombie)
+                {
+                    baseNumber += ((20f / 100f) * baseNumber);
                 }
             }
         }
-
-        private void LogMessage(string message)
-        {
-            InformationManager.DisplayMessage(new InformationMessage(message));
-        }
     }
-
 }
 
 

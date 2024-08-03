@@ -40,7 +40,8 @@ namespace RealmsForgotten.Managers
                 ["battania"] = "player_char_creation_default",
                 ["vlandia"] = "player_char_creation_default",
                 ["giant"] = "rf_xilan_default",
-                ["aqarun"] = "rf_aqarun_default"
+                ["aqarun"] = "rf_aqarun_default",
+                ["south_realm"] = "player_char_creation_default",
             },
             [StartType.Merchant] = new Dictionary<string, string>
             {
@@ -51,7 +52,8 @@ namespace RealmsForgotten.Managers
                 ["battania"] = "rf_elvean_merchant",
                 ["vlandia"] = "merchant_start_vlandia",
                 ["giant"] = "merchant_start_xilan",
-                ["aqarun"] = "merchant_start_aqarun"
+                ["aqarun"] = "merchant_start_aqarun",
+                ["south_realm"] = "merchant_start_empire",
             },
             [StartType.Exiled] = new Dictionary<string, string>
             {
@@ -62,7 +64,8 @@ namespace RealmsForgotten.Managers
                 ["battania"] = "rf_exiled_equip",
                 ["vlandia"] = "rf_exiled_equip",
                 ["giant"] = "rf_exiled_equip",
-                ["aqarun"] = "rf_exiled_equip"
+                ["aqarun"] = "rf_exiled_equip",
+                ["south_realm"] = "rf_exiled_equip"
             },
             [StartType.EscapedPrisoner] = new Dictionary<string, string>
             {
@@ -73,7 +76,8 @@ namespace RealmsForgotten.Managers
                 ["battania"] = "rf_elvean_mistic",
                 ["vlandia"] = "rf_nasoria_mistic",
                 ["giant"] = "rf_giant_mistic",
-                ["aqarun"] = "rf_aqarun_mistic"
+                ["aqarun"] = "rf_aqarun_mistic",
+                ["south_realm"] = "rf_empire_mistic"
             },
             [StartType.Looter] = new Dictionary<string, string>
             {
@@ -84,7 +88,8 @@ namespace RealmsForgotten.Managers
                 ["battania"] = "rf_looter",
                 ["vlandia"] = "rf_looter",
                 ["giant"] = "rf_looter",
-                ["aqarun"] = "rf_looter"
+                ["aqarun"] = "rf_looter",
+                ["south_realm"] = "rf_looter"
             },
             [StartType.Mercenary] = new Dictionary<string, string>
             {
@@ -95,7 +100,8 @@ namespace RealmsForgotten.Managers
                 ["battania"] = "merc_elvean_start",
                 ["vlandia"] = "merc_nasoria_start",
                 ["giant"] = "merc_giant_start",
-                ["aqarun"] = "merc_athas_start"
+                ["aqarun"] = "merc_athas_start",
+                ["south_realm"] = "merc_realms_start",
             },
             [StartType.VassalNoFief] = new Dictionary<string, string>
             {
@@ -106,7 +112,8 @@ namespace RealmsForgotten.Managers
                 ["battania"] = "elvean_vassal_nofief",
                 ["vlandia"] = "nasoria_vassal_nofief",
                 ["giant"] = "giant_vassal_nofief",
-                ["aqarun"] = "vassalnofief_aqarun_start"
+                ["aqarun"] = "vassalnofief_aqarun_start",
+                ["south_realm"] = "realms_vassal_nofief",
             },
             [StartType.KingdomRuler] = new Dictionary<string, string>
             {
@@ -117,7 +124,8 @@ namespace RealmsForgotten.Managers
                 ["battania"] = "king_elvean_start",
                 ["vlandia"] = "king_nasoria_start",
                 ["giant"] = "king_giant_start",
-                ["aqarun"] = "king_aqarun_start"
+                ["aqarun"] = "king_aqarun_start",
+                ["south_realm"] = "king_realms_start",
             },
             [StartType.CastleRuler] = new Dictionary<string, string>
             {
@@ -128,7 +136,8 @@ namespace RealmsForgotten.Managers
                 ["battania"] = "vassal_elvean_start",
                 ["vlandia"] = "vassal_nasoria_start",
                 ["giant"] = "vassal_giant_start",
-                ["aqarun"] = "vassal_aqarun_start"
+                ["aqarun"] = "vassal_aqarun_start",
+                ["south_realm"] = "vassal_realms_start",
             },
             [StartType.VassalFief] = new Dictionary<string, string>
             {
@@ -139,7 +148,8 @@ namespace RealmsForgotten.Managers
                 ["battania"] = "lord_elvean_start",
                 ["vlandia"] = "ruler_nasoria_start",
                 ["giant"] = "ruler_giant_start",
-                ["aqarun"] = "ruler_aqarun_start"
+                ["aqarun"] = "ruler_aqarun_start",
+                ["south_realm"] = "ruler_realms_start",
             },
         };
         public static readonly Dictionary<(string Culture, StartType StartOption), List<TroopSpawnInfo>> CultureStartTypeToTroops = new()
@@ -452,6 +462,44 @@ namespace RealmsForgotten.Managers
                 new TroopSpawnInfo("Aqarun_cavalry_master", 3),
                 new TroopSpawnInfo("Aqarun_archer", 2) }},
 
+            { ("south_realm", StartType.Merchant), new List<TroopSpawnInfo> {
+    new TroopSpawnInfo("empire_trader", 4),
+    new TroopSpawnInfo("empire_recruit", 8),
+    new TroopSpawnInfo("empire_archer", 4) }},
+
+{ ("south_realm", StartType.Exiled), new List<TroopSpawnInfo> {
+     new TroopSpawnInfo("imperial_recruit", 4),
+    new TroopSpawnInfo("imperial_archer", 2) }},
+
+{ ("south_realm", StartType.EscapedPrisoner), new List<TroopSpawnInfo> {
+    new TroopSpawnInfo("looter", 2) }},
+
+{ ("south_realm", StartType.Looter), new List<TroopSpawnInfo> {
+    new TroopSpawnInfo("looter", 8) }},
+
+{ ("south_realm", StartType.Mercenary), new List<TroopSpawnInfo> {
+   new TroopSpawnInfo("mercenary_volunteer", 10) }},
+
+{ ("south_realm", StartType.VassalNoFief), new List<TroopSpawnInfo> {
+    new TroopSpawnInfo("imperial_legionary", 10),
+    new TroopSpawnInfo("imperial_palatine_guard", 5),
+    new TroopSpawnInfo("imperial_cataphract", 3) }},
+
+{ ("south_realm", StartType.KingdomRuler), new List<TroopSpawnInfo> {
+    new TroopSpawnInfo("imperial_legionary", 20),
+    new TroopSpawnInfo("imperial_palatine_guard", 10),
+    new TroopSpawnInfo("imperial_cataphract", 10) }},
+
+{ ("south_realm", StartType.CastleRuler), new List<TroopSpawnInfo> {
+    new TroopSpawnInfo("imperial_legionary", 15),
+    new TroopSpawnInfo("imperial_palatine_guard", 10),
+    new TroopSpawnInfo("imperial_cataphract", 5) }},
+
+{ ("south_realm", StartType.VassalFief), new List<TroopSpawnInfo> {
+    new TroopSpawnInfo("imperial_legionary", 10),
+    new TroopSpawnInfo("imperial_palatine_guard", 5),
+    new TroopSpawnInfo("imperial_cataphract", 5) }},
+
 
     };
 
@@ -511,6 +559,9 @@ namespace RealmsForgotten.Managers
                     break;
                 case 11:
                     startingSettlement = Settlement.Find("town_A5");
+                    break;
+                case 12:
+                    startingSettlement = Settlement.Find("town_ES1");
                     break;
                 default:
                     break;

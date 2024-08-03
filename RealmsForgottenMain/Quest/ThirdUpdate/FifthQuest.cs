@@ -73,7 +73,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
         private const string MysticWeaponId = "ancient_elvish_polearm";
         private const string ShieldTreasureId = "ulvor_dec_shield";
         private const string TreasureFightCharacter = "allkhuur_goddess";
-        private const int devilPartiesToDefeatTarget = 2;
+        private const int devilPartiesToDefeatTarget = 5;
 
         public override TextObject Title => GameTexts.FindText("rf_quest_title_part_five");
         public override bool IsRemainingTimeHidden => true;
@@ -250,7 +250,6 @@ namespace RealmsForgotten.Quest.SecondUpdate
         {
             SetDialogs();
             Instance = this;
-            InitializeDefeatDevilPartiesObjective();
         }
 
         private void CountDevilPartyDefeat(MobileParty mobileParty, PartyBase destroyer)
@@ -852,27 +851,23 @@ namespace RealmsForgotten.Quest.SecondUpdate
                     }
                     if (FifthQuest.Instance?.requireTreasureLog?.CurrentProgress == 0 && spawnedItemEntity.WeaponCopy.Item?.StringId == ShieldTreasureId)
                     {
-                        MBInformationManager.ShowSceneNotification(new MagicItemFoundSceneNotification(
-                            spawnedItemEntity.WeaponCopy.Item.Name.ToString(),
-                            "scn_mage_staff",
-                            () =>
-                            {
-                                CharacterObject characterObject = CharacterObject.Find(TreasureFightCharacter);
-                                Monster monsterWithSuffix = FaceGen.GetMonsterWithSuffix(characterObject.Race, FaceGen.MonsterSuffixSettlement);
-                                Equipment randomEquipmentElements = Equipment.GetRandomEquipmentElements(characterObject, true);
+                        // Removed the notification here
+                        CharacterObject characterObject = CharacterObject.Find(TreasureFightCharacter);
+                        Monster monsterWithSuffix = FaceGen.GetMonsterWithSuffix(characterObject.Race, FaceGen.MonsterSuffixSettlement);
+                        Equipment randomEquipmentElements = Equipment.GetRandomEquipmentElements(characterObject, true);
 
-                                AgentBuildData agentBuildData = new AgentBuildData(new SimpleAgentOrigin(characterObject)).Equipment(randomEquipmentElements)
-                                    .Monster(monsterWithSuffix);
-                                Vec3 initialPosition = new Vec3(138.69f, 157.79f, 23.82f);
-                                agentBuildData.InitialPosition(in initialPosition).InitialDirection(agent.Position.AsVec2);
+                        AgentBuildData agentBuildData = new AgentBuildData(new SimpleAgentOrigin(characterObject)).Equipment(randomEquipmentElements)
+                            .Monster(monsterWithSuffix);
+                        Vec3 initialPosition = new Vec3(138.69f, 157.79f, 23.82f);
+                        agentBuildData.InitialPosition(in initialPosition).InitialDirection(agent.Position.AsVec2);
 
-                                TreasureFightAgent = Mission.Current.SpawnAgent(agentBuildData, true);
-                                TreasureFightAgent.TeleportToPosition(initialPosition);
-                                Mission.Current.GetMissionBehavior<MissionConversationLogic>().StartConversation(TreasureFightAgent, false);
-                            }));
+                        TreasureFightAgent = Mission.Current.SpawnAgent(agentBuildData, true);
+                        TreasureFightAgent.TeleportToPosition(initialPosition);
+                        Mission.Current.GetMissionBehavior<MissionConversationLogic>().StartConversation(TreasureFightAgent, false);
                     }
                 }
             }
+
         }
     }
 }

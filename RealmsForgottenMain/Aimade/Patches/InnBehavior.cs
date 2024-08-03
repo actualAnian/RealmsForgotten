@@ -42,7 +42,15 @@ namespace RealmsForgotten.AiMade.Patches
             CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, OnGameLoaded);
         }
 
-        public override void SyncData(IDataStore dataStore) { }
+        public override void SyncData(IDataStore dataStore)
+        {
+            dataStore.SyncData("_isInnInitialized", ref _isInnInitialized);
+            dataStore.SyncData("IsInInn", ref IsInInn);
+
+            // Sync _inn if needed
+            // Example (assuming Location is serializable or can be converted to a serializable form):
+            // dataStore.SyncData("_inn", ref _inn);
+        }
 
         void OnGameLoaded(CampaignGameStarter campaignGameStarter)
         {
@@ -74,11 +82,7 @@ namespace RealmsForgotten.AiMade.Patches
             string sceneName = GetSceneNameForCulture(cultureId);
             _inn.SetSceneName(0, sceneName);
 
-            var allWanderers = settlement.HeroesWithoutParty.Where(x => x.IsWanderer && x.CompanionOf == null).ToList();
-            foreach (Hero wanderer in allWanderers)
-            {
-                ADODInnHelper.AddWandererLocationCharacter(wanderer, settlement, _inn);
-            }
+            AddWanderersToInn(settlement); // Add wanderers to the inn
 
             dictionary.Add("village_inn", _inn);
             if (field != null)
@@ -206,6 +210,9 @@ namespace RealmsForgotten.AiMade.Patches
                 ADODInnHelper.AddNotableLocationCharacter(notable, settlement, _inn);
             }
 
+            // Add wanderers to the inn
+            AddWanderersToInn(settlement);
+
             if (unusedUsablePointCount.TryGetValue("spawnpoint_tavernkeeper", out var num) && num > 0)
             {
                 locationWithId.AddLocationCharacters(CreateTavernkeeper, settlement.Culture, LocationCharacter.CharacterRelations.Neutral, 1);
@@ -245,6 +252,34 @@ namespace RealmsForgotten.AiMade.Patches
                 }
             }
         }
+        private void AddWanderersToInn(Settlement settlement)
+        {
+            var wanderers = settlement.HeroesWithoutParty.Where(hero => hero.IsWanderer && hero.CompanionOf == null).ToList();
+            foreach (var wanderer in wanderers)
+            {
+                Monster monster = TaleWorlds.Core.FaceGen.GetMonsterWithSuffix(wanderer.CharacterObject.Race, "_settlement");
+                AgentData agentData = new AgentData(new SimpleAgentOrigin(wanderer.CharacterObject))
+                    .Monster(monster)
+                    .Age((int)wanderer.Age); // Cast to int
+
+                LocationCharacter wandererCharacter = new LocationCharacter(
+                    agentData,
+                    new LocationCharacter.AddBehaviorsDelegate(SandBoxManager.Instance.AgentBehaviorManager.AddWandererBehaviors),
+                    "wanderer",
+                    true,
+                    LocationCharacter.CharacterRelations.Neutral,
+                    ActionSetCode.GenerateActionSetNameWithSuffix(monster, wanderer.IsFemale, ""),
+                    true,
+                    false,
+                    null,
+                    false,
+                    false,
+                    true);
+
+                _inn.AddLocationCharacters(delegate { return wandererCharacter; }, settlement.Culture, LocationCharacter.CharacterRelations.Neutral, 1);
+            }
+        }
+
 
         private static LocationCharacter CreateDancer(CultureObject culture, LocationCharacter.CharacterRelations relation)
         {
@@ -274,6 +309,7 @@ namespace RealmsForgotten.AiMade.Patches
             AgentData agentData = new AgentData(new SimpleAgentOrigin(tavernkeeper, -1, null, default(UniqueTroopDescriptor))).Monster(monsterWithSuffix).Age(MBRandom.RandomInt(minValue, maxValue));
             return new LocationCharacter(agentData, new LocationCharacter.AddBehaviorsDelegate(SandBoxManager.Instance.AgentBehaviorManager.AddWandererBehaviors), "spawnpoint_tavernkeeper", true, relation, ActionSetCode.GenerateActionSetNameWithSuffix(agentData.AgentMonster, agentData.AgentIsFemale, "_tavern_keeper"), true, false, null, false, false, true);
         }
+
         private static LocationCharacter CreateMusician(CultureObject culture, LocationCharacter.CharacterRelations relation)
         {
             CharacterObject musician = culture.Musician;
@@ -311,6 +347,7 @@ namespace RealmsForgotten.AiMade.Patches
                 }
             };
         }
+
 
         private static LocationCharacter CreateTownsManForTavern(CultureObject culture, LocationCharacter.CharacterRelations relation)
         {

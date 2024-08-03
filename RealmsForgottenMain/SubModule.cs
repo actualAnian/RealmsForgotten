@@ -1,4 +1,4 @@
-using HarmonyLib;
+﻿using HarmonyLib;
 using RealmsForgotten.Managers;
 using System;
 using System.Collections.Generic;
@@ -22,7 +22,7 @@ using TaleWorlds.Engine.GauntletUI;
 using Module = TaleWorlds.MountAndBlade.Module;
 using Newtonsoft.Json.Linq;
 using RealmsForgotten.AiMade;
-using RealmsForgotten.AiMade.Models;
+using RealmsForgotten.AiMade.Career;
 using RealmsForgotten.Quest;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.GameMenus;
@@ -34,6 +34,9 @@ using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
+using RealmsForgotten.UI;
+using TaleWorlds.ScreenSystem;
+
 
 namespace RealmsForgotten
 {
@@ -77,6 +80,7 @@ namespace RealmsForgotten
                 campaignGameStarter.AddBehavior(new RFFaithCampaignBehavior());
                 campaignGameStarter.AddBehavior(new CulturesCampaignBehavior());
                 
+
                 campaignGameStarter.AddModel(new RFAgentApplyDamageModel());
                 campaignGameStarter.AddModel(new RFBuildingConstructionModel());
                 campaignGameStarter.AddModel(new RFCombatXpModel());
@@ -89,8 +93,7 @@ namespace RealmsForgotten
                 campaignGameStarter.AddModel(new RFWageModel());
                 campaignGameStarter.AddModel(new RFBattleCaptainModel());
                 campaignGameStarter.AddModel(new RFInventoryCapacityModel());
-                campaignGameStarter.AddModel(new RaceSpeedBonusModel());
-               
+
                 new RFAttributes().Initialize();
                 new RFSkills().Initialize();
                 new RFSkillEffects().InitializeAll();
@@ -146,20 +149,16 @@ namespace RealmsForgotten
         {
             if (mission != null)
             {
-                if ((mission.Mode == MissionMode.Battle || mission.Mode == MissionMode.StartUp) && mission.CombatType != Mission.MissionCombatType.ArenaCombat)
+                if ((mission.Mode == MissionMode.Battle || mission.Mode == MissionMode.StartUp) && mission.CombatType != Mission.MissionCombatType.ArenaCombat);
                 {
                     mission.AddMissionBehavior(new RFEnchantedWeaponsMissionBehavior());
                     mission.AddMissionBehavior(new NecromancerStaffMissionBehavior());
-                    mission.AddMissionBehavior(new SpecialDamageMissionLogic());
-                    mission.AddMissionBehavior(new DemonLordsAmbushLogic());
-                    mission.AddMissionBehavior(new SpecialDamageMissionLogic());
-                    mission.AddMissionBehavior(new RealmsForgotten.Models.DemonLordsAmbushLogic());
                     mission.AddMissionBehavior(new GandalfStaffMissionBehavior());
+                    mission.AddMissionBehavior(new DuelsBehavior());
                 }
 
                 mission.AddMissionBehavior(new SpellAmmoMissionBehavior());
-
-
+                
                 if (Campaign.Current != null)
                 {
                     ItemRosterElement elixir = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("elixir_rfmisc"));
@@ -167,10 +166,6 @@ namespace RealmsForgotten
                     if (!elixir.IsEmpty || !berserker.IsEmpty)
                         mission.AddMissionBehavior(new PotionsMissionBehavior(elixir, berserker));
                 }
-                
-                mission.AddMissionBehavior(new HealOnKillMissionBehavior());
-
-                mission.AddMissionBehavior(new HealOnKillMissionBehavior()); // Add this line
             }
         }
         protected override void OnBeforeInitialModuleScreenSetAsRoot() { }
@@ -212,7 +207,7 @@ namespace RealmsForgotten
 
             TextObject coreContentDisabledReason = new("Disabled during installation.", null);
             UIConfig.DoNotUseGeneratedPrefabs = true;
-            
+
             RemoveSandboxAndStoryOptions();
 
             Module.CurrentModule.AddInitialStateOption(
@@ -220,7 +215,14 @@ namespace RealmsForgotten
                 () => MBGameManager.StartNewGame(new RFCampaignManager()),
                 () => (Module.CurrentModule.IsOnlyCoreContentEnabled, coreContentDisabledReason))
             );
-            harmony.PatchAll();
+        }
+        protected override void OnApplicationTick(float dt)
+        {
+            base.OnApplicationTick(dt);
+            if (Input.IsKeyPressed(InputKey.F9))
+            {
+                CareerScreenManager.OpenCareerInfoScreen();
+            }
         }
         public static Dictionary<string, int> undeadRespawnConfig { get; private set; }
         private void ReadConfigFile()

@@ -15,8 +15,8 @@ namespace RealmsForgotten.Behaviors
     public class BanditPartyGrowthBehavior : CampaignBehaviorBase
     {
         private int _lastUpdateDay = -1;
-        private const int UpdateIntervalDays = 5; // Adjusted for testing
-        private const float GrowthRate = 0.15f; // 15% growth rate
+        private const int UpdateIntervalDays = 35; // Adjusted for testing
+        private const float GrowthRate = 0.10f; // 10% growth rate
 
         public override void RegisterEvents()
         {

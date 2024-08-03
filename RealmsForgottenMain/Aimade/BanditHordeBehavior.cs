@@ -18,11 +18,11 @@ namespace RealmsForgotten.AiMade
 {
     public class BanditHordeBehavior : CampaignBehaviorBase
     {
-        private const int SpawnIntervalDays = 15;
+        private const int SpawnIntervalDays = 60;
         private const float GrowthFactor = 0.10f;
         private List<string> settlementIds = new List<string>
         {
-            "town_B4", "town_EN4", "town_EW4", "town_ES4", "town_V6", "town_A2"
+            "town_EN4", "town_EW4", "town_V6", "town_A2"
         };
 
         private int lastSpawnDay;
@@ -141,9 +141,9 @@ namespace RealmsForgotten.AiMade
             // Define the bandit troop types and their counts
             var banditTroops = new List<(CharacterObject, int)>
             {
-                (CharacterObject.Find("steppe_bandits_bandit"), 200),
-                (CharacterObject.Find("steppe_bandits_raider"), 100),
-                (CharacterObject.Find("steppe_bandits_chief"), 50),
+                (CharacterObject.Find("steppe_bandits_bandit"), 100),
+                (CharacterObject.Find("steppe_bandits_raider"), 50),
+                (CharacterObject.Find("steppe_bandits_chief"), 25),
                 (CharacterObject.Find("steppe_bandits_boss"), 1),
             };
             return banditTroops;

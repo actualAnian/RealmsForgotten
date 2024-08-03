@@ -73,6 +73,7 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(DuelsBehavior), 41);
             AddClassDefinition(typeof(BarbarianHordeInvasion), 42);
             AddClassDefinition(typeof(UndeadHordeBehavior), 43);
+                        
         }
     }
 }
