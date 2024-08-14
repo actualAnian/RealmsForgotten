@@ -68,7 +68,6 @@
 
   <ItemGroup>
     <Folder Include="AiMade\" />
-    <Folder Include="_Module\ModuleData\" />
   </ItemGroup>
 
   <ItemGroup>

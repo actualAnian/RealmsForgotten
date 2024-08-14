@@ -40,7 +40,7 @@ namespace RealmsForgotten.AiMade
                 case "ice_tower_inside":
                     if (!misticPolearmSpawned)
                     {
-                        SpawnItem("ancient_elvish_polearm", new Vec3(122.42f, 192.97f, 4.03f, -1f), new Vec3(0.00f, 0.00f, -30.00f, -1f));
+                        SpawnItem("rfmisc_mistic_polearm", new Vec3(122.42f, 192.97f, 4.03f, -1f), new Vec3(0.00f, 0.00f, -30.00f, -1f));
                         misticPolearmSpawned = true;
                     }
                     break;

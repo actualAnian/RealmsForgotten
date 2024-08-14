@@ -34,7 +34,7 @@ namespace RealmsForgotten.AiMade.Career
         private bool hasLegendaryBattleCry = false;
         private string currentTier = null; // Default to null to avoid wrongly applying any tier
 
-        private CareerType currentCareer = CareerType.None;// Default to null
+        private CareerType currentCareer;// Default to null
         private bool isCareerAccepted = false; // Track if career is accepted
         private float nextNotificationTime = float.MaxValue; // Initialize to prevent immediate notifications
 
@@ -50,6 +50,7 @@ namespace RealmsForgotten.AiMade.Career
                 CheckAndApplyTierProgression("Chivalry Points");
                 return true;
             }
+            InformationManager.DisplayMessage(new InformationMessage($"Attempted to add {points} chivalry points, but the current career is {currentCareer}. No points added."));
             return false;
         }
 
@@ -87,9 +88,6 @@ namespace RealmsForgotten.AiMade.Career
 
         private void OnCharacterCreationEnd()
         {
-            if (currentCareer == CareerType.None)
-                return;
-            
             isCareerAccepted = true;
             ApplyInitialCareerTier(currentCareer);
             InformationManager.DisplayMessage(new InformationMessage($"You started the {currentCareer} career. Initial tier applied: {currentTier}."));
@@ -112,7 +110,7 @@ namespace RealmsForgotten.AiMade.Career
                     ApplyCareer();
                     InformationManager.DisplayMessage(new InformationMessage("Career Accepted"));
                     isCareerAccepted = true;
-                    nextNotificationTime = float.MaxValue;
+                    nextNotificationTime = float.MaxValue; // To prevent further notifications
                 }
                 else
                 {
@@ -129,7 +127,7 @@ namespace RealmsForgotten.AiMade.Career
         private bool CheckCareerConditions()
         {
             // Implement your condition check logic here
-            return true;
+            return true; // Return true if conditions are met
         }
 
         private void ApplyCareer()

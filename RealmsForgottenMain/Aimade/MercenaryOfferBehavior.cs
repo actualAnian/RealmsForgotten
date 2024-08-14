@@ -53,6 +53,7 @@ namespace RealmsForgotten.AiMade
             }
             else
             {
+                InformationManager.DisplayMessage(new InformationMessage("Initialization successful: Found lord_3_1 and his kingdom"));
                 _wasAtPeace = !IsKingdomAtWar(_lordKingdom);
             }
         }

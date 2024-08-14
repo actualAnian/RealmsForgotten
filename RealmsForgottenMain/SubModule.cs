@@ -28,6 +28,7 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.GameMenus;
 using RealmsForgotten.Patches;
 using RealmsForgotten.Quest.SecondUpdate;
+using RealmsForgotten.RFCustomHorses;
 using SandBox.GameComponents;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
@@ -76,6 +77,8 @@ namespace RealmsForgotten
                 //Faith bhv comes before cultures bhv
                 campaignGameStarter.AddBehavior(new RFFaithCampaignBehavior());
                 campaignGameStarter.AddBehavior(new CulturesCampaignBehavior());
+                
+                campaignGameStarter.AddBehavior(RFHorseSpawningCampaignBehavior.Instance);
                 
                 campaignGameStarter.AddModel(new RFAgentApplyDamageModel());
                 campaignGameStarter.AddModel(new RFBuildingConstructionModel());
@@ -152,8 +155,6 @@ namespace RealmsForgotten
                     mission.AddMissionBehavior(new NecromancerStaffMissionBehavior());
                     mission.AddMissionBehavior(new SpecialDamageMissionLogic());
                     mission.AddMissionBehavior(new DemonLordsAmbushLogic());
-                    mission.AddMissionBehavior(new SpecialDamageMissionLogic());
-                    mission.AddMissionBehavior(new RealmsForgotten.Models.DemonLordsAmbushLogic());
                     mission.AddMissionBehavior(new GandalfStaffMissionBehavior());
                 }
 

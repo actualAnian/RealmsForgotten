@@ -5,7 +5,7 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
-
+// Add this directive for LINQ
 
 namespace RealmsForgotten.AiMade.Religions
 {
@@ -26,9 +26,6 @@ namespace RealmsForgotten.AiMade.Religions
             get => _ceremonyCompleted;
             private set => _ceremonyCompleted = value;
         }
-
-        public bool CeremonyQuestAccepted => ceremonyQuestAccepted;
-        public Settlement TargetSettlement => targetSettlement;
 
         public override void RegisterEvents()
         {
@@ -54,21 +51,11 @@ namespace RealmsForgotten.AiMade.Religions
         private void OnNewGameCreated(CampaignGameStarter campaignGameStarter)
         {
             // Add any initialization logic here
-            InitializeCeremonyQuest();
         }
 
         private void OnGameLoaded(CampaignGameStarter campaignGameStarter)
         {
             // Add any loading logic here
-            InitializeCeremonyQuest();
-        }
-
-        private void InitializeCeremonyQuest()
-        {
-            if (ceremonyQuestAccepted && targetSettlement != null)
-            {
-                InformationManager.DisplayMessage(new InformationMessage($"Ceremony quest is active. Target settlement: {targetSettlement.Name}. Deadline: {questDeadline.RemainingHoursFromNow} hours remaining."));
-            }
         }
 
         public void TriggerReligiousCeremonyFromDialogue()
@@ -97,11 +84,11 @@ namespace RealmsForgotten.AiMade.Religions
         {
             targetSettlement = settlement;
             ceremonyQuestAccepted = true;
-            questDeadline = CampaignTime.DaysFromNow(5);
+            questDeadline = CampaignTime.DaysFromNow(7);
             InformationManager.DisplayMessage(new InformationMessage($"You need to travel to {settlement.Name} within 5 days to attend the ceremony.", Colors.Green));
         }
 
-        public void CompleteCeremony()
+        private void CompleteCeremony()
         {
             ceremonyQuestAccepted = false;
             CeremonyCompleted = true;
