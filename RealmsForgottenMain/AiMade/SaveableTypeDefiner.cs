@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using RealmsForgotten.AiMade.Career;
+using RealmsForgotten.AiMade.Managers.RealmsForgotten.AiMade.Managers;
 using RealmsForgotten.AiMade.Patches;
 using RealmsForgotten.AiMade.Religions;
 using RealmsForgotten.Behaviors;
@@ -73,7 +74,9 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(DuelsBehavior), 41);
             AddClassDefinition(typeof(BarbarianHordeInvasion), 42);
             AddClassDefinition(typeof(UndeadHordeBehavior), 43);
-                        
+            AddClassDefinition(typeof(BanditIncrease), 44);
+            AddClassDefinition(typeof(BanditPartyManager), 45);
+
         }
     }
 }

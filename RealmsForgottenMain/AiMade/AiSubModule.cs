@@ -1,5 +1,7 @@
 ﻿using HarmonyLib;
 using RealmsForgotten.AiMade.Career;
+using RealmsForgotten.AiMade.Managers;
+using RealmsForgotten.AiMade.Managers.RealmsForgotten.AiMade.Managers;
 using RealmsForgotten.AiMade.Models;
 using RealmsForgotten.AiMade.Patches;
 using RealmsForgotten.AiMade.Religions;
@@ -76,7 +78,9 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new UndeadHordeBehavior());
             campaignGameStarter.AddBehavior(new BarbarianHordeInvasion());
             campaignGameStarter.AddBehavior(new ADODInnBehavior());
-            
+            campaignGameStarter.AddBehavior(new BanditIncrease());
+            campaignGameStarter.AddBehavior(new BanditPartyManager());
+
         }
 
         public static void InitializeCareerSystem()

@@ -9,6 +9,7 @@ namespace RealmsForgotten.AiMade.Career
     {
         private bool hasDefended;
         private int chivalryPointsGained;
+
         public override void RegisterEvents()
         {
             CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnMapEventEnded);
@@ -31,12 +32,12 @@ namespace RealmsForgotten.AiMade.Career
 
         private bool IsBanditParty(PartyBase party)
         {
-            return party.MobileParty != null && party.MobileParty.PartyComponent.GetType().Name == "BanditPartyComponent";
+            return party?.MobileParty?.PartyComponent?.GetType()?.Name == "BanditPartyComponent";
         }
 
         private bool IsVillagerOrCaravanParty(PartyBase party)
         {
-            if (party.MobileParty != null)
+            if (party?.MobileParty?.PartyComponent != null)
             {
                 var componentType = party.MobileParty.PartyComponent.GetType().Name;
                 return componentType == "VillagerPartyComponent" || componentType == "CaravanPartyComponent";
