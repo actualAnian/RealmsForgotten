@@ -52,6 +52,10 @@
       <HintPath>%(Identity)</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="$(GameFolder)\Modules\ServeAsSoldier\bin\Win64_Shipping_Client\*.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="MCMv5">
       <HintPath>_Module\bin\Win64_Shipping_Client\MCMv5.dll</HintPath>
     </Reference>
