@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RFEffects", "RFEffects\RFEf
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NecromancyAndSummoning", "NecromancyAndSummoning\NecromancyAndSummoning.csproj", "{74D0988D-8A41-4FAB-AA02-F808EB8B08CD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RFCustomHorses", "RFCustomHorses\RFCustomHorses.csproj", "{55E6DBBA-C8C8-4280-8372-E82AE14E3C0B}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HuntableHerds", "HuntableHerds\HuntableHerds.csproj", "{FF903985-2BD6-4B37-8D15-EB4898C4FC6C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealmsForgotten", "RealmsForgottenMain\RealmsForgotten.csproj", "{1076A320-4649-4272-B9B7-EB10875BC6B2}"
@@ -18,6 +16,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RFCustomSettlements", "RFCustomScenes\RFCustomSettlements.csproj", "{5EDC973C-000A-475F-AD9A-41045E31AC88}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RFCustomBandits", "RFCustomBandits\RFCustomBandits.csproj", "{283CFF27-B5F4-4BE8-B978-DC7D9A8E46E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RFReligions", "RFReligions\RFReligions.csproj", "{25646E57-0449-44C6-AE51-2412AEE5E876}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,14 +43,6 @@ Global
 		{74D0988D-8A41-4FAB-AA02-F808EB8B08CD}.Release|Any CPU.Build.0 = Release|x64
 		{74D0988D-8A41-4FAB-AA02-F808EB8B08CD}.Release|x64.ActiveCfg = Release|x64
 		{74D0988D-8A41-4FAB-AA02-F808EB8B08CD}.Release|x64.Build.0 = Release|x64
-		{55E6DBBA-C8C8-4280-8372-E82AE14E3C0B}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{55E6DBBA-C8C8-4280-8372-E82AE14E3C0B}.Debug|Any CPU.Build.0 = Debug|x64
-		{55E6DBBA-C8C8-4280-8372-E82AE14E3C0B}.Debug|x64.ActiveCfg = Debug|x64
-		{55E6DBBA-C8C8-4280-8372-E82AE14E3C0B}.Debug|x64.Build.0 = Debug|x64
-		{55E6DBBA-C8C8-4280-8372-E82AE14E3C0B}.Release|Any CPU.ActiveCfg = Release|x64
-		{55E6DBBA-C8C8-4280-8372-E82AE14E3C0B}.Release|Any CPU.Build.0 = Release|x64
-		{55E6DBBA-C8C8-4280-8372-E82AE14E3C0B}.Release|x64.ActiveCfg = Release|x64
-		{55E6DBBA-C8C8-4280-8372-E82AE14E3C0B}.Release|x64.Build.0 = Release|x64
 		{FF903985-2BD6-4B37-8D15-EB4898C4FC6C}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{FF903985-2BD6-4B37-8D15-EB4898C4FC6C}.Debug|Any CPU.Build.0 = Debug|x64
 		{FF903985-2BD6-4B37-8D15-EB4898C4FC6C}.Debug|x64.ActiveCfg = Debug|x64
@@ -91,6 +83,14 @@ Global
 		{283CFF27-B5F4-4BE8-B978-DC7D9A8E46E8}.Release|Any CPU.Build.0 = Release|x64
 		{283CFF27-B5F4-4BE8-B978-DC7D9A8E46E8}.Release|x64.ActiveCfg = Release|x64
 		{283CFF27-B5F4-4BE8-B978-DC7D9A8E46E8}.Release|x64.Build.0 = Release|x64
+		{25646E57-0449-44C6-AE51-2412AEE5E876}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{25646E57-0449-44C6-AE51-2412AEE5E876}.Debug|Any CPU.Build.0 = Debug|x64
+		{25646E57-0449-44C6-AE51-2412AEE5E876}.Debug|x64.ActiveCfg = Debug|x64
+		{25646E57-0449-44C6-AE51-2412AEE5E876}.Debug|x64.Build.0 = Debug|x64
+		{25646E57-0449-44C6-AE51-2412AEE5E876}.Release|Any CPU.ActiveCfg = Release|x64
+		{25646E57-0449-44C6-AE51-2412AEE5E876}.Release|Any CPU.Build.0 = Release|x64
+		{25646E57-0449-44C6-AE51-2412AEE5E876}.Release|x64.ActiveCfg = Release|x64
+		{25646E57-0449-44C6-AE51-2412AEE5E876}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

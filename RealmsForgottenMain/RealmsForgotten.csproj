@@ -55,9 +55,6 @@
     <Reference Include="MCMv5">
       <HintPath>_Module\bin\Win64_Shipping_Client\MCMv5.dll</HintPath>
     </Reference>
-    <Reference Include="ServeAsSoldier">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\RealmsForgotten\bin\Win64_Shipping_Client\ServeAsSoldier.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>
@@ -70,7 +67,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="_Module\ModuleData\" />
+    <Folder Include="AiMade\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -78,21 +75,6 @@
     <Compile Remove="AiMade\Career\ContractNotificationBehavior.cs" />
     <Compile Remove="AiMade\Career\MercenaryContractManager.cs" />
     <Compile Remove="AiMade\Career\ContractorBehavior.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Properties\Settings.Designer.cs">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
   </ItemGroup>
 
 </Project>

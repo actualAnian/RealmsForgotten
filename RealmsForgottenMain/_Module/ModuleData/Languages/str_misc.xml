@@ -45,13 +45,12 @@
     <string id="buy_slaves" text="Buy {AMOUNT} slave soldiers ({COST}{GOLD_ICON})" />
 
     <string id="temple_desc" text="The place where people of local culture praise their gods." />
-    <string id="visit_temple" text="Go to the temple" />
+    <string id="visit_temple" text="Go to the temple district" />
     <string id="low_faith_temple" text="You must have at least {AMOUNT} faith to recruit priests." />
     <string id="hire_monks" text="Hire {AMOUNT} warrior priests ({COST}{GOLD_ICON})" />
     <string id="no_monks_available" text="No warriors available at the moment." />
     <string id="donate_faith_text" text="+{AMOUNT} Faith XP" />
     <string id="donate_description" text="Donating to the temple will allow the priests to teach you the theology of the local religion, in addition to increasing your own faith" />
-    <string id="donate_to_temple" text="Donate to temple" />
     <string id="donate" text="Donate" />
 	  <string id="priest_morale_bonus" text="Priests Morale Bonus" />
 	  <string id="increased_melee" text="A weapon you're carrying has enhanced your skill in combat, increasing your melee skills." />

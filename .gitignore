@@ -16,5 +16,9 @@ RFCustomScenes/bin
 RFCustomScenes/obj
 RFCustomBandits/bin
 RFCustomBandits/obj
+RFReligions/bin
+RFReligions/obj
 fixCode.py
+.idea
 .vs
+.vscode
