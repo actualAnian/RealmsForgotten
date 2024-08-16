@@ -158,9 +158,7 @@ namespace RealmsForgotten.AiMade
                     kvp => kvp.Value.Select(MBObjectManager.Instance.GetObject<CharacterObject>).ToList()
                 );
             }
-
-            // Add logging
-            InformationManager.DisplayMessage(new InformationMessage($"SyncData called for {this.GetType().Name}"));
+            
         }
     }
 }

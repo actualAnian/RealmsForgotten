@@ -71,10 +71,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="AiMade\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Remove="AiMade\Career\InitializeMercenaryContracts.cs" />
     <Compile Remove="AiMade\Career\ContractNotificationBehavior.cs" />
     <Compile Remove="AiMade\Career\MercenaryContractManager.cs" />

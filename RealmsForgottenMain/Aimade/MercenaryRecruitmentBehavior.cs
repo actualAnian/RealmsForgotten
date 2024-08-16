@@ -144,9 +144,7 @@ namespace RealmsForgotten.AiMade
             {
                 cultureTroopMap = tempCultureTroopMap;
             }
-
-            // Add logging
-            InformationManager.DisplayMessage(new InformationMessage($"SyncData called for {this.GetType().Name}"));
+          
         }
     }
 }

@@ -24,7 +24,8 @@ namespace RealmsForgotten.AiMade
 
         private void OnSessionLaunched(CampaignGameStarter starter)
         {
-            _configs["town_EW3"] = new ExampleConfig("Hire Anorite Priests", new List<string> { "anorit_templar" });
+            _configs["town_EW3"] = new ExampleConfig("Hire Anorite Priests", new List<string> { "anorit_high_templar" });
+            _configs["town_EM1"] = new ExampleConfig("Hire Red Mages", new List<string> { "red_mage" });
             AddGameMenus(starter);
         }
 
@@ -146,9 +147,7 @@ namespace RealmsForgotten.AiMade
             {
                 _configs = tempConfigs;
             }
-
-            // Add logging
-            InformationManager.DisplayMessage(new InformationMessage($"SyncData called for {this.GetType().Name}"));
+          
         }
     }
 }

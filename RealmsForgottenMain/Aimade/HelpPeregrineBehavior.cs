@@ -162,10 +162,7 @@ namespace RealmsForgotten.AiMade
 
         private void EndEscortMission()
         {
-            if (MobileParty.MainParty.MemberRoster.FindIndexOfTroop(questMonasteryMonk) > -1)
-            {
-                MobileParty.MainParty.MemberRoster.RemoveTroop(questMonasteryMonk);
-            }
+            MobileParty.MainParty.MemberRoster.RemoveTroop(questMonasteryMonk);
             targetSettlement = null;
             banditAttackCount = 0;
             questMonasteryMonk = null;
