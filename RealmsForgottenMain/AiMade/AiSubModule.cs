@@ -4,6 +4,7 @@ using RealmsForgotten.AiMade.Managers;
 using RealmsForgotten.AiMade.Managers.RealmsForgotten.AiMade.Managers;
 using RealmsForgotten.AiMade.Models;
 using RealmsForgotten.AiMade.Patches;
+using RealmsForgotten.AiMade.Patches;
 using RealmsForgotten.AiMade.Religions;
 using RealmsForgotten.Behaviors;
 using System;

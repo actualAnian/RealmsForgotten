@@ -59,6 +59,9 @@
     <Reference Include="MCMv5">
       <HintPath>_Module\bin\Win64_Shipping_Client\MCMv5.dll</HintPath>
     </Reference>
+    <Reference Include="ServeAsSoldier">
+      <HintPath>_Module\bin\Win64_Shipping_Client\ServeAsSoldier.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

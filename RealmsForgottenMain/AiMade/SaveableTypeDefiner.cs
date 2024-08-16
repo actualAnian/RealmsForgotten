@@ -4,6 +4,7 @@ using RealmsForgotten.AiMade.Managers.RealmsForgotten.AiMade.Managers;
 using RealmsForgotten.AiMade.Patches;
 using RealmsForgotten.AiMade.Religions;
 using RealmsForgotten.Behaviors;
+using RealmsForgotten.Behaviors;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.SaveSystem;
 
@@ -53,6 +54,7 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(BanditDefeatChivalryBehavior), 17);
             AddClassDefinition(typeof(CareerProgressionBehavior), 18);
             AddClassDefinition(typeof(ReligionObject), 19);
+            AddClassDefinition(typeof(ADODInnBehavior), 20);
             AddClassDefinition(typeof(ADODInnBehavior), 20);
             AddClassDefinition(typeof(DefendVillagersOrCaravansBehavior), 22);
             AddClassDefinition(typeof(QuestCompletionBehavior), 23);

@@ -148,6 +148,7 @@ namespace RealmsForgotten.AiMade
                 _configs = tempConfigs;
             }
           
+          
         }
     }
 }

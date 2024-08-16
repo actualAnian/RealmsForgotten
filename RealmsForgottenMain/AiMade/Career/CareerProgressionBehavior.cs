@@ -35,6 +35,7 @@ namespace RealmsForgotten.AiMade.Career
         private string currentTier = null; // Default to null to avoid wrongly applying any tier
 
         private CareerType currentCareer = CareerType.None;// Default to null
+        private CareerType currentCareer = CareerType.None;// Default to null
         private bool isCareerAccepted = false; // Track if career is accepted
         private float nextNotificationTime = float.MaxValue; // Initialize to prevent immediate notifications
 
