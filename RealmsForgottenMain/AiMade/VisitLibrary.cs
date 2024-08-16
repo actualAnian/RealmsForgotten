@@ -343,7 +343,7 @@ namespace RealmsForgotten.AiMade
 
             if (hero.Gold >= dynamicGoldCost && hero.PartyBelongedTo.ItemRoster.GetItemNumber(AlchemicalPowderItem) >= dynamicPowderAmount)
             {
-                GiveGoldAction.ApplyBetweenCharacters(null, hero, dynamicGoldCost, false);
+                GiveGoldAction.ApplyBetweenCharacters(hero, null, dynamicGoldCost, false);
                 hero.PartyBelongedTo.ItemRoster.AddToCounts(AlchemicalPowderItem, -dynamicPowderAmount);
                 hero.AddSkillXp(RFSkills.Alchemy, CalculateDynamicXpAmount(currentSkillLevel));
 
@@ -407,7 +407,9 @@ namespace RealmsForgotten.AiMade
 
             if (hero.Gold >= dynamicGoldCost)
             {
-                GiveGoldAction.ApplyBetweenCharacters(null, hero, dynamicGoldCost, false);
+                // Deduct gold from hero
+                GiveGoldAction.ApplyBetweenCharacters(hero, null, dynamicGoldCost, false);
+
                 hero.AddSkillXp(skill, CalculateDynamicXpAmount(currentSkillLevel));
 
                 InformationManager.ShowInquiry(new InquiryData(

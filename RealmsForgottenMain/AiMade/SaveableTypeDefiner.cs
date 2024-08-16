@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using RealmsForgotten.AiMade.Career;
+using RealmsForgotten.AiMade.Managers.RealmsForgotten.AiMade.Managers;
 using RealmsForgotten.AiMade.Patches;
 using RealmsForgotten.AiMade.Religions;
+using RealmsForgotten.Behaviors;
 using RealmsForgotten.Behaviors;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.SaveSystem;
@@ -53,6 +55,7 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(CareerProgressionBehavior), 18);
             AddClassDefinition(typeof(ReligionObject), 19);
             AddClassDefinition(typeof(ADODInnBehavior), 20);
+            AddClassDefinition(typeof(ADODInnBehavior), 20);
             AddClassDefinition(typeof(DefendVillagersOrCaravansBehavior), 22);
             AddClassDefinition(typeof(QuestCompletionBehavior), 23);
             AddClassDefinition(typeof(DivineShieldStateBehavior), 24);
@@ -73,6 +76,9 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(DuelsBehavior), 41);
             AddClassDefinition(typeof(BarbarianHordeInvasion), 42);
             AddClassDefinition(typeof(UndeadHordeBehavior), 43);
+            AddClassDefinition(typeof(BanditIncrease), 44);
+            AddClassDefinition(typeof(BanditPartyManager), 45);
+
         }
     }
 }

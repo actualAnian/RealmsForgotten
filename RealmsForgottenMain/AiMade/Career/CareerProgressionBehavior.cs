@@ -35,6 +35,7 @@ namespace RealmsForgotten.AiMade.Career
         private string currentTier = null; // Default to null to avoid wrongly applying any tier
 
         private CareerType currentCareer = CareerType.None;// Default to null
+        private CareerType currentCareer = CareerType.None;// Default to null
         private bool isCareerAccepted = false; // Track if career is accepted
         private float nextNotificationTime = float.MaxValue; // Initialize to prevent immediate notifications
 
@@ -89,7 +90,7 @@ namespace RealmsForgotten.AiMade.Career
         {
             if (currentCareer == CareerType.None)
                 return;
-            
+
             isCareerAccepted = true;
             ApplyInitialCareerTier(currentCareer);
             InformationManager.DisplayMessage(new InformationMessage($"You started the {currentCareer} career. Initial tier applied: {currentTier}."));
@@ -159,7 +160,7 @@ namespace RealmsForgotten.AiMade.Career
                 CheckAndApplyTierProgression("Reach Level");
             }
         }
-        
+
         private void UpdateProgression(string requirement, int value)
         {
             playerProgress += value;
@@ -403,7 +404,7 @@ namespace RealmsForgotten.AiMade.Career
             dataStore.SyncData("playerProgress", ref playerProgress);
             dataStore.SyncData("hasLegendaryBattleCry", ref hasLegendaryBattleCry);
             dataStore.SyncData("currentTier", ref currentTier);
-           // dataStore.SyncData("currentCareerId", ref currentCareer);
+            // dataStore.SyncData("currentCareerId", ref currentCareer);
             dataStore.SyncData("chivalryPoints", ref chivalryPoints);
             ChivalryManager.SyncData(dataStore);
         }
@@ -469,7 +470,7 @@ namespace RealmsForgotten.AiMade.Career
         }
     }
 }
-    
+
 
 
 

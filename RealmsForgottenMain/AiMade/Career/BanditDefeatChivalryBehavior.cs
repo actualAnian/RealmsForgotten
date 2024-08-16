@@ -32,7 +32,11 @@ namespace RealmsForgotten.AiMade.Career
 
         private bool IsBanditParty(PartyBase party)
         {
-            return party.MobileParty != null && party.MobileParty.PartyComponent.GetType().Name == "BanditPartyComponent";
+            if (party == null || party.MobileParty == null || party.MobileParty.PartyComponent == null)
+            {
+                return false;
+            }
+            return party.MobileParty.PartyComponent.GetType().Name == "BanditPartyComponent";
         }
 
         private void AwardChivalryPoints()
@@ -72,4 +76,3 @@ namespace RealmsForgotten.AiMade.Career
         }
     }
 }
-

@@ -264,9 +264,15 @@ namespace RealmsForgotten.RFLegendaryTroops
 
         private void SpawnNotablesAtGameStart()
         {
+            if (Settlement.All == null)
+            {
+                // Handle the case where Settlement.All is null
+                return;
+            }
+
             foreach (Settlement settlement in Settlement.All)
             {
-                if (settlement.IsCastle)
+                if (settlement != null && settlement.IsCastle)
                 {
                     int targetNotableCountForSettlement = Helper.GetTargetNotableCountForSettlement(settlement);
                     for (int i = 0; i < targetNotableCountForSettlement; i++)

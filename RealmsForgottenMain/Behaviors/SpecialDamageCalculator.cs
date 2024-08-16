@@ -1,4 +1,4 @@
-using RealmsForgotten.Models;
+﻿using RealmsForgotten.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,13 +48,10 @@ namespace RealmsForgotten.Behaviors
             return "unknown";
         }
 
-        private float ApplySpecificWeaponDamage(Agent agent, float damage, float penaltyFactor = 0.2f)
+        private float ApplySpecificWeaponDamage(Agent agent, float damage)
         {
-            float penalizedDamage = damage * penaltyFactor;
-
-            agent.Health -= penalizedDamage;
-           
-            return penalizedDamage;
+            // Logic for applying damage with a specific weapon
+            return damage; // Modify as needed
         }
     }
 }

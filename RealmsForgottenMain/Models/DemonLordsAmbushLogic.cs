@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,6 +30,7 @@ namespace RealmsForgotten.Models
                     if (raceId != -1) // Assuming -1 is returned if the race is not found
                     {
                         targetRaceIds.Add(raceId);
+                        LogMessage($"DemonLordsAmbushLogic: Added race '{raceName}' with ID {raceId}.");
                     }
                     else
                     {

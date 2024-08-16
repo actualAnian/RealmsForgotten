@@ -1,27 +1,57 @@
-﻿using RealmsForgotten.AiMade.Career;
+﻿using HarmonyLib;
+using RealmsForgotten.AiMade.Career;
+using RealmsForgotten.AiMade.Managers;
+using RealmsForgotten.AiMade.Managers.RealmsForgotten.AiMade.Managers;
 using RealmsForgotten.AiMade.Models;
+using RealmsForgotten.AiMade.Patches;
 using RealmsForgotten.AiMade.Patches;
 using RealmsForgotten.AiMade.Religions;
 using RealmsForgotten.Behaviors;
+using System;
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.Core;
 using TaleWorlds.InputSystem;
+using TaleWorlds.Library;
+using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.AiMade
 {
-    public static class AiSubModule
+    public class AiSubModule : MBSubModuleBase
     {
-        public static readonly Dictionary<string, InputKey> PossibleKeys = new();
-        
+        protected override void OnSubModuleLoad()
+        {
+            base.OnSubModuleLoad();
+            try
+            {
+                var harmony = new Harmony("com.realmsforgotten.aimade");
+                harmony.PatchAll();
+                InformationManager.DisplayMessage(new InformationMessage("RealmsForgotten: Harmony patches applied successfully."));
+            }
+            catch (Exception ex)
+            {
+                InformationManager.DisplayMessage(new InformationMessage($"RealmsForgotten: Failed to apply Harmony patches. {ex.Message}"));
+            }
+        }
+
+        protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
+        {
+            base.OnGameStart(game, gameStarterObject);
+            if (game.GameType is Campaign)
+            {
+                var campaignStarter = (CampaignGameStarter)gameStarterObject;
+                AddCampaignBehaviors(campaignStarter);
+            }
+        }
+
         public static void AddCampaignBehaviors(CampaignGameStarter campaignGameStarter)
         {
             // Initialize quest behaviors
-           
             var customItemCategories = new RealmsForgotten.Behaviors.CustomItemCategories();
             customItemCategories.Initialize();
 
             // Add quest behaviors
-          
+
             // Add other behaviors
             campaignGameStarter.AddBehavior(new MercenaryOfferBehavior());
             campaignGameStarter.AddBehavior(new HouseTroopsTownsBehavior());
@@ -49,6 +79,9 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new UndeadHordeBehavior());
             campaignGameStarter.AddBehavior(new BarbarianHordeInvasion());
             campaignGameStarter.AddBehavior(new ADODInnBehavior());
+            campaignGameStarter.AddBehavior(new BanditIncrease());
+            campaignGameStarter.AddBehavior(new BanditPartyManager());
+
         }
 
         public static void InitializeCareerSystem()

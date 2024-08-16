@@ -92,6 +92,15 @@ namespace RealmsForgotten
                 case "aqarun":
                     bodyPropString = AqarunBodyPropString;
                     break;
+                case "south_realm":
+                    bodyPropString = HumanBodyPropString;
+                    break;
+                case "west_realm":
+                    bodyPropString = HumanBodyPropString;
+                    break;
+                case "mage":
+                    bodyPropString = HumanBodyPropString;
+                    break;
                 default:
                     Debug.FailedAssert("Selected culture is invalid!", "RFCharacterCreationContent.cs", "OnCultureSelected", 80);
                     bodyPropString = HumanBodyPropString;
@@ -182,6 +191,15 @@ namespace RealmsForgotten
 
                         cultureObject.CultureFeats.Add(culturalFeats.aqarunRecruitBandits);
                         break;
+                    case "south_realm":
+                        cultureObject.CultureFeats.Add(culturalFeats.empireAdittionalTier);
+                        break;
+                    case "west_realm":
+                        cultureObject.CultureFeats.Add(culturalFeats.empireAdittionalTier);
+                        break;
+                    case "mage":
+                        cultureObject.CultureFeats.Add(culturalFeats.empireAdittionalTier);
+                        break;
                 }
 
             }
@@ -266,6 +284,33 @@ namespace RealmsForgotten
             aqarunParentsCategory.AddCategoryOption(new("Free men"), new() { DefaultSkills.Scouting, DefaultSkills.Bow }, DefaultCharacterAttributes.Cunning, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, AqarunFreeMenOnConsequence, base.AseraiBedouinOnApply, new("{=PKhcPbBX}Your family were part of a nomadic clan, crisscrossing the wastes between wadi beds and wells to feed their herds of goats and camels on the scraggly scrubs of the Kalikhr."), null, 0, 0, 0, 0, 0);
             aqarunParentsCategory.AddCategoryOption(new("Orfans"), new() { DefaultSkills.Roguery, DefaultSkills.Polearm }, DefaultCharacterAttributes.Control, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, AqarunOrphansOnConsequence, base.AseraiBackAlleyThugOnApply, new("Your father was not your biological father, but adopted you under his protection to one day strenghten his army of thugs. He worked for a fitiwi, one of the strongmen who keep order in the poorer quarters of the oasis towns. He resolved disputes over land, dice and insults, imposing his authority with the fitiwi's traditional staff."), null, 0, 0, 0, 0, 0);
 
+            // Southrealm
+            CharacterCreationCategory southrealmParentsCategory = parentsMenu.AddMenuCategory(new(this.SouthRealmParentsOnCondition));
+            southrealmParentsCategory.AddCategoryOption(new("Direct Descendants of the first people"), new() { DefaultSkills.Riding, DefaultSkills.Polearm }, DefaultCharacterAttributes.Vigor, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, SouthRealmLandlordsRetainerOnConsequence, base.EmpireLandlordsRetainerOnApply, new("Descending from the ruler´s bloodline of the First People - the ancestors that made the pilgrimage to Aeurth - your father was a leader among his village and the cousin of the King of his Realm. He rode with the lord´s cavalry, fighting as an armored lancer."), null, 0, 0, 0, 0, 0);
+            southrealmParentsCategory.AddCategoryOption(new("{=651FhzdR}Urban merchants"), new() { DefaultSkills.Trade, DefaultSkills.Charm }, DefaultCharacterAttributes.Social, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, SouthRealmMerchantOnConsequence, base.EmpireMerchantOnApply, new("{=FQntPChs}Your family were merchants in one of the main cities of the Kingdoms of Man. They sometimes organized caravans to nearby towns, and discussed issues in the town council."), null, 0, 0, 0, 0, 0);
+            southrealmParentsCategory.AddCategoryOption(new("Free Farmers"), new() { DefaultSkills.Athletics, DefaultSkills.Polearm }, DefaultCharacterAttributes.Endurance, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, SouthRealmFreeholderOnConsequence, base.EmpireFreeholderOnApply, new("{=09z8Q08f}Your family were small farmers with just enough land to feed themselves and make a small profit. People like them were the pillars of the realm rural economy, as well as the backbone of the levy."), null, 0, 0, 0, 0, 0);
+            southrealmParentsCategory.AddCategoryOption(new("{=v48N6h1t}Urban artisans"), new() { DefaultSkills.Crafting, DefaultSkills.Crossbow }, DefaultCharacterAttributes.Intelligence, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, SouthRealmArtisanOnConsequence, base.EmpireArtisanOnApply, new("{=ZKynvffv}Your family owned their own workshop in a city, making goods from raw materials brought in from the countryside. Your father played an active if minor role in the town council, and also served in the militia."), null, 0, 0, 0, 0, 0);
+            southrealmParentsCategory.AddCategoryOption(new("Forestcaretakers"), new() { DefaultSkills.Scouting, DefaultSkills.Bow }, DefaultCharacterAttributes.Control, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, SouthRealmWoodsmanOnConsequence, base.EmpireWoodsmanOnApply, new("Your family lived in a village, but did not own their own land. Instead, your father supplemented paid jobs with long trips in the woods, hunting and trapping, always keeping a wary eye for the lord's game wardens."), null, 0, 0, 0, 0, 0);
+            southrealmParentsCategory.AddCategoryOption(new("{=aEke8dSb}Urban vagabonds"), new() { DefaultSkills.Roguery, DefaultSkills.Throwing }, DefaultCharacterAttributes.Cunning, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, SouthRealmVagabondOnConsequence, base.EmpireVagabondOnApply, new("{=Jvf6K7TZ}Your family numbered among the many poor migrants living in the slums that grow up outside the walls of cities, making whatever money they could from a variety of odd jobs. Sometimes they did service for one of the many criminal gangs, and you had an early look at the dark side of life."), null, 0, 0, 0, 0, 0);
+
+            // WestRealm
+            CharacterCreationCategory westrealmParentsCategory = parentsMenu.AddMenuCategory(new(this.WestRealmParentsOnCondition));
+            westrealmParentsCategory.AddCategoryOption(new("Direct Descendants of the first people"), new() { DefaultSkills.Riding, DefaultSkills.Polearm }, DefaultCharacterAttributes.Vigor, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, WestRealmLandlordsRetainerOnConsequence, base.EmpireLandlordsRetainerOnApply, new("Descending from the ruler´s bloodline of the First People - the ancestors that made the pilgrimage to Aeurth - your father was a leader among his village and the cousin of the King of his Realm. He rode with the lord´s cavalry, fighting as an armored lancer."), null, 0, 0, 0, 0, 0);
+            westrealmParentsCategory.AddCategoryOption(new("{=651FhzdR}Urban merchants"), new() { DefaultSkills.Trade, DefaultSkills.Charm }, DefaultCharacterAttributes.Social, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, WestRealmMerchantOnConsequence, base.EmpireMerchantOnApply, new("{=FQntPChs}Your family were merchants in one of the main cities of the Kingdoms of Man. They sometimes organized caravans to nearby towns, and discussed issues in the town council."), null, 0, 0, 0, 0, 0);
+            westrealmParentsCategory.AddCategoryOption(new("Free Farmers"), new() { DefaultSkills.Athletics, DefaultSkills.Polearm }, DefaultCharacterAttributes.Endurance, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, WestRealmFreeholderOnConsequence, base.EmpireFreeholderOnApply, new("{=09z8Q08f}Your family were small farmers with just enough land to feed themselves and make a small profit. People like them were the pillars of the realm rural economy, as well as the backbone of the levy."), null, 0, 0, 0, 0, 0);
+            westrealmParentsCategory.AddCategoryOption(new("{=v48N6h1t}Urban artisans"), new() { DefaultSkills.Crafting, DefaultSkills.Crossbow }, DefaultCharacterAttributes.Intelligence, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, WestRealmArtisanOnConsequence, base.EmpireArtisanOnApply, new("{=ZKynvffv}Your family owned their own workshop in a city, making goods from raw materials brought in from the countryside. Your father played an active if minor role in the town council, and also served in the militia."), null, 0, 0, 0, 0, 0);
+            westrealmParentsCategory.AddCategoryOption(new("Forestcaretakers"), new() { DefaultSkills.Scouting, DefaultSkills.Bow }, DefaultCharacterAttributes.Control, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, WestRealmWoodsmanOnConsequence, base.EmpireWoodsmanOnApply, new("Your family lived in a village, but did not own their own land. Instead, your father supplemented paid jobs with long trips in the woods, hunting and trapping, always keeping a wary eye for the lord's game wardens."), null, 0, 0, 0, 0, 0);
+            westrealmParentsCategory.AddCategoryOption(new("{=aEke8dSb}Urban vagabonds"), new() { DefaultSkills.Roguery, DefaultSkills.Throwing }, DefaultCharacterAttributes.Cunning, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, WestRealmVagabondOnConsequence, base.EmpireVagabondOnApply, new("{=Jvf6K7TZ}Your family numbered among the many poor migrants living in the slums that grow up outside the walls of cities, making whatever money they could from a variety of odd jobs. Sometimes they did service for one of the many criminal gangs, and you had an early look at the dark side of life."), null, 0, 0, 0, 0, 0);
+
+            // Mage
+            CharacterCreationCategory mageParentsCategory = parentsMenu.AddMenuCategory(new(this.MageParentsOnCondition));
+            mageParentsCategory.AddCategoryOption(new("Direct Descendants of the first people"), new() { DefaultSkills.Riding, DefaultSkills.Polearm }, DefaultCharacterAttributes.Vigor, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, MageLandlordsRetainerOnConsequence, base.EmpireLandlordsRetainerOnApply, new("Descending from the ruler´s bloodline of the First People - the ancestors that made the pilgrimage to Aeurth - your father was a leader among his village and the cousin of the King of his Realm. He rode with the lord´s cavalry, fighting as an armored lancer."), null, 0, 0, 0, 0, 0);
+            mageParentsCategory.AddCategoryOption(new("{=651FhzdR}Urban merchants"), new() { DefaultSkills.Trade, DefaultSkills.Charm }, DefaultCharacterAttributes.Social, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, MageMerchantOnConsequence, base.EmpireMerchantOnApply, new("{=FQntPChs}Your family were merchants in one of the main cities of the Kingdoms of Man. They sometimes organized caravans to nearby towns, and discussed issues in the town council."), null, 0, 0, 0, 0, 0);
+            mageParentsCategory.AddCategoryOption(new("Free Farmers"), new() { DefaultSkills.Athletics, DefaultSkills.Polearm }, DefaultCharacterAttributes.Endurance, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, MageFreeholderOnConsequence, base.EmpireFreeholderOnApply, new("{=09z8Q08f}Your family were small farmers with just enough land to feed themselves and make a small profit. People like them were the pillars of the realm rural economy, as well as the backbone of the levy."), null, 0, 0, 0, 0, 0);
+            mageParentsCategory.AddCategoryOption(new("{=v48N6h1t}Urban artisans"), new() { DefaultSkills.Crafting, DefaultSkills.Crossbow }, DefaultCharacterAttributes.Intelligence, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, MageArtisanOnConsequence, base.EmpireArtisanOnApply, new("{=ZKynvffv}Your family owned their own workshop in a city, making goods from raw materials brought in from the countryside. Your father played an active if minor role in the town council, and also served in the militia."), null, 0, 0, 0, 0, 0);
+            mageParentsCategory.AddCategoryOption(new("Forestcaretakers"), new() { DefaultSkills.Scouting, DefaultSkills.Bow }, DefaultCharacterAttributes.Control, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, MageWoodsmanOnConsequence, base.EmpireWoodsmanOnApply, new("Your family lived in a village, but did not own their own land. Instead, your father supplemented paid jobs with long trips in the woods, hunting and trapping, always keeping a wary eye for the lord's game wardens."), null, 0, 0, 0, 0, 0);
+            mageParentsCategory.AddCategoryOption(new("{=aEke8dSb}Urban vagabonds"), new() { DefaultSkills.Roguery, DefaultSkills.Throwing }, DefaultCharacterAttributes.Cunning, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, MageVagabondOnConsequence, base.EmpireVagabondOnApply, new("{=Jvf6K7TZ}Your family numbered among the many poor migrants living in the slums that grow up outside the walls of cities, making whatever money they could from a variety of odd jobs. Sometimes they did service for one of the many criminal gangs, and you had an early look at the dark side of life."), null, 0, 0, 0, 0, 0);
+
             characterCreation.AddNewMenu(parentsMenu);
         }
 
@@ -324,6 +369,95 @@ namespace RealmsForgotten
             SetParentAndOccupationType(characterCreation, 6, OccupationTypes.Healer);
         }
 
+        protected void SouthRealmLandlordsRetainerOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 1, OccupationTypes.Retainer);
+        }
+
+        protected void SouthRealmMerchantOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 2, OccupationTypes.Merchant);
+        }
+
+        protected void SouthRealmFreeholderOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 3, OccupationTypes.Farmer);
+        }
+
+        protected void SouthRealmArtisanOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 4, OccupationTypes.Artisan);
+        }
+
+        protected void SouthRealmWoodsmanOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 5, OccupationTypes.Hunter);
+        }
+
+        protected void SouthRealmVagabondOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 6, OccupationTypes.Vagabond);
+        }
+
+        protected void WestRealmLandlordsRetainerOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 1, OccupationTypes.Retainer);
+        }
+
+        protected void WestRealmMerchantOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 2, OccupationTypes.Merchant);
+        }
+
+        protected void WestRealmFreeholderOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 3, OccupationTypes.Farmer);
+        }
+
+        protected void WestRealmArtisanOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 4, OccupationTypes.Artisan);
+        }
+
+        protected void WestRealmWoodsmanOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 5, OccupationTypes.Hunter);
+        }
+
+        protected void WestRealmVagabondOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 6, OccupationTypes.Vagabond);
+        }
+
+        protected void MageLandlordsRetainerOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 1, OccupationTypes.Retainer);
+        }
+
+        protected void MageMerchantOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 2, OccupationTypes.Merchant);
+        }
+
+        protected void MageFreeholderOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 3, OccupationTypes.Farmer);
+        }
+
+        protected void MageArtisanOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 4, OccupationTypes.Artisan);
+        }
+
+        protected void MageWoodsmanOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 5, OccupationTypes.Hunter);
+        }
+
+        protected void MageVagabondOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 6, OccupationTypes.Vagabond);
+        }
         protected new void AddChildhoodMenu(CharacterCreation characterCreation)
         {
             // CHILDHOOD MENU
@@ -666,6 +800,122 @@ namespace RealmsForgotten
                 DefaultSkills.Throwing
             }, DefaultCharacterAttributes.Cunning, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, new(base.YouthCamperOnConsequence), new(base.YouthCamperOnApply), new("{=64rWqBLN}You avoided service with one of the main forces of your realm's armies, but followed instead in the train - the troops' wives, lovers and servants, and those who make their living by caring for, entertaining, or cheating the soldiery.", null), null, 0, 0, 0, 0, 0);
 
+            // South Realm
+
+            characterCreationCategory = characterCreationMenu.AddMenuCategory(new(SouthRealmParentsOnCondition));
+            characterCreationCategory.AddCategoryOption(new("{=h2KnarLL}trained with the cavalry.", null), new()
+            {
+                DefaultSkills.Riding,
+                DefaultSkills.Polearm
+            },  DefaultCharacterAttributes.Endurance, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, new(base.YouthCavalryOnConsequence), new(base.YouthCavalryOnApply), new("{=7cHsIMLP}You could never have bought the equipment on your own but you were a good enough rider so that the local lord lent you a horse and equipment. You joined the armored cavalry, training with the lance.", null), null, 0, 0, 0, 0, 0);
+
+            characterCreationCategory.AddCategoryOption(new("partrolled the cities.", null), new()
+            {
+                DefaultSkills.Crossbow,
+                DefaultSkills.Engineering
+            }, DefaultCharacterAttributes.Intelligence, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, new(base.YouthGarrisonOnConsequence), new(base.YouthGarrisonOnApply), new("{63TAYbkx}Urban troops spend much of their time guarding the town walls. Most of their training was in missile weapons, especially useful during sieges.", null), null, 0, 0, 0, 0, 0);
+
+            characterCreationCategory.AddCategoryOption(new("joined the scouts.", null), new()
+            {
+                DefaultSkills.Riding,
+                DefaultSkills.Bow
+            }, DefaultCharacterAttributes.Endurance, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, new(base.YouthOtherOutridersOnConsequence), new(base.YouthOtherOutridersOnApply), new("You couted ahead of the army.", null), null, 0, 0, 0, 0, 0);
+
+            characterCreationCategory.AddCategoryOption(new("{=a8arFSra}trained with the infantry.", null), new()
+            {
+                DefaultSkills.Polearm,
+                 DefaultSkills.OneHanded
+            },  DefaultCharacterAttributes.Vigor, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, null, new(base.YouthInfantryOnApply), new("{=afH90aNs}Young Tribesmen armed with spear and shield, drawn from smallholding farmers, have always been the backbone of most armies of Athas.", null), null, 0, 0, 0, 0, 0);
+
+            characterCreationCategory.AddCategoryOption(new("{=oMbOIPc9}joined the skirmishers.", null), new()
+            {
+            DefaultSkills.Throwing,
+            DefaultSkills.OneHanded
+         }, DefaultCharacterAttributes.Control, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, new(base.YouthSkirmisherOnConsequence), new(base.YouthSkirmisherOnApply), new("{=bXAg5w19}Younger recruits, or those of a slighter build, or those too poor to buy shield and armor tend to join the skirmishers. Fighting with bow and javelin, they try to stay out of reach of the main enemy forces.", null), null, 0, 0, 0, 0, 0);
+
+            characterCreationCategory.AddCategoryOption(new("{=GFUggps8}marched with the free people.", null), new()
+        {
+            DefaultSkills.Roguery,
+            DefaultSkills.Throwing
+        }, DefaultCharacterAttributes.Cunning, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, new(base.YouthCamperOnConsequence), new(base.YouthCamperOnApply), new("{=64rWqBLN}You avoided service with one of the main forces of your realm's armies, but followed instead in the train - the troops' wives, lovers and servants, and those who make their living by caring for, entertaining, or cheating the soldiery.", null), null, 0, 0, 0, 0, 0);
+
+            // West Realm
+
+            characterCreationCategory = characterCreationMenu.AddMenuCategory(new(WestRealmParentsOnCondition));
+            characterCreationCategory.AddCategoryOption(new("{=h2KnarLL}trained with the cavalry.", null), new()
+        {
+            DefaultSkills.Riding,
+            DefaultSkills.Polearm
+        }, DefaultCharacterAttributes.Endurance, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, new(base.YouthCavalryOnConsequence), new(base.YouthCavalryOnApply), new("{=7cHsIMLP}You could never have bought the equipment on your own but you were a good enough rider so that the local lord lent you a horse and equipment. You joined the armored cavalry, training with the lance.", null), null, 0, 0, 0, 0, 0);
+
+            characterCreationCategory.AddCategoryOption(new("partrolled the cities.", null), new()
+        {
+             DefaultSkills.Crossbow,
+            DefaultSkills.Engineering
+        }, DefaultCharacterAttributes.Intelligence, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, new(base.YouthGarrisonOnConsequence), new(base.YouthGarrisonOnApply), new("{63TAYbkx}Urban troops spend much of their time guarding the town walls. Most of their training was in missile weapons, especially useful during sieges.", null), null, 0, 0, 0, 0, 0);
+
+            characterCreationCategory.AddCategoryOption(new("joined the scouts.", null), new()
+        {
+            DefaultSkills.Riding,
+             DefaultSkills.Bow
+         }, DefaultCharacterAttributes.Endurance, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, new(base.YouthOtherOutridersOnConsequence), new(base.YouthOtherOutridersOnApply), new("You couted ahead of the army.", null), null, 0, 0, 0, 0, 0);
+
+            characterCreationCategory.AddCategoryOption(new("{=a8arFSra}trained with the infantry.", null), new()
+        {
+            DefaultSkills.Polearm,
+            DefaultSkills.OneHanded
+        }, DefaultCharacterAttributes.Vigor, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, null, new(base.YouthInfantryOnApply), new("{=afH90aNs}Young Tribesmen armed with spear and shield, drawn from smallholding farmers, have always been the backbone of most armies of Athas.", null), null, 0, 0, 0, 0, 0);
+
+            characterCreationCategory.AddCategoryOption(new("{=oMbOIPc9}joined the skirmishers.", null), new()
+        {
+            DefaultSkills.Throwing,
+            DefaultSkills.OneHanded
+        }, DefaultCharacterAttributes.Control, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, new(base.YouthSkirmisherOnConsequence), new(base.YouthSkirmisherOnApply), new("{=bXAg5w19}Younger recruits, or those of a slighter build, or those too poor to buy shield and armor tend to join the skirmishers. Fighting with bow and javelin, they try to stay out of reach of the main enemy forces.", null), null, 0, 0, 0, 0, 0);
+
+            characterCreationCategory.AddCategoryOption(new("{=GFUggps8}marched with the free people.", null), new()
+        {
+            DefaultSkills.Roguery,
+            DefaultSkills.Throwing
+        }, DefaultCharacterAttributes.Cunning, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, new(base.YouthCamperOnConsequence), new(base.YouthCamperOnApply), new("{=64rWqBLN}You avoided service with one of the main forces of your realm's armies, but followed instead in the train - the troops' wives, lovers and servants, and those who make their living by caring for, entertaining, or cheating the soldiery.", null), null, 0, 0, 0, 0, 0);
+
+            // Mage
+
+            characterCreationCategory = characterCreationMenu.AddMenuCategory(new(MageParentsOnCondition));
+            characterCreationCategory.AddCategoryOption(new("{=h2KnarLL}trained with the cavalry.", null), new()
+        {
+            DefaultSkills.Riding,
+            DefaultSkills.Polearm
+        }, DefaultCharacterAttributes.Endurance, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, new(base.YouthCavalryOnConsequence), new(base.YouthCavalryOnApply), new("{=7cHsIMLP}You could never have bought the equipment on your own but you were a good enough rider so that the local lord lent you a horse and equipment. You joined the armored cavalry, training with the lance.", null), null, 0, 0, 0, 0, 0);
+
+            characterCreationCategory.AddCategoryOption(new("partrolled the cities.", null), new()
+        {
+            DefaultSkills.Crossbow,
+            DefaultSkills.Engineering
+        }, DefaultCharacterAttributes.Intelligence, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, new(base.YouthGarrisonOnConsequence), new(base.YouthGarrisonOnApply), new("{63TAYbkx}Urban troops spend much of their time guarding the town walls. Most of their training was in missile weapons, especially useful during sieges.", null), null, 0, 0, 0, 0, 0);
+
+            characterCreationCategory.AddCategoryOption(new("joined the scouts.", null), new()
+        {
+            DefaultSkills.Riding,
+             DefaultSkills.Bow
+        }, DefaultCharacterAttributes.Endurance, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, new(base.YouthOtherOutridersOnConsequence), new(base.YouthOtherOutridersOnApply), new("You couted ahead of the army.", null), null, 0, 0, 0, 0, 0);
+
+            characterCreationCategory.AddCategoryOption(new("{=a8arFSra}trained with the infantry.", null), new()
+        {
+            DefaultSkills.Polearm,
+            DefaultSkills.OneHanded
+        }, DefaultCharacterAttributes.Vigor, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, null, new(base.YouthInfantryOnApply), new("{=afH90aNs}Young Tribesmen armed with spear and shield, drawn from smallholding farmers, have always been the backbone of most armies.", null), null, 0, 0, 0, 0, 0);
+
+            characterCreationCategory.AddCategoryOption(new("{=oMbOIPc9}joined the scholars.", null), new()
+        {
+            DefaultSkills.Medicine,
+            RFSkills.Arcane
+        }, DefaultCharacterAttributes.Control, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, new(base.YouthSkirmisherOnConsequence), new(base.YouthSkirmisherOnApply), new("{=bXAg5w19}After reaching the age when every youth is potentially a spear bearer, it became clear that your constitution was not up to the task. However, scrolls and books quickly revealed themselves as a field in which you showed great familiarity. Seeing this, the scholars of the kingdom gladly welcomed another novice.", null), null, 0, 0, 0, 0, 0);
+
+            characterCreationCategory.AddCategoryOption(new("{=GFUggps8}marched with the free people.", null), new()
+        {
+            DefaultSkills.Throwing,
+            DefaultSkills.OneHanded
+        }, DefaultCharacterAttributes.Cunning, this.FocusToAdd, this.SkillLevelToAdd, this.AttributeLevelToAdd, null, new(base.YouthCamperOnConsequence), new(base.YouthCamperOnApply), new("{=64rWqBLN}You avoided service with one of the main forces of your realm's armies, but followed instead in the train - the troops' wives, lovers and servants, and those who make their living by caring for, entertaining, or cheating the soldiery.", null), null, 0, 0, 0, 0, 0);
 
             characterCreation.AddNewMenu(characterCreationMenu);
         }
@@ -818,6 +1068,7 @@ namespace RealmsForgotten
             characterCreationCategory.AddCategoryOption(new("{=CulturedStart42}On a river boat to the Nasoria city of Valendia", null), new(), null, 0, 0, 0, null, new(this.PravendLocationOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart43}You leave the boat and arrive right at the gates", null), null, 0, 0, 0, 0, 0);
             characterCreationCategory.AddCategoryOption(new("{=CulturedStart48}In a caravan to the Xilantlacay city of Uztlecot", null), new(), null, 0, 0, 0, null, new(UztlecotLocationOnConsequence), new(DoNothingOnApply), new("{=CulturedStart36}You leave the caravan right at the gates", null), null, 0, 0, 0, 0, 0);
             characterCreationCategory.AddCategoryOption(new("{=CulturedStart50}In a caravan to the free state of Balik", null), new(), null, 0, 0, 0, null, new(this.BalikLocationOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart36}You leave the caravan right at the gates", null), null, 0, 0, 0, 0, 0);
+            characterCreationCategory.AddCategoryOption(new("{=CulturedStart51}In a caravan to the the city of Verbrund", null), new(), null, 0, 0, 0, null, new(this.VerbrundLocationOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart36}You leave the caravan right at the gates", null), null, 0, 0, 0, 0, 0);
             characterCreationCategory.AddCategoryOption(new("{=CulturedStart44}At your castle", null), new(), null, 0, 0, 0, new(this.CastleLocationOnCondition), new(this.CastleLocationOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart45}At your newly acquired castle", null), null, 0, 0, 0, 0, 0);
             characterCreationCategory.AddCategoryOption(new("{=CulturedStart46}Escaping from your captor", null), new(), null, 0, 0, 0, new(this.EscapingLocationOnCondition), new(this.EscapingLocationOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart47}Having just escaped", null), null, 0, 0, 0, 0, 0);
             characterCreation.AddNewMenu(characterCreationMenu);
@@ -830,41 +1081,48 @@ namespace RealmsForgotten
             characterCreationCategory.AddCategoryOption(new("{=CulturedStart09}A commoner (Default Start)", null), new(), null, 0, 0, 0, null, new(this.DefaultStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart10}Setting off with your Father, Mother, Brother and your two younger siblings to a new town you'd heard was safer. But you did not make it.", null), null, 0, 0, 0, 0, 0);
             characterCreationCategory.AddCategoryOption(new("{=CulturedStart11}A budding caravanner", null), new MBList<SkillObject>
             {
-                DefaultSkills.Trade
+                DefaultSkills.Trade,
+                DefaultSkills.Charm
             }, null, 1, 25, 0, null, new(this.MerchantStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart12}With what savings you could muster you purchased some mules and mercenaries." + $"\n{startingSkillMult[StartType.Merchant]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 0, 0, 0, 0);
-            characterCreationCategory.AddCategoryOption(new("{=CulturedStart13}A noble of {CULTURE} in exile", null), new MBList<SkillObject>
+            characterCreationCategory.AddCategoryOption(new("{=CulturedStart13}A ranger of {CULTURE} in exile", null), new MBList<SkillObject>
             {
-                DefaultSkills.Leadership
+                DefaultSkills.Leadership,
+                DefaultSkills.Scouting
             }, null, 1, 50, 0, null, new(this.ExiledStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart14}Forced into exile after your parents were executed for suspected treason. With only your family's bodyguard you set off. Should you return you'd be viewed as a criminal." + $"\n{startingSkillMult[StartType.Exiled]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 150, 0, 0, 0);
-            characterCreationCategory.AddCategoryOption(new("{=CulturedStart15}In a failing mercenary company", null), new MBList<SkillObject>
+            characterCreationCategory.AddCategoryOption(new("{=CulturedStart15}A leader of a failing mercenary company", null), new MBList<SkillObject>
             {
-                DefaultSkills.Tactics
+                DefaultSkills.Tactics,
+                DefaultSkills.Roguery
             }, null, 1, 50, 0, null, new(this.MercenaryStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart16}With men deserting over lack of wages, your company leader was found dead, and you decided to take your chance and lead." + $"\n{startingSkillMult[StartType.Mercenary]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 50, 0, 0, 0);
             characterCreationCategory.AddCategoryOption(new("{=CulturedStart17}A cheap outlaw", null), new MBList<SkillObject>
             {
-                DefaultSkills.Roguery
+                DefaultSkills.Roguery,
+                DefaultSkills.Scouting
             }, null, 1, 25, 0, null, new(this.LooterStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart18}Left impoverished from war, you found a group of like-minded ruffians who were desperate to get by." + $"\n{startingSkillMult[StartType.Looter]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 0, 0, 0, 0);
-            characterCreationCategory.AddCategoryOption(new("{=CulturedStart19}A new vassal of {CULTURE}", null), new MBList<SkillObject>
+            characterCreationCategory.AddCategoryOption(new("{=CulturedStart19}An ursurper of {CULTURE}", null), new MBList<SkillObject>
             {
-                DefaultSkills.Steward
+                DefaultSkills.Steward,
+                DefaultSkills.Charm
             }, null, 1, 50, 0, null, new(this.VassalStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart20}A young noble who came into an arrangement with the king for a chance at land." + $"\n{startingSkillMult[StartType.VassalNoFief]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 150, 0, 0, 0);
-            characterCreationCategory.AddCategoryOption(new("{=CulturedStart21}Leading part of {CULTURE}", null), new MBList<SkillObject>
+            characterCreationCategory.AddCategoryOption(new("{=CulturedStart21}A cleric of {CULTURE}", null), new MBList<SkillObject>
             {
-                DefaultSkills.Leadership,
-                DefaultSkills.Steward
+                RFSkills.Faith,
+                DefaultSkills.Riding
             }, DefaultCharacterAttributes.Social, 1, 50, 1, null, new(this.KingdomStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart22}With the support of companions you have gathered an army. With limited funds and food you decided it's time for action." + $"\n{startingSkillMult[StartType.KingdomRuler]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 900, 0, 0, 0);
-            characterCreationCategory.AddCategoryOption(new("{=CulturedStart23}You acquired a castle", null), new MBList<SkillObject>
+            characterCreationCategory.AddCategoryOption(new("{=CulturedStart23}A lord with a castle", null), new MBList<SkillObject>
             {
                 DefaultSkills.Leadership,
                 DefaultSkills.Steward
             }, DefaultCharacterAttributes.Social, 1, 25, 1, null, new(this.CastleRulerStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart24}You acquired a castle through your own means and declared yourself a kingdom for better or worse." + $"\n{startingSkillMult[StartType.CastleRuler]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 900, 0, 0, 0);
-            characterCreationCategory.AddCategoryOption(new("{=CulturedStart25}A landed vassal of {CULTURE}", null), new MBList<SkillObject>
+            characterCreationCategory.AddCategoryOption(new("{=CulturedStart25}A knight of {CULTURE}", null), new MBList<SkillObject>
             {
-                DefaultSkills.Steward
+                DefaultSkills.Steward,
+                DefaultSkills.Roguery
             }, null, 1, 50, 0, null, new(this.LandedVassalStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart26}A young noble who came into an arrangement with the king for land." + $"\n{startingSkillMult[StartType.VassalFief]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 150, 0, 0, 0);
             characterCreationCategory.AddCategoryOption(new("{=CulturedStart27}A wanderer mystic of {CULTURE}", null), new MBList<SkillObject>
             {
-                RFSkills.Arcane
+                RFSkills.Arcane,
+                DefaultSkills.Scouting
             }, null, 1, 10, 0, null, new(this.EscapedStartOnConsequence), new(this.DoNothingOnApply), new("{=CulturedStart28}A mystic peregrin in pursuit of arcane misteries." + $"\n{startingSkillMult[StartType.EscapedPrisoner]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 0, 0, 0, 0);
             characterCreation.AddNewMenu(characterCreationMenu);
         }
@@ -875,6 +1133,21 @@ namespace RealmsForgotten
         protected bool AqarunParentsOnCondition()
         {
             return base.GetSelectedCulture().StringId == "aqarun";
+        }
+
+        protected bool SouthRealmParentsOnCondition()
+        {
+            return base.GetSelectedCulture().StringId == "south_realm";
+        }
+
+        protected bool WestRealmParentsOnCondition()
+        {
+            return base.GetSelectedCulture().StringId == "west_realm";
+        }
+
+        protected bool MageParentsOnCondition()
+        {
+            return base.GetSelectedCulture().StringId == "mage";
         }
 
         protected void StartOnInit(CharacterCreation characterCreation)
@@ -1042,6 +1315,16 @@ namespace RealmsForgotten
         protected void BalikLocationOnConsequence(CharacterCreation characterCreation)
         {
             this.Manager.SetLocationOption(11);
+        }
+
+        protected void VerbrundLocationOnConsequence(CharacterCreation characterCreation)
+        {
+            this.Manager.SetLocationOption(12);
+        }
+
+        protected void AugurionLocationOnConsequence(CharacterCreation characterCreation)
+        {
+            this.Manager.SetLocationOption(13);
         }
         protected void DoNothingOnApply(CharacterCreation characterCreation)
         {
