@@ -410,16 +410,7 @@ public static class ReligionLogicHelper
     }
 
 
-    public static bool CanReligionSacrifice(Core.RFReligions rel)
-    {
-        return rel - Core.RFReligions.AeternaFide <= 3;
-    }
 
-
-    public static bool ReligionCanItemSacrifice(Core.RFReligions rel)
-    {
-        return rel <= Core.RFReligions.KharazDrathar;
-    }
 
 
     private static string primSecond = GameTexts.FindText("RFRAJQJbd").Value;
