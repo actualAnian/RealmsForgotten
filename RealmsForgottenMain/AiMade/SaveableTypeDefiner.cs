@@ -55,7 +55,6 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(CareerProgressionBehavior), 18);
             AddClassDefinition(typeof(ReligionObject), 19);
             AddClassDefinition(typeof(ADODInnBehavior), 20);
-            AddClassDefinition(typeof(ADODInnBehavior), 20);
             AddClassDefinition(typeof(DefendVillagersOrCaravansBehavior), 22);
             AddClassDefinition(typeof(QuestCompletionBehavior), 23);
             AddClassDefinition(typeof(DivineShieldStateBehavior), 24);
