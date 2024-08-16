@@ -2,7 +2,7 @@
 
 public static class ReligionMapHelper
 {
-    public static Core.RFReligions MapCultureToReligion(string cultureString)
+    public static Core.RFReligions GetCultureReligion(string cultureString)
     {
         switch (cultureString)
         {

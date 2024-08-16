@@ -14,7 +14,7 @@ public class SubModule : MBSubModuleBase
     protected override void OnApplicationTick(float _deltaTime)
     {
         if (Campaign.Current != null && Mission.Current == null && Input.IsKeyReleased((InputKey)19))
-            ReligionBehavior.Instance.TriggerReligionMenuEvent();
+            ReligionBehavior.Instance?.TriggerReligionMenuEvent();
     }
 
     protected override void OnGameStart(Game game, IGameStarter gameStarterObject)

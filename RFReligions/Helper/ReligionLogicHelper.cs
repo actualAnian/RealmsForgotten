@@ -20,7 +20,7 @@ public static class ReligionLogicHelper
         { Core.RFReligions.VyralethAmara, Core.RFReligions.None },
         { Core.RFReligions.AeternaFide, Core.RFReligions.Anorites }
     };
-    public static bool ReligionSacrificeHaveItems(Core.RFReligions rel, int requiredItemCount, ItemRoster roster)
+    public static bool CheckItemSacrificeItems(Core.RFReligions rel, int requiredItemCount, ItemRoster roster)
     {
         requiredItemCount = requiredItemCount > 0 ? requiredItemCount : 1;
         if (rel == Core.RFReligions.Anorites)
@@ -43,7 +43,7 @@ public static class ReligionLogicHelper
     }
 
 
-    public static bool ReligionOfferHaveItems(Core.RFReligions rel, ItemRoster roster)
+    public static bool CheckRosterOfferItems(Core.RFReligions rel, ItemRoster roster)
     {
         var num = 5;
         var num2 = 3;
@@ -92,7 +92,7 @@ public static class ReligionLogicHelper
     }
 
 
-    public static bool ReligionOfferItems(Core.RFReligions rel, ItemRoster roster)
+    public static bool OfferItems(Core.RFReligions rel, ItemRoster roster)
     {
         try
         {
@@ -211,14 +211,14 @@ public static class ReligionLogicHelper
     }
 
 
-    public static bool ReligionSacrificeItems(Core.RFReligions rel, int requiredItemCount, ItemRoster roster)
+    public static bool SacrificeItems(Core.RFReligions rel, int requiredItemCount, ItemRoster roster)
     {
         try
         {
             requiredItemCount = requiredItemCount > 0 ? requiredItemCount : 1;
             if (rel == Core.RFReligions.Anorites)
             {
-                foreach (var itemRosterElement in roster.ToList<ItemRosterElement>())
+                foreach (var itemRosterElement in roster.ToList())
                 {
                     if (requiredItemCount == 0) return true;
                     if (itemRosterElement.EquipmentElement.Item.IsAnimal &&
@@ -231,7 +231,7 @@ public static class ReligionLogicHelper
 
             if (rel == Core.RFReligions.KharazDrathar)
             {
-                foreach (var itemRosterElement2 in roster.ToList<ItemRosterElement>())
+                foreach (var itemRosterElement2 in roster.ToList())
                 {
                     if (requiredItemCount == 0) return true;
                     if (itemRosterElement2.EquipmentElement.Item.IsAnimal &&
@@ -244,7 +244,7 @@ public static class ReligionLogicHelper
 
             if (rel == Core.RFReligions.Xochxinti)
             {
-                foreach (var itemRosterElement3 in roster.ToList<ItemRosterElement>())
+                foreach (var itemRosterElement3 in roster.ToList())
                 {
                     if (requiredItemCount == 0) return true;
                     if (itemRosterElement3.EquipmentElement.Item.IsMountable &&
@@ -257,7 +257,7 @@ public static class ReligionLogicHelper
 
             if (rel == Core.RFReligions.AeternaFide)
             {
-                foreach (var itemRosterElement4 in roster.ToList<ItemRosterElement>())
+                foreach (var itemRosterElement4 in roster.ToList())
                 {
                     if (requiredItemCount == 0) return true;
                     if (itemRosterElement4.EquipmentElement.Item.IsAnimal &&
@@ -282,31 +282,31 @@ public static class ReligionLogicHelper
         {
             case Core.RFReligions.Anorites:
             {
-                var itemObject = Items.All.FirstOrDefault((ItemObject item) => item.IsAnimal && item.StringId == "cow");
+                var itemObject = Items.All.FirstOrDefault(item => item.IsAnimal && item.StringId == "cow");
                 return new TextObject("({COUNT} {ANIMAL})", null).SetTextVariable("COUNT", 5)
                     .SetTextVariable("ANIMAL", itemObject.Name);
             }
             case Core.RFReligions.KharazDrathar:
             {
-                var itemObject2 = Items.All.FirstOrDefault((ItemObject item) => item.IsAnimal && item.StringId == "hog");
+                var itemObject2 = Items.All.FirstOrDefault(item => item.IsAnimal && item.StringId == "hog");
                 return new TextObject("({COUNT} {ANIMAL})", null).SetTextVariable("COUNT", 5)
                     .SetTextVariable("ANIMAL", itemObject2.Name);
             }
             case Core.RFReligions.Xochxinti:
-                Items.All.FirstOrDefault((ItemObject item) =>
+                Items.All.FirstOrDefault(item =>
                     item.IsMountable && item.ItemCategory.StringId.Contains("horse"));
                 return new TextObject("({COUNT} {ANIMAL})", null).SetTextVariable("COUNT", 3)
                     .SetTextVariable("ANIMAL", new TextObject("{=LwfILaRH}Horse", null));
             case Core.RFReligions.AeternaFide:
             {
                 var itemObject3 =
-                    Items.All.FirstOrDefault((ItemObject item) => item.IsAnimal && item.StringId.Contains("sheep"));
+                    Items.All.FirstOrDefault(item => item.IsAnimal && item.StringId.Contains("sheep"));
                 return new TextObject("({COUNT} {ANIMAL})", null).SetTextVariable("COUNT", 5)
                     .SetTextVariable("ANIMAL", itemObject3.Name);
             }
             default:
                 var itemObject4 =
-                    Items.All.FirstOrDefault((ItemObject item) => item.IsAnimal && item.StringId.Contains("sheep"));
+                    Items.All.FirstOrDefault(item => item.IsAnimal && item.StringId.Contains("sheep"));
                 return new TextObject("({COUNT} {ANIMAL})", null).SetTextVariable("COUNT", 5)
                     .SetTextVariable("ANIMAL", itemObject4.Name);
         }
@@ -317,8 +317,8 @@ public static class ReligionLogicHelper
     {
         if (rel == Core.RFReligions.Anorites)
         {
-            var itemObject = Items.All.FirstOrDefault((ItemObject item) => item.StringId.Contains("wood"));
-            var itemObject2 = Items.All.FirstOrDefault((ItemObject item) => item.StringId.Contains("charcoal"));
+            var itemObject = Items.All.FirstOrDefault(item => item.StringId.Contains("wood"));
+            var itemObject2 = Items.All.FirstOrDefault(item => item.StringId.Contains("charcoal"));
             if (itemObject2 == null || itemObject2 == null) return TextObject.Empty;
             return new TextObject(primSecond, null).SetTextVariable("PRIMARY_COUNT", 5)
                 .SetTextVariable("PRIMARY_NAME", itemObject.Name).SetTextVariable("SECONDARY_COUNT", 3)
@@ -326,8 +326,8 @@ public static class ReligionLogicHelper
         }
         else if (rel == Core.RFReligions.KharazDrathar)
         {
-            var itemObject3 = Items.All.FirstOrDefault((ItemObject item) => item.StringId.Contains("cheese"));
-            var itemObject4 = Items.All.FirstOrDefault((ItemObject item) => item.StringId.Contains("butter"));
+            var itemObject3 = Items.All.FirstOrDefault(item => item.StringId.Contains("cheese"));
+            var itemObject4 = Items.All.FirstOrDefault(item => item.StringId.Contains("butter"));
             if (itemObject4 != null && itemObject4 != null)
                 return new TextObject(primSecond, null).SetTextVariable("PRIMARY_COUNT", 5)
                     .SetTextVariable("PRIMARY_NAME", itemObject3.Name).SetTextVariable("SECONDARY_COUNT", 3)
@@ -339,8 +339,8 @@ public static class ReligionLogicHelper
             if (rel != Core.RFReligions.AeternaFide)
             {
                 if (rel != Core.RFReligions.Faelora) return TextObject.Empty;
-                var itemObject5 = Items.All.FirstOrDefault((ItemObject item) => item.StringId.Contains("wine"));
-                var itemObject6 = Items.All.FirstOrDefault((ItemObject item) => item.StringId.Contains("cheese"));
+                var itemObject5 = Items.All.FirstOrDefault(item => item.StringId.Contains("wine"));
+                var itemObject6 = Items.All.FirstOrDefault(item => item.StringId.Contains("cheese"));
                 if (itemObject6 != null && itemObject6 != null)
                     return new TextObject(primSecond, null).SetTextVariable("PRIMARY_COUNT", 5)
                         .SetTextVariable("PRIMARY_NAME", itemObject5.Name).SetTextVariable("SECONDARY_COUNT", 3)
@@ -349,8 +349,8 @@ public static class ReligionLogicHelper
             }
             else
             {
-                var itemObject7 = Items.All.FirstOrDefault((ItemObject item) => item.StringId.Contains("wood"));
-                var itemObject8 = Items.All.FirstOrDefault((ItemObject item) => item.StringId.Contains("iron"));
+                var itemObject7 = Items.All.FirstOrDefault(item => item.StringId.Contains("wood"));
+                var itemObject8 = Items.All.FirstOrDefault(item => item.StringId.Contains("iron"));
                 if (itemObject8 == null || itemObject8 == null) return TextObject.Empty;
                 return new TextObject(primSecond, null).SetTextVariable("PRIMARY_COUNT", 5)
                     .SetTextVariable("PRIMARY_NAME", itemObject7.Name).SetTextVariable("SECONDARY_COUNT", 3)
@@ -359,8 +359,8 @@ public static class ReligionLogicHelper
         }
         else
         {
-            var itemObject9 = Items.All.FirstOrDefault((ItemObject item) => item.StringId.Contains("iron"));
-            var itemObject10 = Items.All.FirstOrDefault((ItemObject item) => item.StringId.Contains("charcoal"));
+            var itemObject9 = Items.All.FirstOrDefault(item => item.StringId.Contains("iron"));
+            var itemObject10 = Items.All.FirstOrDefault(item => item.StringId.Contains("charcoal"));
             if (itemObject10 != null && itemObject10 != null)
                 return new TextObject(primSecond, null).SetTextVariable("PRIMARY_COUNT", 5)
                     .SetTextVariable("PRIMARY_NAME", itemObject9.Name).SetTextVariable("SECONDARY_COUNT", 3)
@@ -374,7 +374,7 @@ public static class ReligionLogicHelper
     {
         if (rel == Core.RFReligions.Anorites)
         {
-            var itemObject = Items.All.FirstOrDefault((ItemObject item) => item.IsAnimal && item.StringId == "cow");
+            var itemObject = Items.All.FirstOrDefault(item => item.IsAnimal && item.StringId == "cow");
             var num = soldierCount / 15;
             return new TextObject("({COUNT} {ANIMAL})", null).SetTextVariable("COUNT", num == 0 ? 1 : num)
                 .SetTextVariable("ANIMAL", itemObject.Name);
@@ -382,7 +382,7 @@ public static class ReligionLogicHelper
 
         if (rel == Core.RFReligions.KharazDrathar)
         {
-            var itemObject2 = Items.All.FirstOrDefault((ItemObject item) => item.IsAnimal && item.StringId == "hog");
+            var itemObject2 = Items.All.FirstOrDefault(item => item.IsAnimal && item.StringId == "hog");
             var num2 = soldierCount / 10;
             return new TextObject("({COUNT} {ANIMAL})", null).SetTextVariable("COUNT", num2 == 0 ? 1 : num2)
                 .SetTextVariable("ANIMAL", itemObject2.Name);
@@ -390,7 +390,7 @@ public static class ReligionLogicHelper
 
         if (rel == Core.RFReligions.Xochxinti)
         {
-            Items.All.FirstOrDefault((ItemObject item) =>
+            Items.All.FirstOrDefault(item =>
                 item.IsMountable && item.ItemCategory.StringId.Contains("horse"));
             var num3 = soldierCount / 20;
             return new TextObject("({COUNT} {ANIMAL})", null).SetTextVariable("COUNT", num3 == 0 ? 1 : num3)
@@ -400,7 +400,7 @@ public static class ReligionLogicHelper
         if (rel == Core.RFReligions.AeternaFide)
         {
             var itemObject3 =
-                Items.All.FirstOrDefault((ItemObject item) => item.IsAnimal && item.StringId.Contains("sheep"));
+                Items.All.FirstOrDefault(item => item.IsAnimal && item.StringId.Contains("sheep"));
             var num4 = soldierCount / 10;
             return new TextObject("({COUNT} {ANIMAL})", null).SetTextVariable("COUNT", num4 == 0 ? 1 : num4)
                 .SetTextVariable("ANIMAL", itemObject3.Name);
@@ -410,7 +410,7 @@ public static class ReligionLogicHelper
     }
 
 
-    public static bool ReligionCanSacrifice(Core.RFReligions rel)
+    public static bool CanReligionSacrifice(Core.RFReligions rel)
     {
         return rel - Core.RFReligions.AeternaFide <= 3;
     }
