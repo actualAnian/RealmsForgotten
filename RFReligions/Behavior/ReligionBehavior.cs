@@ -411,21 +411,21 @@ internal class ReligionBehavior : CampaignBehaviorBase
             new OnInitDelegate(game_menu_temple_enter_on_init), GameOverlays.MenuOverlayType.SettlementWithCharacters,
             GameMenu.MenuFlags.None, null);*/
         starter.AddGameMenuOption("town_temple", "town_temple_faelora", GameTexts.FindText("RFRgHOZTS").Value,
-            game_menu_town_enter_sacellum_on_condition,
+            game_menu_town_enter_sanctum_sapientiae_on_condition,
             x =>
             {
                 tempSelecteddReligion = Core.RFReligions.Faelora;
                 GameMenu.SwitchToMenu("town_temple_inner");
             });
         starter.AddGameMenuOption("town_temple", "town_temple_anorites", GameTexts.FindText("RFRcVAXGX").Value,
-            game_menu_town_enter_cavern_on_condition,
+            game_menu_town_enter_caverna_on_condition,
             x =>
             {
                 tempSelecteddReligion = Core.RFReligions.Anorites;
                 GameMenu.SwitchToMenu("town_temple_inner");
             });
         starter.AddGameMenuOption("town_temple", "town_temple_aeternafide", GameTexts.FindText("RFRBPijwQ").Value,
-            game_menu_town_enter_oak_grove_on_condition,
+            game_menu_town_enter_sylvan_sanctum_on_condition,
             x =>
             {
                 tempSelecteddReligion = Core.RFReligions.AeternaFide;
@@ -438,7 +438,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
                 GameMenu.SwitchToMenu("town_temple_inner");
             });
         starter.AddGameMenuOption("town_temple", "town_temple_kharazdrathar", GameTexts.FindText("RFRjHkWuQ").Value,
-            game_menu_town_enter_stone_circle_on_condition,
+            game_menu_town_enter_khazrak_on_condition,
             delegate(MenuCallbackArgs x)
             {
                 tempSelecteddReligion = Core.RFReligions.KharazDrathar;
@@ -711,7 +711,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
     }
 
 
-    private bool game_menu_town_enter_stone_circle_on_condition(MenuCallbackArgs args)
+    private bool game_menu_town_enter_khazrak_on_condition(MenuCallbackArgs args)
     {
         args.optionLeaveType = GameMenuOption.LeaveType.Continue;
         var currentSettlement = Settlement.CurrentSettlement;
@@ -731,7 +731,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
     }
 
 
-    private bool game_menu_town_enter_oak_grove_on_condition(MenuCallbackArgs args)
+    private bool game_menu_town_enter_sylvan_sanctum_on_condition(MenuCallbackArgs args)
     {
         args.optionLeaveType = GameMenuOption.LeaveType.Continue;
         var currentSettlement = Settlement.CurrentSettlement;
@@ -741,7 +741,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
     }
 
 
-    private bool game_menu_town_enter_cavern_on_condition(MenuCallbackArgs args)
+    private bool game_menu_town_enter_caverna_on_condition(MenuCallbackArgs args)
     {
         args.optionLeaveType = GameMenuOption.LeaveType.Continue;
         var currentSettlement = Settlement.CurrentSettlement;
@@ -751,7 +751,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
     }
 
 
-    private bool game_menu_town_enter_sacellum_on_condition(MenuCallbackArgs args)
+    private bool game_menu_town_enter_sanctum_sapientiae_on_condition(MenuCallbackArgs args)
     {
         args.optionLeaveType = GameMenuOption.LeaveType.Continue;
         var currentSettlement = Settlement.CurrentSettlement;
