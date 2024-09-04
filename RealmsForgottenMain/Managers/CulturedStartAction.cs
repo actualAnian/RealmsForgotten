@@ -10,6 +10,7 @@ using TaleWorlds.CampaignSystem.GameState;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
+using TaleWorlds.Library;
 using TaleWorlds.ObjectSystem;
 using static RealmsForgotten.Globals;
 
@@ -781,16 +782,37 @@ namespace RealmsForgotten.Managers
                                             where character.Occupation == Occupation.Wanderer && character.Culture == mainHero.Culture
                                             select character).GetRandomElementInefficiently();
                 Settlement randomSettlement = (from settlement in Settlement.All
-                                               where settlement.Culture == wanderer.Culture && settlement.IsTown
+                                               where settlement.Culture == wanderer?.Culture && settlement.IsTown
                                                select settlement).GetRandomElementInefficiently();
+
+                if (wanderer == null)
+                {
+                    InformationManager.DisplayMessage(new InformationMessage("CULTURED START WANDERER ERROR", Colors.Red));
+                    break;
+                }
+                
                 Hero companion = HeroCreator.CreateSpecialHero(wanderer, randomSettlement, null, null, 33);
 
                 companion.Clan = randomSettlement.OwnerClan;
                 companion.ChangeState(Hero.CharacterStates.Active);
                 if (startOption == StartType.KingdomRuler || startOption == StartType.CastleRuler || startOption == StartType.VassalFief) // gives companions noble equipment
                 {
-                    companion.BattleEquipment.FillFrom(Campaign.Current.Models.EquipmentSelectionModel.GetEquipmentRostersForHeroComeOfAge(companion, false)[0].AllEquipments.GetRandomElement());
-                    companion.CivilianEquipment.FillFrom(Campaign.Current.Models.EquipmentSelectionModel.GetEquipmentRostersForHeroComeOfAge(companion, true)[0].AllEquipments.GetRandomElement());
+                    try
+                    {
+                        companion.BattleEquipment.FillFrom(Campaign.Current.Models.EquipmentSelectionModel.GetEquipmentRostersForHeroComeOfAge(companion, false)[0].AllEquipments.GetRandomElement());
+                    }
+                    catch (Exception e)
+                    {
+                        InformationManager.DisplayMessage(new InformationMessage("ERROR FILLING EQUIPMENT ON COMPANION", Colors.Red));
+                    }
+                    try
+                    {
+                        companion.CivilianEquipment.FillFrom(Campaign.Current.Models.EquipmentSelectionModel.GetEquipmentRostersForHeroComeOfAge(companion, true)[0].AllEquipments.GetRandomElement());
+                    }
+                    catch (Exception e)
+                    {
+                        InformationManager.DisplayMessage(new InformationMessage("ERROR FILLING EQUIPMENT ON COMPANION", Colors.Red));
+                    }
                 }
                 AddCompanionAction.Apply(Clan.PlayerClan, companion);
                 AddHeroToPartyAction.Apply(companion, mainHero.PartyBelongedTo, false);
