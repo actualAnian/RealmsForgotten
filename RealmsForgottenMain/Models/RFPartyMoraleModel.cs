@@ -34,7 +34,7 @@ namespace RealmsForgotten.Models
             }
             catch (Exception ex)
             {
-                return party.MoraleExplained;
+                return new ExplainedNumber(50);
             }
 
             if (party.PartyComponent?.MobileParty == null)
