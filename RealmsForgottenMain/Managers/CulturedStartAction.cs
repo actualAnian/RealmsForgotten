@@ -130,6 +130,20 @@ namespace RealmsForgotten.Managers
                 ["west_realm"] = "realms_vassal_nofief",
                 ["mage"] = "realms_vassal_nofief",
             },
+            [StartType.VassalFief] = new Dictionary<string, string>
+            {
+                ["aserai"] = "athas_vassal_nofief_equip",
+                ["empire"] = "realms_vassal_nofief",
+                ["khuzait"] = "khuzait_vassal_nofief",
+                ["sturgia"] = "dreadrealms_vassal_nofief",
+                ["battania"] = "elvean_vassal_nofief",
+                ["vlandia"] = "nasoria_vassal_nofief",
+                ["giant"] = "giant_vassal_nofief",
+                ["aqarun"] = "vassalnofief_aqarun_start",
+                ["south_realm"] = "realms_vassal_nofief",
+                ["west_realm"] = "realms_vassal_nofief",
+                ["mage"] = "realms_vassal_nofief",
+            },
             [StartType.KingdomRuler] = new Dictionary<string, string>
             {
                 ["aserai"] = "king_athas_start",
@@ -157,21 +171,7 @@ namespace RealmsForgotten.Managers
                 ["south_realm"] = "vassal_realms_start",
                 ["west_realm"] = "vassal_realms_start",
                 ["mage"] = "vassal_realms_start",
-            },
-            [StartType.VassalFief] = new Dictionary<string, string>
-            {
-                ["aserai"] = "ruler_athas_start",
-                ["empire"] = "ruler_realms_start",
-                ["khuzait"] = "ruler_allkhuur_start",
-                ["sturgia"] = "ruler_dreadrealms_start",
-                ["battania"] = "lord_elvean_start",
-                ["vlandia"] = "ruler_nasoria_start",
-                ["giant"] = "ruler_giant_start",
-                ["aqarun"] = "ruler_aqarun_start",
-                ["south_realm"] = "ruler_realms_start",
-                ["west_realm"] = "ruler_realms_start",
-                ["mage"] = "ruler_realms_start",
-            },
+            }
         };
         public static readonly Dictionary<(string Culture, StartType StartOption), List<TroopSpawnInfo>> CultureStartTypeToTroops = new()
         {
@@ -722,7 +722,7 @@ namespace RealmsForgotten.Managers
                                             // Dynamically retrieve troops for the castle ruler start based on the hero's culture
                     Console.WriteLine("Processing Default start option");
                     List<TroopSpawnInfo> castleRulerTroops = GetTroopsForStartOption(mainHero.Culture.StringId, StartType.CastleRuler);
-                    ApplyInternal(mainHero, gold: 60000, grain: 30, tier: 3, troops: castleRulerTroops, companions: 1, companionParties: 1, startingSettlement: startingSettlement, startOption: StartType.CastleRuler);
+                    ApplyInternal(mainHero, gold: 60000, grain: 30, tier: 3, troops: castleRulerTroops, companions: 1, companionParties: 1, startingSettlement: startingSettlement, ruler: ruler, startOption: StartType.CastleRuler);
                     ownedSettlement ??= Settlement.All.Where(settlement => settlement.Culture == mainHero.Culture && settlement.IsCastle).GetRandomElementInefficiently();
                     break;
 
@@ -822,17 +822,27 @@ namespace RealmsForgotten.Managers
                     MobilePartyHelper.CreateNewClanMobileParty(companion, mainHero.Clan, out bool fromMainclan);
                 }
             }
-            if (ruler != null)
+            if (ruler != null && Clan.PlayerClan.Kingdom == null)
             {
                 CharacterRelationManager.SetHeroRelation(mainHero, ruler, 10);
                 ChangeKingdomAction.ApplyByJoinToKingdom(mainHero.Clan, ruler.Clan.Kingdom, false);
                 mainHero.Clan.Influence = 10;
-            }
+                
+                if (startOption == StartType.KingdomRuler && mainHero.Clan.Kingdom?.Leader != mainHero)
+                {
+                    Campaign.Current.KingdomManager.CreateKingdom(mainHero.Clan.Name, mainHero.Clan.InformalName, mainHero.Clan.Culture, mainHero.Clan);
+                    mainHero.Clan.Influence = 100;
+                }
+                else if (startOption == StartType.CastleRuler)
+                {
+                    Settlement settlement =
+                        mainHero.Clan.Kingdom.Settlements.GetRandomElementWithPredicate(settlement =>
+                            settlement.IsCastle);
+                
+                    ChangeOwnerOfSettlementAction.ApplyByDefault(mainHero, settlement);
 
-            if (startOption == StartType.KingdomRuler || startOption == StartType.CastleRuler)
-            {
-                Campaign.Current.KingdomManager.CreateKingdom(mainHero.Clan.Name, mainHero.Clan.InformalName, mainHero.Clan.Culture, mainHero.Clan);
-                mainHero.Clan.Influence = 100;
+                    startingSettlement = settlement;
+                }
             }
         }
 

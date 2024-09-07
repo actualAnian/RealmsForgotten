@@ -14,7 +14,7 @@ public class ReligionsSettlementMenuOverlayVM : SettlementMenuOverlayVM
 
     public ReligionsSettlementMenuOverlayVM(GameOverlays.MenuOverlayType type) : base(type)
     {
-        if (Settlement.CurrentSettlement.IsTown)
+        if (Settlement.CurrentSettlement?.IsTown == true)
             ReligionHint =
                 new BasicTooltipViewModel(() => ReligionUIHelper.GetTownReligion(Settlement.CurrentSettlement.Town));
     }
@@ -22,7 +22,7 @@ public class ReligionsSettlementMenuOverlayVM : SettlementMenuOverlayVM
     public override void Refresh()
     {
         base.Refresh();
-        if (Settlement.CurrentSettlement.IsTown)
+        if (Settlement.CurrentSettlement?.IsTown == true)
             ReligionLbl = string.Format("{0:0.#}", ReligionUIHelper.GetTownReligionLbl());
     }
 
