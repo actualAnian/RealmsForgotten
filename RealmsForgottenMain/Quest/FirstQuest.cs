@@ -279,11 +279,8 @@ namespace RealmsForgotten.Quest
             private void SpawnOwlParty()
             {
                 Clan clan = Clan.FindFirst(x => x.StringId == "clan_empire_north_7");
-
-
                 MobileParty mobileParty = LordPartyComponent.CreateLordParty("owl_party", TheOwl, MobileParty.MainParty.Position2D, 1f, QuestGiver.HomeSettlement, TheOwl);
                 mobileParty.MemberRoster.RemoveIf(x => x.Character.HeroObject?.StringId != TheOwl.StringId);
-
                 mobileParty.InitializeMobilePartyAroundPosition(clan.DefaultPartyTemplate, MobileParty.MainParty.Position2D, 1f, 0, 0);
                 mobileParty.StringId = "owl_party";
                 mobileParty.Ai.SetMoveEngageParty(MobileParty.MainParty);

@@ -58,9 +58,9 @@ internal class MainPatch
         {
             if (movieName == "SettlementOverlay" && dataSource is SettlementMenuOverlayVM settlementMenuOverlayVm)
             {
-                var religionsSettlementMenuOverlayVm =
+                /*var religionsSettlementMenuOverlayVm =
                     new ReligionsSettlementMenuOverlayVM(GetOverlayPatch.currentMenuOverlayType);
-                dataSource = religionsSettlementMenuOverlayVm;
+                dataSource = religionsSettlementMenuOverlayVm;*/
                 movieName = "ReligionSettlementOverlay";
             }
         }
