@@ -7,9 +7,9 @@ namespace RealmsForgotten.Patches;
 [HarmonyPatch(typeof(Clan), "FindSettlementScoreForBeingHomeSettlement")]
 public static class FixMagesHomeSettlementPatch
 {
-    public static void Postfix(Settlement settlement, ref float __result)
+    public static void Postfix(Settlement settlement, Clan __instance, ref float __result)
     {
-        if (settlement.Culture?.StringId == "mage")
+        if (__instance.Culture?.StringId == "mage" && settlement.Culture?.StringId == "mage")
             __result = 999999f;
     }
 }
