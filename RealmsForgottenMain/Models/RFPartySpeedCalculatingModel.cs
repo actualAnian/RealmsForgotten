@@ -11,18 +11,25 @@ using TaleWorlds.Core;
 using TaleWorlds.Localization;
 using RealmsForgotten.Quest;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
+using TaleWorlds.CampaignSystem.ComponentInterfaces;
 
 namespace RealmsForgotten.Models
 {
     public class RFPartySpeedCalculatingModel : DefaultPartySpeedCalculatingModel
     {
+        private PartySpeedModel _previousModel;
+        
+        public RFPartySpeedCalculatingModel(PartySpeedModel previousModel)
+        {
+            _previousModel = previousModel;
+        }
         public override ExplainedNumber CalculateBaseSpeed(MobileParty party, bool includeDescriptions = false,
             int additionalTroopOnFootCount = 0, int additionalTroopOnHorseCount = 0)
         {
             ExplainedNumber baseValue;
             try
             {
-                baseValue = base.CalculateBaseSpeed(party, includeDescriptions, additionalTroopOnFootCount,
+                baseValue = _previousModel.CalculateBaseSpeed(party, includeDescriptions, additionalTroopOnFootCount,
                     additionalTroopOnHorseCount);
             }
             catch (Exception e)

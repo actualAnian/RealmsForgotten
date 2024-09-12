@@ -7,6 +7,7 @@ using RealmsForgotten.Behaviors;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 
@@ -14,6 +15,12 @@ namespace RealmsForgotten.Models
 {
     internal class RFPartyMoraleModel : DefaultPartyMoraleModel
     {
+        private PartyMoraleModel _previousModel;
+        
+        public RFPartyMoraleModel(PartyMoraleModel previousModel)
+        {
+            _previousModel = previousModel;
+        }
         public bool IsPartyBandit(MobileParty party)
         {
             try
@@ -30,7 +37,7 @@ namespace RealmsForgotten.Models
             ExplainedNumber baseNumber;
             try
             {
-                baseNumber = base.GetEffectivePartyMorale(party, includeDescription);
+                baseNumber = _previousModel.GetEffectivePartyMorale(party, includeDescription);
             }
             catch (Exception ex)
             {

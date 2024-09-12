@@ -6,14 +6,21 @@ using System.Threading.Tasks;
 using RealmsForgotten.AiMade.Career;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.ComponentInterfaces;
 
 namespace RealmsForgotten.Models
 {
     internal class RFVolunteerModel : DefaultVolunteerModel
     {
+        private VolunteerModel _previousModel;
+        
+        public RFVolunteerModel(VolunteerModel previousModel)
+        {
+            _previousModel = previousModel;
+        }
         public override int MaximumIndexHeroCanRecruitFromHero(Hero buyerHero, Hero sellerHero, int useValueAsRelation = -101)
         {
-            int baseValue = base.MaximumIndexHeroCanRecruitFromHero(buyerHero, sellerHero, useValueAsRelation);
+            int baseValue = _previousModel.MaximumIndexHeroCanRecruitFromHero(buyerHero, sellerHero, useValueAsRelation);
             if (CustomSettings.Instance?.InfluenceCostForDifferentCultures == true)
             {
                 IFaction buyerKingdom = buyerHero.MapFaction;

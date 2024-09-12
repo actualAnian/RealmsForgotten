@@ -684,7 +684,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
             var disabledText = TextObject.Empty;
             if (!flag)
             {
-                var str = new TextObject("{=str_warning_crafing_materials}You don't have enough materials for ", null).ToString();
+                var str = GameTexts.FindText("str_warning_crafing_materials").ToString();
                 var textObject = ReligionLogicHelper.ReligionTempleSacrificeText(tempSelecteddReligion);
                 disabledText = new TextObject(str + (textObject != null ? textObject.ToString() : null), null);
             }
@@ -816,7 +816,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
         var disabledText = TextObject.Empty;
         if (canReligionSacrificeItems) 
             return MenuHelper.SetOptionProperties(args, canReligionSacrificeItems, !canReligionSacrificeItems, disabledText);
-        var str = new TextObject("{=str_warning_crafing_materials}You don't have enough materials for ", null).ToString();
+        var str = GameTexts.FindText("str_warning_crafing_materials").ToString();
         var textObject = ReligionLogicHelper.ReligionSacrificeText(heroReligionModel.Religion,
             MobileParty.MainParty.MemberRoster.TotalManCount);
         disabledText = new TextObject(str + (textObject != null ? textObject.ToString() : null), null);
