@@ -77,7 +77,7 @@ public static class ReligionLogicHelper
         if (rel == Core.RFReligions.AeternaFide)
         {
             var amount7 = roster.ToList<ItemRosterElement>()
-                .Find((ItemRosterElement item) => item.EquipmentElement.Item.StringId == "wood").Amount;
+                .Find((ItemRosterElement item) => item.EquipmentElement.Item.StringId == "hardwood").Amount;
             var amount8 = roster.ToList<ItemRosterElement>()
                 .Find((ItemRosterElement item) => item.EquipmentElement.Item.StringId == "iron").Amount;
             return amount7 >= num && amount8 >= num2;

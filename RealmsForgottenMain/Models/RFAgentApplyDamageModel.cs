@@ -1,41 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using HarmonyLib;
+﻿using System.Collections.Generic;
 using RealmsForgotten.AiMade.Career;
 using RealmsForgotten.AiMade.Models;
 using RealmsForgotten.CustomSkills;
 using SandBox.GameComponents;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
-using TaleWorlds.MountAndBlade.ComponentInterfaces;
 using FaceGen = TaleWorlds.Core.FaceGen;
 using RealmsForgotten.Behaviors;
-using RealmsForgotten.Patches;
 using TaleWorlds.CampaignSystem;
-using static HarmonyLib.Code;
-using TaleWorlds.Engine;
-using TaleWorlds.Library;
-using static TaleWorlds.MountAndBlade.Mission;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
+using TaleWorlds.MountAndBlade.ComponentInterfaces;
 
 namespace RealmsForgotten.Models
 {
     public class RFAgentApplyDamageModel : SandboxAgentApplyDamageModel
     {
         public static RFAgentApplyDamageModel Instance;
-        public RFAgentApplyDamageModel()
+        
+        private AgentApplyDamageModel _previousModel;
+        
+        public RFAgentApplyDamageModel(AgentApplyDamageModel previousModel)
         {
+            _previousModel = previousModel;
             Instance = this;
         }
         public Dictionary<int, float> ModifiedDamageAgents = new();
 
         public override bool DecideAgentKnockedBackByBlow(Agent attackerAgent, Agent victimAgent, in AttackCollisionData collisionData, WeaponComponentData attackerWeapon, in Blow blow)
         {
-            bool baseValue = base.DecideAgentKnockedBackByBlow(attackerAgent, victimAgent, collisionData, attackerWeapon, blow);
+            bool baseValue = _previousModel.DecideAgentKnockedBackByBlow(attackerAgent, victimAgent, collisionData, attackerWeapon, blow);
 
             int half_giant = FaceGen.GetRaceOrDefault("half_giant");
 
@@ -47,7 +40,7 @@ namespace RealmsForgotten.Models
 
         public override bool DecideAgentKnockedDownByBlow(Agent attackerAgent, Agent victimAgent, in AttackCollisionData collisionData, WeaponComponentData attackerWeapon, in Blow blow)
         {
-            bool baseValue = base.DecideAgentKnockedDownByBlow(attackerAgent, victimAgent, collisionData, attackerWeapon, blow);
+            bool baseValue = _previousModel.DecideAgentKnockedDownByBlow(attackerAgent, victimAgent, collisionData, attackerWeapon, blow);
 
             int half_giant = FaceGen.GetRaceOrDefault("half_giant");
 
@@ -59,7 +52,7 @@ namespace RealmsForgotten.Models
 
         public override float CalculateDamage(in AttackInformation attackInformation, in AttackCollisionData collisionData, in MissionWeapon weapon, float baseDamage)
         {
-            float baseNumber = base.CalculateDamage(attackInformation, collisionData, weapon, baseDamage);
+            float baseNumber = _previousModel.CalculateDamage(attackInformation, collisionData, weapon, baseDamage);
             CharacterObject captainCharacterObject =
                 attackInformation.AttackerAgent?.Formation?.Captain?.Character as CharacterObject;
 

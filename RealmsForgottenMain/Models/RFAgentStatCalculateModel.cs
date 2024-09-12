@@ -15,15 +15,21 @@ namespace RealmsForgotten.Models
 {
     internal class RFAgentStatCalculateModel : SandboxAgentStatCalculateModel
     {
+        private AgentStatCalculateModel _previousModel;
+        
+        public RFAgentStatCalculateModel(AgentStatCalculateModel previousModel)
+        {
+            _previousModel = previousModel;
+        }
         public override void InitializeAgentStats(Agent agent, Equipment spawnEquipment, AgentDrivenProperties agentDrivenProperties, AgentBuildData agentBuildData)
         {
-            base.InitializeAgentStats(agent, spawnEquipment, agentDrivenProperties, agentBuildData);
+            _previousModel.InitializeAgentStats(agent, spawnEquipment, agentDrivenProperties, agentBuildData);
             UpdateAgentDrivenProperties(agent, agentDrivenProperties);
         }
 
         public override void UpdateAgentStats(Agent agent, AgentDrivenProperties agentDrivenProperties)
         {
-            base.UpdateAgentStats(agent, agentDrivenProperties);
+            _previousModel.UpdateAgentStats(agent, agentDrivenProperties);
             UpdateAgentDrivenProperties(agent, agentDrivenProperties);
         }
 
@@ -48,7 +54,7 @@ namespace RealmsForgotten.Models
         private EquipmentIndex[] equipmentIndices = { EquipmentIndex.Weapon0, EquipmentIndex.Weapon1, EquipmentIndex.Weapon2, EquipmentIndex.Weapon3};
         public override void InitializeMissionEquipment(Agent agent)
         {
-            base.InitializeMissionEquipment(agent);
+            _previousModel.InitializeMissionEquipment(agent);
 
             CharacterObject agentCharacterObject = agent?.Character as CharacterObject;
             ;
@@ -103,7 +109,7 @@ namespace RealmsForgotten.Models
         }
         public override float GetWeaponInaccuracy(Agent agent, WeaponComponentData weapon, int weaponSkill)
         {
-            float baseValue = base.GetWeaponInaccuracy(agent, weapon, weaponSkill);
+            float baseValue = _previousModel.GetWeaponInaccuracy(agent, weapon, weaponSkill);
             ExplainedNumber accuracy = new ExplainedNumber(baseValue, false, null);
             var character = agent.Character as CharacterObject;
             if (character != null)

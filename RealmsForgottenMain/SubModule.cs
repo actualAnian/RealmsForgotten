@@ -35,6 +35,8 @@ using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
+using TaleWorlds.CampaignSystem.ComponentInterfaces;
+using TaleWorlds.MountAndBlade.ComponentInterfaces;
 
 namespace RealmsForgotten
 {
@@ -80,19 +82,19 @@ namespace RealmsForgotten
                 
                 campaignGameStarter.AddBehavior(RFHorseSpawningCampaignBehavior.Instance);
                 
-                campaignGameStarter.AddModel(new RFAgentApplyDamageModel());
-                campaignGameStarter.AddModel(new RFBuildingConstructionModel());
-                campaignGameStarter.AddModel(new RFCombatXpModel());
-                campaignGameStarter.AddModel(new RFDefaultCharacterDevelopmentModel());
-                campaignGameStarter.AddModel(new RFPartyMoraleModel());
-                campaignGameStarter.AddModel(new RFPartySpeedCalculatingModel());
-                campaignGameStarter.AddModel(new RFPrisonerRecruitmentCalculationModel());
-                campaignGameStarter.AddModel(new RFRaidModel());
-                campaignGameStarter.AddModel(new RFVolunteerModel());
-                campaignGameStarter.AddModel(new RFWageModel());
-                campaignGameStarter.AddModel(new RFBattleCaptainModel());
-                campaignGameStarter.AddModel(new RFInventoryCapacityModel());
-                campaignGameStarter.AddModel(new RaceSpeedBonusModel());
+                campaignGameStarter.AddModel(new RFAgentApplyDamageModel(campaignGameStarter.GetExistingModel<AgentApplyDamageModel>()));
+                campaignGameStarter.AddModel(new RFBuildingConstructionModel(campaignGameStarter.GetExistingModel<BuildingConstructionModel>()));
+                campaignGameStarter.AddModel(new RFCombatXpModel(campaignGameStarter.GetExistingModel<CombatXpModel>()));
+                campaignGameStarter.AddModel(new RFDefaultCharacterDevelopmentModel(campaignGameStarter.GetExistingModel<CharacterDevelopmentModel>()));
+                campaignGameStarter.AddModel(new RFPartyMoraleModel(campaignGameStarter.GetExistingModel<PartyMoraleModel>()));
+                campaignGameStarter.AddModel(new RFPartySpeedCalculatingModel(campaignGameStarter.GetExistingModel<PartySpeedModel>()));
+                campaignGameStarter.AddModel(new RFPrisonerRecruitmentCalculationModel(campaignGameStarter.GetExistingModel<PrisonerRecruitmentCalculationModel>()));
+                campaignGameStarter.AddModel(new RFRaidModel(campaignGameStarter.GetExistingModel<RaidModel>()));
+                campaignGameStarter.AddModel(new RFVolunteerModel(campaignGameStarter.GetExistingModel<VolunteerModel>()));
+                campaignGameStarter.AddModel(new RFWageModel(campaignGameStarter.GetExistingModel<PartyWageModel>()));
+                campaignGameStarter.AddModel(new RFBattleCaptainModel(campaignGameStarter.GetExistingModel<BattleCaptainModel>()));
+                campaignGameStarter.AddModel(new RFInventoryCapacityModel(campaignGameStarter.GetExistingModel<InventoryCapacityModel>()));
+                campaignGameStarter.AddModel(new RFRaceSpeedBonusModel(campaignGameStarter.GetExistingModel<PartySpeedModel>()));
                
                 new RFAttributes().Initialize();
                 new RFSkills().Initialize();
@@ -259,7 +261,7 @@ namespace RealmsForgotten
 
             if (initializerObject is CampaignGameStarter campaignGameStarter)
             {
-                RFAgentStatCalculateModel rfAgentStatCalculateModel = new RFAgentStatCalculateModel();
+                RFAgentStatCalculateModel rfAgentStatCalculateModel = new RFAgentStatCalculateModel(campaignGameStarter.GetExistingModel<AgentStatCalculateModel>());
                 campaignGameStarter.AddModel(rfAgentStatCalculateModel);
                 
                 AccessTools.Property(typeof(MissionGameModels), "AgentStatCalculateModel").SetValue(MissionGameModels.Current, rfAgentStatCalculateModel);

@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RealmsForgotten.Quest.SecondUpdate;
-using TaleWorlds.CampaignSystem.GameComponents;
+﻿using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.Core;
+using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.Localization;
-using RealmsForgotten.Quest;
-using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
 namespace RealmsForgotten.Models
 {
-    public class RaceSpeedBonusModel : DefaultPartySpeedCalculatingModel
+    public class RFRaceSpeedBonusModel : DefaultPartySpeedCalculatingModel
     {
+        private PartySpeedModel _previousModel;
+        
+        public RFRaceSpeedBonusModel(PartySpeedModel previousModel)
+        {
+            _previousModel = previousModel;
+        }
         public override ExplainedNumber CalculateBaseSpeed(MobileParty party, bool includeDescriptions = false,
             int additionalTroopOnFootCount = 0, int additionalTroopOnHorseCount = 0)
         {

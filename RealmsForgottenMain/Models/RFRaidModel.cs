@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
@@ -15,6 +16,14 @@ namespace RealmsForgotten.Models
     internal class RFRaidModel : DefaultRaidModel
     {
         private static PartyBase currentRaidParty;
+        
+        private RaidModel _previousModel;
+        
+        public RFRaidModel(RaidModel previousModel)
+        {
+            _previousModel = previousModel;
+        }
+        
         [HarmonyPatch(typeof(RaidEventComponent), "Update")]
         public static class RaidUpdatePatch
         {
@@ -25,7 +34,7 @@ namespace RealmsForgotten.Models
         }
         public override MBReadOnlyList<(ItemObject, float)> GetCommonLootItemScores()
         {
-            MBReadOnlyList<(ItemObject, float)> baseValue = base.GetCommonLootItemScores();
+            MBReadOnlyList<(ItemObject, float)> baseValue = _previousModel.GetCommonLootItemScores();
             if (baseValue == null || baseValue.Count < 1 || currentRaidParty.Owner?.Culture.StringId != "giant")
                 return baseValue;
             for (int i = 0; i < baseValue.Count; i++)
@@ -39,7 +48,7 @@ namespace RealmsForgotten.Models
 
         public override float CalculateHitDamage(MapEventSide attackerSide, float settlementHitPoints)
         {
-            float baseValue = base.CalculateHitDamage(attackerSide, settlementHitPoints);
+            float baseValue = _previousModel.CalculateHitDamage(attackerSide, settlementHitPoints);
             if (attackerSide.LeaderParty.Owner?.Culture.StringId == "giant")
                 return ((25f / 100f) * baseValue) + baseValue;
             return baseValue;
