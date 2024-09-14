@@ -860,9 +860,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
         foreach (var obj in Enum.GetValues(typeof(Core.RFReligions)))
         {
             var rfReligions = (Core.RFReligions)obj;
-            if (rfReligions != Core.RFReligions.PharunAegis && rfReligions != Core.RFReligions.VyralethAmara 
-                                                            && rfReligions != Core.RFReligions.TengralorOrkhai 
-                                                            && rfReligions != _heroes[Hero.MainHero].Religion)
+            if (rfReligions != _heroes[Hero.MainHero].Religion)
             {
                 list.Add(new InquiryElement(rfReligions.ToString(),
                     ReligionUIHelper.GetReligionName(rfReligions).ToString(), null, true, ""));
