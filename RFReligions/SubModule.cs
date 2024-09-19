@@ -13,7 +13,7 @@ public class SubModule : MBSubModuleBase
 {
     protected override void OnApplicationTick(float _deltaTime)
     {
-        if (Campaign.Current != null && Mission.Current == null && Input.IsKeyReleased((InputKey)19))
+        if (Campaign.Current != null && Mission.Current == null && Input.IsKeyReleased(InputKey.R))
             ReligionBehavior.Instance?.TriggerReligionMenuEvent();
     }
 
