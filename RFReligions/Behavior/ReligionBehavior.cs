@@ -942,8 +942,12 @@ internal class ReligionBehavior : CampaignBehaviorBase
 
     private bool IsThisReligionWelcomedInHere(Core.RFReligions mainReligion, Core.RFReligions shouldWelcome)
     {
-        return ReligionLogicHelper.TolerableReligions[mainReligion] == Core.RFReligions.All ||
-               ReligionLogicHelper.TolerableReligions[mainReligion] == shouldWelcome;
+        if (ReligionLogicHelper.TolerableReligions.TryGetValue(mainReligion, out Core.RFReligions tolerable))
+        {
+            return tolerable == Core.RFReligions.All || tolerable == shouldWelcome;
+        }
+
+        return false;
     }
 
 
