@@ -41,24 +41,24 @@ namespace RealmsForgotten.Quest
             CampaignGameStarter gameStarter = (CampaignGameStarter)initializerObject;
             AddQuestBehaviors(gameStarter, true);
         }
+
         public static void OnGameLoaded(Game game, object initializerObject)
         {
             CampaignGameStarter gameStarter = (CampaignGameStarter)initializerObject;
             AddQuestBehaviors(gameStarter, false);
-
         }
+
         private static void AddQuestBehaviors(CampaignGameStarter gameStarter, bool isNewGame)
         {
             if (gameStarter != null)
             {
-
                 gameStarter.AddBehavior(new RescueUliahBehavior(isNewGame));
                 gameStarter.AddBehavior(new SaveCurrentQuestCampaignBehavior());
+                gameStarter.AddBehavior(new SpawnNpcInLordsHallBecomeKnightBehavior()); // Ensure this is added
             }
         }
-
-
     }
+
     public class QuestTypeDefiner : SaveableTypeDefiner
     {
         public QuestTypeDefiner() : base(585820)
@@ -67,16 +67,16 @@ namespace RealmsForgotten.Quest
 
         protected override void DefineClassTypes()
         {
-            base.AddClassDefinition(typeof(RescueUliahBehavior.RescueUliahQuest), 1);
-            base.AddClassDefinition(typeof(SecondQuest), 2);
-            base.AddClassDefinition(typeof(AnoritFindRelicsQuest), 3);
-            base.AddClassDefinition(typeof(ThirdQuest), 4);
-            base.AddClassDefinition(typeof(QuestCaravanPartyComponent), 5);
-            base.AddClassDefinition(typeof(FourthQuest), 6);
-            base.AddClassDefinition(typeof(FifthQuest), 7);
-            base.AddClassDefinition(typeof(SixthQuest), 8);
-
+            AddClassDefinition(typeof(RescueUliahBehavior.RescueUliahQuest), 1);
+            AddClassDefinition(typeof(SecondQuest), 2);
+            AddClassDefinition(typeof(AnoritFindRelicsQuest), 3);
+            AddClassDefinition(typeof(ThirdQuest), 4);
+            AddClassDefinition(typeof(QuestCaravanPartyComponent), 5);
+            AddClassDefinition(typeof(FourthQuest), 6);
+            AddClassDefinition(typeof(FifthQuest), 7);
+            AddClassDefinition(typeof(SixthQuest), 8);
+            AddClassDefinition(typeof(SpawnNpcInLordsHallBecomeKnightBehavior), 20);
+            AddClassDefinition(typeof(SpawnNpcInLordsHallBecomeKnightBehavior.BecomeKnightQuest), 21); // Correctly registered
         }
     }
-
 }

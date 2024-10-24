@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using RealmsForgotten.Behaviors;
+using RealmsForgotten.Quest;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.SaveSystem;
 
@@ -15,5 +16,6 @@ internal class SaveDefiner : SaveableTypeDefiner
     protected override void DefineContainerDefinitions()
     {
         ConstructContainerDefinition(typeof(Dictionary<Settlement, MercenaryData>));
+
     }
 }
