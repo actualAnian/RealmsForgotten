@@ -78,11 +78,6 @@
     <Compile Remove="AiMade\Career\ContractNotificationBehavior.cs" />
     <Compile Remove="AiMade\Career\MercenaryContractManager.cs" />
     <Compile Remove="AiMade\Career\ContractorBehavior.cs" />
-    <Compile Remove="Quest\AI_Quest.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Quest\AI_Quest.cs" />
   </ItemGroup>
 
 </Project>

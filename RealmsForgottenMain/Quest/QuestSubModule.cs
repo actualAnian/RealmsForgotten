@@ -31,6 +31,7 @@ using TaleWorlds.MountAndBlade.View.MissionViews.Singleplayer;
 using TaleWorlds.ObjectSystem;
 using TaleWorlds.SaveSystem;
 using Module = TaleWorlds.MountAndBlade.Module;
+using RealmsForgotten.Quest.KnightQuest;
 
 namespace RealmsForgotten.Quest
 {
@@ -76,7 +77,7 @@ namespace RealmsForgotten.Quest
             AddClassDefinition(typeof(FifthQuest), 7);
             AddClassDefinition(typeof(SixthQuest), 8);
             AddClassDefinition(typeof(SpawnNpcInLordsHallBecomeKnightBehavior), 20);
-            AddClassDefinition(typeof(SpawnNpcInLordsHallBecomeKnightBehavior.BecomeKnightQuest), 21); // Correctly registered
+            AddClassDefinition(typeof(BecomeKnightQuest), 21); // Correctly registered
         }
     }
 }
