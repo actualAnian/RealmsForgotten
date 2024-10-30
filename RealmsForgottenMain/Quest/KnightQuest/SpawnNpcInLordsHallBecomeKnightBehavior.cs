@@ -31,6 +31,7 @@ namespace RealmsForgotten.Quest
         [SaveableField(2)]
         private int daysMercenary = 0;
 
+        private static readonly int MIN_RENOWN_TO_START = 50;
         public static readonly string questSettlement = "town_ES1";
         private static readonly string QuestGiverId = "south_realm_knight_maester";
         private static readonly string LordsHallLocationId = "lordshall";
@@ -140,10 +141,17 @@ namespace RealmsForgotten.Quest
         private DialogFlow CreateStartQuestDialogFlow()
         {
             return DialogFlow.CreateDialogFlow("start", 125)
+                .NpcLine("Greetings, I am looking for renown warriors, to enter knighthood for our realm. Come back when you are more know, then you will be able to enter the trials.", null)
+                .Condition(() => CharacterObject.OneToOneConversationCharacter?.StringId == "south_realm_knight_maester"
+                                && Settlement.CurrentSettlement != null
+                                && Clan.PlayerClan.Renown < MIN_RENOWN_TO_START
+                                && (quest == null || !quest.IsOngoing && !quest.IsFinalized))
+                .CloseDialog()
                 .NpcLine("Greetings, aspiring knight. Do you wish to prove yourself worthy?", null)
                 .Condition(() => CharacterObject.OneToOneConversationCharacter?.StringId == "south_realm_knight_maester"
                                 && Settlement.CurrentSettlement != null
                                 && Settlement.CurrentSettlement.StringId == questSettlement
+                                && Clan.PlayerClan.Renown > MIN_RENOWN_TO_START
                                 && (quest == null || !quest.IsOngoing && !quest.IsFinalized))
                 .PlayerLine("What must I do to become a knight?")
                 .NpcLine("You must retrieve the Knight's Insignia from a distant temple. Will you accept the challenge?")

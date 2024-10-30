@@ -1,37 +1,9 @@
-﻿using HarmonyLib;
-using SandBox;
-using SandBox.Conversation.MissionLogics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using RealmsForgotten.Quest.SecondUpdate;
+﻿using RealmsForgotten.Quest.SecondUpdate;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.CampaignBehaviors;
-using TaleWorlds.CampaignSystem.CharacterCreationContent;
-using TaleWorlds.CampaignSystem.ComponentInterfaces;
-using TaleWorlds.CampaignSystem.Conversation;
-using TaleWorlds.CampaignSystem.Conversation.Tags;
-using TaleWorlds.CampaignSystem.Encounters;
-using TaleWorlds.CampaignSystem.GameComponents;
-using TaleWorlds.CampaignSystem.GameMenus;
-using TaleWorlds.CampaignSystem.Issues;
-using TaleWorlds.CampaignSystem.Party;
-using TaleWorlds.CampaignSystem.Party.PartyComponents;
-using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
-using TaleWorlds.InputSystem;
-using TaleWorlds.Library;
-using TaleWorlds.Localization;
-using TaleWorlds.ModuleManager;
-using TaleWorlds.MountAndBlade;
-using TaleWorlds.MountAndBlade.View;
-using TaleWorlds.MountAndBlade.View.MissionViews.Singleplayer;
-using TaleWorlds.ObjectSystem;
 using TaleWorlds.SaveSystem;
-using Module = TaleWorlds.MountAndBlade.Module;
 using RealmsForgotten.Quest.KnightQuest;
+using RealmsForgotten.Quest.AI_Quest;
 
 namespace RealmsForgotten.Quest
 {
@@ -55,7 +27,8 @@ namespace RealmsForgotten.Quest
             {
                 gameStarter.AddBehavior(new RescueUliahBehavior(isNewGame));
                 gameStarter.AddBehavior(new SaveCurrentQuestCampaignBehavior());
-                gameStarter.AddBehavior(new SpawnNpcInLordsHallBecomeKnightBehavior()); // Ensure this is added
+                gameStarter.AddBehavior(new SpawnNpcInLordsHallBecomeKnightBehavior());
+                gameStarter.AddBehavior(new SpawnNpcInLordsHallBehavior());
             }
         }
     }
@@ -77,7 +50,8 @@ namespace RealmsForgotten.Quest
             AddClassDefinition(typeof(FifthQuest), 7);
             AddClassDefinition(typeof(SixthQuest), 8);
             AddClassDefinition(typeof(SpawnNpcInLordsHallBecomeKnightBehavior), 20);
-            AddClassDefinition(typeof(BecomeKnightQuest), 21); // Correctly registered
+            AddClassDefinition(typeof(BecomeKnightQuest), 21);
+            AddClassDefinition(typeof(SpawnNpcInLordsHallBehavior.RetrieveArtifactQuest), 12);
         }
     }
 }

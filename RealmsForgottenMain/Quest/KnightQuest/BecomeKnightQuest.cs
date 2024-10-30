@@ -151,7 +151,6 @@ namespace RealmsForgotten.Quest.KnightQuest
 
                 if (_banditsDefeated == BanditsToDefeatTarget)
                 {
-
                     CompleteBanditObjective();
                 }
             }

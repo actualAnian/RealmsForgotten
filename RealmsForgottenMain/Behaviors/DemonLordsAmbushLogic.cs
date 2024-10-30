@@ -30,7 +30,6 @@ namespace RealmsForgotten.Models
                     if (raceId != -1) // Assuming -1 is returned if the race is not found
                     {
                         targetRaceIds.Add(raceId);
-                        LogMessage($"DemonLordsAmbushLogic: Added race '{raceName}' with ID {raceId}.");
                     }
                     else
                     {
@@ -51,10 +50,6 @@ namespace RealmsForgotten.Models
                 {
                     LogMessage("DemonLordsAmbushLogic: Race 'half_giant' not found.");
                 }
-                else
-                {
-                    LogMessage($"DemonLordsAmbushLogic: Added race 'half_giant' with ID {halfGiantRaceId}.");
-                }
             }
             catch (KeyNotFoundException)
             {
@@ -74,7 +69,6 @@ namespace RealmsForgotten.Models
                     // Apply absorb ratio of 80%
                     float absorbedDamage = blow.InflictedDamage * 0.2f;
                     affectedAgent.Health = Math.Max(0, affectedAgent.Health - absorbedDamage);
-                    LogMessage($"DemonLordsAmbushLogic: {affectedAgent.Name} hit by {weaponId}, absorbed 80%, applied damage: {absorbedDamage}.");
                     return;
                 }
 
@@ -84,13 +78,11 @@ namespace RealmsForgotten.Models
                     // Apply full damage for fire attacks
                     float fireDamage = blow.InflictedDamage;
                     affectedAgent.Health = Math.Max(0, affectedAgent.Health - fireDamage);
-                    LogMessage($"DemonLordsAmbushLogic: {affectedAgent.Name} hit by fire, applied damage: {fireDamage}.");
                     return;
                 }
 
                 // Apply health boost to the affected agent
                 affectedAgent.Health += blow.InflictedDamage + 10;
-                LogMessage($"DemonLordsAmbushLogic: Applied health boost to {affectedAgent.Name} due to target race.");
             }
 
             // Check if the affected agent is a half_giant and apply 95% damage reduction for piercing damage
@@ -101,7 +93,6 @@ namespace RealmsForgotten.Models
                     // Apply 95% damage reduction for piercing attacks
                     float reducedDamage = blow.InflictedDamage * 0.05f;
                     affectedAgent.Health = Math.Max(0, affectedAgent.Health - reducedDamage);
-                    LogMessage($"DemonLordsAmbushLogic: {affectedAgent.Name} hit by piercing attack, applied 95% damage reduction, applied damage: {reducedDamage}.");
                     return;
                 }
             }
