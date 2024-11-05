@@ -1,0 +1,14 @@
+﻿<Widget Id="Kardrathium" DataSource="{KardrathiumButtonToggle}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Bottom" UpdateChildrenStates="true" PositionYOffset="-30" PositionXOffset="-150">
+	<Children>
+		<Widget DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" SuggestedHeight="40" MarginRight="40" HorizontalAlignment="Left" VerticalAlignment="Center" >
+			<Children>
+				<TextWidget Id="Label" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MaxWidth="185" Text="Use Kardrathium:" Brush="Crafting.Property.Name.Text" HorizontalAlignment="Right" Brush.TextHorizontalAlignment="Right" />
+			</Children>
+		</Widget>
+		<ButtonWidget Id="BoolButton"  DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="30" SuggestedHeight="30" Brush="SPOptions.Checkbox.Empty.Button" ButtonType="Toggle" IsSelected="@UseKardrathium" ToggleIndicator="ToggleIndicator" UpdateChildrenStates="true" HorizontalAlignment="Right" VerticalAlignment="Center">
+			<Children>
+				<ImageWidget Id="ToggleIndicator" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="SPOptions.Checkbox.Full.Button"  />
+			</Children>
+		</ButtonWidget>
+	</Children>
+</Widget>

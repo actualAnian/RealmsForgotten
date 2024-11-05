@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RFCustomBandits", "RFCustom
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RFReligions", "RFReligions\RFReligions.csproj", "{25646E57-0449-44C6-AE51-2412AEE5E876}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RFSmithing", "RFSmithing\RFSmithing.csproj", "{394FAFD1-8054-4AF9-8754-7AA84767F6F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,14 @@ Global
 		{25646E57-0449-44C6-AE51-2412AEE5E876}.Release|Any CPU.Build.0 = Release|x64
 		{25646E57-0449-44C6-AE51-2412AEE5E876}.Release|x64.ActiveCfg = Release|x64
 		{25646E57-0449-44C6-AE51-2412AEE5E876}.Release|x64.Build.0 = Release|x64
+		{394FAFD1-8054-4AF9-8754-7AA84767F6F6}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{394FAFD1-8054-4AF9-8754-7AA84767F6F6}.Debug|Any CPU.Build.0 = Debug|x64
+		{394FAFD1-8054-4AF9-8754-7AA84767F6F6}.Debug|x64.ActiveCfg = Debug|x64
+		{394FAFD1-8054-4AF9-8754-7AA84767F6F6}.Debug|x64.Build.0 = Debug|x64
+		{394FAFD1-8054-4AF9-8754-7AA84767F6F6}.Release|Any CPU.ActiveCfg = Release|x64
+		{394FAFD1-8054-4AF9-8754-7AA84767F6F6}.Release|Any CPU.Build.0 = Release|x64
+		{394FAFD1-8054-4AF9-8754-7AA84767F6F6}.Release|x64.ActiveCfg = Release|x64
+		{394FAFD1-8054-4AF9-8754-7AA84767F6F6}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
