@@ -1,23 +1,18 @@
 ﻿using System;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.AgentOrigins;
 using TaleWorlds.CampaignSystem.Settlements.Locations;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
-using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.ObjectSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.SaveSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.MapEvents;
-using System.Collections.Generic;
-using SandBox.Missions.MissionLogics.Arena;
 using TaleWorlds.CampaignSystem.GameMenus;
-using TaleWorlds.CampaignSystem.ComponentInterfaces;
 
 namespace RealmsForgotten.Quest.KnightQuest
 {
@@ -86,7 +81,7 @@ namespace RealmsForgotten.Quest.KnightQuest
         }
         public void IncrementDaysAsMercenary()
         {
-            if (_beMercenaryLog?.CurrentProgress == 1) return;
+            if (_beMercenaryLog == null || _beMercenaryLog.CurrentProgress == 1) return;
             _daysAsMercenary += 1;
             if (_daysAsMercenary >= DaysToBeMercenary)
             {
@@ -108,13 +103,10 @@ namespace RealmsForgotten.Quest.KnightQuest
 
         protected override void InitializeQuestOnGameLoad()
         {
-            SetDialogs();  // Ensure dialogs are re-initialized after loading
+            SetDialogs();
         }
 
-        protected override void HourlyTick()
-        {
-            // Add logic that should happen every in-game hour, or leave it empty if not needed
-        }
+        protected override void HourlyTick() {}
 
         protected override void RegisterEvents()
         {
@@ -141,13 +133,11 @@ namespace RealmsForgotten.Quest.KnightQuest
         }
         private void OnMobilePartyDestroyedHandler(MobileParty destroyedParty, PartyBase destroyer)
         {
-            if (destroyer.LeaderHero != null && destroyer.LeaderHero != Hero.MainHero) return;
+            if (destroyer.LeaderHero == null || destroyer.LeaderHero != Hero.MainHero) return;
 
             if (destroyedParty.IsBandit)
             {
                 _banditsDefeated++;
-
-                InformationManager.DisplayMessage(new InformationMessage($"You have defeated {_banditsDefeated}/{BanditsToDefeatTarget} bandit parties."));
 
                 if (_banditsDefeated == BanditsToDefeatTarget)
                 {
@@ -223,19 +213,18 @@ namespace RealmsForgotten.Quest.KnightQuest
                 if (mapEvent.BattleState == BattleState.AttackerVictory)
                 {
                     _hideoutsCleared++;
-                    _defeatHideoutLog?.UpdateCurrentProgress(1);
 
-                    InformationManager.DisplayMessage(new InformationMessage($"You have cleared a bandit hideout! {_hideoutsCleared}/{HideoutsToDefeatTarget} completed."));
+                    MBInformationManager.AddQuickInformation(new TextObject($"You have cleared a bandit hideout! {_hideoutsCleared}/{HideoutsToDefeatTarget} completed."));
 
                     if (_hideoutsCleared >= HideoutsToDefeatTarget)
                     {
-                        InformationManager.DisplayMessage(new InformationMessage("You have cleared all required bandit hideouts! Return to the quest giver."));
+                        MBInformationManager.AddQuickInformation(new TextObject("You have cleared all required bandit hideouts! Return to the quest giver."));
+                        _defeatHideoutLog?.UpdateCurrentProgress(1);
                     }
                 }
                 else if (mapEvent.BattleState == BattleState.DefenderVictory)
                 {
                     InformationManager.DisplayMessage(new InformationMessage("You failed to clear the hideout."));
-                    // Handle quest failure if needed
                 }
             }
         }

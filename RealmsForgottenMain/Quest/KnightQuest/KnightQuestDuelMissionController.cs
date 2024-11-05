@@ -81,6 +81,7 @@ namespace RealmsForgotten.Quest.KnightQuest
             }
             catch(Exception)
             {
+                InformationManager.DisplayMessage(new InformationMessage("Error, Could not find an equipment roster with id \"knight_maester_armor\"."));
                 equipment = Settlement.CurrentSettlement.Culture.DuelPresetEquipmentRoster.GetBattleEquipments().GetRandomElementInefficiently();
             }
 
