@@ -1,0 +1,66 @@
+﻿1. allow to dynamically create classes implementing QuestBase
+2. add a dictionary with int values that can be incremented
+3. add to dialogues.xml:
+	<Condition> State["quest_1"] == 1 </Condition> // in c# code translate this to state_dict["state_quest1"] == 1
+	<Condition> Quests["quest_1"].Evaluate() </Condition> // checks if the quest can be finished
+	
+	<Consequence>  // all possible consequences below
+		- Quests["quest_1"].Start() 
+		- Quests["quest_1"].Complete()
+		- State["state_quest_1"] == 0 //creates a new state
+		- State["state_quest_1"] += 1 // increments the state
+	</Consequence>
+4. add new Quests.xml, and code handling it
+example xml:
+<AllQuests>
+<Quest>
+	<QuestId> "quest_1" </QuestId>
+	<QuestGiverId>"npc_1"</QuestGiverId>
+	<Text>"This guy wants you to do this"</Text>
+	<CompletedWhen>
+		<InInventory>
+			<ItemId>gold</ItemId>
+			<Amount>50</Amount>
+		</InInventory>
+		<HasKilled>
+			<CreatureId>"sheep"</CreatureId>
+			<Amount>1</Amount>
+		</HasKilled>
+		<HasPrisoners>
+			<PrisonerId>"looter"</PrisonerId>
+			<Amount>5</Amount>
+		</HasPrisoners>
+	</CompletedWhen>
+	<CompleteConsequence>
+		<RemoveItem>
+			<ItemId>gold</ItemId>
+			<Amount>50</Amount>
+		</RemoveItem>
+		<RemoveTroop>
+			<CreatureId>"looter"</CreatureId>
+			<Amount>1</Amount>
+		</RemoveTroop>
+		<RemovePrisoners>
+			<PrisonerId>"looter"</PrisonerId>
+			<Amount>5</Amount>
+		</RemovePrisoners>
+	</CompleteConsequence>
+	<Reward>
+		<AddToInventory>
+			<ItemId>gold</ItemId>
+			<Amount>50</Amount>
+		</AddToInventory>
+		<AddTroops>
+			<TroopId>"looter"</TroopId>
+			<Amount>5</Amount>
+		</AddTroops>		
+		<AddPrisoners>
+			<PrisonerId>"looter"</PrisonerId>
+			<Amount>5</Amount>
+		</AddPrisoners>		
+		<AddRenown>
+			<Amount>5</Amount>
+		</AddRenown>
+	</Reward>
+</Quest>
+</AllQuests>

@@ -1,4 +1,5 @@
 ﻿using RFCustomSettlements.Dialogues;
+using RFCustomSettlements.Quests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +30,13 @@ namespace RealmsForgotten.RFCustomSettlements
             CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.FillSettlementList));
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnSessionLaunched));
             CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.FillSettlementList));
+            CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, () => { 
+                var quest_1 = new TestClass("test_1", CharacterObject.PlayerCharacter.HeroObject, CampaignTime.Never, 0);
+                quest_1.StartQuest();
+                var quest_2 = new TestClass("test_2", CharacterObject.PlayerCharacter.HeroObject, CampaignTime.Never, 0);
+                quest_2.StartQuest();
+
+            });
         }
 
         private void OnSessionLaunched(CampaignGameStarter starter)
