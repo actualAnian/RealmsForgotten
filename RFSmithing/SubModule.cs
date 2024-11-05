@@ -21,7 +21,7 @@ namespace RealmsForgotten.Smithing
   public class SubModule : MBSubModuleBase
   {
     private static readonly string Namespace = typeof (SubModule).Namespace;
-    private readonly UIExtender _extender = new (Namespace);
+    private readonly UIExtender _extender = new ("RealmsForgotten");
     private readonly Harmony _harmony = new (Namespace);
 
     protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
