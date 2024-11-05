@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using RealmsForgotten.AiMade.Career;
 using RealmsForgotten.AiMade.Managers.RealmsForgotten.AiMade.Managers;
+using RealmsForgotten.AiMade.PartyOverrides;
 using RealmsForgotten.AiMade.Patches;
 using RealmsForgotten.AiMade.Religions;
-using RealmsForgotten.Behaviors;
 using RealmsForgotten.Behaviors;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.SaveSystem;
@@ -77,6 +77,15 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(UndeadHordeBehavior), 43);
             AddClassDefinition(typeof(BanditIncrease), 44);
             AddClassDefinition(typeof(BanditPartyManager), 45);
+            AddClassDefinition(typeof(DocksMenuBehavior), 46);
+            AddClassDefinition(typeof(CustomAIBase), 47);
+            AddClassDefinition(typeof(YourFactionAI), 48);
+            AddClassDefinition(typeof(MyModEnlistmentBehavior), 49);
+            AddClassDefinition(typeof(MyModEnlistmentBehaviorExtension), 50);
+            AddClassDefinition(typeof(MyModEnlistmentDialogBehavior), 52);
+            AddClassDefinition(typeof(KingsguardSaveDataBehavior), 53);
+            AddClassDefinition(typeof(RaceCraftingStaminaBehavior), 54);
+            AddClassDefinition(typeof(ADODChamberlainsBehavior), 55);
 
         }
     }

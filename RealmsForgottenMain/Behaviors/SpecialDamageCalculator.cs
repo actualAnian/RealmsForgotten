@@ -17,8 +17,6 @@ namespace RealmsForgotten.Behaviors
             // Retrieve race ID from agent's character
             int raceId = agent.Character?.Race ?? RaceUtility.GetRaceId("unknown");
 
-            InformationManager.DisplayMessage(new InformationMessage($"Agent Race ID: {raceId}"));
-
             string raceStringId = GetRaceStringId(raceId);
             var resistances = ExtendedInfoManager.GetRaceResistances(raceStringId);
 

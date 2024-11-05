@@ -56,6 +56,10 @@
       <HintPath>%(Identity)</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="$(GameFolder)\Modules\Bannerlord.UIExtenderEx\bin\Win64_Shipping_Client\Bannerlord.UIExtenderEx.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="MCMv5">
       <HintPath>_Module\bin\Win64_Shipping_Client\MCMv5.dll</HintPath>
     </Reference>

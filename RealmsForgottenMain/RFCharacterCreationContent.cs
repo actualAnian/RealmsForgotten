@@ -101,6 +101,9 @@ namespace RealmsForgotten
                 case "mage":
                     bodyPropString = HumanBodyPropString;
                     break;
+                case "dwarf":
+                    bodyPropString = DwarfBodyPropString;
+                    break;
                 default:
                     Debug.FailedAssert("Selected culture is invalid!", "RFCharacterCreationContent.cs", "OnCultureSelected", 80);
                     bodyPropString = HumanBodyPropString;
@@ -199,6 +202,9 @@ namespace RealmsForgotten
                         break;
                     case "mage":
                         cultureObject.CultureFeats.Add(culturalFeats.empireAdittionalTier);
+                        break;
+                    case "dwarf":
+                        cultureObject.CultureFeats.Add(culturalFeats.athasFasterConstructions);
                         break;
                 }
 
@@ -310,6 +316,16 @@ namespace RealmsForgotten
             mageParentsCategory.AddCategoryOption(new("{=v48N6h1t}Urban artisans"), new() { DefaultSkills.Crafting, DefaultSkills.Crossbow }, DefaultCharacterAttributes.Intelligence, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, MageArtisanOnConsequence, base.EmpireArtisanOnApply, new("{=ZKynvffv}Your family owned their own workshop in a city, making goods from raw materials brought in from the countryside. Your father played an active if minor role in the town council, and also served in the militia."), null, 0, 0, 0, 0, 0);
             mageParentsCategory.AddCategoryOption(new("Forestcaretakers"), new() { DefaultSkills.Scouting, DefaultSkills.Bow }, DefaultCharacterAttributes.Control, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, MageWoodsmanOnConsequence, base.EmpireWoodsmanOnApply, new("Your family lived in a village, but did not own their own land. Instead, your father supplemented paid jobs with long trips in the woods, hunting and trapping, always keeping a wary eye for the lord's game wardens."), null, 0, 0, 0, 0, 0);
             mageParentsCategory.AddCategoryOption(new("{=aEke8dSb}Urban vagabonds"), new() { DefaultSkills.Roguery, DefaultSkills.Throwing }, DefaultCharacterAttributes.Cunning, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, MageVagabondOnConsequence, base.EmpireVagabondOnApply, new("{=Jvf6K7TZ}Your family numbered among the many poor migrants living in the slums that grow up outside the walls of cities, making whatever money they could from a variety of odd jobs. Sometimes they did service for one of the many criminal gangs, and you had an early look at the dark side of life."), null, 0, 0, 0, 0, 0);
+
+            // Dwarf
+            CharacterCreationCategory dwarfParentsCategory = parentsMenu.AddMenuCategory(new(DwarfParentsOnCondition));
+            dwarfParentsCategory.AddCategoryOption(new("Dugrast Nobles"), new() { DefaultSkills.TwoHanded, DefaultSkills.Riding }, DefaultCharacterAttributes.Vigor, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, DwarfNoblesOnConsequence, base.EmpireLandlordsRetainerOnApply, new("Your family was part of the noble dwarven houses, renowned for their craftsmanship and warrior skills."), null, 0, 0, 0, 0, 0);
+            dwarfParentsCategory.AddCategoryOption(new("{=651FhzdR}Urban merchants"), new() { DefaultSkills.Trade, DefaultSkills.Charm }, DefaultCharacterAttributes.Social, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, DwarfMerchantOnConsequence, base.EmpireMerchantOnApply, new("{=FQntPChs}Your family were merchants in one of the main cities of the Dugrast Kingdom. They sometimes organized caravans to nearby towns, and discussed issues in the town council."), null, 0, 0, 0, 0, 0);
+            dwarfParentsCategory.AddCategoryOption(new("Dugrast Artisans"), new() { DefaultSkills.Crafting, DefaultSkills.Trade }, DefaultCharacterAttributes.Intelligence, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, DwarfArtisanOnConsequence, base.EmpireArtisanOnApply, new("Your family were famous artisans, crafting weapons, armor, and items of unmatched quality."), null, 0, 0, 0, 0, 0);
+            dwarfParentsCategory.AddCategoryOption(new("Dugrast Miners"), new() { DefaultSkills.Engineering, DefaultSkills.Athletics }, DefaultCharacterAttributes.Endurance, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, DwarfMinerOnConsequence, base.EmpireFreeholderOnApply, new("Your family worked in the deep mines, extracting precious metals and gems from the earth."), null, 0, 0, 0, 0, 0);
+            dwarfParentsCategory.AddCategoryOption(new("Dugrast Warriors"), new() { DefaultSkills.OneHanded, DefaultSkills.Polearm }, DefaultCharacterAttributes.Vigor, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, DwarfWarriorOnConsequence, base.EmpireVagabondOnApply, new("Your family were part of the dwarven military, renowned for their resilience and tactical brilliance in battle."), null, 0, 0, 0, 0, 0);
+            dwarfParentsCategory.AddCategoryOption(new("{=aEke8dSb}Urban vagabonds"), new() { DefaultSkills.Roguery, DefaultSkills.Throwing }, DefaultCharacterAttributes.Cunning, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, DwarfVagabondOnConsequence, base.EmpireVagabondOnApply, new("{=Jvf6K7TZ}Your family numbered among the many poor migrants living in the slums that grow up outside the walls of cities, making whatever money they could from a variety of odd jobs. Sometimes they did service for one of the many criminal gangs, and you had an early look at the dark side of life."), null, 0, 0, 0, 0, 0);
+            characterCreation.AddNewMenu(parentsMenu);
 
             characterCreation.AddNewMenu(parentsMenu);
         }
@@ -458,6 +474,36 @@ namespace RealmsForgotten
         {
             SetParentAndOccupationType(characterCreation, 6, OccupationTypes.Vagabond);
         }
+        private void DwarfNoblesOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 1, OccupationTypes.Retainer);
+        }
+
+        protected void DwarfMerchantOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 2, OccupationTypes.Merchant);
+        }
+
+        private void DwarfArtisanOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 1, OccupationTypes.Artisan);
+        }
+
+        private void DwarfMinerOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 2, OccupationTypes.Farmer);
+        }
+
+        private void DwarfWarriorOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 3, OccupationTypes.Mercenary);
+        }
+
+        protected void DwarfVagabondOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 6, OccupationTypes.Vagabond);
+        }
+
         protected new void AddChildhoodMenu(CharacterCreation characterCreation)
         {
             // CHILDHOOD MENU
@@ -831,94 +877,132 @@ namespace RealmsForgotten
             {
             DefaultSkills.Throwing,
             DefaultSkills.OneHanded
-         }, DefaultCharacterAttributes.Control, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthSkirmisherOnConsequence), new(base.YouthSkirmisherOnApply), new("{=bXAg5w19}Younger recruits, or those of a slighter build, or those too poor to buy shield and armor tend to join the skirmishers. Fighting with bow and javelin, they try to stay out of reach of the main enemy forces.", null), null, 0, 0, 0, 0, 0);
+            }, DefaultCharacterAttributes.Control, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthSkirmisherOnConsequence), new(base.YouthSkirmisherOnApply), new("{=bXAg5w19}Younger recruits, or those of a slighter build, or those too poor to buy shield and armor tend to join the skirmishers. Fighting with bow and javelin, they try to stay out of reach of the main enemy forces.", null), null, 0, 0, 0, 0, 0);
 
             characterCreationCategory.AddCategoryOption(new("{=GFUggps8}marched with the free people.", null), new()
-        {
+            {
             DefaultSkills.Roguery,
             DefaultSkills.Throwing
-        }, DefaultCharacterAttributes.Cunning, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthCamperOnConsequence), new(base.YouthCamperOnApply), new("{=64rWqBLN}You avoided service with one of the main forces of your realm's armies, but followed instead in the train - the troops' wives, lovers and servants, and those who make their living by caring for, entertaining, or cheating the soldiery.", null), null, 0, 0, 0, 0, 0);
+            }, DefaultCharacterAttributes.Cunning, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthCamperOnConsequence), new(base.YouthCamperOnApply), new("{=64rWqBLN}You avoided service with one of the main forces of your realm's armies, but followed instead in the train - the troops' wives, lovers and servants, and those who make their living by caring for, entertaining, or cheating the soldiery.", null), null, 0, 0, 0, 0, 0);
 
             // West Realm
 
             characterCreationCategory = characterCreationMenu.AddMenuCategory(new(WestRealmParentsOnCondition));
             characterCreationCategory.AddCategoryOption(new("{=h2KnarLL}trained with the cavalry.", null), new()
-        {
+            {
             DefaultSkills.Riding,
             DefaultSkills.Polearm
-        }, DefaultCharacterAttributes.Endurance, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthCavalryOnConsequence), new(base.YouthCavalryOnApply), new("{=7cHsIMLP}You could never have bought the equipment on your own but you were a good enough rider so that the local lord lent you a horse and equipment. You joined the armored cavalry, training with the lance.", null), null, 0, 0, 0, 0, 0);
+            }, DefaultCharacterAttributes.Endurance, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthCavalryOnConsequence), new(base.YouthCavalryOnApply), new("{=7cHsIMLP}You could never have bought the equipment on your own but you were a good enough rider so that the local lord lent you a horse and equipment. You joined the armored cavalry, training with the lance.", null), null, 0, 0, 0, 0, 0);
 
             characterCreationCategory.AddCategoryOption(new("partrolled the cities.", null), new()
-        {
-             DefaultSkills.Crossbow,
+            {
+            DefaultSkills.Crossbow,
             DefaultSkills.Engineering
-        }, DefaultCharacterAttributes.Intelligence, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthGarrisonOnConsequence), new(base.YouthGarrisonOnApply), new("{63TAYbkx}Urban troops spend much of their time guarding the town walls. Most of their training was in missile weapons, especially useful during sieges.", null), null, 0, 0, 0, 0, 0);
+            }, DefaultCharacterAttributes.Intelligence, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthGarrisonOnConsequence), new(base.YouthGarrisonOnApply), new("{63TAYbkx}Urban troops spend much of their time guarding the town walls. Most of their training was in missile weapons, especially useful during sieges.", null), null, 0, 0, 0, 0, 0);
 
             characterCreationCategory.AddCategoryOption(new("joined the scouts.", null), new()
-        {
+            {
             DefaultSkills.Riding,
-             DefaultSkills.Bow
-         }, DefaultCharacterAttributes.Endurance, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthOtherOutridersOnConsequence), new(base.YouthOtherOutridersOnApply), new("You couted ahead of the army.", null), null, 0, 0, 0, 0, 0);
+            DefaultSkills.Bow
+            }, DefaultCharacterAttributes.Endurance, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthOtherOutridersOnConsequence), new(base.YouthOtherOutridersOnApply), new("You couted ahead of the army.", null), null, 0, 0, 0, 0, 0);
 
             characterCreationCategory.AddCategoryOption(new("{=a8arFSra}trained with the infantry.", null), new()
-        {
+            {
             DefaultSkills.Polearm,
             DefaultSkills.OneHanded
-        }, DefaultCharacterAttributes.Vigor, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, null, new(base.YouthInfantryOnApply), new("{=afH90aNs}Young Tribesmen armed with spear and shield, drawn from smallholding farmers, have always been the backbone of most armies of Athas.", null), null, 0, 0, 0, 0, 0);
+            }, DefaultCharacterAttributes.Vigor, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, null, new(base.YouthInfantryOnApply), new("{=afH90aNs}Young Tribesmen armed with spear and shield, drawn from smallholding farmers, have always been the backbone of most armies of Athas.", null), null, 0, 0, 0, 0, 0);
 
             characterCreationCategory.AddCategoryOption(new("{=oMbOIPc9}joined the skirmishers.", null), new()
-        {
+            {
             DefaultSkills.Throwing,
             DefaultSkills.OneHanded
-        }, DefaultCharacterAttributes.Control, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthSkirmisherOnConsequence), new(base.YouthSkirmisherOnApply), new("{=bXAg5w19}Younger recruits, or those of a slighter build, or those too poor to buy shield and armor tend to join the skirmishers. Fighting with bow and javelin, they try to stay out of reach of the main enemy forces.", null), null, 0, 0, 0, 0, 0);
+            }, DefaultCharacterAttributes.Control, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthSkirmisherOnConsequence), new(base.YouthSkirmisherOnApply), new("{=bXAg5w19}Younger recruits, or those of a slighter build, or those too poor to buy shield and armor tend to join the skirmishers. Fighting with bow and javelin, they try to stay out of reach of the main enemy forces.", null), null, 0, 0, 0, 0, 0);
 
             characterCreationCategory.AddCategoryOption(new("{=GFUggps8}marched with the free people.", null), new()
-        {
+            {
             DefaultSkills.Roguery,
             DefaultSkills.Throwing
-        }, DefaultCharacterAttributes.Cunning, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthCamperOnConsequence), new(base.YouthCamperOnApply), new("{=64rWqBLN}You avoided service with one of the main forces of your realm's armies, but followed instead in the train - the troops' wives, lovers and servants, and those who make their living by caring for, entertaining, or cheating the soldiery.", null), null, 0, 0, 0, 0, 0);
+            }, DefaultCharacterAttributes.Cunning, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthCamperOnConsequence), new(base.YouthCamperOnApply), new("{=64rWqBLN}You avoided service with one of the main forces of your realm's armies, but followed instead in the train - the troops' wives, lovers and servants, and those who make their living by caring for, entertaining, or cheating the soldiery.", null), null, 0, 0, 0, 0, 0);
 
             // Mage
 
             characterCreationCategory = characterCreationMenu.AddMenuCategory(new(MageParentsOnCondition));
             characterCreationCategory.AddCategoryOption(new("{=h2KnarLL}trained with the cavalry.", null), new()
-        {
+            {
             DefaultSkills.Riding,
             DefaultSkills.Polearm
-        }, DefaultCharacterAttributes.Endurance, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthCavalryOnConsequence), new(base.YouthCavalryOnApply), new("{=7cHsIMLP}You could never have bought the equipment on your own but you were a good enough rider so that the local lord lent you a horse and equipment. You joined the armored cavalry, training with the lance.", null), null, 0, 0, 0, 0, 0);
+            }, DefaultCharacterAttributes.Endurance, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthCavalryOnConsequence), new(base.YouthCavalryOnApply), new("{=7cHsIMLP}You could never have bought the equipment on your own but you were a good enough rider so that the local lord lent you a horse and equipment. You joined the armored cavalry, training with the lance.", null), null, 0, 0, 0, 0, 0);
 
             characterCreationCategory.AddCategoryOption(new("partrolled the cities.", null), new()
-        {
+            {
             DefaultSkills.Crossbow,
             DefaultSkills.Engineering
-        }, DefaultCharacterAttributes.Intelligence, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthGarrisonOnConsequence), new(base.YouthGarrisonOnApply), new("{63TAYbkx}Urban troops spend much of their time guarding the town walls. Most of their training was in missile weapons, especially useful during sieges.", null), null, 0, 0, 0, 0, 0);
+            }, DefaultCharacterAttributes.Intelligence, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthGarrisonOnConsequence), new(base.YouthGarrisonOnApply), new("{63TAYbkx}Urban troops spend much of their time guarding the town walls. Most of their training was in missile weapons, especially useful during sieges.", null), null, 0, 0, 0, 0, 0);
 
             characterCreationCategory.AddCategoryOption(new("joined the scouts.", null), new()
-        {
+            {
             DefaultSkills.Riding,
-             DefaultSkills.Bow
-        }, DefaultCharacterAttributes.Endurance, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthOtherOutridersOnConsequence), new(base.YouthOtherOutridersOnApply), new("You couted ahead of the army.", null), null, 0, 0, 0, 0, 0);
+            DefaultSkills.Bow
+            }, DefaultCharacterAttributes.Endurance, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthOtherOutridersOnConsequence), new(base.YouthOtherOutridersOnApply), new("You couted ahead of the army.", null), null, 0, 0, 0, 0, 0);
 
             characterCreationCategory.AddCategoryOption(new("{=a8arFSra}trained with the infantry.", null), new()
-        {
+            {
             DefaultSkills.Polearm,
             DefaultSkills.OneHanded
-        }, DefaultCharacterAttributes.Vigor, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, null, new(base.YouthInfantryOnApply), new("{=afH90aNs}Young Tribesmen armed with spear and shield, drawn from smallholding farmers, have always been the backbone of most armies.", null), null, 0, 0, 0, 0, 0);
+            }, DefaultCharacterAttributes.Vigor, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, null, new(base.YouthInfantryOnApply), new("{=afH90aNs}Young Tribesmen armed with spear and shield, drawn from smallholding farmers, have always been the backbone of most armies.", null), null, 0, 0, 0, 0, 0);
 
             characterCreationCategory.AddCategoryOption(new("{=oMbOIPc9}joined the scholars.", null), new()
-        {
+            {
             DefaultSkills.Medicine,
             RFSkills.Arcane
-        }, DefaultCharacterAttributes.Control, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthSkirmisherOnConsequence), new(base.YouthSkirmisherOnApply), new("{=bXAg5w19}After reaching the age when every youth is potentially a spear bearer, it became clear that your constitution was not up to the task. However, scrolls and books quickly revealed themselves as a field in which you showed great familiarity. Seeing this, the scholars of the kingdom gladly welcomed another novice.", null), null, 0, 0, 0, 0, 0);
+            }, DefaultCharacterAttributes.Control, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthSkirmisherOnConsequence), new(base.YouthSkirmisherOnApply), new("{=bXAg5w19}After reaching the age when every youth is potentially a spear bearer, it became clear that your constitution was not up to the task. However, scrolls and books quickly revealed themselves as a field in which you showed great familiarity. Seeing this, the scholars of the kingdom gladly welcomed another novice.", null), null, 0, 0, 0, 0, 0);
 
             characterCreationCategory.AddCategoryOption(new("{=GFUggps8}marched with the free people.", null), new()
-        {
+            {
             DefaultSkills.Throwing,
             DefaultSkills.OneHanded
-        }, DefaultCharacterAttributes.Cunning, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthCamperOnConsequence), new(base.YouthCamperOnApply), new("{=64rWqBLN}You avoided service with one of the main forces of your realm's armies, but followed instead in the train - the troops' wives, lovers and servants, and those who make their living by caring for, entertaining, or cheating the soldiery.", null), null, 0, 0, 0, 0, 0);
+            }, DefaultCharacterAttributes.Cunning, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthCamperOnConsequence), new(base.YouthCamperOnApply), new("{=64rWqBLN}You avoided service with one of the main forces of your realm's armies, but followed instead in the train - the troops' wives, lovers and servants, and those who make their living by caring for, entertaining, or cheating the soldiery.", null), null, 0, 0, 0, 0, 0);
+            // Dwarf
 
+            characterCreationCategory = characterCreationMenu.AddMenuCategory(new(DwarfParentsOnCondition));
+            characterCreationCategory.AddCategoryOption(new("{=h2KnarLL}trained with the cavalry.", null), new()
+            {
+               DefaultSkills.Riding,
+               DefaultSkills.Polearm
+            }, DefaultCharacterAttributes.Endurance, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthCavalryOnConsequence), new(base.YouthCavalryOnApply), new("{=7cHsIMLP}You could never have bought the equipment on your own but you were a good enough rider so that the local lord lent you a horse and equipment. You joined the armored cavalry, training with the lance.", null), null, 0, 0, 0, 0, 0);
+
+            characterCreationCategory.AddCategoryOption(new("partrolled the cities.", null), new()
+            {
+                DefaultSkills.Crossbow,
+                DefaultSkills.Engineering
+            }, DefaultCharacterAttributes.Intelligence, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthGarrisonOnConsequence), new(base.YouthGarrisonOnApply), new("{63TAYbkx}Urban troops spend much of their time guarding the town walls. Most of their training was in missile weapons, especially useful during sieges.", null), null, 0, 0, 0, 0, 0);
+
+            characterCreationCategory.AddCategoryOption(new("joined the scouts.", null), new()
+            {
+                DefaultSkills.Riding,
+                DefaultSkills.Crossbow
+            }, DefaultCharacterAttributes.Endurance, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthOtherOutridersOnConsequence), new(base.YouthOtherOutridersOnApply), new("You couted ahead of the army.", null), null, 0, 0, 0, 0, 0);
+
+            characterCreationCategory.AddCategoryOption(new("{=a8arFSra}trained with the infantry.", null), new()
+            {
+                DefaultSkills.Polearm,
+                DefaultSkills.OneHanded
+            }, DefaultCharacterAttributes.Vigor, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, null, new(base.YouthInfantryOnApply), new("{=afH90aNs}Young Tribesmen armed with spear and shield, drawn from smallholding farmers, have always been the backbone of most armies.", null), null, 0, 0, 0, 0, 0);
+
+            characterCreationCategory.AddCategoryOption(new("{=oMbOIPc9}joined the scholars.", null), new()
+            {
+                DefaultSkills.Medicine,
+                RFSkills.Arcane
+            }, DefaultCharacterAttributes.Control, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthSkirmisherOnConsequence), new(base.YouthSkirmisherOnApply), new("{=bXAg5w19}After reaching the age when every youth is potentially a spear bearer, it became clear that your constitution was not up to the task. However, scrolls and books quickly revealed themselves as a field in which you showed great familiarity. Seeing this, the scholars of the kingdom gladly welcomed another novice.", null), null, 0, 0, 0, 0, 0);
+
+            characterCreationCategory.AddCategoryOption(new("{=GFUggps8}marched with the free people.", null), new()
+            {
+                DefaultSkills.Throwing,
+                DefaultSkills.OneHanded
+            }, DefaultCharacterAttributes.Cunning, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthCamperOnConsequence), new(base.YouthCamperOnApply), new("{=64rWqBLN}You avoided service with one of the main forces of your realm's armies, but followed instead in the train - the troops' wives, lovers and servants, and those who make their living by caring for, entertaining, or cheating the soldiery.", null), null, 0, 0, 0, 0, 0);
             characterCreation.AddNewMenu(characterCreationMenu);
         }
+
 
         private void RFYouthOnInit(CharacterCreation characterCreation)
         {
@@ -1099,7 +1183,7 @@ namespace RealmsForgotten
                 DefaultSkills.Roguery,
                 DefaultSkills.Scouting
             }, null, 1, 25, 0, null, new(LooterStartOnConsequence), new(DoNothingOnApply), new("{=CulturedStart18}Left impoverished from war, you found a group of like-minded ruffians who were desperate to get by." + $"\n{startingSkillMult[StartType.Looter]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 0, 0, 0, 0);
-            characterCreationCategory.AddCategoryOption(new("{=CulturedStart19}An usurper of {CULTURE}", null), new MBList<SkillObject>
+            characterCreationCategory.AddCategoryOption(new("{=CulturedStart19}An Knight of {CULTURE}", null), new MBList<SkillObject>
             {
                 DefaultSkills.Steward,
                 DefaultSkills.Charm
@@ -1114,7 +1198,7 @@ namespace RealmsForgotten
                 DefaultSkills.Leadership,
                 DefaultSkills.Steward
             }, DefaultCharacterAttributes.Social, 1, 25, 1, null, new(CastleRulerStartOnConsequence), new(DoNothingOnApply), new("{=CulturedStart24}You acquired a castle through your own means and declared yourself a kingdom for better or worse." + $"\n{startingSkillMult[StartType.CastleRuler]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 900, 0, 0, 0);
-            characterCreationCategory.AddCategoryOption(new("{=CulturedStart25}A knight of {CULTURE}", null), new MBList<SkillObject>
+            characterCreationCategory.AddCategoryOption(new("{=CulturedStart25}An ursurper of {CULTURE}", null), new MBList<SkillObject>
             {
                 DefaultSkills.Steward,
                 DefaultSkills.Roguery
@@ -1149,7 +1233,10 @@ namespace RealmsForgotten
         {
             return base.GetSelectedCulture().StringId == "mage";
         }
-
+        protected bool DwarfParentsOnCondition()
+        {
+            return base.GetSelectedCulture().StringId == "dwarf";
+        }
         protected void StartOnInit(CharacterCreation characterCreation)
         {
             MBTextManager.SetTextVariable("CULTURE", CharacterCreationContentBase.Instance.GetSelectedCulture().Name, false);
@@ -1325,6 +1412,10 @@ namespace RealmsForgotten
         {
             Manager.SetLocationOption(13);
         }
+        protected void OkrestLocationOnConsequence(CharacterCreation characterCreation)
+        {
+            Manager.SetLocationOption(14);
+        }
         protected void DoNothingOnApply(CharacterCreation characterCreation)
         {
         }
@@ -1375,5 +1466,7 @@ namespace RealmsForgotten
         private const string UndeadBodyPropString = "<BodyProperties version=\"4\" age=\"40\" weight=\"0.2978\" build=\"0.9522\"  key=\"000004001900178D18E0788057F760886F8707E84EA8E18174414A490D1100E803BE46350BA7B7A50000000000000000000000000000000000000000016430C6\"  />";
         private const string AqarunBodyPropString = "<BodyProperties version=\"4\" age=\"22.2\" weight=\"0.3272\" build=\"0.6343\"  key=\"003FF00997001019BFEBEF53ADA8CB8B1FFDFD063C34C704EEFCE0BD50AF939F009A560309FCF9B80000000000000000000000000000000000000000112C9002\"  />";
         private const string XilantlacayBodyPropString = "<BodyProperties version=\"4\" age=\"22.2\" weight=\"0.3272\" build=\"0.6343\"  key=\"003458078000200AFDAECE6F0BB44F0EF5F1DEFEDAA6B1818E66E1EE818DF07A007A560307E84F31000000000000000000000000000000000000000052F43142\"  />";
+        private const string DwarfBodyPropString = "<BodyProperties version=\"4\" age=\"22.2\" weight=\"1\" build=\"0.9954\"  key=\"002BB00780003A50FFEFFFFEEEFEF00FFEF5EFA74756E898FFFCF80E516FFEFF003FF60303EFBE9E0000000000000000000000000000000000000000105C9142\"  />";
+
     }
 }
