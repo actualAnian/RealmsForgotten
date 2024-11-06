@@ -12,20 +12,19 @@ namespace RealmsForgotten.Quest
         public static void OnNewGameCreated(Game game, object initializerObject)
         {
             CampaignGameStarter gameStarter = (CampaignGameStarter)initializerObject;
-            AddQuestBehaviors(gameStarter, true);
+            gameStarter.AddBehavior(new RescueUliahBehavior(true));
         }
 
         public static void OnGameLoaded(Game game, object initializerObject)
         {
             CampaignGameStarter gameStarter = (CampaignGameStarter)initializerObject;
-            AddQuestBehaviors(gameStarter, false);
+            gameStarter.AddBehavior(new RescueUliahBehavior(false));
         }
 
-        private static void AddQuestBehaviors(CampaignGameStarter gameStarter, bool isNewGame)
+        public static void AddQuestBehaviors(CampaignGameStarter gameStarter)
         {
             if (gameStarter != null)
             {
-                gameStarter.AddBehavior(new RescueUliahBehavior(isNewGame));
                 gameStarter.AddBehavior(new SaveCurrentQuestCampaignBehavior());
                 gameStarter.AddBehavior(new SpawnNpcInLordsHallBecomeKnightBehavior());
                 gameStarter.AddBehavior(new SpawnNpcInLordsHallBehavior());

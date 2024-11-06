@@ -112,22 +112,22 @@ namespace RealmsForgotten.Quest.KnightQuest
         {
             base.RegisterEvents();
             CampaignEvents.MobilePartyDestroyed.AddNonSerializedListener(this, OnMobilePartyDestroyedHandler);
-            CampaignEvents.SettlementEntered.AddNonSerializedListener(this, OnSettlementEntered);
             CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnMapEventEnded);
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnSessionLaunched));
+            CampaignEvents.OnSettlementLeftEvent.AddNonSerializedListener(this, new Action<MobileParty, Settlement>(this.OnSettlementLeft));
         }
-        private void OnSettlementEntered(MobileParty mobileParty, Settlement settlement, Hero hero) //@TODO, how to fix this
+
+        private void OnSettlementLeft(MobileParty party, Settlement settlement)
         {
-            if (mobileParty == MobileParty.MainParty && settlement == _questGiver.CurrentSettlement)
-            {
+            if (party.LeaderHero?.CharacterObject != CharacterObject.PlayerCharacter) return;
+            if (settlement.Culture.StringId == "neutral_culture")
                 CheckInsigniaInInventory();
-            }
         }
         private void CheckInsigniaInInventory()
         {
             if (PlayerHasInsignia() && _retrieveInsigniaLog?.CurrentProgress == 0)
             {
-                InformationManager.DisplayMessage(new InformationMessage("You have obtained the Knight's Insignia. Return to the quest giver."));
+                MBInformationManager.AddQuickInformation(new TextObject("You have obtained the Knight's Insignia. Return to the quest giver."));
                 _retrieveInsigniaLog.UpdateCurrentProgress(1);
             }
         }
