@@ -105,6 +105,7 @@ namespace RealmsForgotten
                 AiSubModule.AddCampaignBehaviors(campaignGameStarter);
                 AiSubModule.InitializeCareerSystem();
 
+
                 QuestSubModule.AddQuestBehaviors((CampaignGameStarter)gameStarterObject);
 
                 ReadConfigFile();

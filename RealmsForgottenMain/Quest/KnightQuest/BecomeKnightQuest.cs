@@ -118,6 +118,7 @@ namespace RealmsForgotten.Quest.KnightQuest
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnSessionLaunched));
             CampaignEvents.OnSettlementLeftEvent.AddNonSerializedListener(this, new Action<MobileParty, Settlement>(this.OnSettlementLeft));
         }
+
         private void OnSettlementLeft(MobileParty party, Settlement settlement)
         {
             if (party.LeaderHero?.CharacterObject != CharacterObject.PlayerCharacter) return;
