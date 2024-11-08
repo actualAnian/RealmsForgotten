@@ -31,9 +31,9 @@ namespace RealmsForgotten.RFCustomSettlements
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnSessionLaunched));
             CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.FillSettlementList));
             CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, () => { 
-                var quest_1 = new TestClass("test_1", CharacterObject.PlayerCharacter.HeroObject, CampaignTime.Never, 0);
+                var quest_1 = new CustomSettlementQuest("test_1", () => { return false; });
                 quest_1.StartQuest();
-                var quest_2 = new TestClass("test_2", CharacterObject.PlayerCharacter.HeroObject, CampaignTime.Never, 0);
+                var quest_2 = new CustomSettlementQuest("test_2", new Func<bool>(() => { return false; }));
                 quest_2.StartQuest();
 
             });

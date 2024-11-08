@@ -1,12 +1,15 @@
-﻿using TaleWorlds.CampaignSystem;
+﻿using System;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.Localization;
 
 namespace RFCustomSettlements.Quests
 {
-    public class TestClass : QuestBase
+    public class CustomSettlementQuest : QuestBase
     {
-        public TestClass(string questId, Hero questGiver, CampaignTime duration, int rewardGold) : base(questId, questGiver, duration, rewardGold)
+        Func<bool> _completeCondition;
+        public CustomSettlementQuest(string questId, Func<bool> CompleteCondition) : base(questId, CharacterObject.PlayerCharacter.HeroObject, CampaignTime.Never, 0)
         {
+            _completeCondition = CompleteCondition;
         }
 
         public override TextObject Title => new TextObject("test quest");
@@ -24,6 +27,19 @@ namespace RFCustomSettlements.Quests
         protected override void SetDialogs()
         {
         }
+        private void CompleteQuest()
+        {
+
+        }
+        public bool EvaluateCompleteConditions()
+        {
+            return false;
+        }
+        public void OnEnemyKilledInCustomSettlement()
+        {
+
+        }
+
     }
 
 
