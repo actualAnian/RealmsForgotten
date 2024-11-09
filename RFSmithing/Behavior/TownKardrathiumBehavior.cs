@@ -1,5 +1,6 @@
 ﻿using System;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Extensions;
 using TaleWorlds.CampaignSystem.Settlements;
 
 namespace RealmsForgotten.Smithing.Behavior;
@@ -12,6 +13,15 @@ public class TownKardrathiumBehavior : CampaignBehaviorBase
     public override void RegisterEvents()
     {
         CampaignEvents.WeeklyTickEvent.AddNonSerializedListener(this, OnWeeklyTick);
+        CampaignEvents.OnAfterSessionLaunchedEvent.AddNonSerializedListener(this, OnAfterSessionLaunched);
+    }
+
+    private void OnAfterSessionLaunched(CampaignGameStarter obj)
+    {
+        if (!ItemCategories.All.Contains(RFItems.KardrathiumCategory))
+        {
+            ItemCategories.All.Add(RFItems.KardrathiumCategory);
+        }
     }
 
     private void OnWeeklyTick()
