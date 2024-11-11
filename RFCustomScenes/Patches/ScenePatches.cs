@@ -84,6 +84,7 @@ namespace RFCustomSettlements.Patches
             }
         }
     }
+
     [HarmonyPatch(typeof(AgentInteractionInterfaceVM), "OnFocusGained")]
     public class AgentInteractionInterfaceVMOnFocusGainedPatch
     {
@@ -100,10 +101,10 @@ namespace RFCustomSettlements.Patches
                     && codes[index + 2].opcode == OpCodes.Brfalse_S
                     && codes[index + 3].opcode == OpCodes.Ldarg_0
                     && codes[index + 4].opcode == OpCodes.Ldarg_1)
-                {
-                    codes[index].labels.Add(VanillaAgentHandleJumpLabel);
-                    insertionAgentHandle = index;
-                }
+                    {
+                        codes[index].labels.Add(VanillaAgentHandleJumpLabel);
+                        insertionAgentHandle = index;
+                    }
             }
             var handle_rf__agents_instr_list = new List<CodeInstruction>
             {
@@ -117,6 +118,7 @@ namespace RFCustomSettlements.Patches
             codes.InsertRange(insertionAgentHandle, handle_rf__agents_instr_list);
             return codes.AsEnumerable();
         }
+
     }
     internal class MissionMainAgentInteractionComponentFocusTickPatch
     {
@@ -141,6 +143,8 @@ namespace RFCustomSettlements.Patches
                     && codes[index + 2].opcode == OpCodes.Ldloc_1
                     && codes[index + 3].opcode == OpCodes.Ldloc_S)
                     codes[index].labels.Add(startVanillaRecruitjumpLabel);
+
+
                 if (codes[index].opcode == OpCodes.Ldloc_S // checks if agent is used by RFCustomSettlements
                     && codes[index + 1].opcode == OpCodes.Brfalse_S
                     && codes[index + 2].opcode == OpCodes.Ldloc_S
@@ -151,7 +155,7 @@ namespace RFCustomSettlements.Patches
                     && codes[index + 1].opcode == OpCodes.Stloc_S
                     && codes[index + 2].opcode == OpCodes.Ldloc_S
                     && codes[index + 3].opcode == OpCodes.Stloc_0)
-                    codes[index].labels.Add(isRFInteractableAgentjumpLabel);
+                        codes[index].labels.Add(isRFInteractableAgentjumpLabel);
             }
             var set_interactable_instr_list = new List<CodeInstruction> // checks for interactable objects
             {
@@ -175,6 +179,7 @@ namespace RFCustomSettlements.Patches
             codes.InsertRange(insertionAgentCheck, check_interactable_agent_instr_list);
             return codes.AsEnumerable();
         }
+
     }
 #pragma warning restore IDE0051 // Remove unused private members
 }

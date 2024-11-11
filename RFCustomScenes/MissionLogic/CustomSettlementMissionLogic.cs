@@ -21,7 +21,9 @@ using RealmsForgotten.HuntableHerds.Models;
 using System.Text;
 using static RealmsForgotten.RFCustomSettlements.ExploreSettlementStateHandler;
 using static RealmsForgotten.RFCustomSettlements.CustomSettlementBuildData;
-using System.Threading.Tasks;
+using TaleWorlds.LinQuick;
+using TaleWorlds.MountAndBlade.View;
+using TaleWorlds.CampaignSystem.Extensions;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -55,6 +57,8 @@ namespace RealmsForgotten.RFCustomSettlements
         private readonly Action? OnBattleEnd;
         private readonly Dictionary<int, NpcData> NpcsInSettlement = new();
         public Dictionary<Agent, Vec3> LootableAgents { get; } = new();
+
+        public List<Agent> LootableAgents { get; } = new List<Agent>();
 
         //private  onStateChangeListeners
 
@@ -92,23 +96,12 @@ namespace RealmsForgotten.RFCustomSettlements
                 return;
             }
         }
-        public override void OnAgentDeleted(Agent affectedAgent)
-        {
-        }
-        private async Task AddBodyToLootableList(Agent agent)
-        {
-            await Task.Delay(1000);
-            //agent.GetEyeGlobalPosition();
-            //Vec3 agentPosition = agent.GetChestGlobalPosition();
-            LootableAgents.Add(agent, agent.GetChestGlobalPosition());
-        }
         public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
         {
-            AddBodyToLootableList(affectedAgent);
-            //if (affectedAgent.Components.Any(c => c is HerdAgentComponent))
-            //{
-            //    LootableAgents.Add(affectedAgent);
-            //}
+            if (affectedAgent.Components.Any(c => c is HerdAgentComponent))
+            {
+                LootableAgents.Add(affectedAgent);
+            }
         }
         private void UsedObjectTick(float dt)
         {
@@ -554,7 +547,7 @@ namespace RealmsForgotten.RFCustomSettlements
                 HerdAgentComponent component = agent.GetComponent<HerdAgentComponent>();
                 component.GetItemDrops();
                 foreach (ItemRosterElement item in component.GetItemDrops())
-                {
+                    {
                     EquipmentElement element = item.EquipmentElement;
                     loot.AddToCounts(element, item.Amount);
                     HuntableHerds.SubModule.PrintDebugMessage("You looted " + item.Amount + " " + element.Item.Name + "!");
