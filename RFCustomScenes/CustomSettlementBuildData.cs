@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Xml;
 using System.Xml.Linq;
 using TaleWorlds.Engine;
@@ -23,13 +24,41 @@ namespace RealmsForgotten.RFCustomSettlements
             }
 
         }
+        public class ItemDrop
+        {
+            public string ItemId { get; }
+            public int AmountMin { get; }
+            public int AmountMax { get; }
+            public double DropChance { get; }
+            public ItemDrop(string itemId, int amountMin, int amountMax, double dropChance)
+            {
+                ItemId = itemId;
+                AmountMin = amountMin;
+                AmountMax = amountMax;
+                DropChance = dropChance;
+            }
+
+        }
+        public class ItemDropsData
+        {
+            public ItemDropsData(List<ItemDrop> itemDrops, string dropsId)
+            {
+                ItemDrops = itemDrops;
+                DropsId = dropsId;
+            }
+
+            List<ItemDrop> ItemDrops { get; }
+            public string DropsId { get; }
+        }
         public class RFBanditData
         {
             private readonly int _amount;
             private readonly string _id;
+            private readonly string? _dropDataId;
 
-            public RFBanditData(string id, string value2)
+            public RFBanditData(string id, string value2, string? dropDataId = null)
             {
+                _dropDataId = dropDataId;
                 _id = id;
                 _amount = int.Parse(value2);
             }
@@ -73,7 +102,9 @@ namespace RealmsForgotten.RFCustomSettlements
                 {
                     foreach (XElement xElement2 in xElement.Descendants("Bandit"))
                     {
-                        RFBanditData bd = new(xElement2.Element("id").Value, xElement2.Element("amount").Value);
+                        XElement dropId = xElement2.Element("lootId");
+                        string? lootId = dropId?.Value;
+                        RFBanditData bd = new(xElement2.Element("id").Value, xElement2.Element("amount").Value, lootId);
                         int areaIndex = int.Parse(xElement.Element("areaIndex").Value);
                         if(buildStationaryAreasBandits.ContainsKey(areaIndex))
                             buildStationaryAreasBandits[areaIndex].Add(bd);
@@ -83,7 +114,9 @@ namespace RealmsForgotten.RFCustomSettlements
                 }
                 foreach (XElement xElement in element.Descendants("Bandits").Descendants("PatrolArea"))
                 {
-                    RFBanditData bd = new(xElement.Element("Bandit").Element("id").Value, xElement.Element("Bandit").Element("amount").Value);
+                    XElement dropId = xElement.Element("lootId");
+                    string? lootId = dropId?.Value;
+                    RFBanditData bd = new(xElement.Element("Bandit").Element("id").Value, xElement.Element("Bandit").Element("amount").Value, lootId);
                     buildPatrolAreasBandits.Add(int.Parse(xElement.Element("areaIndex").Value), bd);
                 }
                 XElement NpcElement = element.Descendants("Npcs").FirstOrDefault();
