@@ -23,6 +23,9 @@ using static RealmsForgotten.RFCustomSettlements.ExploreSettlementStateHandler;
 using System.Collections;
 using SandBox.Missions.MissionLogics;
 using static RealmsForgotten.RFCustomSettlements.CustomSettlementBuildData;
+using TaleWorlds.LinQuick;
+using TaleWorlds.MountAndBlade.View;
+using TaleWorlds.CampaignSystem.Extensions;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -55,6 +58,8 @@ namespace RealmsForgotten.RFCustomSettlements
         private readonly CustomSettlementBuildData BanditsData;
         private readonly Action? OnBattleEnd;
         private readonly Dictionary<int, NpcData> NpcsInSettlement = new();
+
+        public List<Agent> LootableAgents { get; } = new List<Agent>();
 
         //private  onStateChangeListeners
 
@@ -92,7 +97,13 @@ namespace RealmsForgotten.RFCustomSettlements
                 return;
             }
         }
-
+        public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
+        {
+            if (affectedAgent.Components.Any(c => c is HerdAgentComponent))
+            {
+                LootableAgents.Add(affectedAgent);
+            }
+        }
         private void UsedObjectTick(float dt)
         {
             foreach (KeyValuePair<Agent, UsedObject> keyValuePair in defenderAgentObjects)
@@ -189,6 +200,7 @@ namespace RealmsForgotten.RFCustomSettlements
                     Agent agent = base.Mission.SpawnMonster(rosterElement, default, in position, in initialDirection);
 
                     HerdBuildData herdBuildData = (from buildData in HerdBuildData.allHuntableAgentBuildDatas where buildData.SpawnId == entity.Name select buildData).ElementAt(0);
+                    HerdBuildData.CurrentHerdBuildData = herdBuildData;
                     HerdAgentComponent huntAgentComponent = herdBuildData.IsPassive ? new PassiveHerdAgentComponent(agent) : new AggressiveHerdAgentComponent(agent);
 
                     agent.AddComponent(huntAgentComponent);
@@ -529,7 +541,21 @@ namespace RealmsForgotten.RFCustomSettlements
                 agent.AgentVisuals.GetSkeleton().TickAnimations(0.1f, agent.AgentVisuals.GetGlobalFrame(), true);
             }
         }
-
+        internal void OnAgentLooted(Agent agent)
+        {
+            if (Helper.IsDeadHuntableHerdAnimal(agent))
+            {
+                HerdAgentComponent component = agent.GetComponent<HerdAgentComponent>();
+                component.GetItemDrops();
+                foreach (ItemRosterElement item in component.GetItemDrops())
+                    {
+                    EquipmentElement element = item.EquipmentElement;
+                    loot.AddToCounts(element, item.Amount);
+                    HuntableHerds.SubModule.PrintDebugMessage("You looted " + item.Amount + " " + element.Item.Name + "!");
+                }
+                LootableAgents.Remove(agent);
+            }
+        }
         internal void OnObjectUsed(UsablePlace usablePlace)
         {
             switch (Helper.ChooseObjectType(usablePlace.GameEntity.Name))

@@ -55,7 +55,7 @@ namespace RealmsForgotten.Quest.KnightQuest
         private static readonly string QuestGiverId = "south_realm_knight_maester";
         private static readonly string QuestItemId = "rfmisc_western_2hsword_t3_fire";
 
-        public static CharacterObject KnightMaester 
+        public static CharacterObject KnightMaester
         { 
             get
             { 
@@ -85,6 +85,7 @@ namespace RealmsForgotten.Quest.KnightQuest
             _daysAsMercenary += 1;
             if (_daysAsMercenary >= DaysToBeMercenary)
             {
+                MBInformationManager.AddQuickInformation(new TextObject("You have served as mercenary for enough days. Return to the knight maester!"));
                 _beMercenaryLog?.UpdateCurrentProgress(1);
             }
         }
