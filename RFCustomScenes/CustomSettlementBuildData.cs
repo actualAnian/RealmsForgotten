@@ -37,6 +37,7 @@ namespace RealmsForgotten.RFCustomSettlements
                 AmountMax = amountMax;
                 DropChance = dropChance;
             }
+
         }
         public class ItemDropsData
         {
@@ -45,6 +46,7 @@ namespace RealmsForgotten.RFCustomSettlements
                 ItemDrops = itemDrops;
                 DropsId = dropsId;
             }
+
             List<ItemDrop> ItemDrops { get; }
             public string DropsId { get; }
         }

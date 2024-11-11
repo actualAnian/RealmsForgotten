@@ -21,9 +21,7 @@ using RealmsForgotten.HuntableHerds.Models;
 using System.Text;
 using static RealmsForgotten.RFCustomSettlements.ExploreSettlementStateHandler;
 using static RealmsForgotten.RFCustomSettlements.CustomSettlementBuildData;
-using TaleWorlds.LinQuick;
-using TaleWorlds.MountAndBlade.View;
-using TaleWorlds.CampaignSystem.Extensions;
+using System.Threading.Tasks;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -56,9 +54,7 @@ namespace RealmsForgotten.RFCustomSettlements
         private readonly CustomSettlementBuildData BanditsData;
         private readonly Action? OnBattleEnd;
         private readonly Dictionary<int, NpcData> NpcsInSettlement = new();
-        public Dictionary<Agent, Vec3> LootableAgents { get; } = new();
-
-        public List<Agent> LootableAgents { get; } = new List<Agent>();
+        public Dictionary<Agent, Vec3> LootableAgents { get; } = new ();
 
         //private  onStateChangeListeners
 
@@ -96,12 +92,24 @@ namespace RealmsForgotten.RFCustomSettlements
                 return;
             }
         }
+        public override void OnAgentDeleted(Agent affectedAgent)
+        {
+
+        }
+        private async Task AddBodyToLootableList(Agent agent)
+        {
+            await Task.Delay(1000);
+            //agent.GetEyeGlobalPosition();
+            //Vec3 agentPosition = agent.GetChestGlobalPosition();
+            LootableAgents.Add(agent, agent.GetChestGlobalPosition());
+        }
         public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
         {
-            if (affectedAgent.Components.Any(c => c is HerdAgentComponent))
-            {
-                LootableAgents.Add(affectedAgent);
-            }
+            AddBodyToLootableList(affectedAgent);
+            //if (affectedAgent.Components.Any(c => c is HerdAgentComponent))
+            //{
+            //    LootableAgents.Add(affectedAgent);
+            //}
         }
         private void UsedObjectTick(float dt)
         {

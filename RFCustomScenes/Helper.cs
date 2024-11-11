@@ -131,17 +131,13 @@ namespace RealmsForgotten.RFCustomSettlements
             float RANGE_X = 1.5f;
             float RANGE_Y = 1.5f;
             float RANGE_Z = 1.5f;
-            foreach (Agent lootableAgent in logic.LootableAgents)
+            foreach (KeyValuePair<Agent, Vec3> lootableAgent in logic.LootableAgents)
             {
-                Vec3 capsule1 = lootableAgent.CollisionCapsule.P1;
-                Vec3 capsule2 = lootableAgent.CollisionCapsule.P2;
-                if (Math.Abs(capsule1.X - closesPoint.X) < RANGE_X
-                    && Math.Abs(capsule1.Y - closesPoint.Y) < RANGE_Y
-                    && Math.Abs(capsule1.Z - closesPoint.Z) < RANGE_Z
-                    || Math.Abs(capsule2.X - closesPoint.X) < RANGE_X
-                    && Math.Abs(capsule2.Y - closesPoint.Y) < RANGE_Y
-                    && Math.Abs(capsule2.Z - closesPoint.Z) < RANGE_Z)
-                    return lootableAgent;
+                Vec3 centerPosition = lootableAgent.Value;
+                if (Math.Abs(centerPosition.X - closesPoint.X) < RANGE_X
+                    && Math.Abs(centerPosition.Y - closesPoint.Y) < RANGE_Y
+                    && Math.Abs(centerPosition.Z - closesPoint.Z) < RANGE_Z)
+                    return lootableAgent.Key;
             }
             return null;
         }
