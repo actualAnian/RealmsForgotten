@@ -23,6 +23,7 @@ using static RealmsForgotten.RFCustomSettlements.ExploreSettlementStateHandler;
 using static RealmsForgotten.RFCustomSettlements.CustomSettlementBuildData;
 using System.Threading.Tasks;
 using RFCustomSettlements;
+using HuntableHerds.Models;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -551,9 +552,9 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         internal void OnAgentLooted(Agent agent)
         {
-            if (Helper.IsDeadHuntableHerdAnimal(agent))
+            if (Helper.IsLootableDeadAgent(agent))
             {
-                HerdAgentComponent component = agent.GetComponent<HerdAgentComponent>();
+                LootableAgentComponent component = agent.GetComponent<LootableAgentComponent>();
                 component.GetItemDrops();
                 foreach (ItemRosterElement item in component.GetItemDrops())
                     {

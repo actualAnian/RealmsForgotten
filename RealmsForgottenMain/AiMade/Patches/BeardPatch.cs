@@ -21,11 +21,10 @@ namespace RealmsForgotten.AiMade.Patches
 
                 if (raceList.Count > race)
                 {
-                    //raceList.
                     var dwarfList = raceList.Cast<XmlNode>().Where(node => node.Attributes?["id"]?.Value == "dwarf");
                     if (dwarfList.Count() != 1) return null;
                     XmlNode selectedRace = dwarfList.First();
-                    var genderNodes = selectedRace.ChildNodes;
+                    XmlNodeList genderNodes = selectedRace.ChildNodes;
 
                     if (genderNodes.Count > gender)
                     {
@@ -45,11 +44,9 @@ namespace RealmsForgotten.AiMade.Patches
         private static void LoadSkinsXML()
         {
             var settings = new XmlReaderSettings { IgnoreComments = true };
-            using (var reader = XmlReader.Create(SkinFilePath, settings))
-            {
-                SkinDocument = new XmlDocument();
-                SkinDocument.Load(reader);
-            }
+            using XmlReader reader = XmlReader.Create(SkinFilePath, settings);
+            SkinDocument = new XmlDocument();
+            SkinDocument.Load(reader);
         }
     }
 }

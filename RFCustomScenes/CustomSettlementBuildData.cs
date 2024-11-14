@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HuntableHerds.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -27,45 +28,23 @@ namespace RealmsForgotten.RFCustomSettlements
             }
 
         }
-        public class ItemDrop
-        {
-            public string ItemId { get; }
-            public int AmountMin { get; }
-            public int AmountMax { get; }
-            public double DropChance { get; }
-            public ItemDrop(string itemId, int amountMin, int amountMax, double dropChance)
-            {
-                ItemId = itemId;
-                AmountMin = amountMin;
-                AmountMax = amountMax;
-                if (dropChance < 0 || dropChance > 1)
-                {
-                    dropChance = 0;
-                }
-                DropChance = dropChance;
-            }
 
-        }
-        public class ItemDropsData
-        {
-            public ItemDropsData(List<ItemDrop> itemDrops, string dropsId)
-            {
-                ItemDrops = itemDrops;
-                DropsId = dropsId;
-            }
-
-            public List<ItemDrop> ItemDrops { get; }
-            public string DropsId { get; }
-        }
         public class RFBanditData
         {
             private readonly int _amount;
             private readonly string _id;
             private readonly string? _dropDataId;
+            //private readonly string _dropDataId2;
 
-            public RFBanditData(string id, string value2, string? dropDataId = null)
+            public RFBanditData(string id, string value2, string dropDataId)
             {
                 _dropDataId = dropDataId;
+                _id = id;
+                _amount = int.Parse(value2);
+            }
+            public RFBanditData(string id, string value2)
+            {
+                _dropDataId = null;
                 _id = id;
                 _amount = int.Parse(value2);
             }
@@ -159,7 +138,7 @@ namespace RealmsForgotten.RFCustomSettlements
                 }
                 foreach (XElement xElement in element.Descendants("Bandits").Descendants("PatrolArea"))
                 {
-                    XElement dropId = xElement.Element("lootId");
+                    XElement dropId = xElement.Element("Bandit").Element("lootId");
                     string? lootId = dropId?.Value;
                     RFBanditData bd = new(xElement.Element("Bandit").Element("id").Value, xElement.Element("Bandit").Element("amount").Value, lootId);
                     buildPatrolAreasBandits.Add(int.Parse(xElement.Element("areaIndex").Value), bd);

@@ -1,19 +1,12 @@
-﻿using RealmsForgotten.HuntableHerds.Models;
+﻿using HuntableHerds.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Core;
-using TaleWorlds.Engine;
-using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
-using static RealmsForgotten.RFCustomSettlements.CustomSettlementBuildData;
 
 namespace RFCustomSettlements
 {
-    internal class LootableAgentComponent : AgentComponent
+    public class LootableAgentComponent : AgentComponent
     {
         private ItemRoster itemDrops;
 

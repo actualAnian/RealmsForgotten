@@ -30,8 +30,8 @@ namespace RFCustomSettlements.Patches
             if ((logic = Mission.Current.GetMissionBehavior<CustomSettlementMissionLogic>()) == null) return;
             if (!((MissionScreen)curMisScrInfo.Invoke(__instance, null)).SceneLayer.Input.IsGameKeyPressed(13)) return;
             var c = (Mission)curMisInfo.Invoke(__instance, null);
-            Agent agent;
-            if ((agent = (Agent)__instance.CurrentFocusedObject) != null && IsDeadHuntableHerdAnimal(agent))
+            Agent? agent;
+            if ((agent = __instance.CurrentFocusedObject as Agent) != null && IsLootableDeadAgent(agent))
             {
                 logic.OnAgentLooted(agent);
             }
@@ -109,7 +109,7 @@ namespace RFCustomSettlements.Patches
             var handle_rf__agents_instr_list = new List<CodeInstruction>
             {
                 new(OpCodes.Ldloc_0),
-                new(OpCodes.Call, AccessTools.Method(typeof(Helper), nameof(IsDeadHuntableHerdAnimal))),
+                new(OpCodes.Call, AccessTools.Method(typeof(Helper), nameof(IsLootableDeadAgent))),
                 new(OpCodes.Brfalse, VanillaAgentHandleJumpLabel),
                 new(OpCodes.Ldarg_0),
                 new(OpCodes.Call, AccessTools.Method(typeof(Helper), nameof(SetVMLook))),
