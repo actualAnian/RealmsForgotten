@@ -216,10 +216,8 @@ namespace RealmsForgotten
         }
         protected override void OnSubModuleLoad()
         {
-            //var types = Globals.realmsForgottenAssembly.GetTypes().ToList();
-            //var patch = types.Where(t => t is FaceGenPatch);
             base.OnSubModuleLoad();
-            harmony.PatchAll(); // Ensure Harmony patches are applied
+            harmony.PatchAll();
 
             TextObject coreContentDisabledReason = new("Disabled during installation.", null);
             UIConfig.DoNotUseGeneratedPrefabs = true;

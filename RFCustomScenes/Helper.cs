@@ -1,4 +1,5 @@
-﻿using SandBox.Objects.Usables;
+﻿using RFCustomSettlements;
+using SandBox.Objects.Usables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -104,9 +105,9 @@ namespace RealmsForgotten.RFCustomSettlements
             }
             return null;
         }
-        public static bool IsDeadHuntableHerdAnimal(Agent agent)
+        public static bool IsLootableDeadAgent(Agent agent)
         {
-            return !agent.IsActive() && agent.Components.Any(c => c is HuntableHerds.AgentComponents.HerdAgentComponent);
+            return !agent.IsActive() && agent.Components.Any(c => c is LootableAgentComponent);
         }
 
         public static void SetVMLook(AgentInteractionInterfaceVM vm)
