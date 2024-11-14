@@ -19,6 +19,7 @@ namespace RealmsForgotten.RFCustomSettlements
             base.OnSubModuleLoad();
             harmony.PatchAll();
             CustomSettlementBuildData.BuildAll();
+            CustomSettlementBuildData.BuildItemDrops();
             DialogueParser.Deserialize();
         }
         protected override void OnSubModuleUnloaded()

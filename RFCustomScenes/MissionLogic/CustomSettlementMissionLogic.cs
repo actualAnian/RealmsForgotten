@@ -22,6 +22,7 @@ using System.Text;
 using static RealmsForgotten.RFCustomSettlements.ExploreSettlementStateHandler;
 using static RealmsForgotten.RFCustomSettlements.CustomSettlementBuildData;
 using System.Threading.Tasks;
+using RFCustomSettlements;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -92,24 +93,17 @@ namespace RealmsForgotten.RFCustomSettlements
                 return;
             }
         }
-        public override void OnAgentDeleted(Agent affectedAgent)
-        {
-
-        }
         private async Task AddBodyToLootableList(Agent agent)
         {
             await Task.Delay(1000);
-            //agent.GetEyeGlobalPosition();
-            //Vec3 agentPosition = agent.GetChestGlobalPosition();
             LootableAgents.Add(agent, agent.GetChestGlobalPosition());
         }
         public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
         {
-            AddBodyToLootableList(affectedAgent);
-            //if (affectedAgent.Components.Any(c => c is HerdAgentComponent))
-            //{
-            //    LootableAgents.Add(affectedAgent);
-            //}
+            if (affectedAgent.Components.Any(c => c is LootableAgentComponent))
+            {
+                AddBodyToLootableList(affectedAgent);
+            }
         }
         private void UsedObjectTick(float dt)
         {
@@ -285,13 +279,15 @@ namespace RealmsForgotten.RFCustomSettlements
 
                 for(int i = 0; i < allBandits; i++)
                 {
-                    try 
+                    try
                     {
+                        RFBanditData currentBanditData = BanditsData.patrolAreasBandits[areaIndex];
                         RFAgentOrigin agentToSpawn = PrepareAgentToSpawn(ChooseBanditToSpawn(banditsInArea));
                         standingPoint = usableMachinesQueue.Dequeue();
                         globalFrame = standingPoint.GameEntity.GetGlobalFrame();
                         globalFrame.rotation.OrthonormalizeAccordingToForwardAndKeepUpAsZAxis();
                         Agent agent = Mission.Current.SpawnTroop(agentToSpawn, false, false, false, false, 0, 0, false, false, false, new Vec3?(globalFrame.origin), new Vec2?(globalFrame.rotation.f.AsVec2.Normalized()), "_hideout_bandit", null, FormationClass.NumberOfAllFormations, false);
+                        AddLootableComponent(currentBanditData.ItemDropsData, agent);
                         InitializeBanditAgent(agent, standingPoint, false, defenderAgentObjects);
                     }
                     catch(InvalidOperationException)
@@ -316,20 +312,25 @@ namespace RealmsForgotten.RFCustomSettlements
                 try
                 {
                     if (!BanditsData.patrolAreasBandits.ContainsKey(areaIndex)) continue;
+                    RFBanditData currentBanditData = BanditsData.patrolAreasBandits[areaIndex];
 
                     MatrixFrame globalFrame = area.GameEntity.GetGlobalFrame();
                     globalFrame.rotation.OrthonormalizeAccordingToForwardAndKeepUpAsZAxis();
-
-                    RFAgentOrigin troopToSpawn = PrepareAgentToSpawn(BanditsData.patrolAreasBandits[areaIndex].Id);
+                    RFAgentOrigin troopToSpawn = PrepareAgentToSpawn(currentBanditData.Id);
                     Agent agent = Mission.Current.SpawnTroop(troopToSpawn, false, false, false, false, 0, 0, false, false, false, new Vec3?(globalFrame.origin), new Vec2?(globalFrame.rotation.f.AsVec2.Normalized()), "_hideout_bandit", null, FormationClass.NumberOfAllFormations, false);
+                    AddLootableComponent(currentBanditData.ItemDropsData, agent);
                     InitializeBanditAgent(agent, area.StandingPoints[0], false, defenderAgentObjects);
                 }
                 catch (Exception)
                 {
                     HuntableHerds.SubModule.PrintDebugMessage($"error spawning the bandits in patrol area {areaIndex}");
                 }
-
             }
+        }
+        private void AddLootableComponent(ItemDropsData? data, Agent agent)
+        {
+            if (data != null)
+                agent.AddComponent(new LootableAgentComponent(agent, data));
         }
         private void SpawnPlayerTroops()
         {

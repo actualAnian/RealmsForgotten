@@ -1,6 +1,7 @@
 ﻿using System.Xml;
 using System.IO;
 using TaleWorlds.Library;
+using System.Linq;
 
 namespace RealmsForgotten.AiMade.Patches
 {
@@ -9,7 +10,7 @@ namespace RealmsForgotten.AiMade.Patches
         private static readonly string SkinFilePath = Path.Combine(BasePath.Name, "Modules", "RF_Races", "ModuleData", "skins.xml");
         private static XmlDocument SkinDocument;
 
-        public static string GetBeardName(int index, int race, int gender)
+        public static string? GetBeardName(int index, int race, int gender)
         {
             if (SkinDocument == null)
                 LoadSkinsXML();
@@ -20,7 +21,10 @@ namespace RealmsForgotten.AiMade.Patches
 
                 if (raceList.Count > race)
                 {
-                    var selectedRace = raceList[race];
+                    //raceList.
+                    var dwarfList = raceList.Cast<XmlNode>().Where(node => node.Attributes?["id"]?.Value == "dwarf");
+                    if (dwarfList.Count() != 1) return null;
+                    XmlNode selectedRace = dwarfList.First();
                     var genderNodes = selectedRace.ChildNodes;
 
                     if (genderNodes.Count > gender)
@@ -28,7 +32,7 @@ namespace RealmsForgotten.AiMade.Patches
                         var selectedGender = genderNodes.Item(gender);
                         var beards = selectedGender.SelectNodes("beard_meshes/beard_mesh");
 
-                        if (beards.Count > 0 && index < beards.Count)
+                        if (beards.Count > 0 && index < beards.Count && beards[index].Attributes.Count != 0)
                         {
                             return beards[index].Attributes["name"].Value;
                         }
@@ -41,19 +45,11 @@ namespace RealmsForgotten.AiMade.Patches
 
         private static void LoadSkinsXML()
         {
-            if (File.Exists(SkinFilePath))
+            var settings = new XmlReaderSettings { IgnoreComments = true };
+            using (var reader = XmlReader.Create(SkinFilePath, settings))
             {
-                var settings = new XmlReaderSettings { IgnoreComments = true };
-                using (var reader = XmlReader.Create(SkinFilePath, settings))
-                {
-                    SkinDocument = new XmlDocument();
-                    SkinDocument.Load(reader);
-                }
-            }
-            else
-            {
-                // Handle file not found scenario
-                // Optionally log or display an error message
+                SkinDocument = new XmlDocument();
+                SkinDocument.Load(reader);
             }
         }
     }
