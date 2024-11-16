@@ -13,6 +13,7 @@ using TaleWorlds.SaveSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.GameMenus;
+using System.Collections.Generic;
 
 namespace RealmsForgotten.Quest.KnightQuest
 {
@@ -48,17 +49,17 @@ namespace RealmsForgotten.Quest.KnightQuest
         [SaveableField(10)]
         private bool _shouldDuelBeOnHorse;
 
-        private const int BanditsToDefeatTarget = 1;
-        private const int HideoutsToDefeatTarget = 1;
-        private const int DaysToBeMercenary = 1;
+        private const int BanditsToDefeatTarget = 10;
+        private const int HideoutsToDefeatTarget = 5;
+        private const int DaysToBeMercenary = 100;
 
         private static readonly string QuestGiverId = "south_realm_knight_maester";
         private static readonly string QuestItemId = "rfmisc_western_2hsword_t3_fire";
 
-        public static CharacterObject KnightMaester 
-        { 
+        public static CharacterObject KnightMaester
+        {
             get
-            { 
+            {
                 return MBObjectManager.Instance.GetObject<CharacterObject>(QuestGiverId);
             }
         }
@@ -85,6 +86,7 @@ namespace RealmsForgotten.Quest.KnightQuest
             _daysAsMercenary += 1;
             if (_daysAsMercenary >= DaysToBeMercenary)
             {
+                MBInformationManager.AddQuickInformation(new TextObject("You have served as mercenary for enough days. Return to the knight maester!"));
                 _beMercenaryLog?.UpdateCurrentProgress(1);
             }
         }
@@ -97,8 +99,8 @@ namespace RealmsForgotten.Quest.KnightQuest
         private void InitializeLogs()
         {
             _retrieveInsigniaLog = AddDiscreteLog(
-                new TextObject("Retrieve the Knight's Insignia from the distant temple."),
-                new TextObject("Find and bring back the Knight's Insignia."), 0, 1);
+                new TextObject("Retrieve the Knight's Sword from the monastery."),
+                new TextObject("Find and bring back the Knight's Sword."), 0, 1);
         }
 
         protected override void InitializeQuestOnGameLoad()
@@ -106,28 +108,27 @@ namespace RealmsForgotten.Quest.KnightQuest
             SetDialogs();
         }
 
-        protected override void HourlyTick() {}
+        protected override void HourlyTick() { }
 
         protected override void RegisterEvents()
         {
             base.RegisterEvents();
             CampaignEvents.MobilePartyDestroyed.AddNonSerializedListener(this, OnMobilePartyDestroyedHandler);
-            CampaignEvents.SettlementEntered.AddNonSerializedListener(this, OnSettlementEntered);
             CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnMapEventEnded);
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnSessionLaunched));
+            CampaignEvents.OnSettlementLeftEvent.AddNonSerializedListener(this, new Action<MobileParty, Settlement>(this.OnSettlementLeft));
         }
-        private void OnSettlementEntered(MobileParty mobileParty, Settlement settlement, Hero hero) //@TODO, how to fix this
+        private void OnSettlementLeft(MobileParty party, Settlement settlement)
         {
-            if (mobileParty == MobileParty.MainParty && settlement == _questGiver.CurrentSettlement)
-            {
+            if (party.LeaderHero?.CharacterObject != CharacterObject.PlayerCharacter) return;
+            if (settlement.Culture.StringId == "neutral_culture")
                 CheckInsigniaInInventory();
-            }
         }
         private void CheckInsigniaInInventory()
         {
             if (PlayerHasInsignia() && _retrieveInsigniaLog?.CurrentProgress == 0)
             {
-                InformationManager.DisplayMessage(new InformationMessage("You have obtained the Knight's Insignia. Return to the quest giver."));
+                MBInformationManager.AddQuickInformation(new TextObject("You have obtained the Knight's Sword. Return to the quest giver."));
                 _retrieveInsigniaLog.UpdateCurrentProgress(1);
             }
         }
@@ -158,7 +159,7 @@ namespace RealmsForgotten.Quest.KnightQuest
 
             if (knightInsignia == null)
             {
-                InformationManager.DisplayMessage(new InformationMessage($"Error: Knight Insignia item with ID '{QuestItemId}' not found."));
+                InformationManager.DisplayMessage(new InformationMessage($"Error: Knight Sword item with ID '{QuestItemId}' not found."));
                 return false;
             }
 
@@ -166,12 +167,12 @@ namespace RealmsForgotten.Quest.KnightQuest
 
             if (itemCount > 0)
             {
-                InformationManager.DisplayMessage(new InformationMessage("Knight's Insignia found in inventory."));
+                InformationManager.DisplayMessage(new InformationMessage("Knight's Sword found in inventory."));
                 return true;
             }
             else
             {
-                InformationManager.DisplayMessage(new InformationMessage("Knight's Insignia not found in inventory."));
+                InformationManager.DisplayMessage(new InformationMessage("Knight's Sword not found in inventory."));
                 return false;
             }
         }
@@ -243,11 +244,11 @@ namespace RealmsForgotten.Quest.KnightQuest
         private DialogFlow CreateRetrieveInsigniaTrueDialogFlow()
         {
             return DialogFlow.CreateDialogFlow("start", 125)
-                .NpcLine("Ah, have you retrieved the Knight's Insignia?")
+                .NpcLine("Ah, have you retrieved the Sword?")
                 .Condition(() => CharacterObject.OneToOneConversationCharacter?.StringId == QuestGiverId
                                  && _retrieveInsigniaLog?.CurrentProgress == 1)
                 .PlayerLine("Yes, I have it.")
-                .NpcLine("Good. Now, defeat the bandit parties to prove your worth.")
+                .NpcLine("Good... That was your task of bravery, now you your task of honour begins. Hunt and defeat bandit parties to prove your worth.")
                 .Consequence(() =>
                 {
                     _retrieveInsigniaLog?.UpdateCurrentProgress(2);  // Update the quest to the next stage
@@ -258,7 +259,7 @@ namespace RealmsForgotten.Quest.KnightQuest
 
         private DialogFlow CreateRetrieveInsigniaFalseDialogFlow()
         {
-            return DialogFlow.CreateDialogFlow("start", 125).NpcLine("Do you have the Knight's Insignia?")
+            return DialogFlow.CreateDialogFlow("start", 125).NpcLine("Do you have the Knight's Sword?")
             .Condition(() => CharacterObject.OneToOneConversationCharacter?.StringId == QuestGiverId
                              && _retrieveInsigniaLog?.CurrentProgress == 0)
             .PlayerLine("No, I do not have it yet.")
@@ -282,7 +283,7 @@ namespace RealmsForgotten.Quest.KnightQuest
                     // Option when the bandits have been defeated
                     .PlayerOption("Yes, I have defeated the bandits.")
                     .Condition(() => _banditsDefeated >= BanditsToDefeatTarget)
-                    .NpcLine("Excellent work! Now, clear the bandit hideout(s) to complete your quest.")
+                    .NpcLine("Excellent work! You managed to make on step further, an important one. You prove you are able to protect the weak. Now, you need to go into those scum´s nest. Find and destroy their hideouts, to purge the land from this evil.")
                     .Consequence(() =>
                     {
                         _defeatBanditsLog?.UpdateCurrentProgress(BanditsToDefeatTarget);
@@ -313,7 +314,7 @@ namespace RealmsForgotten.Quest.KnightQuest
                     .Condition(() => CharacterObject.OneToOneConversationCharacter?.StringId == QuestGiverId
                                  && _defeatHideoutLog?.CurrentProgress == 1
                                  )
-                    .NpcLine("Well done. You have proven your worth.")
+                    .NpcLine("Well done. You have proven your bravery, your honour and your worth. Now the task of loyalty begins. A knight is nothing without true loyalty. You will serve our queen and wage war against her enemies. That is the moment you prove yourself worthy of the Queen´s trust. God bless you.")
                     .Consequence(() =>
                     {
                         _beMercenaryLog = AddDiscreteLog(
@@ -438,12 +439,47 @@ namespace RealmsForgotten.Quest.KnightQuest
 
         private void GiveReward(bool fullReward)
         {
-            int renown = fullReward? 50 : 20;
-            int gold = fullReward ? 2000 : 500;
+            int renown = fullReward ? 50 : 20;
+            int gold = fullReward ? 10000 : 500;
+
             ChangeClanInfluenceAction.Apply(Clan.PlayerClan, renown);
-            GiveGoldAction.ApplyBetweenCharacters(null, Hero.MainHero, gold);  // Reward the player with gold
-            InformationManager.DisplayMessage(new InformationMessage($"You have received {gold} gold and earned the title of Knight."));
+            GiveGoldAction.ApplyBetweenCharacters(null, Hero.MainHero, gold);
+
+            // Base items rewarded in both cases
+            List<string> baseItemIds = new List<string>
+    {
+        "realm_plated_cav_helmet",
+        "realm_knight_shoulder_plates",
+        "realm_knight_armor",
+        "realm_expert_gauntlets",
+        "r_knight_chausses",
+        "t2_empire_horse",
+        "half_scale_barding"
+    };
+
+            // Additional item for full reward
+            if (fullReward)
+            {
+                baseItemIds.Add("rfmisc_western_2hsword_t3_fire");
+            }
+
+            foreach (string itemId in baseItemIds)
+            {
+                ItemObject item = Game.Current.ObjectManager.GetObject<ItemObject>(itemId);
+                if (item != null)
+                {
+                    Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(item, 1);
+                }
+            }
+
+            string rewardMessage = fullReward
+                ? $"You have received {gold} gold, earned the title of Knight, and been gifted an sacred fire sword."
+                : $"You have received {gold} gold and earned the title of Knight.";
+
+            InformationManager.DisplayMessage(new InformationMessage(rewardMessage));
         }
+
+
 
         private void SwitchPlayerToNewFaction()
         {

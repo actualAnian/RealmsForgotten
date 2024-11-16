@@ -1,17 +1,26 @@
 ﻿using System;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Extensions;
 using TaleWorlds.CampaignSystem.Settlements;
 
 namespace RealmsForgotten.Smithing.Behavior;
 
 public class TownKardrathiumBehavior : CampaignBehaviorBase
 {
-    private readonly string[] _settlementIds = { "town_V1" };
+    private readonly string[] _settlementIds = { "town_dwarf_1", "town_dwarf_2", "town_dwarf3", "town_dwarf5", "town_dwarf6", "town_dwarf7" };
     private const int AvailableCountPerWeek = 5;
     
     public override void RegisterEvents()
     {
         CampaignEvents.WeeklyTickEvent.AddNonSerializedListener(this, OnWeeklyTick);
+        CampaignEvents.OnAfterSessionLaunchedEvent.AddNonSerializedListener(this, OnAfterSessionLaunched);
+    }
+    private void OnAfterSessionLaunched(CampaignGameStarter obj)
+    {
+        if (!ItemCategories.All.Contains(RFItems.KardrathiumCategory))
+        {
+            ItemCategories.All.Add(RFItems.KardrathiumCategory);
+        }
     }
 
     private void OnWeeklyTick()

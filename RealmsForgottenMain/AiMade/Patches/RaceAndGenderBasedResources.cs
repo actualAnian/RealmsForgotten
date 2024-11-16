@@ -6,20 +6,28 @@ using System.Text;
 using System.Threading.Tasks;
 using TaleWorlds.MountAndBlade.ViewModelCollection.FaceGenerator;
 using RealmsForgotten.AiMade.Patches;
+using System.Reflection;
+using TaleWorlds.CampaignSystem.Extensions;
+using TaleWorlds.Core;
 
 namespace RealmsForgotten.AiMade.Patches
 {
+    [HarmonyPatch(typeof(FaceGenVM), "UpdateRaceAndGenderBasedResources")]
     public static class FaceGenPatch
     {
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(FaceGenVM), "UpdateRaceAndGenderBasedResources")]
-        public static void ReplaceImages(FaceGenVM __instance)
+        private static int defaultBeardsNum = 42;
+        static void Postfix(FaceGenVM __instance)
         {
             int selectedRace = __instance.RaceSelector == null ? 0 : __instance.RaceSelector.SelectedIndex;
 
-            foreach (var item in __instance.BeardTypes)
+            //if (selectedRace == 0) defaultBeardsNum = __instance.BeardTypes.Count; // count number of default beards
+
+            //var names = FaceGen.GetRaceNames(); 
+            //if (names[selectedRace] != "dwarf") return;
+            for (int i = defaultBeardsNum; i < __instance.BeardTypes.Count; i++)
             {
-                string name = FaceGenHelper.GetBeardName(item.Index, selectedRace, __instance.SelectedGender);
+                var item = __instance.BeardTypes[i];
+                string? name = FaceGenHelper.GetBeardName(item.Index, selectedRace, __instance.SelectedGender);
                 if (!string.IsNullOrEmpty(name))
                 {
                     item.ImagePath = "FaceGen\\Beard\\" + name;

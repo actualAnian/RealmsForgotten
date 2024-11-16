@@ -136,14 +136,14 @@ internal class ReligionBehavior : CampaignBehaviorBase
         {
             foreach (var hero in Campaign.Current.AliveHeroes)
             {
-                if (!_heroes.TryGetValue(hero, out var heroReligionModel)) 
+                if (!_heroes.TryGetValue(hero, out var heroReligionModel))
                     continue;
 
                 if (!hero.IsDead)
                 {
-                    if (hero == Hero.MainHero || MBRandom.RandomInt(0, 100) >= 60) 
+                    if (hero == Hero.MainHero || MBRandom.RandomInt(0, 100) >= 60)
                         continue;
-                        
+
                     if (hero.IsPlayerCompanion)
                     {
                         if (!_heroes.ContainsKey(Hero.MainHero))
@@ -237,21 +237,21 @@ internal class ReligionBehavior : CampaignBehaviorBase
 
     private float CalculateMoraleBasedOnLeader(MobileParty party)
     {
-        if (party.LeaderHero == null) 
-            return 0f;
-        
-        if (!_heroes.TryGetValue(party.LeaderHero, out var heroReligionModel)) 
+        if (party.LeaderHero == null)
             return 0f;
 
-        if (!(heroReligionModel.GetDevotionToCurrentReligion() >= 20f)) 
+        if (!_heroes.TryGetValue(party.LeaderHero, out var heroReligionModel))
             return 0f;
-        
+
+        if (!(heroReligionModel.GetDevotionToCurrentReligion() >= 20f))
+            return 0f;
+
         var array = party.MemberRoster.GetTroopRoster().ToArray();
-        var num = (from troopRosterElement 
-            in array 
-            let rfReligions = ReligionMapHelper.GetCultureReligion(troopRosterElement.Character.Culture.StringId) 
-            where heroReligionModel.Religion == rfReligions 
-            select troopRosterElement.Number).Sum();
+        var num = (from troopRosterElement
+            in array
+                   let rfReligions = ReligionMapHelper.GetCultureReligion(troopRosterElement.Character.Culture.StringId)
+                   where heroReligionModel.Religion == rfReligions
+                   select troopRosterElement.Number).Sum();
 
         return 2f * (heroReligionModel.GetDevotionToCurrentReligion() / 100f) /
             (float)party.MemberRoster.TotalManCount * (float)num;
@@ -280,7 +280,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
     }
 
 
-    public float PartyGetMoraleEffect(MobileParty party) => 
+    public float PartyGetMoraleEffect(MobileParty party) =>
         _partyMoraleEffect.TryGetValue(party, out var effect) ? effect : 0f;
 
 
@@ -288,9 +288,9 @@ internal class ReligionBehavior : CampaignBehaviorBase
     {
         var settlement = town.Settlement;
         if (!settlement.IsTown || settlement.OwnerClan?.Leader == null ||
-            !_heroes.TryGetValue(settlement.OwnerClan.Leader, out var heroReligionModel)) 
+            !_heroes.TryGetValue(settlement.OwnerClan.Leader, out var heroReligionModel))
             return 0f;
-        
+
         var mainReligionRatio = _settlements[settlement].GetMainReligionRatio();
         var num = (double)mainReligionRatio < 0.6 ? mainReligionRatio / 2f * -1f : mainReligionRatio / 2f;
         if (_settlements[settlement].GetMainReligion() != heroReligionModel.Religion) num -= 2f;
@@ -307,15 +307,15 @@ internal class ReligionBehavior : CampaignBehaviorBase
     {
         try
         {
-            if (!_heroes.TryGetValue(hero, out var heroReligionModel)) 
+            if (!_heroes.TryGetValue(hero, out var heroReligionModel))
                 return;
             if (!hero.IsDead)
             {
-                if (hero == Hero.MainHero) 
+                if (hero == Hero.MainHero)
                     return;
                 if (!hero.IsPlayerCompanion)
                 {
-                    if (!hero.IsLord) 
+                    if (!hero.IsLord)
                         return;
                     var num = MBRandom.RandomFloatRanged(2f);
                     if (MBRandom.RandomFloat < 0.5f) num *= -1f;
@@ -342,9 +342,9 @@ internal class ReligionBehavior : CampaignBehaviorBase
 
     private void RelationshipReligionDecider(Hero decideWith, Hero subject, HeroReligionModel subjectReligion)
     {
-        if (MBRandom.RandomInt(0, 100) >= 40) 
+        if (MBRandom.RandomInt(0, 100) >= 40)
             return;
-        
+
         if (!_heroes.TryGetValue(decideWith, out var heroReligionModel))
         {
             ChangeRelationAction.ApplyRelationChangeBetweenHeroes(subject, decideWith, -1, true);
@@ -432,14 +432,14 @@ internal class ReligionBehavior : CampaignBehaviorBase
                 GameMenu.SwitchToMenu("town_temple_inner");
             });
         starter.AddGameMenuOption("town_temple", "town_temple_itan", GameTexts.FindText("RFRFCZtIn").Value,
-            game_menu_town_enter_yurt_on_condition, delegate(MenuCallbackArgs x)
+            game_menu_town_enter_yurt_on_condition, delegate (MenuCallbackArgs x)
             {
                 tempSelecteddReligion = Core.RFReligions.Xochxinti;
                 GameMenu.SwitchToMenu("town_temple_inner");
             });
         starter.AddGameMenuOption("town_temple", "town_temple_kharazdrathar", GameTexts.FindText("RFRjHkWuQ").Value,
             game_menu_town_enter_khazrak_on_condition,
-            delegate(MenuCallbackArgs x)
+            delegate (MenuCallbackArgs x)
             {
                 tempSelecteddReligion = Core.RFReligions.KharazDrathar;
                 GameMenu.SwitchToMenu("town_temple_inner");
@@ -460,7 +460,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
             game_menu_temple_item_worship_on_consequence);
         starter.AddGameMenuOption("town_temple_inner", "town_inner_temple_back", "{=qWAmxyYz}Back",
             back_on_condition,
-            delegate(MenuCallbackArgs x) { GameMenu.SwitchToMenu("town_temple"); }, true, -1, false);
+            delegate (MenuCallbackArgs x) { GameMenu.SwitchToMenu("town_temple"); }, true, -1, false);
         starter.AddGameMenu("religion_menu", GameTexts.FindText("RFR86PaBs").Value,
             new OnInitDelegate(game_menu_religion_on_init), GameOverlays.MenuOverlayType.None, GameMenu.MenuFlags.None,
             null);
@@ -532,7 +532,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
         GiveGoldAction.ApplyBetweenCharacters(Hero.MainHero, null, DONATION_COST, false);
         AddMoraleEffectToParty(MobileParty.MainParty, 12f, tempSelecteddReligion);
         _heroes[Hero.MainHero].AddDevotion(15f, tempSelecteddReligion, Hero.MainHero);
-        
+
         foreach (var hero in Settlement.CurrentSettlement.Notables
                      .Where(hero => _heroes.ContainsKey(hero))
                      .Where(hero => _heroes[hero].Religion == tempSelecteddReligion))
@@ -540,8 +540,8 @@ internal class ReligionBehavior : CampaignBehaviorBase
             ChangeRelationAction.ApplyPlayerRelation(hero, 7, true, true);
         }
 
-        foreach (var hero2 in Campaign.Current.AliveHeroes.Where(hero2 => 
-                         _heroes.ContainsKey(hero2) && hero2 is { HasMet: true, IsNotable: false } 
+        foreach (var hero2 in Campaign.Current.AliveHeroes.Where(hero2 =>
+                         _heroes.ContainsKey(hero2) && hero2 is { HasMet: true, IsNotable: false }
                                                     && _heroes[hero2].Religion == tempSelecteddReligion))
         {
             ChangeRelationAction.ApplyPlayerRelation(hero2, 2, false, false);
@@ -568,7 +568,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
         args.optionLeaveType = GameMenuOption.LeaveType.Trade;
         return MenuHelper.SetOptionProperties(args, flag, !flag, disabledText);
     }
-    
+
     private void game_menu_temple_item_worship_on_consequence(MenuCallbackArgs args)
     {
         if (ReligionLogicHelper.OfferItems(tempSelecteddReligion, MobileParty.MainParty.ItemRoster))
@@ -598,9 +598,9 @@ internal class ReligionBehavior : CampaignBehaviorBase
     private bool game_menu_temple_item_worhsip_on_condition(MenuCallbackArgs args)
     {
         args.optionLeaveType = GameMenuOption.LeaveType.OrderTroopsToAttack;
-        if (!ReligionCanItemSacrifice(tempSelecteddReligion)) 
+        if (!ReligionCanItemSacrifice(tempSelecteddReligion))
             return false;
-        
+
         if (tempSelecteddReligion == Core.RFReligions.Faelora)
         {
             MBTextManager.SetTextVariable("ITEM_WORSHIP_ACTION_TYPE", GameTexts.FindText("RFRQy4KCS"), false);
@@ -634,10 +634,10 @@ internal class ReligionBehavior : CampaignBehaviorBase
         var canOfferItems = ReligionLogicHelper.CheckRosterOfferItems(tempSelecteddReligion,
             MobileParty.MainParty.ItemRoster);
         var disabledText = TextObject.Empty;
-        
-        if (canOfferItems) 
+
+        if (canOfferItems)
             return MenuHelper.SetOptionProperties(args, canOfferItems, !canOfferItems, disabledText);
-        
+
         var str = GameTexts.FindText("str_warning_crafing_materials").ToString();
         var textObject = ReligionLogicHelper.ReligionTempleOfferItems(tempSelecteddReligion);
         disabledText = new TextObject(str + (textObject != null ? textObject.ToString() : null), null);
@@ -649,9 +649,9 @@ internal class ReligionBehavior : CampaignBehaviorBase
 
     private void game_menu_temple_sacrifice_on_consequence(MenuCallbackArgs args)
     {
-        if (!ReligionLogicHelper.SacrificeItems(tempSelecteddReligion, 5, MobileParty.MainParty.ItemRoster)) 
+        if (!ReligionLogicHelper.SacrificeItems(tempSelecteddReligion, 5, MobileParty.MainParty.ItemRoster))
             return;
-        
+
         AddMoraleEffectToParty(MobileParty.MainParty, 10f, tempSelecteddReligion);
         _heroes[Hero.MainHero].AddDevotion(15f, tempSelecteddReligion, Hero.MainHero);
         var haveReligionHero = false;
@@ -795,26 +795,26 @@ internal class ReligionBehavior : CampaignBehaviorBase
     private bool game_menu_religion_sacrifice_on_condition(MenuCallbackArgs args)
     {
         args.optionLeaveType = GameMenuOption.LeaveType.OrderTroopsToAttack;
-        if (!_heroes.TryGetValue(Hero.MainHero, out var heroReligionModel)) 
+        if (!_heroes.TryGetValue(Hero.MainHero, out var heroReligionModel))
             return false;
-        
-        if (!CanReligionSacrifice(heroReligionModel.Religion)) 
+
+        if (!CanReligionSacrifice(heroReligionModel.Religion))
             return false;
 
         MBTextManager.SetTextVariable("SACRIFICE_ACTION_TYPE",
             heroReligionModel.Religion == Core.RFReligions.Xochxinti
                 ? GameTexts.FindText("RFRGhjVkq")
                 : GameTexts.FindText("RFRryDfNh"), false);
-        
+
         MBTextManager.SetTextVariable("REQUIRED_ANIMALS",
             ReligionLogicHelper.ReligionSacrificeText(heroReligionModel.Religion,
                 MobileParty.MainParty.MemberRoster.TotalManCount), false);
-        
+
         var requiredItemCount = MobileParty.MainParty.MemberRoster.TotalManCount / 10;
         var canReligionSacrificeItems = ReligionLogicHelper.CheckItemSacrificeItems(heroReligionModel.Religion, requiredItemCount,
             MobileParty.MainParty.ItemRoster);
         var disabledText = TextObject.Empty;
-        if (canReligionSacrificeItems) 
+        if (canReligionSacrificeItems)
             return MenuHelper.SetOptionProperties(args, canReligionSacrificeItems, !canReligionSacrificeItems, disabledText);
         var str = GameTexts.FindText("str_warning_crafing_materials").ToString();
         var textObject = ReligionLogicHelper.ReligionSacrificeText(heroReligionModel.Religion,
@@ -1002,9 +1002,9 @@ internal class ReligionBehavior : CampaignBehaviorBase
                     }
             }
 
-            if (_heroes != null && _heroes.Count != 0) 
+            if (_heroes != null && _heroes.Count != 0)
                 return;
-            
+
             _heroes = new Dictionary<Hero, HeroReligionModel>();
             foreach (var hero in Campaign.Current.AliveHeroes)
                 if ((hero != Hero.MainHero || includePlayer) && hero.IsAlive)
@@ -1049,7 +1049,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
     [SaveableField(2)] public Dictionary<Hero, HeroReligionModel> _heroes;
     [SaveableField(3)] private Dictionary<MobileParty, float> _partyMoraleEffect;
     [SaveableField(4)] private Dictionary<Settlement, float> _settlementEffect;
-    
+
     private Core.RFReligions tempSelecteddReligion;
     private int DONATION_COST = 8300;
 }

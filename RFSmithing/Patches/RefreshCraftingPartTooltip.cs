@@ -19,23 +19,9 @@ public static class RefreshCraftingPartTooltip
     {
         if (WeaponDesignMixin.Instance?.KardrathiumButtonToggle == null || CraftingMixin.Instance == null)
             return;
-        
-        WeaponDesignElement weaponDesignElement = args[0] as WeaponDesignElement;
 
-        int price = 0;
-        foreach ((CraftingMaterials, int) tuple in weaponDesignElement.CraftingPiece.MaterialsUsed)
-        {
-            if (KardrathiumButtonToggleVM.Irons.Contains(tuple.Item1) && tuple.Item2 > 0)
-            {
-                price = tuple.Item2;
-            }
-        }
+        int price = WeaponDesignMixin.Instance.KardrathiumButtonToggle.GetCurrentKardrathiumPrice();
 
-        if (price <= 0)
-        {
-            return;
-        }
-        
         propertyBasedTooltipVM.AddProperty(() => new TextObject("{=kardrathium}Kardrathium(?)").ToString(), () => price.ToString());
     }
 }

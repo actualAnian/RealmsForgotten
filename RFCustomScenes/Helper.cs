@@ -3,11 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.Core;
 using TaleWorlds.Engine;
+using TaleWorlds.InputSystem;
+using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using TaleWorlds.MountAndBlade.ViewModelCollection;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -30,6 +33,7 @@ namespace RealmsForgotten.RFCustomSettlements
         };
         public static bool IsRFObject(IFocusable focusable)
         {
+            if (!Mission.Current.MissionBehaviors.Any(item => item is CustomSettlementMissionLogic)) return false;
             UsablePlace? usablePlace;
             if ((usablePlace = focusable as UsablePlace) != null && usablePlace.GameEntity.Name.StartsWith("rf_")) return true;
             //if (gameEntity != null && gameEntity.Name.StartsWith("rf_")) return true;
@@ -38,7 +42,7 @@ namespace RealmsForgotten.RFCustomSettlements
 
         public static bool IsCloseEnough(Agent mainAgent, IFocusable focusable)
         {
-            if(((UsablePlace)focusable).GameEntity.GlobalPosition.Distance(Agent.Main.Position) < rfInteractionDistance)
+            if (((UsablePlace)focusable).GameEntity.GlobalPosition.Distance(Agent.Main.Position) < rfInteractionDistance)
             {
                 _canInteract = true;
                 return true;
@@ -66,8 +70,52 @@ namespace RealmsForgotten.RFCustomSettlements
 
         public static float maxPickableDistance = 10f;
 
-        public static bool CanInteract { get => _canInteract;}
+        public static bool CanInteract { get => _canInteract; }
 
+        public static Agent? RayCastToCheckForRFInteractableAgent(Agent agent)
+        {
+            // ALSO PREVENTS THE MOUNTS ENEMIES FROM HUNTABLE HERDS TO BE MOUNTABLE
+            if (agent != null && agent.IsActive() && agent.Components.Any(c => c is HuntableHerds.AgentComponents.HerdAgentComponent)) return null;
+            if (agent != null) return agent;
+            CustomSettlementMissionLogic logic;
+            if ((logic = Mission.Current.GetMissionBehavior<CustomSettlementMissionLogic>()) == null) return null;
+            if (logic.LootableAgents.IsEmpty()) return null;
+            float num = 10f;
+            MatrixFrame cf = Mission.Current.GetCameraFrame();
+
+            Vec3 direction = cf.rotation.u * -1;
+            Vec3 vec = direction;
+            Vec3 position = cf.origin;
+            Vec3 position2 = Agent.Main.Position;
+            float num2 = new Vec3(position.x, position.y, 0f, -1f).Distance(new Vec3(position2.x, position2.y, 0f, -1f));
+            Vec3 vec2 = position * (1f - num2) + (position + direction) * num2;
+            _ = Mission.Current.Scene.RayCastForClosestEntityOrTerrainMT(vec2, vec2 + vec * num, out float distance, out Vec3 closesPoint, 0.01f, BodyFlags.None);
+
+            float RANGE_X = 1.5f;
+            float RANGE_Y = 1.5f;
+            float RANGE_Z = 1.5f;
+            foreach (KeyValuePair<Agent, Vec3> lootableAgent in logic.LootableAgents)
+            {
+                Vec3 centerPosition = lootableAgent.Value;
+                if (Math.Abs(centerPosition.X - closesPoint.X) < RANGE_X
+                    && Math.Abs(centerPosition.Y - closesPoint.Y) < RANGE_Y
+                    && Math.Abs(centerPosition.Z - closesPoint.Z) < RANGE_Z)
+                    return lootableAgent.Key;
+            }
+            return null;
+        }
+        public static bool IsDeadHuntableHerdAnimal(Agent agent)
+        {
+            return !agent.IsActive() && agent.Components.Any(c => c is HuntableHerds.AgentComponents.HerdAgentComponent);
+        }
+
+        public static void SetVMLook(AgentInteractionInterfaceVM vm)
+        {
+            GameKey key = HotKeyManager.GetCategory("CombatHotKeyCategory").GetGameKey(13);
+            string button = $@"<img src=""General\InputKeys\{key.ToString().ToLower()}"" extend=""24"">";
+            vm.PrimaryInteractionMessage = button + "Loot";
+            vm.IsActive = true;
+        }
         public static RFUsableObjectType? ChooseObjectType(string objectName)
         {
             string objectType = objectName.Split('_')[1];

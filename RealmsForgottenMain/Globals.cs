@@ -64,7 +64,7 @@ namespace RealmsForgotten
         public static bool IsUrkhai(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("urkhai"); }
 
         internal static List<string>  PlayerSelectableRaces { get { return _playerSelectableRaces; } }
-        private static List<string> _playerSelectableRaces = new() { "human", "elvean", "undead", "mull", "half_giant", "Xilantlacay", "tlachiquiy", "dwarf", "urkhai" };
+        private static List<string> _playerSelectableRaces = new() { "human", "elvean", "undead", "mull", "half_giant", "Xilantlacay", "tlachiquiy", "dwarf" };
 
         public static bool IsMissionInitialized = false;
 

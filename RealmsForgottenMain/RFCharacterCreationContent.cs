@@ -18,6 +18,7 @@ using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using RealmsForgotten.AiMade.Career;
+using TaleWorlds.SaveSystem.Definition;
 
 namespace RealmsForgotten
 {
@@ -65,7 +66,10 @@ namespace RealmsForgotten
             CharacterObject playerCharacter = CharacterObject.PlayerCharacter;
             string stringId = playerCharacter.Culture.StringId;
             string cultureId = stringId;
+
             string bodyPropString;
+            string raceId = "human"; // Default race to prevent uninitialized variable usage.
+
             switch (cultureId)
             {
                 case "aserai":
@@ -73,6 +77,7 @@ namespace RealmsForgotten
                     break;
                 case "battania":
                     bodyPropString = ElveanBodyPropString;
+                    raceId = "elvean";
                     break;
                 case "empire":
                     bodyPropString = HumanBodyPropString;
@@ -82,37 +87,42 @@ namespace RealmsForgotten
                     break;
                 case "sturgia":
                     bodyPropString = UndeadBodyPropString;
+                    raceId = "undead";
                     break;
                 case "vlandia":
                     bodyPropString = NasoriaBodyPropString;
                     break;
                 case "giant":
                     bodyPropString = XilantlacayBodyPropString;
+                    raceId = "Xilantlacay";
                     break;
                 case "aqarun":
                     bodyPropString = AqarunBodyPropString;
                     break;
                 case "south_realm":
-                    bodyPropString = HumanBodyPropString;
-                    break;
                 case "west_realm":
-                    bodyPropString = HumanBodyPropString;
-                    break;
                 case "mage":
                     bodyPropString = HumanBodyPropString;
                     break;
                 case "dwarf":
                     bodyPropString = DwarfBodyPropString;
+                    raceId = "dwarf"; // Assign specific race ID for dwarves.
                     break;
                 default:
                     Debug.FailedAssert("Selected culture is invalid!", "RFCharacterCreationContent.cs", "OnCultureSelected", 80);
                     bodyPropString = HumanBodyPropString;
                     break;
             }
+
             BodyProperties.FromString(bodyPropString, out BodyProperties properties);
             playerCharacter.UpdatePlayerCharacterBodyProperties(properties, playerCharacter.Race, playerCharacter.IsFemale);
+            SetRaceForCharacter(playerCharacter, raceId);
         }
 
+        private void SetRaceForCharacter(CharacterObject character, string raceId)
+        {
+            character.Race = TaleWorlds.Core.FaceGen.GetRaceOrDefault(raceId);
+        }
         public override int GetSelectedParentType()
         {
             return base.SelectedParentType;

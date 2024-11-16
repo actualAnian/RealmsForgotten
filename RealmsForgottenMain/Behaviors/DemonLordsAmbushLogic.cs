@@ -48,12 +48,12 @@ namespace RealmsForgotten.Models
                 halfGiantRaceId = TaleWorlds.Core.FaceGen.GetRaceOrDefault("half_giant");
                 if (halfGiantRaceId == -1)
                 {
-                    LogMessage("DemonLordsAmbushLogic: Race 'half_giant' not found.");
+                   
                 }
             }
             catch (KeyNotFoundException)
             {
-                LogMessage("DemonLordsAmbushLogic: Race 'half_giant' not found.");
+               
             }
         }
 

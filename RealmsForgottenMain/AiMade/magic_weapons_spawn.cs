@@ -10,7 +10,6 @@ namespace RealmsForgotten.AiMade
     public class FindMagicItemsMissionBehavior : MissionBehavior
     {
         private bool fireSwordSpawned = false;
-        private bool misticPolearmSpawned = false;
 
         // Declare a public static event for item pickup
         public static event Action<Agent, SpawnedItemEntity> ItemPickedUp;
@@ -23,6 +22,11 @@ namespace RealmsForgotten.AiMade
         {
             base.AfterStart();
             InformationManager.DisplayMessage(new InformationMessage($"You are on: {Mission.Current.SceneName}"));
+
+            // Attach the OnItemPickup handler
+            Mission.Current.OnItemPickUp += OnItemPickup;
+
+            // Spawn items immediately
             CheckAndSpawnItems(Mission.Current.SceneName);
         }
 
@@ -30,18 +34,11 @@ namespace RealmsForgotten.AiMade
         {
             switch (sceneName)
             {
-                case "ice_tower":
+                case "anorite_monastery":
                     if (!fireSwordSpawned)
                     {
-                        SpawnItem("rfmisc_western_2hsword_t4_fire", new Vec3(95.54f, 150.13f, 49.42f, -1f), new Vec3(0.34f, -91.21f, -90.24f, -1f));
+                        SpawnItem("rfmisc_western_2hsword_t3_fire", new Vec3(484.57f, 873f, 94.36f), new Vec3(0.00f, -180.17f, 17.42f));
                         fireSwordSpawned = true;
-                    }
-                    break;
-                case "ice_tower_inside":
-                    if (!misticPolearmSpawned)
-                    {
-                        SpawnItem("ancient_elvish_polearm", new Vec3(122.42f, 192.97f, 4.03f, -1f), new Vec3(0.00f, 0.00f, -30.00f, -1f));
-                        misticPolearmSpawned = true;
                     }
                     break;
                 default:
@@ -52,13 +49,12 @@ namespace RealmsForgotten.AiMade
 
         private void SpawnItem(string itemId, Vec3 position, Vec3 rotation)
         {
-            var item = MBObjectManager.Instance.GetObject<ItemObject>(itemId);
+            ItemObject item = MBObjectManager.Instance.GetObject<ItemObject>(itemId);
             if (item != null)
             {
-                var missionWeapon = new MissionWeapon(item, new ItemModifier(), Banner.CreateOneColoredEmptyBanner(1));
-                Mission.SpawnWeaponWithNewEntityAux(missionWeapon, Mission.WeaponSpawnFlags.WithStaticPhysics, new MatrixFrame(Mat3.CreateMat3WithForward(rotation), position), 0, null, false);
-                Mission.Current.OnItemPickUp += OnItemPickup;
-
+                MissionWeapon missionWeapon = new MissionWeapon(item, new ItemModifier(), Banner.CreateOneColoredEmptyBanner(1));
+                MatrixFrame frame = new MatrixFrame(Mat3.CreateMat3WithForward(rotation), position);
+                Mission.SpawnWeaponWithNewEntityAux(missionWeapon, Mission.WeaponSpawnFlags.WithStaticPhysics, frame, 0, null, false);
                 InformationManager.DisplayMessage(new InformationMessage($"Successfully spawned item '{itemId}' at {position}."));
             }
             else
@@ -74,23 +70,15 @@ namespace RealmsForgotten.AiMade
 
             if (agent.IsMainAgent)
             {
-                string sceneID = "";  // Default scene ID
                 string itemName = item.WeaponCopy.Item.Name.ToString();  // Fetching the item's name
 
-                // Determine the appropriate scene based on the item ID
-                if (item.WeaponCopy.Item.StringId == "rfmisc_western_2hsword_t4_fire")
+                if (item.WeaponCopy.Item.StringId == "rfmisc_western_2hsword_t3_fire")
                 {
-                    sceneID = "scn_mage_staff";
-                }
-                else if (item.WeaponCopy.Item.StringId == "rfmisc_mistic_polearm")
-                {
-                    sceneID = "scn_mage_staff";
-                }
+                    // Add the item to the player's inventory
+                    AddItemToPlayerInventory(item.WeaponCopy.Item);
 
-                // Create and show the notification with the specific scene
-                var notification = new MagicItemFoundSceneNotification(itemName, sceneID, () => AddItemToPlayerInventory(item.WeaponCopy.Item));
-                InformationManager.DisplayMessage(new InformationMessage($"You found a {itemName}!"));
-                MBInformationManager.ShowSceneNotification(notification);
+                    InformationManager.DisplayMessage(new InformationMessage($"You found a {itemName}!"));
+                }
             }
         }
 
@@ -98,10 +86,11 @@ namespace RealmsForgotten.AiMade
         {
             var mainParty = MobileParty.MainParty.ItemRoster;
             mainParty.AddToCounts(item, 1);
-            InformationManager.DisplayMessage(new InformationMessage($"The {item.Name} has been added to the inventory."));
+            InformationManager.DisplayMessage(new InformationMessage($"The {item.Name} has been added to your inventory."));
         }
 
         public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;
     }
 }
+
 
