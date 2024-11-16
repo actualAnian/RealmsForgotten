@@ -26,7 +26,7 @@ namespace RealmsForgotten.Quest.KnightQuest
 
 
         [SaveableField(2)]
-        private JournalLog? _retrieveInsigniaLog;
+        private JournalLog? _retrieveSwordLog;
 
         [SaveableField(3)]
         private JournalLog? _defeatBanditsLog;
@@ -98,7 +98,7 @@ namespace RealmsForgotten.Quest.KnightQuest
 
         private void InitializeLogs()
         {
-            _retrieveInsigniaLog = AddDiscreteLog(
+            _retrieveSwordLog = AddDiscreteLog(
                 new TextObject("Retrieve the Knight's Sword from the monastery."),
                 new TextObject("Find and bring back the Knight's Sword."), 0, 1);
         }
@@ -118,19 +118,18 @@ namespace RealmsForgotten.Quest.KnightQuest
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnSessionLaunched));
             CampaignEvents.OnSettlementLeftEvent.AddNonSerializedListener(this, new Action<MobileParty, Settlement>(this.OnSettlementLeft));
         }
-
         private void OnSettlementLeft(MobileParty party, Settlement settlement)
         {
             if (party.LeaderHero?.CharacterObject != CharacterObject.PlayerCharacter) return;
             if (settlement.Culture.StringId == "neutral_culture")
-                CheckInsigniaInInventory();
+                CheckSwordInInventory();
         }
-        private void CheckInsigniaInInventory()
+        private void CheckSwordInInventory()
         {
-            if (PlayerHasInsignia() && _retrieveInsigniaLog?.CurrentProgress == 0)
+            if (PlayerHasSword() && _retrieveSwordLog?.CurrentProgress == 0)
             {
-                MBInformationManager.AddQuickInformation(new TextObject("You have obtained the Knight's Sword. Return to the quest giver."));
-                _retrieveInsigniaLog.UpdateCurrentProgress(1);
+                InformationManager.DisplayMessage(new InformationMessage("You have obtained the Knight's Sword. Return to the quest giver."));
+                _retrieveSwordLog.UpdateCurrentProgress(1);
             }
         }
         private void OnMobilePartyDestroyedHandler(MobileParty destroyedParty, PartyBase destroyer)
@@ -154,28 +153,21 @@ namespace RealmsForgotten.Quest.KnightQuest
             MBInformationManager.AddQuickInformation(new TextObject("You have defeated enough bandit parties. Return to complete the quest."));
         }
 
-        public bool PlayerHasInsignia()
+        public bool PlayerHasSword()
         {
-            ItemObject knightInsignia = MBObjectManager.Instance.GetObject<ItemObject>(QuestItemId);
+            ItemObject knightSword = MBObjectManager.Instance.GetObject<ItemObject>(QuestItemId);
 
-            if (knightInsignia == null)
+            if (knightSword == null)
             {
                 InformationManager.DisplayMessage(new InformationMessage($"Error: Knight Sword item with ID '{QuestItemId}' not found."));
                 return false;
             }
-
-            int itemCount = Hero.MainHero.PartyBelongedTo.ItemRoster.GetItemNumber(knightInsignia);
+            int itemCount = Hero.MainHero.PartyBelongedTo.ItemRoster.GetItemNumber(knightSword);
 
             if (itemCount > 0)
-            {
-                InformationManager.DisplayMessage(new InformationMessage("Knight's Sword found in inventory."));
                 return true;
-            }
             else
-            {
-                InformationManager.DisplayMessage(new InformationMessage("Knight's Sword not found in inventory."));
                 return false;
-            }
         }
         private void StartBanditObjective()
         {
@@ -233,8 +225,8 @@ namespace RealmsForgotten.Quest.KnightQuest
 
         protected override void SetDialogs()
         {
-            Campaign.Current.ConversationManager.AddDialogFlow(CreateRetrieveInsigniaTrueDialogFlow());
-            Campaign.Current.ConversationManager.AddDialogFlow(CreateRetrieveInsigniaFalseDialogFlow());
+            Campaign.Current.ConversationManager.AddDialogFlow(CreateRetrieveSwordTrueDialogFlow());
+            Campaign.Current.ConversationManager.AddDialogFlow(CreateRetrieveSwordFalseDialogFlow());
             Campaign.Current.ConversationManager.AddDialogFlow(CreateBanditObjectiveDialogFlow());
             Campaign.Current.ConversationManager.AddDialogFlow(CreateHideoutObjectiveDialogFlow());
             Campaign.Current.ConversationManager.AddDialogFlow(CreateServeAsMercenaryNotFinishedDialogFlow());
@@ -242,27 +234,27 @@ namespace RealmsForgotten.Quest.KnightQuest
             Campaign.Current.ConversationManager.AddDialogFlow(CreateDoDuelDialogFlow());
         }
 
-        private DialogFlow CreateRetrieveInsigniaTrueDialogFlow()
+        private DialogFlow CreateRetrieveSwordTrueDialogFlow()
         {
             return DialogFlow.CreateDialogFlow("start", 125)
                 .NpcLine("Ah, have you retrieved the Sword?")
                 .Condition(() => CharacterObject.OneToOneConversationCharacter?.StringId == QuestGiverId
-                                 && _retrieveInsigniaLog?.CurrentProgress == 1)
+                                 && _retrieveSwordLog?.CurrentProgress == 1)
                 .PlayerLine("Yes, I have it.")
                 .NpcLine("Good... That was your task of bravery, now you your task of honour begins. Hunt and defeat bandit parties to prove your worth.")
                 .Consequence(() =>
                 {
-                    _retrieveInsigniaLog?.UpdateCurrentProgress(2);  // Update the quest to the next stage
+                    _retrieveSwordLog?.UpdateCurrentProgress(2);  // Update the quest to the next stage
                     StartBanditObjective();  // Proceed with the bandit objective
                 })
                 .CloseDialog();
         }
 
-        private DialogFlow CreateRetrieveInsigniaFalseDialogFlow()
+        private DialogFlow CreateRetrieveSwordFalseDialogFlow()
         {
             return DialogFlow.CreateDialogFlow("start", 125).NpcLine("Do you have the Knight's Sword?")
             .Condition(() => CharacterObject.OneToOneConversationCharacter?.StringId == QuestGiverId
-                             && _retrieveInsigniaLog?.CurrentProgress == 0)
+                             && _retrieveSwordLog?.CurrentProgress == 0)
             .PlayerLine("No, I do not have it yet.")
             .CloseDialog();
         }
@@ -272,7 +264,7 @@ namespace RealmsForgotten.Quest.KnightQuest
                 .NpcLine("Have you defeated the bandits?")
                 .Condition(() => CharacterObject.OneToOneConversationCharacter?.StringId == QuestGiverId
                                  && _defeatHideoutLog == null
-                                 && _retrieveInsigniaLog?.CurrentProgress == 2
+                                 && _retrieveSwordLog?.CurrentProgress == 2
                                  )
                 .BeginPlayerOptions()
                     // Option when the bandits are not yet defeated

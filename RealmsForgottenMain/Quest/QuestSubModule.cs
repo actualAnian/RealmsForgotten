@@ -27,7 +27,6 @@ namespace RealmsForgotten.Quest
             {
                 gameStarter.AddBehavior(new SaveCurrentQuestCampaignBehavior());
                 gameStarter.AddBehavior(new SpawnNpcInLordsHallBecomeKnightBehavior());
-                
             }
         }
     }
