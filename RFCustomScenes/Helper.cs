@@ -1,4 +1,5 @@
 ﻿using RFCustomSettlements;
+using SandBox.AI;
 using SandBox.Objects.Usables;
 using System;
 using System.Collections.Generic;
@@ -35,6 +36,8 @@ namespace RealmsForgotten.RFCustomSettlements
         public static bool IsRFObject(IFocusable focusable)
         {
             if (!Mission.Current.MissionBehaviors.Any(item => item is CustomSettlementMissionLogic)) return false;
+            Agent? agent;
+            if ((agent = focusable as Agent) != null && IsLootableDeadAgent(agent)) return true;
             UsablePlace? usablePlace;
             if ((usablePlace = focusable as UsablePlace) != null && usablePlace.GameEntity.Name.StartsWith("rf_")) return true;
             //if (gameEntity != null && gameEntity.Name.StartsWith("rf_")) return true;
@@ -43,7 +46,9 @@ namespace RealmsForgotten.RFCustomSettlements
 
         public static bool IsCloseEnough(Agent mainAgent, IFocusable focusable)
         {
-            if(((UsablePlace)focusable).GameEntity.GlobalPosition.Distance(Agent.Main.Position) < rfInteractionDistance)
+            Agent? agent;
+            if ((agent = focusable as Agent) != null && IsLootableDeadAgent(agent)) return true;
+            if (((UsablePlace)focusable).GameEntity.GlobalPosition.Distance(Agent.Main.Position) < rfInteractionDistance)
             {
                 _canInteract = true;
                 return true;

@@ -24,6 +24,7 @@ using static RealmsForgotten.RFCustomSettlements.CustomSettlementBuildData;
 using System.Threading.Tasks;
 using RFCustomSettlements;
 using HuntableHerds.Models;
+using SandBox.AI;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -555,13 +556,21 @@ namespace RealmsForgotten.RFCustomSettlements
             if (Helper.IsLootableDeadAgent(agent))
             {
                 LootableAgentComponent component = agent.GetComponent<LootableAgentComponent>();
-                component.GetItemDrops();
+                bool playSound = component.GetItemDrops().Count != 0 || component.GoldDrop != 0;
                 foreach (ItemRosterElement item in component.GetItemDrops())
-                    {
+                {
                     EquipmentElement element = item.EquipmentElement;
                     loot.AddToCounts(element, item.Amount);
                     HuntableHerds.SubModule.PrintDebugMessage("You looted " + item.Amount + " " + element.Item.Name + "!");
                 }
+                if (component.GoldDrop != 0)
+                {
+                    goldLooted += component.GoldDrop;
+                    HuntableHerds.SubModule.PrintDebugMessage("You found " + goldLooted + "<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">");
+                }
+
+                if (playSound) 
+                    Mission.MakeSoundOnlyOnRelatedPeer(SoundEvent.GetEventIdFromString("event:/mission/combat/pickup_arrows"), agent.Position, Mission.MainAgent.Index);
                 LootableAgents.Remove(agent);
             }
         }
