@@ -118,7 +118,7 @@ namespace RealmsForgotten.Quest.KnightQuest
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnSessionLaunched));
             CampaignEvents.OnSettlementLeftEvent.AddNonSerializedListener(this, new Action<MobileParty, Settlement>(this.OnSettlementLeft));
         }
-        private void OnSettlementLeft(MobileParty party, Settlement settlement)
+        private void OnSettlementEntered(MobileParty mobileParty, Settlement settlement, Hero hero) //@TODO, how to fix this
         {
             if (party.LeaderHero?.CharacterObject != CharacterObject.PlayerCharacter) return;
             if (settlement.Culture.StringId == "neutral_culture")
@@ -128,7 +128,7 @@ namespace RealmsForgotten.Quest.KnightQuest
         {
             if (PlayerHasInsignia() && _retrieveInsigniaLog?.CurrentProgress == 0)
             {
-                MBInformationManager.AddQuickInformation(new TextObject("You have obtained the Knight's Sword. Return to the quest giver."));
+                InformationManager.DisplayMessage(new InformationMessage("You have obtained the Knight's Insignia. Return to the quest giver."));
                 _retrieveInsigniaLog.UpdateCurrentProgress(1);
             }
         }

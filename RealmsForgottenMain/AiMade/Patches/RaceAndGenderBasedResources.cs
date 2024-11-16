@@ -24,7 +24,7 @@ namespace RealmsForgotten.AiMade.Patches
 
             //var names = FaceGen.GetRaceNames(); 
             //if (names[selectedRace] != "dwarf") return;
-            for (int i = defaultBeardsNum; i < __instance.BeardTypes.Count; i++)
+            for (int i = defaultBeardsNum; i < __instance.BeardTypes.Count; i++) 
             {
                 var item = __instance.BeardTypes[i];
                 string? name = FaceGenHelper.GetBeardName(item.Index, selectedRace, __instance.SelectedGender);

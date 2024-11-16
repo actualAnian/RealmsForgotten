@@ -107,6 +107,9 @@ namespace RealmsForgotten
 
                 QuestSubModule.AddQuestBehaviors((CampaignGameStarter)gameStarterObject);
 
+
+                QuestSubModule.AddQuestBehaviors((CampaignGameStarter)gameStarterObject);
+
                 ReadConfigFile();
             }
             if (CustomSettings.Instance != null)
@@ -218,7 +221,7 @@ namespace RealmsForgotten
             //var types = Globals.realmsForgottenAssembly.GetTypes().ToList();
             //var patch = types.Where(t => t is FaceGenPatch);
             base.OnSubModuleLoad();
-            harmony.PatchAll(); // Ensure Harmony patches are applied
+            harmony.PatchAll();
 
             TextObject coreContentDisabledReason = new("Disabled during installation.", null);
             UIConfig.DoNotUseGeneratedPrefabs = true;
