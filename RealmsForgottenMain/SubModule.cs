@@ -107,9 +107,6 @@ namespace RealmsForgotten
 
                 QuestSubModule.AddQuestBehaviors((CampaignGameStarter)gameStarterObject);
 
-
-                QuestSubModule.AddQuestBehaviors((CampaignGameStarter)gameStarterObject);
-
                 ReadConfigFile();
             }
             if (CustomSettings.Instance != null)
@@ -233,7 +230,6 @@ namespace RealmsForgotten
                 () => MBGameManager.StartNewGame(new RFCampaignManager()),
                 () => (Module.CurrentModule.IsOnlyCoreContentEnabled, coreContentDisabledReason))
             );
-            harmony.PatchAll();
         }
         public static Dictionary<string, int> undeadRespawnConfig { get; private set; }
         private void ReadConfigFile()
