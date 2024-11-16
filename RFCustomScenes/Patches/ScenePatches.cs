@@ -42,6 +42,19 @@ namespace RFCustomSettlements.Patches
             }
         }
     }
+    [HarmonyPatch(typeof(AgentInteractionInterfaceVM), "Tick")]
+    public class AgentInteractionInterfaceVMTickPatch
+    {
+        static readonly FieldInfo info = AccessTools.Field(typeof(AgentInteractionInterfaceVM), "_currentFocusedObject");
+        static bool Prefix(MissionMainAgentInteractionComponent __instance)
+        {
+            var currentFocusedObject = info.GetValue(__instance);
+            Agent? agent;
+            if ((agent = currentFocusedObject as Agent) == null) return true;
+            if (Helper.IsLootableDeadAgent(agent)) return false;
+            return true;    
+        }
+    }
     [HarmonyPatch(typeof(AgentInteractionInterfaceVM), "SetUsableMachine")]
     public class AgentInteractionInterfaceVMSetUsableMachinePatch
     {
@@ -88,7 +101,7 @@ namespace RFCustomSettlements.Patches
     [HarmonyPatch(typeof(AgentInteractionInterfaceVM), "OnFocusGained")]
     public class AgentInteractionInterfaceVMOnFocusGainedPatch
     {
-        [HarmonyPatch(typeof(MissionMainAgentInteractionComponent), "OnFocusGained")]
+        [HarmonyPatch(typeof(AgentInteractionInterfaceVM), "OnFocusGained")]
         internal static IEnumerable<CodeInstruction> OnFocusGainedPatch(IEnumerable<CodeInstruction> instructions, ILGenerator ilGenerator)
         {
             var codes = instructions.ToList();
@@ -106,7 +119,7 @@ namespace RFCustomSettlements.Patches
                         insertionAgentHandle = index;
                     }
             }
-            var handle_rf__agents_instr_list = new List<CodeInstruction>
+            var handle_rf_agents_instr_list = new List<CodeInstruction>
             {
                 new(OpCodes.Ldloc_0),
                 new(OpCodes.Call, AccessTools.Method(typeof(Helper), nameof(IsLootableDeadAgent))),
@@ -115,7 +128,7 @@ namespace RFCustomSettlements.Patches
                 new(OpCodes.Call, AccessTools.Method(typeof(Helper), nameof(SetVMLook))),
                 new(OpCodes.Ret)
             };
-            codes.InsertRange(insertionAgentHandle, handle_rf__agents_instr_list);
+            codes.InsertRange(insertionAgentHandle, handle_rf_agents_instr_list);
             return codes.AsEnumerable();
         }
 
