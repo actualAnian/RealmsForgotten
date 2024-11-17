@@ -33,6 +33,14 @@
 			<HintPath>%(Identity)</HintPath>
 			<Private>False</Private>
 		</Reference>
+
+		<Reference Include="Marching">
+		  <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Marching\bin\Win64_Shipping_Client\Marching.dll</HintPath>
+		</Reference>
+
+		<Reference Include="MCMv5">
+		  <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\RealmsForgotten\bin\Win64_Shipping_Client\MCMv5.dll</HintPath>
+		</Reference>
 	
 	</ItemGroup>
 
