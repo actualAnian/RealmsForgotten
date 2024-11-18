@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RealmsForgotten;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -104,8 +105,10 @@ internal class HouseTroopsXmlManager
 
     private string FormXmlPath(string xmlName)
     {
-        string customBasePath = @"C:\Program Files (x86)\Steam\steamapps\common\Mount & Blade II Bannerlord";
-        return Path.Combine(customBasePath, "Modules", "RealmsForgotten", "ModuleData", xmlName);
+        string path = Path.GetDirectoryName(Globals.realmsForgottenAssembly.Location);
+
+        string projectPath = Path.GetFullPath(Path.Combine(path, @"..\..\ModuleData\"));
+        return Path.Combine(projectPath, xmlName);
     }
     internal void CreateFolderIfNeeded()
     {
