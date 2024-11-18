@@ -30,7 +30,8 @@ namespace RealmsForgotten.AiMade
         {
             try
             {
-                LoadDialogues("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\RealmsForgotten\\bin\\Win64_Shipping_Client\\storyteller_dialogues.xml");
+                string path = Path.GetDirectoryName(Globals.realmsForgottenAssembly.Location);
+                LoadDialogues(Path.Combine(path, "storyteller_dialogues.xml"));
                 AddDialogs(campaignGameStarter);
             }
             catch (Exception ex)
