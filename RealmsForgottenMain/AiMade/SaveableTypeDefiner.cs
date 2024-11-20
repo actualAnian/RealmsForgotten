@@ -96,7 +96,7 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(ADODSpecialSettlementTroopsModel), 58);
             AddClassDefinition(typeof(ADODCustomLocationsBehavior), 59);
             AddClassDefinition(typeof(NasorianHordeInvasion), 60);
-            
+            AddClassDefinition(typeof(FirstTreeTempleLocation), 61);
 
         }
     }

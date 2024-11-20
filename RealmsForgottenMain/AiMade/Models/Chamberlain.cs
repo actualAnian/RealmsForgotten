@@ -1,4 +1,5 @@
-﻿using System;
+﻿﻿using RealmsForgotten;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -104,8 +105,9 @@ internal class HouseTroopsXmlManager
 
     private string FormXmlPath(string xmlName)
     {
-        string customBasePath = @"C:\Program Files (x86)\Steam\steamapps\common\Mount & Blade II Bannerlord";
-        return Path.Combine(customBasePath, "Modules", "RealmsForgotten", "ModuleData", xmlName);
+        string path = Path.GetDirectoryName(Globals.realmsForgottenAssembly.Location);
+        string projectPath = Path.GetFullPath(Path.Combine(path, @"..\..\ModuleData\"));
+        return Path.Combine(projectPath, xmlName);
     }
     internal void CreateFolderIfNeeded()
     {
@@ -840,12 +842,11 @@ internal class ADODChamberlainsBehavior : CampaignBehaviorBase
     {
         var troops = ADODChamberlainsBehavior.CORE_UNIT_LIST.Select(MBObjectManager.Instance.GetObject<CharacterObject>).ToList();
 
-        string title = new TextObject("Recruit House Troops", null).ToString();
+        string title = new TextObject("Recruit Troops", null).ToString();
 
         List<InquiryElement> options = troops.Select(troop =>
         {
             int troopCost = CalculateHouseTroopCost(troop);
-
             return new InquiryElement(troop, troop.Name.ToString(), new ImageIdentifier(CharacterCode.CreateFrom(troop)),
                 Hero.MainHero.Gold >= troopCost, // Can afford condition
                 new TextObject("{=!}{GOLD_ICON}" + troopCost).ToString() // Tooltip showing cost
@@ -894,7 +895,7 @@ internal class ADODChamberlainsBehavior : CampaignBehaviorBase
             roster.AddToCounts(selectedTroop, quantity);
 
             // Display confirmation message
-            InformationManager.DisplayMessage(new InformationMessage($"{quantity} {selectedTroop.Name} recruited to your party for {totalCost} Gold Dragons."));
+            InformationManager.DisplayMessage(new InformationMessage($"{quantity} {selectedTroop.Name} recruited to your party for {totalCost} Gold Coins."));
         }
         else
         {
@@ -909,7 +910,7 @@ internal class ADODChamberlainsBehavior : CampaignBehaviorBase
         int baseCost = 100;
         int index = ADODChamberlainsBehavior.CORE_UNIT_LIST.IndexOf(troop.StringId);
 
-      
+
         if (index == -1)
         {
             // Log a warning or provide a fallback cost in case the troop is not in the list
