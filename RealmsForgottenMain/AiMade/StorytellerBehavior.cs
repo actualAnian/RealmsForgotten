@@ -10,6 +10,7 @@ using TaleWorlds.CampaignSystem.Settlements.Locations;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
+using TaleWorlds.ModuleManager;
 using TaleWorlds.ObjectSystem;
 
 namespace RealmsForgotten.AiMade
@@ -30,7 +31,10 @@ namespace RealmsForgotten.AiMade
         {
             try
             {
-                LoadDialogues("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\RealmsForgotten\\bin\\Win64_Shipping_Client\\storyteller_dialogues.xml");
+                string modFolder = ModuleHelper.GetModuleFullPath("RealmsForgotten");
+                string dialoguesFilePath = Path.Combine(modFolder, "bin", "Win64_Shipping_Client", "storyteller_dialogues.xml");
+
+                LoadDialogues(dialoguesFilePath);
                 AddDialogs(campaignGameStarter);
             }
             catch (Exception ex)

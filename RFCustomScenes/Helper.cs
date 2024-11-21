@@ -65,6 +65,7 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             return int.Parse(itemData.Last());
         }
+
         internal static string GetNameOfGoldObject(int amount)
         {
             if (0 < amount && amount < 20) return "Gold Pile";
@@ -72,8 +73,11 @@ namespace RealmsForgotten.RFCustomSettlements
             else if (amount < 2000) return "Gold Chest";
             else return "Gold";
         }
+
         public static float maxPickableDistance = 10f;
+
         public static bool CanInteract { get => _canInteract; }
+
         public static Agent? RayCastToCheckForRFInteractableAgent(Agent agent)
         {
             // ALSO PREVENTS THE MOUNTS ENEMIES FROM HUNTABLE HERDS TO BE MOUNTABLE

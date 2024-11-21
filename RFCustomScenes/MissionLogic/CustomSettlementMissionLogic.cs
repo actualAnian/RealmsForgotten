@@ -568,8 +568,7 @@ namespace RealmsForgotten.RFCustomSettlements
                     goldLooted += component.GoldDrop;
                     HuntableHerds.SubModule.PrintDebugMessage("You found " + goldLooted + "<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">");
                 }
-
-                if (playSound) 
+                if (playSound)
                     Mission.MakeSoundOnlyOnRelatedPeer(SoundEvent.GetEventIdFromString("event:/mission/combat/pickup_arrows"), agent.Position, Mission.MainAgent.Index);
                 LootableAgents.Remove(agent);
             }
