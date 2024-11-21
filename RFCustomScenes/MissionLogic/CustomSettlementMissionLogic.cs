@@ -270,7 +270,7 @@ namespace RealmsForgotten.RFCustomSettlements
                 StandingPoint standingPoint;
                 MatrixFrame globalFrame;
 
-                Dictionary<string, int> banditsInArea = GetTroopsInArea(BanditsData.stationaryAreasBandits[areaIndex], out int allBandits);
+                Dictionary<RFBanditData, int> banditsInArea = GetTroopsInArea(BanditsData.stationaryAreasBandits[areaIndex], out int allBandits);
 
                 foreach (UsableMachine usableMachine in commonAreaMarker.GetUsableMachinesInRange(null))
                 {
@@ -283,13 +283,17 @@ namespace RealmsForgotten.RFCustomSettlements
                 {
                     try
                     {
-                        RFBanditData currentBanditData = BanditsData.patrolAreasBandits[areaIndex];
-                        RFAgentOrigin agentToSpawn = PrepareAgentToSpawn(ChooseBanditToSpawn(banditsInArea));
+                        //
+                        RFBanditData currentBanditData = ChooseBanditToSpawn(banditsInArea);
+
+                        //
+                        RFAgentOrigin agentToSpawn = PrepareAgentToSpawn(currentBanditData.Id);
                         standingPoint = usableMachinesQueue.Dequeue();
                         globalFrame = standingPoint.GameEntity.GetGlobalFrame();
                         globalFrame.rotation.OrthonormalizeAccordingToForwardAndKeepUpAsZAxis();
                         Agent agent = Mission.Current.SpawnTroop(agentToSpawn, false, false, false, false, 0, 0, false, false, false, new Vec3?(globalFrame.origin), new Vec2?(globalFrame.rotation.f.AsVec2.Normalized()), "_hideout_bandit", null, FormationClass.NumberOfAllFormations, false);
-                        AddLootableComponent(currentBanditData.ItemDropsData, agent);
+                        if (currentBanditData.ItemDropsData != null)
+                            AddLootableComponent(currentBanditData.ItemDropsData, agent);
                         InitializeBanditAgent(agent, standingPoint, false, defenderAgentObjects);
                     }
                     catch (InvalidOperationException)
@@ -320,7 +324,8 @@ namespace RealmsForgotten.RFCustomSettlements
                     globalFrame.rotation.OrthonormalizeAccordingToForwardAndKeepUpAsZAxis();
                     RFAgentOrigin troopToSpawn = PrepareAgentToSpawn(currentBanditData.Id);
                     Agent agent = Mission.Current.SpawnTroop(troopToSpawn, false, false, false, false, 0, 0, false, false, false, new Vec3?(globalFrame.origin), new Vec2?(globalFrame.rotation.f.AsVec2.Normalized()), "_hideout_bandit", null, FormationClass.NumberOfAllFormations, false);
-                    AddLootableComponent(currentBanditData.ItemDropsData, agent);
+                    if (currentBanditData.ItemDropsData != null)
+                        AddLootableComponent(currentBanditData.ItemDropsData, agent);
                     InitializeBanditAgent(agent, area.StandingPoints[0], false, defenderAgentObjects);
                 }
                 catch (Exception)
@@ -329,9 +334,8 @@ namespace RealmsForgotten.RFCustomSettlements
                 }
             }
         }
-        private void AddLootableComponent(ItemDropsData? data, Agent agent)
+        private void AddLootableComponent(ItemDropsData data, Agent agent)
         {
-            if (data != null)
                 agent.AddComponent(new LootableAgentComponent(agent, data));
         }
         private void SpawnPlayerTroops()
@@ -371,21 +375,21 @@ namespace RealmsForgotten.RFCustomSettlements
             RFAgentOrigin rFAgentOrigin = new(new PartyBase(banditsInSettlement), descriptor, troop.Tier, troop);
             return rFAgentOrigin;
         }
-        private string ChooseBanditToSpawn(Dictionary<string, int> banditsInArea)
+        private RFBanditData ChooseBanditToSpawn(Dictionary<RFBanditData, int> banditsInArea)
         {
-            KeyValuePair<string, int> banditPair = banditsInArea.GetRandomElementInefficiently();
+            KeyValuePair<RFBanditData, int> banditPair = banditsInArea.GetRandomElementInefficiently();
             banditsInArea[banditPair.Key] -= 1;
             if (banditsInArea[banditPair.Key] < 1) banditsInArea.Remove(banditPair.Key);
             return banditPair.Key;
         }
-        private Dictionary<string, int> GetTroopsInArea(List<CustomSettlementBuildData.RFBanditData> rFBanditData, out int allBandits)
+        private Dictionary<RFBanditData, int> GetTroopsInArea(List<RFBanditData> rFBanditData, out int allBandits)
         {
-            Dictionary<string, int> bandits = new();
             allBandits = 0;
-            foreach (CustomSettlementBuildData.RFBanditData data in rFBanditData)
+            Dictionary<RFBanditData, int> bandits = new();
+            foreach (RFBanditData bandit in rFBanditData)
             {
-                bandits[data.Id] = data.Amount;
-                allBandits += data.Amount;
+                allBandits += bandit.Amount;
+                bandits.Add(bandit, bandit.Amount);
             }
             return bandits;
         }
