@@ -31,10 +31,8 @@ namespace RealmsForgotten.AiMade
         {
             try
             {
-                string modFolder = ModuleHelper.GetModuleFullPath("RealmsForgotten");
-                string dialoguesFilePath = Path.Combine(modFolder, "bin", "Win64_Shipping_Client", "storyteller_dialogues.xml");
-
-                LoadDialogues(dialoguesFilePath);
+                string path = Path.GetDirectoryName(Globals.realmsForgottenAssembly.Location);
+                LoadDialogues(Path.Combine(path, "storyteller_dialogues.xml"));
                 AddDialogs(campaignGameStarter);
             }
             catch (Exception ex)

@@ -1,4 +1,4 @@
-﻿﻿using RealmsForgotten;
+﻿using RealmsForgotten;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -106,6 +106,7 @@ internal class HouseTroopsXmlManager
     private string FormXmlPath(string xmlName)
     {
         string path = Path.GetDirectoryName(Globals.realmsForgottenAssembly.Location);
+
         string projectPath = Path.GetFullPath(Path.Combine(path, @"..\..\ModuleData\"));
         return Path.Combine(projectPath, xmlName);
     }
