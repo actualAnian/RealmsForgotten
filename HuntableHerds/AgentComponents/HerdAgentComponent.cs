@@ -1,6 +1,5 @@
 ﻿using HuntableHerds.Models;
 using RealmsForgotten.HuntableHerds.Models;
-using RFCustomSettlements;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
