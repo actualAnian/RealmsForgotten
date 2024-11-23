@@ -97,7 +97,7 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         private async Task AddBodyToLootableList(Agent agent)
         {
-            await Task.Delay(1000);
+            await Task.Delay(2000);
             LootableAgents.Add(agent, agent.GetChestGlobalPosition());
         }
         public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)

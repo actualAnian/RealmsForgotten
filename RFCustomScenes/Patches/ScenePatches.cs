@@ -24,22 +24,25 @@ namespace RFCustomSettlements.Patches
     {
         static readonly MethodInfo curMisScrInfo = AccessTools.PropertyGetter("MissionMainAgentInteractionComponent:CurrentMissionScreen");
         static readonly MethodInfo curMisInfo = AccessTools.PropertyGetter("MissionMainAgentInteractionComponent:CurrentMission");
-        static void Postfix(MissionMainAgentInteractionComponent __instance)
+        static bool Prefix(MissionMainAgentInteractionComponent __instance)
         {
             CustomSettlementMissionLogic logic;
-            if ((logic = Mission.Current.GetMissionBehavior<CustomSettlementMissionLogic>()) == null) return;
-            if (!((MissionScreen)curMisScrInfo.Invoke(__instance, null)).SceneLayer.Input.IsGameKeyPressed(13)) return;
+            if ((logic = Mission.Current.GetMissionBehavior<CustomSettlementMissionLogic>()) == null) return true;
+            if (!((MissionScreen)curMisScrInfo.Invoke(__instance, null)).SceneLayer.Input.IsGameKeyPressed(13)) return true;
             var c = (Mission)curMisInfo.Invoke(__instance, null);
             Agent? agent;
             if ((agent = __instance.CurrentFocusedObject as Agent) != null && IsLootableDeadAgent(agent))
             {
                 logic.OnAgentLooted(agent);
+                return false;
             }
             UsablePlace? usablePlace;
             if ((usablePlace = (__instance.CurrentFocusedMachine as UsablePlace)) != null && IsRFObject(usablePlace) && CanInteract)
             {
                 ((CustomSettlementMissionLogic)c.MissionBehaviors.Where(m => m is CustomSettlementMissionLogic).ElementAt(0)).OnObjectUsed(usablePlace);
+                return false;
             }
+            return true;
         }
     }
     [HarmonyPatch(typeof(AgentInteractionInterfaceVM), "Tick")]
