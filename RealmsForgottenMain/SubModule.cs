@@ -96,7 +96,9 @@ namespace RealmsForgotten
                 campaignGameStarter.AddModel(new RFBattleCaptainModel(campaignGameStarter.GetExistingModel<BattleCaptainModel>()));
                 campaignGameStarter.AddModel(new RFInventoryCapacityModel(campaignGameStarter.GetExistingModel<InventoryCapacityModel>()));
                 campaignGameStarter.AddModel(new RFRaceSpeedBonusModel(campaignGameStarter.GetExistingModel<PartySpeedModel>()));
-               
+                campaignGameStarter.AddModel(new RFBanditDensityModel(campaignGameStarter.GetExistingModel<BanditDensityModel>()));
+
+                
                 new RFAttributes().Initialize();
                 new RFSkills().Initialize();
                 new RFSkillEffects().InitializeAll();
