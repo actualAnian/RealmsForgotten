@@ -38,62 +38,61 @@ public class SettlementReligionModel
             religiousValues[rel] += val;
         }
 
-        (from x in _religiousValues
-            orderby x.Value
-            select x).Reverse<KeyValuePair<RFReligions, float>>();
+        //(from x in _religiousValues
+        //    orderby x.Value
+        //    select x).Reverse<KeyValuePair<RFReligions, float>>();
     }
 
 
     public void DailyReligionDevotion(float val)
     {
-        try
-        {
-            var num = val / (float)_religiousValues.Count;
-            var key = (from x in _religiousValues
-                orderby x.Value
-                select x).Reverse().FirstOrDefault().Key;
-            var religiousValues = _religiousValues;
-            var key2 = key;
-            religiousValues[key2] += val * (float)(MBRandom.RandomInt(0, 100) > 80 ? -1 : 1);
-            foreach (var keyValuePair in _religiousValues)
-                if (keyValuePair.Key != key)
-                {
-                    religiousValues = _religiousValues;
-                    key2 = keyValuePair.Key;
-                    religiousValues[key2] += num * (float)(MBRandom.RandomInt(0, 100) > 80 ? -1 : 1);
-                }
+        float num = val / _religiousValues.Count;
+        RFReligions key = CalculateMainReligion();
+        RFReligions key2 = key;
+        _religiousValues[key2] += val * (MBRandom.RandomInt(0, 100) > 80 ? -1 : 1);
+        List<RFReligions> keys = _religiousValues.Keys.ToList();
+        foreach (RFReligions religion in keys)
+            if (religion != key)
+            {
+                _religiousValues[religion] += num * (MBRandom.RandomInt(0, 100) > 80 ? -1 : 1);
+            }
 
-            (from x in _religiousValues
-                orderby x.Value
-                select x).Reverse();
-        }
-        catch
-        {
-        }
+            //(from x in _religiousValues
+            // orderby x.Value
+            // select x).Reverse();
     }
 
 
     public float GetMainReligionRatio()
     {
+        RFReligions mainReligion = CalculateMainReligion();
         var num = 0f;
-        var key = (from x in _religiousValues
-            orderby x.Value
-            select x).Reverse().FirstOrDefault().Key;
         foreach (var keyValuePair in _religiousValues)
-            if (keyValuePair.Key != key)
+            if (keyValuePair.Key != mainReligion)
                 num += keyValuePair.Value;
-        return _religiousValues[key] / (num + _religiousValues[key]);
+        return _religiousValues[mainReligion] / (num + _religiousValues[mainReligion]);
     }
 
-
+    private RFReligions CalculateMainReligion()
+    {
+        float maxValue = 0;
+        RFReligions maxKey = default;
+        foreach (KeyValuePair<RFReligions, float> keyValuePair in _religiousValues)
+        {
+            if (keyValuePair.Value > maxValue)
+            {
+                maxValue = keyValuePair.Value;
+                maxKey = keyValuePair.Key;
+            }
+        }
+        return maxKey;
+    }
     public void ReCalculateDevotion(Town town)
     {
         var mainReligionRatio = GetMainReligionRatio();
         var num = subject.Town.Prosperity * mainReligionRatio;
         var num2 = subject.Town.Prosperity - num;
-        var key = (from x in _religiousValues
-            orderby x.Value
-            select x).Reverse().FirstOrDefault().Key;
+        RFReligions key = CalculateMainReligion();
         _religiousValues[key] = num;
         foreach (var keyValuePair in _religiousValues.ToList())
         {
@@ -106,17 +105,17 @@ public class SettlementReligionModel
             }
         }
 
-        (from x in _religiousValues
-            orderby x.Value
-            select x).Reverse();
+        //(from x in _religiousValues
+        //    orderby x.Value
+        //    select x).Reverse();
     }
 
     public void ResetReligionDevotion(RFReligions rel)
     {
         if (_religiousValues.ContainsKey(rel)) _religiousValues[rel] = 0f;
-        (from x in _religiousValues
-            orderby x.Value
-            select x).Reverse();
+        //(from x in _religiousValues
+        //    orderby x.Value
+        //    select x).Reverse();
     }
 
     [SaveableField(1)] public Dictionary<RFReligions, float> _religiousValues;
