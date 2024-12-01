@@ -20,9 +20,11 @@ using RealmsForgotten.HuntableHerds.AgentComponents;
 using RealmsForgotten.HuntableHerds.Models;
 using System.Text;
 using static RealmsForgotten.RFCustomSettlements.ExploreSettlementStateHandler;
-using System.Collections;
-using SandBox.Missions.MissionLogics;
 using static RealmsForgotten.RFCustomSettlements.CustomSettlementBuildData;
+using System.Threading.Tasks;
+using RFCustomSettlements;
+using HuntableHerds.Models;
+using SandBox.AI;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -55,6 +57,9 @@ namespace RealmsForgotten.RFCustomSettlements
         private readonly CustomSettlementBuildData BanditsData;
         private readonly Action? OnBattleEnd;
         private readonly Dictionary<int, NpcData> NpcsInSettlement = new();
+        public Dictionary<Agent, Vec3> LootableAgents { get; } = new ();
+
+        //private  onStateChangeListeners
 
         public CustomSettlementMissionLogic(CustomSettlementBuildData buildData, Action? onBattleEnd = null)
         {
@@ -63,7 +68,7 @@ namespace RealmsForgotten.RFCustomSettlements
             areaMarkers = new();
             loot = new();
             banditsInSettlement = CreateBanditData(buildData);
-            foreach(NpcData data in buildData.allNpcs)
+            foreach (NpcData data in buildData.allNpcs)
             {
                 if (!NpcsInSettlement.ContainsKey(data.TagId))
                     NpcsInSettlement[data.TagId] = data;
@@ -86,10 +91,22 @@ namespace RealmsForgotten.RFCustomSettlements
             {
                 InitializeMission();
                 isMissionInitialized = true;
+                Globals.IsMissionInitialized = true;
                 return;
             }
         }
-
+        private async Task AddBodyToLootableList(Agent agent)
+        {
+            await Task.Delay(1000);
+            LootableAgents.Add(agent, agent.GetChestGlobalPosition());
+        }
+        public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
+        {
+            if (affectedAgent.Components.Any(c => c is LootableAgentComponent))
+            {
+                AddBodyToLootableList(affectedAgent);
+            }
+        }
         private void UsedObjectTick(float dt)
         {
             foreach (KeyValuePair<Agent, UsedObject> keyValuePair in defenderAgentObjects)
@@ -103,9 +120,9 @@ namespace RealmsForgotten.RFCustomSettlements
         private void InitializeMission()
         {
             areaMarkers.AddRange(from area in base.Mission.ActiveMissionObjects.FindAllWithType<CommonAreaMarker>()
-                                       orderby area.AreaIndex
-                                       select area);
-            
+                                 orderby area.AreaIndex
+                                 select area);
+
             patrolAreas.AddRange(from area in base.Mission.ActiveMissionObjects.FindAllWithType<PatrolArea>()
                                  orderby area.AreaIndex
                                  select area);
@@ -144,7 +161,7 @@ namespace RealmsForgotten.RFCustomSettlements
                 }
             }
             if (NpcSpawnPositions.Count == 0) return;
-            foreach (KeyValuePair<int, GameEntity>  pair in NpcSpawnPositions)
+            foreach (KeyValuePair<int, GameEntity> pair in NpcSpawnPositions)
             {
                 var NpcSpawnPoint = pair.Value.GetChildren().FirstOrDefault();
                 Team team = base.Mission.PlayerAllyTeam;
@@ -174,7 +191,7 @@ namespace RealmsForgotten.RFCustomSettlements
 
         private void SpawnHuntableHerdsAnimals()
         {
-            foreach(GameEntity entity in animalSpawnPositions)
+            foreach (GameEntity entity in animalSpawnPositions)
             {
                 try
                 {
@@ -186,6 +203,7 @@ namespace RealmsForgotten.RFCustomSettlements
                     Agent agent = base.Mission.SpawnMonster(rosterElement, default, in position, in initialDirection);
 
                     HerdBuildData herdBuildData = (from buildData in HerdBuildData.allHuntableAgentBuildDatas where buildData.SpawnId == entity.Name select buildData).ElementAt(0);
+                    HerdBuildData.CurrentHerdBuildData = herdBuildData;
                     HerdAgentComponent huntAgentComponent = herdBuildData.IsPassive ? new PassiveHerdAgentComponent(agent) : new AggressiveHerdAgentComponent(agent);
 
                     agent.AddComponent(huntAgentComponent);
@@ -223,9 +241,9 @@ namespace RealmsForgotten.RFCustomSettlements
                     HuntableHerds.SubModule.PrintDebugMessage($"Error, there is no character with id \"{pair.Value.Id}\"", 255, 0, 0);
                 }
             }
-            foreach(KeyValuePair<int, List<CustomSettlementBuildData.RFBanditData>> pair in bd.stationaryAreasBandits)
+            foreach (KeyValuePair<int, List<CustomSettlementBuildData.RFBanditData>> pair in bd.stationaryAreasBandits)
             {
-                foreach(CustomSettlementBuildData.RFBanditData banditData in pair.Value)
+                foreach (CustomSettlementBuildData.RFBanditData banditData in pair.Value)
                 {
                     try
                     {
@@ -261,18 +279,20 @@ namespace RealmsForgotten.RFCustomSettlements
                 usableMachinesInArea.Shuffle();
                 Queue<StandingPoint> usableMachinesQueue = new(usableMachinesInArea);
 
-                for(int i = 0; i < allBandits; i++)
+                for (int i = 0; i < allBandits; i++)
                 {
-                    try 
+                    try
                     {
+                        RFBanditData currentBanditData = BanditsData.patrolAreasBandits[areaIndex];
                         RFAgentOrigin agentToSpawn = PrepareAgentToSpawn(ChooseBanditToSpawn(banditsInArea));
                         standingPoint = usableMachinesQueue.Dequeue();
                         globalFrame = standingPoint.GameEntity.GetGlobalFrame();
                         globalFrame.rotation.OrthonormalizeAccordingToForwardAndKeepUpAsZAxis();
                         Agent agent = Mission.Current.SpawnTroop(agentToSpawn, false, false, false, false, 0, 0, false, false, false, new Vec3?(globalFrame.origin), new Vec2?(globalFrame.rotation.f.AsVec2.Normalized()), "_hideout_bandit", null, FormationClass.NumberOfAllFormations, false);
+                        AddLootableComponent(currentBanditData.ItemDropsData, agent);
                         InitializeBanditAgent(agent, standingPoint, false, defenderAgentObjects);
                     }
-                    catch(InvalidOperationException)
+                    catch (InvalidOperationException)
                     {
                         HuntableHerds.SubModule.PrintDebugMessage($"error spawning the bandits in common area {areaIndex}, not enough animation points. found: {commonAreaMarker.GetUsableMachinesInRange(null).Count}, needed: {allBandits}");
                     }
@@ -288,37 +308,42 @@ namespace RealmsForgotten.RFCustomSettlements
             IEnumerable<PatrolArea> source = from area in patrolAreas
                                              where area.StandingPoints.All((StandingPoint point) => !point.HasUser && !point.HasAIMovingTo)
                                              select area;
-            foreach(PatrolArea area in source)
+            foreach (PatrolArea area in source)
             {
                 int areaIndex = area.AreaIndex;
                 try
                 {
                     if (!BanditsData.patrolAreasBandits.ContainsKey(areaIndex)) continue;
+                    RFBanditData currentBanditData = BanditsData.patrolAreasBandits[areaIndex];
 
                     MatrixFrame globalFrame = area.GameEntity.GetGlobalFrame();
                     globalFrame.rotation.OrthonormalizeAccordingToForwardAndKeepUpAsZAxis();
-
-                    RFAgentOrigin troopToSpawn = PrepareAgentToSpawn(BanditsData.patrolAreasBandits[areaIndex].Id);
+                    RFAgentOrigin troopToSpawn = PrepareAgentToSpawn(currentBanditData.Id);
                     Agent agent = Mission.Current.SpawnTroop(troopToSpawn, false, false, false, false, 0, 0, false, false, false, new Vec3?(globalFrame.origin), new Vec2?(globalFrame.rotation.f.AsVec2.Normalized()), "_hideout_bandit", null, FormationClass.NumberOfAllFormations, false);
+                    AddLootableComponent(currentBanditData.ItemDropsData, agent);
                     InitializeBanditAgent(agent, area.StandingPoints[0], false, defenderAgentObjects);
                 }
                 catch (Exception)
                 {
                     HuntableHerds.SubModule.PrintDebugMessage($"error spawning the bandits in patrol area {areaIndex}");
                 }
-
             }
+        }
+        private void AddLootableComponent(ItemDropsData? data, Agent agent)
+        {
+            if (data != null)
+                agent.AddComponent(new LootableAgentComponent(agent, data));
         }
         private void SpawnPlayerTroops()
         {
             TroopRoster? troopRoster;
             if ((troopRoster = NextSceneData.Instance.playerTroopRoster) == null) return;
             FlattenedTroopRoster flattenedTR = troopRoster.ToFlattenedRoster();
-            foreach(TroopRosterElement troop in  troopRoster.GetTroopRoster())
+            foreach (TroopRosterElement troop in troopRoster.GetTroopRoster())
             {
                 CharacterObject? character;
                 if ((character = troop.Character) == Hero.MainHero.CharacterObject) continue;
-                for(int i = 0; i < troop.Number; i++)
+                for (int i = 0; i < troop.Number; i++)
                 {
                     UniqueTroopDescriptor descriptor = flattenedTR.FindIndexOfCharacter(character);
                     RFAgentOrigin troopToSpawn = new(Hero.MainHero.PartyBelongedTo.Party, descriptor, character.Tier, character, true);
@@ -403,13 +428,13 @@ namespace RealmsForgotten.RFCustomSettlements
                 }
             }
         }
-        public override MissionBehaviorType BehaviorType 
-		{
-			get
-			{
-				return MissionBehaviorType.Other;
-			}
-		}
+        public override MissionBehaviorType BehaviorType
+        {
+            get
+            {
+                return MissionBehaviorType.Other;
+            }
+        }
         public override void AfterStart()
         {
             SpawnPlayer();
@@ -449,6 +474,7 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         public override void OnAgentAlarmedStateChanged(Agent agent, Agent.AIStateFlag flag)
         {
+            //BehaviorTree.Visit
             bool flag2 = flag == Agent.AIStateFlag.Alarmed;
             if (flag2 || flag == Agent.AIStateFlag.Cautious)
             {
@@ -525,7 +551,29 @@ namespace RealmsForgotten.RFCustomSettlements
                 agent.AgentVisuals.GetSkeleton().TickAnimations(0.1f, agent.AgentVisuals.GetGlobalFrame(), true);
             }
         }
+        internal void OnAgentLooted(Agent agent)
+        {
+            if (Helper.IsLootableDeadAgent(agent))
+            {
+                LootableAgentComponent component = agent.GetComponent<LootableAgentComponent>();
+                bool playSound = component.GetItemDrops().Count != 0 || component.GoldDrop != 0;
+                foreach (ItemRosterElement item in component.GetItemDrops())
+                {
+                    EquipmentElement element = item.EquipmentElement;
+                    loot.AddToCounts(element, item.Amount);
+                    HuntableHerds.SubModule.PrintDebugMessage("You looted " + item.Amount + " " + element.Item.Name + "!");
+                }
+                if (component.GoldDrop != 0)
+                {
+                    goldLooted += component.GoldDrop;
+                    HuntableHerds.SubModule.PrintDebugMessage("You found " + goldLooted + "<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">");
+                }
 
+                if (playSound) 
+                    Mission.MakeSoundOnlyOnRelatedPeer(SoundEvent.GetEventIdFromString("event:/mission/combat/pickup_arrows"), agent.Position, Mission.MainAgent.Index);
+                LootableAgents.Remove(agent);
+            }
+        }
         internal void OnObjectUsed(UsablePlace usablePlace)
         {
             switch (Helper.ChooseObjectType(usablePlace.GameEntity.Name))

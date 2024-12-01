@@ -24,7 +24,7 @@ namespace RealmsForgotten.RFLegendaryTroops
         }
         protected void AddGameMenus(CampaignGameStarter campaignGameSystemStarter)
         {
-            campaignGameSystemStarter.AddGameMenuOption("castle", "recruit_volunteers", "{=E31IJyqs}Recruit troops",
+            campaignGameSystemStarter.AddGameMenuOption("castle", "recruit_volunteers", "{=E31IJyqs}Recruit legendary troops",
                 game_menu_castle_recruit_troops_on_condition, game_menu_recruit_volunteers_on_consequence);
         }
         private static bool game_menu_castle_recruit_troops_on_condition(MenuCallbackArgs args)

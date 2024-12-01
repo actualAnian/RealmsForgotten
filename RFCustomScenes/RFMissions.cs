@@ -70,7 +70,9 @@ namespace RealmsForgotten.RFCustomSettlements
                     ViewCreator.CreateMissionFormationMarkerUIHandler(mission),
 
                     SandBoxViewCreator.CreateMissionNameMarkerUIHandler(mission),
-                    SandBoxViewCreator.CreateMissionConversationView(mission)
+                    SandBoxViewCreator.CreateMissionConversationView(mission),
+
+                    //new BehaviorTreeMissionLogic()
                     }, true, true);
             }
         [MissionMethod]

@@ -19,6 +19,10 @@ namespace RealmsForgotten.RFLegendaryTroops
             {"aserai", "legendary_mull"},
             {"giant", "legendary_xilantlacay"},
             {"aqarun", "legendary_aqarun"},
+            {"south_realm", "legendary_southrealm_cavalry"},
+            {"west_realm", "legendary_westrealm_swordsman"},
+            {"mage", "red_mage_elite"},
+            {"dwarf", "legendary_dugrast"},
 
         }; 
         public static CharacterObject ChooseLegendaryTroop(CultureObject culture)

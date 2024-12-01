@@ -52,6 +52,27 @@
       <HintPath>%(Identity)</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="$(GameFolder)\Modules\ServeAsSoldier\bin\Win64_Shipping_Client\*.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(GameFolder)\Modules\Bannerlord.UIExtenderEx\bin\Win64_Shipping_Client\Bannerlord.UIExtenderEx.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="MCMv5">
+      <HintPath>_Module\bin\Win64_Shipping_Client\MCMv5.dll</HintPath>
+    </Reference>
+    <Reference Include="ServeAsSoldier">
+      <HintPath>_Module\bin\Win64_Shipping_Client\ServeAsSoldier.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration" />
+    <Reference Include="T7TroopUnlocker">
+      <HintPath>F:\Nexus Mods\1.2.11\T7TroopUnlockerHarmony for v1.1.X and 1.2.X ONLY-4205-1-0-3-1715852778\T7TroopUnlocker\bin\Win64_Shipping_Client\T7TroopUnlocker.dll</HintPath>
+    </Reference>
+    <Reference Include="T7TroopUnlockerHarmony">
+      <HintPath>F:\Nexus Mods\1.2.11\T7TroopUnlockerHarmony for v1.1.X and 1.2.X ONLY-4205-1-0-3-1715852778\T7TroopUnlocker\bin\Win64_Shipping_Client\T7TroopUnlockerHarmony.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
@@ -64,7 +85,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="_Module\ModuleData\" />
+    <Compile Remove="AiMade\Career\InitializeMercenaryContracts.cs" />
+    <Compile Remove="AiMade\Career\ContractNotificationBehavior.cs" />
+    <Compile Remove="AiMade\Career\MercenaryContractManager.cs" />
+    <Compile Remove="AiMade\Career\ContractorBehavior.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="AiMade\TroopUnlocker\" />
+    <Folder Include="AiMade\Stealth\" />
   </ItemGroup>
 
 </Project>
