@@ -51,8 +51,10 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         private void RunManualPatches()
         {
+            var onFocusGained = AccessTools.Method("AgentInteractionInterfaceVM:OnFocusGained");
             var original = AccessTools.Method("MissionMainAgentInteractionComponent:FocusTick");
             harmony.Patch(original, transpiler: new HarmonyMethod(typeof(MissionMainAgentInteractionComponentFocusTickPatch), nameof(MissionMainAgentInteractionComponentFocusTickPatch.FocusTickPatch)));
+            harmony.Patch(onFocusGained, transpiler: new HarmonyMethod(typeof(AgentInteractionInterfaceVMOnFocusGainedPatch), nameof(AgentInteractionInterfaceVMOnFocusGainedPatch.OnFocusGainedPatch)));
         }
 
         protected override void OnGameStart(Game game, IGameStarter starterObject)

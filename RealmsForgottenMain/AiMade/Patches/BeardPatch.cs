@@ -1,6 +1,7 @@
 ﻿using System.Xml;
 using System.IO;
 using TaleWorlds.Library;
+using System.Linq;
 
 namespace RealmsForgotten.AiMade.Patches
 {
@@ -9,52 +10,43 @@ namespace RealmsForgotten.AiMade.Patches
         private static readonly string SkinFilePath = Path.Combine(BasePath.Name, "Modules", "RF_Races", "ModuleData", "skins.xml");
         private static XmlDocument SkinDocument;
 
-        public static string GetBeardName(int index, int race, int gender)
+        public static string? GetBeardName(int index, int race, int gender)
         {
             if (SkinDocument == null)
                 LoadSkinsXML();
 
             if (SkinDocument != null)
             {
-                var raceList = SkinDocument.GetElementsByTagName("race");
+                XmlNodeList raceList = SkinDocument.GetElementsByTagName("race");
 
                 if (raceList.Count > race)
                 {
-                    var selectedRace = raceList[race];
-                    var genderNodes = selectedRace.ChildNodes;
+                    var dwarfList = raceList.Cast<XmlNode>().Where(node => node.Attributes?["id"]?.Value == "dwarf");
+                    if (dwarfList.Count() != 1) return null;
+                    XmlNode selectedRace = dwarfList.First();
+                    XmlNodeList genderNodes = selectedRace.ChildNodes;
 
                     if (genderNodes.Count > gender)
                     {
-                        var selectedGender = genderNodes.Item(gender);
-                        var beards = selectedGender.SelectNodes("beard_meshes/beard_mesh");
+                        XmlNode selectedGender = genderNodes.Item(gender);
+                        XmlNodeList beards = selectedGender.SelectNodes("beard_meshes/beard_mesh");
 
-                        if (beards.Count > 0 && index < beards.Count)
+                        if (beards.Count > 0 && index < beards.Count && beards[index].Attributes.Count != 0)
                         {
                             return beards[index].Attributes["name"].Value;
                         }
                     }
                 }
             }
-
             return null;
         }
 
         private static void LoadSkinsXML()
         {
-            if (File.Exists(SkinFilePath))
-            {
-                var settings = new XmlReaderSettings { IgnoreComments = true };
-                using (var reader = XmlReader.Create(SkinFilePath, settings))
-                {
-                    SkinDocument = new XmlDocument();
-                    SkinDocument.Load(reader);
-                }
-            }
-            else
-            {
-                // Handle file not found scenario
-                // Optionally log or display an error message
-            }
+            var settings = new XmlReaderSettings { IgnoreComments = true };
+            using XmlReader reader = XmlReader.Create(SkinFilePath, settings);
+            SkinDocument = new XmlDocument();
+            SkinDocument.Load(reader);
         }
     }
 }

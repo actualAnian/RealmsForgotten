@@ -21,7 +21,7 @@ namespace RealmsForgotten.Quest
         [SaveableField(2)]
         private int daysMercenary = 0;
 
-        public static readonly string questSettlement = "town_ES1";
+        public static readonly string questSettlement = "town_EN1";
         private static readonly string QuestGiverId = "south_realm_knight_maester";
         private static readonly string LordsHallLocationId = "lordshall";
         private static readonly string QuestItemId = "rfmisc_western_2hsword_t3_fire";
@@ -81,7 +81,7 @@ namespace RealmsForgotten.Quest
                             LocationCharacter locationCharacter = CreateQuestGiver(settlement.Culture, LocationCharacter.CharacterRelations.Neutral);
                             location.AddCharacter(locationCharacter);
 
-                            InformationManager.DisplayMessage(new InformationMessage("Knight Guild Master has been spawned in the Lord's Hall."));
+                            InformationManager.DisplayMessage(new InformationMessage("Knight Guild Master is currently in the Lord's Chambers."));
                         }
                     }
                 }
@@ -130,39 +130,25 @@ namespace RealmsForgotten.Quest
         private DialogFlow CreateStartQuestDialogFlow()
         {
             return DialogFlow.CreateDialogFlow("start", 125)
-                .NpcLine("Greetings, aspiring knight. Do you wish to prove yourself worthy?", null)
+                .NpcLine("Greetings sir, I suppose you are another aspiring knight... Do you wish to prove yourself worthy?", null)
                 .Condition(() => CharacterObject.OneToOneConversationCharacter?.StringId == "south_realm_knight_maester"
                                 && Settlement.CurrentSettlement != null
                                 && Settlement.CurrentSettlement.StringId == questSettlement
                                 && (quest == null || !quest.IsOngoing && !quest.IsFinalized))
                 .PlayerLine("What must I do to become a knight?")
-                .NpcLine("You must retrieve the Knight's Insignia from a distant temple. Will you accept the challenge?")
+                .NpcLine("You must successfully endure tasks of bravery, honor, loyalty, and mastery in combat to prove your valor. Do you find yourself ready to accept such challenges?")
                 .BeginPlayerOptions()
 
-                .PlayerOption("What is the Knight's Insignia?", null)
-                .NpcLine("It is a sacred relic, symbolizing honor and courage.")
+                .PlayerOption("How do I start?", null)
+                .NpcLine("First, you have to go through the trial of bravery. You have to retrieve the sword of justice, a sacred relic, symbolizing honor and courage.")
                 .BeginPlayerOptions()
-                    .PlayerOption("What do I gain from this?", null)
-                    .NpcLine("You will be granted the title of knight and receive great rewards.")
+                    .PlayerOption("Where do I find it?", null)
+                    .NpcLine("You will have to go to the monastery of the Anorites.")
                     .BeginPlayerOptions()
-                        .PlayerOption("I will retrieve the Knight's Insignia.")
+                        .PlayerOption("I will retrieve the sword.")
                         .Consequence(() => OnStartQuest())
                         .CloseDialog()
-                        .PlayerOption("No, I cannot accept this task.")
-                        .CloseDialog()
-                    .EndPlayerOptions()
-                .EndPlayerOptions()
-
-                .PlayerOption("What do I gain from this?", null)
-                .NpcLine("You will be granted the title of knight and receive great rewards.")
-                .BeginPlayerOptions()
-                    .PlayerOption("What is the Knight's Insignia?", null)
-                    .NpcLine("It is a sacred relic, symbolizing honor and courage.")
-                    .BeginPlayerOptions()
-                        .PlayerOption("I will retrieve the Knight's Insignia.")
-                        .Consequence(() => OnStartQuest())
-                        .CloseDialog()
-                        .PlayerOption("No, I cannot accept this task.")
+                        .PlayerOption("No, I guess I am not up to this task right now.")
                         .CloseDialog()
                     .EndPlayerOptions()
                 .EndPlayerOptions()

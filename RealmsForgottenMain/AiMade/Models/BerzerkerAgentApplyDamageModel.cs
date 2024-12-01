@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.MountAndBlade.ComponentInterfaces;
 using TaleWorlds.MountAndBlade;
+using TaleWorlds.Library;
 
 namespace RealmsForgotten.AiMade.Models
 {
@@ -20,23 +21,25 @@ namespace RealmsForgotten.AiMade.Models
             _previousModel = previousModel;
         }
 
-        // Correct method signature for CalculateDamage
+       
         public override float CalculateDamage(in AttackInformation attackInformation, in AttackCollisionData collisionData, in MissionWeapon weapon, float baseDamage)
         {
-            // Custom logic for Berserker Mode
+           
             if (CustomBerserkerBehavior.berserkerModeActive && IsCustomTroop(attackInformation.VictimAgent))
             {
-                return 0f; // Immunity to damage
+                InformationManager.DisplayMessage(new InformationMessage("Beserker took no damage from hit!", Colors.Cyan));
+                return 0f; 
+                
             }
 
-            // Fall back to the default damage calculation
+           
             return _previousModel.CalculateDamage(in attackInformation, in collisionData, in weapon, baseDamage);
         }
 
         private bool IsCustomTroop(Agent agent)
         {
-            // Logic to determine if the agent is the custom troop
-            return agent.Character?.StringId == "dwarf_berzerker"; // Example troop ID
+            
+            return agent.Character?.StringId == "dwarf_berzerker"; 
         }
     }
 }
