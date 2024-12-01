@@ -39,9 +39,8 @@ namespace RealmsForgotten.Quest
 
             }
             hideout.Settlement.IsVisible = true;
-            
+
         }
-        
         public static void RegisterQuestEvents(object obj)
         {
             CampaignEvents.CanHeroDieEvent.AddNonSerializedListener(obj,
@@ -130,7 +129,7 @@ namespace RealmsForgotten.Quest
                 InformationManager.ShowInquiry(new InquiryData("Error", "Error initializing the quest hero QuestQueen", true, false, GameTexts.FindText("str_done").ToString(), "",
                     null, null), true);
             }
-            
+
         }
     }
 

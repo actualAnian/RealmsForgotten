@@ -96,7 +96,7 @@ namespace RealmsForgotten.Quest
                 isNewGame = false;
             }
         }
-    
+
         private void StartQuest()
         {
             InformationManager.ShowInquiry(new InquiryData(GameTexts.FindText("rf_event").ToString(), GameTexts.FindText("rf_main_quest_start_inquiry_1").ToString(), true, false, new TextObject("{=continue}Continue").ToString(), "", () =>
@@ -229,7 +229,7 @@ namespace RealmsForgotten.Quest
             }
             protected override void SetDialogs()
             {
-    
+
                 QuestCharacterDialogFlow = DialogFlow.CreateDialogFlow("start", 125).NpcLine(GameTexts.FindText("rf_uliah_text_1").ToString(), null, null)
                 .Condition(() => Hero.OneToOneConversationHero == Uliah && JournalEntries.Count == 1).BeginPlayerOptions()
                 .PlayerOption(GameTexts.FindText("rf_uliah_text_2").ToString(), null).NpcLine(GameTexts.FindText("rf_uliah_text_3").ToString(), null, null).GotoDialogState("start").PlayerOption(GameTexts.FindText("rf_uliah_text_4").ToString())
@@ -279,11 +279,8 @@ namespace RealmsForgotten.Quest
             private void SpawnOwlParty()
             {
                 Clan clan = Clan.FindFirst(x => x.StringId == "clan_empire_north_7");
-
-
                 MobileParty mobileParty = LordPartyComponent.CreateLordParty("owl_party", TheOwl, MobileParty.MainParty.Position2D, 1f, QuestGiver.HomeSettlement, TheOwl);
                 mobileParty.MemberRoster.RemoveIf(x => x.Character.HeroObject?.StringId != TheOwl.StringId);
-
                 mobileParty.InitializeMobilePartyAroundPosition(clan.DefaultPartyTemplate, MobileParty.MainParty.Position2D, 1f, 0, 0);
                 mobileParty.StringId = "owl_party";
                 mobileParty.Ai.SetMoveEngageParty(MobileParty.MainParty);
@@ -457,7 +454,7 @@ namespace RealmsForgotten.Quest
                 .Condition(() => Hero.OneToOneConversationHero?.PartyBelongedTo == null && Hero.OneToOneConversationHero?.Clan?.StringId == "hidden_hand").NpcLine(GameTexts.FindText("rf_first_quest_hidden_hand_text_prisoner_2").ToString())
                 .PlayerLine(GameTexts.FindText("rf_first_quest_hidden_hand_text_prisoner_3").ToString()).NpcLine(GameTexts.FindText("rf_first_quest_hidden_hand_text_prisoner_4").ToString());
             private DialogFlow PlayerDeliverPrisonersToQueen() => DialogFlow.CreateDialogFlow("start", 125).PlayerLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_1").ToString())
-                .Condition(() => PlayerHavePrisoners && !_refusedQueenMapQuest).NpcLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_2").ToString())
+                    .Condition(() => PlayerHavePrisoners && !_refusedQueenMapQuest).NpcLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_2").ToString())
                 .PlayerLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_3").ToString()).NpcLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_4").ToString()).PlayerLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_5").ToString())
                 .NpcLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_6").ToString()).NpcLine(GameTexts.FindText("rf_first_quest_player_deliver_prisoners_text_7").ToString()).Consequence(DeliverPrisonersToQueen)
                 .BeginPlayerOptions()

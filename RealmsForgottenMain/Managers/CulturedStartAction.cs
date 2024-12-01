@@ -10,6 +10,7 @@ using TaleWorlds.CampaignSystem.GameState;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
+using TaleWorlds.Library;
 using TaleWorlds.ObjectSystem;
 using static RealmsForgotten.Globals;
 
@@ -40,7 +41,11 @@ namespace RealmsForgotten.Managers
                 ["battania"] = "player_char_creation_default",
                 ["vlandia"] = "player_char_creation_default",
                 ["giant"] = "rf_xilan_default",
-                ["aqarun"] = "rf_aqarun_default"
+                ["aqarun"] = "rf_aqarun_default",
+                ["south_realm"] = "player_char_creation_default",
+                ["west_realm"] = "player_char_creation_default",
+                ["mage"] = "player_char_creation_default",
+                ["dwarf"] = "player_char_creation_default",
             },
             [StartType.Merchant] = new Dictionary<string, string>
             {
@@ -51,7 +56,11 @@ namespace RealmsForgotten.Managers
                 ["battania"] = "rf_elvean_merchant",
                 ["vlandia"] = "merchant_start_vlandia",
                 ["giant"] = "merchant_start_xilan",
-                ["aqarun"] = "merchant_start_aqarun"
+                ["aqarun"] = "merchant_start_aqarun",
+                ["south_realm"] = "merchant_start_empire",
+                ["west_realm"] = "merchant_start_empire",
+                ["mage"] = "merchant_start_empire",
+                ["dwarf"] = "merchant_start_sturgia",
             },
             [StartType.Exiled] = new Dictionary<string, string>
             {
@@ -62,7 +71,11 @@ namespace RealmsForgotten.Managers
                 ["battania"] = "rf_exiled_equip",
                 ["vlandia"] = "rf_exiled_equip",
                 ["giant"] = "rf_exiled_equip",
-                ["aqarun"] = "rf_exiled_equip"
+                ["aqarun"] = "rf_exiled_equip",
+                ["south_realm"] = "rf_exiled_equip",
+                ["west_realm"] = "rf_exiled_equip",
+                ["mage"] = "rf_exiled_equip",
+                ["dwarf"] = "rf_exiled_equip",
             },
             [StartType.EscapedPrisoner] = new Dictionary<string, string>
             {
@@ -73,7 +86,11 @@ namespace RealmsForgotten.Managers
                 ["battania"] = "rf_elvean_mistic",
                 ["vlandia"] = "rf_nasoria_mistic",
                 ["giant"] = "rf_giant_mistic",
-                ["aqarun"] = "rf_aqarun_mistic"
+                ["aqarun"] = "rf_aqarun_mistic",
+                ["south_realm"] = "rf_empire_mistic",
+                ["west_realm"] = "rf_empire_mistic",
+                ["mage"] = "rf_empire_mistic",
+                ["dwarf"] = "rf_sturgia_mistic",
             },
             [StartType.Looter] = new Dictionary<string, string>
             {
@@ -84,7 +101,11 @@ namespace RealmsForgotten.Managers
                 ["battania"] = "rf_looter",
                 ["vlandia"] = "rf_looter",
                 ["giant"] = "rf_looter",
-                ["aqarun"] = "rf_looter"
+                ["aqarun"] = "rf_looter",
+                ["south_realm"] = "rf_looter",
+                ["west_realm"] = "rf_looter",
+                ["mage"] = "rf_looter",
+                ["dwarf"] = "rf_looter",
             },
             [StartType.Mercenary] = new Dictionary<string, string>
             {
@@ -95,7 +116,11 @@ namespace RealmsForgotten.Managers
                 ["battania"] = "merc_elvean_start",
                 ["vlandia"] = "merc_nasoria_start",
                 ["giant"] = "merc_giant_start",
-                ["aqarun"] = "merc_athas_start"
+                ["aqarun"] = "merc_athas_start",
+                ["south_realm"] = "merc_realms_start",
+                ["west_realm"] = "merc_realms_start",
+                ["mage"] = "merc_realms_start",
+                ["dwarf"] = "merc_dwarf_start",
             },
             [StartType.VassalNoFief] = new Dictionary<string, string>
             {
@@ -106,7 +131,26 @@ namespace RealmsForgotten.Managers
                 ["battania"] = "elvean_vassal_nofief",
                 ["vlandia"] = "nasoria_vassal_nofief",
                 ["giant"] = "giant_vassal_nofief",
-                ["aqarun"] = "vassalnofief_aqarun_start"
+                ["aqarun"] = "vassalnofief_aqarun_start",
+                ["south_realm"] = "realms_vassal_nofief",
+                ["west_realm"] = "realms_vassal_nofief",
+                ["mage"] = "realms_vassal_nofief",
+                ["dwarf"] = "dwarf_vassal_nofief",
+            },
+            [StartType.VassalFief] = new Dictionary<string, string>
+            {
+                ["aserai"] = "athas_vassal_nofief_equip",
+                ["empire"] = "realms_vassal_nofief",
+                ["khuzait"] = "khuzait_vassal_nofief",
+                ["sturgia"] = "dreadrealms_vassal_nofief",
+                ["battania"] = "elvean_vassal_nofief",
+                ["vlandia"] = "nasoria_vassal_nofief",
+                ["giant"] = "giant_vassal_nofief",
+                ["aqarun"] = "vassalnofief_aqarun_start",
+                ["south_realm"] = "realms_vassal_nofief",
+                ["west_realm"] = "realms_vassal_nofief",
+                ["mage"] = "realms_vassal_nofief",
+                ["dwarf"] = "dwarf_vassal_ursurper",
             },
             [StartType.KingdomRuler] = new Dictionary<string, string>
             {
@@ -117,7 +161,11 @@ namespace RealmsForgotten.Managers
                 ["battania"] = "king_elvean_start",
                 ["vlandia"] = "king_nasoria_start",
                 ["giant"] = "king_giant_start",
-                ["aqarun"] = "king_aqarun_start"
+                ["aqarun"] = "king_aqarun_start",
+                ["south_realm"] = "king_realms_start",
+                ["west_realm"] = "king_realms_start",
+                ["mage"] = "king_realms_start",
+                ["dwarf"] = "king_dwarf_start",
             },
             [StartType.CastleRuler] = new Dictionary<string, string>
             {
@@ -128,19 +176,12 @@ namespace RealmsForgotten.Managers
                 ["battania"] = "vassal_elvean_start",
                 ["vlandia"] = "vassal_nasoria_start",
                 ["giant"] = "vassal_giant_start",
-                ["aqarun"] = "vassal_aqarun_start"
-            },
-            [StartType.VassalFief] = new Dictionary<string, string>
-            {
-                ["aserai"] = "ruler_athas_start",
-                ["empire"] = "ruler_realms_start",
-                ["khuzait"] = "ruler_allkhuur_start",
-                ["sturgia"] = "ruler_dreadrealms_start",
-                ["battania"] = "lord_elvean_start",
-                ["vlandia"] = "ruler_nasoria_start",
-                ["giant"] = "ruler_giant_start",
-                ["aqarun"] = "ruler_aqarun_start"
-            },
+                ["aqarun"] = "vassal_aqarun_start",
+                ["south_realm"] = "vassal_realms_start",
+                ["west_realm"] = "vassal_realms_start",
+                ["mage"] = "vassal_realms_start",
+                ["dwarf"] = "vassal_vortiak_start",
+            }
         };
         public static readonly Dictionary<(string Culture, StartType StartOption), List<TroopSpawnInfo>> CultureStartTypeToTroops = new()
         {
@@ -452,8 +493,140 @@ namespace RealmsForgotten.Managers
                 new TroopSpawnInfo("Aqarun_cavalry_master", 3),
                 new TroopSpawnInfo("Aqarun_archer", 2) }},
 
+            { ("south_realm", StartType.Merchant), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("empire_trader", 4),
+                new TroopSpawnInfo("empire_recruit", 8),
+                new TroopSpawnInfo("empire_archer", 4) }},
 
-    };
+            { ("south_realm", StartType.Exiled), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("imperial_recruit", 4),
+                 new TroopSpawnInfo("imperial_archer", 2) }},
+
+            { ("south_realm", StartType.EscapedPrisoner), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("looter", 2) }},
+
+            { ("south_realm", StartType.Looter), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("looter", 8) }},
+
+            { ("south_realm", StartType.Mercenary), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("mercenary_volunteer", 10) }},
+
+            { ("south_realm", StartType.VassalNoFief), new List<TroopSpawnInfo> {
+                 new TroopSpawnInfo("imperial_legionary", 10),
+                new TroopSpawnInfo("imperial_palatine_guard", 5),
+                new TroopSpawnInfo("imperial_cataphract", 3) }},
+
+            { ("south_realm", StartType.KingdomRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("imperial_legionary", 20),
+                new TroopSpawnInfo("imperial_palatine_guard", 10),
+                new TroopSpawnInfo("imperial_cataphract", 10) }},
+
+            { ("south_realm", StartType.CastleRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("imperial_legionary", 15),
+                new TroopSpawnInfo("imperial_palatine_guard", 10),
+                new TroopSpawnInfo("imperial_cataphract", 5) }},
+
+            { ("south_realm", StartType.VassalFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("imperial_legionary", 10),
+                new TroopSpawnInfo("imperial_palatine_guard", 5),
+                new TroopSpawnInfo("imperial_cataphract", 5) }},
+            { ("west_realm", StartType.CastleRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("imperial_legionary", 15),
+                new TroopSpawnInfo("imperial_palatine_guard", 10),
+                new TroopSpawnInfo("imperial_cataphract", 5) }},
+            { ("west_realm", StartType.EscapedPrisoner), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("looter", 2) }},
+            { ("west_realm", StartType.Exiled), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("imperial_recruit", 4),
+                new TroopSpawnInfo("imperial_archer", 2) }},
+            { ("west_realm", StartType.KingdomRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("imperial_legionary", 20),
+                new TroopSpawnInfo("imperial_palatine_guard", 10),
+                new TroopSpawnInfo("imperial_cataphract", 10) }},
+            { ("west_realm", StartType.Looter), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("looter", 8) }},
+            { ("west_realm", StartType.Mercenary), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("mercenary_volunteer", 10) }},
+            { ("west_realm", StartType.Merchant), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("empire_trader", 4),
+                new TroopSpawnInfo("empire_recruit", 8),
+                new TroopSpawnInfo("empire_archer", 4) }},
+            { ("west_realm", StartType.VassalFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("imperial_legionary", 10),
+                new TroopSpawnInfo("imperial_palatine_guard", 5),
+                new TroopSpawnInfo("imperial_cataphract", 5) }},
+            { ("west_realm", StartType.VassalNoFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("imperial_legionary", 10),
+                new TroopSpawnInfo("imperial_palatine_guard", 5),
+                new TroopSpawnInfo("imperial_cataphract", 3) }},
+            { ("mage", StartType.CastleRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("imperial_legionary", 15),
+                new TroopSpawnInfo("imperial_palatine_guard", 10),
+                new TroopSpawnInfo("imperial_cataphract", 5) }},
+            { ("mage", StartType.EscapedPrisoner), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("looter", 2) }},
+            { ("mage", StartType.Exiled), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("imperial_recruit", 4),
+                new TroopSpawnInfo("imperial_archer", 2) }},
+            { ("mage", StartType.KingdomRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("imperial_legionary", 20),
+                new TroopSpawnInfo("imperial_palatine_guard", 10),
+                new TroopSpawnInfo("imperial_cataphract", 10) }},
+            { ("mage", StartType.Looter), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("looter", 8) }},
+            { ("mage", StartType.Mercenary), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("mercenary_volunteer", 10) }},
+            { ("mage", StartType.Merchant), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("empire_trader", 4),
+                new TroopSpawnInfo("empire_recruit", 8),
+                new TroopSpawnInfo("empire_archer", 4) }},
+            { ("mage", StartType.VassalFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("imperial_legionary", 10),
+                new TroopSpawnInfo("imperial_palatine_guard", 5),
+                new TroopSpawnInfo("imperial_cataphract", 5) }},
+            { ("mage", StartType.VassalNoFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("imperial_legionary", 10),
+                new TroopSpawnInfo("imperial_palatine_guard", 5),
+                new TroopSpawnInfo("imperial_cataphract", 3) }},
+             { ("dwarf", StartType.Merchant), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("merchant_dwarf", 4),
+                new TroopSpawnInfo("dwarf_troop", 8),
+                new TroopSpawnInfo("dwarf_militia_veteran_archer", 4) }},
+
+            { ("dwarf", StartType.Exiled), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("dwarf_troop", 4),
+                new TroopSpawnInfo("dwarf_levy_crossbowman", 2) }},
+
+            { ("dwarf", StartType.EscapedPrisoner), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("dwarf_troop", 5) }},
+
+            { ("dwarf", StartType.Looter), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("dwarf_looter", 8) }},
+
+            { ("dwarf", StartType.Mercenary), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("dwarf_mercenary_volunteer", 10) }},
+
+            { ("dwarf", StartType.VassalNoFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("dwarf_heavy_spearman", 10),
+                new TroopSpawnInfo("dwarf_hardened_crossbowman", 5),
+                new TroopSpawnInfo("dwarf_exp_cavalry", 3) }},
+
+            { ("dwarf", StartType.KingdomRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("dwarf_veteran_warrior", 20),
+                new TroopSpawnInfo("dwarf_sharpshooter", 10),
+                new TroopSpawnInfo("dugrast_druzhinnik", 10) }},
+
+            { ("dwarf", StartType.CastleRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("dwarf_heavy_spearman", 15),
+                new TroopSpawnInfo("dwarf_hardened_crossbowman", 10),
+                new TroopSpawnInfo("dwarf_exp_cavalry", 5) }},
+
+            { ("dwarf", StartType.VassalFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("dwarf_heavy_spearman", 10),
+                new TroopSpawnInfo("dwarf_hardened_crossbowman", 5),
+                new TroopSpawnInfo("dugrast_druzhinnik", 5) }},
+
+             };
 
         public static List<TroopSpawnInfo> GetTroopsForStartOption(string culture, StartType startOption)
         {
@@ -511,6 +684,18 @@ namespace RealmsForgotten.Managers
                     break;
                 case 11:
                     startingSettlement = Settlement.Find("town_A5");
+                    break;
+                case 12:
+                    startingSettlement = Settlement.Find("town_ES1");
+                    break;
+                case 13:
+                    startingSettlement = Settlement.Find("town_EW1");
+                    break;
+                case 14:
+                    startingSettlement = Settlement.Find("town_EM1");
+                    break;
+                case 15:
+                    startingSettlement = Settlement.Find("town_dwarf_1");
                     break;
                 default:
                     break;
@@ -586,7 +771,7 @@ namespace RealmsForgotten.Managers
                                             // Dynamically retrieve troops for the castle ruler start based on the hero's culture
                     Console.WriteLine("Processing Default start option");
                     List<TroopSpawnInfo> castleRulerTroops = GetTroopsForStartOption(mainHero.Culture.StringId, StartType.CastleRuler);
-                    ApplyInternal(mainHero, gold: 60000, grain: 30, tier: 3, troops: castleRulerTroops, companions: 1, companionParties: 1, startingSettlement: startingSettlement, startOption: StartType.CastleRuler);
+                    ApplyInternal(mainHero, gold: 60000, grain: 30, tier: 3, troops: castleRulerTroops, companions: 1, companionParties: 1, startingSettlement: startingSettlement, ruler: ruler, startOption: StartType.CastleRuler);
                     ownedSettlement ??= Settlement.All.Where(settlement => settlement.Culture == mainHero.Culture && settlement.IsCastle).GetRandomElementInefficiently();
                     break;
 
@@ -601,7 +786,8 @@ namespace RealmsForgotten.Managers
                 case StartType.EscapedPrisoner: // Escaped Prisoner
                                                 // No troops to assign for Escaped Prisoner, but applying other effects
                     Console.WriteLine("Processing Default start option");
-                    ApplyInternal(mainHero, gold: 2000, grain: 10, startOption: StartType.EscapedPrisoner);
+                    List<TroopSpawnInfo> escapedPrisonerTroops = GetTroopsForStartOption(mainHero.Culture.StringId, StartType.EscapedPrisoner);
+                    ApplyInternal(mainHero, gold: 3000, grain: 10, startOption: StartType.EscapedPrisoner);
                     if (captor != null)
                     {
                         CharacterRelationManager.SetHeroRelation(mainHero, captor, -50);
@@ -646,16 +832,37 @@ namespace RealmsForgotten.Managers
                                             where character.Occupation == Occupation.Wanderer && character.Culture == mainHero.Culture
                                             select character).GetRandomElementInefficiently();
                 Settlement randomSettlement = (from settlement in Settlement.All
-                                               where settlement.Culture == wanderer.Culture && settlement.IsTown
+                                               where settlement.Culture == wanderer?.Culture && settlement.IsTown
                                                select settlement).GetRandomElementInefficiently();
+
+                if (wanderer == null)
+                {
+                    InformationManager.DisplayMessage(new InformationMessage("CULTURED START WANDERER ERROR", Colors.Red));
+                    break;
+                }
+                
                 Hero companion = HeroCreator.CreateSpecialHero(wanderer, randomSettlement, null, null, 33);
 
                 companion.Clan = randomSettlement.OwnerClan;
                 companion.ChangeState(Hero.CharacterStates.Active);
                 if (startOption == StartType.KingdomRuler || startOption == StartType.CastleRuler || startOption == StartType.VassalFief) // gives companions noble equipment
                 {
-                    companion.BattleEquipment.FillFrom(Campaign.Current.Models.EquipmentSelectionModel.GetEquipmentRostersForHeroComeOfAge(companion, false)[0].AllEquipments.GetRandomElement());
-                    companion.CivilianEquipment.FillFrom(Campaign.Current.Models.EquipmentSelectionModel.GetEquipmentRostersForHeroComeOfAge(companion, true)[0].AllEquipments.GetRandomElement());
+                    try
+                    {
+                        companion.BattleEquipment.FillFrom(Campaign.Current.Models.EquipmentSelectionModel.GetEquipmentRostersForHeroComeOfAge(companion, false)[0].AllEquipments.GetRandomElement());
+                    }
+                    catch (Exception e)
+                    {
+                        InformationManager.DisplayMessage(new InformationMessage("ERROR FILLING EQUIPMENT ON COMPANION", Colors.Red));
+                    }
+                    try
+                    {
+                        companion.CivilianEquipment.FillFrom(Campaign.Current.Models.EquipmentSelectionModel.GetEquipmentRostersForHeroComeOfAge(companion, true)[0].AllEquipments.GetRandomElement());
+                    }
+                    catch (Exception e)
+                    {
+                        InformationManager.DisplayMessage(new InformationMessage("ERROR FILLING EQUIPMENT ON COMPANION", Colors.Red));
+                    }
                 }
                 AddCompanionAction.Apply(Clan.PlayerClan, companion);
                 AddHeroToPartyAction.Apply(companion, mainHero.PartyBelongedTo, false);
@@ -665,17 +872,27 @@ namespace RealmsForgotten.Managers
                     MobilePartyHelper.CreateNewClanMobileParty(companion, mainHero.Clan, out bool fromMainclan);
                 }
             }
-            if (ruler != null)
+            if (ruler != null && Clan.PlayerClan.Kingdom == null)
             {
                 CharacterRelationManager.SetHeroRelation(mainHero, ruler, 10);
                 ChangeKingdomAction.ApplyByJoinToKingdom(mainHero.Clan, ruler.Clan.Kingdom, false);
                 mainHero.Clan.Influence = 10;
-            }
+                
+                if (startOption == StartType.KingdomRuler && mainHero.Clan.Kingdom?.Leader != mainHero)
+                {
+                    Campaign.Current.KingdomManager.CreateKingdom(mainHero.Clan.Name, mainHero.Clan.InformalName, mainHero.Clan.Culture, mainHero.Clan);
+                    mainHero.Clan.Influence = 100;
+                }
+                else if (startOption == StartType.CastleRuler)
+                {
+                    Settlement settlement =
+                        mainHero.Clan.Kingdom.Settlements.GetRandomElementWithPredicate(settlement =>
+                            settlement.IsCastle);
+                
+                    ChangeOwnerOfSettlementAction.ApplyByDefault(mainHero, settlement);
 
-            if (startOption == StartType.KingdomRuler || startOption == StartType.CastleRuler)
-            {
-                Campaign.Current.KingdomManager.CreateKingdom(mainHero.Clan.Name, mainHero.Clan.InformalName, mainHero.Clan.Culture, mainHero.Clan);
-                mainHero.Clan.Influence = 100;
+                    startingSettlement = settlement;
+                }
             }
         }
 

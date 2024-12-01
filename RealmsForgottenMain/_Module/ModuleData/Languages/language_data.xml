@@ -4,4 +4,5 @@
 	<LanguageFile xml_path="str_quest.xml" />
 	<LanguageFile xml_path="str_skills.xml" />
 	<LanguageFile xml_path="str_vendor.xml" />
+	<LanguageFile xml_path="religions.xml" />
 </LanguageData>

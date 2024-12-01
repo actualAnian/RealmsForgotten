@@ -20,7 +20,6 @@ namespace RealmsForgotten.Quest
 
         public static void PatchAll()
         {
-
             SubModule.harmony.Patch(AccessTools.Method(typeof(Hero), "CanHaveQuestsOrIssues"), postfix: new HarmonyMethod(typeof(HeroPatches), nameof(HeroPatches.CanHaveQuestsOrIssuesPostfix)));
             SubModule.harmony.Patch(AccessTools.Method(typeof(PrisonerReleaseCampaignBehavior), "DailyHeroTick"), prefix: new HarmonyMethod(typeof(PrisonerReleaseCampaignBehaviorPatches), nameof(PrisonerReleaseCampaignBehaviorPatches.Prefix)));
             SubModule.harmony.Patch(AccessTools.Method(typeof(DisbandArmyAction), "ApplyInternal"), prefix: new HarmonyMethod(typeof(AvoidArmyDispersePatch), nameof(AvoidArmyDispersePatch.Prefix)));
@@ -29,7 +28,6 @@ namespace RealmsForgotten.Quest
             SubModule.harmony.Patch(AccessTools.Method(typeof(EncounterGameMenuBehavior), "game_menu_encounter_leave_your_soldiers_behind_on_condition"), postfix: new HarmonyMethod(typeof(AvoidPlayerDontFightingPatch), nameof(AvoidPlayerDontFightingPatch.game_menu_encounter_leave_your_soldiers_behind_on_condition_postfix)));
             SubModule.harmony.Patch(AccessTools.Method(typeof(EncounterGameMenuBehavior), "game_menu_encounter_surrender_on_condition"), postfix: new HarmonyMethod(typeof(AvoidPlayerDontFightingPatch), nameof(AvoidPlayerDontFightingPatch.game_menu_encounter_surrender_on_condition_postfix)));
             SubModule.harmony.Patch(AccessTools.Method(typeof(BanditsCampaignBehavior), "bandit_start_barter_condition"), postfix: new HarmonyMethod(typeof(AvoidBarterPatch), nameof(AvoidBarterPatch.Postfix)));
-
         }
 
         public static class AvoidPlayerDontFightingPatch
@@ -68,12 +66,20 @@ namespace RealmsForgotten.Quest
                     __result = false;
             }
         }
-        private static class HeroPatches
+
+        // Make this class public so it can be accessed in the PatchAll method
+        public static class HeroPatches
         {
             public static void CanHaveQuestsOrIssuesPostfix(ref bool __result, Hero __instance)
             {
-                if (Kingdom.All?.First(x => x?.StringId == "empire").Leader?.Spouse?.HomeSettlement?.Notables[0]?.StringId == __instance.StringId)
+                var empireKingdom = Kingdom.All?.FirstOrDefault(x => x?.StringId == "empire");
+
+                if (empireKingdom?.Leader?.Spouse?.HomeSettlement?.Notables != null
+                    && empireKingdom.Leader.Spouse.HomeSettlement.Notables.Count > 0
+                    && empireKingdom.Leader.Spouse.HomeSettlement.Notables[0].StringId == __instance.StringId)
+                {
                     __result = false;
+                }
             }
         }
 

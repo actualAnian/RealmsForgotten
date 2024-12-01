@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+	<Platforms>x64</Platforms>
+	<LangVersion>10.0</LangVersion>
+	<Nullable>enable</Nullable>
+    <GameFolder>$(BANNERLORD_GAME_DIR)</GameFolder>
+    <Configurations>Debug;Release;a</Configurations>
+  </PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\RealmsForgottenMain\RealmsForgotten.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="$(GameFolder)\Modules\SandBox\bin\Win64_Shipping_Client\*.dll">
+			<HintPath>%(Identity)</HintPath>
+			<Private>False</Private>
+		</Reference>
+
+		<Reference Include="$(GameFolder)\Modules\Native\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.View.dll">
+			<HintPath>%(Identity)</HintPath>
+			<Private>False</Private>
+		</Reference>
+
+		<Reference Include="$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.*.dll">
+			<HintPath>%(Identity)</HintPath>
+			<Private>False</Private>
+		</Reference>
+
+		<Reference Include="$(GameFolder)\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCMv5.dll">
+			<HintPath>%(Identity)</HintPath>
+			<Private>False</Private>
+		</Reference>
+
+		<Reference Include="Marching">
+		  <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Marching\bin\Win64_Shipping_Client\Marching.dll</HintPath>
+		</Reference>
+
+		<Reference Include="MCMv5">
+		  <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\RealmsForgotten\bin\Win64_Shipping_Client\MCMv5.dll</HintPath>
+		</Reference>
+	
+	</ItemGroup>
+
+</Project>

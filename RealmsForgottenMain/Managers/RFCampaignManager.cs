@@ -37,6 +37,11 @@ namespace RealmsForgotten.Managers
             base.OnGameEnd(game);
         }
 
+        public override void OnGameInitializationFinished(Game game)
+        {
+            base.OnGameInitializationFinished(game);
+        }
+
         protected override void DoLoadingForGameManager(GameManagerLoadingSteps gameManagerLoadingStep, out GameManagerLoadingSteps nextStep)
         {
             nextStep = GameManagerLoadingSteps.None;
@@ -145,6 +150,8 @@ namespace RealmsForgotten.Managers
             Game.Current.GameStateManager.CleanAndPushState(gameState);
         }
 
-        public override void OnAfterCampaignStart(Game game) {}
+        public override void OnAfterCampaignStart(Game game)
+        {
+        }
     }
 }

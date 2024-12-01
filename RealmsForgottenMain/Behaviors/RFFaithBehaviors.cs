@@ -111,14 +111,6 @@ namespace RealmsForgotten.Behaviors
                 args.optionLeaveType = GameMenuOption.LeaveType.Submenu;
                 return true;
             }, args => GameMenu.SwitchToMenu("town_temple"), false, 4);
-
-            campaignGameStarter.AddGameMenuOption("town_temple", "donate_to_temple",
-    "{=donate_to_temple}Donate to temple", args =>
-            {
-                args.optionLeaveType = GameMenuOption.LeaveType.Bribe;
-                return true;
-            },
-    args => OpenTempleDonation());
             
             campaignGameStarter.AddGameMenuOption("town_temple", "go_back", "{=qWAmxyYz}Back to town center", args =>
             {
@@ -153,7 +145,6 @@ namespace RealmsForgotten.Behaviors
             ScreenManager.TopScreen.AddLayer(_layer);
             ScreenManager.TrySetFocus(_layer);
             _dataSource.RefreshValues();
-
         }
         
         private void OnMapEventEnd(MapEvent mapEvent)

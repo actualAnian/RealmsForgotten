@@ -43,7 +43,7 @@ namespace RealmsForgotten
         }
         private void InitializeAll()
         {
-            athasFasterConstructions.Initialize("{=!}athas_faster_constructions", "{=athas_faster_constructions}Due to slavery constructions are build 20% faster.", 0.20f, true, FeatObject.AdditionType.AddFactor);
+            athasFasterConstructions.Initialize("{=!}athas_faster_constructions", "{=athas_faster_constructions}Constructions are build 20% faster.", 0.20f, true, FeatObject.AdditionType.AddFactor);
 
             elveanForestMorale.Initialize("{=!}elvean_forest_morale_bonus", "{=elvean_forest_morale_bonus}15% bonus to morale in forests.", 0.15f, true, FeatObject.AdditionType.AddFactor);
 

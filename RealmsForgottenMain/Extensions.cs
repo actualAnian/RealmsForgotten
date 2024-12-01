@@ -22,6 +22,11 @@ namespace RealmsForgotten
             SkillHelper.AddSkillBonusForCharacter(RFSkills.Faith, RFSkillEffects.FaithPerkMultiplier, hero, ref explainedNumber);
             return explainedNumber.ResultNumber;
         }
+        
+        public static TBaseModel GetExistingModel<TBaseModel>(this IGameStarter campaignGameStarter) where TBaseModel : GameModel
+        {
+            return (TBaseModel)campaignGameStarter.Models.Last(model => model.GetType().IsSubclassOf(typeof(TBaseModel)));
+        }
         public static T RandomElementByWeight<T>(this Dictionary<T, int> dictionary, Func<KeyValuePair<T, int>, int> weightSelector)
         {
             int totalWeight = dictionary.Sum(weightSelector);

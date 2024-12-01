@@ -27,7 +27,7 @@ namespace RFCustomSettlements
             { 
                 if(_arenaSettlementStateHandler == null)
                 {
-                    _arenaSettlementStateHandler = (ArenaSettlementStateHandler)(arenaSettlement.SettlementComponent as RFCustomSettlement).StateHandler;
+                    _arenaSettlementStateHandler = (ArenaSettlementStateHandler)(arenaSettlement?.SettlementComponent as RFCustomSettlement).StateHandler;
                 }
                 return _arenaSettlementStateHandler;
             }
@@ -51,7 +51,7 @@ namespace RFCustomSettlements
         {
             //this.AddDialogs(campaignGameStarter); 
             this.AddGameMenus(campaignGameStarter); 
-            arenaSettlement = Settlement.All.Single(s => s.SettlementComponent is RFCustomSettlement settlement && settlement.StateHandler is ArenaSettlementStateHandler);
+            arenaSettlement = Settlement.All.FirstOrDefault(s => s.SettlementComponent is RFCustomSettlement settlement && settlement.StateHandler is ArenaSettlementStateHandler);
         }
         private void AddGameMenus(CampaignGameStarter campaignGameStarter)
         {

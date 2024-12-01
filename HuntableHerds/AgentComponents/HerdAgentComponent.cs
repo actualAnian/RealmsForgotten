@@ -1,16 +1,16 @@
-﻿using RealmsForgotten.HuntableHerds.Models;
+﻿using HuntableHerds.Models;
+using RealmsForgotten.HuntableHerds.Models;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.HuntableHerds.AgentComponents {
-    public class HerdAgentComponent : AgentComponent {
-        private ItemRoster itemDrops;
+    public class HerdAgentComponent : LootableAgentComponent {
 
-		public HerdAgentComponent(Agent agent) : base(agent) {
+		public HerdAgentComponent(Agent agent) : base(agent, HerdBuildData.CurrentHerdBuildData.GetCopyOfItemDrops()) {
             agent.Health = HerdBuildData.CurrentHerdBuildData.StartingHealth;
-            itemDrops = HerdBuildData.CurrentHerdBuildData.GetCopyOfItemDrops();
+            ;
 		}
 
         public override void OnTickAsAI(float dt) {
@@ -27,15 +27,6 @@ namespace RealmsForgotten.HuntableHerds.AgentComponents {
 
             GoToPositionOppositeFromOtherAgent(affectorAgent);
         }
-
-        public ItemRoster GetItemDrops() {
-            return itemDrops;
-        }
-
-        public void ClearItemDrops() {
-            itemDrops.Clear();
-        }
-
         public void SetMoveToPosition(WorldPosition position, bool addHumanLikeDelay = false, Agent.AIScriptedFrameFlags flags = Agent.AIScriptedFrameFlags.None) {
             this.Agent.SetScriptedPosition(ref position, addHumanLikeDelay, flags);
         }

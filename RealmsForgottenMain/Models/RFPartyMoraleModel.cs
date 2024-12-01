@@ -7,6 +7,7 @@ using RealmsForgotten.Behaviors;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 
@@ -14,6 +15,12 @@ namespace RealmsForgotten.Models
 {
     internal class RFPartyMoraleModel : DefaultPartyMoraleModel
     {
+        private PartyMoraleModel _previousModel;
+        
+        public RFPartyMoraleModel(PartyMoraleModel previousModel)
+        {
+            _previousModel = previousModel;
+        }
         public bool IsPartyBandit(MobileParty party)
         {
             try
@@ -30,11 +37,11 @@ namespace RealmsForgotten.Models
             ExplainedNumber baseNumber;
             try
             {
-                baseNumber = base.GetEffectivePartyMorale(party, includeDescription);
+                baseNumber = _previousModel.GetEffectivePartyMorale(party, includeDescription);
             }
             catch (Exception ex)
             {
-                return party.MoraleExplained;
+                return new ExplainedNumber(50);
             }
 
             if (party.PartyComponent?.MobileParty == null)
@@ -44,14 +51,20 @@ namespace RealmsForgotten.Models
 
             try
             {
-                //Tlachiquiy
+                // Tlachiquiy
                 if (!IsPartyBandit(party) && party.Owner?.CharacterObject.Race == FaceGen.GetRaceOrDefault("tlachiquiy") &&
                     baseNumber.ResultNumber < 100)
                     baseNumber = new ExplainedNumber(100, true, new TextObject("{=tc_boldness}Tlachiquiy's Boldness"));
 
-                //Elvean
                 if (party?.Party?.Culture == null)
                     return baseNumber;
+
+                // Dwarf
+                if (party.Party.Culture.StringId == "dwarf")
+                {
+                    baseNumber = new ExplainedNumber(100, true, new TextObject("{=dwarf_unbreakable_morale}Dwarven Unbreakable Morale"));
+                    return baseNumber;
+                }
             }
             catch (Exception e)
             {
@@ -70,8 +83,6 @@ namespace RealmsForgotten.Models
                 float moraleFactor = amount * 0.015f;
                 baseNumber.AddFactor(moraleFactor, new TextObject("{=priest_morale_bonus}Priests Morale Bonus"));
             }
-            
-            
             return baseNumber;
         }
     }
