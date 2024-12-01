@@ -56,7 +56,6 @@ namespace RealmsForgotten.AiMade
 
         private void OnDailyTick()
         {
-            InformationManager.DisplayMessage(new InformationMessage("Daily Tick Triggered", Colors.Green)); // Debug message
             CheckAndSpawnBanditParties();
         }
 
