@@ -37,6 +37,7 @@ using TaleWorlds.Library;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.MountAndBlade.ComponentInterfaces;
+using RealmsForgotten.AiMade.Patches;
 
 namespace RealmsForgotten
 {
@@ -103,6 +104,7 @@ namespace RealmsForgotten
                 
                 AiSubModule.AddCampaignBehaviors(campaignGameStarter);
                 AiSubModule.InitializeCareerSystem();
+
 
                 ReadConfigFile();
             }
@@ -191,8 +193,10 @@ namespace RealmsForgotten
         {
 #pragma warning disable BHA0003 // Type was not found
             MethodInfo originalMethod = AccessTools.Method("PartyVM:PopulatePartyListLabel");
+//            MethodInfo beardGetterMethod = AccessTools.Method("FaceGenVM:UpdateRaceAndGenderBasedResources");
 #pragma warning restore BHA0003 // Type was not found
             harmony.Patch(originalMethod, transpiler: new HarmonyMethod(typeof(PartyVMPatch), nameof(PartyVMPatch.PartyVMPopulatePartyListLabelPatch)));
+  //          harmony.Patch(beardGetterMethod, transpiler: new HarmonyMethod(typeof(PartyVMPatch), nameof(PartyVMPatch.PartyVMPopulatePartyListLabelPatch)));
 
             QuestPatches.PatchAll();
 
@@ -211,7 +215,7 @@ namespace RealmsForgotten
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
-            harmony.PatchAll(); // Ensure Harmony patches are applied
+            harmony.PatchAll();
 
             TextObject coreContentDisabledReason = new("Disabled during installation.", null);
             UIConfig.DoNotUseGeneratedPrefabs = true;
@@ -223,7 +227,6 @@ namespace RealmsForgotten
                 () => MBGameManager.StartNewGame(new RFCampaignManager()),
                 () => (Module.CurrentModule.IsOnlyCoreContentEnabled, coreContentDisabledReason))
             );
-            harmony.PatchAll();
         }
         public static Dictionary<string, int> undeadRespawnConfig { get; private set; }
         private void ReadConfigFile()

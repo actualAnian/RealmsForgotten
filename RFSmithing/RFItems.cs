@@ -36,7 +36,7 @@ public class RFItems
     private void InitializeAll()
     {
         ItemObject.InitializeTradeGood(_kardrathium,
-            new TextObject("{=kardrathium}Kardrathium{@Plural}loads of kardrathium{\\@}"), "iron_a", _kardrathiumCategory,
+            new TextObject("{=kardrathium}Kardrathium{@Plural}loads of kardrathium{\\@}"), "karthradium_steel", _kardrathiumCategory,
             300, 5f, ItemObject.ItemTypeEnum.Goods);
     }
 }

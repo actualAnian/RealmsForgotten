@@ -45,7 +45,9 @@ namespace RealmsForgotten.AiMade
                 { "giant", new List<string> { "jawwal_tier_1", "jawwal_tier_1" } },
                 { "aqarun", new List<string> { "jawwal_tier_1", "jawwal_tier_1" } },
                 { "mage", new List<string> { "jawwal_tier_1", "jawwal_tier_1" } },
-                // Add more culture mappings here
+                { "west_realm", new List<string> { "legion_of_the_betrayed_tier_1", "hidden_hand_tier_1", "embers_of_flame_tier_1", "eleftheroi_tier_1" } },
+                { "south_realm", new List<string> { "legion_of_the_betrayed_tier_1", "hidden_hand_tier_1", "embers_of_flame_tier_1", "eleftheroi_tier_1" } },
+                { "dwarf", new List<string> { "forest_people_tier_1" } },
             };
         }
 

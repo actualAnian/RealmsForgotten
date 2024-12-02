@@ -51,14 +51,20 @@ namespace RealmsForgotten.Models
 
             try
             {
-                //Tlachiquiy
+                // Tlachiquiy
                 if (!IsPartyBandit(party) && party.Owner?.CharacterObject.Race == FaceGen.GetRaceOrDefault("tlachiquiy") &&
                     baseNumber.ResultNumber < 100)
                     baseNumber = new ExplainedNumber(100, true, new TextObject("{=tc_boldness}Tlachiquiy's Boldness"));
 
-                //Elvean
                 if (party?.Party?.Culture == null)
                     return baseNumber;
+
+                // Dwarf
+                if (party.Party.Culture.StringId == "dwarf")
+                {
+                    baseNumber = new ExplainedNumber(100, true, new TextObject("{=dwarf_unbreakable_morale}Dwarven Unbreakable Morale"));
+                    return baseNumber;
+                }
             }
             catch (Exception e)
             {
@@ -77,8 +83,6 @@ namespace RealmsForgotten.Models
                 float moraleFactor = amount * 0.015f;
                 baseNumber.AddFactor(moraleFactor, new TextObject("{=priest_morale_bonus}Priests Morale Bonus"));
             }
-
-
             return baseNumber;
         }
     }

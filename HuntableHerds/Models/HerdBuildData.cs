@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HuntableHerds.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -21,14 +22,14 @@ namespace RealmsForgotten.HuntableHerds.Models
         public int DamageToPlayer;
         public float SightRange;
         public bool FleeOnAttacked;
-        public List<(string, (int, int))> ItemDrops;
+        ItemDropsData ItemDrops;
         public List<string> SceneIds;
 
         public static List<HerdBuildData> allHuntableAgentBuildDatas = new();
         public static HerdBuildData? CurrentHerdBuildData;
 
 
-        public HerdBuildData(string notifMessage, string messageTitle, string message, string spawnId, int totalAmountInHerd, bool isPassive, float startingHealth, float maxSpeed, float hitboxRange, int damageToPlayer, float sightRange, bool fleeOnAttacked, List<(string, (int, int))> itemDropsIdAndCount, List<string> sceneIds) {
+        public HerdBuildData(string notifMessage, string messageTitle, string message, string spawnId, int totalAmountInHerd, bool isPassive, float startingHealth, float maxSpeed, float hitboxRange, int damageToPlayer, float sightRange, bool fleeOnAttacked, ItemDropsData itemDropsIdAndCount, List<string> sceneIds) {
             NotifMessage = notifMessage;
             MessageTitle = messageTitle;
             Message = message;
@@ -47,26 +48,8 @@ namespace RealmsForgotten.HuntableHerds.Models
             CurrentHerdBuildData = this;
         }
 
-        public ItemRoster GetCopyOfItemDrops() {
-            ItemRoster itemRoster = new();
-            foreach ((string, (int, int)) pair in ItemDrops) {
-                ItemObject? item = null;
-                try {
-                    item = Game.Current.ObjectManager.GetObject<ItemObject>(pair.Item1);
-                }
-                catch (NullReferenceException) {
-                    continue;
-                }
-                if (item == null)
-                    continue;
-
-                int amount = pair.Item2.Item1;
-                if (pair.Item2.Item2 > pair.Item2.Item1)
-                    amount = MBRandom.RandomInt(pair.Item2.Item1, pair.Item2.Item2 + 1);
-
-                itemRoster.AddToCounts(item, amount);
-            }
-            return itemRoster;
+        public ItemDropsData GetCopyOfItemDrops() {
+            return ItemDrops;
         }
 
         public static void BuildAll() {
@@ -91,7 +74,7 @@ namespace RealmsForgotten.HuntableHerds.Models
                 float sightRange = (float)element.Element("sightRange");
                 bool fleeOnAttacked = element.Element("fleeOnAttacked").Value.ToLower() == "true" ? true : false;
 
-                List<(string, (int, int))> itemDrops = new();
+                List<ItemDrop> item = new();
                 XElement? itemDropsElement = element.Element("ItemDrops");
                 if (itemDropsElement != null)
                     foreach (XElement itemDrop in itemDropsElement.Descendants("ItemDrop")) {
@@ -100,9 +83,11 @@ namespace RealmsForgotten.HuntableHerds.Models
                         XElement? maxAmountNode = itemDrop.Element("maxAmount");
                         if (maxAmountNode != null)
                             maxAmount = (int)maxAmountNode;
-                        itemDrops.Add((itemDrop.Element("itemId").Value, (amount, maxAmount)));
+                        item.Add(new(itemDrop.Element("itemId").Value, amount, maxAmount, 1));
+                        //itemDrops.Add((itemDrop.Element("itemId").Value, (amount, maxAmount)));
                     }
 
+                ItemDropsData itemDrops = new(item,  $"HH_{spawnId}_item_drops");
                 List<string> sceneIds = new();
                 XElement? sceneIdsElement = element.Element("SceneIds");
                 if (sceneIdsElement != null)

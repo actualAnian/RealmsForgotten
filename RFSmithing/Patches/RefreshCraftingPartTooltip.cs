@@ -21,7 +21,7 @@ public static class RefreshCraftingPartTooltip
             return;
 
         int price = WeaponDesignMixin.Instance.KardrathiumButtonToggle.GetCurrentKardrathiumPrice();
-        
+
         propertyBasedTooltipVM.AddProperty(() => new TextObject("{=kardrathium}Kardrathium(?)").ToString(), () => price.ToString());
     }
 }
