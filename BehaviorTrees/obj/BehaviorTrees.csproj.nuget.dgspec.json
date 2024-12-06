@@ -1,0 +1,51 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\Damian\\Bannerlord Mods\\RealmsForgotten\\BehaviorTrees\\BehaviorTrees.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\Damian\\Bannerlord Mods\\RealmsForgotten\\BehaviorTrees\\BehaviorTrees.csproj": {
+      "version": "0.0.1",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Damian\\Bannerlord Mods\\RealmsForgotten\\BehaviorTrees\\BehaviorTrees.csproj",
+        "projectName": "BehaviorTrees",
+        "projectPath": "C:\\Users\\Damian\\Bannerlord Mods\\RealmsForgotten\\BehaviorTrees\\BehaviorTrees.csproj",
+        "packagesPath": "C:\\Users\\Damian\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Damian\\Bannerlord Mods\\RealmsForgotten\\BehaviorTrees\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Damian\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net472"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net472": {
+            "targetAlias": "net472",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net472": {
+          "targetAlias": "net472",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

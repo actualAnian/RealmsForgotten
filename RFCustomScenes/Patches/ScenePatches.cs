@@ -117,42 +117,6 @@ namespace RFCustomSettlements.Patches
                     && codes[index + 2].opcode == OpCodes.Brfalse_S
                     && codes[index + 3].opcode == OpCodes.Ldarg_0
                     && codes[index + 4].opcode == OpCodes.Ldarg_1)
-                    {
-                        codes[index].labels.Add(VanillaAgentHandleJumpLabel);
-                        insertionAgentHandle = index;
-                    }
-            }
-            var handle_rf_agents_instr_list = new List<CodeInstruction>
-            {
-                new(OpCodes.Ldloc_0),
-                new(OpCodes.Call, AccessTools.Method(typeof(Helper), nameof(IsLootableDeadAgent))),
-                new(OpCodes.Brfalse, VanillaAgentHandleJumpLabel),
-                new(OpCodes.Ldarg_0),
-                new(OpCodes.Call, AccessTools.Method(typeof(Helper), nameof(SetVMLook))),
-                new(OpCodes.Ret)
-            };
-            codes.InsertRange(insertionAgentHandle, handle_rf_agents_instr_list);
-            return codes.AsEnumerable();
-        }
-
-    }
-
-    [HarmonyPatch(typeof(AgentInteractionInterfaceVM), "OnFocusGained")]
-    public class AgentInteractionInterfaceVMOnFocusGainedPatch
-    {
-        [HarmonyPatch(typeof(AgentInteractionInterfaceVM), "OnFocusGained")]
-        internal static IEnumerable<CodeInstruction> OnFocusGainedPatch(IEnumerable<CodeInstruction> instructions, ILGenerator ilGenerator)
-        {
-            var codes = instructions.ToList();
-            var insertionAgentHandle = 0;
-            Label VanillaAgentHandleJumpLabel = ilGenerator.DefineLabel();
-            for (var index = 0; index < codes.Count; index++)
-            {
-                if (codes[index].opcode == OpCodes.Ldloc_0
-                    && codes[index + 1].opcode == OpCodes.Callvirt
-                    && codes[index + 2].opcode == OpCodes.Brfalse_S
-                    && codes[index + 3].opcode == OpCodes.Ldarg_0
-                    && codes[index + 4].opcode == OpCodes.Ldarg_1)
                 {
                     codes[index].labels.Add(VanillaAgentHandleJumpLabel);
                     insertionAgentHandle = index;

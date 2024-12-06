@@ -66,6 +66,7 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             return int.Parse(itemData.Last());
         }
+
         internal static string GetNameOfGoldObject(int amount)
         {
             if (0 < amount && amount < 20) return "Gold Pile";
@@ -73,26 +74,8 @@ namespace RealmsForgotten.RFCustomSettlements
             else if (amount < 2000) return "Gold Chest";
             else return "Gold";
         }
-        public static float maxPickableDistance = 10f;
-        public static bool CanInteract { get => _canInteract; }
-        public static Agent? RayCastToCheckForRFInteractableAgent(Agent agent)
-        {
-            // ALSO PREVENTS THE MOUNTS ENEMIES FROM HUNTABLE HERDS TO BE MOUNTABLE
-            if (agent != null && agent.IsActive() && agent.Components.Any(c => c is HuntableHerds.AgentComponents.HerdAgentComponent)) return null;
-            if (agent != null) return agent;
-            CustomSettlementMissionLogic logic;
-            if ((logic = Mission.Current.GetMissionBehavior<CustomSettlementMissionLogic>()) == null) return null;
-            if (logic.LootableAgents.IsEmpty()) return null;
-            float num = 10f;
-            MatrixFrame cf = Mission.Current.GetCameraFrame();
 
-            Vec3 direction = cf.rotation.u * -1;
-            Vec3 vec = direction;
-            Vec3 position = cf.origin;
-            Vec3 position2 = Agent.Main.Position;
-            float num2 = new Vec3(position.x, position.y, 0f, -1f).Distance(new Vec3(position2.x, position2.y, 0f, -1f));
-            Vec3 vec2 = position * (1f - num2) + (position + direction) * num2;
-            _ = Mission.Current.Scene.RayCastForClosestEntityOrTerrainMT(vec2, vec2 + vec * num, out float distance, out Vec3 closesPoint, 0.01f, BodyFlags.None);
+        public static float maxPickableDistance = 10f;
 
         public static bool CanInteract { get => _canInteract; }
 
