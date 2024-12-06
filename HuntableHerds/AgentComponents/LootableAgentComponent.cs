@@ -31,7 +31,6 @@ namespace RealmsForgotten.HuntableHerds.AgentComponents
                 if (drop.AmountMax > drop.AmountMin)
                     amount = MBRandom.RandomInt(drop.AmountMin, drop.AmountMax);
                 else amount = drop.AmountMax;
-                ItemObject? item = null;
                 if (drop.ItemId == "gold")
                     _goldDrop += amount;
                 ItemObject? item;

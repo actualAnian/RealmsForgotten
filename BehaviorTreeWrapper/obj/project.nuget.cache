@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "odbNLSO+3AQ=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Damian\\Bannerlord Mods\\RealmsForgotten\\BehaviorTreeWrapper\\BehaviorTreeWrapper.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Damian\\.nuget\\packages\\lib.harmony\\2.2.2\\lib.harmony.2.2.2.nupkg.sha512"
+  ],
+  "logs": []
+}

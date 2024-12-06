@@ -1,0 +1,181 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\Damian\\Bannerlord Mods\\RealmsForgotten\\BehaviorTreeWrapper\\BehaviorTreeWrapper.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\Damian\\Bannerlord Mods\\RealmsForgotten\\BehaviorTrees\\BehaviorTrees.csproj": {
+      "version": "0.0.1",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Damian\\Bannerlord Mods\\RealmsForgotten\\BehaviorTrees\\BehaviorTrees.csproj",
+        "projectName": "BehaviorTrees",
+        "projectPath": "C:\\Users\\Damian\\Bannerlord Mods\\RealmsForgotten\\BehaviorTrees\\BehaviorTrees.csproj",
+        "packagesPath": "C:\\Users\\Damian\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Damian\\Bannerlord Mods\\RealmsForgotten\\BehaviorTrees\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Damian\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net472"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net472": {
+            "targetAlias": "net472",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net472": {
+          "targetAlias": "net472",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Damian\\Bannerlord Mods\\RealmsForgotten\\BehaviorTreeWrapper\\BehaviorTreeWrapper.csproj": {
+      "version": "0.0.1",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Damian\\Bannerlord Mods\\RealmsForgotten\\BehaviorTreeWrapper\\BehaviorTreeWrapper.csproj",
+        "projectName": "BehaviorTreeWrapper",
+        "projectPath": "C:\\Users\\Damian\\Bannerlord Mods\\RealmsForgotten\\BehaviorTreeWrapper\\BehaviorTreeWrapper.csproj",
+        "packagesPath": "C:\\Users\\Damian\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Damian\\Bannerlord Mods\\RealmsForgotten\\BehaviorTreeWrapper\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Damian\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net472"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net472": {
+            "targetAlias": "net472",
+            "projectReferences": {
+              "C:\\Users\\Damian\\Bannerlord Mods\\RealmsForgotten\\BehaviorTrees\\BehaviorTrees.csproj": {
+                "projectPath": "C:\\Users\\Damian\\Bannerlord Mods\\RealmsForgotten\\BehaviorTrees\\BehaviorTrees.csproj"
+              },
+              "C:\\Users\\Damian\\Bannerlord Mods\\RealmsForgotten\\RealmsForgottenMain\\RealmsForgotten.csproj": {
+                "projectPath": "C:\\Users\\Damian\\Bannerlord Mods\\RealmsForgotten\\RealmsForgottenMain\\RealmsForgotten.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net472": {
+          "targetAlias": "net472",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Damian\\Bannerlord Mods\\RealmsForgotten\\RealmsForgottenMain\\RealmsForgotten.csproj": {
+      "version": "0.0.1",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Damian\\Bannerlord Mods\\RealmsForgotten\\RealmsForgottenMain\\RealmsForgotten.csproj",
+        "projectName": "RealmsForgotten",
+        "projectPath": "C:\\Users\\Damian\\Bannerlord Mods\\RealmsForgotten\\RealmsForgottenMain\\RealmsForgotten.csproj",
+        "packagesPath": "C:\\Users\\Damian\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Damian\\Bannerlord Mods\\RealmsForgotten\\RealmsForgottenMain\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Damian\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net472"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net472": {
+            "targetAlias": "net472",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net472": {
+          "targetAlias": "net472",
+          "dependencies": {
+            "BUTR.Harmony.Analyzer": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.1.44, )"
+            },
+            "Bannerlord.BuildResources": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.1.85, )"
+            },
+            "Harmony.Extensions": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.1.0.67, )"
+            },
+            "IsExternalInit": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.3, )"
+            },
+            "Lib.Harmony": {
+              "include": "Compile",
+              "target": "Package",
+              "version": "[2.2.2, )"
+            },
+            "Nullable": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.3.1, )"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
