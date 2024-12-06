@@ -26,6 +26,7 @@ namespace RealmsForgotten.AiMade
         {
             _configs["town_EW3"] = new ExampleConfig("Hire Anorite Priests", new List<string> { "anorit_high_templar" });
             _configs["town_EM1"] = new ExampleConfig("Hire Red Mages", new List<string> { "red_mage" });
+            _configs["town_FirstTree"] = new ExampleConfig("First Tree Ranger", new List<string> { "first_tree_ranger" });
             AddGameMenus(starter);
         }
 
@@ -58,7 +59,6 @@ namespace RealmsForgotten.AiMade
             });
         }
 
-
         private bool IsConfigAvailableForCurrentSettlement()
         {
             Settlement currentSettlement = Settlement.CurrentSettlement;
@@ -73,13 +73,32 @@ namespace RealmsForgotten.AiMade
 
         private void ShowTroopPurchaseDialog(string settlementId)
         {
+            if (!_configs.ContainsKey(settlementId))
+            {
+                InformationManager.DisplayMessage(new InformationMessage($"Config for settlement {settlementId} not found."));
+                return;
+            }
+
             var troopIds = _configs[settlementId].TroopIds;
-            var troops = troopIds.Select(MBObjectManager.Instance.GetObject<CharacterObject>).ToList();
+            var troops = troopIds
+                .Select(id => MBObjectManager.Instance.GetObject<CharacterObject>(id))
+                .Where(troop => troop != null)
+                .ToList();
+
+            if (troops.Count == 0)
+            {
+                InformationManager.DisplayMessage(new InformationMessage("No valid troops found for this settlement."));
+                return;
+            }
 
             string title = new TextObject(_configs[settlementId].DisplayName, null).ToString();
             List<InquiryElement> options = troops.Select(troop => new InquiryElement(troop, troop.Name.ToString(), new ImageIdentifier(CharacterCode.CreateFrom(troop)))).ToList();
 
-            MBInformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(title, string.Empty, options, true, 1, 1, GameTexts.FindText("str_done", null).ToString(), GameTexts.FindText("str_cancel", null).ToString(), elements => OnTroopTypeSelected(elements, settlementId), null, "", false), false, false);
+            MBInformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(
+                title, string.Empty, options, true, 1, 1,
+                GameTexts.FindText("str_done", null).ToString(),
+                GameTexts.FindText("str_cancel", null).ToString(),
+                elements => OnTroopTypeSelected(elements, settlementId), null, "", false), false, false);
         }
 
         private void OnTroopTypeSelected(List<InquiryElement> elements, string settlementId)
@@ -93,29 +112,45 @@ namespace RealmsForgotten.AiMade
 
         private void ShowTroopQuantitySelection(CharacterObject troop, string settlementId)
         {
+            if (troop == null || PartyBase.MainParty == null || MobileParty.MainParty == null)
+            {
+                InformationManager.DisplayMessage(new InformationMessage("Error in troop or party configuration."));
+                return;
+            }
+
             int maxQuantity = PartyBase.MainParty.PartySizeLimit - MobileParty.MainParty.MemberRoster.TotalManCount;
             int troopCost = CalculateTroopCost(troop);
 
-            InformationManager.ShowTextInquiry(new TextInquiryData("Select Quantity", $"How many {troop.Name}'s do you wish to recruit? Each costs {troopCost} Gold Dragons.", true, true, "Recruit", "Cancel", quantityText =>
-            {
-                if (int.TryParse(quantityText, out int quantity) && quantity > 0 && quantity <= maxQuantity)
-                {
-                    int totalCost = troopCost * quantity;
-                    ConfirmTroopPurchase(troop, quantity, totalCost, settlementId);
-                }
-                else
-                {
-                    InformationManager.DisplayMessage(new InformationMessage("You do not have enough space in your party to recruit all of these troops or you entered an Incorrect amount."));
-                }
-            }, null));
+            InformationManager.ShowTextInquiry(new TextInquiryData(
+                "Select Quantity",
+                $"How many {troop.Name}'s do you wish to recruit? Each costs {troopCost} Gold Coins.",
+                true, true, "Recruit", "Cancel",
+                quantityText => {
+                    if (int.TryParse(quantityText, out int quantity) && quantity > 0 && quantity <= maxQuantity)
+                    {
+                        int totalCost = troopCost * quantity;
+                        ConfirmTroopPurchase(troop, quantity, totalCost, settlementId);
+                    }
+                    else
+                    {
+                        InformationManager.DisplayMessage(new InformationMessage("Invalid quantity."));
+                    }
+                }, null));
         }
 
         private void ConfirmTroopPurchase(CharacterObject troop, int quantity, int totalCost, string settlementId)
         {
-            InformationManager.ShowInquiry(new InquiryData("Confirm Purchase", $"Are you sure you want to recruit {quantity} {troop.Name}(s) for {totalCost} Gold Dragons?", true, true, "Confirm", "Cancel", () =>
+            if (troop == null || Hero.MainHero == null)
             {
-                FinalizeTroopPurchase(troop, quantity, totalCost, settlementId);
-            }, null));
+                InformationManager.DisplayMessage(new InformationMessage("Invalid troop or hero configuration."));
+                return;
+            }
+
+            InformationManager.ShowInquiry(new InquiryData(
+                "Confirm Purchase",
+                $"Are you sure you want to recruit {quantity} {troop.Name}(s) for {totalCost} Gold Dragons?",
+                true, true, "Confirm", "Cancel",
+                () => FinalizeTroopPurchase(troop, quantity, totalCost, settlementId), null));
         }
 
         private void FinalizeTroopPurchase(CharacterObject troop, int quantity, int totalCost, string settlementId)
@@ -129,26 +164,23 @@ namespace RealmsForgotten.AiMade
             }
             else
             {
-                InformationManager.DisplayMessage(new InformationMessage("Your coffers lack the Gold needed to recruit our soldiers."));
+                InformationManager.DisplayMessage(new InformationMessage("You lack the Gold needed to recruit these troops."));
             }
         }
 
         private int CalculateTroopCost(CharacterObject troop)
         {
-            return troop.Level * 10;
+            return troop?.Level * 10 ?? 0;
         }
 
         public override void SyncData(IDataStore dataStore)
         {
-            // Sync the _configs dictionary
             Dictionary<string, ExampleConfig> tempConfigs = _configs;
             dataStore.SyncData("HouseTroopsTownsBehavior_configs", ref tempConfigs);
             if (dataStore.IsLoading)
             {
                 _configs = tempConfigs;
             }
-          
-          
         }
     }
 }

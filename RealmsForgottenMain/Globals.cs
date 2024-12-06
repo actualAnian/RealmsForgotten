@@ -3,21 +3,12 @@ using System.Collections.Generic;
 using System.Reflection;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
+using TaleWorlds.Library;
 
 namespace RealmsForgotten
 {
     public static class Globals
     {
-        //public static Dictionary<string, string> TroopsIdToRaces = new()
-        //{
-        //    ["human"] = "imperial_recruit",
-        //    ["elvean"] = "battanian_volunteer",
-        //    ["mull"] = "aserai_youth",
-        //    ["undead"] = "sturgian_warrior_son",
-        //    ["half_giant"] = "cs_troll_raiders_raider",
-        //    ["Xilantlacay"] = "giant_archer",
-        //    ["tlachiquiy"] = "minotaur"
-        //};
         public static Dictionary<string, int> RacesIds = new();
 
         public static Assembly realmsForgottenAssembly = Assembly.GetExecutingAssembly();
@@ -53,24 +44,6 @@ namespace RealmsForgotten
         };
         internal static int GiantCountsAs { get { return 2; } }
         internal static int GiantsCostMult {  get { return 2; } }
-
-        //internal static void SetRacesIds()
-        //{
-        //    foreach(KeyValuePair<string, string> TroopPair in TroopsIdToRaces)
-        //    {
-        //        try
-        //        {
-        //            CharacterObject troop = TaleWorlds.ObjectSystem.MBObjectManager.Instance.GetObject<CharacterObject>(TroopPair.Value);
-        //            FaceGen.GetRaceOrDefault(TroopPair.Key] = troop.Race;
-        //        }
-        //        catch
-        //        {
-        //            FaceGen.GetRaceOrDefault(TroopPair.Key] = -1;
-        //            string text = $"error trying to set the race id of {TroopPair.Key} in RealmsForgotten.Globals.SetGiantRaceId";
-        //            InformationManager.DisplayMessage(new InformationMessage(text, new Color(1, 0, 0)));
-        //        }
-        //    }
-        //}
         public static bool IsGiant(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("half_giant"); }
         public static bool IsUndead(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("undead"); }
         public static bool IsHuman(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("human"); }
@@ -78,10 +51,50 @@ namespace RealmsForgotten
         public static bool IsElvean(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("elvean"); }
         public static bool IsXilantlacay(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("Xilantlacay"); }
         public static bool IsTlachiquiy(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("tlachiquiy"); }
+        public static bool IsUrkrish(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("urkrish"); }
+        public static bool IsThog(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("thog"); }
+        public static bool IsShaitan(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("shaitan"); }
+        public static bool IsKharach(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("kharach"); }
+        public static bool IsBrute(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("brute"); }
+        public static bool IsBark(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("bark"); }
+        public static bool IsNurh(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("nurh"); }
+        public static bool IsDaimo(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("daimo"); }
+        public static bool IsSillok(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("sillok"); }
+        public static bool IsDwarf(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("dwarf"); }
+        public static bool IsUrkhai(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("urkhai"); }
 
         internal static List<string>  PlayerSelectableRaces { get { return _playerSelectableRaces; } }
-        private static List<string> _playerSelectableRaces = new() { "human", "elvean", "undead", "mull", "half_giant", "Xilantlacay" };
-    
+        private static List<string> _playerSelectableRaces = new() { "human", "elvean", "undead", "mull", "half_giant", "Xilantlacay", "tlachiquiy", "dwarf" };
+
         public static bool IsMissionInitialized = false;
+
+        public static List<string> GetOrderedRacesForSelection()
+        {
+            List<string> orderedRaces = new List<string>
+            {
+                "human",
+                "elvean",
+                "undead",
+                "mull",
+                "half_giant",
+                "Xilantlacay",
+                "tlachiquiy",
+                "dwarf",
+            };
+
+            ValidateRaceOrder(orderedRaces);
+            return orderedRaces;
+        }
+
+        private static void ValidateRaceOrder(List<string> orderedRaces)
+        {
+            foreach (string race in _playerSelectableRaces)
+            {
+                if (!orderedRaces.Contains(race))
+                {
+                    InformationManager.DisplayMessage(new InformationMessage($"Warning: Race {race} is not included in the selection order!"));
+                }
+            }
+        }
     }
 }

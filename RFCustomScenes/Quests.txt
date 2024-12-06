@@ -1,29 +1,38 @@
-﻿1. allow to dynamically create classes implementing QuestBase
-2. add a dictionary with int values that can be incremented
-3. add to dialogues.xml:
-	<Condition> State["quest_1"] == 1 </Condition> // in c# code translate this to state_dict["state_quest1"] == 1
-	<Condition> Quests["quest_1"].Evaluate() </Condition> // checks if the quest can be finished
+﻿adding custom settlements quests:
+
+IMPORTANT: keywords have to be FULLCAPTIONED (except npcId)
+possible dialogues.xml:
+	<Conditions>
+	npcId IS npc_1
+	State state_1" CREATE
+	State state_1" IS 1
+	EVALUATE quest_1
+	</Condition>
 	
-	<Consequence>  // all possible consequences below
-		- Quests["quest_1"].Start() 
-		- Quests["quest_1"].Complete()
-		- State["state_quest_1"] == 0 //creates a new state
-		- State["state_quest_1"] += 1 // increments the state
+	<Consequence>
+		- START quest_1 
+		- COMPLETE quest_1
+		- State state_quest_1 INCREMENT
+		- State state_quest_1 RESET 
 	</Consequence>
-4. add new Quests.xml, and code handling it
-example xml:
+use AND keyword to add multiple conditions / consequences
+
+example dialogue:
+<Dialogue isStartLine="true" condition="npcId IS anorite_monastery_militia AND STATE epic_quest_state CREATE" consequence="START quest_1 AND STATE epic_quest_state INCREMENT">
+		
+emaple Quests.xml:
 <AllQuests>
 <Quest>
-	<QuestId> "quest_1" </QuestId>
-	<QuestGiverId>"npc_1"</QuestGiverId>
-	<Text>"This guy wants you to do this"</Text>
+	<QuestId>quest_1</QuestId>
+	<QuestGiverId>npc_1</QuestGiverId>
+	<Text>This guy wants you to do this</Text>
 	<CompletedWhen>
 		<InInventory>
 			<ItemId>gold</ItemId>
 			<Amount>50</Amount>
 		</InInventory>
 		<HasKilled>
-			<CreatureId>"sheep"</CreatureId>
+			<TroopId>"sheep"</TroopId>
 			<Amount>1</Amount>
 		</HasKilled>
 		<HasPrisoners>
@@ -37,7 +46,7 @@ example xml:
 			<Amount>50</Amount>
 		</RemoveItem>
 		<RemoveTroop>
-			<CreatureId>"looter"</CreatureId>
+			<TroopId>"looter"</TroopId>
 			<Amount>1</Amount>
 		</RemoveTroop>
 		<RemovePrisoners>

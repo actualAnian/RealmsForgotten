@@ -68,7 +68,7 @@ namespace RFCustomSettlements
         private void rf_arena_finish_init(MenuCallbackArgs args)
         {
             args.MenuContext.SetBackgroundMeshName(Hero.MainHero.IsFemale ? "arena_female_win" : "arena_male_win");
-            Equipment playerEquipment = ArenaSettlementStateHandler.PlayerArenaRewardEquipment != null ? ArenaSettlementStateHandler.PlayerArenaRewardEquipment : MBObjectManager.Instance.GetObject<CharacterObject>("aserai_infantry").Equipment;
+            Equipment playerEquipment = ArenaSettlementStateHandler.PlayerArenaRewardEquipment ?? MBObjectManager.Instance.GetObject<CharacterObject>("aserai_infantry").Equipment;
             if(playerEquipment != null) Hero.MainHero.BattleEquipment.FillFrom(playerEquipment);
             int amount = 20;
             Hero.MainHero.Clan.AddRenown(amount);

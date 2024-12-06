@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.Localization;
+using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.Roster;
+using TaleWorlds.Core;
+using TaleWorlds.ObjectSystem;
 
 namespace RFCustomSettlements.Quests
 {
@@ -9,29 +13,20 @@ namespace RFCustomSettlements.Quests
     {
         public string QuestId { get; }
         public string QuestGiverId { get; }
-
         public string QuestLogText { get; }
-        public string CompleteCondition { get; }
-        public string CompleteConsequence { get; }
+        public CompletedWhen CompleteCondition { get; }
+        public QuestCompleteConsequence CompleteConsequence { get; }
 
-        public QuestData(string questId, string questGiverId, string questLogId)
+        public QuestData(string questId, string questGiverId, string questLogId, CompletedWhen when, QuestCompleteConsequence consequence)
         {
             QuestId = questId;
             QuestGiverId = questGiverId;
             QuestLogText = questLogId;
-            CompleteCondition = CreateCondition();
-            CompleteConsequence = CreateConsequence();
+            CompleteCondition = when;
+            CompleteConsequence = consequence;
         }
+    }
 
-        private string CreateConsequence()
-        {
-            return "";
-        }
-
-        private string CreateCondition()
-        {
-            return "";
-        }
 
     public class InInventory
     {
@@ -46,11 +41,11 @@ namespace RFCustomSettlements.Quests
 
     public class HasKilled
     {
-        public string CreatureId { get; set; }
+        public string TroopId { get; set; }
         public int Amount { get; set; }
-        public HasKilled(string creatureId, int amount)
+        public HasKilled(string TroopId, int amount)
         {
-            CreatureId = creatureId;
+            this.TroopId = TroopId;
             Amount = amount;
         }
     }
@@ -80,11 +75,11 @@ namespace RFCustomSettlements.Quests
 
     public class RemoveTroop
     {
-        public string CreatureId { get; set; }
+        public string TroopId { get; set; }
         public int Amount { get; set; }
-        public RemoveTroop(string creatureId, int amount)
+        public RemoveTroop(string TroopId, int amount)
         {
-            CreatureId = creatureId;
+            this.TroopId = TroopId;
             Amount = amount;
         }
     }
@@ -103,18 +98,49 @@ namespace RFCustomSettlements.Quests
 
     public class CompletedWhen
     {
-        public List<InInventory> InInventoryList { get; set; } = new();
-        public List<HasKilled> HasKilledList { get; set; } = new();
-        public List<HasPrisoners> HasPrisonersList { get; set; } = new();
+        public CompletedWhen(Dictionary<string, int>? inInventoryList, Dictionary<string, int>? hasKilledList, Dictionary<string, int>? hasPrisonersList)
+        {
+            InInventoryList = inInventoryList;
+            HasKilledList = hasKilledList;
+            HasPrisonersList = hasPrisonersList;
+        }
+
+        public Dictionary<string, int>? InInventoryList { get; }
+        public Dictionary<string, int>? HasKilledList { get; }
+        public Dictionary<string, int>? HasPrisonersList { get; }
     }
 
-    public class CompleteConsequence
+    public class QuestCompleteConsequence
     {
-        public List<RemoveItem> RemoveItemList { get; set; } = new List<RemoveItem>();
-        public List<RemoveTroop> RemoveTroopList { get; set; } = new List<RemoveTroop>();
-        public List<RemovePrisoners> RemovePrisonersList { get; set; } = new List<RemovePrisoners>();
+        public QuestCompleteConsequence(Dictionary<string, int>? removeItemList, Dictionary<string, int>? removeTroopList, Dictionary<string, int>? removePrisonersList, Dictionary<string, int>? addItemList, Dictionary<string, int>? addTroopList, int? renownAmount)
+        {
+            RemoveItemList = removeItemList;
+            RemoveTroopList = removeTroopList;
+            RemovePrisonersList = removePrisonersList;
+            AddItemList = addItemList;
+            AddTroopList = addTroopList;
+            if (renownAmount != null)
+                RenownAmount = (int)renownAmount;
+            if (removeItemList != null && removeItemList.ContainsKey("gold"))
+            {
+                LoseGoldAmount = removeItemList["gold"];
+                removeItemList.Remove("gold");
+            }
+            if (addItemList != null && addItemList.ContainsKey("gold"))
+            {
+                ReceiveGoldAmount = addItemList["gold"];
+                addItemList.Remove("gold");
+            }
+        }
+
+        public Dictionary<string, int>? RemoveItemList { get; }
+        public Dictionary<string, int>? RemoveTroopList { get; }
+        public Dictionary<string, int>? RemovePrisonersList { get; }
+        public Dictionary<string, int>? AddItemList { get; }
+        public Dictionary<string, int>? AddTroopList { get; }
+        public int RenownAmount { get; } = 0;
+        public int ReceiveGoldAmount { get; } = 0;
+        public int LoseGoldAmount { get; } = 0;
+
     }
-
-}
-
 }

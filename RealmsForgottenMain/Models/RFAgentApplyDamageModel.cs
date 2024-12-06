@@ -16,9 +16,9 @@ namespace RealmsForgotten.Models
     public class RFAgentApplyDamageModel : SandboxAgentApplyDamageModel
     {
         public static RFAgentApplyDamageModel Instance;
-        
+
         private AgentApplyDamageModel _previousModel;
-        
+
         public RFAgentApplyDamageModel(AgentApplyDamageModel previousModel)
         {
             _previousModel = previousModel;
@@ -200,9 +200,3 @@ namespace RealmsForgotten.Models
         }
     }
 }
-
-
-
-
-
-

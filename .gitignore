@@ -18,6 +18,11 @@ RFCustomBandits/bin
 RFCustomBandits/obj
 RFReligions/bin
 RFReligions/obj
+RFSmithing/bin
+RFSmithing/obj
+Marching/bin
+Marching/obj
+packages
 fixCode.py
 .idea
 .vs

@@ -92,7 +92,7 @@ namespace RealmsForgotten.AiMade.Career
 
             isCareerAccepted = true;
             ApplyInitialCareerTier(currentCareer);
-            InformationManager.DisplayMessage(new InformationMessage($"You started the {currentCareer} career. Initial tier applied: {currentTier}."));
+            InformationManager.DisplayMessage(new InformationMessage($"You are trying to make your name famous as a {currentCareer}. Initial tier applied: {currentTier}."));
         }
 
         private void OnMissionStarted(IMission imission)
@@ -169,8 +169,8 @@ namespace RealmsForgotten.AiMade.Career
         private void NotifyTierProgression(CareerTier tier)
         {
             InformationManager.ShowInquiry(new InquiryData(
-                "Tier Progression",
-                $"You have progressed to the {tier.Name} tier! Benefits: {GetTierBenefitsDescription(tier)}",
+                "Current Progression",
+                $"You find yourself at the {tier.Name} tier! Benefits: {GetTierBenefitsDescription(tier)}",
                 true,
                 false,
                 "OK",

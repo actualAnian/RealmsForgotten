@@ -1,9 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using HuntableHerds.Models;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Xml;
 using System.Xml.Linq;
+using TaleWorlds.Core;
 using TaleWorlds.Engine;
+using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.RFCustomSettlements
@@ -23,21 +28,39 @@ namespace RealmsForgotten.RFCustomSettlements
             }
 
         }
+
         public class RFBanditData
         {
             private readonly int _amount;
             private readonly string _id;
+            private readonly string? _dropDataId;
+            //private readonly string _dropDataId2;
 
+            public RFBanditData(string id, string value2, string dropDataId)
+            {
+                _dropDataId = dropDataId;
+                _id = id;
+                _amount = int.Parse(value2);
+            }
             public RFBanditData(string id, string value2)
             {
+                _dropDataId = null;
                 _id = id;
                 _amount = int.Parse(value2);
             }
 
             public string Id { get => _id; }
             public int Amount { get => _amount; }
+            public ItemDropsData? ItemDropsData 
+            {
+                get 
+                {
+                    if (_dropDataId == null || !AllItemDropsData.ContainsKey(_dropDataId)) return null;
+                    return AllItemDropsData[_dropDataId];
+                }
+            }
         }
-        internal static readonly Dictionary<string, CustomSettlementBuildData> allCustomSettlementBuildDatas = new ();
+        internal static readonly Dictionary<string, CustomSettlementBuildData> allCustomSettlementBuildDatas = new();
         public readonly Dictionary<int, List<RFBanditData>> stationaryAreasBandits;
         public readonly Dictionary<int, RFBanditData> patrolAreasBandits;
 
@@ -45,6 +68,12 @@ namespace RealmsForgotten.RFCustomSettlements
         public readonly int enterStartHour;
         public readonly int enterEndHour;
         public List<NpcData> allNpcs { get; private set; }
+        public static Dictionary<string, ItemDropsData> AllItemDropsData { get; } = new();
+
+        private static string _mainPath = System.IO.Path.GetDirectoryName(Globals.realmsForgottenAssembly.Location);
+
+        private static readonly string _banditsXmlFileName = System.IO.Path.Combine(_mainPath, "settlement_bandits.xml");
+        private static readonly string _itemDropsXmlFileName = System.IO.Path.Combine(_mainPath, "item_drops.xml");
         public CustomSettlementBuildData(Dictionary<int, List<RFBanditData>> _stationaryAreasBandits, Dictionary<int, RFBanditData> _patrolAreasBandits, List<NpcData>Npcs, bool _canEnterOnlyAtSpecialHours = false, int _enterStartHour = 0, int _enterEndHour = 24)
         {
             stationaryAreasBandits = _stationaryAreasBandits;
@@ -54,13 +83,37 @@ namespace RealmsForgotten.RFCustomSettlements
             enterEndHour = _enterEndHour;
             allNpcs = Npcs;
         }
+        public static void BuildItemDrops()
+        {
+            XmlDocument xmlDoc = new();
+            xmlDoc.Load(_itemDropsXmlFileName);
+
+            XmlNodeList itemDropsDataNodes = xmlDoc.SelectNodes("/AllItemDrops/ItemDropsData");
+            foreach (XmlNode itemDropsDataNode in itemDropsDataNodes)
+            {
+                string dropsId = itemDropsDataNode.SelectSingleNode("DropsId").InnerText;
+                XmlNodeList itemDropNodes = itemDropsDataNode.SelectNodes("ItemDrops/ItemDrop");
+
+                List<ItemDrop> itemDrops = new List<ItemDrop>();
+                
+                foreach (XmlNode itemDropNode in itemDropNodes)
+                {
+                    string itemId = itemDropNode.SelectSingleNode("ItemId").InnerText;
+                    int amountMin = int.Parse(itemDropNode.SelectSingleNode("AmountMin").InnerText);
+                    int amountMax = int.Parse(itemDropNode.SelectSingleNode("AmountMax").InnerText);
+                    double dropChance = double.Parse(itemDropNode.SelectSingleNode("DropChance").InnerText);
+
+                    ItemDrop itemDrop = new ItemDrop(itemId, amountMin, amountMax, dropChance);
+                    itemDrops.Add(itemDrop);
+                }
+                ItemDropsData itemDropsData = new ItemDropsData(itemDrops, dropsId);
+                AllItemDropsData.Add(dropsId, itemDropsData);
+            }
+        }
         public static void BuildAll()
         {
-            string mainPath = System.IO.Path.GetDirectoryName(Globals.realmsForgottenAssembly.Location);
 
-            string xmlFileName = System.IO.Path.Combine(mainPath, "settlement_bandits.xml");
-
-            XElement SettlementBandits = XElement.Load(xmlFileName);
+            XElement SettlementBandits = XElement.Load(_banditsXmlFileName);
 
             foreach (XElement element in SettlementBandits.Descendants("CustomScene"))
             {
@@ -73,9 +126,11 @@ namespace RealmsForgotten.RFCustomSettlements
                 {
                     foreach (XElement xElement2 in xElement.Descendants("Bandit"))
                     {
-                        RFBanditData bd = new(xElement2.Element("id").Value, xElement2.Element("amount").Value);
+                        XElement dropId = xElement2.Element("lootId");
+                        string? lootId = dropId?.Value;
+                        RFBanditData bd = new(xElement2.Element("id").Value, xElement2.Element("amount").Value, lootId);
                         int areaIndex = int.Parse(xElement.Element("areaIndex").Value);
-                        if(buildStationaryAreasBandits.ContainsKey(areaIndex))
+                        if (buildStationaryAreasBandits.ContainsKey(areaIndex))
                             buildStationaryAreasBandits[areaIndex].Add(bd);
                         else
                             buildStationaryAreasBandits[areaIndex] = new List<RFBanditData>() { bd };
@@ -83,7 +138,9 @@ namespace RealmsForgotten.RFCustomSettlements
                 }
                 foreach (XElement xElement in element.Descendants("Bandits").Descendants("PatrolArea"))
                 {
-                    RFBanditData bd = new(xElement.Element("Bandit").Element("id").Value, xElement.Element("Bandit").Element("amount").Value);
+                    XElement dropId = xElement.Element("Bandit").Element("lootId");
+                    string? lootId = dropId?.Value;
+                    RFBanditData bd = new(xElement.Element("Bandit").Element("id").Value, xElement.Element("Bandit").Element("amount").Value, lootId);
                     buildPatrolAreasBandits.Add(int.Parse(xElement.Element("areaIndex").Value), bd);
                 }
                 XElement NpcElement = element.Descendants("Npcs").FirstOrDefault();

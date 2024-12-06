@@ -1,19 +1,18 @@
 ﻿using HarmonyLib;
 using RealmsForgotten.AiMade.Career;
-using RealmsForgotten.AiMade.Managers;
 using RealmsForgotten.AiMade.Managers.RealmsForgotten.AiMade.Managers;
 using RealmsForgotten.AiMade.Models;
 using RealmsForgotten.AiMade.Patches;
-using RealmsForgotten.AiMade.Patches;
-using RealmsForgotten.AiMade.Religions;
 using RealmsForgotten.Behaviors;
 using System;
-using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
-using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using SandBox.GameComponents;
+using RealmsForgotten.AiMade.Enlistement;
+using static RealmsForgotten.AiMade.ADODReinforcementsSystem;
+using System.Linq;
 
 namespace RealmsForgotten.AiMade
 {
@@ -41,6 +40,7 @@ namespace RealmsForgotten.AiMade
             {
                 var campaignStarter = (CampaignGameStarter)gameStarterObject;
                 AddCampaignBehaviors(campaignStarter);
+                AddCustomModels(campaignStarter);
             }
         }
 
@@ -67,7 +67,7 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new DefendVillagersOrCaravansBehavior());
             campaignGameStarter.AddBehavior(new QuestCompletionBehavior());
             campaignGameStarter.AddBehavior(new BanditDefeatChivalryBehavior());
-            campaignGameStarter.AddBehavior(new DivineShieldStateBehavior()); // Add the state behavior here
+            campaignGameStarter.AddBehavior(new DivineShieldStateBehavior());
             campaignGameStarter.AddBehavior(new BattleCryStateBehavior());
             campaignGameStarter.AddBehavior(new VisitLibrary());
             campaignGameStarter.AddBehavior(new CareerProgressionBehavior());
@@ -81,9 +81,50 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new ADODInnBehavior());
             campaignGameStarter.AddBehavior(new BanditIncrease());
             campaignGameStarter.AddBehavior(new BanditPartyManager());
-
+            campaignGameStarter.AddBehavior(new DocksMenuBehavior());
+            campaignGameStarter.AddBehavior(new MyModEnlistmentBehavior());
+            campaignGameStarter.AddBehavior(new MyModEnlistmentBehaviorExtension());
+            campaignGameStarter.AddBehavior(new MyModEnlistmentDialogBehavior());
+            campaignGameStarter.AddBehavior(new KingsguardSaveDataBehavior());
+            campaignGameStarter.AddBehavior(new RaceCraftingStaminaBehavior());
+            campaignGameStarter.AddBehavior(new ADODChamberlainsBehavior());
+            campaignGameStarter.AddBehavior(new SlaveBehavior());
+            campaignGameStarter.AddBehavior(new ADODCustomLocationsBehavior());
+            campaignGameStarter.AddBehavior(new NasorianHordeInvasion());
+            
         }
+        private void AddCustomModels(CampaignGameStarter campaignGameStarter)
+        {
+            // Register the custom inventory capacity model
+            campaignGameStarter.AddModel(new CustomInventoryCapacityModel());
+            campaignGameStarter.AddModel(new CustomBerserkerApplyDamageModel(new SandboxAgentApplyDamageModel()));
+            campaignGameStarter.AddModel(new RFMapWeatherModel());
+        }
+        public override void OnMissionBehaviorInitialize(Mission mission)
+        {
+            if (mission != null)
+            {
+                if ((mission.Mode == MissionMode.Battle || mission.Mode == MissionMode.StartUp || mission.Mode == MissionMode.Conversation)
+                    && mission.CombatType != Mission.MissionCombatType.ArenaCombat)
+                {
+                    mission.AddMissionBehavior(new CustomBerserkerBehavior());
+                    mission.AddMissionBehavior(new ADODFireArrowsMissionBehavior());
+                }
 
+                if (mission?.MissionLogics?.OfType<CustomBattleAgentLogic>().Any() != true)
+                {
+                    if (mission?.MissionLogics?.OfType<SiegeDeploymentMissionController>().Any() != true)
+                    {
+                        if (mission?.MissionLogics?.OfType<DeploymentMissionController>().Any() == true)
+                        {
+                            mission.AddMissionBehavior(new ADODReinforcementsRunner());
+                        }
+                    }
+                }
+
+                mission.AddMissionBehavior(new FindMagicItemsMissionBehavior());
+            }
+        }
         public static void InitializeCareerSystem()
         {
             CareerInitialization.InitializeCareers();

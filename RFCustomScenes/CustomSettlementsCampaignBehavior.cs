@@ -4,22 +4,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Conversation;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Overlay;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.MountAndBlade;
+using TaleWorlds.SaveSystem;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
     internal class CustomSettlementsCampaignBehavior : CampaignBehaviorBase
     {
-
         private List<RFCustomSettlement>? customSettlementComponents;
         internal static List<Settlement>? customSettlements;
         private static RFCustomSettlement? currentSettlement;
+        public static Dictionary<string, QuestData> AllQuests { get; set; } = new();
 
+        [SaveableField(1)]
+        private static Dictionary<string, int> _dialogueStates = new();
+        public static Dictionary<string, int> DialogueStates { get { return _dialogueStates; } }
         public CustomSettlementsCampaignBehavior()
         {
             if (MobileParty.MainParty != null && Settlement.CurrentSettlement != null && Settlement.CurrentSettlement.SettlementComponent is RFCustomSettlement settlement)
@@ -30,12 +34,10 @@ namespace RealmsForgotten.RFCustomSettlements
             CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.FillSettlementList));
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnSessionLaunched));
             CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.FillSettlementList));
-            CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, () => { 
-                var quest_1 = new CustomSettlementQuest("test_1", () => { return false; });
-                quest_1.StartQuest();
-                var quest_2 = new CustomSettlementQuest("test_2", new Func<bool>(() => { return false; }));
-                quest_2.StartQuest();
-
+            CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, () => {
+                int a = 5;
+                //test = new CustomSettlementQuest("test_1", () => { return false; });
+                
             });
         }
 
@@ -51,11 +53,15 @@ namespace RealmsForgotten.RFCustomSettlements
             {
                 if(line.IsPlayerLine)
                 {
-                    
-                    starter.AddPlayerLine(line.LineId + line.Text.First() + line.Text.GetHashCode().ToString(), line.InputId, line.GoToLineId, line.Text, line.Condition, null, 100, null, null);
+                    starter.AddPlayerLine(line.LineId + line.Text.First() + line.Text.GetHashCode().ToString(), line.InputId, line.GoToLineId, line.Text, line.Condition, line.Consequence, 100, null, null);
                 }
-                else starter.AddDialogLine(line.LineId + line.Text.First() + line.Text.GetHashCode().ToString(), line.InputId, line.GoToLineId, line.Text, line.Condition, null, 100, null);
+                else starter.AddDialogLine(line.LineId + line.Text.First() + line.Text.GetHashCode().ToString(), line.InputId, line.GoToLineId, line.Text, line.Condition, line.Consequence, 100, null);
             }
+            starter.AddDialogLine("Custom_Settlements_CrashSave", "start", "close_window", "I forgot what I was gonna say, report this to the mod authors.", delegate () {
+            if (Mission.Current == null) return false;
+            CustomSettlementMissionLogic? logic = Mission.Current.GetMissionBehavior<CustomSettlementMissionLogic>();
+            return logic != null ;
+            }, null, 100, null);
         }
 
         private void FillSettlementList(CampaignGameStarter starter)
@@ -158,6 +164,8 @@ namespace RealmsForgotten.RFCustomSettlements
 #pragma warning restore IDE1006 // Naming Styles
         public override void SyncData(IDataStore dataStore)
         {
+
+            dataStore.SyncData("custSetDialStates", ref _dialogueStates);
             if (dataStore.IsSaving)
             {
                 customSettlementComponents = (from Settlement settlement in customSettlements

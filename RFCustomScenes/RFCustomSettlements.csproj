@@ -10,7 +10,7 @@
 		<ModuleId>$(MSBuildProjectName)</ModuleId>
 		<ModuleName>$(MSBuildProjectName)</ModuleName>
 		<GameFolder>$(BANNERLORD_GAME_DIR)</GameFolder>
-		<Configurations>Debug;Release;ccc</Configurations>
+		<Configurations>Debug;Release;tak</Configurations>
 	</PropertyGroup>
 
 

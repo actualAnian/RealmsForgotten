@@ -45,6 +45,7 @@ namespace RealmsForgotten.Managers
                 ["south_realm"] = "player_char_creation_default",
                 ["west_realm"] = "player_char_creation_default",
                 ["mage"] = "player_char_creation_default",
+                ["dwarf"] = "player_char_creation_default",
             },
             [StartType.Merchant] = new Dictionary<string, string>
             {
@@ -59,6 +60,7 @@ namespace RealmsForgotten.Managers
                 ["south_realm"] = "merchant_start_empire",
                 ["west_realm"] = "merchant_start_empire",
                 ["mage"] = "merchant_start_empire",
+                ["dwarf"] = "merchant_start_sturgia",
             },
             [StartType.Exiled] = new Dictionary<string, string>
             {
@@ -73,6 +75,7 @@ namespace RealmsForgotten.Managers
                 ["south_realm"] = "rf_exiled_equip",
                 ["west_realm"] = "rf_exiled_equip",
                 ["mage"] = "rf_exiled_equip",
+                ["dwarf"] = "rf_exiled_equip",
             },
             [StartType.EscapedPrisoner] = new Dictionary<string, string>
             {
@@ -87,6 +90,7 @@ namespace RealmsForgotten.Managers
                 ["south_realm"] = "rf_empire_mistic",
                 ["west_realm"] = "rf_empire_mistic",
                 ["mage"] = "rf_empire_mistic",
+                ["dwarf"] = "rf_sturgia_mistic",
             },
             [StartType.Looter] = new Dictionary<string, string>
             {
@@ -101,6 +105,7 @@ namespace RealmsForgotten.Managers
                 ["south_realm"] = "rf_looter",
                 ["west_realm"] = "rf_looter",
                 ["mage"] = "rf_looter",
+                ["dwarf"] = "rf_looter",
             },
             [StartType.Mercenary] = new Dictionary<string, string>
             {
@@ -115,6 +120,7 @@ namespace RealmsForgotten.Managers
                 ["south_realm"] = "merc_realms_start",
                 ["west_realm"] = "merc_realms_start",
                 ["mage"] = "merc_realms_start",
+                ["dwarf"] = "merc_dwarf_start",
             },
             [StartType.VassalNoFief] = new Dictionary<string, string>
             {
@@ -129,6 +135,7 @@ namespace RealmsForgotten.Managers
                 ["south_realm"] = "realms_vassal_nofief",
                 ["west_realm"] = "realms_vassal_nofief",
                 ["mage"] = "realms_vassal_nofief",
+                ["dwarf"] = "dwarf_vassal_nofief",
             },
             [StartType.VassalFief] = new Dictionary<string, string>
             {
@@ -143,6 +150,7 @@ namespace RealmsForgotten.Managers
                 ["south_realm"] = "realms_vassal_nofief",
                 ["west_realm"] = "realms_vassal_nofief",
                 ["mage"] = "realms_vassal_nofief",
+                ["dwarf"] = "dwarf_vassal_ursurper",
             },
             [StartType.KingdomRuler] = new Dictionary<string, string>
             {
@@ -157,6 +165,7 @@ namespace RealmsForgotten.Managers
                 ["south_realm"] = "king_realms_start",
                 ["west_realm"] = "king_realms_start",
                 ["mage"] = "king_realms_start",
+                ["dwarf"] = "king_dwarf_start",
             },
             [StartType.CastleRuler] = new Dictionary<string, string>
             {
@@ -171,6 +180,7 @@ namespace RealmsForgotten.Managers
                 ["south_realm"] = "vassal_realms_start",
                 ["west_realm"] = "vassal_realms_start",
                 ["mage"] = "vassal_realms_start",
+                ["dwarf"] = "vassal_vortiak_start",
             }
         };
         public static readonly Dictionary<(string Culture, StartType StartOption), List<TroopSpawnInfo>> CultureStartTypeToTroops = new()
@@ -578,6 +588,43 @@ namespace RealmsForgotten.Managers
                 new TroopSpawnInfo("imperial_legionary", 10),
                 new TroopSpawnInfo("imperial_palatine_guard", 5),
                 new TroopSpawnInfo("imperial_cataphract", 3) }},
+             { ("dwarf", StartType.Merchant), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("merchant_dwarf", 4),
+                new TroopSpawnInfo("dwarf_troop", 8),
+                new TroopSpawnInfo("dwarf_militia_veteran_archer", 4) }},
+
+            { ("dwarf", StartType.Exiled), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("dwarf_troop", 4),
+                new TroopSpawnInfo("dwarf_levy_crossbowman", 2) }},
+
+            { ("dwarf", StartType.EscapedPrisoner), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("dwarf_troop", 5) }},
+
+            { ("dwarf", StartType.Looter), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("dwarf_looter", 8) }},
+
+            { ("dwarf", StartType.Mercenary), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("dwarf_mercenary_volunteer", 10) }},
+
+            { ("dwarf", StartType.VassalNoFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("dwarf_heavy_spearman", 10),
+                new TroopSpawnInfo("dwarf_hardened_crossbowman", 5),
+                new TroopSpawnInfo("dwarf_exp_cavalry", 3) }},
+
+            { ("dwarf", StartType.KingdomRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("dwarf_veteran_warrior", 20),
+                new TroopSpawnInfo("dwarf_sharpshooter", 10),
+                new TroopSpawnInfo("dugrast_druzhinnik", 10) }},
+
+            { ("dwarf", StartType.CastleRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("dwarf_heavy_spearman", 15),
+                new TroopSpawnInfo("dwarf_hardened_crossbowman", 10),
+                new TroopSpawnInfo("dwarf_exp_cavalry", 5) }},
+
+            { ("dwarf", StartType.VassalFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("dwarf_heavy_spearman", 10),
+                new TroopSpawnInfo("dwarf_hardened_crossbowman", 5),
+                new TroopSpawnInfo("dugrast_druzhinnik", 5) }},
 
              };
 
@@ -647,7 +694,9 @@ namespace RealmsForgotten.Managers
                 case 14:
                     startingSettlement = Settlement.Find("town_EM1");
                     break;
-
+                case 15:
+                    startingSettlement = Settlement.Find("town_dwarf_1");
+                    break;
                 default:
                     break;
             }
@@ -737,7 +786,8 @@ namespace RealmsForgotten.Managers
                 case StartType.EscapedPrisoner: // Escaped Prisoner
                                                 // No troops to assign for Escaped Prisoner, but applying other effects
                     Console.WriteLine("Processing Default start option");
-                    ApplyInternal(mainHero, gold: 2000, grain: 10, startOption: StartType.EscapedPrisoner);
+                    List<TroopSpawnInfo> escapedPrisonerTroops = GetTroopsForStartOption(mainHero.Culture.StringId, StartType.EscapedPrisoner);
+                    ApplyInternal(mainHero, gold: 3000, grain: 10, startOption: StartType.EscapedPrisoner);
                     if (captor != null)
                     {
                         CharacterRelationManager.SetHeroRelation(mainHero, captor, -50);
