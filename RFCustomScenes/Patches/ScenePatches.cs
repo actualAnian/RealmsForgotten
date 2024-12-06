@@ -24,22 +24,25 @@ namespace RFCustomSettlements.Patches
     {
         static readonly MethodInfo curMisScrInfo = AccessTools.PropertyGetter("MissionMainAgentInteractionComponent:CurrentMissionScreen");
         static readonly MethodInfo curMisInfo = AccessTools.PropertyGetter("MissionMainAgentInteractionComponent:CurrentMission");
-        static void Postfix(MissionMainAgentInteractionComponent __instance)
+        static bool Prefix(MissionMainAgentInteractionComponent __instance)
         {
             CustomSettlementMissionLogic logic;
-            if ((logic = Mission.Current.GetMissionBehavior<CustomSettlementMissionLogic>()) == null) return;
-            if (!((MissionScreen)curMisScrInfo.Invoke(__instance, null)).SceneLayer.Input.IsGameKeyPressed(13)) return;
+            if ((logic = Mission.Current.GetMissionBehavior<CustomSettlementMissionLogic>()) == null) return true;
+            if (!((MissionScreen)curMisScrInfo.Invoke(__instance, null)).SceneLayer.Input.IsGameKeyPressed(13)) return true;
             var c = (Mission)curMisInfo.Invoke(__instance, null);
             Agent? agent;
             if ((agent = __instance.CurrentFocusedObject as Agent) != null && IsLootableDeadAgent(agent))
             {
                 logic.OnAgentLooted(agent);
+                return false;
             }
             UsablePlace? usablePlace;
             if ((usablePlace = (__instance.CurrentFocusedMachine as UsablePlace)) != null && IsRFObject(usablePlace) && CanInteract)
             {
                 ((CustomSettlementMissionLogic)c.MissionBehaviors.Where(m => m is CustomSettlementMissionLogic).ElementAt(0)).OnObjectUsed(usablePlace);
+                return false;
             }
+            return true;
         }
     }
     [HarmonyPatch(typeof(AgentInteractionInterfaceVM), "Tick")]
@@ -52,7 +55,7 @@ namespace RFCustomSettlements.Patches
             Agent? agent;
             if ((agent = currentFocusedObject as Agent) == null) return true;
             if (Helper.IsLootableDeadAgent(agent)) return false;
-            return true;    
+            return true;
         }
     }
     [HarmonyPatch(typeof(AgentInteractionInterfaceVM), "SetUsableMachine")]
@@ -133,6 +136,42 @@ namespace RFCustomSettlements.Patches
         }
 
     }
+
+    [HarmonyPatch(typeof(AgentInteractionInterfaceVM), "OnFocusGained")]
+    public class AgentInteractionInterfaceVMOnFocusGainedPatch
+    {
+        [HarmonyPatch(typeof(AgentInteractionInterfaceVM), "OnFocusGained")]
+        internal static IEnumerable<CodeInstruction> OnFocusGainedPatch(IEnumerable<CodeInstruction> instructions, ILGenerator ilGenerator)
+        {
+            var codes = instructions.ToList();
+            var insertionAgentHandle = 0;
+            Label VanillaAgentHandleJumpLabel = ilGenerator.DefineLabel();
+            for (var index = 0; index < codes.Count; index++)
+            {
+                if (codes[index].opcode == OpCodes.Ldloc_0
+                    && codes[index + 1].opcode == OpCodes.Callvirt
+                    && codes[index + 2].opcode == OpCodes.Brfalse_S
+                    && codes[index + 3].opcode == OpCodes.Ldarg_0
+                    && codes[index + 4].opcode == OpCodes.Ldarg_1)
+                {
+                    codes[index].labels.Add(VanillaAgentHandleJumpLabel);
+                    insertionAgentHandle = index;
+                }
+            }
+            var handle_rf_agents_instr_list = new List<CodeInstruction>
+            {
+                new(OpCodes.Ldloc_0),
+                new(OpCodes.Call, AccessTools.Method(typeof(Helper), nameof(IsLootableDeadAgent))),
+                new(OpCodes.Brfalse, VanillaAgentHandleJumpLabel),
+                new(OpCodes.Ldarg_0),
+                new(OpCodes.Call, AccessTools.Method(typeof(Helper), nameof(SetVMLook))),
+                new(OpCodes.Ret)
+            };
+            codes.InsertRange(insertionAgentHandle, handle_rf_agents_instr_list);
+            return codes.AsEnumerable();
+        }
+
+    }
     internal class MissionMainAgentInteractionComponentFocusTickPatch
     {
         internal static IEnumerable<CodeInstruction> FocusTickPatch(IEnumerable<CodeInstruction> instructions, ILGenerator ilGenerator)
@@ -168,7 +207,7 @@ namespace RFCustomSettlements.Patches
                     && codes[index + 1].opcode == OpCodes.Stloc_S
                     && codes[index + 2].opcode == OpCodes.Ldloc_S
                     && codes[index + 3].opcode == OpCodes.Stloc_0)
-                        codes[index].labels.Add(isRFInteractableAgentjumpLabel);
+                    codes[index].labels.Add(isRFInteractableAgentjumpLabel);
             }
             var set_interactable_instr_list = new List<CodeInstruction> // checks for interactable objects
             {

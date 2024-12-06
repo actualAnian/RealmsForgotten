@@ -1,5 +1,6 @@
 ﻿using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.MapEvents;
+using TaleWorlds.Core;
 using TaleWorlds.Library;
 
 namespace RealmsForgotten.AiMade.Career
@@ -45,8 +46,11 @@ namespace RealmsForgotten.AiMade.Career
 
             if (pointsToAward > 0)
             {
-                ChivalryManager.AddChivalry(Hero.MainHero, pointsToAward, true); // Adjust this line to fit your ChivalryManager implementation
-                InformationManager.DisplayMessage(new InformationMessage($"You have cleared {_hideoutsCleared} bandit hideouts and gained {pointsToAward} chivalry points!"));
+                var careerProgressionBehavior = Campaign.Current.GetCampaignBehavior<CareerProgressionBehavior>();
+                if (careerProgressionBehavior.AddChivalryPoints(pointsToAward, CareerType.Knight))
+                {
+                    InformationManager.DisplayMessage(new InformationMessage($"You have cleared {_hideoutsCleared} bandit hideouts and gained {pointsToAward} chivalry points!"));
+                }
             }
         }
 

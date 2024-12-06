@@ -57,7 +57,7 @@ namespace RealmsForgotten.Quest.KnightQuest
         private static readonly string QuestItemId = "rfmisc_western_2hsword_t3_fire";
 
         public static CharacterObject KnightMaester
-        { 
+        {
             get
             {
                 return MBObjectManager.Instance.GetObject<CharacterObject>(QuestGiverId);

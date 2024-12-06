@@ -3,18 +3,21 @@ using System;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
+using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-namespace RFCustomSettlements
+namespace RealmsForgotten.HuntableHerds.AgentComponents
 {
     public class LootableAgentComponent : AgentComponent
     {
-        private ItemRoster itemDrops;
+        private readonly ItemRoster itemDrops;
         public int GoldDrop { get { return _goldDrop; } }
+        public Vec3 LootArea { get; }
 
         private int _goldDrop = 0;
         public LootableAgentComponent(Agent agent, ItemDropsData itemDrops) : base(agent)
         {
+            LootArea = itemDrops.LootArea;
             this.itemDrops = RandomizeLoot(itemDrops);
         }
         public ItemRoster RandomizeLoot(ItemDropsData itemDrops)
@@ -24,13 +27,14 @@ namespace RFCustomSettlements
             {
                 if (MBRandom.RandomFloatRanged(0f, 1f) >= drop.DropChance)
                     continue;
-                int amount = 0;
+                int amount;
                 if (drop.AmountMax > drop.AmountMin)
                     amount = MBRandom.RandomInt(drop.AmountMin, drop.AmountMax);
                 else amount = drop.AmountMax;
                 ItemObject? item = null;
                 if (drop.ItemId == "gold")
                     _goldDrop += amount;
+                ItemObject? item;
                 try
                 {
                     item = Game.Current.ObjectManager.GetObject<ItemObject>(drop.ItemId);

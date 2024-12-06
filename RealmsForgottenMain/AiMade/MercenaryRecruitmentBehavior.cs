@@ -72,13 +72,21 @@ namespace RealmsForgotten.AiMade
 
         private void ShowMercenaryPurchaseDialog(string cultureId)
         {
-            var troopIds = cultureTroopMap.ContainsKey(cultureId) ? cultureTroopMap[cultureId] : new List<string> { "default_troop_id" };
-            var troops = troopIds.Select(MBObjectManager.Instance.GetObject<CharacterObject>).ToList();
+            if (cultureTroopMap.ContainsKey(cultureId))
+            {
+                List<string> troopIds = cultureTroopMap[cultureId];
+                List<CharacterObject> troops = troopIds.Select(MBObjectManager.Instance.GetObject<CharacterObject>).ToList();
+                string title = new TextObject("Hire Mercenaries", null).ToString();
+                List<InquiryElement> options = troops.Select(troop => new InquiryElement(troop, troop.Name.ToString(), new ImageIdentifier(CharacterCode.CreateFrom(troop)))).ToList();
+                MBInformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(title, string.Empty, options, true, 1, 1, GameTexts.FindText("str_done", null).ToString(), GameTexts.FindText("str_cancel", null).ToString(), elements => OnMercenaryTypeSelected(elements), null, "", false), false, false);
+            }
+            else
+            {
+                InformationManager.ShowInquiry(new InquiryData("There are no mercenaries to recruit", "No mercs", true, false, new TextObject("{=continue}Continue").ToString(), "", () =>
+                {
 
-            string title = new TextObject("Hire Mercenaries", null).ToString();
-            List<InquiryElement> options = troops.Select(troop => new InquiryElement(troop, troop.Name.ToString(), new ImageIdentifier(CharacterCode.CreateFrom(troop)))).ToList();
-
-            MBInformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(title, string.Empty, options, true, 1, 1, GameTexts.FindText("str_done", null).ToString(), GameTexts.FindText("str_cancel", null).ToString(), elements => OnMercenaryTypeSelected(elements), null, "", false), false, false);
+                }, null), true);
+            }
         }
 
         private void OnMercenaryTypeSelected(List<InquiryElement> elements)

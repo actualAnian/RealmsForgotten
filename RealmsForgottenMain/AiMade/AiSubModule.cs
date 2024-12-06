@@ -91,7 +91,8 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new SlaveBehavior());
             campaignGameStarter.AddBehavior(new ADODCustomLocationsBehavior());
             campaignGameStarter.AddBehavior(new NasorianHordeInvasion());
-            
+            campaignGameStarter.AddBehavior(new FirstTreeTempleLocation());
+
         }
         private void AddCustomModels(CampaignGameStarter campaignGameStarter)
         {

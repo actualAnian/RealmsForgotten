@@ -11,7 +11,6 @@ namespace RealmsForgotten.HuntableHerds.AgentComponents {
 
 		public HerdAgentComponent(Agent agent) : base(agent, HerdBuildData.CurrentHerdBuildData.GetCopyOfItemDrops()) {
             agent.Health = HerdBuildData.CurrentHerdBuildData.StartingHealth;
-            ;
 		}
 
         public override void OnTickAsAI(float dt) {
