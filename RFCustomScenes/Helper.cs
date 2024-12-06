@@ -1,4 +1,5 @@
-﻿using RFCustomSettlements;
+﻿using RealmsForgotten.HuntableHerds.AgentComponents;
+using RFCustomSettlements;
 using SandBox.AI;
 using SandBox.Objects.Usables;
 using System;
@@ -93,15 +94,35 @@ namespace RealmsForgotten.RFCustomSettlements
             Vec3 vec2 = position * (1f - num2) + (position + direction) * num2;
             _ = Mission.Current.Scene.RayCastForClosestEntityOrTerrainMT(vec2, vec2 + vec * num, out float distance, out Vec3 closesPoint, 0.01f, BodyFlags.None);
 
-            float RANGE_X = 1.5f;
-            float RANGE_Y = 1.5f;
-            float RANGE_Z = 1.5f;
+        public static bool CanInteract { get => _canInteract; }
+
+        public static Agent? RayCastToCheckForRFInteractableAgent(Agent agent)
+        {
+            // ALSO PREVENTS THE MOUNTS ENEMIES FROM HUNTABLE HERDS TO BE MOUNTABLE
+            if (agent != null && agent.Components.Any(c => c is HuntableHerds.AgentComponents.HerdAgentComponent)) return null;
+            if (agent != null) return agent;
+            CustomSettlementMissionLogic logic;
+            if ((logic = Mission.Current.GetMissionBehavior<CustomSettlementMissionLogic>()) == null) return null;
+            if (logic.LootableAgents.IsEmpty()) return null;
+            float num = 10f;
+            MatrixFrame cf = Mission.Current.GetCameraFrame();
+
+            Vec3 direction = cf.rotation.u * -1;
+            Vec3 vec = direction;
+            Vec3 position = cf.origin;
+            Vec3 position2 = Agent.Main.Position;
+            float num2 = new Vec3(position.x, position.y, 0f, -1f).Distance(new Vec3(position2.x, position2.y, 0f, -1f));
+            Vec3 vec2 = position * (1f - num2) + (position + direction) * num2;
+            _ = Mission.Current.Scene.RayCastForClosestEntityOrTerrainMT(vec2, vec2 + vec * num, out float distance, out Vec3 closesPoint, 0.01f, BodyFlags.None);
+
             foreach (KeyValuePair<Agent, Vec3> lootableAgent in logic.LootableAgents)
             {
+
+                Vec3 range = lootableAgent.Key.GetComponent<LootableAgentComponent>().LootArea;
                 Vec3 centerPosition = lootableAgent.Value;
-                if (Math.Abs(centerPosition.X - closesPoint.X) < RANGE_X
-                    && Math.Abs(centerPosition.Y - closesPoint.Y) < RANGE_Y
-                    && Math.Abs(centerPosition.Z - closesPoint.Z) < RANGE_Z)
+                if (Math.Abs(centerPosition.X - closesPoint.X) < range.X
+                    && Math.Abs(centerPosition.Y - closesPoint.Y) < range.Y
+                    && Math.Abs(centerPosition.Z - closesPoint.Z) < range.Z)
                     return lootableAgent.Key;
             }
             return null;

@@ -9,7 +9,7 @@ namespace RealmsForgotten.AiMade.Utility
     public static class SyncDataUtility
     {
         // Specify the exact folder path
-        private static readonly string logFolderPath = @"C:\Users\gupol\Documents\modloginfo";
+        private static readonly string logFolderPath = Globals.realmsForgottenAssembly.Location;
         private static readonly string logFilePath = Path.Combine(logFolderPath, "BannerlordSaveErrors.log");
 
         public static void Log(string message)
@@ -60,4 +60,3 @@ namespace RealmsForgotten.AiMade.Utility
         }
     }
 }
-

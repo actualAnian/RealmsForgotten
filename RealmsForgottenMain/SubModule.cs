@@ -2,7 +2,6 @@ using HarmonyLib;
 using RealmsForgotten.Managers;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -22,19 +21,11 @@ using TaleWorlds.Engine.GauntletUI;
 using Module = TaleWorlds.MountAndBlade.Module;
 using Newtonsoft.Json.Linq;
 using RealmsForgotten.AiMade;
-using RealmsForgotten.AiMade.Models;
 using RealmsForgotten.Quest;
-using TaleWorlds.CampaignSystem.Settlements;
-using TaleWorlds.CampaignSystem.GameMenus;
 using RealmsForgotten.Patches;
-using RealmsForgotten.Quest.SecondUpdate;
 using RealmsForgotten.RFCustomHorses;
-using SandBox.GameComponents;
-using TaleWorlds.CampaignSystem.CharacterDevelopment;
-using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
-using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.MountAndBlade.ComponentInterfaces;
 using RealmsForgotten.AiMade.Patches;
@@ -96,7 +87,9 @@ namespace RealmsForgotten
                 campaignGameStarter.AddModel(new RFBattleCaptainModel(campaignGameStarter.GetExistingModel<BattleCaptainModel>()));
                 campaignGameStarter.AddModel(new RFInventoryCapacityModel(campaignGameStarter.GetExistingModel<InventoryCapacityModel>()));
                 campaignGameStarter.AddModel(new RFRaceSpeedBonusModel(campaignGameStarter.GetExistingModel<PartySpeedModel>()));
-               
+                campaignGameStarter.AddModel(new RFBanditDensityModel(campaignGameStarter.GetExistingModel<BanditDensityModel>()));
+
+                
                 new RFAttributes().Initialize();
                 new RFSkills().Initialize();
                 new RFSkillEffects().InitializeAll();
@@ -105,6 +98,7 @@ namespace RealmsForgotten
                 AiSubModule.AddCampaignBehaviors(campaignGameStarter);
                 AiSubModule.InitializeCareerSystem();
 
+                QuestSubModule.AddQuestBehaviors((CampaignGameStarter)gameStarterObject);
 
                 ReadConfigFile();
             }
@@ -193,10 +187,10 @@ namespace RealmsForgotten
         {
 #pragma warning disable BHA0003 // Type was not found
             MethodInfo originalMethod = AccessTools.Method("PartyVM:PopulatePartyListLabel");
-//            MethodInfo beardGetterMethod = AccessTools.Method("FaceGenVM:UpdateRaceAndGenderBasedResources");
+            //            MethodInfo beardGetterMethod = AccessTools.Method("FaceGenVM:UpdateRaceAndGenderBasedResources");
 #pragma warning restore BHA0003 // Type was not found
             harmony.Patch(originalMethod, transpiler: new HarmonyMethod(typeof(PartyVMPatch), nameof(PartyVMPatch.PartyVMPopulatePartyListLabelPatch)));
-  //          harmony.Patch(beardGetterMethod, transpiler: new HarmonyMethod(typeof(PartyVMPatch), nameof(PartyVMPatch.PartyVMPopulatePartyListLabelPatch)));
+            //          harmony.Patch(beardGetterMethod, transpiler: new HarmonyMethod(typeof(PartyVMPatch), nameof(PartyVMPatch.PartyVMPopulatePartyListLabelPatch)));
 
             QuestPatches.PatchAll();
 
@@ -214,6 +208,8 @@ namespace RealmsForgotten
         }
         protected override void OnSubModuleLoad()
         {
+            //var types = Globals.realmsForgottenAssembly.GetTypes().ToList();
+            //var patch = types.Where(t => t is FaceGenPatch);
             base.OnSubModuleLoad();
             harmony.PatchAll();
 
