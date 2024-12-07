@@ -43,7 +43,10 @@ namespace RFCustomSettlements.Quests
         }
         [SaveableField(1)]
         private Dictionary<string, CustomSettlementQuestData> questSaveableData = new();
-        public override void RegisterEvents() {}
+        public override void RegisterEvents()
+        {
+            //CampaignEvents.OnGameLoadFinishedEvent.AddNonSerializedListener(this, ReloadQuests);
+        }
 
         public override void SyncData(IDataStore dataStore)
         {
@@ -194,7 +197,7 @@ namespace RFCustomSettlements.Quests
         }
         public override TextObject Title => new(_title);
 
-        public override bool IsRemainingTimeHidden => false;
+        public override bool IsRemainingTimeHidden => true;
 
         protected override void HourlyTick() {}
 
@@ -357,6 +360,7 @@ namespace RFCustomSettlements.Quests
             _title = "temp";
             tasksString = item2;
             enemiesToKill = tasks;
+            //this.StartQuest();
             if (tasks.Count() != 0) QuestsListeningToActorRemoved.Add(this);
         }
     }

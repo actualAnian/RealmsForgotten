@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RFCustomSettlements.Quests;
+using System;
 using System.Collections.Generic;
 using TaleWorlds.SaveSystem;
 using static RealmsForgotten.RFCustomSettlements.ArenaSettlementStateHandler;
@@ -14,9 +15,11 @@ namespace RealmsForgotten.RFCustomSettlements
             AddClassDefinition(typeof(RFCustomSettlement), 1, null);
             AddEnumDefinition(typeof(ArenaState), 2, null);
             AddClassDefinition(typeof(CustomSettlementQuestData), 4, null);
+            AddClassDefinition(typeof(CustomSettlementQuest), 5, null);
         }
         protected override void DefineContainerDefinitions()
         {
+            ConstructContainerDefinition(typeof(Dictionary<string, int>));
             ConstructContainerDefinition(typeof(Dictionary<string, CustomSettlementQuestData>));
             ConstructContainerDefinition(typeof(List<RFCustomSettlement>));
         }

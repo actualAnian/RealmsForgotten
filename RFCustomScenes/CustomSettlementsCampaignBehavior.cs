@@ -23,6 +23,7 @@ namespace RealmsForgotten.RFCustomSettlements
 
         [SaveableField(1)]
         private static Dictionary<string, int> _dialogueStates = new();
+        
         public static Dictionary<string, int> DialogueStates { get { return _dialogueStates; } }
         public CustomSettlementsCampaignBehavior()
         {
@@ -164,7 +165,6 @@ namespace RealmsForgotten.RFCustomSettlements
 #pragma warning restore IDE1006 // Naming Styles
         public override void SyncData(IDataStore dataStore)
         {
-
             dataStore.SyncData("custSetDialStates", ref _dialogueStates);
             if (dataStore.IsSaving)
             {

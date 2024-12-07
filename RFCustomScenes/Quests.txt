@@ -4,23 +4,23 @@ IMPORTANT: keywords have to be FULLCAPTIONED (except npcId)
 possible dialogues.xml:
 	<Conditions>
 	npcId IS npc_1
-	State state_1" CREATE
-	State state_1" IS 1
+	STATE state_1" CREATE
+	STATE state_1" IS 1
 	EVALUATE quest_1
 	</Condition>
 	
 	<Consequence>
 		- START quest_1 
 		- COMPLETE quest_1
-		- State state_quest_1 INCREMENT
-		- State state_quest_1 RESET 
+		- STATE state_quest_1 INCREMENT
+		- STATE state_quest_1 RESET 
 	</Consequence>
 use AND keyword to add multiple conditions / consequences
 
 example dialogue:
 <Dialogue isStartLine="true" condition="npcId IS anorite_monastery_militia AND STATE epic_quest_state CREATE" consequence="START quest_1 AND STATE epic_quest_state INCREMENT">
 		
-emaple Quests.xml:
+example Quests.xml:
 <AllQuests>
 <Quest>
 	<QuestId>quest_1</QuestId>
