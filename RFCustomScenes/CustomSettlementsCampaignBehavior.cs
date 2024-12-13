@@ -20,7 +20,6 @@ namespace RealmsForgotten.RFCustomSettlements
         internal static List<Settlement>? customSettlements;
         private static RFCustomSettlement? currentSettlement;
         public static Dictionary<string, QuestData> AllQuests { get; set; } = new();
-
         [SaveableField(1)]
         private static Dictionary<string, int> _dialogueStates = new();
         

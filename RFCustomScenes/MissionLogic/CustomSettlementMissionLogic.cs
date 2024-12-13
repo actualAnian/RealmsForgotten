@@ -157,7 +157,6 @@ namespace RealmsForgotten.RFCustomSettlements
 
         private void SpawnNpcs()
         {
-
             Dictionary<string, List<UsableMachine>> _usablePoints = new();
             foreach (UsableMachine usableMachine in base.Mission.MissionObjects.FindAllWithType<UsableMachine>())
             {

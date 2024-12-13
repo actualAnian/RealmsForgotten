@@ -40,9 +40,12 @@ namespace RFCustomSettlements.Quests
             CustomSettlementQuestSync behavior = Campaign.Current.GetCampaignBehavior<CustomSettlementQuestSync>();
             CustomSettlementQuestData oldData = behavior.questSaveableData[questId];
             oldData.EnemiesToKill = enemiesToKill;
+            behavior.test = new(questId, enemiesToKill);
         }
         [SaveableField(1)]
         private Dictionary<string, CustomSettlementQuestData> questSaveableData = new();
+        [SaveableField(2)]
+        private CustomSettlementQuestData test;
         public override void RegisterEvents()
         {
             //CampaignEvents.OnGameLoadFinishedEvent.AddNonSerializedListener(this, ReloadQuests);
@@ -53,9 +56,10 @@ namespace RFCustomSettlements.Quests
             if (dataStore.IsSaving)
                 foreach (var quest in CustomSettlementQuest.GetAllQuest())
                     Update(quest.StringId, quest.enemiesToKill);
-
+            dataStore.SyncData("customSettlementTest", ref test);
             dataStore.SyncData("customSettlementQuestData", ref questSaveableData);
-            if (dataStore.IsLoading)
+            questSaveableData ??= new();
+            if (false)//dataStore.IsLoading)
             {
                 foreach (KeyValuePair<string, CustomSettlementQuestData> item in questSaveableData)
                 {

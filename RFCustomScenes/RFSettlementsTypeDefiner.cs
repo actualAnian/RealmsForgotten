@@ -14,8 +14,8 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             AddClassDefinition(typeof(RFCustomSettlement), 1, null);
             AddEnumDefinition(typeof(ArenaState), 2, null);
-            AddClassDefinition(typeof(CustomSettlementQuestData), 4, null);
-            AddClassDefinition(typeof(CustomSettlementQuest), 5, null);
+            AddClassDefinition(typeof(CustomSettlementQuestData), 3, null);
+            AddClassDefinition(typeof(CustomSettlementQuest), 4, null);
         }
         protected override void DefineContainerDefinitions()
         {

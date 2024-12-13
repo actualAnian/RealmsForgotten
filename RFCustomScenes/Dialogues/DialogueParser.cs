@@ -75,6 +75,8 @@ namespace RFCustomSettlements.Dialogues
                     if (keyword == "IS")
                     {
                         int number = int.Parse(data[3]);
+                        if (number == 0 && !Helper.ContainsDialogueState(stateId) )
+                            Helper.AddDialogueState(stateId);
                         return number == Helper.GetDialogueState(stateId);
                     }
                     throw new Exception("incorrect Keyword, expected \"IS\" or \"CREATE\"");
@@ -215,7 +217,7 @@ namespace RFCustomSettlements.Dialogues
         public static List<DialogueLine> allDialogues = new();
         public static void Deserialize()
         {
-
+            Dictionary<string, int> inputsAmount = new();
             string mainPath = Path.GetDirectoryName(Globals.realmsForgottenAssembly.Location);
 
             string xmlFileName = Path.Combine(mainPath, "dialogues.xml");
@@ -232,11 +234,15 @@ namespace RFCustomSettlements.Dialogues
                 if (node.Attribute("consequence") != null)
                     consequence = node.Attribute("consequence").Value;
                 text = node.Element("text").Value;
-                lineId = node.Element("lineId").Value;
+                inputId = node.Element("inputId").Value;
                 goToId = node.Element("goToId").Value;
-                if (node.Attribute("isStartLine") != null && bool.Parse(node.Attribute("isStartLine").Value) == true) inputId = "start";
-                else inputId = lineId;
+                //if (node.Attribute("isStartLine") != null && bool.Parse(node.Attribute("isStartLine").Value) == true) inputId = "start";
+                //else inputId = lineId;// node.Element("inputId").Value;
                 bool player = bool.Parse(node.Element("isPlayerLine").Value);
+
+                if (!inputsAmount.ContainsKey(inputId))
+                    inputsAmount[inputId] = 0;
+                lineId = inputId + inputsAmount[inputId];
                 allDialogues.Add(new(text, lineId, goToId, player, inputId, condition, consequence));
             }
         }
