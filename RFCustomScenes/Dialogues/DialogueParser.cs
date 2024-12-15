@@ -66,12 +66,12 @@ namespace RFCustomSettlements.Dialogues
                 {
                     string stateId = data[1];
                     string keyword = data[2];
-                    if (keyword == "CREATE")
-                    {
-                        if (Helper.ContainsDialogueState(stateId)) return false;
-                        Helper.AddDialogueState(stateId);
-                        return true;
-                    }
+                    //if (keyword == "CREATE")
+                    //{
+                    //    if (Helper.ContainsDialogueState(stateId)) return false;
+                    //    Helper.AddDialogueState(stateId);
+                    //    return true;
+                    //}
                     if (keyword == "IS")
                     {
                         int number = int.Parse(data[3]);
@@ -79,11 +79,18 @@ namespace RFCustomSettlements.Dialogues
                             Helper.AddDialogueState(stateId);
                         return number == Helper.GetDialogueState(stateId);
                     }
-                    throw new Exception("incorrect Keyword, expected \"IS\" or \"CREATE\"");
+                    if (keyword == "ISNOT")
+                    {
+                        int number = int.Parse(data[3]);
+                        if (!Helper.ContainsDialogueState(stateId))
+                            return false;
+                        return number != Helper.GetDialogueState(stateId);
+                    }
+                    throw new Exception("incorrect Keyword, expected \"IS\" or \"ISNOT\"");
                 }
                 catch (Exception)
                 {
-                    InformationManager.DisplayMessage(new InformationMessage($"Error parsing the condition for the dialogue in {data}", null));
+                    InformationManager.DisplayMessage(new InformationMessage($"Error parsing the condition for the dialogue in {string.Join(" ", data)}", null));
                     return false;
                 }
             }},
@@ -93,7 +100,7 @@ namespace RFCustomSettlements.Dialogues
                     return CharacterObject.OneToOneConversationCharacter.StringId == data[2];
                 }
 
-                InformationManager.DisplayMessage(new InformationMessage($"Error parsing the condition for the dialogue in {data}", null));
+                InformationManager.DisplayMessage(new InformationMessage($"Error parsing the condition for the dialogue in {string.Join(" ", data)}", null));
                 return false;
             } }
         };

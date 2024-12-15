@@ -46,6 +46,8 @@ namespace RFCustomSettlements.Quests
         private Dictionary<string, CustomSettlementQuestData> questSaveableData = new();
         [SaveableField(2)]
         private CustomSettlementQuestData test;
+        [SaveableField(3)]
+        private int cos;
         public override void RegisterEvents()
         {
             //CampaignEvents.OnGameLoadFinishedEvent.AddNonSerializedListener(this, ReloadQuests);
@@ -54,10 +56,14 @@ namespace RFCustomSettlements.Quests
         public override void SyncData(IDataStore dataStore)
         {
             if (dataStore.IsSaving)
+            {
                 foreach (var quest in CustomSettlementQuest.GetAllQuest())
                     Update(quest.StringId, quest.enemiesToKill);
+                cos = 5;
+            }
+            dataStore.SyncData("cos", ref cos);
             dataStore.SyncData("customSettlementTest", ref test);
-            dataStore.SyncData("customSettlementQuestData", ref questSaveableData);
+            dataStore.SyncData("questSaveableData", ref questSaveableData);
             questSaveableData ??= new();
             if (false)//dataStore.IsLoading)
             {
@@ -215,6 +221,7 @@ namespace RFCustomSettlements.Quests
         {
             tasksLog.UpdateCurrentProgress(1);
             _completeConsequence();
+            CompleteQuestWithSuccess();
         }
         public bool EvaluateCompleteConditions()
         {
