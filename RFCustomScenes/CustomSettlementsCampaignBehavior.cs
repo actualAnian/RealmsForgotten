@@ -25,6 +25,7 @@ namespace RealmsForgotten.RFCustomSettlements
         public static Dictionary<string, int> DialogueStates { get { return _dialogueStates; } }
         public CustomSettlementsCampaignBehavior()
         {
+            _dialogueStates = new();
             if (MobileParty.MainParty != null && Settlement.CurrentSettlement != null && Settlement.CurrentSettlement.SettlementComponent is RFCustomSettlement settlement)
                 currentSettlement = settlement;
         }

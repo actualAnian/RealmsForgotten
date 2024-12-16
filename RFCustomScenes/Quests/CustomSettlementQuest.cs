@@ -9,6 +9,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Core;
+using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
@@ -22,12 +23,12 @@ namespace RFCustomSettlements.Quests
         public CustomSettlementQuestData(string text, Dictionary<string, int> enemiesToKill)
         {
             EnemiesToKill = enemiesToKill;
-            Text = text;
+            TasksText = text;
         }
         [SaveableProperty(0)]
         public Dictionary<string, int> EnemiesToKill { get; set; }
         [SaveableProperty(1)]
-        public string Text { get; set; }
+        public string TasksText { get; set; }
     }
 
     public class CustomSettlementQuestSync : CampaignBehaviorBase
@@ -65,7 +66,7 @@ namespace RFCustomSettlements.Quests
                 {
                     CustomSettlementQuest? quest = CustomSettlementQuest.GetQuest(item.Key);
                     if (quest == null) continue;
-                    quest.LoadData(item.Value.Text, item.Value.EnemiesToKill);
+                    quest.LoadData(item.Value.TasksText, item.Value.EnemiesToKill);
                 }
             }
         }
@@ -88,7 +89,6 @@ namespace RFCustomSettlements.Quests
             _completeConsequence = CreateConsequence(data.CompleteConsequence);
 
             _title = data.QuestLogText;
-            //tasksLog = AddLog(new("a"));
             tasksLog = AddDiscreteLog(
                             new TextObject($"{data.QuestLogText}"),
                             new TextObject($"{tasksString}"), 0, 1);
@@ -97,7 +97,7 @@ namespace RFCustomSettlements.Quests
                 CustomSettlementMissionLogic logic = Mission.Current.GetMissionBehavior<CustomSettlementMissionLogic>();
                 if (logic != null) logic.UnitKilled += OnEnemyKilledInCustomSettlement;
             }
-            CustomSettlementQuestSync.AddNewQuest(data.QuestId, _title, enemiesToKill);
+            CustomSettlementQuestSync.AddNewQuest(data.QuestId, tasksString, enemiesToKill);
         }
         public static bool IsQuestActive(string questId)
         {
@@ -125,7 +125,7 @@ namespace RFCustomSettlements.Quests
         {
             StringBuilder sb = new();
             CharacterObject? questGiver = MBObjectManager.Instance.GetObject<CharacterObject>($"{data.QuestGiverId}");
-            sb.Append(questGiver != null ? questGiver.StringId : $"Error, npc with id{data.QuestGiverId} not found.");
+            sb.Append(questGiver != null ? questGiver.Name.Value : $"Error, npc with id{data.QuestGiverId} not found.");
             sb.AppendLine(" wants you to:");
             CompletedWhen condition = data.CompleteCondition;
             if (condition.InInventoryList?.Count > 0)
@@ -225,10 +225,25 @@ namespace RFCustomSettlements.Quests
         }
         public void OnEnemyKilledInCustomSettlement(string killedId)
         {
+            string appendText = " - DONE";
             if (enemiesToKill.ContainsKey(killedId))
             {
                 enemiesToKill[killedId] -= 1;
-                if (enemiesToKill[killedId] <= 0) enemiesToKill.Remove(killedId);
+                if (enemiesToKill[killedId] <= 0)
+                {
+                    StringBuilder newString = new();
+                    string subtext = MBObjectManager.Instance.GetObject<CharacterObject>(killedId).Name.ToString();
+                    enemiesToKill.Remove(killedId);
+                    foreach (var task in tasksString.Split('\n'))
+                    {
+                        if (task.Contains(subtext)) continue;
+                        newString.Append(task);
+                    }
+                    tasksLog.UpdateCurrentProgress(1);
+                    tasksLog = AddDiscreteLog(tasksLog.LogText,
+                                    new TextObject($"{newString}"), 0, 1);
+                    //tasksLog.TaskName.SetTextVariable(new(tasksString));
+                }
             }
             if (enemiesToKill.Count() <= 0) CustomSettlementQuest.QuestsListeningToActorRemoved.Remove(this);
         }
@@ -306,7 +321,6 @@ namespace RFCustomSettlements.Quests
                 MobileParty.MainParty.PartyTradeGold -= consequence.LoseGoldAmount;
             };
         }
-
         private Func<bool> CreateCondition(CompletedWhen condition)
         {
             return () =>
