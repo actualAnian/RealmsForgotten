@@ -22,7 +22,6 @@ namespace RealmsForgotten.RFCustomSettlements
         public static Dictionary<string, QuestData> AllQuests { get; set; } = new();
         [SaveableField(1)]
         private static Dictionary<string, int> _dialogueStates = new();
-        
         public static Dictionary<string, int> DialogueStates { get { return _dialogueStates; } }
         public CustomSettlementsCampaignBehavior()
         {

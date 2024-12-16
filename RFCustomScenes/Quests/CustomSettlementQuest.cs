@@ -17,19 +17,21 @@ using TaleWorlds.SaveSystem;
 
 namespace RFCustomSettlements.Quests
 {
+    public class CustomSettlementQuestData
+    {
+        public CustomSettlementQuestData(string text, Dictionary<string, int> enemiesToKill)
+        {
+            EnemiesToKill = enemiesToKill;
+            Text = text;
+        }
+        [SaveableProperty(0)]
+        public Dictionary<string, int> EnemiesToKill { get; set; }
+        [SaveableProperty(1)]
+        public string Text { get; set; }
+    }
+
     public class CustomSettlementQuestSync : CampaignBehaviorBase
     {
-        internal class CustomSettlementQuestData
-        {
-            public CustomSettlementQuestData(string text, Dictionary<string, int> enemiesToKill)
-            {
-                EnemiesToKill = enemiesToKill;
-                Text = text;
-            }
-
-            public Dictionary<string, int> EnemiesToKill { get; set; }
-            public string Text { get; }
-        }
         public static void AddNewQuest(string questId, string text, Dictionary<string, int> enemiesToKill)
         {
             CustomSettlementQuestSync behavior = Campaign.Current.GetCampaignBehavior<CustomSettlementQuestSync>();
@@ -40,14 +42,9 @@ namespace RFCustomSettlements.Quests
             CustomSettlementQuestSync behavior = Campaign.Current.GetCampaignBehavior<CustomSettlementQuestSync>();
             CustomSettlementQuestData oldData = behavior.questSaveableData[questId];
             oldData.EnemiesToKill = enemiesToKill;
-            behavior.test = new(questId, enemiesToKill);
         }
         [SaveableField(1)]
         private Dictionary<string, CustomSettlementQuestData> questSaveableData = new();
-        [SaveableField(2)]
-        private CustomSettlementQuestData test;
-        [SaveableField(3)]
-        private int cos;
         public override void RegisterEvents()
         {
             //CampaignEvents.OnGameLoadFinishedEvent.AddNonSerializedListener(this, ReloadQuests);
@@ -59,13 +56,10 @@ namespace RFCustomSettlements.Quests
             {
                 foreach (var quest in CustomSettlementQuest.GetAllQuest())
                     Update(quest.StringId, quest.enemiesToKill);
-                cos = 5;
             }
-            dataStore.SyncData("cos", ref cos);
-            dataStore.SyncData("customSettlementTest", ref test);
-            dataStore.SyncData("questSaveableData", ref questSaveableData);
+            dataStore.SyncData< Dictionary<string, CustomSettlementQuestData>>("questSaveableData", ref questSaveableData);
             questSaveableData ??= new();
-            if (false)//dataStore.IsLoading)
+            if (dataStore.IsLoading)
             {
                 foreach (KeyValuePair<string, CustomSettlementQuestData> item in questSaveableData)
                 {
@@ -88,6 +82,7 @@ namespace RFCustomSettlements.Quests
         public static List<CustomSettlementQuest> QuestsListeningToActorRemoved { get; } = new();
         private CustomSettlementQuest(QuestData data) : base(data.QuestId, CharacterObject.PlayerCharacter.HeroObject, CampaignTime.Never, 0)
         {
+
             tasksString = AnalyseConditions(data);
             _completeCondition = CreateCondition(data.CompleteCondition);
             _completeConsequence = CreateConsequence(data.CompleteConsequence);
@@ -206,6 +201,7 @@ namespace RFCustomSettlements.Quests
             }
         }
         public override TextObject Title => new(_title);
+        public override bool IsSpecialQuest => true;
 
         public override bool IsRemainingTimeHidden => true;
 
@@ -368,7 +364,7 @@ namespace RFCustomSettlements.Quests
 
         internal void LoadData(string item2, Dictionary<string, int> tasks)
         {
-            _title = "temp";
+            _title = CustomSettlementsCampaignBehavior.AllQuests[StringId].QuestLogText;
             tasksString = item2;
             enemiesToKill = tasks;
             //this.StartQuest();
