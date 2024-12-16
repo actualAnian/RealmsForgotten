@@ -26,6 +26,7 @@ using RFCustomSettlements;
 using HuntableHerds.Models;
 using SandBox.AI;
 using RFCustomSettlements.Quests;
+using System.ComponentModel;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -53,7 +54,6 @@ namespace RealmsForgotten.RFCustomSettlements
         private Dictionary<int, GameEntity> NpcSpawnPositions = new();
         private readonly Dictionary<Agent, CustomSettlementMissionLogic.UsedObject> defenderAgentObjects;
         private readonly ItemRoster loot;
-        private int goldLooted = 0;
         private readonly MobileParty banditsInSettlement;
         private readonly CustomSettlementBuildData BanditsData;
         private readonly Action? OnBattleEnd;
@@ -418,9 +418,6 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         protected override void OnEndMission()
         {
-            NextSceneData.Instance.goldLoot = goldLooted;
-            NextSceneData.Instance.itemLoot = loot;
-
             if (NextSceneData.Instance.shouldSwitchScenes == false)
                 NextSceneData.Instance.currentState = NextSceneData.RFExploreState.Finished;
             if (OnBattleEnd != null) this.OnBattleEnd();
@@ -569,13 +566,13 @@ namespace RealmsForgotten.RFCustomSettlements
                 foreach (ItemRosterElement item in component.GetItemDrops())
                 {
                     EquipmentElement element = item.EquipmentElement;
-                    loot.AddToCounts(element, item.Amount);
+                    MobileParty.MainParty.ItemRoster.AddToCounts(element, item.Amount);
                     HuntableHerds.SubModule.PrintDebugMessage("You looted " + item.Amount + " " + element.Item.Name + "!");
                 }
                 if (component.GoldDrop != 0)
                 {
-                    goldLooted += component.GoldDrop;
-                    HuntableHerds.SubModule.PrintDebugMessage("You found " + goldLooted + "<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">");
+                    Hero.MainHero.ChangeHeroGold(component.GoldDrop);
+                    HuntableHerds.SubModule.PrintDebugMessage("You found " + component.GoldDrop + "<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">");
                 }
                 if (playSound)
                     Mission.MakeSoundOnlyOnRelatedPeer(SoundEvent.GetEventIdFromString("event:/mission/combat/pickup_arrows"), agent.Position, Mission.MainAgent.Index);
@@ -609,14 +606,14 @@ namespace RealmsForgotten.RFCustomSettlements
                 string soundEventId = "";
                 if (itemId == "gold")
                 {
-                    goldLooted += amount;
+                    Hero.MainHero.ChangeHeroGold(amount);
                     soundEventId = "event:/ui/notification/coins_positive";
-                    HuntableHerds.SubModule.PrintDebugMessage("You found " + goldLooted + "<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">");
+                    HuntableHerds.SubModule.PrintDebugMessage("You found " + amount + "<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">");
                 }
                 else
                 {
                     ItemObject item = MBObjectManager.Instance.GetObject<ItemObject>(itemId);
-                    loot.AddToCounts(item, amount);
+                    MobileParty.MainParty.ItemRoster.AddToCounts(item, amount);
                     HuntableHerds.SubModule.PrintDebugMessage("You found " + item.Name + "!");
                     soundEventId = "event:/mission/combat/pickup_arrows";
                 }
