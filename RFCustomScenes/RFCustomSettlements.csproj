@@ -31,6 +31,14 @@
 			<Private>False</Private>
 		</Reference>
 		
+		<Reference Include="BehaviorTrees">
+		  <HintPath>..\..\BehaviorTree\BehaviorTreeWrapper\bin\x64\Debug\net472\BehaviorTrees.dll</HintPath>
+		</Reference>
+		
+		<Reference Include="BehaviorTreeWrapper">
+		  <HintPath>..\..\BehaviorTree\BehaviorTreeWrapper\bin\x64\Debug\net472\BehaviorTreeWrapper.dll</HintPath>
+		</Reference>
+		
 		<Reference Include="$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.*.dll">
 		  <HintPath>%(Identity)</HintPath>
 		  <Private>False</Private>
