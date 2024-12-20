@@ -92,7 +92,7 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new ADODCustomLocationsBehavior());
             campaignGameStarter.AddBehavior(new NasorianHordeInvasion());
             campaignGameStarter.AddBehavior(new FirstTreeTempleLocation());
-
+            campaignGameStarter.AddBehavior(new AggressiveDwarfUrkhaiBehavior());
         }
         private void AddCustomModels(CampaignGameStarter campaignGameStarter)
         {
