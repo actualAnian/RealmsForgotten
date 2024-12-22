@@ -96,7 +96,6 @@ namespace RealmsForgotten.Quest.SecondUpdate
                     EndCaptivityAction.ApplyByReleasedAfterBattle(Hero.MainHero);
 
                 CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter), new ConversationCharacterData(TheOwl.CharacterObject));
-                takeBossToLordLog?.UpdateCurrentProgress(3);
             }
 
             if (captureHellboundLog?.CurrentProgress == 2)
