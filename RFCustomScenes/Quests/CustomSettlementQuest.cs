@@ -89,8 +89,15 @@ namespace RFCustomSettlements.Quests
             _completeConsequence = CreateConsequence(data.CompleteConsequence);
 
             _title = data.QuestLogText;
+
+
+            StringBuilder sb = new();
+            CharacterObject? questGiver = MBObjectManager.Instance.GetObject<CharacterObject>($"{data.QuestGiverId}");
+            sb.Append(questGiver != null ? questGiver.Name.Value : $"Error, npc with id {data.QuestGiverId} not found.");
+            sb.AppendLine(" wants you to:");
+
             tasksLog = AddDiscreteLog(
-                            new TextObject($"{data.QuestLogText}"),
+                            new TextObject(sb.ToString()),
                             new TextObject($"{tasksString}"), 0, 1);
             if (data.CompleteCondition.HasKilledList.Count() > 0 && Mission.Current != null)
             {
@@ -124,9 +131,6 @@ namespace RFCustomSettlements.Quests
         private string AnalyseConditions(QuestData data)
         {
             StringBuilder sb = new();
-            CharacterObject? questGiver = MBObjectManager.Instance.GetObject<CharacterObject>($"{data.QuestGiverId}");
-            sb.Append(questGiver != null ? questGiver.Name.Value : $"Error, npc with id{data.QuestGiverId} not found.");
-            sb.AppendLine(" wants you to:");
             CompletedWhen condition = data.CompleteCondition;
             if (condition.InInventoryList?.Count > 0)
             {
@@ -316,9 +320,21 @@ namespace RFCustomSettlements.Quests
                         else  MobileParty.MainParty.MemberRoster.AddToCounts(character, troop.Value);
                     }
                 }
-                Clan.PlayerClan.AddRenown(consequence.RenownAmount);
-                MobileParty.MainParty.PartyTradeGold += consequence.ReceiveGoldAmount;
-                MobileParty.MainParty.PartyTradeGold -= consequence.LoseGoldAmount;
+                if (consequence.RenownAmount != 0)
+                {
+                    InformationManager.DisplayMessage(new InformationMessage($"Your renown increased by {consequence.RenownAmount}!"));
+                    Clan.PlayerClan.AddRenown(consequence.RenownAmount);
+                }
+                if (consequence.ReceiveGoldAmount != 0)
+                {
+                    InformationManager.DisplayMessage(new InformationMessage($"You gained {consequence.ReceiveGoldAmount}" + "<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">", "event:/ui/notification/coins_positive"));
+                    MobileParty.MainParty.PartyTradeGold += consequence.ReceiveGoldAmount;
+                }
+                if (consequence.LoseGoldAmount != 0)
+                {
+                    InformationManager.DisplayMessage(new InformationMessage($"You lost {consequence.LoseGoldAmount}" + "<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">", "event:/ui/notification/coins_negative"));
+                    MobileParty.MainParty.PartyTradeGold -= consequence.LoseGoldAmount;
+                }
             };
         }
         private Func<bool> CreateCondition(CompletedWhen condition)
