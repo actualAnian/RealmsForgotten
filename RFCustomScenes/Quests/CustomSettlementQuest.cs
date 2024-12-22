@@ -201,7 +201,7 @@ namespace RFCustomSettlements.Quests
             }
         }
         public override TextObject Title => new(_title);
-        public override bool IsSpecialQuest => true;
+        public override bool IsSpecialQuest => false;
 
         public override bool IsRemainingTimeHidden => true;
 
@@ -267,11 +267,11 @@ namespace RFCustomSettlements.Quests
                         string stringId = item.EquipmentElement.ToString();
                         if (consequence.RemoveItemList != null && consequence.RemoveItemList.ContainsKey(stringId))
                         {
-                            item.Amount -= consequence.RemoveItemList[stringId];
+                            MobileParty.MainParty.ItemRoster.AddToCounts(item.EquipmentElement, -consequence.RemoveItemList[stringId]);
                         }
                         if (consequence.AddItemList != null && consequence.AddItemList.ContainsKey(stringId))
                         {
-                            item.Amount += consequence.AddItemList[stringId];
+                            MobileParty.MainParty.ItemRoster.AddToCounts(item.EquipmentElement, consequence.AddItemList[stringId]);
                         }
                     }
                 }
@@ -332,7 +332,7 @@ namespace RFCustomSettlements.Quests
                     {
                         string stringId = item.EquipmentElement.ToString();
                         if (condition.InInventoryList.ContainsKey(stringId)
-                        && condition.InInventoryList[stringId] >= item.Amount)
+                        && condition.InInventoryList[stringId] <= item.Amount)
                         {
                             ItemsNeeded -= 1;
                             ItemObject? good = MBObjectManager.Instance.GetObject<ItemObject>(stringId);

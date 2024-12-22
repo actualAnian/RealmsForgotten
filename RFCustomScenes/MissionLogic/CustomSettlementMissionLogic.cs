@@ -109,7 +109,8 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
         {
-            UnitKilled?.Invoke(affectedAgent.Character.StringId);
+            string agentId = affectedAgent.Character == null ? affectedAgent.Monster.StringId : affectedAgent.Character.StringId;
+            UnitKilled?.Invoke(agentId);
             if (affectedAgent.Components.Any(c => c is LootableAgentComponent))
             {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed

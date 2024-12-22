@@ -39,7 +39,7 @@ namespace RFCustomSettlements.Quests
             var removePrisonersList = ParseConditionDictionary(questElement.Element("CompleteConsequence")?.Elements("RemovePrisoners"), "PrisonerId", "Amount", errorMessageFistPart);
             var addItemList = ParseConditionDictionary(questElement.Element("CompleteConsequence")?.Elements("AddToInventory"), "ItemId", "Amount", errorMessageFistPart);
             var addTroopList = ParseConditionDictionary(questElement.Element("CompleteConsequence")?.Elements("AddTroops"), "TroopId", "Amount", errorMessageFistPart);
-            string? renown = questElement.Element("AddRenown")?.Value?.Trim();
+            string? renown = questElement.Element("CompleteConsequence")?.Element("AddRenown")?.Value?.Trim();
             int renownAmount = 0;
             if (renown != null && !int.TryParse(renown, out renownAmount))
             {
