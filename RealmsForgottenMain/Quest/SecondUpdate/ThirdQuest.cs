@@ -194,6 +194,10 @@ namespace RealmsForgotten.Quest.SecondUpdate
                     null, null), true);
                 goToHideoutLog.UpdateCurrentProgress(1);
             }
+            if (goToHideoutLog?.CurrentProgress == 4)
+            {
+                CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty), new ConversationCharacterData(TheOwl.CharacterObject));
+            }
         }
 
         private void OnLeaveSettlement(MobileParty mobileParty, Settlement settlement)
@@ -573,7 +577,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
         private DialogFlow HideoutOwlDialogFlow => DialogFlow.CreateDialogFlow("start", 125)
             .NpcLine(GameTexts.FindText("rf_third_quest_boss_dialog_4_owl"))
-            .Condition(() => goToHideoutLog?.CurrentProgress == 5).Consequence(OnCapturedHideoutBoss);
+            .Condition(() => goToHideoutLog?.CurrentProgress == 4).Consequence(OnCapturedHideoutBoss);
 
         private DialogFlow DeliverScholarDialogFlow()
         {
@@ -645,8 +649,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             dialogFlow.AddPlayerLine("quest_hideout_boss_dialog_4", "hideout_boss_output_3", "close_window", GameTexts.FindText("rf_third_quest_boss_dialog_4").ToString(), null,
                 () =>
                 {
-                    goToHideoutLog?.UpdateCurrentProgress(5);
-                    CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty), new ConversationCharacterData(TheOwl.CharacterObject));
+                    goToHideoutLog?.UpdateCurrentProgress(4);
                 }, this);
             dialogFlow.AddPlayerLine("quest_hideout_boss_dialog_5", "hideout_boss_output_3", "close_window", GameTexts.FindText("rf_third_quest_boss_dialog_5").ToString(), null, OnCapturedHideoutBoss, this);
 
