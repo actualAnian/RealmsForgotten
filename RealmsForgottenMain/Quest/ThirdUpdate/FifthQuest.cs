@@ -275,9 +275,18 @@ namespace RealmsForgotten.Quest.SecondUpdate
             SetDialogs();
             Instance = this;
         }
-
-        private void CountDevilPartyDefeat(MobileParty mobileParty, PartyBase destroyer)
+        private void InitializeDefeatDevilPartiesObjective()
         {
+            defeatDevilPartiesLog = AddDiscreteLog(GameTexts.FindText("rf_fifth_quest_defeat_devil_parties_log"), GameTexts.FindText("rf_fifth_quest_defeat_devil_parties_task"), 0, devilPartiesToDefeatTarget);
+            InformationManager.DisplayMessage(new InformationMessage($"New objective: Defeat {devilPartiesToDefeatTarget} devil parties."));
+        }
+        private void OnMobilePartyDestroyed(MobileParty mobileParty, PartyBase destroyer)
+        {
+            if (mobileParty == null || destroyer == null)
+            {
+                return;
+            }
+
             if (destroyer.LeaderHero != null && destroyer.LeaderHero == Hero.MainHero)
             {
                 if (mobileParty.IsBandit && !string.IsNullOrEmpty(mobileParty.StringId) && mobileParty.StringId.Contains("devils") && defeatDevilPartiesLog?.CurrentProgress > -1)
@@ -286,6 +295,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                     CheckDevilPartyDefeatObjective();
                 }
             }
+<<<<<<< HEAD
         }
 
 
@@ -325,6 +335,9 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 InformationManager.DisplayMessage(new InformationMessage($"Exception in OnMobilePartyDestroyed: {ex.Message}\nStackTrace: {ex.StackTrace}"));
             }
             CountDevilPartyDefeat(mobileParty, destroyer);
+=======
+            
+>>>>>>> dd575e5 (fix party not being attacked after being in a caravan, update quest 5,6 for 1.2.12)
         }
 
 
@@ -332,13 +345,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
         private void CheckDevilPartyDefeatObjective()
         {
-            if (!isObjectiveCompleted)
-            {
-                InformationManager.DisplayMessage(new InformationMessage("Objective complete: You have defeated 10 devil parties!"));
-            }
-
-            deliverLordToAlKhuurLog.UpdateCurrentProgress(1);
-            InformationManager.DisplayMessage(new InformationMessage("Progress updated for deliverLordToAlKhuurLog."));
+            //deliverLordToAlKhuurLog.UpdateCurrentProgress(1);
 
             if (isObjectiveCompleted) // Ensure this is only called once
             {
@@ -548,9 +555,9 @@ namespace RealmsForgotten.Quest.SecondUpdate
             .Consequence(() =>
             {
                 deliverNelrogToNasorianLog.UpdateCurrentProgress(1);
-
                 GivePlayerTroops("vlandian_champion", 30);
-
+                if (PlayerEncounter.EncounteredMobileParty != null)
+                    PlayerEncounter.Finish();
             }).CloseDialog();
         private DialogFlow OwlTavernDefaultDialog => DialogFlow.CreateDialogFlow("start", 115)
             .PlayerLine(GameTexts.FindText("rf_owl_tavern_default"))

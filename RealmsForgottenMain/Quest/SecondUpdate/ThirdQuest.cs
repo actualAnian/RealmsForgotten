@@ -316,6 +316,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                     PrepareScholarHeroAndEvent, null), true);
                 IsPlayerInOwlArmy = false;
                 goToAnoritLordLog.UpdateCurrentProgress(2);
+                MobileParty.MainParty.IgnoreByOtherPartiesTill(CampaignTime.Now);
             }
         }
 
