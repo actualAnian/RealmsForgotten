@@ -145,7 +145,6 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 hellboundParty.InitializeMobilePartyAtPosition(hellBoundTroopRoster,
                     TroopRoster.CreateDummyTroopRoster(), MobileParty.MainParty.Position2D);
 
-
                 hellboundParty.IgnoreForHours(24);
                 hellboundParty.Ai.SetMoveEngageParty(MobileParty.MainParty);
             }
