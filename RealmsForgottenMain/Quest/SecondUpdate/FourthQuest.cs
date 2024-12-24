@@ -10,7 +10,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
-using TaleWorlds.CampaignSystem.ComponentInterfaces;
+using TaleWorlds.CampaignSystem.ComponentInterfaces;    
 using TaleWorlds.CampaignSystem.Conversation;
 using TaleWorlds.CampaignSystem.Conversation.Persuasion;
 using TaleWorlds.CampaignSystem.Encounters;
@@ -84,7 +84,6 @@ namespace RealmsForgotten.Quest.SecondUpdate
             if (captureHellboundLog?.CurrentProgress == 0 && defeatedSide?.LeaderParty.Culture.StringId == "hellbound_outlaw")
             {
                 captureHellboundLog.UpdateCurrentProgress(1);
-                CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty), new ConversationCharacterData(CharacterObject.Find("hellbound_chief")));
             }
         }
 
@@ -97,7 +96,10 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
                 CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter), new ConversationCharacterData(TheOwl.CharacterObject));
             }
-
+            if (captureHellboundLog?.CurrentProgress == 1)
+            {
+                CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty), new ConversationCharacterData(CharacterObject.Find("hellbound_chief")));
+            }
             if (captureHellboundLog?.CurrentProgress == 2)
             {
                 new FifthQuest("rf_fifth_quest", QuestGiver, CampaignTime.Never, 50000).StartQuest();

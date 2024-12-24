@@ -55,7 +55,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
         [SaveableField(5)]
         private bool elveanKingPersuasionFailed;
         [SaveableField(6)]
-        private JournalLog talkToMagicSellerLog;
+        public JournalLog talkToMagicSellerLog;
         [SaveableField(7)]
         private JournalLog requireTreasureLog;
         [SaveableField(8)]
@@ -240,6 +240,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
         private void OnSettlementLeave(MobileParty mobileParty, Settlement settlement)
         {
+            OnTreasureFightWin();
             if (mobileParty.IsMainParty && takeMysticalWeaponLog?.CurrentProgress == 1)
             {
                 CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter), new ConversationCharacterData(TheOwl.CharacterObject));
@@ -551,6 +552,8 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 }
                 requireTreasureLog.UpdateCurrentProgress(2);
                 talkToNasorianKingLog = AddLog(GameTexts.FindText("rf_fifth_quest_seventh_objective"));
+                if (PlayerEncounter.EncounteredMobileParty != null)
+                    PlayerEncounter.Finish();
             }).CloseDialog();
         private DialogFlow ElveanKingPersuasionDialogFlow()
         {
@@ -746,6 +749,8 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 {
                     talkToNasorianKingLog?.UpdateCurrentProgress(1);
                     deliverNelrogToNasorianLog = AddLog(GameTexts.FindText("rf_fifth_quest_eighth_objective"));
+                    if (PlayerEncounter.EncounteredMobileParty != null)
+                        PlayerEncounter.Finish();
                 }, this);
 
             return dialogFlow;
