@@ -514,7 +514,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             {
                 talkToMagicSellerLog.UpdateCurrentProgress(2);
                 TextObject textObject = GameTexts.FindText("rf_fifth_quest_sixth_objective");
-                Settlement settlement = Settlement.Find("castle_village_K2_2");
+                Settlement settlement = Settlement.Find("town_K1");
                 textObject.SetTextVariable("CLOSEST_SETTLEMENT", settlement.EncyclopediaLinkWithName);
                 ; requireTreasureLog = AddLog(textObject);
             }).CloseDialog();
