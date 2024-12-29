@@ -240,7 +240,6 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
         private void OnSettlementLeave(MobileParty mobileParty, Settlement settlement)
         {
-            OnTreasureFightWin();
             if (mobileParty.IsMainParty && takeMysticalWeaponLog?.CurrentProgress == 1)
             {
                 CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter), new ConversationCharacterData(TheOwl.CharacterObject));
