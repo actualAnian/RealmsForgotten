@@ -229,24 +229,25 @@ namespace RFCustomSettlements.Quests
         }
         public void OnEnemyKilledInCustomSettlement(string killedId)
         {
-            string appendText = " - DONE";
             if (enemiesToKill.ContainsKey(killedId))
             {
                 enemiesToKill[killedId] -= 1;
                 if (enemiesToKill[killedId] <= 0)
                 {
+                    int TasksLeft = 0;
                     StringBuilder newString = new();
                     string subtext = MBObjectManager.Instance.GetObject<CharacterObject>(killedId).Name.ToString();
                     enemiesToKill.Remove(killedId);
                     foreach (var task in tasksString.Split('\n'))
                     {
-                        if (task.Contains(subtext)) continue;
+                        if (task.Contains(subtext) && task.Contains("kill") || task == "") continue;
                         newString.Append(task);
+                        TasksLeft += 1;
                     }
                     tasksLog.UpdateCurrentProgress(1);
+                    if (TasksLeft == 0) newString = new("All done, talk to the quest giver.");
                     tasksLog = AddDiscreteLog(tasksLog.LogText,
                                     new TextObject($"{newString}"), 0, 1);
-                    //tasksLog.TaskName.SetTextVariable(new(tasksString));
                 }
             }
             if (enemiesToKill.Count() <= 0) CustomSettlementQuest.QuestsListeningToActorRemoved.Remove(this);
