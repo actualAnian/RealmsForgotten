@@ -2,6 +2,7 @@
 using RFCustomSettlements;
 using RFCustomSettlements.Dialogues;
 using RFCustomSettlements.Patches;
+using RFCustomSettlements.Quests;
 using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -20,6 +21,7 @@ namespace RealmsForgotten.RFCustomSettlements
             harmony.PatchAll();
             CustomSettlementBuildData.BuildAll();
             CustomSettlementBuildData.BuildItemDrops();
+            QuestDataLoader.LoadQuestData();
             DialogueParser.Deserialize();
         }
         protected override void OnSubModuleUnloaded()
@@ -64,6 +66,7 @@ namespace RealmsForgotten.RFCustomSettlements
             {
                 starter.AddBehavior(new CustomSettlementsCampaignBehavior());
                 starter.AddBehavior(new ArenaCampaignBehavior());
+                starter.AddBehavior(new CustomSettlementQuestSync());
             }
         }
     }

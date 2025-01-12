@@ -97,6 +97,7 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(ADODCustomLocationsBehavior), 59);
             AddClassDefinition(typeof(NasorianHordeInvasion), 60);
             AddClassDefinition(typeof(FirstTreeTempleLocation), 61);
+            AddClassDefinition(typeof(AggressiveDwarfUrkhaiBehavior), 62);
 
         }
     }
