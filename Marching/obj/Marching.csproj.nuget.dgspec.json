@@ -1,0 +1,137 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\gupol\\Documents\\RealmForgotten_Project\\RealmsForgotten\\Marching\\Marching.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\gupol\\Documents\\RealmForgotten_Project\\RealmsForgotten\\Marching\\Marching.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\gupol\\Documents\\RealmForgotten_Project\\RealmsForgotten\\Marching\\Marching.csproj",
+        "projectName": "Marching",
+        "projectPath": "C:\\Users\\gupol\\Documents\\RealmForgotten_Project\\RealmsForgotten\\Marching\\Marching.csproj",
+        "packagesPath": "C:\\Users\\gupol\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\gupol\\Documents\\RealmForgotten_Project\\RealmsForgotten\\Marching\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\gupol\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net472"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net472": {
+            "targetAlias": "net472",
+            "projectReferences": {
+              "C:\\Users\\gupol\\Documents\\RealmForgotten_Project\\RealmsForgotten\\RealmsForgottenMain\\RealmsForgotten.csproj": {
+                "projectPath": "C:\\Users\\gupol\\Documents\\RealmForgotten_Project\\RealmsForgotten\\RealmsForgottenMain\\RealmsForgotten.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net472": {
+          "targetAlias": "net472",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\gupol\\Documents\\RealmForgotten_Project\\RealmsForgotten\\RealmsForgottenMain\\RealmsForgotten.csproj": {
+      "version": "0.0.1",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\gupol\\Documents\\RealmForgotten_Project\\RealmsForgotten\\RealmsForgottenMain\\RealmsForgotten.csproj",
+        "projectName": "RealmsForgotten",
+        "projectPath": "C:\\Users\\gupol\\Documents\\RealmForgotten_Project\\RealmsForgotten\\RealmsForgottenMain\\RealmsForgotten.csproj",
+        "packagesPath": "C:\\Users\\gupol\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\gupol\\Documents\\RealmForgotten_Project\\RealmsForgotten\\RealmsForgottenMain\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\gupol\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net472"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net472": {
+            "targetAlias": "net472",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net472": {
+          "targetAlias": "net472",
+          "dependencies": {
+            "BUTR.Harmony.Analyzer": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.1.44, )"
+            },
+            "Bannerlord.BuildResources": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.1.85, )"
+            },
+            "Harmony.Extensions": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.1.0.67, )"
+            },
+            "IsExternalInit": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.3, )"
+            },
+            "Lib.Harmony": {
+              "include": "Compile",
+              "target": "Package",
+              "version": "[2.2.2, )"
+            },
+            "Nullable": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.3.1, )"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

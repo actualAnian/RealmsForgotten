@@ -1,0 +1,15 @@
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\Marching\obj\x64\Debug\net472\Marching.csproj.AssemblyReference.cache
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\Marching\obj\x64\Debug\net472\Marching.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\Marching\obj\x64\Debug\net472\Marching.AssemblyInfoInputs.cache
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\Marching\obj\x64\Debug\net472\Marching.AssemblyInfo.cs
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\Marching\obj\x64\Debug\net472\Marching.csproj.CoreCompileInputs.cache
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\Marching\obj\x64\Debug\net472\Marching.sourcelink.json
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\Marching\bin\x64\Debug\net472\Marching.dll
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\Marching\bin\x64\Debug\net472\Marching.pdb
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\Marching\bin\x64\Debug\net472\MCMv5.dll
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\Marching\bin\x64\Debug\net472\RealmsForgotten.dll
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\Marching\bin\x64\Debug\net472\ServeAsSoldier.dll
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\Marching\bin\x64\Debug\net472\RealmsForgotten.pdb
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\Marching\obj\x64\Debug\net472\Marching.csproj.Up2Date
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\Marching\obj\x64\Debug\net472\Marching.dll
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\Marching\obj\x64\Debug\net472\Marching.pdb
