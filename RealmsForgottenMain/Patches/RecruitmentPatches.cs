@@ -13,6 +13,7 @@ using TaleWorlds.CampaignSystem.ViewModelCollection.GameMenu.Recruitment;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
+using System.Linq;
 
 namespace RealmsForgotten.Patches
 {
@@ -26,12 +27,30 @@ namespace RealmsForgotten.Patches
             {
                 if (subject.Culture != side1Party.LeaderHero.Culture && !side1Party.ActualClan.IsMinorFaction && !side1Party.ActualClan.IsClanTypeMercenary)
                 {
-                    ChangeClanInfluenceAction.Apply(side1Party.ActualClan, -(subject.Tier * (10 - (side1Party.ActualClan.Renown / 10000))));
+                    // Calculate base influence cost
+                    float baseCost = subject.Tier * (10 - (side1Party.ActualClan.Renown / 10000));
 
+                    float averageRelation = (float)Hero.AllAliveHeroes
+                    .Where(hero => hero.Culture == subject.Culture && hero.Clan != null && hero.Clan.IsNoble)
+                    .Select(hero => Hero.MainHero.GetRelation(hero))
+                    .DefaultIfEmpty(0)
+                    .Average();
+
+                    // Calculate the influence reduction based on relation
+                    float reductionMultiplier = 0.05f; // Adjust this multiplier as needed
+                    float reduction = averageRelation * reductionMultiplier;
+
+                    // Final influence cost
+                    float finalCost = baseCost - reduction;
+                    if (finalCost < 0) finalCost = 0;
+
+                    // Apply the influence cost
+                    ChangeClanInfluenceAction.Apply(side1Party.ActualClan, -finalCost);
                 }
             }
         }
     }
+
     [HarmonyPatch(typeof(RecruitmentVM), "OnDone")]
     public static class OnDonePatch
     {

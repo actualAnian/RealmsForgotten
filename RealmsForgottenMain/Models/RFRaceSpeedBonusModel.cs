@@ -21,9 +21,12 @@ namespace RealmsForgotten.Models
 
             Hero partyOwner = party.LeaderHero;
 
-            if (partyOwner != null && partyOwner.Culture.StringId == "devils")
+            if (partyOwner != null &&
+                 (partyOwner.Culture.StringId == "devils" || partyOwner.Culture.StringId == "urkhai"))
+            {
+                // Add a 20% factor to the existing speed
                 baseValue.AddFactor(0.20f, new TextObject("{=culture_bonus}Culture Speed Bonus"));
-
+            }
             return baseValue;
         }
     }

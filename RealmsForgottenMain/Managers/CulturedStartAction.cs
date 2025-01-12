@@ -46,6 +46,7 @@ namespace RealmsForgotten.Managers
                 ["west_realm"] = "player_char_creation_default",
                 ["mage"] = "player_char_creation_default",
                 ["dwarf"] = "player_char_creation_default",
+                ["urkhai"] = "player_char_creation_default",
             },
             [StartType.Merchant] = new Dictionary<string, string>
             {
@@ -61,6 +62,7 @@ namespace RealmsForgotten.Managers
                 ["west_realm"] = "merchant_start_empire",
                 ["mage"] = "merchant_start_empire",
                 ["dwarf"] = "merchant_start_sturgia",
+                ["urkhai"] = "merchant_start_sturgia",
             },
             [StartType.Exiled] = new Dictionary<string, string>
             {
@@ -76,6 +78,7 @@ namespace RealmsForgotten.Managers
                 ["west_realm"] = "rf_exiled_equip",
                 ["mage"] = "rf_exiled_equip",
                 ["dwarf"] = "rf_exiled_equip",
+                ["urkhai"] = "rf_exiled_equip",
             },
             [StartType.EscapedPrisoner] = new Dictionary<string, string>
             {
@@ -91,6 +94,7 @@ namespace RealmsForgotten.Managers
                 ["west_realm"] = "rf_empire_mistic",
                 ["mage"] = "rf_empire_mistic",
                 ["dwarf"] = "rf_sturgia_mistic",
+                ["urkhai"] = "rf_sturgia_mistic",
             },
             [StartType.Looter] = new Dictionary<string, string>
             {
@@ -106,6 +110,7 @@ namespace RealmsForgotten.Managers
                 ["west_realm"] = "rf_looter",
                 ["mage"] = "rf_looter",
                 ["dwarf"] = "rf_looter",
+                ["urkhai"] = "rf_looter",
             },
             [StartType.Mercenary] = new Dictionary<string, string>
             {
@@ -121,6 +126,7 @@ namespace RealmsForgotten.Managers
                 ["west_realm"] = "merc_realms_start",
                 ["mage"] = "merc_realms_start",
                 ["dwarf"] = "merc_dwarf_start",
+                ["urkhai"] = "merc_urkhai_start",
             },
             [StartType.VassalNoFief] = new Dictionary<string, string>
             {
@@ -136,6 +142,7 @@ namespace RealmsForgotten.Managers
                 ["west_realm"] = "realms_vassal_nofief",
                 ["mage"] = "realms_vassal_nofief",
                 ["dwarf"] = "dwarf_vassal_nofief",
+                ["urkhai"] = "urkhai_vassal_nofief",
             },
             [StartType.VassalFief] = new Dictionary<string, string>
             {
@@ -151,6 +158,8 @@ namespace RealmsForgotten.Managers
                 ["west_realm"] = "realms_vassal_nofief",
                 ["mage"] = "realms_vassal_nofief",
                 ["dwarf"] = "dwarf_vassal_ursurper",
+                ["urkhai"] = "urkhai_vassal_ursurper",
+
             },
             [StartType.KingdomRuler] = new Dictionary<string, string>
             {
@@ -166,6 +175,7 @@ namespace RealmsForgotten.Managers
                 ["west_realm"] = "king_realms_start",
                 ["mage"] = "king_realms_start",
                 ["dwarf"] = "king_dwarf_start",
+                ["urkhai"] = "king_urkhai_start",
             },
             [StartType.CastleRuler] = new Dictionary<string, string>
             {
@@ -181,6 +191,7 @@ namespace RealmsForgotten.Managers
                 ["west_realm"] = "vassal_realms_start",
                 ["mage"] = "vassal_realms_start",
                 ["dwarf"] = "vassal_vortiak_start",
+                ["urkhai"] = "vassal_urkhai_start",
             }
         };
         public static readonly Dictionary<(string Culture, StartType StartOption), List<TroopSpawnInfo>> CultureStartTypeToTroops = new()
@@ -588,6 +599,7 @@ namespace RealmsForgotten.Managers
                 new TroopSpawnInfo("imperial_legionary", 10),
                 new TroopSpawnInfo("imperial_palatine_guard", 5),
                 new TroopSpawnInfo("imperial_cataphract", 3) }},
+
              { ("dwarf", StartType.Merchant), new List<TroopSpawnInfo> {
                 new TroopSpawnInfo("merchant_dwarf", 4),
                 new TroopSpawnInfo("dwarf_troop", 8),
@@ -625,6 +637,44 @@ namespace RealmsForgotten.Managers
                 new TroopSpawnInfo("dwarf_heavy_spearman", 10),
                 new TroopSpawnInfo("dwarf_hardened_crossbowman", 5),
                 new TroopSpawnInfo("dugrast_druzhinnik", 5) }},
+            { ("urkhai", StartType.Merchant), new List<TroopSpawnInfo> {
+                 new TroopSpawnInfo("merchant_soldier", 4),
+                 new TroopSpawnInfo("merchant_archer", 10),
+                new TroopSpawnInfo("merchant_trained_infantry", 4) }},
+
+            { ("urkhai", StartType.Exiled), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("urkhai_troop", 5),
+                new TroopSpawnInfo("urkhai_archer", 2) }},
+
+            { ("urkhai", StartType.EscapedPrisoner), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("looter", 2) }},
+
+            { ("urkhai", StartType.Looter), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("looter", 8) }},
+
+            { ("urkhai", StartType.Mercenary), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("urkhai_mercenary_volunteer", 10) }},
+
+            { ("urkhai", StartType.VassalNoFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("urkhai_veteran_infantry", 10),
+                new TroopSpawnInfo("urkhai_trained_archer", 5),
+                new TroopSpawnInfo("urkhai_cavalry", 3) }},
+
+            { ("urkhai", StartType.KingdomRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("urkhai_veteran_infantry", 20),
+                new TroopSpawnInfo("urkhai_veteran_archer", 10),
+                new TroopSpawnInfo("uruk_hai_veteran_infantry", 10),
+                new TroopSpawnInfo("urkhai_veteran_cavalry", 10) }},
+
+            { ("urkhai", StartType.CastleRuler), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("urkhai_veteran_infantry", 15),
+                new TroopSpawnInfo("urkhai_veteran_archer", 10),
+                new TroopSpawnInfo("urkhai_cavalry", 5) }},
+
+            { ("urkhai", StartType.VassalFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("urkhai_veteran_infantry", 10),
+                new TroopSpawnInfo("urkhai_veteran_archer", 5),
+                new TroopSpawnInfo("urkhai_cavalry", 5) }},
 
              };
 
@@ -696,6 +746,9 @@ namespace RealmsForgotten.Managers
                     break;
                 case 15:
                     startingSettlement = Settlement.Find("town_dwarf_1");
+                    break;
+                case 16:
+                    startingSettlement = Settlement.Find("town_Urk_1");
                     break;
                 default:
                     break;

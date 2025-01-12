@@ -32,6 +32,7 @@ namespace RealmsForgotten.AiMade
             ConstructContainerDefinition(typeof(Dictionary<CultureObject, List<string>>));
             ConstructContainerDefinition(typeof(Dictionary<string, List<string>>));
             ConstructContainerDefinition(typeof(Dictionary<string, TownSlaveData>));
+            ConstructContainerDefinition(typeof(Dictionary<string, TownPrisonerData>));
             ConstructContainerDefinition(typeof(Dictionary<Settlement, CampaignTime>));
         }
 
@@ -98,6 +99,9 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(NasorianHordeInvasion), 60);
             AddClassDefinition(typeof(FirstTreeTempleLocation), 61);
             AddClassDefinition(typeof(AggressiveDwarfUrkhaiBehavior), 62);
+            AddClassDefinition(typeof(MineBehavior), 63);
+            AddClassDefinition(typeof(TownPrisonerData), 64);
+
 
         }
     }
