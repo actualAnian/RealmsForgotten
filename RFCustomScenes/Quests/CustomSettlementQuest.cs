@@ -205,7 +205,7 @@ namespace RFCustomSettlements.Quests
             }
         }
         public override TextObject Title => new(_title);
-        public override bool IsSpecialQuest => false;
+        public override bool IsSpecialQuest => true;
 
         public override bool IsRemainingTimeHidden => true;
 
