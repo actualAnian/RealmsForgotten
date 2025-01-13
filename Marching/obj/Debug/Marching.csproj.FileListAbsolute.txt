@@ -1,2 +1,0 @@
-C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\Marching\obj\Debug\Marching.csproj.AssemblyReference.cache
-C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\Marching\obj\Debug\Marching.csproj.CoreCompileInputs.cache
