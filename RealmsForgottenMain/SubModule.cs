@@ -28,6 +28,7 @@ using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.MountAndBlade.ComponentInterfaces;
+using RealmsForgotten.AiMade.Patches;
 
 namespace RealmsForgotten
 {

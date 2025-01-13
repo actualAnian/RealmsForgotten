@@ -231,6 +231,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 PlayerEncounter.Finish();
                 goToHideoutLog.UpdateCurrentProgress(3);
                 CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty), new ConversationCharacterData(CharacterObject.Find(hideoutBossCharacterId)));
+                //goToHideoutLog.UpdateCurrentProgress(4);
             }
         }
 

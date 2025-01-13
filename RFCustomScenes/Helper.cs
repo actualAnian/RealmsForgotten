@@ -142,5 +142,34 @@ namespace RealmsForgotten.RFCustomSettlements
             if (!name.Contains("rf_Npc")) return null;
             return name.Remove(0, 7);
         }
+        public static void AddDialogueState(string stateId)
+        {
+            if (!CustomSettlementsCampaignBehavior.DialogueStates.ContainsKey(stateId))
+                CustomSettlementsCampaignBehavior.DialogueStates[stateId] = 0;
+        }
+        public static void IncrementDialogueState(string stateId)
+        {
+            if (!CustomSettlementsCampaignBehavior.DialogueStates.ContainsKey(stateId))
+                InformationManager.DisplayMessage(new InformationMessage($"custom settlements dialogue error, no state with id {stateId}", new Color(255, 0, 0)));
+            else
+                CustomSettlementsCampaignBehavior.DialogueStates[stateId] += 1;
+        }
+        public static void ResetDialogueState(string stateId)
+        {
+            if (!CustomSettlementsCampaignBehavior.DialogueStates.ContainsKey(stateId))
+                InformationManager.DisplayMessage(new InformationMessage($"custom settlements dialogue error, no state with id {stateId}", new Color(255, 0, 0)));
+            else
+                CustomSettlementsCampaignBehavior.DialogueStates[stateId] = 0;
+        }
+        public static int? GetDialogueState(string stateId)
+        {
+            if (CustomSettlementsCampaignBehavior.DialogueStates.ContainsKey(stateId))
+                return CustomSettlementsCampaignBehavior.DialogueStates[stateId];
+            return null;
+        }
+        public static bool ContainsDialogueState(string stateId)
+        {
+            return CustomSettlementsCampaignBehavior.DialogueStates.ContainsKey(stateId);
+        }
     }
 }

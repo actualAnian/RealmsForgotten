@@ -1,0 +1,75 @@
+﻿adding custom settlements quests:
+
+IMPORTANT: keywords have to be FULLCAPTIONED (except npcId)
+possible dialogues.xml:
+	<Conditions>
+	npcId IS npc_1
+	STATE state_1" CREATE
+	STATE state_1" IS 1
+	EVALUATE quest_1
+	</Condition>
+	
+	<Consequence>
+		- START quest_1 
+		- COMPLETE quest_1
+		- STATE state_quest_1 INCREMENT
+		- STATE state_quest_1 RESET 
+	</Consequence>
+use AND keyword to add multiple conditions / consequences
+
+example dialogue:
+<Dialogue isStartLine="true" condition="npcId IS anorite_monastery_militia AND STATE epic_quest_state CREATE" consequence="START quest_1 AND STATE epic_quest_state INCREMENT">
+		
+example Quests.xml:
+<AllQuests>
+<Quest>
+	<QuestId>quest_1</QuestId>
+	<QuestGiverId>npc_1</QuestGiverId>
+	<Text>This guy wants you to do this</Text>
+	<CompletedWhen>
+		<InInventory>
+			<ItemId>gold</ItemId>
+			<Amount>50</Amount>
+		</InInventory>
+		<HasKilled>
+			<TroopId>"sheep"</TroopId>
+			<Amount>1</Amount>
+		</HasKilled>
+		<HasPrisoners>
+			<PrisonerId>"looter"</PrisonerId>
+			<Amount>5</Amount>
+		</HasPrisoners>
+	</CompletedWhen>
+	<CompleteConsequence>
+		<RemoveItem>
+			<ItemId>gold</ItemId>
+			<Amount>50</Amount>
+		</RemoveItem>
+		<RemoveTroop>
+			<TroopId>"looter"</TroopId>
+			<Amount>1</Amount>
+		</RemoveTroop>
+		<RemovePrisoners>
+			<PrisonerId>"looter"</PrisonerId>
+			<Amount>5</Amount>
+		</RemovePrisoners>
+	</CompleteConsequence>
+	<Reward>
+		<AddToInventory>
+			<ItemId>gold</ItemId>
+			<Amount>50</Amount>
+		</AddToInventory>
+		<AddTroops>
+			<TroopId>"looter"</TroopId>
+			<Amount>5</Amount>
+		</AddTroops>		
+		<AddPrisoners>
+			<PrisonerId>"looter"</PrisonerId>
+			<Amount>5</Amount>
+		</AddPrisoners>		
+		<AddRenown>
+			<Amount>5</Amount>
+		</AddRenown>
+	</Reward>
+</Quest>
+</AllQuests>
