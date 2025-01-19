@@ -162,13 +162,28 @@ namespace RealmsForgotten.AiMade
 
         private void EndEscortMission()
         {
-            MobileParty.MainParty.MemberRoster.RemoveTroop(questMonasteryMonk);
+            foreach (var element in MobileParty.MainParty.MemberRoster.GetTroopRoster())
+            {
+                InformationManager.DisplayMessage(new InformationMessage($"Roster contains: {element.Character.Name}, Count: {element.Number}", Colors.Yellow));
+            }
+
+            if (questMonasteryMonk != null && MobileParty.MainParty.MemberRoster.Contains(questMonasteryMonk))
+            {
+                MobileParty.MainParty.MemberRoster.RemoveTroop(questMonasteryMonk);
+            }
+            else
+            {
+                InformationManager.DisplayMessage(new InformationMessage("WARNING: The peregrine monk was not found in the party roster.", Colors.Red));
+            }
+
             targetSettlement = null;
             banditAttackCount = 0;
             questMonasteryMonk = null;
             questAccepted = false;
+
             InformationManager.DisplayMessage(new InformationMessage("THE PEREGRINE MONK HAS LEFT YOUR PARTY.", Colors.Green));
         }
+
 
         private void HealPlayerAndTroops()
         {

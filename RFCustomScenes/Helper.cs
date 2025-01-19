@@ -1,4 +1,5 @@
-﻿using RFCustomSettlements;
+﻿using RealmsForgotten.HuntableHerds.AgentComponents;
+using RFCustomSettlements;
 using SandBox.AI;
 using SandBox.Objects.Usables;
 using System;
@@ -65,6 +66,7 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             return int.Parse(itemData.Last());
         }
+
         internal static string GetNameOfGoldObject(int amount)
         {
             if (0 < amount && amount < 20) return "Gold Pile";
@@ -72,12 +74,15 @@ namespace RealmsForgotten.RFCustomSettlements
             else if (amount < 2000) return "Gold Chest";
             else return "Gold";
         }
+
         public static float maxPickableDistance = 10f;
+
         public static bool CanInteract { get => _canInteract; }
+
         public static Agent? RayCastToCheckForRFInteractableAgent(Agent agent)
         {
             // ALSO PREVENTS THE MOUNTS ENEMIES FROM HUNTABLE HERDS TO BE MOUNTABLE
-            if (agent != null && agent.IsActive() && agent.Components.Any(c => c is HuntableHerds.AgentComponents.HerdAgentComponent)) return null;
+            if (agent != null && agent.Components.Any(c => c is HuntableHerds.AgentComponents.HerdAgentComponent)) return null;
             if (agent != null) return agent;
             CustomSettlementMissionLogic logic;
             if ((logic = Mission.Current.GetMissionBehavior<CustomSettlementMissionLogic>()) == null) return null;
@@ -93,15 +98,14 @@ namespace RealmsForgotten.RFCustomSettlements
             Vec3 vec2 = position * (1f - num2) + (position + direction) * num2;
             _ = Mission.Current.Scene.RayCastForClosestEntityOrTerrainMT(vec2, vec2 + vec * num, out float distance, out Vec3 closesPoint, 0.01f, BodyFlags.None);
 
-            float RANGE_X = 1.5f;
-            float RANGE_Y = 1.5f;
-            float RANGE_Z = 1.5f;
             foreach (KeyValuePair<Agent, Vec3> lootableAgent in logic.LootableAgents)
             {
+
+                Vec3 range = lootableAgent.Key.GetComponent<LootableAgentComponent>().LootArea;
                 Vec3 centerPosition = lootableAgent.Value;
-                if (Math.Abs(centerPosition.X - closesPoint.X) < RANGE_X
-                    && Math.Abs(centerPosition.Y - closesPoint.Y) < RANGE_Y
-                    && Math.Abs(centerPosition.Z - closesPoint.Z) < RANGE_Z)
+                if (Math.Abs(centerPosition.X - closesPoint.X) < range.X
+                    && Math.Abs(centerPosition.Y - closesPoint.Y) < range.Y
+                    && Math.Abs(centerPosition.Z - closesPoint.Z) < range.Z)
                     return lootableAgent.Key;
             }
             return null;
@@ -137,6 +141,35 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             if (!name.Contains("rf_Npc")) return null;
             return name.Remove(0, 7);
+        }
+        public static void AddDialogueState(string stateId)
+        {
+            if (!CustomSettlementsCampaignBehavior.DialogueStates.ContainsKey(stateId))
+                CustomSettlementsCampaignBehavior.DialogueStates[stateId] = 0;
+        }
+        public static void IncrementDialogueState(string stateId)
+        {
+            if (!CustomSettlementsCampaignBehavior.DialogueStates.ContainsKey(stateId))
+                InformationManager.DisplayMessage(new InformationMessage($"custom settlements dialogue error, no state with id {stateId}", new Color(255, 0, 0)));
+            else
+                CustomSettlementsCampaignBehavior.DialogueStates[stateId] += 1;
+        }
+        public static void ResetDialogueState(string stateId)
+        {
+            if (!CustomSettlementsCampaignBehavior.DialogueStates.ContainsKey(stateId))
+                InformationManager.DisplayMessage(new InformationMessage($"custom settlements dialogue error, no state with id {stateId}", new Color(255, 0, 0)));
+            else
+                CustomSettlementsCampaignBehavior.DialogueStates[stateId] = 0;
+        }
+        public static int? GetDialogueState(string stateId)
+        {
+            if (CustomSettlementsCampaignBehavior.DialogueStates.ContainsKey(stateId))
+                return CustomSettlementsCampaignBehavior.DialogueStates[stateId];
+            return null;
+        }
+        public static bool ContainsDialogueState(string stateId)
+        {
+            return CustomSettlementsCampaignBehavior.DialogueStates.ContainsKey(stateId);
         }
     }
 }

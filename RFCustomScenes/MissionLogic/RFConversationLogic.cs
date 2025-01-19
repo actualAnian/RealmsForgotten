@@ -9,7 +9,7 @@ namespace RFCustomSettlements
     public class RFConversationLogic : MissionLogic
     {
         private MissionMode oldMissionMode;
-        private static List<string> listOfTalkableNpcs = new List<string>();
+        private static List<string> listOfTalkableNpcs = new();
         public ConversationManager ConversationManager { get; private set; }
 
         public static void AddNpcAsTalkable(string NpcId)
@@ -55,10 +55,7 @@ namespace RFCustomSettlements
                 agent2.AgentVisuals.SetVisible(true);
                 agent2.AgentVisuals.SetClothComponentKeepStateOfAllMeshes(false);
                 Agent mountAgent = agent2.MountAgent;
-                if (mountAgent != null)
-                {
-                    mountAgent.AgentVisuals.SetVisible(true);
-                }
+                mountAgent?.AgentVisuals.SetVisible(true);
             }
             if (base.Mission.Mode == MissionMode.Conversation)
             {
@@ -68,10 +65,7 @@ namespace RFCustomSettlements
             {
                 Agent.Main.AgentVisuals.SetVisible(true);
                 Agent.Main.AgentVisuals.SetClothComponentKeepStateOfAllMeshes(false);
-                if (Agent.Main.MountAgent != null)
-                {
-                    Agent.Main.MountAgent.AgentVisuals.SetVisible(true);
-                }
+                Agent.Main.MountAgent?.AgentVisuals.SetVisible(true);
             }
             base.Mission.MainAgentServer.Controller = Agent.ControllerType.Player;
             ConversationManager.ConversationEnd -= this.OnConversationEnd;

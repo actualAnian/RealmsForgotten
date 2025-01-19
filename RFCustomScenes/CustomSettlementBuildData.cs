@@ -102,11 +102,12 @@ namespace RealmsForgotten.RFCustomSettlements
                     int amountMin = int.Parse(itemDropNode.SelectSingleNode("AmountMin").InnerText);
                     int amountMax = int.Parse(itemDropNode.SelectSingleNode("AmountMax").InnerText);
                     double dropChance = double.Parse(itemDropNode.SelectSingleNode("DropChance").InnerText);
-
                     ItemDrop itemDrop = new ItemDrop(itemId, amountMin, amountMax, dropChance);
                     itemDrops.Add(itemDrop);
                 }
-                ItemDropsData itemDropsData = new ItemDropsData(itemDrops, dropsId);
+
+                string? lootAreaSize = itemDropsDataNode.SelectSingleNode("LootAreaSize")?.InnerText;
+                ItemDropsData itemDropsData = new(itemDrops, dropsId, lootAreaSize);
                 AllItemDropsData.Add(dropsId, itemDropsData);
             }
         }

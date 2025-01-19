@@ -482,7 +482,15 @@
 				</Bandit>
 			</CommonArea>
 		</Bandits>
+		<Npcs>
+			<Npc>
+				<NpcId>kingruins_npc</NpcId>
+				<TagId>1</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+		</Npcs>
 	</CustomScene>
+	
 	<CustomScene>
 		<id>king_ruins_hall</id>
 		<Bandits>

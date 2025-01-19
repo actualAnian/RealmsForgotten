@@ -16,11 +16,12 @@ namespace RealmsForgotten.Models
     internal class RFPartyMoraleModel : DefaultPartyMoraleModel
     {
         private PartyMoraleModel _previousModel;
-        
+
         public RFPartyMoraleModel(PartyMoraleModel previousModel)
         {
             _previousModel = previousModel;
         }
+
         public bool IsPartyBandit(MobileParty party)
         {
             try
@@ -32,6 +33,20 @@ namespace RealmsForgotten.Models
                 return true;
             }
         }
+
+        public bool HasUrkhaiTroops(MobileParty party)
+        {
+            // Check if any member of the party belongs to the Urkhai race
+            foreach (var troop in party.MemberRoster.GetTroopRoster())
+            {
+                if (troop.Character.Race == FaceGen.GetRaceOrDefault("urkhai"))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public override ExplainedNumber GetEffectivePartyMorale(MobileParty party, bool includeDescription = false)
         {
             ExplainedNumber baseNumber;
@@ -54,7 +69,9 @@ namespace RealmsForgotten.Models
                 // Tlachiquiy
                 if (!IsPartyBandit(party) && party.Owner?.CharacterObject.Race == FaceGen.GetRaceOrDefault("tlachiquiy") &&
                     baseNumber.ResultNumber < 100)
+                {
                     baseNumber = new ExplainedNumber(100, true, new TextObject("{=tc_boldness}Tlachiquiy's Boldness"));
+                }
 
                 if (party?.Party?.Culture == null)
                     return baseNumber;
@@ -65,17 +82,23 @@ namespace RealmsForgotten.Models
                     baseNumber = new ExplainedNumber(100, true, new TextObject("{=dwarf_unbreakable_morale}Dwarven Unbreakable Morale"));
                     return baseNumber;
                 }
+
+                // Urkhai Presence Effect
+                if (HasUrkhaiTroops(party))
+                {
+                    baseNumber.AddFactor(-0.10f, new TextObject("{=urkhai_fear}Enemy Morale Reduced by Urkhai Presence"));
+                }
             }
             catch (Exception e)
             {
                 return baseNumber;
             }
-            
+
             TerrainType faceTerrainType = Campaign.Current.MapSceneWrapper.GetFaceTerrainType(party.CurrentNavigationFace);
             if (party.Party.Culture.StringId == "battania" && faceTerrainType == TerrainType.Forest)
                 baseNumber.AddFactor(0.12f, new TextObject("{=elvean_morale_bonus}Elvean Forest Morale Bonus"));
 
-            //Monk knight
+            // Monk knight
             int index = party.MemberRoster.FindIndexOfTroop(CulturesCampaignBehavior.WarriorMonkCharacter);
             if (index > -1)
             {
@@ -83,6 +106,7 @@ namespace RealmsForgotten.Models
                 float moraleFactor = amount * 0.015f;
                 baseNumber.AddFactor(moraleFactor, new TextObject("{=priest_morale_bonus}Priests Morale Bonus"));
             }
+
             return baseNumber;
         }
     }

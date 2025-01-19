@@ -26,6 +26,7 @@ using TaleWorlds.MountAndBlade.GauntletUI;
 using System.Collections.ObjectModel;
 using TaleWorlds.CampaignSystem.Actions;
 using RealmsForgotten.Utility;
+using RealmsForgotten.Quest.SecondUpdate;
 
 namespace RealmsForgotten.Behaviors
 {
@@ -70,19 +71,24 @@ namespace RealmsForgotten.Behaviors
             Campaign.Current.Models.AgeModel.GetAgeLimitForLocation(@object, out minValue, out maxValue, "");
             Monster monsterWithSuffix = FaceGen.GetMonsterWithSuffix(@object.Race, "_settlement");
             AgentData agentData = new AgentData(new SimpleAgentOrigin(@object, -1, null, default(UniqueTroopDescriptor))).Monster(monsterWithSuffix).Age(MBRandom.RandomInt(minValue, maxValue));
-            var vendor = new LocationCharacter(agentData, new LocationCharacter.AddBehaviorsDelegate(SandBoxManager.Instance.AgentBehaviorManager.AddWandererBehaviors), "sp_tavern_townsman", true, relation, null, true, false, null, false, false, true);
+            var vendor = new LocationCharacter(agentData, new LocationCharacter.AddBehaviorsDelegate(SandBoxManager.Instance.AgentBehaviorManager.AddWandererBehaviors), "sp_tavern_townsman", true, relation, null, true, false, null, false, true, true);
             vendor.PrefabNamesForBones.Add(agentData.AgentMonster.OffHandItemBoneIndex, "kitchen_pitcher_b_tavern");
             return vendor;
         }
         private void OnSessionLaunched(CampaignGameStarter starter)
         {
-
             this.AddDialogs(starter);
+        }
+        private bool DoesEnchanterNpcHaveOtherDialogs()
+        {
+            FifthQuest quest = (FifthQuest)(Campaign.Current.QuestManager.Quests.Where(q => q is FifthQuest).FirstOrDefault());
+            if (quest != null && quest.talkToMagicSellerLog?.CurrentProgress == 0) return true;
+            return false;
         }
 
         private void AddDialogs(CampaignGameStarter starter)
         {
-            DialogFlow dialog = DialogFlow.CreateDialogFlow("start", 125).PlayerLine(new TextObject("{=vendor_ask}Hi, i heard you deal with special items, is that true ?").ToString()).Condition(() => CharacterObject.OneToOneConversationCharacter?.StringId == "enchanted_vendor" && lastMeetingTime == default)
+            DialogFlow dialog = DialogFlow.CreateDialogFlow("start", 125).PlayerLine(new TextObject("{=vendor_ask}Hi, i heard you deal with special items, is that true ?").ToString()).Condition(() => CharacterObject.OneToOneConversationCharacter?.StringId == "enchanted_vendor" && lastMeetingTime == default && !DoesEnchanterNpcHaveOtherDialogs())
                 .Consequence(()=> lastMeetingTime = CampaignTime.Now).NpcLine(new TextObject("{=vendor_answer}Yes, what can i do for you ?").ToString()).BeginPlayerOptions().PlayerOption(new TextObject("{=vendor_answer_2}What do you have to offer ?").ToString()).Consequence(() =>
                 {
                     Settlement currentSettlement = Settlement.CurrentSettlement;
@@ -93,7 +99,7 @@ namespace RealmsForgotten.Behaviors
                     }
                 }).GotoDialogState("start").PlayerOption("{=leave}Leave.").CloseDialog().EndPlayerOptions();
 
-            DialogFlow dialog2 = DialogFlow.CreateDialogFlow("start", 125).NpcLine(new TextObject("{=vendor_ask_2}How can i serve you sir ?").ToString()).Condition(() => CharacterObject.OneToOneConversationCharacter?.StringId == "enchanted_vendor")
+            DialogFlow dialog2 = DialogFlow.CreateDialogFlow("start", 125).NpcLine(new TextObject("{=vendor_ask_2}How can i serve you sir ?").ToString()).Condition(() => CharacterObject.OneToOneConversationCharacter?.StringId == "enchanted_vendor" && !DoesEnchanterNpcHaveOtherDialogs())
                 .BeginPlayerOptions().PlayerOption(new TextObject("{=vendor_answer_2}What do you have to offer ?").ToString()).Consequence(() =>
                 {
                     Settlement currentSettlement = Settlement.CurrentSettlement;

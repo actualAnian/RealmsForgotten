@@ -214,7 +214,7 @@
 	<string id="rf_quest_title_part_four" text="{=rf_quest_title_part_four}Realms Forgotten Quest: Part Four" />
 
 	<string id="rf_fourth_quest_first_log" text="{=rf_fourth_quest_first_log}Take the hideout boss to the {LORD.LINK}." />
-	<string id="rf_fourth_quest_second_log" text="{=rf_fourth_quest_second_log}Go to the monastery and talk to the monks. It should be near the village Borchovagorka." />
+	<string id="rf_fourth_quest_second_log" text="{=rf_fourth_quest_second_log}Go to the monastery and talk to the monks. It should be near the city of Nippura." />
 	<string id="rf_fourth_quest_third_log" text="{=rf_fourth_quest_third_log}Capture a hellbound outlaw to extract information." />
 
 	<string id="rf_fourth_quest_first_dialog_1" text="{=rf_fourth_quest_first_dialog_1}What was that? Not only are these lands plagued by rising undead, but now demons threaten the world of the living! We are damned..." />
@@ -233,7 +233,7 @@
 	<string id="rf_fourth_quest_first_dialog_14" text="{=rf_fourth_quest_first_dialog_14}Do you mean magic? Pursuing magic is under penalty of death." />
 	<string id="rf_fourth_quest_first_dialog_15" text="{=rf_fourth_quest_first_dialog_15}And yet, undead and demons? Do they make any more sense? They must be creatures born of magic, albeit a dark one... Magic or faith, holy men or sorcerers, what's the difference? The folk regard them as good. We have nothing to lose." />
 	<string id="rf_fourth_quest_first_dialog_16" text="{=rf_fourth_quest_first_dialog_16}I see... Where are we heading?" />
-	<string id="rf_fourth_quest_first_dialog_17" text="{=rf_fourth_quest_first_dialog_17}We need to travel to Borchovagorka. In the hills, we will find a monastery." />
+	<string id="rf_fourth_quest_first_dialog_17" text="{=rf_fourth_quest_first_dialog_17}We need to travel to the city of Nippura. In the hills, we will find a monastery." />
 
 	<string id="rf_fourth_quest_monk_dialog_1" text="{=rf_fourth_quest_monk_dialog_1}Excuse me, sir. We've heard a lot about your deeds from the folk around these parts. They claim you are holy men..." />
 	<string id="rf_fourth_quest_monk_dialog_2" text="{=rf_fourth_quest_monk_dialog_2}Good day, brother. Those are kind words, but we are no holy people, only dedicated hermits. How can we serve you?" />

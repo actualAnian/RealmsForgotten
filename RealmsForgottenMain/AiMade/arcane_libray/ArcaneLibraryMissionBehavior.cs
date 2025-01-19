@@ -93,10 +93,9 @@ namespace RealmsForgotten.AiMade.ArcaneLibrary
         {
             try
             {
-                // Example file path to your XML file containing dialogues
-                string filePath = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\RealmsForgotten\\bin\\Win64_Shipping_Client\\arcane_library_dialogues.xml";
+                string path = Path.GetDirectoryName(Globals.realmsForgottenAssembly.Location);
+                LoadDialogues(Path.Combine(path, "arcane_library_dialogues.xml"));
 
-                LoadDialogues(filePath);
                 AddDialogs(campaignGameStarter);
             }
             catch (Exception ex)

@@ -108,6 +108,10 @@ namespace RealmsForgotten
                     bodyPropString = DwarfBodyPropString;
                     raceId = "dwarf"; // Assign specific race ID for dwarves.
                     break;
+                case "urkhai":
+                    bodyPropString = HumanBodyPropString;
+                    raceId = "urkhai";
+                    break;
                 default:
                     Debug.FailedAssert("Selected culture is invalid!", "RFCharacterCreationContent.cs", "OnCultureSelected", 80);
                     bodyPropString = HumanBodyPropString;
@@ -215,6 +219,9 @@ namespace RealmsForgotten
                         break;
                     case "dwarf":
                         cultureObject.CultureFeats.Add(culturalFeats.athasFasterConstructions);
+                        break;
+                    case "urkhai":
+                        cultureObject.CultureFeats.Add(culturalFeats.xilantlacayRaidersBonus);
                         break;
                 }
 
@@ -335,6 +342,16 @@ namespace RealmsForgotten
             dwarfParentsCategory.AddCategoryOption(new("Dugrast Miners"), new() { DefaultSkills.Engineering, DefaultSkills.Athletics }, DefaultCharacterAttributes.Endurance, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, DwarfMinerOnConsequence, base.EmpireFreeholderOnApply, new("Your family worked in the deep mines, extracting precious metals and gems from the earth."), null, 0, 0, 0, 0, 0);
             dwarfParentsCategory.AddCategoryOption(new("Dugrast Warriors"), new() { DefaultSkills.OneHanded, DefaultSkills.Polearm }, DefaultCharacterAttributes.Vigor, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, DwarfWarriorOnConsequence, base.EmpireVagabondOnApply, new("Your family were part of the dwarven military, renowned for their resilience and tactical brilliance in battle."), null, 0, 0, 0, 0, 0);
             dwarfParentsCategory.AddCategoryOption(new("{=aEke8dSb}Urban vagabonds"), new() { DefaultSkills.Roguery, DefaultSkills.Throwing }, DefaultCharacterAttributes.Cunning, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, DwarfVagabondOnConsequence, base.EmpireVagabondOnApply, new("{=Jvf6K7TZ}Your family numbered among the many poor migrants living in the slums that grow up outside the walls of cities, making whatever money they could from a variety of odd jobs. Sometimes they did service for one of the many criminal gangs, and you had an early look at the dark side of life."), null, 0, 0, 0, 0, 0);
+            characterCreation.AddNewMenu(parentsMenu);
+
+            // urkhai
+            CharacterCreationCategory urkhaiParentsCategory = parentsMenu.AddMenuCategory(new(UrkhaiParentsOnCondition));
+            urkhaiParentsCategory.AddCategoryOption(new("Urkhai Commanders"), new() { DefaultSkills.TwoHanded, DefaultSkills.Riding }, DefaultCharacterAttributes.Vigor, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, UrkhaiNoblesOnConsequence, base.EmpireLandlordsRetainerOnApply, new("You were born from a high rank Urkhai commander, renowned for his commanding skills and courage in battle."), null, 0, 0, 0, 0, 0);
+            urkhaiParentsCategory.AddCategoryOption(new("{=651FhzdR}Urban merchants"), new() { DefaultSkills.Trade, DefaultSkills.Charm }, DefaultCharacterAttributes.Social, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, UrkhaiMerchantOnConsequence, base.EmpireMerchantOnApply, new("{=FQntPChs}Your family were merchants in one of the main cities of the Urkhai Kingdom. They sometimes organized caravans to nearby towns, and discussed issues in the town council."), null, 0, 0, 0, 0, 0);
+            urkhaiParentsCategory.AddCategoryOption(new("Urkhai Artisans"), new() { DefaultSkills.Crafting, DefaultSkills.Trade }, DefaultCharacterAttributes.Intelligence, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, UrkhaiArtisanOnConsequence, base.EmpireArtisanOnApply, new("Your family were famous artisans, crafting weapons, armor, and items of unmatched quality."), null, 0, 0, 0, 0, 0);
+            urkhaiParentsCategory.AddCategoryOption(new("Urkhai Miners"), new() { DefaultSkills.Engineering, DefaultSkills.Athletics }, DefaultCharacterAttributes.Endurance, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, UrkhaiMinerOnConsequence, base.EmpireFreeholderOnApply, new("Your family worked in the deep mines, extracting precious metals and gems from the earth."), null, 0, 0, 0, 0, 0);
+            urkhaiParentsCategory.AddCategoryOption(new("Urkhai Troops"), new() { DefaultSkills.OneHanded, DefaultSkills.Polearm }, DefaultCharacterAttributes.Vigor, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, UrkhaiWarriorOnConsequence, base.EmpireVagabondOnApply, new("Your family were part of the urkhaish military, renowned for their brutality and courage in battle."), null, 0, 0, 0, 0, 0);
+            urkhaiParentsCategory.AddCategoryOption(new("{=aEke8dSb}Urban vagabonds"), new() { DefaultSkills.Roguery, DefaultSkills.Throwing }, DefaultCharacterAttributes.Cunning, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, UrkhaiVagabondOnConsequence, base.EmpireVagabondOnApply, new("{=Jvf6K7TZ}Your family numbered among the many poor migrants living in the slums that grow up outside the walls of cities, making whatever money they could from a variety of odd jobs. Sometimes they did service for one of the many criminal gangs, and you had an early look at the dark side of life."), null, 0, 0, 0, 0, 0);
             characterCreation.AddNewMenu(parentsMenu);
 
             characterCreation.AddNewMenu(parentsMenu);
@@ -510,6 +527,36 @@ namespace RealmsForgotten
         }
 
         protected void DwarfVagabondOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 6, OccupationTypes.Vagabond);
+        }
+
+        private void UrkhaiNoblesOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 1, OccupationTypes.Retainer);
+        }
+
+        protected void UrkhaiMerchantOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 2, OccupationTypes.Merchant);
+        }
+
+        private void UrkhaiArtisanOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 1, OccupationTypes.Artisan);
+        }
+
+        private void UrkhaiMinerOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 2, OccupationTypes.Farmer);
+        }
+
+        private void UrkhaiWarriorOnConsequence(CharacterCreation characterCreation)
+        {
+            SetParentAndOccupationType(characterCreation, 3, OccupationTypes.Mercenary);
+        }
+
+        protected void UrkhaiVagabondOnConsequence(CharacterCreation characterCreation)
         {
             SetParentAndOccupationType(characterCreation, 6, OccupationTypes.Vagabond);
         }
@@ -759,7 +806,7 @@ namespace RealmsForgotten
                 DefaultSkills.Engineering
             }, DefaultCharacterAttributes.Intelligence, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthGarrisonOnConsequence), new(base.YouthGarrisonOnApply), new("{=63TAYbkx}Urban troops spend much of their time guarding the town walls. Most of their training was in missile weapons, especially useful during sieges.", null), null, 0, 0, 0, 0, 0);
 
-            characterCreationCategory.AddCategoryOption(new("trained with the infrantry.", null), new()
+            characterCreationCategory.AddCategoryOption(new("trained with the infantry.", null), new()
             {
                 DefaultSkills.Throwing,
                 DefaultSkills.OneHanded
@@ -1011,6 +1058,46 @@ namespace RealmsForgotten
                 DefaultSkills.OneHanded
             }, DefaultCharacterAttributes.Cunning, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthCamperOnConsequence), new(base.YouthCamperOnApply), new("{=64rWqBLN}You avoided service with one of the main forces of your realm's armies, but followed instead in the train - the troops' wives, lovers and servants, and those who make their living by caring for, entertaining, or cheating the soldiery.", null), null, 0, 0, 0, 0, 0);
             characterCreation.AddNewMenu(characterCreationMenu);
+            
+            // Urkhai
+
+            characterCreationCategory = characterCreationMenu.AddMenuCategory(new(UrkhaiParentsOnCondition));
+            characterCreationCategory.AddCategoryOption(new("{=h2KnarLL}trained with the commander´s army.", null), new()
+            {
+               DefaultSkills.TwoHanded,
+               DefaultSkills.Polearm
+            }, DefaultCharacterAttributes.Endurance, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthCavalryOnConsequence), new(base.YouthCavalryOnApply), new("{=7cHsIMLP}You could never have bought the equipment on your own but you were a good enough rider so that the local lord lent you a horse and equipment. You joined the armored cavalry, training with the lance.", null), null, 0, 0, 0, 0, 0);
+
+            characterCreationCategory.AddCategoryOption(new("partrolled the cities.", null), new()
+            {
+                DefaultSkills.Crossbow,
+                DefaultSkills.Engineering
+            }, DefaultCharacterAttributes.Intelligence, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthGarrisonOnConsequence), new(base.YouthGarrisonOnApply), new("{63TAYbkx}Urban troops spend much of their time guarding the town walls. Most of their training was in missile weapons, especially useful during sieges.", null), null, 0, 0, 0, 0, 0);
+
+            characterCreationCategory.AddCategoryOption(new("joined the scouts.", null), new()
+            {
+                DefaultSkills.Riding,
+                DefaultSkills.Crossbow
+            }, DefaultCharacterAttributes.Endurance, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthOtherOutridersOnConsequence), new(base.YouthOtherOutridersOnApply), new("You couted ahead of the army.", null), null, 0, 0, 0, 0, 0);
+
+            characterCreationCategory.AddCategoryOption(new("{=a8arFSra}trained with the infantry.", null), new()
+            {
+                DefaultSkills.Athletics,
+                DefaultSkills.OneHanded
+            }, DefaultCharacterAttributes.Vigor, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, null, new(base.YouthInfantryOnApply), new("{=afH90aNs}Young Tribesmen armed with spear and shield, drawn from smallholding farmers, have always been the backbone of most armies.", null), null, 0, 0, 0, 0, 0);
+
+            characterCreationCategory.AddCategoryOption(new("{=oMbOIPc9}joined the scholars.", null), new()
+            {
+                DefaultSkills.Medicine,
+                RFSkills.Arcane
+            }, DefaultCharacterAttributes.Control, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthSkirmisherOnConsequence), new(base.YouthSkirmisherOnApply), new("{=bXAg5w19}After reaching the age when every youth is potentially a spear bearer, it became clear that your constitution was not up to the task. However, scrolls and books quickly revealed themselves as a field in which you showed great familiarity. Seeing this, the scholars of the kingdom gladly welcomed another novice.", null), null, 0, 0, 0, 0, 0);
+
+            characterCreationCategory.AddCategoryOption(new("{=GFUggps8}marched with the free people.", null), new()
+            {
+                DefaultSkills.Throwing,
+                DefaultSkills.OneHanded
+            }, DefaultCharacterAttributes.Cunning, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthCamperOnConsequence), new(base.YouthCamperOnApply), new("{=64rWqBLN}You avoided service with one of the main forces of your realm's armies, but followed instead in the train - the troops' wives, lovers and servants, and those who make their living by caring for, entertaining, or cheating the soldiery.", null), null, 0, 0, 0, 0, 0);
+            characterCreation.AddNewMenu(characterCreationMenu);
         }
 
 
@@ -1246,6 +1333,11 @@ namespace RealmsForgotten
         protected bool DwarfParentsOnCondition()
         {
             return base.GetSelectedCulture().StringId == "dwarf";
+        }
+
+        protected bool UrkhaiParentsOnCondition()
+        {
+            return base.GetSelectedCulture().StringId == "urkhai";
         }
         protected void StartOnInit(CharacterCreation characterCreation)
         {

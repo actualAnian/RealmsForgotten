@@ -24,8 +24,6 @@ namespace RealmsForgotten.RFCustomSettlements
                 SwitchScene,
                 Finished
             }
-            internal ItemRoster? itemLoot;
-            internal int goldLoot;
             internal static NextSceneData? _instance;
             internal bool shouldSwitchScenes = false;
             internal string? newSceneId;
@@ -42,8 +40,6 @@ namespace RealmsForgotten.RFCustomSettlements
             }
             internal void ResetData()
             {
-                goldLoot = 0;
-                itemLoot = new();
                 shouldSwitchScenes = false;
                 playerTroopRoster = TroopRoster.CreateDummyTroopRoster();
                 newSceneId = null;
@@ -141,17 +137,6 @@ namespace RealmsForgotten.RFCustomSettlements
                     }
                     break;
                 case NextSceneData.RFExploreState.Finished:
-                    if (NextSceneData.Instance.goldLoot > 0)
-                    {
-                        Hero.MainHero.ChangeHeroGold(NextSceneData.Instance.goldLoot);
-                        TextObject goldText = new("Total Gold Loot: {CHANGE}{GOLD_ICON}", null);
-                        goldText.SetTextVariable("CHANGE", NextSceneData.Instance.goldLoot);
-                        goldText.SetTextVariable("GOLD_ICON", "{=!}<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">");
-
-                        InformationManager.DisplayMessage(new InformationMessage(goldText.ToString(), "event:/ui/notification/coins_positive"));
-                    }
-                    if (!NextSceneData.Instance.itemLoot.IsEmpty())
-                        InventoryManager.OpenScreenAsReceiveItems(NextSceneData.Instance.itemLoot, new TextObject("Loot"), null);
                     NextSceneData.Instance.ResetData();
                     break;
             }

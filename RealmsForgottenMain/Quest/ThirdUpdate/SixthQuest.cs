@@ -100,6 +100,18 @@ namespace RealmsForgotten.Quest.SecondUpdate
             base.RegisterEvents();
             CampaignEvents.MobilePartyDestroyed.AddNonSerializedListener(this, OnMobilePartyDestroyed);
             CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, HourlyTick);
+            CampaignEvents.TickEvent.AddNonSerializedListener(this, OnTick);
+        }
+
+        private void OnTick(float obj)
+        {
+            if (talkToLordLog?.CurrentProgress == 2 && defeatDemonLordPartiesLog == null)
+            {
+                CampaignMapConversation.OpenConversation(
+                    new ConversationCharacterData(CharacterObject.PlayerCharacter),
+                    new ConversationCharacterData(TheOwl.CharacterObject)
+                );
+            }
         }
 
         protected override void OnStartQuest()
@@ -298,20 +310,6 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 );
             }
         }
-
-        private void StartOwlConversationResponse()
-        {
-            Hero owl = TheOwl;
-            if (owl != null)
-            {
-                Campaign.Current.ConversationManager.AddDialogFlow(TalkToLordDialogOwl, this);
-                CampaignMapConversation.OpenConversation(
-                    new ConversationCharacterData(CharacterObject.PlayerCharacter),
-                    new ConversationCharacterData(owl.CharacterObject)
-                );
-            }
-        }
-
         private void StartOwlConversationLordsDefeated()
         {
             if (TheOwl != null)
@@ -379,11 +377,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 ("sturgian_veteran_warrior", 50),
                 ("sturgian_veteran_bowman", 25)
             };
-
-             // Call the method to add the troops
             GivePlayerTroops(troopsToAdd);
-
-            StartOwlConversationResponse();
         })
         .CloseDialog();
 

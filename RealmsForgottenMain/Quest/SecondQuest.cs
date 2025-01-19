@@ -118,7 +118,7 @@ namespace RealmsForgotten.Quest
 
 
                 _isPlayerInOwlArmy = false;
-
+                MobileParty.MainParty.IgnoreByOtherPartiesTill(CampaignTime.Now);
                 QuestPatches.AvoidDisbanding = false;
 
 
@@ -196,7 +196,10 @@ namespace RealmsForgotten.Quest
             if (settlement.IsTown && CampaignMission.Current != null && !HasTalkedToOwl)
             {
                 Location location = CampaignMission.Current.Location;
-                if (location != null && settlement.StringId == QuestGiver.HomeSettlement.StringId && location.StringId == "tavern")
+                if (location != null 
+                    && (settlement.StringId == QuestGiver.HomeSettlement.StringId 
+                    || QuestGiver.CurrentSettlement != null && QuestGiver.CurrentSettlement == Hero.MainHero.CurrentSettlement
+                    && location.StringId == "tavern"))
                 {
                     LocationCharacter locationCharacter = CreateTheOwl(settlement.Culture, LocationCharacter.CharacterRelations.Neutral);
                     location.AddCharacter(locationCharacter);
