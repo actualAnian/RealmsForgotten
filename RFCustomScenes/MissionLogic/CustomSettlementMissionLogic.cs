@@ -22,14 +22,13 @@ using System.Text;
 using static RealmsForgotten.RFCustomSettlements.ExploreSettlementStateHandler;
 using static RealmsForgotten.RFCustomSettlements.CustomSettlementBuildData;
 using System.Threading.Tasks;
-using RFCustomSettlements;
 using HuntableHerds.Models;
-using SandBox.AI;
 using RFCustomSettlements.Quests;
-using System.ComponentModel;
-
+using BehaviorTreeWrapper;
+using BehaviorTreeWrapper.Tests;
 namespace RealmsForgotten.RFCustomSettlements
 {
+
     internal class CustomSettlementMissionLogic : MissionBehavior
     {
         private class UsedObject
@@ -216,6 +215,13 @@ namespace RealmsForgotten.RFCustomSettlements
                     HerdAgentComponent huntAgentComponent = herdBuildData.IsPassive ? new PassiveHerdAgentComponent(agent) : new AggressiveHerdAgentComponent(agent);
 
                     agent.AddComponent(huntAgentComponent);
+                    
+                    BehaviorTrees.BTRegister.RegisterClass("ExampleTree", objects => ExampleTree.BuildTree(objects));
+                    if (agent.Monster.StringId == "rat")
+                    {
+                        //agent.AddComponent(new TestComponent(agent));
+                        agent.AddComponent(new BehaviorTreeAgentComponent(agent, "ExampleTree"));
+                    }
 
                     for (int i = 0; i < 3; i++)
                     {

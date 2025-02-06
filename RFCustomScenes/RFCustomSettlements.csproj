@@ -32,11 +32,11 @@
 		</Reference>
 		
 		<Reference Include="BehaviorTrees">
-		  <HintPath>..\..\BehaviorTree\BehaviorTreeWrapper\bin\x64\Debug\net472\BehaviorTrees.dll</HintPath>
+		  <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\RealmsForgotten\bin\Win64_Shipping_Client\BehaviorTrees.dll</HintPath>
 		</Reference>
 		
 		<Reference Include="BehaviorTreeWrapper">
-		  <HintPath>..\..\BehaviorTree\BehaviorTreeWrapper\bin\x64\Debug\net472\BehaviorTreeWrapper.dll</HintPath>
+		  <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\RealmsForgotten\bin\Win64_Shipping_Client\BehaviorTreeWrapper.dll</HintPath>
 		</Reference>
 		
 		<Reference Include="$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.*.dll">
