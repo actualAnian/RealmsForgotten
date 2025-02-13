@@ -29,6 +29,7 @@ using TaleWorlds.Library;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.MountAndBlade.ComponentInterfaces;
 using RealmsForgotten.AiMade.Patches;
+using RealmsForgotten.UI;
 
 namespace RealmsForgotten
 {
@@ -211,6 +212,7 @@ namespace RealmsForgotten
             //var types = Globals.realmsForgottenAssembly.GetTypes().ToList();
             //var patch = types.Where(t => t is FaceGenPatch);
             base.OnSubModuleLoad();
+            ViewModelExtensionManager.Initialize(); //has to happen before harmony PatchAll
             harmony.PatchAll();
 
             TextObject coreContentDisabledReason = new("Disabled during installation.", null);
