@@ -70,7 +70,6 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new DivineShieldStateBehavior());
             campaignGameStarter.AddBehavior(new BattleCryStateBehavior());
             campaignGameStarter.AddBehavior(new VisitLibrary());
-            campaignGameStarter.AddBehavior(new CareerProgressionBehavior());
             campaignGameStarter.AddBehavior(new BanditHideoutClearedBehavior());
             campaignGameStarter.AddBehavior(new AggressiveSturgiaBehavior());
             campaignGameStarter.AddBehavior(new HumanCohesionBehavior());
@@ -126,10 +125,6 @@ namespace RealmsForgotten.AiMade
 
                 mission.AddMissionBehavior(new FindMagicItemsMissionBehavior());
             }
-        }
-        public static void InitializeCareerSystem()
-        {
-            CareerInitialization.InitializeCareers();
         }
     }
 }

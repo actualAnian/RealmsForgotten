@@ -30,6 +30,7 @@ using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.MountAndBlade.ComponentInterfaces;
 using RealmsForgotten.AiMade.Patches;
 using RealmsForgotten.UI;
+using RealmsForgotten.Career;
 
 namespace RealmsForgotten
 {
@@ -97,7 +98,6 @@ namespace RealmsForgotten
                 new RFPerks().Initialize();
                 
                 AiSubModule.AddCampaignBehaviors(campaignGameStarter);
-                AiSubModule.InitializeCareerSystem();
 
                 QuestSubModule.AddQuestBehaviors((CampaignGameStarter)gameStarterObject);
 
@@ -171,6 +171,19 @@ namespace RealmsForgotten
                 mission.AddMissionBehavior(new HealOnKillMissionBehavior());
 
                 mission.AddMissionBehavior(new HealOnKillMissionBehavior()); // Add this line
+            }
+        }
+        public override void BeginGameStart(Game game)
+        {
+            if (game.GameType is Campaign)
+            {
+                game.ObjectManager.RegisterType<CareerObject>("Career", "Careers", 103U, true);
+                game.ObjectManager.RegisterType<CareerChoiceObject>("CareerChoice", "CareerChoices", 104U, true);
+                game.ObjectManager.RegisterType<CareerChoiceGroupObject>("CareerChoiceGroup", "CareerChoiceGroups", 105U, true);
+
+                _ = new RFCareers();
+                _ = new RFCareerChoiceGroups();
+                _ = new RFCareerChoices();
             }
         }
         protected override void OnBeforeInitialModuleScreenSetAsRoot() { }

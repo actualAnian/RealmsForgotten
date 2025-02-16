@@ -28,15 +28,15 @@ namespace RealmsForgotten.AiMade.Career
 
             return damage;
         }
-        private bool IsSlayer(Agent agent)
-        {
-            // Verificar se o agente é o herói do jogador e possui o benefício Slayer
-            if (agent.IsHero && agent.Character is CharacterObject character && character.HeroObject != null)
-            {
-                Hero hero = character.HeroObject;
-                return Campaign.Current?.GetCampaignBehavior<CareerProgressionBehavior>()?.IsAgentSlayer(hero) ?? false;
-            }
-            return false;
-        }
+        //private bool IsSlayer(Agent agent)
+        //{
+        //    // Verificar se o agente é o herói do jogador e possui o benefício Slayer
+        //    if (agent.IsHero && agent.Character is CharacterObject character && character.HeroObject != null)
+        //    {
+        //        Hero hero = character.HeroObject;
+        //        return Campaign.Current?.GetCampaignBehavior<CareerProgressionBehavior>()?.IsAgentSlayer(hero) ?? false;
+        //    }
+        //    return false;
+        //}
     }
 }

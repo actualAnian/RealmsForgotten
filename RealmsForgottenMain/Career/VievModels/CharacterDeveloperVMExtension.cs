@@ -11,7 +11,7 @@ using TaleWorlds.Library;
 using RealmsForgotten.AiMade.Enlistement;
 using RealmsForgotten.UI;
 
-namespace TOR_Core.CharacterDevelopment.CareerSystem
+namespace RealmsForgotten.Career.VievModels
 {
     [ViewModelExtension(typeof(CharacterDeveloperVM))]
     public class CharacterDeveloperVMExtension : BaseViewModelExtension
@@ -26,8 +26,8 @@ namespace TOR_Core.CharacterDevelopment.CareerSystem
 
         private void ExecuteNavigateToCareers()
         {
-            //var state = Game.Current.GameStateManager.CreateState<CareerScreenGameState>();
-            //Game.Current.GameStateManager.PushState(state);
+            var state = Game.Current.GameStateManager.CreateState<CareerScreenGameState>();
+            Game.Current.GameStateManager.PushState(state);
         }
         [DataSourceProperty]
         public bool HasCareer
