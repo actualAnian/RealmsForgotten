@@ -5,9 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Helpers;
 using RealmsForgotten.Behaviors;
+using RealmsForgotten.Career;
+using RealmsForgotten.Career.Logic;
 using RealmsForgotten.CustomSkills;
 using SandBox.GameComponents;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
@@ -83,9 +86,9 @@ namespace RealmsForgotten.Models
 
                     agent.SetWeaponAmountInSlot(equipmentIndex, (short)number.ResultNumber, true);
                 }
-                    
             }
-            
+            if (agent == Agent.Main)
+                CareerLogic.ApplyExtraAmmo();
         }
         private void AddSkillEffectsForAgent(Agent agent, AgentDrivenProperties agentDrivenProperties)
         {

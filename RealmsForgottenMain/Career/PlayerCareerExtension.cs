@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
 using TaleWorlds.CampaignSystem;
@@ -9,7 +10,7 @@ namespace RealmsForgotten.Career
     public static class PlayerCareerExtension
     {
         public static readonly int MaximumNumberOfCareerPerkPoints = 30;
-        public static HeroExtendedInfo PlayerCareerInfo { get; set; } = new();
+        public static HeroExtendedInfo? PlayerCareerInfo { get; set; } = new();
         public static bool HasAnyCareer() => Game.Current.GameType is Campaign && GetCareer() != null;
         public static CareerObject? GetCareer()
         {
@@ -120,16 +121,22 @@ namespace RealmsForgotten.Career
             }
             else return false;
         }
+        public static List<string> GetAllCareerChoices()
+        {
+            if (!HasAnyCareer())
+                return new();
+            return PlayerCareerInfo.CareerChoices;
+        }
     }
-
 
     [Flags]
     public enum AttackTypeMask
     {
         Ranged = 1,
         Melee = 2,
+        Alchemy = 3,
         Spell = 4,
-        All = Ranged | Melee | Spell
+        All = Ranged | Melee | Alchemy | Spell
     }
 
     [Serializable]
@@ -151,12 +158,16 @@ namespace RealmsForgotten.Career
     public enum DamageType
     {
         Invalid,
-        Physical,
+        PhysicalMelee,
+        PhysicalRanged,
         Magical,
-        Fire,
-        Holy,
-        Lightning,
-        Frost,
+        Alchemical,
         All
+    }
+    public enum PropertyMask : int
+    {
+        Attack = 0,
+        Defense = 1,
+        All = 2
     }
 }

@@ -31,6 +31,9 @@ using TaleWorlds.MountAndBlade.ComponentInterfaces;
 using RealmsForgotten.AiMade.Patches;
 using RealmsForgotten.UI;
 using RealmsForgotten.Career;
+using SandBox.GameComponents;
+using SandBox.Missions.MissionLogics;
+using RealmsForgotten.Career.Logic;
 
 namespace RealmsForgotten
 {
@@ -82,6 +85,8 @@ namespace RealmsForgotten
                 campaignGameStarter.AddModel(new RFDefaultCharacterDevelopmentModel(campaignGameStarter.GetExistingModel<CharacterDevelopmentModel>()));
                 campaignGameStarter.AddModel(new RFPartyMoraleModel(campaignGameStarter.GetExistingModel<PartyMoraleModel>()));
                 campaignGameStarter.AddModel(new RFPartySpeedCalculatingModel(campaignGameStarter.GetExistingModel<PartySpeedModel>()));
+                campaignGameStarter.AddModel(new RFCharacterStatsModel(campaignGameStarter.GetExistingModel<CharacterStatsModel>()));
+                
                 campaignGameStarter.AddModel(new RFPrisonerRecruitmentCalculationModel(campaignGameStarter.GetExistingModel<PrisonerRecruitmentCalculationModel>()));
                 campaignGameStarter.AddModel(new RFRaidModel(campaignGameStarter.GetExistingModel<RaidModel>()));
                 campaignGameStarter.AddModel(new RFVolunteerModel(campaignGameStarter.GetExistingModel<VolunteerModel>()));
@@ -90,6 +95,7 @@ namespace RealmsForgotten
                 campaignGameStarter.AddModel(new RFInventoryCapacityModel(campaignGameStarter.GetExistingModel<InventoryCapacityModel>()));
                 campaignGameStarter.AddModel(new RFRaceSpeedBonusModel(campaignGameStarter.GetExistingModel<PartySpeedModel>()));
                 campaignGameStarter.AddModel(new RFBanditDensityModel(campaignGameStarter.GetExistingModel<BanditDensityModel>()));
+                campaignGameStarter.AddModel(new RFStrikeMagnitudeModel());
 
                 
                 new RFAttributes().Initialize();
@@ -172,6 +178,10 @@ namespace RealmsForgotten
 
                 mission.AddMissionBehavior(new HealOnKillMissionBehavior()); // Add this line
             }
+            if (Game.Current.GameType is Campaign)
+            {
+                mission.AddMissionBehavior(new CareerPerkMissionBehavior());
+            }
         }
         public override void BeginGameStart(Game game)
         {
@@ -186,6 +196,7 @@ namespace RealmsForgotten
                 _ = new RFCareerChoices();
             }
         }
+
         protected override void OnBeforeInitialModuleScreenSetAsRoot() { }
         public override void OnGameInitializationFinished(Game game)
         {

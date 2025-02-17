@@ -98,8 +98,8 @@
 																							<ItemTemplate>
 																								<ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="50" StackLayout.LayoutMethod="HorizontalLeftToRight">
 																									<Children>
-																										<Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="35" SuggestedWidth="35" HorizontalAlignment="Left" MarginLeft="23" MarginTop="5" MarginBottom="5" Sprite="BlankWhiteSquare_9" Color="#7f695cFF" IsVisible="@IsFreeToTake" />
-																										<Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="35" SuggestedWidth="35" HorizontalAlignment="Left" MarginLeft="23" MarginTop="5" MarginBottom="5" Sprite="BlankWhiteSquare_9" Color="#dfc395FF" IsVisible="@IsTaken" />
+																										<Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="35" SuggestedWidth="35" HorizontalAlignment="Left" MarginLeft="23" MarginTop="5" MarginBottom="5" Sprite="CharacterDeveloper\progress_bar_fill" Color="#7f695cFF" IsVisible="@IsFreeToTake" />
+																										<Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="35" SuggestedWidth="35" HorizontalAlignment="Left" MarginLeft="23" MarginTop="5" MarginBottom="5" Sprite="CharacterDeveloper\progress_bar_empty" Color="#dfc395FF" IsVisible="@IsTaken" />
 																										<TextWidget DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="35" SuggestedWidth="500" HorizontalAlignment="Left" MarginLeft="23" MarginTop="5" MarginBottom="5" Text="@Description" Brush="TorCareerChoiceBrush" />
 																									</Children>
 																								</ListPanel>
@@ -110,8 +110,8 @@
 																				</ImageWidget>
 																				<ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop" IsVisible="@ButtonsVisible">
 																					<Children>
-																						<ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="50" HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="#000000FF" AlphaFactor="0.4" IsVisible="@IsActive" MarginLeft="10" Command.Click="ExecuteClickIncrease" />
-																						<ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="50" HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="#000000FF" AlphaFactor="0.4" IsVisible="@IsActive" MarginLeft="10" Command.Click="ExecuteClickDecrease" />
+																						<ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="30" SuggestedWidth="30" HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="#000000FF" AlphaFactor="0.4" IsVisible="@IsActive" MarginLeft="10" MarginTop="40" Command.Click="ExecuteClickIncrease" />
+																						<ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="30" SuggestedWidth="30" HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="#0000FFFF" AlphaFactor="0.4" IsVisible="@IsActive" MarginLeft="10" MarginTop="40" Command.Click="ExecuteClickDecrease" />
 																					</Children>
 																				</ListPanel>
 																			</Children>

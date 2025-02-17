@@ -4,6 +4,7 @@ using TaleWorlds.Localization;
 
 namespace RealmsForgotten.Career
 {
+    //@TODO remove this
     public class CareerAbilityEffectVM : ViewModel
     {
         private string _text;

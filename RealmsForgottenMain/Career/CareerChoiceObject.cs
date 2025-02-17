@@ -35,8 +35,6 @@ namespace RealmsForgotten.Career
                         GameTexts.TryGetText("tor_damagetype", out var damageTypeText, damageType.ToString());
                         GameTexts.SetVariable("EFFECT_DAMAGE_TYPE", damageTypeText);
 
-                        var attackType = Passive.AttackTypeMask;
-                        GameTexts.TryGetText("tor_attacktype", out var attackTypeText, attackType.ToString());
                         GameTexts.SetVariable("EFFECT_ATTACK_TYPE", damageTypeText);
                         GameTexts.SetVariable("EFFECT_VALUE", (Passive.DamageProportionTuple.Percent).ToString("R"));
                     }
@@ -152,34 +150,23 @@ namespace RealmsForgotten.Career
             public bool InterpretAsPercentage = true;
             public bool WithFactorFlatSwitch;
             public DamageProportionTuple DamageProportionTuple;
-            public AttackTypeMask AttackTypeMask = AttackTypeMask.Melee;
 
-            public delegate bool SpecialCombatInteractionFunction(Agent attacker, Agent victim, AttackTypeMask mask);
+            public delegate bool SpecialCombatInteractionFunction(Agent attacker, Agent victim);
             private readonly SpecialCombatInteractionFunction _specialCombatInteractionFunction;
             public delegate bool SpecialCharacterEvaluationFunction(CharacterObject characterObject);
             private readonly SpecialCharacterEvaluationFunction _specialCharacterEvaluationFunction;
 
-            public bool IsValidCombatInteraction(Agent attacker, Agent victim, AttackTypeMask mask) => _specialCombatInteractionFunction == null || _specialCombatInteractionFunction.Invoke(attacker, victim, mask);
+            public bool IsValidCombatInteraction(Agent attacker, Agent victim) => _specialCombatInteractionFunction == null || _specialCombatInteractionFunction.Invoke(attacker, victim);
 
             public bool IsValidCharacterObject(CharacterObject characterObject) => _specialCharacterEvaluationFunction == null || _specialCharacterEvaluationFunction.Invoke(characterObject);
-
-            public PassiveEffect(float effectValue, PassiveEffectType type, AttackTypeMask mask)
-            {
-                EffectMagnitude = effectValue;
-                Operation = OperationType.Add;
-                InterpretAsPercentage = true;
-                PassiveEffectType = type;
-                AttackTypeMask = mask;
-            }
-            public PassiveEffect(PassiveEffectType type, DamageProportionTuple damageProportionTuple, AttackTypeMask mask, SpecialCombatInteractionFunction function = null)
+            public PassiveEffect(PassiveEffectType type, DamageProportionTuple damageProportionTuple, SpecialCombatInteractionFunction function = null, bool interpretAsPercentage = true)
             {
                 InterpretAsPercentage = true;
                 EffectMagnitude = 0;
                 Operation = OperationType.Add;
-                InterpretAsPercentage = true;
+                InterpretAsPercentage = interpretAsPercentage;
                 PassiveEffectType = type;
                 DamageProportionTuple = damageProportionTuple;
-                AttackTypeMask = mask;
                 _specialCombatInteractionFunction = function;
             }
 
@@ -223,9 +210,16 @@ namespace RealmsForgotten.Career
 
     public enum PassiveEffectType
     {
+        //edited to work
+
+        Ammo,               //arrows, crossbows , flat number
+        SpellAmmo,
+        Health,             //Player health points, flat number
+
+
+        //have to be enabled
         Special,            //For everything that requires special implementation
 
-        Health,             //Player health points, flat number
         CustomResourceUpkeepModifier, //scales custom resource upkeep
         CustomResourceUpgradeCostModifier, //scales custom upgrade costs
         CustomResourceGain, //daily gain for custom resource , flat number
@@ -255,7 +249,6 @@ namespace RealmsForgotten.Career
         TroopMorale,        //Morale
         TroopWages,         //Negative number decrease
         TroopUpgradeCost,
-        Ammo,               //Player ammo , flat number
         SwingSpeed,
         EquipmentWeightReduction
     }

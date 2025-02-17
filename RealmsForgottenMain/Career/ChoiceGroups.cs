@@ -8,7 +8,7 @@ namespace RealmsForgotten.Career
         public static RFCareerChoiceGroups Instance { get; private set; }
 
         //Mercenary
-        private CareerChoiceGroupObject _survivalist;
+        private CareerChoiceGroupObject _wandering_blade;
         private CareerChoiceGroupObject _duelist;
         private CareerChoiceGroupObject _headhunter;
         private CareerChoiceGroupObject _knightly;
@@ -35,7 +35,7 @@ namespace RealmsForgotten.Career
         {
 
             //Mercenary
-            _survivalist = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("Survivalist"));
+            _wandering_blade = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("WanderingBlade"));
             _duelist = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("Duelist"));
             _headhunter = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("Headhunter"));
             _knightly = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("Knightly"));
@@ -58,7 +58,7 @@ namespace RealmsForgotten.Career
         {
             //Mercenary
 
-            _survivalist.Initialize("Wandering Blade", RFCareers.Mercenary, 1, (Hero hero, out string text) =>
+            _wandering_blade.Initialize("Wandering Blade", RFCareers.Mercenary, 1, (Hero hero, out string text) =>
             {
                 text = string.Empty;
                 return true;
