@@ -76,12 +76,12 @@ namespace RealmsForgotten.Career
                 text = "Required clan renown: 2";
                 return hero.Clan.Tier >= 2;
             });
-            _merc_eq_2.Initialize("Commander", RFCareers.Mercenary, 2, (Hero hero, out string text) =>
+            _merc_eq_2.Initialize("Commander", RFCareers.Mercenary, 3, (Hero hero, out string text) =>
             {
                 text = "Required clan renown: 2";
                 return hero.Clan.Tier >= 2;
             });
-            _mercenaryLord.Initialize("Mercenary's equipment II", RFCareers.Mercenary, 2, (Hero hero, out string text) =>
+            _mercenaryLord.Initialize("Mercenary's equipment II", RFCareers.Mercenary, 3, (Hero hero, out string text) =>
             {
                 text = "Required clan renown: 2";
                 return hero.Clan.Tier >= 2;

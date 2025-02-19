@@ -1,5 +1,6 @@
 ﻿using System;
-using TaleWorlds.CampaignSystem;
+using TaleWorlds.Core;
+using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 
 namespace RealmsForgotten.Career.VievModels
@@ -8,7 +9,7 @@ namespace RealmsForgotten.Career.VievModels
     {
         private Action _closeAction;
         private CareerObjectVM _currentCareerVM;
-        private bool _hasBattlePrayers;
+        bool _canClose = false;
 
         public CareerScreenVM(Action closeAction)
         {
@@ -16,7 +17,19 @@ namespace RealmsForgotten.Career.VievModels
 
             PlayerCareerExtension.AddCareer(RFCareers.Mercenary);
             _currentCareerVM = new CareerObjectVM(PlayerCareerExtension.GetCareer());
-            HasBattlePrayers = false;
+
+            Game.Current.AfterTick = (Action<float>)Delegate.Combine(Game.Current.AfterTick, new Action<float>(this.OnTick));
+            _canClose = true;
+        }
+
+        private void OnTick(float obj)
+        {
+            if (Input.IsKeyPressed(InputKey.Escape) && _canClose)
+            {
+                Game.Current.AfterTick = (Action<float>)Delegate.Remove(Game.Current.AfterTick, new Action<float>(this.OnTick));
+                _canClose = false;
+                ExecuteCancel();
+            }
         }
 
         private void ExecuteDone()
@@ -37,12 +50,6 @@ namespace RealmsForgotten.Career.VievModels
             _currentCareerVM.RefundPerks();
         }
 
-        private void OpenBattlePrayers()
-        {
-            //var state = Game.Current.GameStateManager.CreateState<BattlePrayerBookState>();
-            //Game.Current.GameStateManager.PushState(state);
-        }
-
         [DataSourceProperty]
         public CareerObjectVM CurrentCareer
         {
@@ -56,23 +63,6 @@ namespace RealmsForgotten.Career.VievModels
                 {
                     _currentCareerVM = value;
                     OnPropertyChangedWithValue(value, "CurrentCareer");
-                }
-            }
-        }
-
-        [DataSourceProperty]
-        public bool HasBattlePrayers
-        {
-            get
-            {
-                return _hasBattlePrayers;
-            }
-            set
-            {
-                if (value != _hasBattlePrayers)
-                {
-                    _hasBattlePrayers = value;
-                    OnPropertyChangedWithValue(value, "HasBattlePrayers");
                 }
             }
         }

@@ -42,7 +42,7 @@ namespace RealmsForgotten.Career.VievModels
         public CareerObjectVM(CareerObject career)
         {
             _career = career;
-            _name = GameTexts.FindText("career_title", _career.StringId).ToString();
+            _name = career.Name.Value;
             _spriteName = "CareerSystem\\Illustrations\\" + career.StringId;
             _abilitySpriteName = null;//_career.GetAbilityTemplate()?.SpriteName;      //in case no career ability is found deactivate this screen
             _abilityName = null;//new TextObject(_career.GetAbilityTemplate()?.Name).ToString();
