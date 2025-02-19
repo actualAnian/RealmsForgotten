@@ -1,4 +1,5 @@
-﻿using TaleWorlds.CampaignSystem;
+﻿using System.Collections.Generic;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
@@ -33,6 +34,15 @@ namespace RealmsForgotten.Career.Logic
                     short result = (short)MathF.Round(ammoCount.ResultNumber);
                     equipment.SetAmountOfSlot(equipmentIndex, result, true);
                 }
+            }
+        }
+        public static void ApplyExtraShieldDamage(MissionWeapon weapon)
+        {
+            List<string> choices = PlayerCareerExtension.GetAllCareerChoices();
+            if (choices.Contains("NightRiderPassive4"))
+            {
+                WeaponComponentData weaponComponentData = weapon.CurrentUsageItem;
+                weaponComponentData.WeaponFlags |= WeaponFlags.BonusAgainstShield;
             }
         }
     }

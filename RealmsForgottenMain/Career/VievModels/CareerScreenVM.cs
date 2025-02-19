@@ -19,9 +19,22 @@ namespace RealmsForgotten.Career.VievModels
             HasBattlePrayers = false;
         }
 
-        private void ExecuteClose()
+        private void ExecuteDone()
         {
             _closeAction();
+        }
+        private void ExecuteCancel()
+        {
+            _currentCareerVM.RefundPerks();
+            _closeAction();
+        }
+        private void ExecuteBuyPerk()
+        {
+            _currentCareerVM.BuyPerk();
+        }
+        private void ExecuteReset()
+        {
+            _currentCareerVM.RefundPerks();
         }
 
         private void OpenBattlePrayers()

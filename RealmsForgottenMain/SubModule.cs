@@ -86,7 +86,8 @@ namespace RealmsForgotten
                 campaignGameStarter.AddModel(new RFPartyMoraleModel(campaignGameStarter.GetExistingModel<PartyMoraleModel>()));
                 campaignGameStarter.AddModel(new RFPartySpeedCalculatingModel(campaignGameStarter.GetExistingModel<PartySpeedModel>()));
                 campaignGameStarter.AddModel(new RFCharacterStatsModel(campaignGameStarter.GetExistingModel<CharacterStatsModel>()));
-                
+                campaignGameStarter.AddModel(new RFPartyHealingModel(campaignGameStarter.GetExistingModel<PartyHealingModel>()));
+
                 campaignGameStarter.AddModel(new RFPrisonerRecruitmentCalculationModel(campaignGameStarter.GetExistingModel<PrisonerRecruitmentCalculationModel>()));
                 campaignGameStarter.AddModel(new RFRaidModel(campaignGameStarter.GetExistingModel<RaidModel>()));
                 campaignGameStarter.AddModel(new RFVolunteerModel(campaignGameStarter.GetExistingModel<VolunteerModel>()));

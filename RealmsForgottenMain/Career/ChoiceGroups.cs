@@ -9,12 +9,11 @@ namespace RealmsForgotten.Career
 
         //Mercenary
         private CareerChoiceGroupObject _wandering_blade;
-        private CareerChoiceGroupObject _duelist;
-        private CareerChoiceGroupObject _headhunter;
-        private CareerChoiceGroupObject _knightly;
-        private CareerChoiceGroupObject _paymaster;
+        private CareerChoiceGroupObject _leader;
+        private CareerChoiceGroupObject _merc_eq_1;
+        private CareerChoiceGroupObject _duel_champoin;
         private CareerChoiceGroupObject _mercenaryLord;
-        private CareerChoiceGroupObject _commander;
+        private CareerChoiceGroupObject _merc_eq_2;
 
         //Grail Knight
         private CareerChoiceGroupObject _errantryWar;
@@ -36,12 +35,11 @@ namespace RealmsForgotten.Career
 
             //Mercenary
             _wandering_blade = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("WanderingBlade"));
-            _duelist = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("Duelist"));
-            _headhunter = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("Headhunter"));
-            _knightly = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("Knightly"));
-            _paymaster = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("Paymaster"));
+            _leader = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("Leader"));
+            _merc_eq_1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("MercenaryEquipmentI"));
+            _duel_champoin = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("DuelChampion"));
             _mercenaryLord = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("MercenaryLord"));
-            _commander = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("Commander"));
+            _merc_eq_2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("MercenaryEquipmentII"));
 
             //Grail Knight
             _errantryWar = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("ErrantryWar"));
@@ -63,22 +61,22 @@ namespace RealmsForgotten.Career
                 text = string.Empty;
                 return true;
             });
-            _duelist.Initialize("Leader", RFCareers.Mercenary, 1, (Hero hero, out string text) =>
+            _leader.Initialize("Leader", RFCareers.Mercenary, 1, (Hero hero, out string text) =>
             {
                 text = string.Empty;
                 return true;
             });
-            _paymaster.Initialize("Mercenary's equipment I", RFCareers.Mercenary, 1, (Hero hero, out string text) =>
+            _merc_eq_1.Initialize("Mercenary's equipment I", RFCareers.Mercenary, 2, (Hero hero, out string text) =>
             {
                 text = string.Empty;
                 return true;
             });
-            _headhunter.Initialize("Duel champion ", RFCareers.Mercenary, 2, (Hero hero, out string text) =>
+            _duel_champoin.Initialize("Duel champion ", RFCareers.Mercenary, 2, (Hero hero, out string text) =>
             {
                 text = "Required clan renown: 2";
                 return hero.Clan.Tier >= 2;
             });
-            _knightly.Initialize("Commander", RFCareers.Mercenary, 2, (Hero hero, out string text) =>
+            _merc_eq_2.Initialize("Commander", RFCareers.Mercenary, 2, (Hero hero, out string text) =>
             {
                 text = "Required clan renown: 2";
                 return hero.Clan.Tier >= 2;

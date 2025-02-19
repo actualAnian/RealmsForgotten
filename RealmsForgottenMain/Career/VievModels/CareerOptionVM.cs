@@ -1,5 +1,8 @@
 ﻿using RealmsForgotten.AiMade.Career;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
+using System.Text.RegularExpressions;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
@@ -33,7 +36,9 @@ namespace RealmsForgotten.Career.VievModels
         private bool _tier1Active;
         private bool _tier2Active;
         private bool _tier3Active;
-
+        private CareerChoiceGroupObjectVM _highlightedGroup;
+        private TopScreenVM _topscreen;
+        private List<CareerChoiceObjectVM> selectedChoices = new();
         public CareerObjectVM(CareerObject career)
         {
             _career = career;
@@ -47,23 +52,24 @@ namespace RealmsForgotten.Career.VievModels
             _choiceGroups1 = new MBBindingList<CareerChoiceGroupObjectVM>();
             _choiceGroups2 = new MBBindingList<CareerChoiceGroupObjectVM>();
             _choiceGroups3 = new MBBindingList<CareerChoiceGroupObjectVM>();
+            _topscreen = new();
 
             foreach (var group in _career.ChoiceGroups)
             {
                 switch (group.Tier)
                 {
                     case 1:
-                        _choiceGroups1.Add(new CareerChoiceGroupObjectVM(group, RefreshValues));
+                        _choiceGroups1.Add(new CareerChoiceGroupObjectVM(group, RefreshValues, _topscreen));
                         if (group.GetConditionText(Hero.MainHero) != _choiceGroup1Condition) _choiceGroup1Condition += group.GetConditionText(Hero.MainHero);
                         if (group.GetUnlockText(Hero.MainHero) != _choiceGroup1Unlock) _choiceGroup1Unlock += group.GetUnlockText(Hero.MainHero);
                         break;
                     case 2:
-                        _choiceGroups2.Add(new CareerChoiceGroupObjectVM(group, RefreshValues));
+                        _choiceGroups2.Add(new CareerChoiceGroupObjectVM(group, RefreshValues, _topscreen));
                         if (group.GetConditionText(Hero.MainHero) != _choiceGroup2Condition) _choiceGroup2Condition += group.GetConditionText(Hero.MainHero);
                         if (group.GetUnlockText(Hero.MainHero) != _choiceGroup2Unlock) _choiceGroup2Unlock += group.GetUnlockText(Hero.MainHero);
                         break;
                     case 3:
-                        _choiceGroups3.Add(new CareerChoiceGroupObjectVM(group, RefreshValues));
+                        _choiceGroups3.Add(new CareerChoiceGroupObjectVM(group, RefreshValues, _topscreen));
                         if (group.GetConditionText(Hero.MainHero) != _choiceGroup3Condition) _choiceGroup3Condition += group.GetConditionText(Hero.MainHero);
                         if (group.GetUnlockText(Hero.MainHero) != _choiceGroup3Unlock) _choiceGroup3Unlock += group.GetUnlockText(Hero.MainHero);
                         break;
@@ -77,9 +83,55 @@ namespace RealmsForgotten.Career.VievModels
             _tier1Active = !_career.ChoiceGroups.Where(x => x.Tier == 1).All(x => x.IsActiveForHero(Hero.MainHero));
             _tier2Active = !_career.ChoiceGroups.Where(x => x.Tier == 2).All(x => x.IsActiveForHero(Hero.MainHero));
             _tier3Active = !_career.ChoiceGroups.Where(x => x.Tier == 3).All(x => x.IsActiveForHero(Hero.MainHero));
+            _highlightedGroup = _choiceGroups1[0];
+            _topscreen.Choices = _highlightedGroup.Choices;
+            _topscreen.GroupName = _highlightedGroup.GroupName;
             RefreshValues();
         }
+        public bool IsPerkGroupUnlocked()
+        {
+            //@ TODO
+            return true;
+        }
 
+        public void BuyPerk()
+        {
+            MBBindingList<CareerChoiceGroupObjectVM>? groups = GetGroupsTier();
+            foreach (CareerChoiceGroupObjectVM group in groups)
+            {
+                if (group == _highlightedGroup)
+                {
+                    CareerChoiceObjectVM perkToGet = group.Choices.First(c => c.IsFreeToTake);
+                    if (perkToGet == null) return;
+                    selectedChoices.Add(perkToGet);
+                    perkToGet.SelectChoice();
+                    return;
+                }
+                else
+                {
+                    group.Choices.Any(c => c.IsTaken);
+                    return;
+                }
+            }
+        }
+        public void RefundPerks()
+        {
+            for (int i = selectedChoices.Count - 1; i >= 0; i--)
+            {
+                selectedChoices[i].DeSelectChoice();
+                //selectedChoices.RemoveAt(i);
+            }
+        }
+        private MBBindingList<CareerChoiceGroupObjectVM>? GetGroupsTier()
+        {
+            return _highlightedGroup.ChoiceGroup.Tier switch
+            {
+                1 => _choiceGroups1,
+                2 => _choiceGroups2,
+                3 => _choiceGroups3,
+                _ => null,
+            };
+        }
         public override void RefreshValues()
         {
             HeroExtendedInfo info = PlayerCareerExtension.PlayerCareerInfo;
@@ -458,6 +510,22 @@ namespace RealmsForgotten.Career.VievModels
                 {
                     _tier3Active = value;
                     OnPropertyChangedWithValue(value, "Tier3Active");
+                }
+            }
+        }
+        [DataSourceProperty]
+        public TopScreenVM TopScreen
+        {
+            get
+            {
+                return _topscreen;
+            }
+            set
+            {
+                if (value != _topscreen)
+                {
+                    _topscreen = value;
+                    OnPropertyChangedWithValue(value, "TopScreen");
                 }
             }
         }

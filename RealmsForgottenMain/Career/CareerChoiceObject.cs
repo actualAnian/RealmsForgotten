@@ -213,8 +213,12 @@ namespace RealmsForgotten.Career
         //edited to work
 
         Ammo,               //arrows, crossbows , flat number
-        SpellAmmo,
+        SpellAmmo,          // + alchemical stones
         Health,             //Player health points, flat number
+        Damage,             //player damage, requires damage tuple
+        Resistance,         //player resistance requires damage tuple
+        TroopDamage,
+        TroopResistance,
 
 
         //have to be enabled
@@ -224,8 +228,6 @@ namespace RealmsForgotten.Career
         CustomResourceUpgradeCostModifier, //scales custom upgrade costs
         CustomResourceGain, //daily gain for custom resource , flat number
         HealthRegeneration, //player life regeneration, as flat number
-        Damage,             //player damage, requires damage tuple
-        Resistance,         //player resistance requires damage tuple
         AccuracyPenalty,           //spray of ranged weapons
         RangedMovementPenalty, // inaccuracy for ranged weapons penality due to movement
         ArmorPenetration,   //player ignores armor with attack mask - this cant be Spells, will be ignored
@@ -243,8 +245,6 @@ namespace RealmsForgotten.Career
         PartyMovementSpeed, //general party speed
         PartySize,
         CompanionLimit,
-        TroopDamage,
-        TroopResistance,
         TroopRegeneration,  //troop regeneration, flat number
         TroopMorale,        //Morale
         TroopWages,         //Negative number decrease

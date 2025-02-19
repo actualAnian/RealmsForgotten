@@ -17,8 +17,9 @@ namespace RealmsForgotten.Career.VievModels
         private bool _isActive;
         private bool _areButtonsVisible;
         private Action _choiceChangedAction;
+        private TopScreenVM _topScreenVM;
 
-        public CareerChoiceGroupObjectVM(CareerChoiceGroupObject choiceGroup, Action choiceChangedAction)
+        public CareerChoiceGroupObjectVM(CareerChoiceGroupObject choiceGroup, Action choiceChangedAction, TopScreenVM topScreenVM)
         {
             _choiceGroup = choiceGroup;
             _groupName = _choiceGroup.Name.ToString();
@@ -27,6 +28,7 @@ namespace RealmsForgotten.Career.VievModels
             _areButtonsVisible = true;
             _choices = new MBBindingList<CareerChoiceObjectVM>();
             choiceGroup.Choices.ForEach(x => _choices.Add(new CareerChoiceObjectVM(x)));
+            _topScreenVM = topScreenVM;
         }
 
         private void ExecuteClickIncrease()
@@ -57,8 +59,11 @@ namespace RealmsForgotten.Career.VievModels
             if (_choiceChangedAction != null) _choiceChangedAction();
         }
 
-        private void ExecuteBeginHover() => ButtonsVisible = false;
-        private void ExecuteEndHover() => ButtonsVisible = true;
+        private void ExecuteBeginHover()
+        {
+            _topScreenVM.GroupName = _groupName;
+            _topScreenVM.Choices = _choices;
+        }
 
         [DataSourceProperty]
         public string GroupName
@@ -127,5 +132,6 @@ namespace RealmsForgotten.Career.VievModels
                 }
             }
         }
+        public CareerChoiceGroupObject ChoiceGroup { get { return  _choiceGroup; } }
     }
 }

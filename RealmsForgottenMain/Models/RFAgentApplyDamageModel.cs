@@ -10,6 +10,7 @@ using RealmsForgotten.Behaviors;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.MountAndBlade.ComponentInterfaces;
+using RealmsForgotten.Career.Logic;
 
 namespace RealmsForgotten.Models
 {
@@ -95,9 +96,11 @@ namespace RealmsForgotten.Models
                 }
 
                 CrusaderDamageModel.CalculateDamage(attackedCharacterObject, attackedCharacterObject, ref baseNumber);
+
+                if (attackerCharacterObject == Hero.MainHero.CharacterObject)
+                    CareerLogic.ApplyExtraShieldDamage(weapon);
             }
             DemonRaceDamageModel.CalculateDamage(attackInformation.AttackerAgent, weapon, ref baseNumber);
-
             return baseNumber;
         }
 

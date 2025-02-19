@@ -26,8 +26,12 @@ namespace RealmsForgotten.Career.VievModels
 
         private void ExecuteNavigateToCareers()
         {
-            var state = Game.Current.GameStateManager.CreateState<CareerScreenGameState>();
-            Game.Current.GameStateManager.PushState(state);
+            try
+            {
+                var state = Game.Current.GameStateManager.CreateState<CareerScreenGameState>();
+                Game.Current.GameStateManager.PushState(state);
+            }
+            catch (Exception) { }
         }
         [DataSourceProperty]
         public bool HasCareer
