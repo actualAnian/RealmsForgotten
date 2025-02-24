@@ -20,9 +20,9 @@ namespace RealmsForgotten.Career.VievModels
         private MBBindingList<CareerAbilityEffectVM> _abilityDescription;
         private string _description;
         private CareerObject _career;
-        private MBBindingList<CareerChoiceGroupObjectVM> _choiceGroups1;
-        private MBBindingList<CareerChoiceGroupObjectVM> _choiceGroups2;
-        private MBBindingList<CareerChoiceGroupObjectVM> _choiceGroups3;
+        private MBBindingList<CareerChoiceDoubleGroupObjectVM> _choiceGroups1;
+        private MBBindingList<CareerChoiceDoubleGroupObjectVM> _choiceGroups2;
+        private MBBindingList<CareerChoiceDoubleGroupObjectVM> _choiceGroups3;
         private string _choiceGroup1Name;
         private string _choiceGroup2Name;
         private string _choiceGroup3Name;
@@ -36,7 +36,7 @@ namespace RealmsForgotten.Career.VievModels
         private bool _tier1Active;
         private bool _tier2Active;
         private bool _tier3Active;
-        private CareerChoiceGroupObjectVM _highlightedGroup;
+        private CareerChoiceDoubleGroupObjectVM _highlightedGroup;
         private TopScreenVM _topscreen;
         private List<CareerChoiceObjectVM> selectedChoices = new();
         public CareerObjectVM(CareerObject career)
@@ -49,9 +49,9 @@ namespace RealmsForgotten.Career.VievModels
             _abilityDescription = null;//new MBBindingList<CareerAbilityEffectVM>();
             //_career.GetAbilityEffectLines().ForEach(x => _abilityDescription.Add(new CareerAbilityEffectVM(x)));
             _description = _career.Description.ToString();
-            _choiceGroups1 = new MBBindingList<CareerChoiceGroupObjectVM>();
-            _choiceGroups2 = new MBBindingList<CareerChoiceGroupObjectVM>();
-            _choiceGroups3 = new MBBindingList<CareerChoiceGroupObjectVM>();
+            _choiceGroups1 = new MBBindingList<CareerChoiceDoubleGroupObjectVM>();
+            _choiceGroups2 = new MBBindingList<CareerChoiceDoubleGroupObjectVM>();
+            _choiceGroups3 = new MBBindingList<CareerChoiceDoubleGroupObjectVM>();
             _topscreen = new();
 
             foreach (var group in _career.ChoiceGroups)
@@ -59,17 +59,17 @@ namespace RealmsForgotten.Career.VievModels
                 switch (group.Tier)
                 {
                     case 1:
-                        _choiceGroups1.Add(new CareerChoiceGroupObjectVM(group, RefreshValues, _topscreen));
+                        _choiceGroups1.Add(new CareerChoiceDoubleGroupObjectVM(group, RefreshValues, _topscreen));
                         if (group.GetConditionText(Hero.MainHero) != _choiceGroup1Condition) _choiceGroup1Condition += group.GetConditionText(Hero.MainHero);
                         if (group.GetUnlockText(Hero.MainHero) != _choiceGroup1Unlock) _choiceGroup1Unlock += group.GetUnlockText(Hero.MainHero);
                         break;
                     case 2:
-                        _choiceGroups2.Add(new CareerChoiceGroupObjectVM(group, RefreshValues, _topscreen));
+                        _choiceGroups2.Add(new CareerChoiceDoubleGroupObjectVM(group, RefreshValues, _topscreen));
                         if (group.GetConditionText(Hero.MainHero) != _choiceGroup2Condition) _choiceGroup2Condition += group.GetConditionText(Hero.MainHero);
                         if (group.GetUnlockText(Hero.MainHero) != _choiceGroup2Unlock) _choiceGroup2Unlock += group.GetUnlockText(Hero.MainHero);
                         break;
                     case 3:
-                        _choiceGroups3.Add(new CareerChoiceGroupObjectVM(group, RefreshValues, _topscreen));
+                        _choiceGroups3.Add(new CareerChoiceDoubleGroupObjectVM(group, RefreshValues, _topscreen));
                         if (group.GetConditionText(Hero.MainHero) != _choiceGroup3Condition) _choiceGroup3Condition += group.GetConditionText(Hero.MainHero);
                         if (group.GetUnlockText(Hero.MainHero) != _choiceGroup3Unlock) _choiceGroup3Unlock += group.GetUnlockText(Hero.MainHero);
                         break;
@@ -84,7 +84,7 @@ namespace RealmsForgotten.Career.VievModels
             _tier2Active = !_career.ChoiceGroups.Where(x => x.Tier == 2).All(x => x.IsActiveForHero(Hero.MainHero));
             _tier3Active = !_career.ChoiceGroups.Where(x => x.Tier == 3).All(x => x.IsActiveForHero(Hero.MainHero));
             _highlightedGroup = _choiceGroups1[0];
-            _topscreen.Choices = _highlightedGroup.Choices;
+            _topscreen.Choices = _highlightedGroup.Choices0;
             _topscreen.GroupName = _highlightedGroup.GroupName;
             RefreshValues();
         }
@@ -96,12 +96,12 @@ namespace RealmsForgotten.Career.VievModels
 
         public void BuyPerk()
         {
-            MBBindingList<CareerChoiceGroupObjectVM>? groups = GetGroupsTier();
-            foreach (CareerChoiceGroupObjectVM group in groups)
+            MBBindingList<CareerChoiceDoubleGroupObjectVM>? groups = GetGroupsTier();
+            foreach (CareerChoiceDoubleGroupObjectVM group in groups)
             {
                 if (group == _highlightedGroup)
                 {
-                    CareerChoiceObjectVM perkToGet = group.Choices.First(c => c.IsFreeToTake);
+                    CareerChoiceObjectVM perkToGet = group.Choices0.First(c => c.IsUnavailableToTake);
                     if (perkToGet == null) return;
                     selectedChoices.Add(perkToGet);
                     perkToGet.SelectChoice();
@@ -109,7 +109,7 @@ namespace RealmsForgotten.Career.VievModels
                 }
                 else
                 {
-                    group.Choices.Any(c => c.IsTaken);
+                    group.Choices0.Any(c => c.IsTaken);
                     return;
                 }
             }
@@ -122,7 +122,7 @@ namespace RealmsForgotten.Career.VievModels
                 //selectedChoices.RemoveAt(i);
             }
         }
-        private MBBindingList<CareerChoiceGroupObjectVM>? GetGroupsTier()
+        private MBBindingList<CareerChoiceDoubleGroupObjectVM>? GetGroupsTier()
         {
             return _highlightedGroup.ChoiceGroup.Tier switch
             {
@@ -246,9 +246,25 @@ namespace RealmsForgotten.Career.VievModels
                 }
             }
         }
+        [DataSourceProperty]
+        public CareerChoiceDoubleGroupObjectVM DoubleGroupTier1
+        {
+            get
+            {
+                return _highlightedGroup;
+            }
+            set
+            {
+                if (value != _highlightedGroup)
+                {
+                    _highlightedGroup = value;
+                    OnPropertyChangedWithValue(value, "DoubleGroupTier1");
+                }
+            }
+        }
 
         [DataSourceProperty]
-        public MBBindingList<CareerChoiceGroupObjectVM> ChoiceGroupsTier1
+        public MBBindingList<CareerChoiceDoubleGroupObjectVM> ChoiceGroupsTier1
         {
             get
             {
@@ -265,7 +281,7 @@ namespace RealmsForgotten.Career.VievModels
         }
 
         [DataSourceProperty]
-        public MBBindingList<CareerChoiceGroupObjectVM> ChoiceGroupsTier2
+        public MBBindingList<CareerChoiceDoubleGroupObjectVM> ChoiceGroupsTier2
         {
             get
             {
@@ -282,7 +298,7 @@ namespace RealmsForgotten.Career.VievModels
         }
 
         [DataSourceProperty]
-        public MBBindingList<CareerChoiceGroupObjectVM> ChoiceGroupsTier3
+        public MBBindingList<CareerChoiceDoubleGroupObjectVM> ChoiceGroupsTier3
         {
             get
             {

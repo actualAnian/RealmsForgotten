@@ -5,29 +5,60 @@ namespace RealmsForgotten.Career.VievModels
 {
     public class CareerChoiceObjectVM : ViewModel
     {
+        public enum ChoiceState
+        {
+            Taken,
+            AvailableToTake,
+            UnavailableToTake
+        }
         private CareerChoiceObject _choice;
+        private CareerChoiceDoubleGroupObjectVM _group;
         private string _description;
         private string _name;
-        private bool _isTaken;
-        private bool _isFreeToTake;
+        private ChoiceState buttonState;
+        private bool _isTaken = false;
+        private bool _isUnavailableToTake = true;
+        private bool _isAvailableToTake = false;
 
-        public CareerChoiceObjectVM(CareerChoiceObject choice)
+        public CareerChoiceObjectVM(CareerChoiceObject choice, CareerChoiceDoubleGroupObjectVM group, ChoiceState curState)
         {
+            _group = group;
             _choice = choice;
             _name = _choice.Name.ToString();
             _description = _choice.Description.ToString();
-            RefreshValues();
+            SetState(curState);
+            //RefreshValues();
         }
-
+        public void SetState(ChoiceState newState)
+        {
+            switch (newState)
+            {
+                case ChoiceState.Taken:
+                    IsTaken = true;
+                    IsAvailableToTake = false;
+                    IsUnavailableToTake = false;
+                    break;
+                case ChoiceState.AvailableToTake:
+                    IsTaken = false;
+                    IsAvailableToTake = true;
+                    IsUnavailableToTake = false;
+                    break;
+                case ChoiceState.UnavailableToTake:
+                    IsTaken = false;
+                    IsAvailableToTake = false;
+                    IsUnavailableToTake = true;
+                    break;
+            }
+        }
         public override void RefreshValues()
         {
-            IsTaken = PlayerCareerExtension.HasCareerChoice(_choice);
-            IsFreeToTake = !_isTaken;
+            SetState(buttonState);
         }
 
         public void SelectChoice()
         {
-            if (PlayerCareerExtension.TryAddCareerChoice(_choice)) RefreshValues();
+            if (PlayerCareerExtension.TryAddCareerChoice(_choice))
+                _group.OnPerkTaken(_choice);
         }
 
         public void DeSelectChoice()
@@ -68,20 +99,35 @@ namespace RealmsForgotten.Career.VievModels
                 }
             }
         }
-
         [DataSourceProperty]
-        public bool IsFreeToTake
+        public bool IsAvailableToTake
         {
             get
             {
-                return _isFreeToTake;
+                return _isAvailableToTake;
             }
             set
             {
-                if (value != _isFreeToTake)
+                if (value != _isAvailableToTake)
                 {
-                    _isFreeToTake = value;
-                    OnPropertyChangedWithValue(value, "IsFreeToTake");
+                    _isAvailableToTake = value;
+                    OnPropertyChangedWithValue(value, "IsAvailableToTake");
+                }
+            }
+        }
+        [DataSourceProperty]
+        public bool IsUnavailableToTake
+        {
+            get
+            {
+                return _isUnavailableToTake;
+            }
+            set
+            {
+                if (value != _isUnavailableToTake)
+                {
+                    _isUnavailableToTake = value;
+                    OnPropertyChangedWithValue(value, "IsUnavailableToTake");
                 }
             }
         }

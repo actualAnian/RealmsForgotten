@@ -108,28 +108,40 @@
 												<ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" SuggestedHeight="50" MarginLeft="20" StackLayout.LayoutMethod="HorizontalLeftToRight">
 													<Children>
 														<!-- tier 1-->
-														<Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" SuggestedHeight="500" VerticalAlignment="Center" MarginLeft="30" HorizontalAlignment="Left" >
+														<Widget  DataSource="{DoubleGroupTier1}" WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" SuggestedHeight="500" VerticalAlignment="Center" MarginLeft="30" HorizontalAlignment="Left" >
 															<Children>
-																<ListPanel DataSource="{ChoiceGroupsTier1}" WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" StackLayout.LayoutMethod="VerticalBottomToTop" >
-																	<ItemTemplate>
-																		<ButtonWidget SuggestedWidth="320" SuggestedHeight="80" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" MarginTop="50" Command.HoverBegin="ExecuteBeginHover" Sprite="StdAssets\Popup\canvas">
+																<TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="200" VerticalAlignment="Top" HorizontalAlignment="Center" PositionYOffset="0" Text="@GroupName" Brush="TorRoRSettlementBrush"/>
+																<ButtonWidget SuggestedWidth="320" SuggestedHeight="200" DoNotPassEventsToChildren="false" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" MarginTop="50" Command.HoverBegin="ExecuteBeginHover" Sprite="StdAssets\Popup\canvas">
+																	<Children>
+																		<ListPanel ClipContents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginTop="20" StackLayout.LayoutMethod="VerticalBottomToTop">
 																			<Children>
-																				<TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="200" VerticalAlignment="Top" HorizontalAlignment="Center" PositionYOffset="-55" Text="@GroupName" Brush="TorRoRSettlementBrush"/>
-																				<ListPanel DataSource="{Choices}" ClipContents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginTop="10" StackLayout.LayoutMethod="HorizontalCentered">
+																				<ListPanel DataSource="{Choices0}" ClipContents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginBottom="40" StackLayout.LayoutMethod="HorizontalCentered">
 																					<ItemTemplate>
 																						<ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="50" StackLayout.LayoutMethod="HorizontalLeftToRight">
 																							<Children>
-																								<Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="35" SuggestedWidth="35" HorizontalAlignment="Left" MarginLeft="15" MarginTop="5" MarginBottom="5" Sprite="CharacterDeveloper\progress_bar_fill" Color="#7f695cFF" IsVisible="@IsFreeToTake" />
-																								<Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="35" SuggestedWidth="35" HorizontalAlignment="Left" MarginLeft="15" MarginTop="5" MarginBottom="5" Sprite="CharacterDeveloper\progress_bar_empty" Color="#dfc395FF" IsVisible="@IsTaken" />
+																								<ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="35" SuggestedWidth="35" HorizontalAlignment="Left" MarginLeft="15" MarginTop="5" MarginBottom="5" Sprite="BlankWhiteSquare_9" Color="#FFFFFFFF" IsVisible="@IsAvailableToTake" Command.Click="SelectChoice"/>
+																								<Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="35" SuggestedWidth="35" HorizontalAlignment="Left" MarginLeft="15" MarginTop="5" MarginBottom="5" Sprite="BlankWhiteSquare_9" Color="#dfc395FF" IsVisible="@IsTaken" />
+																								<Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="35" SuggestedWidth="35" HorizontalAlignment="Left" MarginLeft="15" MarginTop="5" MarginBottom="5" Sprite="BlankWhiteSquare_9" Color="#555555FF" IsVisible="@IsUnavailableToTake" />
 																							</Children>
 																						</ListPanel>
 																					</ItemTemplate>
 																				</ListPanel>
-																				<BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Popup.Frame" IsEnabled="false" />
+																				<ListPanel DataSource="{Choices1}" ClipContents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" StackLayout.LayoutMethod="HorizontalCentered">
+																					<ItemTemplate>
+																						<ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="50" StackLayout.LayoutMethod="HorizontalLeftToRight">
+																							<Children>
+																								<ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="35" SuggestedWidth="35" HorizontalAlignment="Left" MarginLeft="15" MarginTop="5" MarginBottom="5" Sprite="BlankWhiteSquare_9" Color="#FFFFFFFF" IsVisible="@IsAvailableToTake" Command.Click="SelectChoice"/>
+																								<Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="35" SuggestedWidth="35" HorizontalAlignment="Left" MarginLeft="15" MarginTop="5" MarginBottom="5" Sprite="BlankWhiteSquare_9" Color="#dfc395FF" IsVisible="@IsTaken" />
+																								<Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="35" SuggestedWidth="35" HorizontalAlignment="Left" MarginLeft="15" MarginTop="5" MarginBottom="5" Sprite="BlankWhiteSquare_9" Color="#555555FF" IsVisible="@IsUnavailableToTake" />
+																							</Children>
+																						</ListPanel>
+																					</ItemTemplate>
+																				</ListPanel>
 																			</Children>
-																		</ButtonWidget>
-																	</ItemTemplate>
-																</ListPanel>
+																		</ListPanel>
+																			<BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Popup.Frame" IsEnabled="false" />
+																	</Children>
+																</ButtonWidget>
 															</Children>
 														</Widget>
 
@@ -162,30 +174,7 @@
 														</Widget>
 
 														<!-- tier 2-->
-														<Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" SuggestedHeight="500" VerticalAlignment="Center" MarginLeft="30" HorizontalAlignment="Left" >
-															<Children>
-																<ListPanel DataSource="{ChoiceGroupsTier2}" WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" StackLayout.LayoutMethod="VerticalBottomToTop" >
-																	<ItemTemplate>
-																		<ImageWidget SuggestedWidth="320" SuggestedHeight="80" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" MarginTop="50" Command.HoverBegin="ExecuteBeginHover" Sprite="StdAssets\Popup\canvas">
-																			<Children>
-																				<TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="200" VerticalAlignment="Top" HorizontalAlignment="Center" PositionYOffset="-55" Text="@GroupName" Brush="TorRoRSettlementBrush"/>
-																				<ListPanel DataSource="{Choices}" ClipContents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginTop="10" StackLayout.LayoutMethod="HorizontalCentered">
-																					<ItemTemplate>
-																						<ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="50" StackLayout.LayoutMethod="HorizontalLeftToRight">
-																							<Children>
-																								<Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="35" SuggestedWidth="35" HorizontalAlignment="Left" MarginLeft="15" MarginTop="5" MarginBottom="5" Sprite="CharacterDeveloper\progress_bar_fill" Color="#7f695cFF" IsVisible="@IsFreeToTake" />
-																								<Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="35" SuggestedWidth="35" HorizontalAlignment="Left" MarginLeft="15" MarginTop="5" MarginBottom="5" Sprite="CharacterDeveloper\progress_bar_empty" Color="#dfc395FF" IsVisible="@IsTaken" />
-																							</Children>
-																						</ListPanel>
-																					</ItemTemplate>
-																				</ListPanel>
-																				<BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Popup.Frame" IsEnabled="false" />
-																			</Children>
-																		</ImageWidget>
-																	</ItemTemplate>
-																</ListPanel>
-															</Children>
-														</Widget>
+
 
 														<Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" SuggestedWidth="180" VerticalAlignment="Bottom" HorizontalAlignment="Left" MarginLeft="30">
 															<Children>
@@ -217,30 +206,8 @@
 														</Widget>
 
 														<!-- tier 3-->
-														<Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" SuggestedHeight="500" VerticalAlignment="Center" MarginLeft="30" HorizontalAlignment="Left" >
-															<Children>
-																<ListPanel DataSource="{ChoiceGroupsTier3}" WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" StackLayout.LayoutMethod="VerticalBottomToTop" >
-																	<ItemTemplate>
-																		<ImageWidget SuggestedWidth="320" SuggestedHeight="80" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" MarginTop="50" Command.HoverBegin="ExecuteBeginHover" Sprite="StdAssets\Popup\canvas">
-																			<Children>
-																				<TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="200" VerticalAlignment="Top" HorizontalAlignment="Center" PositionYOffset="-55" Text="@GroupName" Brush="TorRoRSettlementBrush"/>
-																				<ListPanel DataSource="{Choices}" ClipContents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginTop="10" StackLayout.LayoutMethod="HorizontalCentered">
-																					<ItemTemplate>
-																						<ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="50" StackLayout.LayoutMethod="HorizontalLeftToRight">
-																							<Children>
-																								<Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="35" SuggestedWidth="35" HorizontalAlignment="Left" MarginLeft="15" MarginTop="5" MarginBottom="5" Sprite="CharacterDeveloper\progress_bar_fill" Color="#7f695cFF" IsVisible="@IsFreeToTake" />
-																								<Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="35" SuggestedWidth="35" HorizontalAlignment="Left" MarginLeft="15" MarginTop="5" MarginBottom="5" Sprite="CharacterDeveloper\progress_bar_empty" Color="#dfc395FF" IsVisible="@IsTaken" />
-																							</Children>
-																						</ListPanel>
-																					</ItemTemplate>
-																				</ListPanel>
-																				<BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Popup.Frame" IsEnabled="false" />
-																			</Children>
-																		</ImageWidget>
-																	</ItemTemplate>
-																</ListPanel>
-															</Children>
-														</Widget>
+
+
 													</Children>
 												</ListPanel>
 											</Children>
