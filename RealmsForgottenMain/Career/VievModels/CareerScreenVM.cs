@@ -41,10 +41,10 @@ namespace RealmsForgotten.Career.VievModels
             _currentCareerVM.RefundPerks();
             _closeAction();
         }
-        private void ExecuteBuyPerk()
-        {
-            _currentCareerVM.BuyPerk();
-        }
+        //private void ExecuteBuyPerk()
+        //{
+        //    _currentCareerVM.BuyPerk();
+        //}
         private void ExecuteReset()
         {
             _currentCareerVM.RefundPerks();

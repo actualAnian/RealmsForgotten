@@ -2,7 +2,7 @@
 using TaleWorlds.Localization;
 
 
-namespace RealmsForgotten.Career
+namespace RealmsForgotten.Career.VievModels
 {
     //@TODO remove this
     public class CareerAbilityEffectVM : ViewModel

@@ -36,7 +36,7 @@ namespace RealmsForgotten.Career
 
         public void Initialize(string name, Predicate<Hero> condition)
         {
-            var description = GameTexts.FindText("career_description", StringId);
+            var description = GameTexts.FindText("class_description", StringId);
             base.Initialize(new TextObject(name), description);
             _condition = condition;
             AfterInitialized();

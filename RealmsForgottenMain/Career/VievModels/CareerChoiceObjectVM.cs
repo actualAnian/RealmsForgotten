@@ -1,4 +1,5 @@
 ﻿using TaleWorlds.CampaignSystem;
+using TaleWorlds.Core;
 using TaleWorlds.Library;
 
 namespace RealmsForgotten.Career.VievModels
@@ -20,6 +21,10 @@ namespace RealmsForgotten.Career.VievModels
         private bool _isUnavailableToTake = true;
         private bool _isAvailableToTake = false;
 
+        public CareerChoiceObjectVM()
+        {
+            _description = string.Empty;
+        }
         public CareerChoiceObjectVM(CareerChoiceObject choice, CareerChoiceDoubleGroupObjectVM group, ChoiceState curState)
         {
             _group = group;
@@ -64,6 +69,16 @@ namespace RealmsForgotten.Career.VievModels
         public void DeSelectChoice()
         {
             if (PlayerCareerExtension.TryRemoveCareerChoice(_choice)) RefreshValues();
+        }
+
+        public void ExecuteBeginHint()
+        {
+            MBInformationManager.ShowHint(Description);
+        }
+
+        public void ExecuteEndHint()
+        {
+            MBInformationManager.HideInformations();
         }
 
         [DataSourceProperty]

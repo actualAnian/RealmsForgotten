@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="string">
+  <tags>
+    <tag language="English" />
+  </tags>
+    <strings>
+		<string id="class_group1_name_Mercenary" text="Witch Hunter Initiate" />
+		<string id="class_group2_name_Mercenary" text="Witch Hunter Captain" />
+		<string id="class_group3_name_Mercenary" text="Master Witch Hunter" />
+		
+		<!-- descriptions-->
+		<string id="class_description.Mercenary" text="We are mercenaries. We have the resources. The will. To make these hours count! The clock is ticking, gentlemen. Let's begin." />
+
+	</strings>
+</base>

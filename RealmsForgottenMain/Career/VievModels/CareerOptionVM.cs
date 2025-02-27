@@ -20,16 +20,12 @@ namespace RealmsForgotten.Career.VievModels
         private MBBindingList<CareerAbilityEffectVM> _abilityDescription;
         private string _description;
         private CareerObject _career;
-        private MBBindingList<CareerChoiceDoubleGroupObjectVM> _choiceGroups1;
-        private MBBindingList<CareerChoiceDoubleGroupObjectVM> _choiceGroups2;
-        private MBBindingList<CareerChoiceDoubleGroupObjectVM> _choiceGroups3;
+        private CareerChoiceDoubleGroupObjectVM _choiceDoubleGroup1;
+        private CareerChoiceDoubleGroupObjectVM _choiceDoubleGroup2;
+        private CareerChoiceDoubleGroupObjectVM _choiceDoubleGroup3;
         private string _choiceGroup1Name;
         private string _choiceGroup2Name;
         private string _choiceGroup3Name;
-        private string _choiceGroup1Condition;
-        private string _choiceGroup2Condition;
-        private string _choiceGroup3Condition;
-        private string _choiceGroup1Unlock;
         private string _choiceGroup2Unlock;
         private string _choiceGroup3Unlock;
         private string _freeCareerPoints;
@@ -49,89 +45,78 @@ namespace RealmsForgotten.Career.VievModels
             _abilityDescription = null;//new MBBindingList<CareerAbilityEffectVM>();
             //_career.GetAbilityEffectLines().ForEach(x => _abilityDescription.Add(new CareerAbilityEffectVM(x)));
             _description = _career.Description.ToString();
-            _choiceGroups1 = new MBBindingList<CareerChoiceDoubleGroupObjectVM>();
-            _choiceGroups2 = new MBBindingList<CareerChoiceDoubleGroupObjectVM>();
-            _choiceGroups3 = new MBBindingList<CareerChoiceDoubleGroupObjectVM>();
             _topscreen = new();
-
-            foreach (var group in _career.ChoiceGroups)
+            List<List<CareerChoiceGroupObject>> groups = new() { new(), new(), new() };
+            foreach (CareerChoiceGroupObject group in _career.ChoiceGroups)
             {
                 switch (group.Tier)
                 {
                     case 1:
-                        _choiceGroups1.Add(new CareerChoiceDoubleGroupObjectVM(group, RefreshValues, _topscreen));
-                        if (group.GetConditionText(Hero.MainHero) != _choiceGroup1Condition) _choiceGroup1Condition += group.GetConditionText(Hero.MainHero);
-                        if (group.GetUnlockText(Hero.MainHero) != _choiceGroup1Unlock) _choiceGroup1Unlock += group.GetUnlockText(Hero.MainHero);
+                        groups[0].Add(group);
                         break;
                     case 2:
-                        _choiceGroups2.Add(new CareerChoiceDoubleGroupObjectVM(group, RefreshValues, _topscreen));
-                        if (group.GetConditionText(Hero.MainHero) != _choiceGroup2Condition) _choiceGroup2Condition += group.GetConditionText(Hero.MainHero);
-                        if (group.GetUnlockText(Hero.MainHero) != _choiceGroup2Unlock) _choiceGroup2Unlock += group.GetUnlockText(Hero.MainHero);
+                        groups[1].Add(group);
                         break;
                     case 3:
-                        _choiceGroups3.Add(new CareerChoiceDoubleGroupObjectVM(group, RefreshValues, _topscreen));
-                        if (group.GetConditionText(Hero.MainHero) != _choiceGroup3Condition) _choiceGroup3Condition += group.GetConditionText(Hero.MainHero);
-                        if (group.GetUnlockText(Hero.MainHero) != _choiceGroup3Unlock) _choiceGroup3Unlock += group.GetUnlockText(Hero.MainHero);
+                        groups[2].Add(group);
                         break;
                     default:
                         break;
                 }
             }
-            _choiceGroup1Name = GameTexts.FindText("career_choicegroup1_name", _career.StringId).ToString();
-            _choiceGroup2Name = GameTexts.FindText("career_choicegroup2_name", _career.StringId).ToString();
-            _choiceGroup3Name = GameTexts.FindText("career_choicegroup3_name", _career.StringId).ToString();
+            _choiceDoubleGroup1 = new CareerChoiceDoubleGroupObjectVM(groups[0], this, _topscreen);
+            _choiceDoubleGroup2 = new CareerChoiceDoubleGroupObjectVM(groups[1], this, _topscreen);
+            _choiceDoubleGroup3 = new CareerChoiceDoubleGroupObjectVM(groups[2], this, _topscreen);
+
+            _choiceGroup1Name = GameTexts.FindText("class_choicegroup1_name_" + _career.StringId).ToString();
+            _choiceGroup2Name = GameTexts.FindText("class_choicegroup2_name_" + _career.StringId).ToString();
+            _choiceGroup3Name = GameTexts.FindText("career_choicegroup3_name_" + _career.StringId).ToString();
             _tier1Active = !_career.ChoiceGroups.Where(x => x.Tier == 1).All(x => x.IsActiveForHero(Hero.MainHero));
             _tier2Active = !_career.ChoiceGroups.Where(x => x.Tier == 2).All(x => x.IsActiveForHero(Hero.MainHero));
             _tier3Active = !_career.ChoiceGroups.Where(x => x.Tier == 3).All(x => x.IsActiveForHero(Hero.MainHero));
-            _highlightedGroup = _choiceGroups1[0];
-            _topscreen.Choices = _highlightedGroup.Choices0;
-            _topscreen.GroupName = _highlightedGroup.GroupName;
+            _topscreen.Choices = _choiceDoubleGroup1.GetChoices();
+            _topscreen.GroupName = _choiceDoubleGroup1.GroupName;
+            SetAvailability();
             RefreshValues();
         }
-        public bool IsPerkGroupUnlocked()
+        public void SetAvailability()
         {
-            //@ TODO
-            return true;
+            _choiceDoubleGroup1.IsActive = true;
+            if (_choiceDoubleGroup2.GetChoices().Count > 0 && (_choiceDoubleGroup2.GetChoices()[0].IsTaken || _choiceDoubleGroup2.GetChoices().Last().IsTaken))
+                _choiceDoubleGroup2.IsActive = true;
+            if (_choiceDoubleGroup3.GetChoices().Count > 0 && (_choiceDoubleGroup3.GetChoices()[0].IsTaken || _choiceDoubleGroup3.GetChoices().Last().IsTaken))
+                _choiceDoubleGroup3.IsActive = true;
         }
-
-        public void BuyPerk()
+        public void HandleAddPerk(CareerChoiceObjectVM choice)
         {
-            MBBindingList<CareerChoiceDoubleGroupObjectVM>? groups = GetGroupsTier();
-            foreach (CareerChoiceDoubleGroupObjectVM group in groups)
-            {
-                if (group == _highlightedGroup)
-                {
-                    CareerChoiceObjectVM perkToGet = group.Choices0.First(c => c.IsUnavailableToTake);
-                    if (perkToGet == null) return;
-                    selectedChoices.Add(perkToGet);
-                    perkToGet.SelectChoice();
-                    return;
-                }
-                else
-                {
-                    group.Choices0.Any(c => c.IsTaken);
-                    return;
-                }
-            }
+            selectedChoices.Add(choice);
+            if (_choiceDoubleGroup2.IsLastChoice(choice)) _choiceDoubleGroup3.IsActive = true;
+            if (_choiceDoubleGroup1.IsLastChoice(choice)) _choiceDoubleGroup2.IsActive = true;
         }
         public void RefundPerks()
         {
             for (int i = selectedChoices.Count - 1; i >= 0; i--)
             {
+                if (_choiceDoubleGroup1.IsLastChoice(selectedChoices[i]))
+                    _choiceDoubleGroup2.IsActive = false;
+                if (_choiceDoubleGroup2.IsLastChoice(selectedChoices[i]))
+                    _choiceDoubleGroup3.IsActive = false;
                 selectedChoices[i].DeSelectChoice();
-                //selectedChoices.RemoveAt(i);
             }
+            _choiceDoubleGroup1.RefreshValues();
+            _choiceDoubleGroup2.RefreshValues();
+            _choiceDoubleGroup3.RefreshValues();
         }
-        private MBBindingList<CareerChoiceDoubleGroupObjectVM>? GetGroupsTier()
-        {
-            return _highlightedGroup.ChoiceGroup.Tier switch
-            {
-                1 => _choiceGroups1,
-                2 => _choiceGroups2,
-                3 => _choiceGroups3,
-                _ => null,
-            };
-        }
+        //private CareerChoiceDoubleGroupObjectVM? GetGroupsTier()
+        //{
+        //    return _highlightedGroup.ChoiceGroup.Tier switch
+        //    {
+        //        1 => _choiceGroups1,
+        //        2 => _choiceGroups2,
+        //        3 => _choiceGroups3,
+        //        _ => null,
+        //    };
+        //}
         public override void RefreshValues()
         {
             HeroExtendedInfo info = PlayerCareerExtension.PlayerCareerInfo;
@@ -143,6 +128,7 @@ namespace RealmsForgotten.Career.VievModels
                 //var min = Mathf.Min(PlayerCareerExtension.MaximumNumberOfCareerPerkPoints, Hero.MainHero.Level);
                 FreeCareerPoints = "Free career points: " + (min - usedPoints).ToString();
             }
+            SetAvailability();
         }
 
         [DataSourceProperty]
@@ -251,69 +237,49 @@ namespace RealmsForgotten.Career.VievModels
         {
             get
             {
-                return _highlightedGroup;
+                return _choiceDoubleGroup1;
             }
             set
             {
-                if (value != _highlightedGroup)
+                if (value != _choiceDoubleGroup1)
                 {
-                    _highlightedGroup = value;
+                    _choiceDoubleGroup1 = value;
                     OnPropertyChangedWithValue(value, "DoubleGroupTier1");
                 }
             }
         }
-
         [DataSourceProperty]
-        public MBBindingList<CareerChoiceDoubleGroupObjectVM> ChoiceGroupsTier1
+        public CareerChoiceDoubleGroupObjectVM DoubleGroupTier2
         {
             get
             {
-                return _choiceGroups1;
+                return _choiceDoubleGroup2;
             }
             set
             {
-                if (value != _choiceGroups1)
+                if (value != _choiceDoubleGroup2)
                 {
-                    _choiceGroups1 = value;
-                    OnPropertyChangedWithValue(value, "ChoiceGroupsTier1");
+                    _choiceDoubleGroup2 = value;
+                    OnPropertyChangedWithValue(value, "DoubleGroupTier2");
                 }
             }
         }
-
         [DataSourceProperty]
-        public MBBindingList<CareerChoiceDoubleGroupObjectVM> ChoiceGroupsTier2
+        public CareerChoiceDoubleGroupObjectVM DoubleGroupTier3
         {
             get
             {
-                return _choiceGroups2;
+                return _choiceDoubleGroup3;
             }
             set
             {
-                if (value != _choiceGroups2)
+                if (value != _choiceDoubleGroup3)
                 {
-                    _choiceGroups2 = value;
-                    OnPropertyChangedWithValue(value, "ChoiceGroupsTier2");
+                    _choiceDoubleGroup3 = value;
+                    OnPropertyChangedWithValue(value, "DoubleGroupTier3");
                 }
             }
         }
-
-        [DataSourceProperty]
-        public MBBindingList<CareerChoiceDoubleGroupObjectVM> ChoiceGroupsTier3
-        {
-            get
-            {
-                return _choiceGroups3;
-            }
-            set
-            {
-                if (value != _choiceGroups3)
-                {
-                    _choiceGroups3 = value;
-                    OnPropertyChangedWithValue(value, "ChoiceGroupsTier3");
-                }
-            }
-        }
-
         [DataSourceProperty]
         public string ChoiceGroup1Name
         {
@@ -361,72 +327,6 @@ namespace RealmsForgotten.Career.VievModels
                 {
                     _choiceGroup3Name = value;
                     OnPropertyChangedWithValue(value, "ChoiceGroup3Name");
-                }
-            }
-        }
-
-        [DataSourceProperty]
-        public string ChoiceGroup1Condition
-        {
-            get
-            {
-                return _choiceGroup1Condition;
-            }
-            set
-            {
-                if (value != _choiceGroup1Condition)
-                {
-                    _choiceGroup1Condition = value;
-                    OnPropertyChangedWithValue(value, "ChoiceGroup1Condition");
-                }
-            }
-        }
-
-        [DataSourceProperty]
-        public string ChoiceGroup2Condition
-        {
-            get
-            {
-                return _choiceGroup2Condition;
-            }
-            set
-            {
-                if (value != _choiceGroup2Condition)
-                {
-                    _choiceGroup2Condition = value;
-                    OnPropertyChangedWithValue(value, "ChoiceGroup2Condition");
-                }
-            }
-        }
-        [DataSourceProperty]
-        public string ChoiceGroup3Condition
-        {
-            get
-            {
-                return _choiceGroup3Condition;
-            }
-            set
-            {
-                if (value != _choiceGroup3Condition)
-                {
-                    _choiceGroup3Condition = value;
-                    OnPropertyChangedWithValue(value, "ChoiceGroup3Condition");
-                }
-            }
-        }
-        [DataSourceProperty]
-        public string ChoiceGroup1Unlock
-        {
-            get
-            {
-                return _choiceGroup1Unlock;
-            }
-            set
-            {
-                if (value != _choiceGroup1Unlock)
-                {
-                    _choiceGroup1Unlock = value;
-                    OnPropertyChangedWithValue(value, "ChoiceGroup1Unlock");
                 }
             }
         }

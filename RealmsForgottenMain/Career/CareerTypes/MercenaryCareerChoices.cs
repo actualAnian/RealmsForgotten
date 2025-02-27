@@ -14,29 +14,29 @@ namespace RealmsForgotten.Career.CareerTypes
 
         private CareerChoiceObject _mercenaryRootNode;
 
-        private CareerChoiceObject _wandering_blade_passive1;
-        private CareerChoiceObject _wandering_blade_passive2;
-        private CareerChoiceObject _wandering_blade_passive3;
-        private CareerChoiceObject _wandering_blade_passive4;
-        private CareerChoiceObject _wandering_blade_keystone;
+        private CareerChoiceObject _wandering_blade_1_passive1;
+        private CareerChoiceObject _wandering_blade_1_passive2;
+        private CareerChoiceObject _wandering_blade_1_passive3;
+        private CareerChoiceObject _wandering_blade_1_passive4;
+        private CareerChoiceObject _wandering_blade_1_keystone;
 
-        private CareerChoiceObject _leaderPassive1;
-        private CareerChoiceObject _leaderPassive2;
-        private CareerChoiceObject _leaderPassive3;
-        private CareerChoiceObject _leaderPassive4;
-        private CareerChoiceObject _leaderKeystone;
+        private CareerChoiceObject _wandering_blade_2_passive1;
+        private CareerChoiceObject _wandering_blade_2_passive2;
+        private CareerChoiceObject _wandering_blade_2_passive3;
+        private CareerChoiceObject _wandering_blade_2_passive4;
+        private CareerChoiceObject _wandering_blade_2_keystone;
 
-        private CareerChoiceObject _merc_equipment_I_passive1;
-        private CareerChoiceObject _merc_equipment_I_passive2;
-        private CareerChoiceObject _merc_equipment_I_passive3;
-        private CareerChoiceObject _merc_equipment_I_passive4;
-        private CareerChoiceObject _merc_equipment_I_keystone;
+        private CareerChoiceObject _warlord_of_coin_1_passive1;
+        private CareerChoiceObject _warlord_of_coin_1_passive2;
+        private CareerChoiceObject _warlord_of_coin_1_passive3;
+        private CareerChoiceObject _warlord_of_coin_1_passive4;
+        private CareerChoiceObject _warlord_of_coin_1_passive5;
 
-        private CareerChoiceObject _duel_champion_passive1;
-        private CareerChoiceObject _duel_champion_passive2;
-        private CareerChoiceObject _duel_champion_passive3;
-        private CareerChoiceObject _duel_champion_passive4;
-        private CareerChoiceObject _duel_champion_keystone;
+        private CareerChoiceObject _warlord_of_coin_2_passive1;
+        private CareerChoiceObject _warlord_of_coin_2_passive2;
+        private CareerChoiceObject _warlord_of_coin_2_passive3;
+        private CareerChoiceObject _warlord_of_coin_2_passive4;
+        private CareerChoiceObject _warlord_of_coin_2_passive5;
 
         private CareerChoiceObject _mercenaryLordpassive1;
         private CareerChoiceObject _mercenaryLordpassive2;
@@ -53,29 +53,29 @@ namespace RealmsForgotten.Career.CareerTypes
         {
             _mercenaryRootNode = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("MercenaryRoot"));
 
-            _wandering_blade_passive1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("SurvivalistPassive1"));
-            _wandering_blade_passive2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("SurvivalistPassive2"));
-            _wandering_blade_passive3 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("SurvivalistPassive3"));
-            _wandering_blade_passive4 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("SurvivalistPassive4"));
-            _wandering_blade_keystone = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("SurvivalistKeystone"));
+            _wandering_blade_1_passive1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("WanderingBlade1_1"));
+            _wandering_blade_1_passive2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("WanderingBlade1_2"));
+            _wandering_blade_1_passive3 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("WanderingBlade1_3"));
+            _wandering_blade_1_passive4 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("WanderingBlade1_4"));
+            _wandering_blade_1_keystone = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("WanderingBlade1_5"));
 
-            _leaderPassive1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("LeaderPassive1"));
-            _leaderPassive2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("LeaderPassive2"));
-            _leaderPassive3 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("LeaderPassive3"));
-            _leaderPassive4 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("LeaderPassive4"));
-            _leaderKeystone = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("LeaderKeystone"));
+            _wandering_blade_2_passive1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("WanderingBlade2_1"));
+            _wandering_blade_2_passive2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("WanderingBlade2_2"));
+            _wandering_blade_2_passive3 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("WanderingBlade2_3"));
+            _wandering_blade_2_passive4 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("WanderingBlade2_4"));
+            _wandering_blade_2_keystone = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("WanderingBlade2_5"));
 
-            _merc_equipment_I_passive1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("MercenaryEquipmentIHeadhunterPassive1"));
-            _merc_equipment_I_passive2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("MercenaryEquipmentIPassive2"));
-            _merc_equipment_I_passive3 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("MercenaryEquipmentIPassive3"));
-            _merc_equipment_I_passive4 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("MercenaryEquipmentIPassive4"));
-            _merc_equipment_I_keystone = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("MercenaryEquipmentIKeystone"));
+            _warlord_of_coin_1_passive1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("WarlordOfCoin1_1"));
+            _warlord_of_coin_1_passive2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("WarlordOfCoin1_2"));
+            _warlord_of_coin_1_passive3 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("WarlordOfCoin1_3"));
+            _warlord_of_coin_1_passive4 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("WarlordOfCoin1_4"));
+            _warlord_of_coin_1_passive5 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("WarlordOfCoin1_5"));
 
-            _duel_champion_passive1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("DuelChampionPassive1"));
-            _duel_champion_passive2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("DuelChampionPassive2"));
-            _duel_champion_passive3 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("DuelChampionPassive3"));
-            _duel_champion_passive4 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("DuelChampionPassive4"));
-            _duel_champion_keystone = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("DuelChampionKeystone"));
+            _warlord_of_coin_2_passive1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("WarlordOfCoin2_1"));
+            _warlord_of_coin_2_passive2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("WarlordOfCoin2_2"));
+            _warlord_of_coin_2_passive3 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("WarlordOfCoin2_3"));
+            _warlord_of_coin_2_passive4 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("WarlordOfCoin2_4"));
+            _warlord_of_coin_2_passive5 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("WarlordOfCoin2_5"));
 
             _mercenaryLordpassive1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("MercenaryLordPassive1"));
             _mercenaryLordpassive2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceObject("MercenaryLordPassive2"));
@@ -105,11 +105,11 @@ namespace RealmsForgotten.Career.CareerTypes
                     },
                 });
 
-            _wandering_blade_keystone.Initialize(CareerID, "Headshots return the arrow/bolt used.", "WanderingBlade", false, ChoiceType.Keystone); // CareerPerkMissionBehavior, WanderingBladeKeystone
+            _wandering_blade_1_keystone.Initialize(CareerID, "Headshots return the arrow/bolt used.", "WanderingBlade1", false, ChoiceType.Keystone); // CareerPerkMissionBehavior, WanderingBladeKeystone
 
-            _leaderKeystone.Initialize(CareerID, "Increases mercenary contract gains by 20%.", "Leader", false, ChoiceType.Keystone);
+            _wandering_blade_2_keystone.Initialize(CareerID, "Increases mercenary contract gains by 20%.", "WanderingBlade2", false, ChoiceType.Keystone);
 
-            _merc_equipment_I_keystone.Initialize(CareerID, "Increases range damage during the career ability by 15%.", "Headhunter", false,
+            _warlord_of_coin_1_passive5.Initialize(CareerID, "Increases range damage during the career ability by 15%.", "Headhunter", false,
                 ChoiceType.Keystone, new List<CareerChoiceObject.MutationObject>()
                 {
                     new CareerChoiceObject.MutationObject()
@@ -122,7 +122,7 @@ namespace RealmsForgotten.Career.CareerTypes
                     }
                 });
 
-            _duel_champion_keystone.Initialize(CareerID, "Killing an enemy replenishes 10 Health.", "DuelChampion", false, ChoiceType.Keystone);
+            _warlord_of_coin_2_passive5.Initialize(CareerID, "Killing an enemy replenishes 10 Health.", "DuelChampion", false, ChoiceType.Keystone);
 
             _mercenaryLordkeystone.Initialize(CareerID, "Values for career ability effects are doubled.", "Paymaster", false,
                 ChoiceType.Keystone, new List<CareerChoiceObject.MutationObject>()
@@ -193,26 +193,26 @@ namespace RealmsForgotten.Career.CareerTypes
 
         protected override void InitializePassives()
         {
-            _wandering_blade_passive1.Initialize(CareerID, "5 extra arrows, bolts ammo", "WanderingBlade", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(5, PassiveEffectType.Ammo));
-            _wandering_blade_passive2.Initialize(CareerID, "Increases Hitpoints by 20", "WanderingBlade", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(20, PassiveEffectType.Health));
-            _wandering_blade_passive3.Initialize(CareerID, "Extra 20% armor penetration of melee attacks", "WanderingBlade", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(-20, PassiveEffectType.ArmorPenetration));
-            _wandering_blade_passive4.Initialize(CareerID, "Increases ranged damage by 10%.", "WanderingBlade", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(PassiveEffectType.Damage, new DamageProportionTuple(DamageType.PhysicalRanged, 10)));
+            _wandering_blade_1_passive1.Initialize(CareerID, "5 extra arrows, bolts ammo", "WanderingBlade1", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(5, PassiveEffectType.Ammo));
+            _wandering_blade_1_passive2.Initialize(CareerID, "Increases Hitpoints by 20", "WanderingBlade1", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(20, PassiveEffectType.Health));
+            _wandering_blade_1_passive3.Initialize(CareerID, "Extra 20% armor penetration of melee attacks", "WanderingBlade1", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(-20, PassiveEffectType.ArmorPenetration));
+            _wandering_blade_1_passive4.Initialize(CareerID, "Increases ranged damage by 10%.", "WanderingBlade1", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(PassiveEffectType.Damage, new DamageProportionTuple(DamageType.PhysicalRanged, 10)));
 
-            _leaderPassive1.Initialize(CareerID, "The Spotting range of the party is increased by 20%", "Leader", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(20, PassiveEffectType.Health));
-            _leaderPassive2.Initialize(CareerID, "Companion limit of party is increased by 2", "Leader", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(PassiveEffectType.TroopResistance, new DamageProportionTuple(DamageType.PhysicalMelee, 10),
+            _wandering_blade_2_passive1.Initialize(CareerID, "The Spotting range of the party is increased by 20%", "WanderingBlade2", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(20, PassiveEffectType.Health));
+            _wandering_blade_2_passive2.Initialize(CareerID, "Companion limit of party is increased by 2", "WanderingBlade2", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(PassiveEffectType.TroopResistance, new DamageProportionTuple(DamageType.PhysicalMelee, 10),
                 (attacker, victim) => !victim.BelongsToMainParty() && !(victim.IsMainAgent || victim.IsHero)));
-            _leaderPassive3.Initialize(CareerID, "Mercenary troops cost no extra wage.", "Leader", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(PassiveEffectType.Damage, new DamageProportionTuple(DamageType.PhysicalMelee, 10)));
-            _leaderPassive4.Initialize(CareerID, "Increases melee damage resistance of melee troops by 10%.", "Leader", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(3, PassiveEffectType.HealthRegeneration));
+            _wandering_blade_2_passive3.Initialize(CareerID, "Mercenary troops cost no extra wage.", "WanderingBlade2", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(PassiveEffectType.Damage, new DamageProportionTuple(DamageType.PhysicalMelee, 10)));
+            _wandering_blade_2_passive4.Initialize(CareerID, "Increases melee damage resistance of melee troops by 10%.", "WanderingBlade2", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(3, PassiveEffectType.HealthRegeneration));
 
-            _merc_equipment_I_passive1.Initialize(CareerID, "10 extra ammo.", "Headhunter", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(10, PassiveEffectType.Ammo));
-            _merc_equipment_I_passive2.Initialize(CareerID, "Increases ranged damage by 10%.", "Headhunter", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(PassiveEffectType.Damage, new DamageProportionTuple(DamageType.PhysicalMelee, 10)));
-            _merc_equipment_I_passive3.Initialize(CareerID, "Companion limit of party is increased by 5.", "Headhunter", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(5, PassiveEffectType.CompanionLimit));
-            _merc_equipment_I_passive4.Initialize(CareerID, "Increases ranged damage resistance by 15%.", "Headhunter", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(PassiveEffectType.Resistance, new DamageProportionTuple(DamageType.PhysicalMelee, 15)));
+            _warlord_of_coin_1_passive1.Initialize(CareerID, "10 extra ammo.", "WarlordOfCoin1", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(10, PassiveEffectType.Ammo));
+            _warlord_of_coin_1_passive2.Initialize(CareerID, "Increases influence gain by 20%.", "WarlordOfCoin1", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(0.2f, PassiveEffectType.DailyInfluence, true));
+            _warlord_of_coin_1_passive3.Initialize(CareerID, "Companion limit of party is increased by 5.", "WarlordOfCoin1", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(5, PassiveEffectType.CompanionLimit));
+            _warlord_of_coin_1_passive4.Initialize(CareerID, "Increases ranged damage resistance by 15%.", "WarlordOfCoin1", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(PassiveEffectType.Resistance, new DamageProportionTuple(DamageType.PhysicalMelee, 15)));
 
-            _duel_champion_passive1.Initialize(CareerID, "Increases health regeneration after battles by 10", "Knightly", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(10, PassiveEffectType.HealthRegeneration));
-            _duel_champion_passive2.Initialize(CareerID, "Attacks deal bonus damage against shields.", "Knightly", false, ChoiceType.Passive, null);
-            _duel_champion_passive3.Initialize(CareerID, "Increases Hitpoints by 40.", "Knightly", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(40, PassiveEffectType.Health));
-            _duel_champion_passive4.Initialize(CareerID, "Increases melee damage by 15%.", "Knightly", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(PassiveEffectType.Damage, new DamageProportionTuple(DamageType.PhysicalMelee, 15)));
+            _warlord_of_coin_2_passive1.Initialize(CareerID, "Increases health regeneration after battles by 10", "WarlordOfCoin2", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(10, PassiveEffectType.HealthRegeneration));
+            _warlord_of_coin_2_passive2.Initialize(CareerID, "Attacks deal bonus damage against shields.", "WarlordOfCoin2", false, ChoiceType.Passive, null);
+            _warlord_of_coin_2_passive3.Initialize(CareerID, "Increases Hitpoints by 40.", "WarlordOfCoin2", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(40, PassiveEffectType.Health));
+            _warlord_of_coin_2_passive4.Initialize(CareerID, "Increases melee damage by 15%.", "WarlordOfCoin2", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(PassiveEffectType.Damage, new DamageProportionTuple(DamageType.PhysicalMelee, 15)));
 
             _mercenaryLordpassive1.Initialize(CareerID, "4 extra special ammo like grenades or buckshot.", "MercenaryLord", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(4, PassiveEffectType.Special, false)); //TORAgentStatCalculateModel 97
             _mercenaryLordpassive2.Initialize(CareerID, "Increases the damage of all ranged troops by 15%.", "MercenaryLord", false, ChoiceType.Passive, null, new CareerChoiceObject.PassiveEffect(PassiveEffectType.TroopDamage, new DamageProportionTuple(DamageType.PhysicalMelee, 15),

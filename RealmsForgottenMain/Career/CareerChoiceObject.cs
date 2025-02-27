@@ -219,7 +219,7 @@ namespace RealmsForgotten.Career
         Resistance,         //player resistance requires damage tuple
         TroopDamage,
         TroopResistance,
-
+        DailyInfluence,
 
         //have to be enabled
         Special,            //For everything that requires special implementation

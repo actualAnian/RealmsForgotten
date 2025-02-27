@@ -8,8 +8,8 @@ namespace RealmsForgotten.Career
         public static RFCareerChoiceGroups Instance { get; private set; }
 
         //Mercenary
-        private CareerChoiceGroupObject _wandering_blade;
-        private CareerChoiceGroupObject _leader;
+        private CareerChoiceGroupObject _wandering_blade_1;
+        private CareerChoiceGroupObject _wandering_blade_2;
         private CareerChoiceGroupObject _merc_eq_1;
         private CareerChoiceGroupObject _duel_champoin;
         private CareerChoiceGroupObject _mercenaryLord;
@@ -34,10 +34,10 @@ namespace RealmsForgotten.Career
         {
 
             //Mercenary
-            _wandering_blade = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("WanderingBlade"));
-            _leader = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("Leader"));
-            _merc_eq_1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("MercenaryEquipmentI"));
-            _duel_champoin = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("DuelChampion"));
+            _wandering_blade_1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("WanderingBlade1"));
+            _wandering_blade_2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("WanderingBlade2"));
+            _merc_eq_1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("WarlordOfCoin1"));
+            _duel_champoin = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("WarlordOfCoin2"));
             _mercenaryLord = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("MercenaryLord"));
             _merc_eq_2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("MercenaryEquipmentII"));
 
@@ -56,22 +56,22 @@ namespace RealmsForgotten.Career
         {
             //Mercenary
 
-            _wandering_blade.Initialize("Wandering Blade", RFCareers.Mercenary, 1, (Hero hero, out string text) =>
+            _wandering_blade_1.Initialize("Wandering Blade", RFCareers.Mercenary, 1, (Hero hero, out string text) =>
             {
                 text = string.Empty;
                 return true;
             });
-            _leader.Initialize("Leader", RFCareers.Mercenary, 1, (Hero hero, out string text) =>
+            _wandering_blade_2.Initialize("Wandering Blade", RFCareers.Mercenary, 1, (Hero hero, out string text) =>
             {
                 text = string.Empty;
                 return true;
             });
-            _merc_eq_1.Initialize("Mercenary's equipment I", RFCareers.Mercenary, 2, (Hero hero, out string text) =>
+            _merc_eq_1.Initialize("Warlord of Coin", RFCareers.Mercenary, 2, (Hero hero, out string text) =>
             {
                 text = string.Empty;
                 return true;
             });
-            _duel_champoin.Initialize("Duel champion ", RFCareers.Mercenary, 2, (Hero hero, out string text) =>
+            _duel_champoin.Initialize("Warlord of Coin", RFCareers.Mercenary, 2, (Hero hero, out string text) =>
             {
                 text = "Required clan renown: 2";
                 return hero.Clan.Tier >= 2;
