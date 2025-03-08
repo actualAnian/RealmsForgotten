@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using RealmsForgotten.AiMade;
 using RealmsForgotten.Behaviors;
+using RealmsForgotten.Career;
 using RealmsForgotten.Quest;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -16,6 +17,7 @@ internal class SaveDefiner : SaveableTypeDefiner
         AddClassDefinition(typeof(MercenaryData), 1);
         AddEnumDefinition(typeof(DestinationTypes), 2, null);
         AddClassDefinition(typeof(TownSlaveData), 3, null);
+        AddClassDefinition(typeof(PlayerClassInfo), 4);
     }
     protected override void DefineContainerDefinitions()
     {

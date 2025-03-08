@@ -9,8 +9,9 @@ using static TaleWorlds.MountAndBlade.Mission;
 using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.Library;
+using RealmsForgotten.Career;
 
-namespace RealmsForgotten.Career.Patches
+namespace RealmsForgotten.Patches
 {
     [HarmonyPatch]
     public static class DamagePatch
@@ -19,7 +20,7 @@ namespace RealmsForgotten.Career.Patches
         [HarmonyPatch(typeof(Agent), "HandleBlow")]
         public static bool PreHandleBlow(ref Blow b, Agent __instance)
         {
-            Agent attacker = b.OwnerId != -1 ? Mission.Current.FindAgentWithIndex(b.OwnerId) : __instance;
+            Agent attacker = b.OwnerId != -1 ? Current.FindAgentWithIndex(b.OwnerId) : __instance;
             Agent victim = __instance;
 
             //if (!victim.IsHuman || !attacker.IsHuman)
@@ -62,19 +63,17 @@ namespace RealmsForgotten.Career.Patches
                             resistancePercentages[index] += careerBonuses[index];
                         }
                     }
-
                 }
             }
             float summedBonus = 0;
             summedBonus += additionalDamagePercentages[(int)damageType];
             summedBonus -= resistancePercentages[(int)damageType];
-            
+            summedBonus += Globals.RaceResistances.FirstOrDefault(entry => entry.Check(victim.Character)).Resistances[(int)damageType];
             int resultDamage = (int)(baseDamage + baseDamage * summedBonus);
 
             b.InflictedDamage = resultDamage;
             if (attacker == Agent.Main || victim == Agent.Main)
                 DisplayDamageResult(baseDamage, resultDamage, summedBonus, victim == Agent.Main);
-            
             return true;
         }
 
@@ -84,20 +83,20 @@ namespace RealmsForgotten.Career.Patches
             int affectorWeaponSlotOrMissileIndex = b.WeaponRecord.AffectorWeaponSlotOrMissileIndex;
             if (b.IsMissile)
             {
-
                 Type missionType = victim.Mission.GetType();
                 System.Reflection.FieldInfo missilesField = AccessTools.Field(missionType, "_missiles");
-                Dictionary<int, Missile> missilesValue = (Dictionary<int, Mission.Missile>)missilesField.GetValue(victim.Mission);
+                Dictionary<int, Missile> missilesValue = (Dictionary<int, Missile>)missilesField.GetValue(victim.Mission);
                 missionWeapon = missilesValue[affectorWeaponSlotOrMissileIndex].Weapon;
             }
             else
             {
-                missionWeapon = ((attacker != null && affectorWeaponSlotOrMissileIndex >= 0) ? attacker.Equipment[affectorWeaponSlotOrMissileIndex] : MissionWeapon.Invalid);
+                missionWeapon = attacker != null && affectorWeaponSlotOrMissileIndex >= 0 ? attacker.Equipment[affectorWeaponSlotOrMissileIndex] : MissionWeapon.Invalid;
             }
             return missionWeapon;
         }
         public static DamageType CalculateDefaultDamage(MissionWeapon missionWeapon)
         {
+            if (missionWeapon.CurrentUsageItem == null) return DamageType.Invalid;
             switch (missionWeapon.CurrentUsageItem.WeaponClass)
             {
                 case WeaponClass.Stone:
@@ -127,7 +126,7 @@ namespace RealmsForgotten.Career.Patches
         {
             Color displaycolor;// = Color.White;
             string sign = bonus >= 0 ? "+" : "-";
-             
+
             if (isVictim) displaycolor = Color.FromUint(9856100);
             else displaycolor = Colors.Cyan;
 

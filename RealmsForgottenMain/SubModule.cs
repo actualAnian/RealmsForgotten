@@ -78,7 +78,8 @@ namespace RealmsForgotten
                 campaignGameStarter.AddBehavior(new CulturesCampaignBehavior());
                 
                 campaignGameStarter.AddBehavior(RFHorseSpawningCampaignBehavior.Instance);
-                
+                campaignGameStarter.AddBehavior(new RFCareerPerkCampaignBehavior());
+
                 campaignGameStarter.AddModel(new RFAgentApplyDamageModel(campaignGameStarter.GetExistingModel<AgentApplyDamageModel>()));
                 campaignGameStarter.AddModel(new RFBuildingConstructionModel(campaignGameStarter.GetExistingModel<BuildingConstructionModel>()));
                 campaignGameStarter.AddModel(new RFCombatXpModel(campaignGameStarter.GetExistingModel<CombatXpModel>()));
@@ -94,8 +95,10 @@ namespace RealmsForgotten
                 campaignGameStarter.AddModel(new RFWageModel(campaignGameStarter.GetExistingModel<PartyWageModel>()));
                 campaignGameStarter.AddModel(new RFBattleCaptainModel(campaignGameStarter.GetExistingModel<BattleCaptainModel>()));
                 campaignGameStarter.AddModel(new RFInventoryCapacityModel(campaignGameStarter.GetExistingModel<InventoryCapacityModel>()));
-                campaignGameStarter.AddModel(new RFRaceSpeedBonusModel(campaignGameStarter.GetExistingModel<PartySpeedModel>()));
                 campaignGameStarter.AddModel(new RFBanditDensityModel(campaignGameStarter.GetExistingModel<BanditDensityModel>()));
+                campaignGameStarter.AddModel(new RFClanFinanceModel(campaignGameStarter.GetExistingModel<ClanFinanceModel>()));
+                campaignGameStarter.AddModel(new RFMapVisibilityModel(campaignGameStarter.GetExistingModel<MapVisibilityModel>()));
+                campaignGameStarter.AddModel(new RFClanTierModel());
                 campaignGameStarter.AddModel(new RFStrikeMagnitudeModel());
 
                 

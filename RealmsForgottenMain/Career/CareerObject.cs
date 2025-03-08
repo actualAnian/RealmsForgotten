@@ -46,42 +46,5 @@ namespace RealmsForgotten.Career
         {
             return _condition != null && _condition(hero);
         }
-        //public void MutateTriggeredEffect(TriggeredEffectTemplate effect, Agent triggererAgent)
-        //{
-        //    Agent triggererAgent = Hero.MainHero.age;
-        //    if (triggererAgent != null && triggererAgent.GetHero()?.GetExtendedInfo() != null)
-        //    {
-
-        //        var root = triggererAgent.GetHero().GetCareer().RootNode;
-        //        var info = triggererAgent.GetHero().GetExtendedInfo();
-        //        if (info.CareerID == StringId)
-        //        {
-        //            List<CareerChoiceObject> modifications = new List<CareerChoiceObject> { root };
-        //            modifications.AddRange(AllChoices.Where(x => info.CareerChoices.Contains(x.StringId)));
-        //            foreach (var choice in modifications)
-        //            {
-        //                if (choice.HasMutations())
-        //                    choice.MutateTriggeredEffect(effect, triggererAgent);
-        //            }
-        //        }
-        //    }
-        //}
-
-        //public void MutateStatusEffect(StatusEffectTemplate effect, Agent applierAgent)
-        //{
-        //    if (applierAgent != null && applierAgent.GetHero()?.GetExtendedInfo() != null)
-        //    {
-        //        var info = applierAgent.GetHero().GetExtendedInfo();
-        //        if (info.CareerID != StringId) return;
-        //        var choices = new List<CareerChoiceObject>();
-        //        choices.Add(RootNode);
-        //        choices.AddRange(AllChoices.Where(x => info.CareerChoices.Contains(x.StringId)));
-
-        //        foreach (var choice in choices.Where(choice => choice.HasMutations()))
-        //        {
-        //            choice.MutateStatusEffect(effect, applierAgent);
-        //        }
-        //    }
-        //}
     }
 }

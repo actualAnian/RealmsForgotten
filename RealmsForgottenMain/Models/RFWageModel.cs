@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
+using TaleWorlds.CampaignSystem.Party;
+using RealmsForgotten.Career;
+using RealmsForgotten.Career.Logic;
+using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 
 namespace RealmsForgotten.Models
 {
@@ -30,6 +34,24 @@ namespace RealmsForgotten.Models
             if (buyerHero.Culture.StringId == "vlandia" && troop.Occupation == Occupation.Mercenary && nasoriaBonus > 0)
                 return nasoriaBonus;
             return baseValue;
+        }
+        public override ExplainedNumber GetTotalWage(MobileParty mobileParty, bool includeDescriptions = false)
+        {
+            ExplainedNumber value = base.GetTotalWage(mobileParty, includeDescriptions);
+            if (mobileParty != MobileParty.MainParty || !PlayerCareerExtension.HasAnyCareer()) return value;
+            CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.TroopWages, true);
+
+            if (PlayerCareerExtension.HasCareerChoice("WanderingBlade2_5"))
+            {
+                int totalReduction = 0;
+                foreach (TaleWorlds.CampaignSystem.Roster.TroopRosterElement troop in mobileParty.MemberRoster.GetTroopRoster())
+                {
+                    if (troop.Character.Occupation == Occupation.Mercenary)
+                        totalReduction += troop.Character.TroopWage / 3;
+                }
+                if (totalReduction > 0) value.Add(-1 * totalReduction, new("{=merc_merc_wage_reduction}Class mercenary wage reduction"));
+            }
+            return value;
         }
     }
 }

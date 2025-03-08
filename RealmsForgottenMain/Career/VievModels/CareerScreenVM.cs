@@ -15,25 +15,16 @@ namespace RealmsForgotten.Career.VievModels
         {
             _closeAction = closeAction;
 
-            PlayerCareerExtension.AddCareer(RFCareers.Mercenary);
+            if (!PlayerCareerExtension.HasAnyCareer())
+                PlayerCareerExtension.AddCareer(RFCareers.Mercenary);
             _currentCareerVM = new CareerObjectVM(PlayerCareerExtension.GetCareer());
 
-            Game.Current.AfterTick = (Action<float>)Delegate.Combine(Game.Current.AfterTick, new Action<float>(this.OnTick));
             _canClose = true;
-        }
-
-        private void OnTick(float obj)
-        {
-            if (Input.IsKeyPressed(InputKey.Escape) && _canClose)
-            {
-                Game.Current.AfterTick = (Action<float>)Delegate.Remove(Game.Current.AfterTick, new Action<float>(this.OnTick));
-                _canClose = false;
-                ExecuteCancel();
-            }
         }
 
         private void ExecuteDone()
         {
+            _currentCareerVM.GiveActivePerkBonuses();
             _closeAction();
         }
         private void ExecuteCancel()
@@ -41,10 +32,6 @@ namespace RealmsForgotten.Career.VievModels
             _currentCareerVM.RefundPerks();
             _closeAction();
         }
-        //private void ExecuteBuyPerk()
-        //{
-        //    _currentCareerVM.BuyPerk();
-        //}
         private void ExecuteReset()
         {
             _currentCareerVM.RefundPerks();

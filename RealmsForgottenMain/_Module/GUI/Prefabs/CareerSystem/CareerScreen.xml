@@ -65,8 +65,8 @@
 																	<ItemTemplate>
 																		<ListPanel  WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="50" StackLayout.LayoutMethod="HorizontalLeftToRight">
 																			<Children>
-																				<Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="35" SuggestedWidth="35" HorizontalAlignment="Left" MarginLeft="23" MarginTop="5" MarginBottom="5" Sprite="CharacterDeveloper\progress_bar_fill" Color="#7f695cFF"/>
-                                                    							<TextWidget DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="35" SuggestedWidth="500" HorizontalAlignment="Left" MarginLeft="25" MarginTop="5" MarginBottom="5" Text="@Description" Brush="TorCareerChoiceBrush" />
+																				<Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="35" SuggestedWidth="35" HorizontalAlignment="Left" MarginLeft="23" MarginTop="5" MarginBottom="5" Sprite="ui_career_icons\career_perk_icon_35x35"/>
+																				<TextWidget DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="35" SuggestedWidth="500" HorizontalAlignment="Left" MarginLeft="25" MarginTop="5" MarginBottom="5" Text="@Description" Brush="TorCareerChoiceBrush" />
 																			</Children>
 																		</ListPanel>
 																	</ItemTemplate>
@@ -138,7 +138,7 @@
 																				</ListPanel>
 																			</Children>
 																		</ListPanel>
-																			<BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Popup.Frame" IsEnabled="false" />
+																		<BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Popup.Frame" IsEnabled="false" />
 																	</Children>
 																</ButtonWidget>
 															</Children>
@@ -204,7 +204,7 @@
 																				</ListPanel>
 																			</Children>
 																		</ListPanel>
-																			<BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Popup.Frame" IsEnabled="false" />
+																		<BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Popup.Frame" IsEnabled="false" />
 																	</Children>
 																</ButtonWidget>
 															</Children>
@@ -272,7 +272,7 @@
 																				</ListPanel>
 																			</Children>
 																		</ListPanel>
-																			<BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Popup.Frame" IsEnabled="false" />
+																		<BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Popup.Frame" IsEnabled="false" />
 																	</Children>
 																</ButtonWidget>
 															</Children>

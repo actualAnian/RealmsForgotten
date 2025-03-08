@@ -11,5 +11,11 @@
 		<!-- descriptions-->
 		<string id="class_description.Mercenary" text="We are mercenaries. We have the resources. The will. To make these hours count! The clock is ticking, gentlemen. Let's begin." />
 
+
+		<string id="merc_merc_wage_reduction" text="Class mercenary wage reduction" />
+		<string id="rf_raid_plunder" text="You plundered additional {NUMBER_OF} {PRODUCTS}." />
+		<string id="rf_caravan_plunder" text="You plundered additional {NUMBER_OF} {PRODUCTS}." />
+		
+
 	</strings>
 </base>

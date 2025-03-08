@@ -10,11 +10,10 @@ namespace RealmsForgotten.Career
     public static class PlayerCareerExtension
     {
         public static readonly int MaximumNumberOfCareerPerkPoints = 30;
-        public static HeroExtendedInfo? PlayerCareerInfo { get; set; } = new();
+        public static PlayerClassInfo PlayerCareerInfo { get { return RFCareerPerkCampaignBehavior.ClassInfo; } set { RFCareerPerkCampaignBehavior.ClassInfo = value; } }
         public static bool HasAnyCareer() => Game.Current.GameType is Campaign && GetCareer() != null;
         public static CareerObject? GetCareer()
         {
-            Hero hero = Hero.MainHero;
             CareerObject? result = null;
             if (PlayerCareerInfo != null && !string.IsNullOrEmpty(PlayerCareerInfo.CareerID))
             {
@@ -22,41 +21,16 @@ namespace RealmsForgotten.Career
             }
             return result;
         }
-        public static void RemoveAttribute(string attribute)
-        {
-            var info = PlayerCareerInfo;
-            if (info != null && info.AllAttributes.Contains(attribute))
-            {
-                info.AcquiredAttributes.Remove(attribute);
-            }
-        }
-        public static void AddAttribute(string attribute)
-        {
-            var info = PlayerCareerInfo;
-            if (info != null && !info.AllAttributes.Contains(attribute))
-            {
-                info.AcquiredAttributes.Add(attribute);
-            }
-        }
-
         public static void AddCareer(CareerObject career)
         {
-            Hero hero = Hero.MainHero;
-            HeroExtendedInfo info = PlayerCareerInfo;
-            if (info != null)
+            PlayerCareerInfo ??= new();
+            if (HasAnyCareer())
             {
-                if (HasAnyCareer())
-                {
-                    info.CareerChoices.Clear();
-                }
-                info.CareerID = career.StringId;
-                info.CareerChoices.Add(career.RootNode.StringId);
-                var careerObj = RFCareerChoices.Instance.GetCareerChoices(GetCareer());
-                RemoveAttribute( "CareerTier" + 1);
-                RemoveAttribute("CareerTier" + 2);
-                RemoveAttribute("CareerTier" + 3);
-                careerObj.InitialCareerSetup();
+                PlayerCareerInfo.CareerChoices.Clear();
             }
+            PlayerCareerInfo.CareerID = career.StringId;
+            var careerObj = RFCareerChoices.Instance.GetCareerChoices(GetCareer());
+            careerObj.InitialCareerSetup();
         }
 
         public static bool HasCareerChoice(string choiceID)
@@ -79,15 +53,14 @@ namespace RealmsForgotten.Career
         }
         public static bool TryAddCareerChoice(CareerChoiceObject choice)
         {
-            HeroExtendedInfo info = PlayerCareerInfo;
-            if (info != null && !info.CareerChoices.Contains(choice.StringId))
+            if (PlayerCareerInfo != null && !PlayerCareerInfo.CareerChoices.Contains(choice.StringId))
             {
                 int maxChoices = Math.Min(Hero.MainHero.Level + 1, MaximumNumberOfCareerPerkPoints + 1);
                 //@TODO change this
                 maxChoices = 100;
-                if (info.CareerChoices.Count < maxChoices)
+                if (PlayerCareerInfo.CareerChoices.Count < maxChoices)
                 {
-                    info.CareerChoices.Add(choice.StringId);
+                    PlayerCareerInfo.CareerChoices.Add(choice.StringId);
                     return true;
                 }
             }
@@ -95,31 +68,15 @@ namespace RealmsForgotten.Career
         }
         public static bool TryRemoveCareerChoice(CareerChoiceObject choice)
         {
-            HeroExtendedInfo info = PlayerCareerInfo;
-            if (info != null)
+            if (PlayerCareerInfo != null)
             {
-                if (info.CareerChoices.Contains(choice.StringId))
+                if (PlayerCareerInfo.CareerChoices.Contains(choice.StringId))
                 {
-                    info.CareerChoices.Remove(choice.StringId);
+                    PlayerCareerInfo.CareerChoices.Remove(choice.StringId);
                     return true;
                 }
             }
             return false;
-        }
-        public static bool HasUnlockedCareerChoiceTier(int tier)
-        {
-            var tierText = "CareerTier";
-            if (HasAnyCareer() && HasAttribute(tierText + tier)) return true;
-
-            return false;
-        }
-        public static bool HasAttribute(string attribute)
-        {
-            if (PlayerCareerInfo != null)
-            {
-                return PlayerCareerInfo.AllAttributes.Contains(attribute);
-            }
-            else return false;
         }
         public static List<string> GetAllCareerChoices()
         {

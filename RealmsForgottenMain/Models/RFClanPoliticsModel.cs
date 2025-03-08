@@ -25,7 +25,7 @@ namespace RealmsForgotten.Models
             ExplainedNumber value = _previousModel.CalculateInfluenceChange(clan, includeDescriptions);
             if (clan != Clan.PlayerClan) return value;
 
-            CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.DailyInfluence, false);
+            //CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.DailyInfluence, false);
             return value;
         }
 

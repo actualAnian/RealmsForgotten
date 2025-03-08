@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
+using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
@@ -19,8 +20,25 @@ namespace RealmsForgotten.Career
         public CareerChoiceObject(string stringId) : base(stringId) { }
         public override string ToString() => Name.ToString();
         public PassiveEffect Passive { get; private set; }
+        public ActiveEffect Active{ get; private set; }
+        public void Initialize(CareerObject ownerCareer, string description, string belongsToGroup, ActiveEffect activeEffect)
+        {
+            TextObject text;
+            text = new TextObject(description);
+            Active = activeEffect;
 
-        public void Initialize(CareerObject ownerCareer, string description, string belongsToGroup, bool isRootNode, ChoiceType type, List<MutationObject> mutations = null, PassiveEffect passiveEffect = null)
+            base.Initialize(new TextObject(StringId), text);
+            OwnerCareer = ownerCareer;
+            if (!string.IsNullOrEmpty(belongsToGroup))
+            {
+                BelongsToGroup = MBObjectManager.Instance.GetObject<CareerChoiceGroupObject>(x => x.StringId == belongsToGroup);
+            }
+            else BelongsToGroup = null;
+            if (BelongsToGroup != null) BelongsToGroup.Choices.Add(this);
+            AfterInitialized();
+
+        }
+        public void Initialize(CareerObject ownerCareer, string description, string belongsToGroup, bool isRootNode, PassiveEffect passiveEffect = null)
         {
             TextObject text;
             text = new TextObject(description);
@@ -71,7 +89,6 @@ namespace RealmsForgotten.Career
             }
             else BelongsToGroup = null;
             if (BelongsToGroup != null) BelongsToGroup.Choices.Add(this);
-            if (mutations != null) _mutations.AddRange(mutations);
             if (isRootNode) OwnerCareer.RootNode = this;
             AfterInitialized();
         }
@@ -141,7 +158,26 @@ namespace RealmsForgotten.Career
             public Func<CareerChoiceObject, object, Agent, object> PropertyValue { get; set; } = null;
             public OperationType MutationType { get; set; } = OperationType.None;
         }
+        public class ActiveEffect
+        {
+            private readonly Action onExecute;
+            public ActiveEffect(Action _onExecute)
+            {
+                onExecute = _onExecute;
+            }
 
+            public void TryExecute()
+            {
+                try
+                {
+                    onExecute.Invoke();
+                }
+                catch (Exception ex)
+                {
+                    InformationManager.DisplayMessage(new($"ERROR giving player active effect, message: {ex.Message}"));
+                }
+            }
+        }
         public class PassiveEffect
         {
             public float EffectMagnitude = 0f;
@@ -192,14 +228,6 @@ namespace RealmsForgotten.Career
             return !_mutations.IsEmpty();
         }
     }
-
-
-    public enum ChoiceType
-    {
-        Keystone,
-        Passive
-    }
-
     public enum OperationType
     {
         Add,
@@ -219,7 +247,17 @@ namespace RealmsForgotten.Career
         Resistance,         //player resistance requires damage tuple
         TroopDamage,
         TroopResistance,
-        DailyInfluence,
+        MercContractIncome,
+        WorkshopIncome,
+        TownIncome,
+        VillageIncome,
+        CaravanIncome,
+        TroopRegeneration,
+        HealthRegeneration,
+        SpottingRange,
+        TroopWages,
+        GetItem,
+        PartyMovementSpeed,
 
         //have to be enabled
         Special,            //For everything that requires special implementation
@@ -227,7 +265,6 @@ namespace RealmsForgotten.Career
         CustomResourceUpkeepModifier, //scales custom resource upkeep
         CustomResourceUpgradeCostModifier, //scales custom upgrade costs
         CustomResourceGain, //daily gain for custom resource , flat number
-        HealthRegeneration, //player life regeneration, as flat number
         AccuracyPenalty,           //spray of ranged weapons
         RangedMovementPenalty, // inaccuracy for ranged weapons penality due to movement
         ArmorPenetration,   //player ignores armor with attack mask - this cant be Spells, will be ignored
@@ -242,12 +279,9 @@ namespace RealmsForgotten.Career
         SpellEffectiveness, //Damage spell effectiveness - for direct effects
         WindsCooldownReduction, //player cooldown reduction as Percentage
         PrayerCoolDownReduction, //player cooldown reduction as Percentage
-        PartyMovementSpeed, //general party speed
         PartySize,
         CompanionLimit,
-        TroopRegeneration,  //troop regeneration, flat number
         TroopMorale,        //Morale
-        TroopWages,         //Negative number decrease
         TroopUpgradeCost,
         SwingSpeed,
         EquipmentWeightReduction

@@ -12,7 +12,7 @@ namespace RealmsForgotten.Career.VievModels
             AvailableToTake,
             UnavailableToTake
         }
-        private CareerChoiceObject _choice;
+        public CareerChoiceObject choice;
         private CareerChoiceDoubleGroupObjectVM _group;
         private string _description;
         private string _name;
@@ -28,9 +28,9 @@ namespace RealmsForgotten.Career.VievModels
         public CareerChoiceObjectVM(CareerChoiceObject choice, CareerChoiceDoubleGroupObjectVM group, ChoiceState curState)
         {
             _group = group;
-            _choice = choice;
-            _name = _choice.Name.ToString();
-            _description = _choice.Description.ToString();
+            this.choice = choice;
+            _name = this.choice.Name.ToString();
+            _description = this.choice.Description.ToString();
             SetState(curState);
             //RefreshValues();
         }
@@ -62,13 +62,13 @@ namespace RealmsForgotten.Career.VievModels
 
         public void SelectChoice()
         {
-            if (PlayerCareerExtension.TryAddCareerChoice(_choice))
-                _group.OnPerkTaken(_choice);
+            if (PlayerCareerExtension.TryAddCareerChoice(choice))
+                _group.OnPerkTaken(choice);
         }
 
         public void DeSelectChoice()
         {
-            if (PlayerCareerExtension.TryRemoveCareerChoice(_choice)) RefreshValues();
+            if (PlayerCareerExtension.TryRemoveCareerChoice(choice)) RefreshValues();
         }
 
         public void ExecuteBeginHint()

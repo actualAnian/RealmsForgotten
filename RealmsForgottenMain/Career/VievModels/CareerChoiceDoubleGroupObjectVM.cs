@@ -132,9 +132,15 @@ namespace RealmsForgotten.Career.VievModels
             for (int i = 0; i < _choiceGroup0.Choices.Count; i++)
             {
                 if (PlayerCareerExtension.HasCareerChoice(_choiceGroup0.Choices[i]))
+                {
+                    _choices0[i].IsTaken = true;
                     topScreenChoices.Add(_choices0[i]);
+                }
                 else if (PlayerCareerExtension.HasCareerChoice(_choiceGroup1.Choices[i]))
+                {
+                    _choices1[i].IsTaken = true;
                     topScreenChoices.Add(_choices1[i]);
+                }
                 else topScreenChoices.Add(new());
             }
             return topScreenChoices;

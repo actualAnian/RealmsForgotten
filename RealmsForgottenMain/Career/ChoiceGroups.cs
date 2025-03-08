@@ -10,10 +10,10 @@ namespace RealmsForgotten.Career
         //Mercenary
         private CareerChoiceGroupObject _wandering_blade_1;
         private CareerChoiceGroupObject _wandering_blade_2;
-        private CareerChoiceGroupObject _merc_eq_1;
-        private CareerChoiceGroupObject _duel_champoin;
-        private CareerChoiceGroupObject _mercenaryLord;
-        private CareerChoiceGroupObject _merc_eq_2;
+        private CareerChoiceGroupObject _warlord_of_coin_1;
+        private CareerChoiceGroupObject _warlord_of_coin_2;
+        private CareerChoiceGroupObject _mercenary_lord_1;
+        private CareerChoiceGroupObject _mercenary_lord_2;
 
         //Grail Knight
         private CareerChoiceGroupObject _errantryWar;
@@ -36,10 +36,10 @@ namespace RealmsForgotten.Career
             //Mercenary
             _wandering_blade_1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("WanderingBlade1"));
             _wandering_blade_2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("WanderingBlade2"));
-            _merc_eq_1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("WarlordOfCoin1"));
-            _duel_champoin = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("WarlordOfCoin2"));
-            _mercenaryLord = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("MercenaryLord"));
-            _merc_eq_2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("MercenaryEquipmentII"));
+            _warlord_of_coin_1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("WarlordOfCoin1"));
+            _warlord_of_coin_2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("WarlordOfCoin2"));
+            _mercenary_lord_1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("MercenaryLord1"));
+            _mercenary_lord_2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("MercenaryLord2"));
 
             //Grail Knight
             _errantryWar = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("ErrantryWar"));
@@ -66,31 +66,26 @@ namespace RealmsForgotten.Career
                 text = string.Empty;
                 return true;
             });
-            _merc_eq_1.Initialize("Warlord of Coin", RFCareers.Mercenary, 2, (Hero hero, out string text) =>
+            _warlord_of_coin_1.Initialize("Warlord of Coin", RFCareers.Mercenary, 2, (Hero hero, out string text) =>
             {
                 text = string.Empty;
                 return true;
             });
-            _duel_champoin.Initialize("Warlord of Coin", RFCareers.Mercenary, 2, (Hero hero, out string text) =>
+            _warlord_of_coin_2.Initialize("Warlord of Coin", RFCareers.Mercenary, 2, (Hero hero, out string text) =>
             {
                 text = "Required clan renown: 2";
                 return hero.Clan.Tier >= 2;
             });
-            _merc_eq_2.Initialize("Commander", RFCareers.Mercenary, 3, (Hero hero, out string text) =>
+            _mercenary_lord_2.Initialize("Mercenary Lord", RFCareers.Mercenary, 3, (Hero hero, out string text) =>
             {
                 text = "Required clan renown: 2";
                 return hero.Clan.Tier >= 2;
             });
-            _mercenaryLord.Initialize("Mercenary's equipment II", RFCareers.Mercenary, 3, (Hero hero, out string text) =>
+            _mercenary_lord_1.Initialize("Mercenary Lord", RFCareers.Mercenary, 3, (Hero hero, out string text) =>
             {
                 text = "Required clan renown: 2";
                 return hero.Clan.Tier >= 2;
             });
-            //_commander.Initialize("{=commander_choice_group_str}The Commander", RFCareers.Mercenary, 3, (Hero hero, out string text) =>
-            //{
-            //    text = "Required clan renown: 4";
-            //    return hero.Clan.Tier >= 4;
-            //});
 
             //Grail Knight
 

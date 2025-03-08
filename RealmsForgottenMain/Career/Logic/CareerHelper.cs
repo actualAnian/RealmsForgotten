@@ -10,7 +10,6 @@ namespace RealmsForgotten.Career.Logic
     {
         public static void ApplyBasicCareerPassives(ref ExplainedNumber number, PassiveEffectType passiveEffectType, bool asFactor = true)
         {
-            CharacterObject characterObject = Hero.MainHero.CharacterObject;
             var info = PlayerCareerExtension.PlayerCareerInfo;
             if (info == null) return;
             List<string> choices = info.CareerChoices;
@@ -22,7 +21,7 @@ namespace RealmsForgotten.Career.Logic
 
                 var passive = choice.Passive;
 
-                if (!passive.IsValidCharacterObject(characterObject)) continue;
+                if (!passive.IsValidCharacterObject(Hero.MainHero.CharacterObject)) continue;
 
                 if (passive.WithFactorFlatSwitch)
                 {
@@ -70,6 +69,41 @@ namespace RealmsForgotten.Career.Logic
                 }
             }
         }
+        public static void ApplyBasicCareerPassives(ref int number, PassiveEffectType passiveEffectType, bool asFactor = true)
+        {
+            CharacterObject characterObject = Hero.MainHero.CharacterObject;
+            var info = PlayerCareerExtension.PlayerCareerInfo;
+            if (info == null) return;
+            List<string> choices = info.CareerChoices;
+            foreach (var choiceID in choices)
+            {
+                var choice = RFCareerChoices.GetChoice(choiceID);
+
+                if (choice?.Passive == null || choice.Passive.PassiveEffectType != passiveEffectType) continue;
+
+                var passive = choice.Passive;
+
+                if (!passive.IsValidCharacterObject(characterObject)) continue;
+
+                if (passive.WithFactorFlatSwitch)
+                {
+                    asFactor = !asFactor;
+                }
+                var value = passive.EffectMagnitude;
+                var text = choice.BelongsToGroup.Name;
+                if (passive.InterpretAsPercentage)
+                {
+                    value /= 100;
+                }
+                if (asFactor)
+                {
+                    number = (int)(number * value);
+                    continue;
+                }
+                number = (int)(number + value);
+            }
+        }
+
         public static float[] AddCareerPassivesForDamageValues(Agent attacker, Agent victim, PropertyMask mask)
         {
             var damageValues = new float[(int)DamageType.All + 1];

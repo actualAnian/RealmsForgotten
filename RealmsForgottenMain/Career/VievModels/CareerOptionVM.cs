@@ -1,13 +1,7 @@
-﻿using RealmsForgotten.AiMade.Career;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text.RegularExpressions;
-using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
-using TaleWorlds.Localization;
-using TaleWorlds.TwoDimension;
 
 namespace RealmsForgotten.Career.VievModels
 {
@@ -26,12 +20,7 @@ namespace RealmsForgotten.Career.VievModels
         private string _choiceGroup1Name;
         private string _choiceGroup2Name;
         private string _choiceGroup3Name;
-        private string _choiceGroup2Unlock;
-        private string _choiceGroup3Unlock;
         private string _freeCareerPoints;
-        private bool _tier1Active;
-        private bool _tier2Active;
-        private bool _tier3Active;
         private CareerChoiceDoubleGroupObjectVM _highlightedGroup;
         private TopScreenVM _topscreen;
         private List<CareerChoiceObjectVM> selectedChoices = new();
@@ -71,9 +60,6 @@ namespace RealmsForgotten.Career.VievModels
             _choiceGroup1Name = GameTexts.FindText("class_choicegroup1_name_" + _career.StringId).ToString();
             _choiceGroup2Name = GameTexts.FindText("class_choicegroup2_name_" + _career.StringId).ToString();
             _choiceGroup3Name = GameTexts.FindText("career_choicegroup3_name_" + _career.StringId).ToString();
-            _tier1Active = !_career.ChoiceGroups.Where(x => x.Tier == 1).All(x => x.IsActiveForHero(Hero.MainHero));
-            _tier2Active = !_career.ChoiceGroups.Where(x => x.Tier == 2).All(x => x.IsActiveForHero(Hero.MainHero));
-            _tier3Active = !_career.ChoiceGroups.Where(x => x.Tier == 3).All(x => x.IsActiveForHero(Hero.MainHero));
             _topscreen.Choices = _choiceDoubleGroup1.GetChoices();
             _topscreen.GroupName = _choiceDoubleGroup1.GroupName;
             SetAvailability();
@@ -107,19 +93,18 @@ namespace RealmsForgotten.Career.VievModels
             _choiceDoubleGroup2.RefreshValues();
             _choiceDoubleGroup3.RefreshValues();
         }
-        //private CareerChoiceDoubleGroupObjectVM? GetGroupsTier()
-        //{
-        //    return _highlightedGroup.ChoiceGroup.Tier switch
-        //    {
-        //        1 => _choiceGroups1,
-        //        2 => _choiceGroups2,
-        //        3 => _choiceGroups3,
-        //        _ => null,
-        //    };
-        //}
+        internal void GiveActivePerkBonuses()
+        {
+            foreach (CareerChoiceObjectVM choice in selectedChoices)
+            {
+                CareerChoiceObject.ActiveEffect active = choice.choice.Active;
+                if (active == null) continue;
+                active.TryExecute();
+            }
+        }
         public override void RefreshValues()
         {
-            HeroExtendedInfo info = PlayerCareerExtension.PlayerCareerInfo;
+            PlayerClassInfo info = PlayerCareerExtension.PlayerCareerInfo;
             if (info != null)
             {
                 int usedPoints = info.CareerChoices.Count - 1; //Account for root choice, does not need to be taken into consideration.
@@ -130,7 +115,7 @@ namespace RealmsForgotten.Career.VievModels
             }
             SetAvailability();
         }
-
+        
         [DataSourceProperty]
         public string Name
         {
@@ -331,38 +316,6 @@ namespace RealmsForgotten.Career.VievModels
             }
         }
         [DataSourceProperty]
-        public string ChoiceGroup2Unlock
-        {
-            get
-            {
-                return _choiceGroup2Unlock;
-            }
-            set
-            {
-                if (value != _choiceGroup2Unlock)
-                {
-                    _choiceGroup2Unlock = value;
-                    OnPropertyChangedWithValue(value, "ChoiceGroup2Unlock");
-                }
-            }
-        }
-        [DataSourceProperty]
-        public string ChoiceGroup3Unlock
-        {
-            get
-            {
-                return _choiceGroup3Unlock;
-            }
-            set
-            {
-                if (value != _choiceGroup3Unlock)
-                {
-                    _choiceGroup3Unlock = value;
-                    OnPropertyChangedWithValue(value, "ChoiceGroup3Unlock");
-                }
-            }
-        }
-        [DataSourceProperty]
         public string FreeCareerPoints
         {
             get
@@ -375,57 +328,6 @@ namespace RealmsForgotten.Career.VievModels
                 {
                     _freeCareerPoints = value;
                     OnPropertyChangedWithValue(value, "FreeCareerPoints");
-                }
-            }
-        }
-
-        [DataSourceProperty]
-        public bool Tier1Active
-        {
-            get
-            {
-                return _tier1Active;
-            }
-            set
-            {
-                if (value != _tier1Active)
-                {
-                    _tier1Active = value;
-                    OnPropertyChangedWithValue(value, "Tier1Active");
-                }
-            }
-        }
-
-        [DataSourceProperty]
-        public bool Tier2Active
-        {
-            get
-            {
-                return _tier2Active;
-            }
-            set
-            {
-                if (value != _tier2Active)
-                {
-                    _tier2Active = value;
-                    OnPropertyChangedWithValue(value, "Tier2Active");
-                }
-            }
-        }
-
-        [DataSourceProperty]
-        public bool Tier3Active
-        {
-            get
-            {
-                return _tier3Active;
-            }
-            set
-            {
-                if (value != _tier3Active)
-                {
-                    _tier3Active = value;
-                    OnPropertyChangedWithValue(value, "Tier3Active");
                 }
             }
         }
