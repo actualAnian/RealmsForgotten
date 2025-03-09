@@ -12,7 +12,7 @@ namespace RealmsForgotten.Career.CareerTypes
 {
     public class MercenaryCareerChoices : RFCareerChoicesBase
     {
-        public MercenaryCareerChoices(CareerObject id) : base(id) { }
+        public MercenaryCareerChoices(CareerObject id) : base(id) {  }
 
         private CareerChoiceObject _wandering_blade_1_passive1;
         private CareerChoiceObject _wandering_blade_1_passive2;

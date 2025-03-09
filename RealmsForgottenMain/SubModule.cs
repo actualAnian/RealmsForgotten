@@ -34,6 +34,7 @@ using RealmsForgotten.Career;
 using SandBox.GameComponents;
 using SandBox.Missions.MissionLogics;
 using RealmsForgotten.Career.Logic;
+using RealmsForgotten.Career.Ability;
 
 namespace RealmsForgotten
 {
@@ -158,6 +159,9 @@ namespace RealmsForgotten
         {
             if (mission != null)
             {
+                mission.AddMissionBehavior(new AbilityManagerMissionLogic());
+                mission.AddMissionBehavior(new AbilityHUDMissionView());
+
                 if ((mission.Mode == MissionMode.Battle || mission.Mode == MissionMode.StartUp) && mission.CombatType != Mission.MissionCombatType.ArenaCombat)
                 {
                     mission.AddMissionBehavior(new RFEnchantedWeaponsMissionBehavior());

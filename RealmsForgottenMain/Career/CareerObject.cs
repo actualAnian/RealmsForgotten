@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using RealmsForgotten.AiMade.Career;
+using RealmsForgotten.Career.Ability;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
@@ -14,6 +15,7 @@ namespace RealmsForgotten.Career
         private Predicate<Hero> _condition;
         // @TODO remove
         public int MaxCharge { get; private set; } = 0;
+        public ClassAbility Ability { get; private set; }
         public string AbilityTemplateID { get; private set; } = string.Empty;
         public Type AbilityScriptType { get; private set; } = null;
         // @TODO remove
@@ -30,7 +32,7 @@ namespace RealmsForgotten.Career
             }
         }
 
-        public CareerObject(string stringId) : base(stringId) { }
+        public CareerObject(string stringId) : base(stringId) { Ability = new(); }
 
         public override string ToString() => Name.ToString();
 
