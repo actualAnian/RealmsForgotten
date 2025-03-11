@@ -32,14 +32,14 @@ namespace RealmsForgotten.Career
             }
         }
 
-        public CareerObject(string stringId) : base(stringId) { Ability = new(); }
+        public CareerObject(string stringId, ClassAbility ability) : base(stringId) { Ability = ability; }
 
         public override string ToString() => Name.ToString();
 
         public void Initialize(string name, Predicate<Hero> condition)
         {
             var description = GameTexts.FindText("class_description", StringId);
-            base.Initialize(new TextObject(name), description);
+            Initialize(new TextObject(name), description);
             _condition = condition;
             AfterInitialized();
         }

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.Library;
 using RealmsForgotten.Career;
+using RealmsForgotten.Career.Ability;
 
 namespace RealmsForgotten.Patches
 {
@@ -63,12 +64,17 @@ namespace RealmsForgotten.Patches
                             resistancePercentages[index] += careerBonuses[index];
                         }
                     }
+                    ClassAbility ability = PlayerCareerExtension.GetCareer().Ability;
+                    if (ability.IsActive)
+                    {
+                        ability.onTroopHit?.Invoke(attacker, victim, ref additionalDamagePercentages, ref resistancePercentages);
+                    }
                 }
             }
             float summedBonus = 0;
             summedBonus += additionalDamagePercentages[(int)damageType];
             summedBonus -= resistancePercentages[(int)damageType];
-            summedBonus += Globals.RaceResistances.FirstOrDefault(entry => entry.Check(victim.Character)).Resistances[(int)damageType];
+            summedBonus -= Globals.RaceResistances.FirstOrDefault(entry => entry.Check(victim.Character)).Resistances[(int)damageType];
             int resultDamage = (int)(baseDamage + baseDamage * summedBonus);
 
             b.InflictedDamage = resultDamage;

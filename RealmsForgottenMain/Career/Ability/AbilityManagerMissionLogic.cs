@@ -28,7 +28,7 @@ namespace RealmsForgotten.Career.Ability
             TextObject failureReason = new();
             if (!ability.IsDisabled(Agent.Main, out failureReason) && !ability.IsOnCooldown())
             {
-                ability.TryCast(Agent.Main, out failureReason);
+                ability.TryActivate(Agent.Main, out failureReason);
             }
             else
             {

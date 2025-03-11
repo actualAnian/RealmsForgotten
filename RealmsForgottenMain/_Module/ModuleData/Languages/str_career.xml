@@ -16,6 +16,10 @@
 		<string id="rf_raid_plunder" text="You plundered additional {NUMBER_OF} {PRODUCTS}." />
 		<string id="rf_caravan_plunder" text="You plundered additional {NUMBER_OF} {PRODUCTS}." />
 		
+		<!-- abilities -->
+		<string id="rf_mercenary_ability_name" text="Battle Cry" />
+
+		
 
 	</strings>
 </base>

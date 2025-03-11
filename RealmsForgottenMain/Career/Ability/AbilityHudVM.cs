@@ -9,16 +9,13 @@ namespace RealmsForgotten.Career.Ability
 {
     internal class AbilityHudVM : ViewModel
     {
-        private ClassAbility _ability = null;
+        private ClassAbility _ability;
         private string _name = "";
         private string _spriteName = "";
         private string _coolDownLeft = "";
-        private string _WindsOfMagicLeft = "-";
         private bool _isVisible;
         private bool _onCoolDown;
         private bool _isSpell;
-        private float _windsOfMagicValue;
-        private string _windsCost = "";
         private AbilityManagerMissionLogic _abilityLogic;
         private bool _isDisabled;
         private string _disabledText;
@@ -33,8 +30,8 @@ namespace RealmsForgotten.Career.Ability
             IsVisible = _ability != null && _abilityLogic != null && (Mission.Current.Mode == MissionMode.Battle || Mission.Current.Mode == MissionMode.Stealth);
             if (IsVisible)
             {
-                SpriteName = "mercenary_ability_200x200";//_ability.Template.SpriteName;
-                Name = "TODO name"; //new TextObject(_ability.Template.Name).ToString();
+                SpriteName = _ability.Sprite;
+                Name = _ability.Name.ToString();
                 CoolDownLeft = _ability.GetCoolDownLeft().ToString();
                 IsOnCoolDown = _ability.IsOnCooldown();
                 TextObject disabledReason;

@@ -1,7 +1,13 @@
-﻿using TaleWorlds.CampaignSystem;
+﻿using RealmsForgotten.Career.Ability;
+using RealmsForgotten.ObjectExtensions;
+using System.Collections.Generic;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
+using TaleWorlds.Localization;
+using static RealmsForgotten.Career.CareerChoiceObject;
 
 namespace RealmsForgotten.Career
 {
@@ -35,8 +41,14 @@ namespace RealmsForgotten.Career
         public static MBReadOnlyList<CareerObject> All => Instance._allCareers;
         private void RegisterAll()
         {
-            _grailKnight = Game.Current.ObjectManager.RegisterPresumedObject(new CareerObject("GrailKnight"));
-            _mercenary = Game.Current.ObjectManager.RegisterPresumedObject(new CareerObject("Mercenary"));
+            _grailKnight = Game.Current.ObjectManager.RegisterPresumedObject(new CareerObject("GrailKnight", new ClassAbility(new TextObject("{=rf_knight_ability_name}Ability"), "mercenary_ability_200x200", "mercenary_ability_200x200", 5, 5)));
+            _mercenary = Game.Current.ObjectManager.RegisterPresumedObject(new CareerObject("Mercenary", new ClassAbility(new TextObject("{=rf_mercenary_ability_name}Battle Cry"), "mercenary_ability_200x200", "mercenary_ability_200x200", 15, 15,
+                () => {
+                    foreach (Agent? item in Mission.Current.PlayerTeam.ActiveAgents)
+                    {
+                        item.ChangeMorale(20);
+                    }
+                }, (Agent attacker, Agent victim, ref float[] additionalDamagePercentages, ref float[] resistancePercentages) => { if (victim.BelongsToMainParty()) resistancePercentages[1] += 0.5f; }))); // +50% melee damage resistance
 
             _allCareers = new()
             {
