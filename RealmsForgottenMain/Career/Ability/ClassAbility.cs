@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Timers;
+using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.TwoDimension;
@@ -25,7 +26,8 @@ namespace RealmsForgotten.Career.Ability
         // data
         private string sprite;
         private string spriteUpgraded;
-        private bool isUpgraded;
+        public bool IsUpgraded { get; set; } = false;
+        public bool IsEnabled { get; set; } = false;
         public bool IsActive 
         {
             get
@@ -33,15 +35,29 @@ namespace RealmsForgotten.Career.Ability
                 return _durationEndTime > Mission.Current.CurrentTime;
             }
         }
+        public string CurrentSprite
+        {
+            get
+            {
+                return IsUpgraded? spriteUpgraded : sprite;
+            }
+        }
         public string Sprite
         {
             get
             {
-                return isUpgraded? spriteUpgraded : sprite;
+                return sprite;
+            }
+        }
+        public string SpriteUpgraded
+        {
+            get
+            {
+                return spriteUpgraded;
             }
         }
         public TextObject Name { get; private set; }
-        Action? activateEffect;
+        List<Action> activateEffect = new();
         public delegate void OnTroopHitDelegate(Agent attacker, Agent victim, ref float[] additionalDamagePercentages, ref float[] resistancePercentages);
         public OnTroopHitDelegate? onTroopHit;
         public int GetCoolDownLeft() => _coolDownLeft;
@@ -50,12 +66,13 @@ namespace RealmsForgotten.Career.Ability
             Name = _name;
             sprite = _sprite;
             spriteUpgraded = _spriteUpgraded;
-            isUpgraded = false;
+            IsUpgraded = false;
             _timer = new Timer(1000);
             _timer.Elapsed += TimerElapsed;
             _timer.Enabled = false;
             onTroopHit = _onTroopHit;
-            activateEffect = _activateEffect;
+            if (_activateEffect != null)
+                activateEffect.Add(_activateEffect);
             duration = _duration;
             cooldown = _coolDown;
         }
@@ -128,8 +145,7 @@ namespace RealmsForgotten.Career.Ability
         }
         protected virtual void Activate(Agent casterAgent)
         {
-            //OnCastStart?.Invoke(this);
-            activateEffect?.Invoke();
+            activateEffect.ForEach(a => a.Invoke());
             SetCoolDown();
         }
     }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using TaleWorlds.CampaignSystem;
 using TaleWorlds.Library;
 
 namespace RealmsForgotten.Career.VievModels
@@ -17,18 +15,6 @@ namespace RealmsForgotten.Career.VievModels
         private CareerObjectVM _careerObject;
         private TopScreenVM _topScreenVM;
         private bool _isActive = false;
-        public bool IsActive
-        {
-            get 
-            {
-                return _isActive;
-            }
-            set
-            {
-                _isActive = value;
-                RefreshValues();
-            } 
-        }
 
         public CareerChoiceDoubleGroupObjectVM(List<CareerChoiceGroupObject> choiceGroup, CareerObjectVM careerObject, TopScreenVM topScreenVM)
         {
@@ -46,32 +32,32 @@ namespace RealmsForgotten.Career.VievModels
             );
             for (int i = 0; i < _choiceGroup0.Choices.Count; i++)
             {
-                (CareerChoiceObjectVM.ChoiceState, CareerChoiceObjectVM.ChoiceState) choiceStates = GetChoiceState(LastTaken, i);
+                (ThreeStateObjectVM.State, ThreeStateObjectVM.State) choiceStates = GetChoiceState(LastTaken, i);
                 _choices0.Add(new CareerChoiceObjectVM(_choiceGroup0.Choices[i], this, choiceStates.Item1));
                 _choices1.Add(new CareerChoiceObjectVM(_choiceGroup1.Choices[i], this, choiceStates.Item2));
             }
             _topScreenVM.Choices = GetChoices();
         }
-        private (CareerChoiceObjectVM.ChoiceState, CareerChoiceObjectVM.ChoiceState) GetChoiceState(int lastTaken, int index)
+        private (ThreeStateObjectVM.State, ThreeStateObjectVM.State) GetChoiceState(int lastTaken, int index)
         {
-            CareerChoiceObjectVM.ChoiceState state0;
-            CareerChoiceObjectVM.ChoiceState state1;
+            ThreeStateObjectVM.State state0;
+            ThreeStateObjectVM.State state1;
             if (!IsActive)
             {
-                state0 = state1 = CareerChoiceObjectVM.ChoiceState.UnavailableToTake;
+                state0 = state1 = ThreeStateObjectVM.State.UnavailableToTake;
             }
             else if (index <= lastTaken)
             {
-                state0 = PlayerCareerExtension.HasCareerChoice(_choiceGroup0.Choices[index]) ? CareerChoiceObjectVM.ChoiceState.Taken : CareerChoiceObjectVM.ChoiceState.UnavailableToTake;
-                state1 = PlayerCareerExtension.HasCareerChoice(_choiceGroup1.Choices[index]) ? CareerChoiceObjectVM.ChoiceState.Taken : CareerChoiceObjectVM.ChoiceState.UnavailableToTake;
+                state0 = PlayerCareerExtension.HasCareerChoice(_choiceGroup0.Choices[index]) ? ThreeStateObjectVM.State.Taken : ThreeStateObjectVM.State.UnavailableToTake;
+                state1 = PlayerCareerExtension.HasCareerChoice(_choiceGroup1.Choices[index]) ? ThreeStateObjectVM.State.Taken : ThreeStateObjectVM.State.UnavailableToTake;
             }
             else if (index == lastTaken + 1)
             {
-                state0 = state1 = CareerChoiceObjectVM.ChoiceState.AvailableToTake;
+                state0 = state1 = ThreeStateObjectVM.State.AvailableToTake;
             }
             else
             {
-                state0 = state1 = CareerChoiceObjectVM.ChoiceState.UnavailableToTake;
+                state0 = state1 = ThreeStateObjectVM.State.UnavailableToTake;
             }
             return (state0, state1);
         }
@@ -83,7 +69,7 @@ namespace RealmsForgotten.Career.VievModels
             );
             for (int i = 0; i < _choiceGroup0.Choices.Count; i++)
             {
-                (CareerChoiceObjectVM.ChoiceState, CareerChoiceObjectVM.ChoiceState) choiceStates = GetChoiceState(LastTaken, i);
+                (ThreeStateObjectVM.State, ThreeStateObjectVM.State) choiceStates = GetChoiceState(LastTaken, i);
                 _choices0[i].SetState(choiceStates.Item1);
                 _choices1[i].SetState(choiceStates.Item2);
             }
@@ -104,18 +90,18 @@ namespace RealmsForgotten.Career.VievModels
             }
             if (group == 0)
             {
-                _choices0[index].SetState(CareerChoiceObjectVM.ChoiceState.Taken);
-                _choices1[index].SetState(CareerChoiceObjectVM.ChoiceState.UnavailableToTake);
+                _choices0[index].SetState(ThreeStateObjectVM.State.Taken);
+                _choices1[index].SetState(ThreeStateObjectVM.State.UnavailableToTake);
                 _careerObject.HandleAddPerk(_choices0[index]);
             }
             else
             {
-                _choices1[index].SetState(CareerChoiceObjectVM.ChoiceState.Taken);
-                _choices0[index].SetState(CareerChoiceObjectVM.ChoiceState.UnavailableToTake);
+                _choices1[index].SetState(ThreeStateObjectVM.State.Taken);
+                _choices0[index].SetState(ThreeStateObjectVM.State.UnavailableToTake);
                 _careerObject.HandleAddPerk(_choices1[index]);
             }
-            if (_choices0.Count >= index + 2) _choices0[index + 1].SetState(canTake? CareerChoiceObjectVM.ChoiceState.AvailableToTake : CareerChoiceObjectVM.ChoiceState.UnavailableToTake);
-            if (_choices1.Count >= index + 2) _choices1[index + 1].SetState(canTake ? CareerChoiceObjectVM.ChoiceState.AvailableToTake : CareerChoiceObjectVM.ChoiceState.UnavailableToTake);
+            if (_choices0.Count >= index + 2) _choices0[index + 1].SetState(canTake? ThreeStateObjectVM.State.AvailableToTake : ThreeStateObjectVM.State.UnavailableToTake);
+            if (_choices1.Count >= index + 2) _choices1[index + 1].SetState(canTake ? ThreeStateObjectVM.State.AvailableToTake : ThreeStateObjectVM.State.UnavailableToTake);
             _topScreenVM.Choices = GetChoices();
         }
 
@@ -147,6 +133,20 @@ namespace RealmsForgotten.Career.VievModels
             }
             return topScreenChoices;
         }
+        [DataSourceProperty]
+        public bool IsActive
+        {
+            get
+            {
+                return _isActive;
+            }
+            set
+            {
+                _isActive = value;
+                RefreshValues();
+            }
+        }
+
         [DataSourceProperty]
         public string GroupName
         {

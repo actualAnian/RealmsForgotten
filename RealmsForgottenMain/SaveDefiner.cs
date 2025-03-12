@@ -22,6 +22,7 @@ internal class SaveDefiner : SaveableTypeDefiner
         AddClassDefinition(typeof(AbstractPointsSystem), 5);
         AddClassDefinition(typeof(LevelUpPointsSystem), 6);
         AddClassDefinition(typeof(CareerPointsSaveableData), 7);
+        AddClassDefinition(typeof(RenownPointsSystem), 8);
         
     }
     protected override void DefineContainerDefinitions()

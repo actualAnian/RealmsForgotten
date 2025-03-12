@@ -13,7 +13,7 @@ using RealmsForgotten.Career.CareerPointsSystem;
 
 namespace RealmsForgotten.Career
 {
-    public class RFCareerPerkCampaignBehavior : CampaignBehaviorBase
+    public class RFCareerCampaignBehavior : CampaignBehaviorBase
     {
         [SaveableField(0)] static PlayerClassInfo playerClassInfo;
         ItemRoster raidLootedItems = new();
@@ -27,13 +27,29 @@ namespace RealmsForgotten.Career
             CampaignEvents.ItemsLooted.AddNonSerializedListener(this, OnItemLooted);
             CampaignEvents.DistributeLootToPartyEvent.AddNonSerializedListener(this, new Action<MapEvent, PartyBase, Dictionary<PartyBase, ItemRoster>>(this.OnLootCaravanParties));
             CampaignEvents.HeroLevelledUp.AddNonSerializedListener(this, new Action<Hero, bool>(OnLevelUp));
+            CampaignEvents.OnClanInfluenceChangedEvent.AddNonSerializedListener(this, new Action<Clan, float>(OnClanInfluenceChanged));
+            CampaignEvents.RenownGained.AddNonSerializedListener(this, new Action<Hero, int, bool>(OnRenownGained));
         }
+
+        private void OnRenownGained(Hero hero, int arg2, bool arg3)
+        {
+            PointsSystem?.OnRenownGained(hero, arg2, arg3);
+        }
+
+        private void OnClanInfluenceChanged(Clan clan, float arg2)
+        {
+            pointsSystem?.OnClanInfluenceChanged(clan, arg2);
+        }
+
         public static void CreatePointsSystem(PointsSystemType type)
         {
             switch (type)
             {
                 case PointsSystemType.LevelUp:
                     pointsSystem = new LevelUpPointsSystem();
+                    break;
+                case PointsSystemType.Influence:
+                    pointsSystem = new RenownPointsSystem();
                     break;
             }
         }

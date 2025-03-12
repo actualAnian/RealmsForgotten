@@ -8,6 +8,7 @@ namespace RealmsForgotten.Career
     public enum PointsSystemType
     {
         LevelUp,
+        Influence,
     }
 
     public class CareerObject : PropertyObject
@@ -24,7 +25,12 @@ namespace RealmsForgotten.Career
                 return result;
             }
         }
-        public CareerObject(string stringId, ClassAbility ability) : base(stringId) { Ability = ability; }
+        public CareerObject(string stringId, ClassAbility ability, PointsSystemType pointsType) : base(stringId) 
+        {
+            Ability = ability;
+            pointsSystem = pointsType;
+        }
+
         public override string ToString() => Name.ToString();
         public void Initialize(string name)
         {

@@ -1,19 +1,18 @@
-﻿using TaleWorlds.CampaignSystem;
+﻿using System;
+using TaleWorlds.CampaignSystem;
+using TaleWorlds.Library;
 using TaleWorlds.SaveSystem;
 
 namespace RealmsForgotten.Career.CareerPointsSystem
 {
     public abstract class AbstractPointsSystem
     {
-        [SaveableField(0)]  CareerPointsSaveableData pointsData = new();
-        protected AbstractPointsSystem()
-        {
-        }
-
+        [SaveableField(0)] protected CareerPointsSaveableData pointsData = new();
+        protected AbstractPointsSystem() {}
         public int AvailablePoints { get { return pointsData.availablePoints; } }
         public int SpentPoints { get { return pointsData.spentPoints; } }
-        public void AddPoint() { pointsData.availablePoints++; }
-        public bool SpendPoint() 
+        public void AddPoints(int toAdd = 1) { pointsData.availablePoints += toAdd; }
+        public bool SpendPoint()
         {
             if (pointsData.availablePoints == 0) return false;
             pointsData.spentPoints++; pointsData.availablePoints--;
@@ -24,7 +23,8 @@ namespace RealmsForgotten.Career.CareerPointsSystem
             dataStore.SyncData("pointsData", ref pointsData);
         }
         public virtual void OnLevelUp(Hero hero, bool arg2) { }
-
+        public virtual void OnClanInfluenceChanged(Clan clan, float arg2) { }
+        public virtual void OnRenownGained(Hero hero, int arg2, bool arg3) { }
         public void ReturnPoints(int points)
         {
             pointsData.availablePoints += points;
@@ -34,17 +34,5 @@ namespace RealmsForgotten.Career.CareerPointsSystem
         {
             return pointsData.availablePoints != 0;
         }
-    }
-    public class LevelUpPointsSystem : AbstractPointsSystem
-    {
-        public LevelUpPointsSystem() : base()
-        {
-        }
-        public override void OnLevelUp(Hero hero, bool arg2) { if (hero == Hero.MainHero) AddPoint(); }
-    }
-    public class CareerPointsSaveableData
-    {
-        [SaveableField(0)] public int spentPoints = 0;
-        [SaveableField(1)] public int availablePoints = 0;
     }
 }

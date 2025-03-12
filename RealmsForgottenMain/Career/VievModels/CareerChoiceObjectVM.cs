@@ -1,59 +1,26 @@
-﻿using TaleWorlds.CampaignSystem;
-using TaleWorlds.Core;
+﻿using TaleWorlds.Core;
 using TaleWorlds.Library;
 
 namespace RealmsForgotten.Career.VievModels
 {
-    public class CareerChoiceObjectVM : ViewModel
+    public class CareerChoiceObjectVM : ThreeStateObjectVM
     {
-        public enum ChoiceState
-        {
-            Taken,
-            AvailableToTake,
-            UnavailableToTake
-        }
         public CareerChoiceObject choice;
         private CareerChoiceDoubleGroupObjectVM _group;
         private string _description;
         private string _name;
-        private ChoiceState buttonState;
-        private bool _isTaken = false;
-        private bool _isUnavailableToTake = true;
-        private bool _isAvailableToTake = false;
 
         public CareerChoiceObjectVM()
         {
             _description = string.Empty;
         }
-        public CareerChoiceObjectVM(CareerChoiceObject choice, CareerChoiceDoubleGroupObjectVM group, ChoiceState curState)
+        public CareerChoiceObjectVM(CareerChoiceObject choice, CareerChoiceDoubleGroupObjectVM group, State curState)
         {
             _group = group;
             this.choice = choice;
             _name = this.choice.Name.ToString();
             _description = this.choice.Description.ToString();
             SetState(curState);
-            //RefreshValues();
-        }
-        public void SetState(ChoiceState newState)
-        {
-            switch (newState)
-            {
-                case ChoiceState.Taken:
-                    IsTaken = true;
-                    IsAvailableToTake = false;
-                    IsUnavailableToTake = false;
-                    break;
-                case ChoiceState.AvailableToTake:
-                    IsTaken = false;
-                    IsAvailableToTake = true;
-                    IsUnavailableToTake = false;
-                    break;
-                case ChoiceState.UnavailableToTake:
-                    IsTaken = false;
-                    IsAvailableToTake = false;
-                    IsUnavailableToTake = true;
-                    break;
-            }
         }
         public override void RefreshValues()
         {
@@ -94,55 +61,6 @@ namespace RealmsForgotten.Career.VievModels
                 {
                     _name = value;
                     OnPropertyChangedWithValue(value, "Name");
-                }
-            }
-        }
-
-        [DataSourceProperty]
-        public bool IsTaken
-        {
-            get
-            {
-                return _isTaken;
-            }
-            set
-            {
-                if (value != _isTaken)
-                {
-                    _isTaken = value;
-                    OnPropertyChangedWithValue(value, "IsTaken");
-                }
-            }
-        }
-        [DataSourceProperty]
-        public bool IsAvailableToTake
-        {
-            get
-            {
-                return _isAvailableToTake;
-            }
-            set
-            {
-                if (value != _isAvailableToTake)
-                {
-                    _isAvailableToTake = value;
-                    OnPropertyChangedWithValue(value, "IsAvailableToTake");
-                }
-            }
-        }
-        [DataSourceProperty]
-        public bool IsUnavailableToTake
-        {
-            get
-            {
-                return _isUnavailableToTake;
-            }
-            set
-            {
-                if (value != _isUnavailableToTake)
-                {
-                    _isUnavailableToTake = value;
-                    OnPropertyChangedWithValue(value, "IsUnavailableToTake");
                 }
             }
         }

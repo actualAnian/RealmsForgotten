@@ -79,7 +79,7 @@ namespace RealmsForgotten
                 campaignGameStarter.AddBehavior(new CulturesCampaignBehavior());
                 
                 campaignGameStarter.AddBehavior(RFHorseSpawningCampaignBehavior.Instance);
-                campaignGameStarter.AddBehavior(new RFCareerPerkCampaignBehavior());
+                campaignGameStarter.AddBehavior(new RFCareerCampaignBehavior());
 
                 campaignGameStarter.AddModel(new RFAgentApplyDamageModel(campaignGameStarter.GetExistingModel<AgentApplyDamageModel>()));
                 campaignGameStarter.AddModel(new RFBuildingConstructionModel(campaignGameStarter.GetExistingModel<BuildingConstructionModel>()));

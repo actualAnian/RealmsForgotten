@@ -30,7 +30,7 @@ namespace RealmsForgotten.Career.Ability
             IsVisible = _ability != null && _abilityLogic != null && (Mission.Current.Mode == MissionMode.Battle || Mission.Current.Mode == MissionMode.Stealth);
             if (IsVisible)
             {
-                SpriteName = _ability.Sprite;
+                SpriteName = _ability.CurrentSprite;
                 Name = _ability.Name.ToString();
                 CoolDownLeft = _ability.GetCoolDownLeft().ToString();
                 IsOnCoolDown = _ability.IsOnCooldown();
