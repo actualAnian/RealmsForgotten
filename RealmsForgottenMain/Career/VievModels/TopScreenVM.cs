@@ -11,6 +11,34 @@ namespace RealmsForgotten.Career.VievModels
     {
         private MBBindingList<CareerChoiceObjectVM> _choices = new();
         private string _groupName = "Test";
+        private string _freeCareerPoints;
+
+        public TopScreenVM()
+        {
+            RefreshValues();
+        }
+
+        public override void RefreshValues()
+        {
+            FreeCareerPoints = "Free career points: " + (PlayerCareerExtension.PointsSystem?.AvailablePoints).ToString();
+        }
+        [DataSourceProperty]
+        public string FreeCareerPoints
+        {
+            get
+            {
+                return _freeCareerPoints;
+            }
+            set
+            {
+                if (value != _freeCareerPoints)
+                {
+                    _freeCareerPoints = value;
+                    OnPropertyChangedWithValue(value, "FreeCareerPoints");
+                }
+            }
+        }
+
         [DataSourceProperty]
         public MBBindingList<CareerChoiceObjectVM> Choices
         {

@@ -91,6 +91,8 @@ namespace RealmsForgotten.Career.VievModels
         }
         public void OnPerkTaken(CareerChoiceObject choice)
         {
+            PlayerCareerExtension.PointsSystem.SpendPoint();
+            bool canTake = PlayerCareerExtension.PointsSystem.HasAvailablePoints();
             int index = _choiceGroup0.Choices.IndexOf(choice);
             int group = 0;
             CareerChoiceGroupObject groupToEdit = _choiceGroup0;
@@ -112,8 +114,8 @@ namespace RealmsForgotten.Career.VievModels
                 _choices0[index].SetState(CareerChoiceObjectVM.ChoiceState.UnavailableToTake);
                 _careerObject.HandleAddPerk(_choices1[index]);
             }
-            if (_choices0.Count >= index + 2) _choices0[index + 1].SetState(CareerChoiceObjectVM.ChoiceState.AvailableToTake);
-            if (_choices1.Count >= index + 2) _choices1[index + 1].SetState(CareerChoiceObjectVM.ChoiceState.AvailableToTake);
+            if (_choices0.Count >= index + 2) _choices0[index + 1].SetState(canTake? CareerChoiceObjectVM.ChoiceState.AvailableToTake : CareerChoiceObjectVM.ChoiceState.UnavailableToTake);
+            if (_choices1.Count >= index + 2) _choices1[index + 1].SetState(canTake ? CareerChoiceObjectVM.ChoiceState.AvailableToTake : CareerChoiceObjectVM.ChoiceState.UnavailableToTake);
             _topScreenVM.Choices = GetChoices();
         }
 

@@ -13,6 +13,11 @@ namespace RealmsForgotten.Career
 {
     public class RFCareers
     {
+        public enum PointsSystemType
+        {
+            LevelUp,
+        }
+
         private MBReadOnlyList<CareerObject> _allCareers;
         private CareerObject _grailKnight;
         private CareerObject _mercenary;
@@ -22,17 +27,7 @@ namespace RealmsForgotten.Career
             Instance = this;
             RegisterAll();
             InitializeAll();
-            AssignCareerButtons();
         }
-
-        private void AssignCareerButtons()
-        {
-            foreach (var career in All)
-            {
-                CareerButtons.Instance.GetCareerButton(career);
-            }
-        }
-
         public static RFCareers Instance { get; private set; }
 
         public static CareerObject GrailKnight => Instance._grailKnight;
@@ -58,8 +53,8 @@ namespace RealmsForgotten.Career
         }
         private void InitializeAll()
         {
-            _grailKnight.Initialize("Grail Knight", null);
-            _mercenary.Initialize("Mercenary", null);
+            _grailKnight.Initialize("Grail Knight");
+            _mercenary.Initialize("Mercenary");
         }
     }
 }

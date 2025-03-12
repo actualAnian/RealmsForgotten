@@ -9,19 +9,37 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.SaveSystem;
+using RealmsForgotten.Career.CareerPointsSystem;
 
 namespace RealmsForgotten.Career
 {
-    internal class RFCareerPerkCampaignBehavior : CampaignBehaviorBase
+    public class RFCareerPerkCampaignBehavior : CampaignBehaviorBase
     {
         [SaveableField(0)] static PlayerClassInfo playerClassInfo;
         ItemRoster raidLootedItems = new();
+        public Action<Hero, bool>? onLevelUp;
+        [SaveableField(1)] static AbstractPointsSystem? pointsSystem;
+        public static AbstractPointsSystem? PointsSystem { get { return pointsSystem; } }
         public static PlayerClassInfo ClassInfo { get { return playerClassInfo; } set { playerClassInfo = value; } }
         public override void RegisterEvents()
         {
             CampaignEvents.RaidCompletedEvent.AddNonSerializedListener(this, new Action<BattleSideEnum, RaidEventComponent>(this.OnRaidCompleted));
             CampaignEvents.ItemsLooted.AddNonSerializedListener(this, OnItemLooted);
             CampaignEvents.DistributeLootToPartyEvent.AddNonSerializedListener(this, new Action<MapEvent, PartyBase, Dictionary<PartyBase, ItemRoster>>(this.OnLootCaravanParties));
+            CampaignEvents.HeroLevelledUp.AddNonSerializedListener(this, new Action<Hero, bool>(OnLevelUp));
+        }
+        public static void CreatePointsSystem(PointsSystemType type)
+        {
+            switch (type)
+            {
+                case PointsSystemType.LevelUp:
+                    pointsSystem = new LevelUpPointsSystem();
+                    break;
+            }
+        }
+        private void OnLevelUp(Hero hero, bool arg2)
+        {
+            pointsSystem?.OnLevelUp(hero, arg2);
         }
 
         private void OnLootCaravanParties(MapEvent mapEvent, PartyBase party, Dictionary<PartyBase, ItemRoster> dictionary)
@@ -81,7 +99,9 @@ namespace RealmsForgotten.Career
         }
         public override void SyncData(IDataStore dataStore)
         {
+            //if (dataStore.IsSaving) playerClassInfo.spentPoints =
             dataStore.SyncData("playerClassInfo", ref playerClassInfo);
+            dataStore.SyncData("pointsSystem", ref pointsSystem);
         }
     }
 }

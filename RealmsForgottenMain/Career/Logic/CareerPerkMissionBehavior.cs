@@ -16,12 +16,11 @@ namespace RealmsForgotten.Career.Logic
             List<string> choices = PlayerCareerExtension.GetAllCareerChoices();
             if (affectorAgent.IsMainAgent)
             {
-                if (choices.Contains("DuelChampionKeystone"))
+                foreach (var choiceID in choices)
                 {
-                    int amountToIncrease = 10;
-                    float health = affectorAgent.Health;
-                    if (health + amountToIncrease > affectorAgent.HealthLimit) affectorAgent.Health = affectorAgent.HealthLimit;
-                    else affectorAgent.Health += 10;
+                    CareerChoiceObject choice = RFCareerChoices.GetChoice(choiceID);
+                    if (choice?.Passive == null || choice.Passive.PassiveEffectType != PassiveEffectType.OnKill) continue;
+                    choice.Passive.Activate();
                 }
             }
         }

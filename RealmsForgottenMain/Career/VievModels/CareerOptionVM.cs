@@ -9,7 +9,8 @@ namespace RealmsForgotten.Career.VievModels
     {
         private string _name;
         private string _spriteName;
-        private string _abilitySpriteName;
+        private string _abilitySprite;
+        private string _abilityUpgradedSprite; 
         private string _abilityName;
         private MBBindingList<CareerAbilityEffectVM> _abilityDescription;
         private string _description;
@@ -29,10 +30,10 @@ namespace RealmsForgotten.Career.VievModels
             _career = career;
             _name = career.Name.Value;
             _spriteName = "CareerSystem\\Illustrations\\" + career.StringId;
-            _abilitySpriteName = null;//_career.GetAbilityTemplate()?.SpriteName;      //in case no career ability is found deactivate this screen
-            _abilityName = null;//new TextObject(_career.GetAbilityTemplate()?.Name).ToString();
+            _abilitySprite = _career.Ability.Sprite;
+            _abilityUpgradedSprite = _career.Ability.Sprite; //@TODO
+            _abilityName = _career.Ability.Name.ToString();
             _abilityDescription = null;//new MBBindingList<CareerAbilityEffectVM>();
-            //_career.GetAbilityEffectLines().ForEach(x => _abilityDescription.Add(new CareerAbilityEffectVM(x)));
             _description = _career.Description.ToString();
             _topscreen = new();
             List<List<CareerChoiceGroupObject>> groups = new() { new(), new(), new() };
@@ -78,9 +79,13 @@ namespace RealmsForgotten.Career.VievModels
             selectedChoices.Add(choice);
             if (_choiceDoubleGroup2.IsLastChoice(choice)) _choiceDoubleGroup3.IsActive = true;
             if (_choiceDoubleGroup1.IsLastChoice(choice)) _choiceDoubleGroup2.IsActive = true;
+            _topscreen.RefreshValues();
+
+
         }
         public void RefundPerks()
         {
+            PlayerCareerExtension.PointsSystem.ReturnPoints(selectedChoices.Count);
             for (int i = selectedChoices.Count - 1; i >= 0; i--)
             {
                 if (_choiceDoubleGroup1.IsLastChoice(selectedChoices[i]))
@@ -92,6 +97,7 @@ namespace RealmsForgotten.Career.VievModels
             _choiceDoubleGroup1.RefreshValues();
             _choiceDoubleGroup2.RefreshValues();
             _choiceDoubleGroup3.RefreshValues();
+            _topscreen.RefreshValues();
         }
         internal void GiveActivePerkBonuses()
         {
@@ -104,15 +110,7 @@ namespace RealmsForgotten.Career.VievModels
         }
         public override void RefreshValues()
         {
-            PlayerClassInfo info = PlayerCareerExtension.PlayerCareerInfo;
-            if (info != null)
-            {
-                int usedPoints = info.CareerChoices.Count - 1; //Account for root choice, does not need to be taken into consideration.
-                var min = 300;
-                //@TODO remove that
-                //var min = Mathf.Min(PlayerCareerExtension.MaximumNumberOfCareerPerkPoints, Hero.MainHero.Level);
-                FreeCareerPoints = "Free career points: " + (min - usedPoints).ToString();
-            }
+            FreeCareerPoints = "Free career points: " + (PlayerCareerExtension.PointsSystem?.AvailablePoints).ToString();
             SetAvailability();
         }
         
@@ -172,13 +170,13 @@ namespace RealmsForgotten.Career.VievModels
         {
             get
             {
-                return _abilitySpriteName;
+                return _abilitySprite;
             }
             set
             {
-                if (value != _abilitySpriteName)
+                if (value != _abilitySprite)
                 {
-                    _abilitySpriteName = value;
+                    _abilitySprite = value;
                     OnPropertyChangedWithValue(value, "AbilitySpriteName");
                 }
             }

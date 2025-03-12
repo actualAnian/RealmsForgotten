@@ -13,7 +13,6 @@ namespace RealmsForgotten.Career
 {
     public class CareerChoiceObject : PropertyObject
     {
-        private List<MutationObject> _mutations = new List<MutationObject>();
         public CareerObject OwnerCareer { get; private set; }
         public CareerChoiceGroupObject BelongsToGroup { get; private set; }
 
@@ -89,74 +88,7 @@ namespace RealmsForgotten.Career
             }
             else BelongsToGroup = null;
             if (BelongsToGroup != null) BelongsToGroup.Choices.Add(this);
-            if (isRootNode) OwnerCareer.RootNode = this;
             AfterInitialized();
-        }
-        //public void MutateTriggeredEffect(TriggeredEffectTemplate effect, Agent agent) => MutateObject(effect, agent);
-
-        //public void MutateStatusEffect(StatusEffectTemplate effect, Agent agent) => MutateObject(effect, agent);
-
-        //private void MutateObject(ITemplate target, Agent agent)
-        //{
-        //    var type = target.GetType();
-        //    foreach (var mutation in _mutations)
-        //    {
-        //        if (mutation != null && mutation.MutationTargetType == type && mutation.MutationType != OperationType.None && !string.IsNullOrEmpty(mutation.MutationTargetOriginalId) && !string.IsNullOrEmpty(mutation.PropertyName) && mutation.PropertyValue != null)
-        //        {
-        //            var originalId = target.StringID.Split(new char[] { '*' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
-        //            if (originalId == null || originalId != mutation.MutationTargetOriginalId) continue;
-        //            var traverse = Traverse.Create(target);
-        //            if (traverse.Property(mutation.PropertyName).PropertyExists())
-        //            {
-        //                object newValue = mutation.PropertyValue(this, traverse.Property(mutation.PropertyName).GetValue(), agent);
-        //                var propertyType = traverse.Property(mutation.PropertyName).GetValueType();
-        //                switch (mutation.MutationType)
-        //                {
-        //                    case OperationType.Replace:
-        //                        if (newValue.GetType() == propertyType)
-        //                        {
-        //                            traverse.Property(mutation.PropertyName).SetValue(newValue);
-        //                        }
-        //                        break;
-        //                    case OperationType.Multiply:
-
-        //                        if (propertyType == typeof(float))
-        //                        {
-        //                            var value = traverse.Property(mutation.PropertyName).GetValue<float>();
-        //                            traverse.Property(mutation.PropertyName).SetValue(value * (1 + Convert.ToSingle(newValue)));
-        //                        }
-        //                        else if (propertyType == typeof(int))
-        //                        {
-        //                            var value = traverse.Property(mutation.PropertyName).GetValue<int>();
-        //                            traverse.Property(mutation.PropertyName).SetValue(value * (1 + Convert.ToInt32(newValue)));
-        //                        }
-        //                        break;
-        //                    case OperationType.Add:
-        //                        if (propertyType == typeof(float))
-        //                        {
-        //                            var value = traverse.Property(mutation.PropertyName).GetValue<float>();
-        //                            traverse.Property(mutation.PropertyName).SetValue(value + Convert.ToSingle(newValue));
-        //                        }
-        //                        else if (propertyType == typeof(int))
-        //                        {
-        //                            var value = traverse.Property(mutation.PropertyName).GetValue<int>();
-        //                            traverse.Property(mutation.PropertyName).SetValue(value + Convert.ToInt32(newValue));
-        //                        }
-        //                        break;
-        //                    default:
-        //                        break;
-        //                }
-        //            }
-        //        }
-        //    }
-
-        public class MutationObject
-        {
-            public Type MutationTargetType { get; set; }
-            public string MutationTargetOriginalId { get; set; } = string.Empty;
-            public string PropertyName { get; set; } = string.Empty;
-            public Func<CareerChoiceObject, object, Agent, object> PropertyValue { get; set; } = null;
-            public OperationType MutationType { get; set; } = OperationType.None;
         }
         public class ActiveEffect
         {
@@ -185,17 +117,18 @@ namespace RealmsForgotten.Career
             public PassiveEffectType PassiveEffectType = PassiveEffectType.Special;
             public bool InterpretAsPercentage = true;
             public bool WithFactorFlatSwitch;
-            public DamageProportionTuple DamageProportionTuple;
+            public DamageProportionTuple? DamageProportionTuple;
 
             public delegate bool SpecialCombatInteractionFunction(Agent attacker, Agent victim);
-            private readonly SpecialCombatInteractionFunction _specialCombatInteractionFunction;
+            private readonly SpecialCombatInteractionFunction? _specialCombatInteractionFunction;
             public delegate bool SpecialCharacterEvaluationFunction(CharacterObject characterObject);
-            private readonly SpecialCharacterEvaluationFunction _specialCharacterEvaluationFunction;
+            private readonly SpecialCharacterEvaluationFunction? _specialCharacterEvaluationFunction;
+            private readonly Action? _perkActivate;
 
             public bool IsValidCombatInteraction(Agent attacker, Agent victim) => _specialCombatInteractionFunction == null || _specialCombatInteractionFunction.Invoke(attacker, victim);
 
             public bool IsValidCharacterObject(CharacterObject characterObject) => _specialCharacterEvaluationFunction == null || _specialCharacterEvaluationFunction.Invoke(characterObject);
-            public PassiveEffect(PassiveEffectType type, DamageProportionTuple damageProportionTuple, SpecialCombatInteractionFunction function = null, bool interpretAsPercentage = true)
+            public PassiveEffect(PassiveEffectType type, DamageProportionTuple damageProportionTuple, SpecialCombatInteractionFunction? function = null, bool interpretAsPercentage = true)
             {
                 InterpretAsPercentage = true;
                 EffectMagnitude = 0;
@@ -206,7 +139,7 @@ namespace RealmsForgotten.Career
                 _specialCombatInteractionFunction = function;
             }
 
-            public PassiveEffect(float effectValue = 0, PassiveEffectType type = PassiveEffectType.Special, bool asPercent = false, SpecialCharacterEvaluationFunction function = null, bool withFactorFlatSwitch = false)
+            public PassiveEffect(float effectValue = 0, PassiveEffectType type = PassiveEffectType.Special, bool asPercent = false, SpecialCharacterEvaluationFunction? function = null, bool withFactorFlatSwitch = false)
             {
                 EffectMagnitude = effectValue;
                 Operation = OperationType.Add;
@@ -215,17 +148,21 @@ namespace RealmsForgotten.Career
                 _specialCharacterEvaluationFunction = function;
                 WithFactorFlatSwitch = withFactorFlatSwitch;
             }
+            public PassiveEffect(PassiveEffectType type, Action perkActivate)
+            {
+                _perkActivate = perkActivate;
+                PassiveEffectType = type;
+            }
+            public void Activate()
+            {
+                _perkActivate?.Invoke();
+            }
         }
 
         public float GetPassiveValue()
         {
             if (Passive == null) return 0;
             return Passive.InterpretAsPercentage ? Passive.EffectMagnitude / 100 : Passive.EffectMagnitude;
-        }
-
-        public bool HasMutations()
-        {
-            return !_mutations.IsEmpty();
         }
     }
     public enum OperationType
@@ -239,7 +176,6 @@ namespace RealmsForgotten.Career
     public enum PassiveEffectType
     {
         //edited to work
-
         Ammo,               //arrows, crossbows , flat number
         SpellAmmo,          // + alchemical stones
         Health,             //Player health points, flat number
@@ -258,6 +194,7 @@ namespace RealmsForgotten.Career
         TroopWages,
         GetItem,
         PartyMovementSpeed,
+        OnKill,
 
         //have to be enabled
         Special,            //For everything that requires special implementation
@@ -270,15 +207,8 @@ namespace RealmsForgotten.Career
         ArmorPenetration,   //player ignores armor with attack mask - this cant be Spells, will be ignored
         HorseHealth,        //only player, percentage based
         HorseChargeDamage,  //Damage When Horse is raced into infantry.
-        WindsOfMagic,       //player Winds of Magic, as flat number
-        WindsCostReduction, //player Winds of Magic cost reduction as Percentage
-        WindsRegeneration,
         BuffDuration,       //Increases duration for friendly augments    
         DebuffDuration,     //Increases duration for hex
-        SpellRadius,        //
-        SpellEffectiveness, //Damage spell effectiveness - for direct effects
-        WindsCooldownReduction, //player cooldown reduction as Percentage
-        PrayerCoolDownReduction, //player cooldown reduction as Percentage
         PartySize,
         CompanionLimit,
         TroopMorale,        //Morale

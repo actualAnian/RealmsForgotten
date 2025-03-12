@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using RealmsForgotten.AiMade;
 using RealmsForgotten.Behaviors;
 using RealmsForgotten.Career;
+using RealmsForgotten.Career.CareerPointsSystem;
 using RealmsForgotten.Quest;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -18,6 +19,10 @@ internal class SaveDefiner : SaveableTypeDefiner
         AddEnumDefinition(typeof(DestinationTypes), 2, null);
         AddClassDefinition(typeof(TownSlaveData), 3, null);
         AddClassDefinition(typeof(PlayerClassInfo), 4);
+        AddClassDefinition(typeof(AbstractPointsSystem), 5);
+        AddClassDefinition(typeof(LevelUpPointsSystem), 6);
+        AddClassDefinition(typeof(CareerPointsSaveableData), 7);
+        
     }
     protected override void DefineContainerDefinitions()
     {

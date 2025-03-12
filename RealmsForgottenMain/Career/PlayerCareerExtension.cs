@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RealmsForgotten.Career.CareerPointsSystem;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
@@ -10,6 +11,7 @@ namespace RealmsForgotten.Career
     public static class PlayerCareerExtension
     {
         public static readonly int MaximumNumberOfCareerPerkPoints = 30;
+        public static AbstractPointsSystem PointsSystem { get { return RFCareerPerkCampaignBehavior.PointsSystem; } }
         public static PlayerClassInfo PlayerCareerInfo { get { return RFCareerPerkCampaignBehavior.ClassInfo; } set { RFCareerPerkCampaignBehavior.ClassInfo = value; } }
         public static bool HasAnyCareer() => Game.Current.GameType is Campaign && GetCareer() != null;
         public static CareerObject? GetCareer()
@@ -25,14 +27,12 @@ namespace RealmsForgotten.Career
         {
             PlayerCareerInfo ??= new();
             if (HasAnyCareer())
-            {
                 PlayerCareerInfo.CareerChoices.Clear();
-            }
             PlayerCareerInfo.CareerID = career.StringId;
             var careerObj = RFCareerChoices.Instance.GetCareerChoices(GetCareer());
+            RFCareerPerkCampaignBehavior.CreatePointsSystem(career.pointsSystem);
             careerObj.InitialCareerSetup();
         }
-
         public static bool HasCareerChoice(string choiceID)
         {
             bool result = false;
@@ -55,14 +55,8 @@ namespace RealmsForgotten.Career
         {
             if (PlayerCareerInfo != null && !PlayerCareerInfo.CareerChoices.Contains(choice.StringId))
             {
-                int maxChoices = Math.Min(Hero.MainHero.Level + 1, MaximumNumberOfCareerPerkPoints + 1);
-                //@TODO change this
-                maxChoices = 100;
-                if (PlayerCareerInfo.CareerChoices.Count < maxChoices)
-                {
-                    PlayerCareerInfo.CareerChoices.Add(choice.StringId);
-                    return true;
-                }
+                PlayerCareerInfo.CareerChoices.Add(choice.StringId);
+                return true;
             }
             return false;
         }

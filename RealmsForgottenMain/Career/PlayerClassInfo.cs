@@ -1,7 +1,5 @@
-﻿using System;
+﻿using RealmsForgotten.Career.CareerPointsSystem;
 using System.Collections.Generic;
-using System.Linq;
-using TaleWorlds.CampaignSystem;
 using TaleWorlds.SaveSystem;
 
 namespace RealmsForgotten.Career

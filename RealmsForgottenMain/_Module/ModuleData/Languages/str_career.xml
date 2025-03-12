@@ -4,13 +4,9 @@
     <tag language="English" />
   </tags>
     <strings>
-		<string id="class_group1_name_Mercenary" text="Witch Hunter Initiate" />
-		<string id="class_group2_name_Mercenary" text="Witch Hunter Captain" />
-		<string id="class_group3_name_Mercenary" text="Master Witch Hunter" />
-		
+		<string id="class_group1_name_Mercenary" text="Witch Hunter Initiate" />		
 		<!-- descriptions-->
 		<string id="class_description.Mercenary" text="We are mercenaries. We have the resources. The will. To make these hours count! The clock is ticking, gentlemen. Let's begin." />
-
 
 		<string id="merc_merc_wage_reduction" text="Class mercenary wage reduction" />
 		<string id="rf_raid_plunder" text="You plundered additional {NUMBER_OF} {PRODUCTS}." />
@@ -18,8 +14,29 @@
 		
 		<!-- abilities -->
 		<string id="rf_mercenary_ability_name" text="Battle Cry" />
-
-		
-
+		<!--perks-->
+		<string id="rf_career_5_arrows" text="5 extra arrows, bolts ammo" />
+		<string id="rf_career_20_hitpoints" text="Increases Hitpoints by 20" />
+		<string id="rf_career_magical_artifact" text="Gain a magical artifact" />
+		<string id="rf_career_player_ranged_attack_10" text="Increases ranged damage by 10%"/>
+		<string id="rf_career_wages_10_reduction" text="Party wages are reduced by 10%" />
+		<string id="rf_career_companion_two" text="Companion limit of party is increased by 2" />
+		<string id="rf_career_20_health_post_battle" text="Increases health regeneration after battles by 20" />
+		<string id="rf_career_player_melee_attack_10" text="Increases melee damage by 10%" />
+		<string id="rf_career_merc_no_extra_wage" text="Mercenary troops cost no extra wage" />
+		<string id="rf_career_troop_ranged_attack_15" text="Increases ranged damage of your troops by 15%" />
+		<string id="rf_career_merc_contract_income_20" text="Increases income from mercenary contract by 20%" />
+		<string id="rf_career_spotting_MoFo_20" text="+20% spotting range in mountains and forests" />
+		<string id="rf_career_player_ranged_defence_15" text="Increases ranged damage resistance by 15%" />
+		<string id="rf_career_troop_melee_15" text="Increases melee damage your troops by 15%" />
+		<string id="rf_career_workshop_income_20" text="Increases income from workshops by 20%" />
+		<string id="rf_career_spotting_DeSt" text="+20% spotting range in deserts and steppes" />
+		<string id="rf_career_player_melee_defence_15" text="Increases melee damage resistance by 15%" />
+		<string id="rf_career_party_speed_FoMoSw_20" text="+20% party movement speed in forest, mountain and swamp terrain." />
+		<string id="rf_career_troop_ranged_attack_15" text="Increases the damage of all ranged troops by 15%" />
+		<string id="rf_career_raid_more_items" text="After raiding, get additional 20% of items valued less than 60" />
+		<string id="rf_career_troop_melee_attack_15" text="Increases the damage of all melee troops by 15%" />
+		<string id="rf_career_caravan_dest_more_items" text="After destroying a caravan, get additional 20% of items valued less than 60" />
+		<string id="rf_career_heal_on_kill_10" text="Restore 10 hitpoints on kill" />
 	</strings>
 </base>

@@ -75,6 +75,8 @@
 															</Children>
 														</ImageWidget>
 														<!--Frame Border-->
+														<TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Bottom"  PositionYOffset="70" Text="@FreeCareerPoints" />
+
 													</Children>
 												</Widget>
 
