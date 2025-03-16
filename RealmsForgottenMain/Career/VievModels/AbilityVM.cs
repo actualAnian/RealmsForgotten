@@ -13,6 +13,7 @@ namespace RealmsForgotten.Career.VievModels
         }
         public void BuyAbility()
         {
+            SetState(State.Taken);
             careerObjectVM.UnlockAbility(this); 
         }
         [DataSourceProperty]

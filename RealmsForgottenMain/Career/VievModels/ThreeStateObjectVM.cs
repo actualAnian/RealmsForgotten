@@ -1,4 +1,5 @@
-﻿using TaleWorlds.CampaignSystem;
+﻿using Newtonsoft.Json.Linq;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.Library;
 
 namespace RealmsForgotten.Career.VievModels
@@ -44,7 +45,7 @@ namespace RealmsForgotten.Career.VievModels
             {
                 return _isTaken;
             }
-            set
+            private set
             {
                 if (value != _isTaken)
                 {
@@ -60,7 +61,7 @@ namespace RealmsForgotten.Career.VievModels
             {
                 return _isAvailableToTake;
             }
-            set
+            private set
             {
                 if (value != _isAvailableToTake)
                 {
@@ -76,7 +77,7 @@ namespace RealmsForgotten.Career.VievModels
             {
                 return _isUnavailableToTake;
             }
-            set
+            private set
             {
                 if (value != _isUnavailableToTake)
                 {

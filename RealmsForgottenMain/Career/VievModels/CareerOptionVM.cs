@@ -76,8 +76,8 @@ namespace RealmsForgotten.Career.VievModels
         public void HandleAddPerk(CareerChoiceObjectVM choice)
         {
             selectedChoices.Add(choice);
-            if (_choiceDoubleGroup1.IsLastChoice(choice)) baseAbility.IsAvailableToTake = true;
-            if (_choiceDoubleGroup2.IsLastChoice(choice)) upgradedAbility.IsAvailableToTake = true;
+            if (_choiceDoubleGroup1.IsLastChoice(choice)) baseAbility.SetState(ThreeStateObjectVM.State.AvailableToTake);
+            if (_choiceDoubleGroup2.IsLastChoice(choice)) upgradedAbility.SetState(ThreeStateObjectVM.State.AvailableToTake);
             _topscreen.RefreshValues();
         }
         public void RefundPerks()
@@ -99,8 +99,16 @@ namespace RealmsForgotten.Career.VievModels
         }
         internal void UnlockAbility(AbilityVM abilityVM)
         {
-            if (abilityVM == baseAbility) _career.Ability.IsEnabled = true;
-            else _career.Ability.IsUpgraded = true;
+            if (abilityVM == baseAbility)
+            {
+                _career.Ability.IsEnabled = true;
+                _choiceDoubleGroup2.IsActive = true;
+            }
+            else
+            {
+                _choiceDoubleGroup3.IsActive = true;
+                _career.Ability.IsUpgraded = true;
+            }
         }
         internal void GiveActivePerkBonuses()
         {
