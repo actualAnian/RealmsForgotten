@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 
@@ -8,9 +10,8 @@ namespace RealmsForgotten.Career.VievModels
     {
         private string _name;
         private string _spriteName;
-        private string _abilityName;
-        private string _abilityDescription;
         private string _description;
+        private string _abilityName;
         private readonly CareerObject _career;
         private CareerChoiceDoubleGroupObjectVM _choiceDoubleGroup1;
         private CareerChoiceDoubleGroupObjectVM _choiceDoubleGroup2;
@@ -21,20 +22,26 @@ namespace RealmsForgotten.Career.VievModels
         private string _choiceGroup2Name;
         private string _choiceGroup3Name;
         private string _freeCareerPoints;
-        private CareerChoiceDoubleGroupObjectVM _highlightedGroup;
+        private readonly CareerChoiceDoubleGroupObjectVM _highlightedGroup;
         private TopScreenVM _topscreen;
-        private List<CareerChoiceObjectVM> selectedChoices = new();
+        private readonly List<CareerChoiceObjectVM> selectedChoices = new();
+        private bool boughtAbility;
+        private bool boughtAbilityUpgrade;
+        public string _abilityDescription;
+        private string _currentSpriteName;
         public CareerObjectVM(CareerObject career)
         {
             _career = career;
             _name = career.Name.Value;
-            _spriteName = "CareerSystem\\Illustrations\\" + career.StringId;
-            baseAbility = new(_career.Ability.Sprite, this);
-            upgradedAbility = new(_career.Ability.SpriteUpgraded, this);
+            _spriteName = career.StringId + "_icon";
+            baseAbility = new(_career.Ability.Sprite, this, false);
+            upgradedAbility = new(_career.Ability.SpriteUpgraded, this, true);
             _abilityName = _career.Ability.Name.ToString();
-            _abilityDescription = null;//new MBBindingList<CareerAbilityEffectVM>();
-            _description = _career.Description.ToString();
+            _description = PlayerCareerExtension.PointsSystem.Description;
+            _abilityDescription = _career.Ability.Description;
+            _freeCareerPoints = PlayerCareerExtension.PointsSystem.AvailablePoints.ToString();
             _topscreen = new();
+            _currentSpriteName = _career.Ability.Sprite;
             List<List<CareerChoiceGroupObject>> groups = new() { new(), new(), new() };
             foreach (CareerChoiceGroupObject group in _career.ChoiceGroups)
             {
@@ -53,36 +60,51 @@ namespace RealmsForgotten.Career.VievModels
                         break;
                 }
             }
-            _choiceDoubleGroup1 = new CareerChoiceDoubleGroupObjectVM(groups[0], this, _topscreen);
-            _choiceDoubleGroup2 = new CareerChoiceDoubleGroupObjectVM(groups[1], this, _topscreen);
-            _choiceDoubleGroup3 = new CareerChoiceDoubleGroupObjectVM(groups[2], this, _topscreen);
+            _choiceDoubleGroup1 = new CareerChoiceDoubleGroupObjectVM(groups[0], this, _topscreen, 1);
+            _choiceDoubleGroup2 = new CareerChoiceDoubleGroupObjectVM(groups[1], this, _topscreen, 2);
+            _choiceDoubleGroup3 = new CareerChoiceDoubleGroupObjectVM(groups[2], this, _topscreen, 3);
 
             _choiceGroup1Name = GameTexts.FindText("class_choicegroup1_name_" + _career.StringId).ToString();
             _choiceGroup2Name = GameTexts.FindText("class_choicegroup2_name_" + _career.StringId).ToString();
             _choiceGroup3Name = GameTexts.FindText("career_choicegroup3_name_" + _career.StringId).ToString();
             _topscreen.Choices = _choiceDoubleGroup1.GetChoices();
             _topscreen.GroupName = _choiceDoubleGroup1.GroupName;
-            SetAvailability();
+            _highlightedGroup = _choiceDoubleGroup1;
             RefreshValues();
         }
         public void SetAvailability()
         {
             _choiceDoubleGroup1.IsActive = true;
-            if (_choiceDoubleGroup2.GetChoices().Count > 0 && (_choiceDoubleGroup2.GetChoices()[0].IsTaken || baseAbility.IsTaken))
+            baseAbility.RefreshValues();
+            upgradedAbility.RefreshValues();
+            if (baseAbility.IsTaken)
                 _choiceDoubleGroup2.IsActive = true;
-            if (_choiceDoubleGroup3.GetChoices().Count > 0 && (_choiceDoubleGroup3.GetChoices()[0].IsTaken || upgradedAbility.IsTaken))
+            if (upgradedAbility.IsTaken)
                 _choiceDoubleGroup3.IsActive = true;
         }
         public void HandleAddPerk(CareerChoiceObjectVM choice)
         {
             selectedChoices.Add(choice);
-            if (_choiceDoubleGroup1.IsLastChoice(choice)) baseAbility.SetState(ThreeStateObjectVM.State.AvailableToTake);
-            if (_choiceDoubleGroup2.IsLastChoice(choice)) upgradedAbility.SetState(ThreeStateObjectVM.State.AvailableToTake);
             _topscreen.RefreshValues();
         }
         public void RefundPerks()
         {
-            PlayerCareerExtension.PointsSystem.ReturnPoints(selectedChoices.Count);
+            int pointsToReturn = selectedChoices.Count;
+            if (boughtAbility)
+                pointsToReturn += 1;
+            if (boughtAbilityUpgrade)
+                pointsToReturn += 1;
+            PlayerCareerExtension.PointsSystem.ReturnPoints(pointsToReturn);
+            boughtAbility = false;
+            _career.Ability.IsEnabled = false;
+            baseAbility.SetState(ThreeStateObjectVM.State.UnavailableToTake);
+            baseAbility.RefreshValues();
+
+            boughtAbilityUpgrade = false;
+            _career.Ability.IsUpgraded = false;
+            upgradedAbility.SetState(ThreeStateObjectVM.State.UnavailableToTake);
+            upgradedAbility.RefreshValues();
+
             for (int i = selectedChoices.Count - 1; i >= 0; i--)
             {
                 if (_choiceDoubleGroup1.IsLastChoice(selectedChoices[i]))
@@ -99,32 +121,46 @@ namespace RealmsForgotten.Career.VievModels
         }
         internal void UnlockAbility(AbilityVM abilityVM)
         {
+            PlayerCareerExtension.PointsSystem.SpendPoint();
             if (abilityVM == baseAbility)
             {
+                boughtAbility = true;
                 _career.Ability.IsEnabled = true;
                 _choiceDoubleGroup2.IsActive = true;
             }
             else
             {
+                boughtAbilityUpgrade = true;
                 _choiceDoubleGroup3.IsActive = true;
                 _career.Ability.IsUpgraded = true;
             }
+            _topscreen.RefreshValues();
         }
         internal void GiveActivePerkBonuses()
         {
             foreach (CareerChoiceObjectVM choice in selectedChoices)
             {
-                CareerChoiceObject.ActiveEffect active = choice.choice.Active;
-                if (active == null) continue;
-                active.TryExecute();
+                choice.choice.Active?.TryExecute();
             }
         }
+
         public override void RefreshValues()
         {
             FreeCareerPoints = "Free career points: " + (PlayerCareerExtension.PointsSystem?.AvailablePoints).ToString();
             SetAvailability();
         }
-        
+
+        internal bool ShouldBeActive(int tier)
+        {
+            return tier switch
+            {
+                1 => true,
+                2 => _career.Ability.IsEnabled,
+                3 => _career.Ability.IsUpgraded,
+                _ => false,
+            };
+        }
+
         [DataSourceProperty]
         public string Name
         {
@@ -163,7 +199,15 @@ namespace RealmsForgotten.Career.VievModels
         {
             get
             {
-                return _career.Ability.Sprite;
+                return _currentSpriteName;
+            }
+            set
+            {
+                if (value != _currentSpriteName)
+                {
+                    _currentSpriteName = value;
+                    OnPropertyChangedWithValue(value, "CurrentSpriteName");
+                }
             }
         }
 
@@ -202,7 +246,7 @@ namespace RealmsForgotten.Career.VievModels
         }
 
         [DataSourceProperty]
-        public string AbilityEffects
+        public string AbilityDescription
         {
             get
             {
@@ -213,7 +257,7 @@ namespace RealmsForgotten.Career.VievModels
                 if (value != _abilityDescription)
                 {
                     _abilityDescription = value;
-                    OnPropertyChangedWithValue(value, "AbilityEffects");
+                    OnPropertyChangedWithValue(value, "AbilityDescription");
                 }
             }
         }

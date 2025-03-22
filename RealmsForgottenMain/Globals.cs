@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 
@@ -87,7 +88,19 @@ namespace RealmsForgotten
             ValidateRaceOrder(orderedRaces);
             return orderedRaces;
         }
+        public static bool IsBanditParty(PartyBase party)
+        {
+            return party?.MobileParty?.PartyComponent?.GetType()?.Name == "BanditPartyComponent";
+        }
 
+        public static bool IsCaravanParty(PartyBase party)
+        {
+            return party.MobileParty.PartyComponent.GetType().Name == "VillagerPartyComponent";
+        }
+        public static bool IsVillager(PartyBase party)
+        {
+            return party.MobileParty.PartyComponent.GetType().Name == "VillagerPartyComponent";
+        }
         private static void ValidateRaceOrder(List<string> orderedRaces)
         {
             foreach (string race in _playerSelectableRaces)

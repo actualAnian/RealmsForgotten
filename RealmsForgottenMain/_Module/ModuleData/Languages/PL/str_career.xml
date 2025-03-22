@@ -1,19 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="string">
-  <tags>
-    <tag language="English" />
-  </tags>
+    <tags>
+        <tag language="Polski" />
+    </tags>
     <strings>
-		<string id="class_group1_name_Mercenary" text="Witch Hunter Initiate" />		
+		<string id="class_group1_name_Mercenary" text="Witch Hunter Initiate" />
 		<!-- descriptions-->
 		<string id="class_description.Mercenary" text="We are mercenaries. We have the resources. The will. To make these hours count! The clock is ticking, gentlemen. Let's begin." />
 
 		<string id="merc_merc_wage_reduction" text="Class mercenary wage reduction" />
 		<string id="rf_raid_plunder" text="You plundered additional {NUMBER_OF} {PRODUCTS}." />
 		<string id="rf_caravan_plunder" text="You plundered additional {NUMBER_OF} {PRODUCTS}." />
-		
+
 		<!-- abilities -->
-		<string id="rf_mercenary_ability_name" text="Battle Cry" />
+		<string id="rf_mercenary_ability_name" text="Okrzyk mocy!"/>
 		<string id="rf_knight_ability_name" text="Ability" />
 		<!--perks-->
 		<string id="rf_career_5_arrows" text="5 extra arrows, bolts ammo" />
@@ -42,6 +42,6 @@
 		<string id="rf_career_player_dagger_mace_10" text="Increases damage from daggers, one-two handed maces by 10%." />
 		<string id="rf_career_player_melee_attack_15" text="Increase damage of all melee weapons by 15%" />
 		<string id="rf_career_player_ranged_attack_15" text="Increase damage of all ranged weapons by 15%" />
-		
+
 	</strings>
 </base>

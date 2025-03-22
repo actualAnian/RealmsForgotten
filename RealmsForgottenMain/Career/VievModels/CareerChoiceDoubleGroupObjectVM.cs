@@ -7,16 +7,17 @@ namespace RealmsForgotten.Career.VievModels
 {
     public class CareerChoiceDoubleGroupObjectVM : ViewModel
     {
-        private CareerChoiceGroupObject _choiceGroup0;
-        private CareerChoiceGroupObject _choiceGroup1;
+        private readonly CareerChoiceGroupObject _choiceGroup0;
+        private readonly CareerChoiceGroupObject _choiceGroup1;
         private MBBindingList<CareerChoiceObjectVM> _choices0;
         private MBBindingList<CareerChoiceObjectVM> _choices1;
         private string _groupName;
-        private CareerObjectVM _careerObject;
-        private TopScreenVM _topScreenVM;
+        private readonly CareerObjectVM _careerObject;
+        private readonly TopScreenVM _topScreenVM;
         private bool _isActive = false;
+        private readonly int tier;
 
-        public CareerChoiceDoubleGroupObjectVM(List<CareerChoiceGroupObject> choiceGroup, CareerObjectVM careerObject, TopScreenVM topScreenVM)
+        public CareerChoiceDoubleGroupObjectVM(List<CareerChoiceGroupObject> choiceGroup, CareerObjectVM careerObject, TopScreenVM topScreenVM, int ttier)
         {
             _topScreenVM = topScreenVM;
             _choiceGroup0 = choiceGroup[0];
@@ -25,6 +26,7 @@ namespace RealmsForgotten.Career.VievModels
             _careerObject = careerObject;
             _choices0 = new MBBindingList<CareerChoiceObjectVM>();
             _choices1 = new MBBindingList<CareerChoiceObjectVM>();
+            tier = ttier;
 
             int LastTaken = Math.Max(
                 _choiceGroup0.Choices.FindLastIndex(c => PlayerCareerExtension.HasCareerChoice(c)),
@@ -51,7 +53,7 @@ namespace RealmsForgotten.Career.VievModels
                 state0 = PlayerCareerExtension.HasCareerChoice(_choiceGroup0.Choices[index]) ? ThreeStateObjectVM.State.Taken : ThreeStateObjectVM.State.UnavailableToTake;
                 state1 = PlayerCareerExtension.HasCareerChoice(_choiceGroup1.Choices[index]) ? ThreeStateObjectVM.State.Taken : ThreeStateObjectVM.State.UnavailableToTake;
             }
-            else if (index == lastTaken + 1)
+            else if (index == lastTaken + 1 && PlayerCareerExtension.PointsSystem.HasAvailablePoints())
             {
                 state0 = state1 = ThreeStateObjectVM.State.AvailableToTake;
             }
@@ -63,6 +65,7 @@ namespace RealmsForgotten.Career.VievModels
         }
         public override void RefreshValues()
         {
+            IsActive = _careerObject.ShouldBeActive(tier);
             int LastTaken = Math.Max(
                 _choiceGroup0.Choices.FindLastIndex(c => PlayerCareerExtension.HasCareerChoice(c)),
                 _choiceGroup1.Choices.FindLastIndex(c => PlayerCareerExtension.HasCareerChoice(c))
@@ -129,7 +132,7 @@ namespace RealmsForgotten.Career.VievModels
                     _choices1[i].SetState(ThreeStateObjectVM.State.Taken);
                     topScreenChoices.Add(_choices1[i]);
                 }
-                else topScreenChoices.Add(new());
+                //else topScreenChoices.Add(new());
             }
             return topScreenChoices;
         }
@@ -142,8 +145,11 @@ namespace RealmsForgotten.Career.VievModels
             }
             set
             {
-                _isActive = value;
-                RefreshValues();
+                if (value != _isActive)
+                {
+                    _isActive = value;
+                    OnPropertyChangedWithValue(value, "IsActive");
+                }
             }
         }
 

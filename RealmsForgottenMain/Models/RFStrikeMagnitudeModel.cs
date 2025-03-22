@@ -29,9 +29,9 @@ namespace RealmsForgotten.Models
 
                 if (attacker.IsPlayerCharacter && attacker.HeroObject == Hero.MainHero)
                 {
-                    AttackTypeMask attackMask = AttackTypeMask.Melee;
-                    if (weaponComponent.IsRangedWeapon) attackMask = AttackTypeMask.Ranged;
-                    CareerHelper.ApplyBasicCareerPassives(ref resultArmor, PassiveEffectType.ArmorPenetration, attackMask, true);
+                    //AttackTypeMask attackMask = AttackTypeMask.Melee;
+                    //if (weaponComponent.IsRangedWeapon) attackMask = AttackTypeMask.Ranged;
+                    CareerHelper.ApplyBasicCareerPassives(ref resultArmor, PassiveEffectType.ArmorPenetration, true);
                 }
             }
             return resultArmor.ResultNumber;

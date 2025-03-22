@@ -15,13 +15,14 @@ namespace RealmsForgotten.Career.Ability
         private string _coolDownLeft = "";
         private bool _isVisible;
         private bool _onCoolDown;
-        private bool _isSpell;
         private AbilityManagerMissionLogic _abilityLogic;
         private bool _isDisabled;
-        private string _disabledText;
-        private string _abilityType;
 
-        public AbilityHudVM() : base() { }
+        public AbilityHudVM() : base()
+        {
+            _ability = PlayerCareerExtension.GetCareer().Ability;
+            _abilityLogic ??= Mission.Current.GetMissionBehavior<AbilityManagerMissionLogic>();
+        }
 
         public override void RefreshValues()
         {
@@ -34,16 +35,13 @@ namespace RealmsForgotten.Career.Ability
                 Name = _ability.Name.ToString();
                 CoolDownLeft = _ability.GetCoolDownLeft().ToString();
                 IsOnCoolDown = _ability.IsOnCooldown();
-                TextObject disabledReason;
-                if (_ability.IsDisabled(Agent.Main, out disabledReason))
+                if (_ability.IsDisabled(Agent.Main))
                 {
                     IsDisabled = true;
-                    DisabledText = disabledReason.ToString();
                 }
                 else
                 {
                     IsDisabled = false;
-                    DisabledText = string.Empty;
                 }
             }
         }
@@ -147,23 +145,6 @@ namespace RealmsForgotten.Career.Ability
                 {
                     _isDisabled = value;
                     base.OnPropertyChangedWithValue(value, "IsDisabled");
-                }
-            }
-        }
-
-        [DataSourceProperty]
-        public string DisabledText
-        {
-            get
-            {
-                return _disabledText;
-            }
-            set
-            {
-                if (value != _disabledText)
-                {
-                    _disabledText = value;
-                    base.OnPropertyChangedWithValue(value, "DisabledText");
                 }
             }
         }

@@ -18,11 +18,11 @@ namespace RealmsForgotten.Career
     [GameStateScreen(typeof(CareerScreenGameState))]
     public class CareerScreen : ScreenBase, IGameStateListener
     {
-        private GauntletLayer _gauntletLayer;
-        private CareerScreenVM _vm;
-        private CareerScreenGameState _state;
-        private SpriteCategory _inventoryCategory;
-        private SpriteCategory _clanCategory;
+        private GauntletLayer? _gauntletLayer = null;
+        private CareerScreenVM? _vm;
+        private readonly CareerScreenGameState _state;
+        private readonly SpriteCategory _inventoryCategory;
+        private readonly SpriteCategory _clanCategory;
 
         public CareerScreen(CareerScreenGameState state)
         {
@@ -44,7 +44,7 @@ namespace RealmsForgotten.Career
         {
             base.OnFrameTick(dt);
             LoadingWindow.DisableGlobalLoadingWindow();
-            if (_gauntletLayer.Input.IsHotKeyDownAndReleased("Exit") || _gauntletLayer.Input.IsGameKeyDownAndReleased(41))
+            if (_gauntletLayer == null || _gauntletLayer.Input.IsHotKeyDownAndReleased("Exit") || _gauntletLayer.Input.IsGameKeyDownAndReleased(41))
             {
                 CloseScreen();
             }
@@ -67,7 +67,7 @@ namespace RealmsForgotten.Career
         {
             base.OnDeactivate();
             RemoveLayer(_gauntletLayer);
-            _gauntletLayer.IsFocusLayer = false;
+            if (_gauntletLayer != null) _gauntletLayer.IsFocusLayer = false;
             ScreenManager.TryLoseFocus(_gauntletLayer);
         }
 

@@ -11,6 +11,7 @@ namespace RealmsForgotten.Career.VievModels
         public TopScreenVM()
         {
             RefreshValues();
+            _freeCareerPoints = "Free career points: " + (PlayerCareerExtension.PointsSystem?.AvailablePoints).ToString();
         }
 
         public override void RefreshValues()

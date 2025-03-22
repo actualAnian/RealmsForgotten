@@ -1,6 +1,7 @@
 ﻿using RealmsForgotten.ObjectExtensions;
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.Core;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 
@@ -10,16 +11,16 @@ namespace RealmsForgotten.Career.Logic
     {
         public static void ApplyBasicCareerPassives(ref ExplainedNumber number, PassiveEffectType passiveEffectType, bool asFactor = true)
         {
-            var info = PlayerCareerExtension.PlayerCareerInfo;
+            PlayerClassInfo info = PlayerCareerExtension.PlayerCareerInfo;
             if (info == null) return;
             List<string> choices = info.CareerChoices;
             foreach (var choiceID in choices)
             {
-                var choice = RFCareerChoices.GetChoice(choiceID);
+                CareerChoiceObject choice = RFCareerChoices.GetChoice(choiceID);
 
                 if (choice?.Passive == null || choice.Passive.PassiveEffectType != passiveEffectType) continue;
 
-                var passive = choice.Passive;
+                CareerChoiceObject.PassiveEffect passive = choice.Passive;
 
                 if (!passive.IsValidCharacterObject(Hero.MainHero.CharacterObject)) continue;
 
@@ -27,46 +28,14 @@ namespace RealmsForgotten.Career.Logic
                 {
                     asFactor = !asFactor;
                 }
-                var value = passive.EffectMagnitude;
-                var text = choice.BelongsToGroup.Name;
-                if (passive.InterpretAsPercentage)
-                {
-                    value /= 100;
-                }
+                float value = passive.EffectMagnitude;
+                TextObject? text = choice.BelongsToGroup?.Name;
                 if (asFactor)
                 {
                     number.AddFactor(value, text);
                     continue;
                 }
                 number.Add(value, text);
-            }
-        }
-        public static void ApplyBasicCareerPassives(ref ExplainedNumber number, PassiveEffectType passiveEffectType, AttackTypeMask mask, bool asFactor = false)
-        {
-            CharacterObject characterObject = Hero.MainHero.CharacterObject;
-            var info = PlayerCareerExtension.PlayerCareerInfo;
-            if (info == null) return;
-            List<string> choices = info.CareerChoices;
-            foreach (var choiceID in choices)
-            {
-                var choice = RFCareerChoices.GetChoice(choiceID);
-                if (choice == null)
-                    continue;
-
-                if (choice.Passive != null && choice.Passive.PassiveEffectType == passiveEffectType)
-                {
-                    var value = choice.Passive.EffectMagnitude;
-                    if (choice.Passive.InterpretAsPercentage)
-                    {
-                        value /= 100;
-                    }
-                    if (asFactor)
-                    {
-                        number.AddFactor(value, new TextObject(choice.BelongsToGroup.Name.ToString()));
-                        return;
-                    }
-                    number.Add(value, new TextObject(choice.BelongsToGroup.Name.ToString()));
-                }
             }
         }
         public static void ApplyBasicCareerPassives(ref int number, PassiveEffectType passiveEffectType, bool asFactor = true)
@@ -90,11 +59,7 @@ namespace RealmsForgotten.Career.Logic
                     asFactor = !asFactor;
                 }
                 var value = passive.EffectMagnitude;
-                var text = choice.BelongsToGroup.Name;
-                if (passive.InterpretAsPercentage)
-                {
-                    value /= 100;
-                }
+                var text = choice.BelongsToGroup?.Name;
                 if (asFactor)
                 {
                     number = (int)(number * value);
@@ -104,7 +69,7 @@ namespace RealmsForgotten.Career.Logic
             }
         }
 
-        public static float[] AddCareerPassivesForDamageValues(Agent attacker, Agent victim, PropertyMask mask)
+        public static float[] AddCareerPassivesForDamageValues(Agent attacker, Agent victim, PropertyMask mask, WeaponClass? weapon)
         {
             var damageValues = new float[(int)DamageType.All + 1];
 
@@ -112,50 +77,37 @@ namespace RealmsForgotten.Career.Logic
             {
                 case PropertyMask.Attack:
                     if (attacker.IsHero && attacker.IsMainAgent)
-                    {
-                        ApplyCareerPassivesForDamageValues(attacker, victim, ref damageValues, PassiveEffectType.Damage);
-                    }
+                        ApplyCareerPassivesForDamageValues(attacker, victim, ref damageValues, PassiveEffectType.Damage, weapon);
                     else
-                    {
-                        ApplyCareerPassivesForDamageValues(attacker, victim, ref damageValues, PassiveEffectType.TroopDamage);
-                    }
-                    return damageValues;
+                        ApplyCareerPassivesForDamageValues(attacker, victim, ref damageValues, PassiveEffectType.TroopDamage, weapon);
+                    break;
                 case PropertyMask.Defense:
                     if (victim.IsHero && victim.IsMainAgent)
-                    {
-                        ApplyCareerPassivesForDamageValues(attacker, victim, ref damageValues, PassiveEffectType.Resistance);
-                    }
+                        ApplyCareerPassivesForDamageValues(attacker, victim, ref damageValues, PassiveEffectType.Resistance, weapon);
                     else
-                    {
-                        ApplyCareerPassivesForDamageValues(attacker, victim, ref damageValues, PassiveEffectType.TroopResistance);
-                    }
-
-                    return damageValues;
+                        ApplyCareerPassivesForDamageValues(attacker, victim, ref damageValues, PassiveEffectType.TroopResistance, weapon);
+                    break;
                 default:
-                    return null;
+                    break;
             }
+            return damageValues;
         }
-        private static void ApplyCareerPassivesForDamageValues(Agent agent, Agent victim, ref float[] values, PassiveEffectType type)
+        private static void ApplyCareerPassivesForDamageValues(Agent agent, Agent victim, ref float[] values, PassiveEffectType type, WeaponClass? weapon)
         {
-            if (type != PassiveEffectType.Damage &&
-                type != PassiveEffectType.TroopDamage &&
-                type != PassiveEffectType.Resistance &&
-                type != PassiveEffectType.TroopResistance) return;
-
             var choices = PlayerCareerExtension.GetAllCareerChoices();
             foreach (var choiceID in choices)
             {
-                var choice = RFCareerChoices.GetChoice(choiceID);
-                if (choice == null)
+                CareerChoiceObject choice = RFCareerChoices.GetChoice(choiceID);
+                if (choice == null || choice.Passive == null || (choice.Passive.PassiveEffectType != type) || choice.Passive.DamageProportionTuple == null)
                     continue;
-
-                if (choice.Passive != null && (choice.Passive.PassiveEffectType == type))
-                {
-                    //if (!choice.Passive.IsValidCombatInteraction(agent, victim, attackMask)) continue;
-                    var passive = choice.Passive;
-                    var damageType = passive.DamageProportionTuple.DamageType;
-                    values[(int)damageType] += (passive.DamageProportionTuple.Percent / 100);
-                }
+                List<WeaponClass>? perkWeaponClass = choice.Passive.DamageProportionTuple.WeaponClasses;
+                
+                //if (!choice.Passive.IsValidCombatInteraction(agent, victim, attackMask)) continue;
+                if (perkWeaponClass != null && (weapon == null || !perkWeaponClass.Contains((WeaponClass)weapon)))
+                        continue;
+                var passive = choice.Passive;
+                var damageType = passive.DamageProportionTuple.DamageType;
+                values[(int)damageType] += (passive.DamageProportionTuple.Percent / 100);
             }
         }
         public static bool IsValidCareerMissionInteractionBetweenAgents(Agent affectorAgent, Agent affectedAgent)
@@ -168,7 +120,5 @@ namespace RealmsForgotten.Career.Logic
                 || affectedAgent.IsMount) return false;
             return affectorAgent.BelongsToMainParty() || affectedAgent.BelongsToMainParty();
         }
-
-
     }
 }

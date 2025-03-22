@@ -44,11 +44,14 @@ namespace RealmsForgotten.Patches
                 if (CareerHelper.IsValidCareerMissionInteractionBetweenAgents(attacker, victim))
                 {
                     PropertyMask property = PropertyMask.All;
+                    WeaponClass? weapon = null;
+                    if (missionWeapon.CurrentUsageItem != null)
+                       weapon = missionWeapon.CurrentUsageItem.WeaponClass;
 
                     if (attacker.BelongsToMainParty())
                     {
                         property = PropertyMask.Attack;
-                        var careerBonuses = CareerHelper.AddCareerPassivesForDamageValues(attacker, victim, property);
+                        var careerBonuses = CareerHelper.AddCareerPassivesForDamageValues(attacker, victim, property, weapon);
                         for (var index = 0; index < careerBonuses.Length; index++)
                         {
                             additionalDamagePercentages[index] += careerBonuses[index];
@@ -58,23 +61,29 @@ namespace RealmsForgotten.Patches
                     if (victim.BelongsToMainParty())
                     {
                         property = PropertyMask.Defense;
-                        var careerBonuses = CareerHelper.AddCareerPassivesForDamageValues(attacker, victim, property);
+                        var careerBonuses = CareerHelper.AddCareerPassivesForDamageValues(attacker, victim, property, weapon);
                         for (var index = 0; index < careerBonuses.Length; index++)
                         {
                             resistancePercentages[index] += careerBonuses[index];
                         }
                     }
                     ClassAbility ability = PlayerCareerExtension.GetCareer().Ability;
-                    if (ability.IsActive)
+                    if (ability.IsActiveInMission)
                     {
-                        ability.onTroopHit?.Invoke(attacker, victim, ref additionalDamagePercentages, ref resistancePercentages);
+                        ability.OnTroopHit(attacker, victim, ref additionalDamagePercentages, ref resistancePercentages);
                     }
                 }
             }
             float summedBonus = 0;
             summedBonus += additionalDamagePercentages[(int)damageType];
             summedBonus -= resistancePercentages[(int)damageType];
-            summedBonus -= Globals.RaceResistances.FirstOrDefault(entry => entry.Check(victim.Character)).Resistances[(int)damageType];
+            if (victim.Character != null) 
+            {
+                (Func<BasicCharacterObject, bool> Check, float[] Resistances) match = Globals.RaceResistances.FirstOrDefault(entry => entry.Check(victim.Character));
+                if (match.Resistances != null)
+                    summedBonus -= match.Resistances[(int)damageType];
+            }
+            //summedBonus -= Globals.RaceResistances.FirstOrDefault(entry => entry.Check(victim.Character)).Resistances[(int)damageType];
             int resultDamage = (int)(baseDamage + baseDamage * summedBonus);
 
             b.InflictedDamage = resultDamage;

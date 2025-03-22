@@ -53,12 +53,9 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(CultureAppropriateTroopsBehavior), 12);
             AddClassDefinition(typeof(HouseTroopsTownsBehavior), 13);
             AddClassDefinition(typeof(RecruitPrisonersMissionBehavior), 14);
-            AddClassDefinition(typeof(BanditHideoutClearedBehavior), 16);
             AddClassDefinition(typeof(BanditDefeatChivalryBehavior), 17);
             AddClassDefinition(typeof(ReligionObject), 19);
             AddClassDefinition(typeof(ADODInnBehavior), 20);
-            AddClassDefinition(typeof(DefendVillagersOrCaravansBehavior), 22);
-            AddClassDefinition(typeof(QuestCompletionBehavior), 23);
             AddClassDefinition(typeof(DivineShieldStateBehavior), 24);
             AddClassDefinition(typeof(DivineShieldMissionBehavior), 25);
             AddClassDefinition(typeof(BanditConversionManager), 26);
@@ -94,8 +91,6 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(AggressiveDwarfUrkhaiBehavior), 62);
             AddClassDefinition(typeof(MineBehavior), 63);
             AddClassDefinition(typeof(TownPrisonerData), 64);
-
-
         }
     }
 }

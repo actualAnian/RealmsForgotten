@@ -6,14 +6,14 @@ namespace RealmsForgotten.Career.VievModels
     public class CareerChoiceObjectVM : ThreeStateObjectVM
     {
         public CareerChoiceObject choice;
-        private CareerChoiceDoubleGroupObjectVM _group;
+        private readonly CareerChoiceDoubleGroupObjectVM _group;
         private string _description;
         private string _name;
 
-        public CareerChoiceObjectVM()
-        {
-            _description = string.Empty;
-        }
+        //public CareerChoiceObjectVM()
+        //{
+        //    _description = string.Empty;
+        //}
         public CareerChoiceObjectVM(CareerChoiceObject choice, CareerChoiceDoubleGroupObjectVM group, State curState)
         {
             _group = group;

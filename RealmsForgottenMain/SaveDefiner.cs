@@ -3,7 +3,6 @@ using RealmsForgotten.AiMade;
 using RealmsForgotten.Behaviors;
 using RealmsForgotten.Career;
 using RealmsForgotten.Career.CareerPointsSystem;
-using RealmsForgotten.Quest;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.SaveSystem;
@@ -23,7 +22,7 @@ internal class SaveDefiner : SaveableTypeDefiner
         AddClassDefinition(typeof(LevelUpPointsSystem), 6);
         AddClassDefinition(typeof(CareerPointsSaveableData), 7);
         AddClassDefinition(typeof(RenownPointsSystem), 8);
-        
+        AddClassDefinition(typeof(DeedsPointsSystem), 9);
     }
     protected override void DefineContainerDefinitions()
     {

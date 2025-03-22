@@ -6,7 +6,7 @@ namespace RealmsForgotten.Career.VievModels
 {
     public class ThreeStateObjectVM : ViewModel
     {
-        protected State buttonState;
+        protected State buttonState = State.UnavailableToTake;
         private bool _isTaken = false;
         private bool _isUnavailableToTake = true;
         private bool _isAvailableToTake = false;
@@ -36,6 +36,7 @@ namespace RealmsForgotten.Career.VievModels
                     IsUnavailableToTake = true;
                     break;
             }
+            buttonState = newState;
         }
 
         [DataSourceProperty]

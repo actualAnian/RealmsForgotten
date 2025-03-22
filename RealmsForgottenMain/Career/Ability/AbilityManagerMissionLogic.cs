@@ -13,7 +13,7 @@ namespace RealmsForgotten.Career.Ability
     {
         private bool hasAbility;
         ClassAbility ability;
-        private AbilityHUDMissionView _abilityView;
+        private AbilityHUDMissionView? _abilityView;
 
         public AbilityManagerMissionLogic() 
         {
@@ -25,14 +25,13 @@ namespace RealmsForgotten.Career.Ability
             if (!hasAbility || Input.IsKeyDown(InputKey.Tab) || !Input.IsKeyDown(InputKey.E))
                 return;
 
-            TextObject failureReason = new();
-            if (!ability.IsDisabled(Agent.Main, out failureReason) && !ability.IsOnCooldown())
+            if (!ability.IsDisabled(Agent.Main) && !ability.IsOnCooldown())
             {
-                ability.TryActivate(Agent.Main, out failureReason);
+                ability.TryActivate(Agent.Main);
             }
             else
             {
-                _abilityView.DisplayErrorMessage(failureReason.ToString());
+                //_abilityView.DisplayErrorMessage(failureReason.ToString());
             }
         }
 

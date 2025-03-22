@@ -1,5 +1,4 @@
-﻿using RealmsForgotten.AiMade.Career;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.MapEvents;
@@ -15,12 +14,27 @@ namespace RealmsForgotten.Career
 {
     public class RFCareerCampaignBehavior : CampaignBehaviorBase
     {
-        [SaveableField(0)] static PlayerClassInfo playerClassInfo;
+        [SaveableField(0)] PlayerClassInfo playerClassInfo = new();
         ItemRoster raidLootedItems = new();
         public Action<Hero, bool>? onLevelUp;
-        [SaveableField(1)] static AbstractPointsSystem? pointsSystem;
-        public static AbstractPointsSystem? PointsSystem { get { return pointsSystem; } }
-        public static PlayerClassInfo ClassInfo { get { return playerClassInfo; } set { playerClassInfo = value; } }
+        [SaveableField(1)] AbstractPointsSystem? pointsSystem;
+        public AbstractPointsSystem? PointsSystem { get { return pointsSystem; } }
+        public PlayerClassInfo ClassInfo { get { return playerClassInfo; } set { playerClassInfo = value; } }
+        private static RFCareerCampaignBehavior? instance;
+
+        public RFCareerCampaignBehavior()
+        {
+            instance = this;
+        }
+
+        public static RFCareerCampaignBehavior Instance
+        { 
+            get 
+            {
+                instance ??= new RFCareerCampaignBehavior();
+                return instance;
+            }
+        }
         public override void RegisterEvents()
         {
             CampaignEvents.RaidCompletedEvent.AddNonSerializedListener(this, new Action<BattleSideEnum, RaidEventComponent>(this.OnRaidCompleted));
@@ -29,6 +43,18 @@ namespace RealmsForgotten.Career
             CampaignEvents.HeroLevelledUp.AddNonSerializedListener(this, new Action<Hero, bool>(OnLevelUp));
             CampaignEvents.OnClanInfluenceChangedEvent.AddNonSerializedListener(this, new Action<Clan, float>(OnClanInfluenceChanged));
             CampaignEvents.RenownGained.AddNonSerializedListener(this, new Action<Hero, int, bool>(OnRenownGained));
+            CampaignEvents.OnQuestCompletedEvent.AddNonSerializedListener(this, new Action<QuestBase, QuestBase.QuestCompleteDetails>(OnQuestompletedEvent));
+            CampaignEvents.MapEventEnded.AddNonSerializedListener(this, new Action<MapEvent>(OnMapEventEnded));
+        }
+
+        private void OnMapEventEnded(MapEvent mapEvent)
+        {
+            PointsSystem?.OnMapEventEnded(mapEvent);
+        }
+
+        private void OnQuestompletedEvent(QuestBase quest, QuestBase.QuestCompleteDetails details)
+        {
+            PointsSystem?.OnQuestCompleted(quest, details);
         }
 
         private void OnRenownGained(Hero hero, int arg2, bool arg3)
@@ -41,15 +67,18 @@ namespace RealmsForgotten.Career
             pointsSystem?.OnClanInfluenceChanged(clan, arg2);
         }
 
-        public static void CreatePointsSystem(PointsSystemType type)
+        public void CreatePointsSystem(PointsSystemType type)
         {
             switch (type)
             {
                 case PointsSystemType.LevelUp:
                     pointsSystem = new LevelUpPointsSystem();
                     break;
-                case PointsSystemType.Influence:
+                case PointsSystemType.Renown:
                     pointsSystem = new RenownPointsSystem();
+                    break;
+                case PointsSystemType.Deeds:
+                    pointsSystem = new DeedsPointsSystem();
                     break;
             }
         }
@@ -64,7 +93,7 @@ namespace RealmsForgotten.Career
             if (!PlayerCareerExtension.GetAllCareerChoices().Contains("MercenaryLordPassive2_3")) return;
             foreach (KeyValuePair<PartyBase, ItemRoster> tuple in dictionary)
             {
-                if (!tuple.Key.IsCaravan()) continue;
+                if (!Globals.IsCaravanParty(tuple.Key)) continue;
                 for (int i = 0; i < tuple.Value.Count; i++)
                 {
                     ItemRosterElement item = tuple.Value[i];
@@ -115,7 +144,6 @@ namespace RealmsForgotten.Career
         }
         public override void SyncData(IDataStore dataStore)
         {
-            //if (dataStore.IsSaving) playerClassInfo.spentPoints =
             dataStore.SyncData("playerClassInfo", ref playerClassInfo);
             dataStore.SyncData("pointsSystem", ref pointsSystem);
         }

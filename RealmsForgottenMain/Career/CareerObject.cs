@@ -8,7 +8,8 @@ namespace RealmsForgotten.Career
     public enum PointsSystemType
     {
         LevelUp,
-        Influence,
+        Renown,
+        Deeds
     }
 
     public class CareerObject : PropertyObject
@@ -20,7 +21,7 @@ namespace RealmsForgotten.Career
         {
             get
             {
-                List<CareerChoiceObject> result = new List<CareerChoiceObject>();
+                List<CareerChoiceObject> result = new();
                 ChoiceGroups.ForEach(x => x.Choices.ForEach(y => result.Add(y)));
                 return result;
             }

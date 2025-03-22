@@ -4,7 +4,7 @@ namespace RealmsForgotten.Career.CareerTypes
 {
     public abstract class RFCareerChoicesBase
     {
-        protected CareerObject CareerID = null;
+        protected CareerObject CareerID;
         public CareerObject GetID()
         {
             return CareerID;
@@ -16,11 +16,6 @@ namespace RealmsForgotten.Career.CareerTypes
             InitializePassives();
         }
 
-        protected RFCareerChoicesBase()
-        {
-            RegisterAll();
-            InitializePassives();
-        }
 
         protected abstract void RegisterAll();
 

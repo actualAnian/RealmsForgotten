@@ -7,9 +7,8 @@ namespace RealmsForgotten.Career.VievModels
 {
     public class CareerScreenVM : ViewModel
     {
-        private Action _closeAction;
+        private readonly Action _closeAction;
         private CareerObjectVM _currentCareerVM;
-        bool _canClose = false;
 
         public CareerScreenVM(Action closeAction)
         {
@@ -18,8 +17,6 @@ namespace RealmsForgotten.Career.VievModels
             if (!PlayerCareerExtension.HasAnyCareer())
                 PlayerCareerExtension.AddCareer(RFCareers.Mercenary);
             _currentCareerVM = new CareerObjectVM(PlayerCareerExtension.GetCareer());
-
-            _canClose = true;
         }
 
         private void ExecuteDone()

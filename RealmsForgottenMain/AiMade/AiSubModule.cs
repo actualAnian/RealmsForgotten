@@ -63,14 +63,10 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new MerchantEventBehavior());
             campaignGameStarter.AddBehavior(new StorytellerBehavior());
             campaignGameStarter.AddBehavior(new ListeningToStoryBehavior());
-            campaignGameStarter.AddBehavior(new RaidLootBonusBehavior());
-            campaignGameStarter.AddBehavior(new DefendVillagersOrCaravansBehavior());
-            campaignGameStarter.AddBehavior(new QuestCompletionBehavior());
             campaignGameStarter.AddBehavior(new BanditDefeatChivalryBehavior());
             campaignGameStarter.AddBehavior(new DivineShieldStateBehavior());
             campaignGameStarter.AddBehavior(new BattleCryStateBehavior());
             campaignGameStarter.AddBehavior(new VisitLibrary());
-            campaignGameStarter.AddBehavior(new BanditHideoutClearedBehavior());
             campaignGameStarter.AddBehavior(new AggressiveSturgiaBehavior());
             campaignGameStarter.AddBehavior(new HumanCohesionBehavior());
             campaignGameStarter.AddBehavior(new BanditPartyGrowthBehavior());

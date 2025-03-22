@@ -1,5 +1,6 @@
 ﻿using System;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.Library;
 using TaleWorlds.SaveSystem;
 
@@ -9,6 +10,7 @@ namespace RealmsForgotten.Career.CareerPointsSystem
     {
         [SaveableField(0)] protected CareerPointsSaveableData pointsData = new();
         protected AbstractPointsSystem() {}
+        public abstract string Description { get; }
         public int AvailablePoints { get { return pointsData.availablePoints; } }
         public int SpentPoints { get { return pointsData.spentPoints; } }
         public void AddPoints(int toAdd = 1) { pointsData.availablePoints += toAdd; }
@@ -25,6 +27,8 @@ namespace RealmsForgotten.Career.CareerPointsSystem
         public virtual void OnLevelUp(Hero hero, bool arg2) { }
         public virtual void OnClanInfluenceChanged(Clan clan, float arg2) { }
         public virtual void OnRenownGained(Hero hero, int arg2, bool arg3) { }
+        public virtual void OnMapEventEnded(MapEvent mapEvent) { }
+        public virtual void OnQuestCompleted(QuestBase quest, QuestBase.QuestCompleteDetails details) { }
         public void ReturnPoints(int points)
         {
             pointsData.availablePoints += points;

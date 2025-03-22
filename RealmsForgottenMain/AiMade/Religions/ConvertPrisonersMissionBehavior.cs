@@ -20,8 +20,6 @@ namespace RealmsForgotten.AiMade.Religions
 
         public override void RegisterEvents()
         {
-            CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, OnNewGameCreated);
-            CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, OnGameLoaded);
             CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, HourlyTick);
             CampaignEvents.OnMainPartyPrisonerRecruitedEvent.AddNonSerializedListener(this, OnPrisonerRecruited);
             CampaignEvents.SettlementEntered.AddNonSerializedListener(this, OnSettlementEntered);
@@ -36,16 +34,6 @@ namespace RealmsForgotten.AiMade.Religions
             dataStore.SyncData("_targetSettlement", ref _targetSettlement);
             dataStore.SyncData("_requiredPrisoners", ref _requiredPrisoners);
             dataStore.SyncData("_convertedPrisoners", ref _convertedPrisoners);
-        }
-
-        private void OnNewGameCreated(CampaignGameStarter campaignGameStarter)
-        {
-            // Add any initialization logic here
-        }
-
-        private void OnGameLoaded(CampaignGameStarter campaignGameStarter)
-        {
-            // Add any loading logic here
         }
 
         private void HourlyTick()
