@@ -9,18 +9,14 @@ namespace RealmsForgotten.Career
 {
     public static class PlayerCareerExtension
     {
-        public static readonly int MaximumNumberOfCareerPerkPoints = 30;
-        public static AbstractPointsSystem PointsSystem { get { return RFCareerCampaignBehavior.Instance.PointsSystem; } }
+        public static AbstractPointsSystem? PointsSystem { get { return RFCareerCampaignBehavior.Instance.PointsSystem; } }
         public static PlayerClassInfo PlayerCareerInfo { get { return RFCareerCampaignBehavior.Instance.ClassInfo; } set { RFCareerCampaignBehavior.Instance.ClassInfo = value; } }
         public static bool HasAnyCareer() => Game.Current.GameType is Campaign && GetCareer() != null;
-        public static CareerObject GetCareer()
+        public static CareerObject? GetCareer()
         {
-            CareerObject result;
+            CareerObject? result = null;
             if (PlayerCareerInfo != null && !string.IsNullOrEmpty(PlayerCareerInfo.CareerID))
-            {
                 result = RFCareers.All.FirstOrDefault(x => x.StringId == PlayerCareerInfo.CareerID);
-            }
-            else result = RFCareers.Mercenary;
             return result;
         }
         public static void AddCareer(CareerObject career)
@@ -29,7 +25,7 @@ namespace RealmsForgotten.Career
             if (HasAnyCareer())
                 PlayerCareerInfo.CareerChoices.Clear();
             PlayerCareerInfo.CareerID = career.StringId;
-            var careerObj = RFCareerChoices.Instance.GetCareerChoices(GetCareer());
+            var careerObj = RFCareerChoices.Instance.GetCareerChoices(GetCareer()!);
             RFCareerCampaignBehavior.Instance.CreatePointsSystem(career.pointsSystem);
             careerObj.InitialCareerSetup();
         }

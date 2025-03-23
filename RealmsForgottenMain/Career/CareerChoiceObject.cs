@@ -149,14 +149,13 @@ namespace RealmsForgotten.Career
         OnKill,
         CompanionLimit, 
         ArmorPenetration,   //player ignores armor with attack mask - this cant be Spells, will be ignored
-
+        HorseHealth,        //only player, percentage based
+        HorseChargeDamage,  //Damage When Horse is raced into infantry.
 
         //have to be enabled
         Special,           //For everything that requires special implementation
         //AccuracyPenalty,           //spray of ranged weapons
         //RangedMovementPenalty, // inaccuracy for ranged weapons penality due to movement
-        //HorseHealth,        //only player, percentage based
-        //HorseChargeDamage,  //Damage When Horse is raced into infantry.
         //PartySize,
         //TroopMorale,        //Morale
         //TroopUpgradeCost,

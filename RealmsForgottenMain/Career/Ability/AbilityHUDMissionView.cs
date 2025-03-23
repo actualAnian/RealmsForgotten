@@ -13,18 +13,19 @@ namespace RealmsForgotten.Career.Ability
     {
         private bool _hasCareerAbility;
         private bool _isInitialized;
-        private AbilityHudVM? _abilityHUD_VM;
+        private AbilityHudVM? _abilityHudVM;
         private GauntletLayer? _abilityLayer;
 
         public override void OnBehaviorInitialize()
         {
             base.OnBehaviorInitialize();
-            _abilityHUD_VM = new AbilityHudVM();
+            _abilityHudVM = new AbilityHudVM();
             _abilityLayer = new GauntletLayer(100);
-            _abilityLayer.LoadMovie("AbilityHUD", _abilityHUD_VM);
+            _abilityLayer.LoadMovie("AbilityHUD", _abilityHudVM);
             MissionScreen.AddLayer(_abilityLayer);
-            _hasCareerAbility = PlayerCareerExtension.GetCareer().Ability.IsEnabled;
-            _isInitialized = true;
+            var career = PlayerCareerExtension.GetCareer();
+            _hasCareerAbility = career != null && career.Ability.IsEnabled;
+            _isInitialized = _hasCareerAbility;
         }
         public override void OnMissionTick(float dt)
         {
@@ -42,11 +43,11 @@ namespace RealmsForgotten.Career.Ability
                 {
                     if (_hasCareerAbility)
                     {
-                        _abilityHUD_VM?.RefreshValues();
+                        _abilityHudVM?.RefreshValues();
                     }
                     return;
                 }
-                if (_abilityHUD_VM != null) _abilityHUD_VM.IsVisible = false;
+                if (_abilityHudVM != null) _abilityHudVM.IsVisible = false;
             }
         }
     }

@@ -24,8 +24,8 @@ namespace RealmsForgotten.Career.Ability
         private readonly int duration;
 
         // data
-        private string sprite;
-        private string spriteUpgraded;
+        private readonly string sprite;
+        private readonly string spriteUpgraded;
         public bool IsUpgraded { get; set; } = false;
         public bool IsEnabled { get; set; } = false;
         public bool IsActiveInMission 
@@ -60,7 +60,7 @@ namespace RealmsForgotten.Career.Ability
         public string DescriptionUpgraded { get { return new TextObject(descriptionUpdated).ToString(); } }
         private readonly string description;
         private readonly string descriptionUpdated;
-        private string name;
+        private readonly string name;
         public string Name { get { return new TextObject(name).ToString(); } }
         private readonly AbilityData data;
         public delegate void OnTroopHitDelegate(Agent attacker, Agent victim, ref float[] additionalDamagePercentages, ref float[] resistancePercentages);

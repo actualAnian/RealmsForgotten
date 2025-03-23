@@ -9,29 +9,35 @@ namespace RealmsForgotten.Career.Ability
 {
     internal class AbilityHudVM : ViewModel
     {
-        private ClassAbility _ability;
+        private ClassAbility? _ability;
+        private readonly CareerObject? _career;
         private string _name = "";
         private string _spriteName = "";
         private string _coolDownLeft = "";
         private bool _isVisible;
         private bool _onCoolDown;
-        private AbilityManagerMissionLogic _abilityLogic;
+        private AbilityManagerMissionLogic? _abilityLogic;
         private bool _isDisabled;
 
         public AbilityHudVM() : base()
         {
-            _ability = PlayerCareerExtension.GetCareer().Ability;
-            _abilityLogic ??= Mission.Current.GetMissionBehavior<AbilityManagerMissionLogic>();
+            _career = PlayerCareerExtension.GetCareer();
+            if (_career != null)
+            {
+                _ability = _career.Ability;
+                _abilityLogic ??= Mission.Current.GetMissionBehavior<AbilityManagerMissionLogic>();
+            }
         }
 
         public override void RefreshValues()
         {
-            _ability = PlayerCareerExtension.GetCareer().Ability;
-            if (_abilityLogic == null) _abilityLogic = Mission.Current.GetMissionBehavior<AbilityManagerMissionLogic>();
+            if (_career == null) return;
+            _ability = _career.Ability;
+            _abilityLogic ??= Mission.Current.GetMissionBehavior<AbilityManagerMissionLogic>();
             IsVisible = _ability != null && _abilityLogic != null && (Mission.Current.Mode == MissionMode.Battle || Mission.Current.Mode == MissionMode.Stealth);
             if (IsVisible)
             {
-                SpriteName = _ability.CurrentSprite;
+                SpriteName = _ability!.CurrentSprite;
                 Name = _ability.Name.ToString();
                 CoolDownLeft = _ability.GetCoolDownLeft().ToString();
                 IsOnCoolDown = _ability.IsOnCooldown();

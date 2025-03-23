@@ -15,7 +15,7 @@ namespace RealmsForgotten.Career.CareerPointsSystem
     public class DeedsPointsSystem : AbstractPointsSystem
     {
         [SaveableField(0)] int deedsPoints;
-        private static int pointsForPerk = 50;
+        private static readonly int pointsForPerk = 50;
         public override void OnMapEventEnded(MapEvent mapEvent)
         {
             PartyBase attackerParty = mapEvent.AttackerSide.LeaderParty;
@@ -45,7 +45,7 @@ namespace RealmsForgotten.Career.CareerPointsSystem
                 AwardDeedsPoints(-20);
             //}
         }
-        private HashSet<string> goodQuestBehaviors = new HashSet<string>
+        private readonly HashSet<string> goodQuestBehaviors = new()
         {
             "RescueDaughterIssueBehavior",
             "EscortMerchantCaravanBehavior",
@@ -56,7 +56,7 @@ namespace RealmsForgotten.Career.CareerPointsSystem
             "ExtortionByDesertersIssueBehavior"
         };
 
-        private HashSet<string> badQuestBehaviors = new HashSet<string>
+        private readonly HashSet<string> badQuestBehaviors = new()
         {
             "GangLeaderNeedsRecruitsBehavior",
             "LandlordNeedsManualLaborersBehavior",

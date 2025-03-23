@@ -19,7 +19,7 @@ namespace RealmsForgotten.Career.Logic
                 WeaponComponentData currentUsageItem = missionWeapon.CurrentUsageItem;
                 if (currentUsageItem != null && currentUsageItem.IsAmmo && currentUsageItem.RelevantSkill != null)
                 {
-                    ExplainedNumber ammoCount = new ExplainedNumber(missionWeapon.Amount);
+                    ExplainedNumber ammoCount = new(missionWeapon.Amount);
                     switch (missionWeapon.Item.Type)
                     {
                         case ItemObject.ItemTypeEnum.Arrows or ItemObject.ItemTypeEnum.Bolts:

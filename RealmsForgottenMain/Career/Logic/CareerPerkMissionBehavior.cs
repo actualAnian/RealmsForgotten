@@ -33,7 +33,7 @@ namespace RealmsForgotten.Career.Logic
                 EquipmentIndex equipmentIndex = (EquipmentIndex)i;
                 MissionWeapon missionWeapon = equipment[equipmentIndex];
                 if (missionWeapon.IsEmpty || missionWeapon.Item.StringId != affectorWeapon.Item.StringId) continue;
-                WeaponComponentData currentUsageItem = missionWeapon.CurrentUsageItem;
+                //WeaponComponentData currentUsageItem = missionWeapon.CurrentUsageItem;
                 short value = (short)(missionWeapon.Amount + 1);
                 affectorAgent.SetWeaponAmountInSlot(equipmentIndex, value, false);
                 //equipment.SetAmountOfSlot(equipmentIndex, value, true);
