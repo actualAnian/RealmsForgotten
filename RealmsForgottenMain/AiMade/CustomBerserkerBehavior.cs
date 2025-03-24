@@ -17,77 +17,66 @@ namespace RealmsForgotten.AiMade
 {
     public class CustomBerserkerBehavior : MissionBehavior
     {
-        public static bool berserkerModeActive = false;
-        private float initialHealth;
-        private Timer berserkerTimer;
+        private readonly HashSet<Agent> berserkerAgents = new();
+        private readonly Dictionary<Agent, Timer> agentTimers = new();
+        private const float BerserkerDuration = 45f;
 
         public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;
 
-        public CustomBerserkerBehavior()
-        {
-            berserkerTimer = new Timer(Time.ApplicationTime, 0f, false);
-        }
+        public bool berserkerModeActive => berserkerAgents.Count > 0; // True if any agent is in Berserker mode
 
         public override void OnMissionTick(float dt)
         {
             base.OnMissionTick(dt);
-            Agent mainAgent = Agent.Main; // Change to the agent you want to monitor
 
-            // Debugging: Print agent health status
-            InformationManager.DisplayMessage(new InformationMessage($"Agent Health: {mainAgent?.Health}"));
-
-            if (mainAgent == null || !IsCustomTroop(mainAgent))
-                return;
-
-            // Initialize initial health if not already done
-            if (!berserkerModeActive && initialHealth == 0)
+            foreach (Agent agent in Mission.Current.Agents)
             {
-                initialHealth = mainAgent.Health;
-                InformationManager.DisplayMessage(new InformationMessage("Initial health recorded."));
+                if (IsBerserkerCandidate(agent) && !berserkerAgents.Contains(agent))
+                {
+                    if (agent.Health < agent.HealthLimit * 0.66f) // Condition to trigger Berserker
+                    {
+                        ActivateBerserkerMode(agent);
+                    }
+                }
             }
 
-            // Check if the agent has lost 1/3 of its HP
-            if (!berserkerModeActive && mainAgent.Health < initialHealth * (2f / 3f))
+            foreach (var agent in berserkerAgents.ToList())
             {
-                InformationManager.DisplayMessage(new InformationMessage("Berserker mode condition met!"));
-                ActivateBerserkerMode(mainAgent);
-            }
-
-            // Disable berserker mode after some time
-            if (berserkerModeActive && berserkerTimer.Check(Time.ApplicationTime))
-            {
-                DeactivateBerserkerMode(mainAgent);
+                if (agentTimers.TryGetValue(agent, out var timer) && timer.Check(Time.ApplicationTime))
+                {
+                    DeactivateBerserkerMode(agent);
+                }
             }
         }
 
         private void ActivateBerserkerMode(Agent agent)
         {
-            berserkerModeActive = true;
-            berserkerTimer.Reset(Time.ApplicationTime, 45f); // Berserker effect lasts for 45 seconds
+            berserkerAgents.Add(agent);
+            agentTimers[agent] = new Timer(Time.ApplicationTime, BerserkerDuration);
 
-            // Print message when berserker mode is activated
-            var msg = new TextObject("{=berserker_activated}Berserker mode activated!");
-            InformationManager.DisplayMessage(new InformationMessage(msg.ToString(), Color.FromUint(0xFFFF0000)));
+            agent.HealthLimit += 20;
+            agent.Health = Math.Min(agent.Health + 10, agent.HealthLimit);
+            agent.SetMaximumSpeedLimit(agent.MaximumForwardUnlimitedSpeed * 1.2f, true);
 
-            // Debugging: Confirm agent health when berserker mode is triggered
-            InformationManager.DisplayMessage(new InformationMessage($"Berserker mode triggered at health: {agent.Health}"));
+            InformationManager.DisplayMessage(new InformationMessage($"{agent.Name} enters Berserker mode!", Colors.Red));
         }
 
         private void DeactivateBerserkerMode(Agent agent)
         {
-            berserkerModeActive = false;
+            berserkerAgents.Remove(agent);
+            agentTimers.Remove(agent);
 
-            // Print message when berserker mode is deactivated
-            var msg = new TextObject("{=berserker_deactivated}Berserker mode deactivated!");
-            InformationManager.DisplayMessage(new InformationMessage(msg.ToString(), Color.FromUint(0xFFFF0000)));
+            agent.HealthLimit -= 20;
+            agent.SetMaximumSpeedLimit(agent.MaximumForwardUnlimitedSpeed / 1.2f, true);
+
+            InformationManager.DisplayMessage(new InformationMessage($"{agent.Name} exits Berserker mode!", Colors.Red));
         }
 
-        private bool IsCustomTroop(Agent agent)
+        private bool IsBerserkerCandidate(Agent agent)
         {
-            // Debugging: Check if the agent is the custom troop
-            bool isCustom = agent.Character?.StringId == "dwarf_berzerker"; // Replace with your troop ID
-            InformationManager.DisplayMessage(new InformationMessage($"Is Custom Troop: {isCustom}"));
-            return isCustom;
+            return agent.Character?.StringId == "dwarf_berzerker"; // Replace with your troop ID
         }
+
+        public HashSet<Agent> GetBerserkerAgents() => berserkerAgents;
     }
 }

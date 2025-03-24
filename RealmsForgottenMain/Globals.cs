@@ -62,11 +62,9 @@ namespace RealmsForgotten
         public static bool IsSillok(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("sillok"); }
         public static bool IsDwarf(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("dwarf"); }
         public static bool IsUrkhai(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("urkhai"); }
-
-        public static bool IsUrukhai(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("urukhai"); }
-
+       
         internal static List<string>  PlayerSelectableRaces { get { return _playerSelectableRaces; } }
-        private static List<string> _playerSelectableRaces = new() { "human", "elvean", "undead", "mull", "half_giant", "Xilantlacay", "tlachiquiy", "dwarf", "urkhai", "urukhai" };
+        private static List<string> _playerSelectableRaces = new() { "human", "elvean", "undead", "mull", "half_giant", "Xilantlacay", "tlachiquiy", "dwarf", "urkhai" };
 
         public static bool IsMissionInitialized = false;
 

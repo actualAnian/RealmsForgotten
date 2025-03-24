@@ -4,6 +4,7 @@ using TaleWorlds.Core;
 using TaleWorlds.SaveSystem;
 using RealmsForgotten.Quest.KnightQuest;
 using RealmsForgotten.Quest.AI_Quest;
+using RealmsForgotten.Quest.FourthUpdate;
 
 namespace RealmsForgotten.Quest
 {
@@ -47,6 +48,7 @@ namespace RealmsForgotten.Quest
             AddClassDefinition(typeof(FourthQuest), 6);
             AddClassDefinition(typeof(FifthQuest), 7);
             AddClassDefinition(typeof(SixthQuest), 8);
+            AddClassDefinition(typeof(SeventhQuest), 9);
             AddClassDefinition(typeof(SpawnNpcInLordsHallBecomeKnightBehavior), 20);
             AddClassDefinition(typeof(BecomeKnightQuest), 21);
             
