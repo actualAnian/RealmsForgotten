@@ -14,41 +14,54 @@ namespace RealmsForgotten.Career.Logic
         public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
         {
             List<string> choices = PlayerCareerExtension.GetAllCareerChoices();
-            if (affectorAgent.IsMainAgent)
+
+            // Check if affectorAgent is not null before using it
+            if (affectorAgent != null && affectorAgent.IsMainAgent)
             {
                 foreach (var choiceID in choices)
                 {
                     CareerChoiceObject choice = RFCareerChoices.GetChoice(choiceID);
-                    if (choice?.Passive == null || choice.Passive.PassiveEffectType != PassiveEffectType.OnKill) continue;
+                    if (choice?.Passive == null || choice.Passive.PassiveEffectType != PassiveEffectType.OnKill)
+                        continue;
+
                     choice.Passive.Activate();
                 }
             }
         }
-        public override void OnAgentHit(Agent affectedAgent, Agent affectorAgent, in MissionWeapon affectorWeapon, in Blow blow, in AttackCollisionData attackCollisionData)
+
+        public override void OnAgentHit(
+            Agent affectedAgent,
+            Agent affectorAgent,
+            in MissionWeapon affectorWeapon,
+            in Blow blow,
+            in AttackCollisionData attackCollisionData
+        )
         {
+            // Only process if it's a missile hit AND the one who hit is the main agent
             if (!blow.IsMissile || !affectorAgent.IsMainAgent) return;
+
             MissionEquipment equipment = Agent.Main.Equipment;
             for (int i = 0; i < 5; i++)
             {
                 EquipmentIndex equipmentIndex = (EquipmentIndex)i;
                 MissionWeapon missionWeapon = equipment[equipmentIndex];
-                if (missionWeapon.IsEmpty || missionWeapon.Item.StringId != affectorWeapon.Item.StringId) continue;
-                //WeaponComponentData currentUsageItem = missionWeapon.CurrentUsageItem;
+                if (missionWeapon.IsEmpty || missionWeapon.Item.StringId != affectorWeapon.Item.StringId)
+                    continue;
+
                 short value = (short)(missionWeapon.Amount + 1);
                 affectorAgent.SetWeaponAmountInSlot(equipmentIndex, value, false);
-                //equipment.SetAmountOfSlot(equipmentIndex, value, true);
-                //affectorAgent.TryToWieldWeaponInSlot(slotIndex, Agent.WeaponWieldActionType.InstantAfterPickUp, false);
             }
         }
-        public override void OnMissileHit(Agent attacker, Agent victim, bool isCanceled, AttackCollisionData collisionData)
+
+        public override void OnMissileHit(
+            Agent attacker,
+            Agent victim,
+            bool isCanceled,
+            AttackCollisionData collisionData
+        )
         {
-            //List<string> choices = PlayerCareerExtension.GetAllCareerChoices();
-            //if (attacker.IsMainAgent 
-            //    && choices.Contains("SurvivalistKeystone") 
-            //    && collisionData.VictimHitBodyPart == BoneBodyPartType.Head || collisionData.VictimHitBodyPart == BoneBodyPartType.Neck)
-            //{
-            //    attacker.getatt
-            //}
+            // Code for OnMissileHit, if needed, can be added here.
+            // Example: checking for a certain career choice effect when a missile hits the head or neck.
         }
     }
 }
