@@ -93,13 +93,13 @@ namespace RealmsForgotten.Career.CareerTypes
             //tier 1
             _wandering_blade_1_passive1.Initialize(CareerID, "{=rf_career_5_arrows}5 extra arrows, bolts ammo", "WanderingBlade1", new CareerChoiceObject.PassiveEffect(5, PassiveEffectType.Ammo));
             _wandering_blade_1_passive2.Initialize(CareerID, "{=rf_career_20_hitpoints}Increases Hitpoints by 20", "WanderingBlade1", new CareerChoiceObject.PassiveEffect(20, PassiveEffectType.Health));
-            _wandering_blade_1_passive3.Initialize(CareerID, "{=rf_career_magical_artifact}Gain a special equipment.", "WanderingBlade1", new CareerChoiceObject.ActiveEffect(() => { MobileParty.MainParty.ItemRoster.Add(new ItemRosterElement(MBObjectManager.Instance.GetObject<ItemObject>("poisoned_knife"))); }));
+            _wandering_blade_1_passive3.Initialize(CareerID, "{=rf_career_magical_artifact}Gain a magical artifact.", "WanderingBlade1", new CareerChoiceObject.ActiveEffect(() => { MobileParty.MainParty.ItemRoster.AddToCounts(MBObjectManager.Instance.GetObject<ItemObject>("poisoned_knife"), 1); }));
             _wandering_blade_1_passive4.Initialize(CareerID, "{=rf_career_player_sword_axe_10}Increases one handed sword, axe damage by 10%.", "WanderingBlade1", new CareerChoiceObject.PassiveEffect(PassiveEffectType.Damage, new DamageProportionTuple(new List<WeaponClass>() { WeaponClass.OneHandedSword, WeaponClass.OneHandedAxe }, 10)));
             _wandering_blade_1_passive5.Initialize(CareerID, "{=rf_career_wages_10_reduction}Party wages are reduced by 10%", "WanderingBlade1", new CareerChoiceObject.PassiveEffect(-0.1f, PassiveEffectType.TroopWages));
 
             _wandering_blade_2_passive1.Initialize(CareerID, "{=rf_career_companion_two}Companion limit of party is increased by 2", "WanderingBlade2", new CareerChoiceObject.PassiveEffect(2, PassiveEffectType.CompanionLimit));
             _wandering_blade_2_passive2.Initialize(CareerID, "{=rf_career_20_health_post_battle}Increases health regeneration after battles by 20", "WanderingBlade2", new CareerChoiceObject.PassiveEffect(10, PassiveEffectType.HealthRegeneration));
-            _wandering_blade_2_passive3.Initialize(CareerID, "{=}Gain a magical artifact.", "WanderingBlade2", new CareerChoiceObject.PassiveEffect(PassiveEffectType.Damage, new DamageProportionTuple(DamageType.PhysicalMelee, 10)));
+            _wandering_blade_2_passive3.Initialize(CareerID, "{=}Gain a magical artifact.", "WanderingBlade2", new CareerChoiceObject.ActiveEffect(() => { MobileParty.MainParty.ItemRoster.AddToCounts(MBObjectManager.Instance.GetObject<ItemObject>("poisoned_knife"), 1); }));
             _wandering_blade_2_passive4.Initialize(CareerID, "{=rf_career_player_dagger_mace_10}Increases damage from daggers, one-two handed maces by 10%.", "WanderingBlade2", new CareerChoiceObject.PassiveEffect(PassiveEffectType.Damage, new DamageProportionTuple(new List<WeaponClass>() { WeaponClass.Mace, WeaponClass.TwoHandedMace, WeaponClass.Dagger}, 10)));
             _wandering_blade_2_passive5.Initialize(CareerID, "{=rf_career_merc_no_extra_wage}Mercenary troops cost no extra wage.", "WanderingBlade2", new CareerChoiceObject.PassiveEffect(1f, PassiveEffectType.Special));
 
@@ -114,7 +114,7 @@ namespace RealmsForgotten.Career.CareerTypes
                 return faceTerrainType == TerrainType.Forest || faceTerrainType == TerrainType.Mountain;
             }, true));
             _warlord_of_coin_1_passive4.Initialize(CareerID, "{=rf_career_player_ranged_defence_15}Increases ranged damage resistance by 15%.", "WarlordOfCoin1", new CareerChoiceObject.PassiveEffect(PassiveEffectType.Resistance, new DamageProportionTuple(DamageType.PhysicalRanged, 15)));
-            _warlord_of_coin_1_passive5.Initialize(CareerID, "{=}Gain a special equipment.", "WarlordOfCoin1", new CareerChoiceObject.ActiveEffect(() => { MobileParty.MainParty.ItemRoster.Add(new ItemRosterElement(MBObjectManager.Instance.GetObject<ItemObject>("rfmisc_poisoned_javelin"))); }));
+            _warlord_of_coin_1_passive5.Initialize(CareerID, "{=}Gain a magical artifact.", "WarlordOfCoin1", new CareerChoiceObject.ActiveEffect(() => { MobileParty.MainParty.ItemRoster.AddToCounts(MBObjectManager.Instance.GetObject<ItemObject>("("), 1); }));
 
             _warlord_of_coin_2_passive1.Initialize(CareerID, "{=rf_career_troop_melee_15}Increases melee damage your troops by 15%.", "WarlordOfCoin2", new CareerChoiceObject.PassiveEffect(10, PassiveEffectType.HealthRegeneration));
             _warlord_of_coin_2_passive2.Initialize(CareerID, "{=rf_career_workshop_income_20}Increases income from workshops by 20%.", "WarlordOfCoin2", new CareerChoiceObject.PassiveEffect(0.2f, PassiveEffectType.MercContractIncome));
@@ -126,10 +126,10 @@ namespace RealmsForgotten.Career.CareerTypes
                     return faceTerrainType == TerrainType.Desert || faceTerrainType == TerrainType.Steppe;
                 }, true));
             _warlord_of_coin_2_passive4.Initialize(CareerID, "{=rf_career_player_melee_defence_15}Increases melee damage resistance by 15%.", "WarlordOfCoin2", new CareerChoiceObject.PassiveEffect(PassiveEffectType.Resistance, new DamageProportionTuple(DamageType.PhysicalMelee, 15)));
-            _warlord_of_coin_2_passive5.Initialize(CareerID, "{=}Gain a special equipment.", "WarlordOfCoin2", new CareerChoiceObject.ActiveEffect(() => { MobileParty.MainParty.ItemRoster.Add(new ItemRosterElement(MBObjectManager.Instance.GetObject<ItemObject>("blackheart_sword_rfonehanded50"))); }));
+            _warlord_of_coin_2_passive5.Initialize(CareerID, "{=}Gain a special armor set.", "WarlordOfCoin2", new CareerChoiceObject.ActiveEffect(() => { MobileParty.MainParty.ItemRoster.AddToCounts(MBObjectManager.Instance.GetObject<ItemObject>("blackheart_sword_rfonehanded50"), 1); }));
 
-                //tier 3
-                _mercenary_lord_1_passive1.Initialize(CareerID, "{=rf_career_party_speed_FoMoSw_20}+20% party movement speed in forest, mountain and swamp terrain.", "MercenaryLord1", new CareerChoiceObject.PassiveEffect(20, PassiveEffectType.PartyMovementSpeed,
+            //tier 3
+            _mercenary_lord_1_passive1.Initialize(CareerID, "{=rf_career_party_speed_FoMoSw_20}+20% party movement speed in forest, mountain and swamp terrain.", "MercenaryLord1", new CareerChoiceObject.PassiveEffect(20, PassiveEffectType.PartyMovementSpeed,
             (characterObject) => {
                 if (characterObject.HeroObject != Hero.MainHero) return false;
                 var party = characterObject.HeroObject.PartyBelongedTo;

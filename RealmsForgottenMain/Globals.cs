@@ -123,5 +123,9 @@ namespace RealmsForgotten
             (character => character.IsElvean(), new float[] { 0f, 0f, 0f, 0.15f, -0.15f, 0f }),
             (character => character.IsXilantlacay(), new float[] { 0f, 0f, 0f, 0.15f, 0f, 0f })
         };
+        public static bool IsCurrentMainAgentPlayerHero()
+        {
+            return TaleWorlds.MountAndBlade.Agent.Main != null && TaleWorlds.MountAndBlade.Agent.Main.Character == CharacterObject.PlayerCharacter;
+        }
     }
 }

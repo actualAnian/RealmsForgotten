@@ -15,6 +15,7 @@ namespace RealmsForgotten.Career.CareerPointsSystem
     public class DeedsPointsSystem : AbstractPointsSystem
     {
         [SaveableField(0)] int deedsPoints;
+        [SaveableField(1)] int spentDeedsPoints = 0;
         private static readonly int pointsForPerk = 50;
         public override void OnMapEventEnded(MapEvent mapEvent)
         {
@@ -33,6 +34,10 @@ namespace RealmsForgotten.Career.CareerPointsSystem
                 AwardDeedsPoints(10);
                 InformationManager.DisplayMessage(new InformationMessage("You have successfully defended the villagers/caravan and gained chivalry points!"));
             }
+        }
+        public int AllDeedsPoints()
+        {
+            return deedsPoints + spentDeedsPoints;
         }
         public override void OnQuestCompleted(QuestBase quest, QuestBase.QuestCompleteDetails details)
         {
@@ -74,6 +79,7 @@ namespace RealmsForgotten.Career.CareerPointsSystem
             deedsPoints += points;
             int perkPoints = deedsPoints / pointsForPerk;
             deedsPoints -= perkPoints * pointsForPerk;
+            spentDeedsPoints += perkPoints * pointsForPerk;
             AddPoints(perkPoints);
         }
     }
