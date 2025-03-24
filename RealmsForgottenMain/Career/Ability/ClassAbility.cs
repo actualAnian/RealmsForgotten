@@ -186,15 +186,16 @@ namespace RealmsForgotten.Career.Ability
         {
             AbilityData mercAbilityData = new(15, 15, baseActions: new()
             {
-                [AbilityData.ActionTrigger.OnTroopHit] = new() { ((Agent attacker, Agent victim, float[] additionalDamagePercentages, float[] resistancePercentages) => AbilityEffects.GiveFiftyMeleeResistance(attacker, victim, additionalDamagePercentages, resistancePercentages)) },
+                [AbilityData.ActionTrigger.OnTroopHit] = new() { ((Agent attacker, Agent victim, float[] additionalDamagePercentages, float[] resistancePercentages) => AbilityEffects.GiveThirtyMeleeResistanceToInfantry(attacker, victim, additionalDamagePercentages, resistancePercentages)) },
+                [AbilityData.ActionTrigger.OnActivate] = new() { () => AbilityEffects.IncreaseInfantryMorale() },
             },
             upgradedActions: new()
             {
                 [AbilityData.ActionTrigger.OnActivate] = new() { () => AbilityEffects.GiveBerserkerEffects() },
                 [AbilityData.ActionTrigger.OnDeactivate] = new() { () => AbilityEffects.RemoveBerserkerEffects() }
             });
-            All.Add(new ClassAbility("knight_ability", "{=rf_knight_ability_name}Ability", "divine_shield_perk_a_", "divine_shield_perk_b", "{=rf_career_battle_cry_desc} For the next 15 seconds, all your troops get 50% melee damage resistance.", "{=rf_career_battle_cry_upgr_desc} During the effect of battle cry, your troops additionally get berzerker potion effect (+20% attack speed)", mercAbilityData));
-            All.Add(new ClassAbility("merc_ability", "{=rf_mercenary_ability_name}Battle Cry", "battle_cry_perk_a", "battle_cry_perk_b", "{=rf_career_battle_cry_desc} For the next 15 seconds, all your troops get 50% melee damage resistance.", "{=rf_career_battle_cry_upgr_desc} During the effect of battle cry, your troops additionally get berzerker potion effect (+20% attack speed)", mercAbilityData));
+            All.Add(new ClassAbility("knight_ability", "{=rf_knight_ability_name}Divine Shield", "divine_shield_perk_a_", "divine_shield_perk_b", "{=rf_career_battle_cry_desc} Increase your infantry's morale by 20, For the next 15 seconds, all your infantry get 30% melee damage resistance.", "{=rf_career_battle_cry_upgr_desc} During the effect of battle cry, your troops additionally get berzerker potion effect (+20% attack speed)", mercAbilityData));
+            All.Add(new ClassAbility("merc_ability", "{=rf_mercenary_ability_name}Battle Cry", "battle_cry_perk_a", "battle_cry_perk_b", "{=rf_career_battle_cry_desc} For the next 15 seconds, all your troops get 50% melee damage resistance.", "{=rf_career_battle_cry_upgr_desc} During the effect of battle cry, your infantry additionally get berzerker potion effect (+20% attack speed)", mercAbilityData));
         }
 
     }

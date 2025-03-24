@@ -62,15 +62,15 @@ namespace RealmsForgotten.Career.Ability
                 agentsWithProperties.RemoveAt(i);
             }
         }
-        public static void GiveFiftyMeleeResistance(Agent attacker, Agent victim, float[] additionalDamagePercentages, float[] resistancePercentages)
+        public static void GiveThirtyMeleeResistanceToInfantry(Agent attacker, Agent victim, float[] additionalDamagePercentages, float[] resistancePercentages)
         {
-            if (victim.BelongsToMainParty()) resistancePercentages[1] += 0.5f;
+            if (victim.BelongsToMainParty() && victim.Character != null && victim.Character.IsInfantry) resistancePercentages[1] += 0.3f;
         }
-        public static void IncreaseMorale()
+        public static void IncreaseInfantryMorale()
         {
             foreach (Agent? agent in Mission.Current.PlayerTeam.ActiveAgents)
             {
-                if (agent.BelongsToMainParty())
+                if (agent.BelongsToMainParty() && agent.Character != null && agent.Character.IsInfantry)
                     agent.ChangeMorale(20);
             }
         }

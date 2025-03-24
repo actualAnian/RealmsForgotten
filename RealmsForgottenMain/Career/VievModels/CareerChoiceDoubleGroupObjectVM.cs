@@ -81,7 +81,6 @@ namespace RealmsForgotten.Career.VievModels
                 _choices0[i].SetState(choiceStates.Item1);
                 _choices1[i].SetState(choiceStates.Item2);
             }
-            _topScreenVM.Choices = GetChoices();
         }
         public void OnPerkTaken(CareerChoiceObject choice)
         {
