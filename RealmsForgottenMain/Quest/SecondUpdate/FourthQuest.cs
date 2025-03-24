@@ -84,7 +84,6 @@ namespace RealmsForgotten.Quest.SecondUpdate
             if (captureHellboundLog?.CurrentProgress == 0 && defeatedSide?.LeaderParty.Culture.StringId == "hellbound_outlaw")
             {
                 captureHellboundLog.UpdateCurrentProgress(1);
-                CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty), new ConversationCharacterData(CharacterObject.Find("hellbound_chief")));
             }
         }
 
@@ -96,9 +95,11 @@ namespace RealmsForgotten.Quest.SecondUpdate
                     EndCaptivityAction.ApplyByReleasedAfterBattle(Hero.MainHero);
 
                 CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter), new ConversationCharacterData(TheOwl.CharacterObject));
-                takeBossToLordLog?.UpdateCurrentProgress(3);
             }
-
+            if (captureHellboundLog?.CurrentProgress == 1)
+            {
+                CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty), new ConversationCharacterData(CharacterObject.Find("hellbound_chief")));
+            }
             if (captureHellboundLog?.CurrentProgress == 2)
             {
                 new FifthQuest("rf_fifth_quest", QuestGiver, CampaignTime.Never, 50000).StartQuest();
@@ -143,7 +144,6 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
                 hellboundParty.InitializeMobilePartyAtPosition(hellBoundTroopRoster,
                     TroopRoster.CreateDummyTroopRoster(), MobileParty.MainParty.Position2D);
-
 
                 hellboundParty.IgnoreForHours(24);
                 hellboundParty.Ai.SetMoveEngageParty(MobileParty.MainParty);

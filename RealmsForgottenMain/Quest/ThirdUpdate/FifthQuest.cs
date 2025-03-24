@@ -64,6 +64,8 @@ namespace RealmsForgotten.Quest.SecondUpdate
         private JournalLog deliverLordToAlKhuurLog;
         [SaveableField(10)]
         private JournalLog defeatDevilPartiesLog;
+        [SaveableField(11)] 
+        private int _lastDevilsSpawnDay = -99;
 
         private bool isObjectiveCompleted => defeatDevilPartiesLog?.CurrentProgress >= devilPartiesToDefeatTarget;
 
@@ -118,9 +120,12 @@ namespace RealmsForgotten.Quest.SecondUpdate
                     }
 
                     party.InitializeMobilePartyAroundPosition(
-                        troopRoster, TroopRoster.CreateDummyTroopRoster(),
-                        hideout.Settlement.Position2D,
-                        100f, 10f);
+                    troopRoster,
+                    TroopRoster.CreateDummyTroopRoster(),
+                    MobileParty.MainParty.Position2D,
+                    100f,
+                    10f
+ );
                 }
             }
         }
@@ -129,59 +134,77 @@ namespace RealmsForgotten.Quest.SecondUpdate
         {
             try
             {
+                int currentDay = (int)CampaignTime.Now.ToDays;
+
+                // Only spawn if at least 7 days have passed
+                if (currentDay - _lastDevilsSpawnDay < 7)
+                {
+                    return; // skip this day
+                }
+
+                // Update to the current day so it won't happen again until 7 more days pass
+                _lastDevilsSpawnDay = currentDay;
+
+                // ===== Your normal "spawn devils" code starts here =====
                 Random rnd = new Random();
                 int devilsAmount = rnd.Next(100, 251);
 
-                // Iterate through all hideouts on the map
                 foreach (Hideout hideout in Hideout.All)
                 {
-                    if (hideout == null || hideout.Settlement == null)
-                    {
-                        InformationManager.DisplayMessage(new InformationMessage("Hideout or its settlement is null."));
+                    if (hideout?.Settlement == null)
                         continue;
-                    }
 
                     Clan devilsClan = Clan.FindFirst(x => x.StringId == "cs_devils_raiders");
                     if (devilsClan == null)
-                    {
-                        InformationManager.DisplayMessage(new InformationMessage("Devils clan not found."));
                         continue;
-                    }
 
-                    // Create the troop roster
                     TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
                     CharacterObject devilsBanditRaider = CharacterObject.Find("cs_devils_bandits_raider");
                     if (devilsBanditRaider == null)
-                    {
-                        InformationManager.DisplayMessage(new InformationMessage("Devils bandit raider not found."));
                         continue;
-                    }
+
                     troopRoster.AddToCounts(devilsBanditRaider, devilsAmount);
 
-                    // Create the devils party
                     MobileParty party = BanditPartyComponent.CreateBanditParty("devils", devilsClan, hideout, true);
                     if (party == null)
-                    {
-                        InformationManager.DisplayMessage(new InformationMessage("Failed to create devils party."));
                         continue;
-                    }
 
-                    // Set the custom name for the devils party
                     party.SetCustomName(new TextObject("Devils Party"));
 
-                    // Initialize the party around the hideout position with the defined troop roster
+                    // Position them around the hideout
                     party.InitializeMobilePartyAroundPosition(
-                        troopRoster, TroopRoster.CreateDummyTroopRoster(),
+                        troopRoster,
+                        TroopRoster.CreateDummyTroopRoster(),
                         hideout.Settlement.Position2D,
-                        200f, 10f);
+                        200f, 10f
+                    );
 
-                    InformationManager.DisplayMessage(new InformationMessage($"Devils spawned at {hideout.Settlement.Name} with {devilsAmount} raiders."));
+                    List<MobileParty> nearbyEnemyParties = MobileParty.All
+                    .Where(p => (p.IsLordParty || IsVillagerParty(p) || p.IsCaravan || p.IsBandit) && p.MapFaction.IsAtWarWith(party.MapFaction))
+                    .OrderBy(p => p.Position2D.DistanceSquared(party.Position2D))
+                    .ToList();
+                    party.Aggressiveness = 10f;
+                    party.Ai.SetDoNotMakeNewDecisions(false);
+                    party.Ai.SetMovePatrolAroundSettlement(hideout.Settlement);
+
+                    // Or if you want them to chase the player specifically, do:
+                    // party.Ai.SetMoveEngageParty(MobileParty.MainParty);
+                    InformationManager.DisplayMessage(
+                        new InformationMessage($"Devils spawned at {hideout.Settlement.Name} with {devilsAmount} raiders.")
+                    );
                 }
             }
             catch (Exception ex)
             {
-                InformationManager.DisplayMessage(new InformationMessage($"Exception in OnDailyTick: {ex.Message}"));
+                InformationManager.DisplayMessage(
+                    new InformationMessage($"Exception in OnDailyTick: {ex.Message}")
+                );
             }
+        }
+
+        private bool IsVillagerParty(MobileParty party)
+        {
+            return party.PartyComponent is VillagerPartyComponent;
         }
 
         private void OnMissionStart(IMission imission)
@@ -294,7 +317,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 var mobilePartyName = mobileParty.Party != null ? mobileParty.Party.Name.ToString() : "Unnamed Party";
                 var destroyerName = destroyer.Name != null ? destroyer.Name.ToString() : "Unnamed Party";
 
-                InformationManager.DisplayMessage(new InformationMessage($"OnMobilePartyDestroyed: MobileParty ID: {mobilePartyName}, Destroyer Party: {destroyerName}"));
+               
             }
             catch (Exception ex)
             {

@@ -16,6 +16,7 @@ using TaleWorlds.ScreenSystem;
 using TaleWorlds.CampaignSystem.Conversation;
 using TaleWorlds.CampaignSystem.Party.PartyComponents;
 using TaleWorlds.CampaignSystem.Roster;
+using RealmsForgotten.Quest.FourthUpdate;
 
 namespace RealmsForgotten.Quest.SecondUpdate
 {
@@ -43,33 +44,33 @@ namespace RealmsForgotten.Quest.SecondUpdate
         public override bool IsRemainingTimeHidden => true;
         //public static SixthQuest Instance { get; private set; }
         static Dictionary<string, DemonLord>? _demonLords;
-        static Dictionary<string, DemonLord> DemonLords 
-        { 
+        static Dictionary<string, DemonLord> DemonLords
+        {
             get
             {
                 _demonLords ??= new()
-                    {
-                        ["cs_nurh_raiders"] = new DemonLord("cs_nurh_raiders_boss", "cs_nurh_raiders", new List<TroopDetail>
+                {
+                    ["cs_nurh_raiders"] = new DemonLord("cs_nurh_raiders_boss", "cs_nurh_raiders", new List<TroopDetail>
                             {
                                 new TroopDetail("cs_nurh_raiders_bandit", 500),
                                 new TroopDetail("cs_nurh_raiders_raider", 250),
                                 new TroopDetail("cs_nurh_raiders_chief", 50)
                         }, Settlement.FindFirst(settlement => settlement.StringId == "town_EN1")),
-                        ["cs_daimo_raiders"] =
+                    ["cs_daimo_raiders"] =
                         new DemonLord("cs_daimo_raiders_boss", "cs_daimo_raiders", new List<TroopDetail>
                             {
                                 new TroopDetail("cs_daimo_raiders_bandit", 500),
                                 new TroopDetail("cs_daimo_raiders_raider", 250),
                                 new TroopDetail("cs_daimo_raiders_chief", 50)
                         }, Settlement.FindFirst(settlement => settlement.StringId == "town_B3")),
-                        ["cs_bark_raiders"] =
+                    ["cs_bark_raiders"] =
                         new DemonLord("cs_bark_raiders_boss", "cs_bark_raiders", new List<TroopDetail>
                             {
                                 new TroopDetail("cs_bark_raiders_bandit", 500),
                                 new TroopDetail("cs_bark_raiders_raider", 250),
                                 new TroopDetail("cs_bark_raiders_chief", 50)
                         }, Settlement.FindFirst(settlement => settlement.StringId == "town_V5")),
-                        ["cs_sillok_raiders"] =
+                    ["cs_sillok_raiders"] =
                         new DemonLord("cs_sillok_raiders_boss", "cs_sillok_raiders", new List<TroopDetail>
                             {
                                 new TroopDetail("cs_sillok_raiders_bandit", 500),
@@ -78,7 +79,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                         }, Settlement.FindFirst(settlement => settlement.StringId == "town_K2"))
                 };
                 return _demonLords;
-            } 
+            }
         }
         protected override void SetDialogs()
         {
@@ -196,7 +197,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
         private void SpawnDemonLords()
         {
-            foreach(DemonLord lord in DemonLords.Values)
+            foreach (DemonLord lord in DemonLords.Values)
                 CreateDemonLordParty(lord.CharacterId, lord.ClanId, lord.SpawnSettlement, lord.TroopDetails);
         }
 
@@ -211,7 +212,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 CharacterObject character = CharacterObject.Find(demonLordId) ?? throw new Exception($"lord with id {demonLordId} not found");
                 troopRoster.AddToCounts(character, 1);
                 initialTroops[character] = 1;
-                
+
                 foreach (var troopDetail in troopDetails)
                 {
                     CharacterObject troop = CharacterObject.Find(troopDetail.TroopId);
@@ -227,7 +228,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 party.SetCustomName(new TextObject($"Demon Lord {character.Name} Party"));
                 party.Aggressiveness = 10f;
                 party.Ai.SetMovePatrolAroundPoint(nearTown.Position2D);
-                
+
                 CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, () =>
                 {
                     if (party != null && party.IsActive)
@@ -380,7 +381,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 ("sturgian_veteran_bowman", 25)
             };
 
-             // Call the method to add the troops
+            // Call the method to add the troops
             GivePlayerTroops(troopsToAdd);
 
             StartOwlConversationResponse();
@@ -413,9 +414,22 @@ namespace RealmsForgotten.Quest.SecondUpdate
            .NpcLine(GameTexts.FindText("rf_sixth_quest_after_demon_lords_defeated_owl_dialog_5"))
            .Consequence(() =>
            {
-               CompleteQuestWithSuccess();
+               StartNewChapterQuest();
            })
            .CloseDialog();
+
+        private void StartNewChapterQuest()
+        {
+            // Optionally complete the current quest before transitioning
+            CompleteQuestWithSuccess();
+
+            // Create and start the new chapter quest
+            SeventhQuest newChapter = new SeventhQuest("rf_seventh_quest", QuestGiver, CampaignTime.DaysFromNow(999), 20000);
+            newChapter.StartQuest();
+
+            InformationManager.DisplayMessage(new InformationMessage("A new threat emerges... Your next chapter begins."));
+        }
+
 
         private void GivePlayerTroops(List<(string troopId, int troopCount)> troops)
         {
