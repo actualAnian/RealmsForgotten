@@ -1,5 +1,4 @@
-﻿using TaleWorlds.CampaignSystem;
-using TaleWorlds.Core;
+﻿using TaleWorlds.Core;
 
 namespace RealmsForgotten.Career
 {
@@ -16,12 +15,12 @@ namespace RealmsForgotten.Career
         private CareerChoiceGroupObject _mercenary_lord_2;
 
         //Grail Knight
-        //private CareerChoiceGroupObject _errantryWar;
-        //private CareerChoiceGroupObject _enhancedHorseCombat;
-        //private CareerChoiceGroupObject _questingVow;
-        //private CareerChoiceGroupObject _monsterSlayer;
-        //private CareerChoiceGroupObject _masterHorseman;
-        //private CareerChoiceGroupObject _grailVow;
+        private CareerChoiceGroupObject _knight_errant_1;
+        private CareerChoiceGroupObject _knight_errant_2;
+        private CareerChoiceGroupObject _field_marshall_1;
+        private CareerChoiceGroupObject _field_marshall_2;
+        private CareerChoiceGroupObject _paragon_of_virtue_1;
+        private CareerChoiceGroupObject _paragon_of_virtue_2;
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
         public RFCareerChoiceGroups()
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
@@ -40,34 +39,32 @@ namespace RealmsForgotten.Career
             _mercenary_lord_1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("MercenaryLord1"));
             _mercenary_lord_2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("MercenaryLord2"));
 
-            //Grail Knight
-            //_errantryWar = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("ErrantryWar"));
-            //_enhancedHorseCombat = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("EnhancedHorseCombat")); ;
-            //_questingVow = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("QuestingVow"));
-            //_monsterSlayer = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("MonsterSlayer"));
-            //_masterHorseman = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("MasterHorseman"));
-            //_grailVow = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("GrailVow"));
+            //Knight
+            _knight_errant_1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("KnightErrant1"));
+            _knight_errant_2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("KnightErrant2"));
+            _field_marshall_1= Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("FieldMarshall1"));
+            _field_marshall_2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("FieldMarshall2"));
+            _paragon_of_virtue_1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("ParagonOfVirtue1"));
+            _paragon_of_virtue_2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("ParagonOfVirtue2"));
         }
 
         private void InitializeAll()
         {
             //Mercenary
+            _wandering_blade_1.Initialize("{=rf_career_merc_1}Wandering Blade", RFCareers.Mercenary, 1);
+            _wandering_blade_2.Initialize("{=rf_career_merc_1}Wandering Blade", RFCareers.Mercenary, 1);
+            _warlord_of_coin_1.Initialize("{=rf_career_merc_2}Warlord of Coin", RFCareers.Mercenary, 2);
+            _warlord_of_coin_2.Initialize("{=rf_career_merc_2}Warlord of Coin", RFCareers.Mercenary, 2);
+            _mercenary_lord_2.Initialize("{=rf_career_merc_3}Mercenary Lord", RFCareers.Mercenary, 3);
+            _mercenary_lord_1.Initialize("{=rf_career_merc_3}Mercenary Lord", RFCareers.Mercenary, 3);
 
-            _wandering_blade_1.Initialize("Wandering Blade", RFCareers.Mercenary, 1);
-            _wandering_blade_2.Initialize("Wandering Blade", RFCareers.Mercenary, 1);
-            _warlord_of_coin_1.Initialize("Warlord of Coin", RFCareers.Mercenary, 2);
-            _warlord_of_coin_2.Initialize("Warlord of Coin", RFCareers.Mercenary, 2);
-            _mercenary_lord_2.Initialize("Mercenary Lord", RFCareers.Mercenary, 3);
-            _mercenary_lord_1.Initialize("Mercenary Lord", RFCareers.Mercenary, 3);
-
-            //Grail Knight
-
-            //_errantryWar.Initialize("{=errantry_war_choice_group_str}Errantry War", RFCareers.GrailKnight, 1);
-            //_enhancedHorseCombat.Initialize("{=enhanced_horse_combat_choice_group_str}Enhanced Horse Combat", RFCareers.GrailKnight, 1);
-            //_questingVow.Initialize("{=questing_vow_choice_group_str}Questing Vow", RFCareers.GrailKnight, 2);
-            //_monsterSlayer.Initialize("{=monster_slayer_choice_group_str}Monster Slayer", RFCareers.GrailKnight, 2);
-            //_masterHorseman.Initialize("{=master_horseman_choice_group_str}Master Horseman", RFCareers.GrailKnight, 3);
-            //_grailVow.Initialize("{=grail_vow_choice_group_str}Grail Vow", RFCareers.GrailKnight, 3);
+            //Knight
+            _knight_errant_1.Initialize("{=rf_career_knight_1}Knight Errant", RFCareers.Knight, 1);
+            _knight_errant_2.Initialize("{=rf_career_knight_1}Knight Errant", RFCareers.Knight, 1);
+            _field_marshall_2.Initialize("{=rf_career_knight_2}Field Marshall", RFCareers.Knight, 2);
+            _field_marshall_1.Initialize("{=rf_career_knight_2}Field Marshall", RFCareers.Knight, 2);
+            _paragon_of_virtue_1.Initialize("{=rf_career_knight_3}Paragon Of Virtue", RFCareers.Knight, 3);
+            _paragon_of_virtue_2.Initialize("{=rf_career_knight_3}Paragon Of Virtue", RFCareers.Knight, 3);
         }
     }
 }

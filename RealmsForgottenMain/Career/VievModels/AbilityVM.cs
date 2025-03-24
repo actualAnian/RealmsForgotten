@@ -25,15 +25,16 @@ namespace RealmsForgotten.Career.VievModels
 
         private void SetAbilityDescription()
         {
+            var career = PlayerCareerExtension.GetCareer()!;
             if (forUpgraded)
             {
-                careerObjectVM.AbilityName = PlayerCareerExtension.GetCareer().Ability.Name.ToString() + "+";
-                careerObjectVM.AbilityDescription = PlayerCareerExtension.GetCareer().Ability.DescriptionUpgraded;
+                careerObjectVM.AbilityName = career.Ability.Name.ToString() + "+";
+                careerObjectVM.AbilityDescription = career.Ability.DescriptionUpgraded;
             }
             else
             {
-                careerObjectVM.AbilityName = PlayerCareerExtension.GetCareer().Ability.Name.ToString();
-                careerObjectVM.AbilityDescription = PlayerCareerExtension.GetCareer().Ability.Description;
+                careerObjectVM.AbilityName = career.Ability.Name.ToString();
+                careerObjectVM.AbilityDescription = career.Ability.Description;
             }
             careerObjectVM.CurrentSpriteName = spriteName;
             careerObjectVM.RefreshValues();
@@ -43,24 +44,25 @@ namespace RealmsForgotten.Career.VievModels
         {
             if (forUpgraded)
             {
-                if (PlayerCareerExtension.GetCareer().Ability.IsUpgraded)
+                if (PlayerCareerExtension.GetCareer()!.Ability.IsUpgraded)
                 {
                     SetState(State.Taken);
                     return;
                 }
-                if (careerObjectVM.DoubleGroupTier2.GetChoices().Count > 0 && (careerObjectVM.DoubleGroupTier2.GetChoices().Last().IsTaken && PlayerCareerExtension.PointsSystem.HasAvailablePoints()))
+                if (careerObjectVM.IsGroupCompleted(1) && PlayerCareerExtension.PointsSystem!.HasAvailablePoints())
                     SetState(State.AvailableToTake);
+                else SetState(State.UnavailableToTake);
             }
             else
             {
-                if (PlayerCareerExtension.GetCareer().Ability.IsEnabled)
+                if (PlayerCareerExtension.GetCareer()!.Ability.IsEnabled)
                 {
                     SetState(State.Taken);
                     return;
                 }
-                if (!IsTaken && careerObjectVM.DoubleGroupTier1.GetChoices().Count > 0 && (careerObjectVM.DoubleGroupTier1.GetChoices().Last().IsTaken && PlayerCareerExtension.PointsSystem.HasAvailablePoints()))
+                if (careerObjectVM.IsGroupCompleted(0) && PlayerCareerExtension.PointsSystem!.HasAvailablePoints())
                     SetState(State.AvailableToTake);
-
+                else SetState(State.UnavailableToTake);
             }
 
         }

@@ -28,17 +28,22 @@ namespace RealmsForgotten.Career.VievModels
             _choices1 = new MBBindingList<CareerChoiceObjectVM>();
             tier = ttier;
 
-            int LastTaken = Math.Max(
+            int lastTaken = Math.Max(
                 _choiceGroup0.Choices.FindLastIndex(c => PlayerCareerExtension.HasCareerChoice(c)),
                 _choiceGroup1.Choices.FindLastIndex(c => PlayerCareerExtension.HasCareerChoice(c))
             );
             for (int i = 0; i < _choiceGroup0.Choices.Count; i++)
             {
-                (ThreeStateObjectVM.State, ThreeStateObjectVM.State) choiceStates = GetChoiceState(LastTaken, i);
+                (ThreeStateObjectVM.State, ThreeStateObjectVM.State) choiceStates = GetChoiceState(lastTaken, i);
                 _choices0.Add(new CareerChoiceObjectVM(_choiceGroup0.Choices[i], this, choiceStates.Item1));
                 _choices1.Add(new CareerChoiceObjectVM(_choiceGroup1.Choices[i], this, choiceStates.Item2));
             }
             _topScreenVM.Choices = GetChoices();
+            RefreshValues();
+        }
+        public bool IsLastPerkTaken()
+        {
+            return GetChoices().Count == Math.Min(_choiceGroup0.Choices.Count, _choiceGroup1.Choices.Count);
         }
         private (ThreeStateObjectVM.State, ThreeStateObjectVM.State) GetChoiceState(int lastTaken, int index)
         {
@@ -53,7 +58,7 @@ namespace RealmsForgotten.Career.VievModels
                 state0 = PlayerCareerExtension.HasCareerChoice(_choiceGroup0.Choices[index]) ? ThreeStateObjectVM.State.Taken : ThreeStateObjectVM.State.UnavailableToTake;
                 state1 = PlayerCareerExtension.HasCareerChoice(_choiceGroup1.Choices[index]) ? ThreeStateObjectVM.State.Taken : ThreeStateObjectVM.State.UnavailableToTake;
             }
-            else if (index == lastTaken + 1 && PlayerCareerExtension.PointsSystem.HasAvailablePoints())
+            else if (index == lastTaken + 1 && PlayerCareerExtension.PointsSystem!.HasAvailablePoints())
             {
                 state0 = state1 = ThreeStateObjectVM.State.AvailableToTake;
             }
@@ -80,7 +85,7 @@ namespace RealmsForgotten.Career.VievModels
         }
         public void OnPerkTaken(CareerChoiceObject choice)
         {
-            PlayerCareerExtension.PointsSystem.SpendPoint();
+            PlayerCareerExtension.PointsSystem!.SpendPoint();
             bool canTake = PlayerCareerExtension.PointsSystem.HasAvailablePoints();
             int index = _choiceGroup0.Choices.IndexOf(choice);
             int group = 0;

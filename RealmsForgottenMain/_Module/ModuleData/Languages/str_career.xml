@@ -4,13 +4,21 @@
     <tag language="English" />
   </tags>
     <strings>
-		<string id="class_group1_name_Mercenary" text="Witch Hunter Initiate" />		
+		<string id="rf_career_merc_1" text="Wandering Blade" />
+		<string id="rf_career_merc_2" text="Warlord of Coin" />
+		<string id="rf_career_merc_3" text="Mercenary Lord" />
+		<string id="rf_career_knight_1" text="Knight Errant" />
+		<string id="rf_career_knight_2" text="Field Marshall" />
+		<string id="rf_career_knight_3" text="Paragon Of Virue" />
+
 		<!-- descriptions-->
 		<string id="class_description.Mercenary" text="We are mercenaries. We have the resources. The will. To make these hours count! The clock is ticking, gentlemen. Let's begin." />
 
 		<string id="merc_merc_wage_reduction" text="Class mercenary wage reduction" />
+		<string id="knight_cav_wage_reduction" text="Class knight cavalry wage reduction" />
 		<string id="rf_raid_plunder" text="You plundered additional {NUMBER_OF} {PRODUCTS}." />
 		<string id="rf_caravan_plunder" text="You plundered additional {NUMBER_OF} {PRODUCTS}." />
+		
 		
 		<!-- abilities -->
 		<string id="rf_mercenary_ability_name" text="Battle Cry" />

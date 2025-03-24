@@ -7,13 +7,8 @@ namespace RealmsForgotten.Career
 {
     public class RFCareers
     {
-        public enum PointsSystemType
-        {
-            LevelUp,
-        }
-
         private MBReadOnlyList<CareerObject> _allCareers;
-        private CareerObject _grailKnight;
+        private CareerObject _Knight;
         private CareerObject _mercenary;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
@@ -33,7 +28,7 @@ namespace RealmsForgotten.Career
                 return instance;
             }
         }
-        public static CareerObject GrailKnight => Instance._grailKnight;
+        public static CareerObject Knight => Instance._Knight;
         public static CareerObject Mercenary => Instance._mercenary;
 
         public static MBReadOnlyList<CareerObject> All => Instance._allCareers;
@@ -41,20 +36,20 @@ namespace RealmsForgotten.Career
         {
             ClassAbility.RegisterAll();
 
-            _grailKnight = Game.Current.ObjectManager.RegisterPresumedObject(new CareerObject("knight", ClassAbility.All.First(a => a.StringId == "merc_ability"), Career.PointsSystemType.LevelUp));
             _mercenary = Game.Current.ObjectManager.RegisterPresumedObject(new CareerObject("mercenary", ClassAbility.All.First(a => a.StringId == "merc_ability"), Career.PointsSystemType.Renown));
+            _Knight = Game.Current.ObjectManager.RegisterPresumedObject(new CareerObject("knight", ClassAbility.All.First(a => a.StringId == "knight_ability"), Career.PointsSystemType.LevelUp));
 
             _allCareers = new()
             {
-                _grailKnight,
                 _mercenary,
+                _Knight,
             };
 
         }
         private void InitializeAll()
         {
-            _grailKnight.Initialize("Grail Knight");
             _mercenary.Initialize("Mercenary");
+            _Knight.Initialize("Knight");
         }
     }
 }

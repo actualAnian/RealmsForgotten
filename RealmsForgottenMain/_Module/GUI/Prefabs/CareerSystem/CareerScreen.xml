@@ -169,8 +169,8 @@
 															<Children>
 																<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" VerticalAlignment="Center" StackLayout.LayoutMethod="VerticalBottomToTop" >
 																	<Children>
-																		<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" HorizontalAlignment="Center" MarginBottom="50" MarginTop="80" SuggestedWidth="50" Sprite="BlankWhiteSquare_9"/>
-																		<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" HorizontalAlignment="Center" SuggestedWidth="50" Sprite="BlankWhiteSquare_9"/>
+																		<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" HorizontalAlignment="Center" MarginBottom="50" MarginTop="80" SuggestedWidth="50" Sprite="arrow_bottom_top"/>
+																		<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" HorizontalAlignment="Center" SuggestedWidth="50" Sprite="arrow_top_bottom"/>
 																	</Children>
 																</ListPanel>
 															</Children>
@@ -219,8 +219,8 @@
 															<Children>
 																<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" VerticalAlignment="Center" StackLayout.LayoutMethod="VerticalBottomToTop" >
 																	<Children>
-																		<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" HorizontalAlignment="Center" MarginBottom="50" MarginTop="80" SuggestedWidth="50" Sprite="BlankWhiteSquare_9"/>
-																		<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" HorizontalAlignment="Center" SuggestedWidth="50" Sprite="BlankWhiteSquare_9"/>
+																		<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" HorizontalAlignment="Center" MarginBottom="50" MarginTop="80" SuggestedWidth="50" Sprite="arrow_top_bottom"/>
+																		<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" HorizontalAlignment="Center" SuggestedWidth="50" Sprite="arrow_bottom_top"/>
 																	</Children>
 																</ListPanel>
 															</Children>
@@ -240,8 +240,8 @@
 															<Children>
 																<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" VerticalAlignment="Center" StackLayout.LayoutMethod="VerticalBottomToTop" >
 																	<Children>
-																		<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" HorizontalAlignment="Center" MarginBottom="50" MarginTop="80" SuggestedWidth="50" Sprite="BlankWhiteSquare_9"/>
-																		<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" HorizontalAlignment="Center" SuggestedWidth="50" Sprite="BlankWhiteSquare_9"/>
+																		<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" HorizontalAlignment="Center" MarginBottom="50" MarginTop="80" SuggestedWidth="50" Sprite="arrow_top_bottom"/>
+																		<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" HorizontalAlignment="Center" SuggestedWidth="50" Sprite="arrow_bottom_top"/>
 																	</Children>
 																</ListPanel>
 															</Children>

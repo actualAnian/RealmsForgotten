@@ -1436,7 +1436,7 @@ namespace RealmsForgotten
         {
             ChooseCharacterEquipment(characterCreation, StartType.VassalFief);
             Manager.SetStoryOption(5);
-            PlayerCareerExtension.AddCareer(RFCareers.GrailKnight);
+            PlayerCareerExtension.AddCareer(RFCareers.Knight);
         }
 
         protected void WandererMysticalStartOnConsequence(CharacterCreation characterCreation)

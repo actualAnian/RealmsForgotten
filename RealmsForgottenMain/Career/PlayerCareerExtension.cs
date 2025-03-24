@@ -25,7 +25,7 @@ namespace RealmsForgotten.Career
             if (HasAnyCareer())
                 PlayerCareerInfo.CareerChoices.Clear();
             PlayerCareerInfo.CareerID = career.StringId;
-            var careerObj = RFCareerChoices.Instance.GetCareerChoices(GetCareer()!);
+            CareerTypes.RFCareerChoicesBase careerObj = RFCareerChoices.Instance.GetCareerChoices(GetCareer()!);
             RFCareerCampaignBehavior.Instance.CreatePointsSystem(career.pointsSystem);
             careerObj.InitialCareerSetup();
         }

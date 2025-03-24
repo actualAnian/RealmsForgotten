@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
@@ -37,7 +36,7 @@ namespace RealmsForgotten.Career.VievModels
             baseAbility = new(_career.Ability.Sprite, this, false);
             upgradedAbility = new(_career.Ability.SpriteUpgraded, this, true);
             _abilityName = _career.Ability.Name.ToString();
-            _description = PlayerCareerExtension.PointsSystem.Description;
+            _description = PlayerCareerExtension.PointsSystem!.Description;
             _abilityDescription = _career.Ability.Description;
             _freeCareerPoints = PlayerCareerExtension.PointsSystem.AvailablePoints.ToString();
             _topscreen = new();
@@ -81,11 +80,24 @@ namespace RealmsForgotten.Career.VievModels
                 _choiceDoubleGroup2.IsActive = true;
             if (upgradedAbility.IsTaken)
                 _choiceDoubleGroup3.IsActive = true;
+            _choiceDoubleGroup2.RefreshValues();
+            _choiceDoubleGroup3.RefreshValues();
         }
         public void HandleAddPerk(CareerChoiceObjectVM choice)
         {
             selectedChoices.Add(choice);
             _topscreen.RefreshValues();
+            baseAbility.RefreshValues();
+            upgradedAbility.RefreshValues();
+        }
+        public bool IsGroupCompleted(int tier)
+        {
+            return tier switch
+            {
+                0 => DoubleGroupTier1.GetChoices().Count > 0 && DoubleGroupTier1.IsLastPerkTaken(),
+                1 => DoubleGroupTier2.GetChoices().Count > 0 && DoubleGroupTier2.IsLastPerkTaken(),
+                _ => false,
+            };
         }
         public void RefundPerks()
         {
@@ -94,7 +106,7 @@ namespace RealmsForgotten.Career.VievModels
                 pointsToReturn += 1;
             if (boughtAbilityUpgrade)
                 pointsToReturn += 1;
-            PlayerCareerExtension.PointsSystem.ReturnPoints(pointsToReturn);
+            PlayerCareerExtension.PointsSystem!.ReturnPoints(pointsToReturn);
             boughtAbility = false;
             _career.Ability.IsEnabled = false;
             baseAbility.SetState(ThreeStateObjectVM.State.UnavailableToTake);
@@ -117,24 +129,25 @@ namespace RealmsForgotten.Career.VievModels
             _choiceDoubleGroup1.RefreshValues();
             _choiceDoubleGroup2.RefreshValues();
             _choiceDoubleGroup3.RefreshValues();
+            baseAbility.RefreshValues();
+            upgradedAbility.RefreshValues();
             _topscreen.RefreshValues();
         }
         internal void UnlockAbility(AbilityVM abilityVM)
         {
-            PlayerCareerExtension.PointsSystem.SpendPoint();
+            PlayerCareerExtension.PointsSystem!.SpendPoint();
             if (abilityVM == baseAbility)
             {
                 boughtAbility = true;
                 _career.Ability.IsEnabled = true;
-                _choiceDoubleGroup2.IsActive = true;
             }
             else
             {
                 boughtAbilityUpgrade = true;
-                _choiceDoubleGroup3.IsActive = true;
                 _career.Ability.IsUpgraded = true;
             }
             _topscreen.RefreshValues();
+            SetAvailability();
         }
         internal void GiveActivePerkBonuses()
         {

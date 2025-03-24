@@ -99,6 +99,7 @@ namespace RealmsForgotten
                 campaignGameStarter.AddModel(new RFBanditDensityModel(campaignGameStarter.GetExistingModel<BanditDensityModel>()));
                 campaignGameStarter.AddModel(new RFClanFinanceModel(campaignGameStarter.GetExistingModel<ClanFinanceModel>()));
                 campaignGameStarter.AddModel(new RFMapVisibilityModel(campaignGameStarter.GetExistingModel<MapVisibilityModel>()));
+                campaignGameStarter.AddModel(new RFPartySizeLimitModel(campaignGameStarter.GetExistingModel<PartySizeLimitModel>()));
                 campaignGameStarter.AddModel(new RFClanTierModel());
                 campaignGameStarter.AddModel(new RFStrikeMagnitudeModel());
 

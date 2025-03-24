@@ -20,8 +20,7 @@ namespace RealmsForgotten.Career.VievModels
 
         public CharacterDeveloperVMExtension(ViewModel vm) : base(vm)
         {
-            HasCareer = true;
-            //HasCareer = Hero.MainHero.HasAnyCareer();
+            HasCareer = PlayerCareerExtension.GetCareer() != null;
         }
 
         private void ExecuteNavigateToCareers()
@@ -31,7 +30,7 @@ namespace RealmsForgotten.Career.VievModels
                 var state = Game.Current.GameStateManager.CreateState<CareerScreenGameState>();
                 Game.Current.GameStateManager.PushState(state);
             }
-            catch (Exception) { }
+            catch (Exception) { Game.Current.GameStateManager.PopState(); }
         }
         [DataSourceProperty]
         public bool HasCareer

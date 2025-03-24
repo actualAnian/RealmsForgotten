@@ -13,10 +13,9 @@ namespace RealmsForgotten.Career.VievModels
         public CareerScreenVM(Action closeAction)
         {
             _closeAction = closeAction;
-
-            if (!PlayerCareerExtension.HasAnyCareer())
-                PlayerCareerExtension.AddCareer(RFCareers.Mercenary);
-            _currentCareerVM = new CareerObjectVM(PlayerCareerExtension.GetCareer());
+            if (PlayerCareerExtension.GetCareer() == null)
+                _closeAction();
+            else _currentCareerVM = new CareerObjectVM(PlayerCareerExtension.GetCareer());
         }
 
         private void ExecuteDone()

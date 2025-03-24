@@ -18,7 +18,7 @@ namespace RealmsForgotten.Career
             _allCareers = new()
             {
                 new MercenaryCareerChoices(RFCareers.Mercenary),
-                //new GrailKnightCareerChoices(RFCareers.GrailKnight),
+                new KnightCareerChoices(RFCareers.Knight),
             };
         }
 
