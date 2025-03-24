@@ -15,7 +15,8 @@ namespace RealmsForgotten.AiMade.Patches
     {
         static bool Prefix(MapEventSide __instance, CharacterObject strikerTroop, CharacterObject attackedTroop, int damage, bool isFinishingStrike)
         {
-            string logFile = "C:\\Users\\gupol\\Documents\\BannerlordDebugLog.txt";
+            string mainPath = Path.GetDirectoryName(Globals.realmsForgottenAssembly.Location);
+            string logFile = Path.Combine(mainPath, "BannerlordDebugLog.txt");
 
             try
             {

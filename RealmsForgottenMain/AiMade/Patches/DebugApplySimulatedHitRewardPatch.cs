@@ -17,8 +17,8 @@ namespace RealmsForgotten.AiMade.Patches
     {
         static bool Prefix(TroopRoster __instance, int index)
         {
-            string logFile = "C:\\Users\\gupol\\Documents\\BannerlordClampXpLog.txt";
-
+            string mainPath = Path.GetDirectoryName(Globals.realmsForgottenAssembly.Location);
+            string logFile = Path.Combine(mainPath, "BannerlordClampXpLog.txt");
             try
             {
                 using (StreamWriter writer = new StreamWriter(logFile, true))
