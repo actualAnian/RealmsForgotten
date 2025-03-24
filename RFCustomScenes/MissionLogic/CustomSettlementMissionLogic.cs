@@ -25,6 +25,8 @@ using System.Threading.Tasks;
 using RFCustomSettlements;
 using HuntableHerds.Models;
 using SandBox.AI;
+using RFCustomSettlements.Quests;
+using System.ComponentModel;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -52,11 +54,12 @@ namespace RealmsForgotten.RFCustomSettlements
         private Dictionary<int, GameEntity> NpcSpawnPositions = new();
         private readonly Dictionary<Agent, CustomSettlementMissionLogic.UsedObject> defenderAgentObjects;
         private readonly ItemRoster loot;
-        private int goldLooted = 0;
         private readonly MobileParty banditsInSettlement;
         private readonly CustomSettlementBuildData BanditsData;
         private readonly Action? OnBattleEnd;
         private readonly Dictionary<int, NpcData> NpcsInSettlement = new();
+        public delegate void UnitKilledHandler(string id);
+        public event UnitKilledHandler? UnitKilled;
         public Dictionary<Agent, Vec3> LootableAgents { get; } = new();
 
         //private  onStateChangeListeners
@@ -78,6 +81,7 @@ namespace RealmsForgotten.RFCustomSettlements
             BanditsData = buildData;
             NextSceneData.Instance.shouldSwitchScenes = false;
             OnBattleEnd = onBattleEnd;
+            CustomSettlementQuest.SubscribeEligibleQuests(this);
         }
         public override void OnMissionTick(float dt)
         {
@@ -105,9 +109,13 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
         {
+            string agentId = affectedAgent.Character == null ? affectedAgent.Monster.StringId : affectedAgent.Character.StringId;
+            UnitKilled?.Invoke(agentId);
             if (affectedAgent.Components.Any(c => c is LootableAgentComponent))
             {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 AddBodyToLootableList(affectedAgent);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
         }
         private void UsedObjectTick(float dt)
@@ -150,7 +158,6 @@ namespace RealmsForgotten.RFCustomSettlements
 
         private void SpawnNpcs()
         {
-
             Dictionary<string, List<UsableMachine>> _usablePoints = new();
             foreach (UsableMachine usableMachine in base.Mission.MissionObjects.FindAllWithType<UsableMachine>())
             {
@@ -172,7 +179,6 @@ namespace RealmsForgotten.RFCustomSettlements
                 {
                     NpcData currentNpcData = NpcsInSettlement[pair.Key];
                     string characterId = currentNpcData.Id;
-                    //string? characterId = Helper.GetCharacterIdfromEntityName(pair.Value.Name);
                     Vec3 position = NpcSpawnPoint.GetGlobalFrame().origin;
                     CharacterObject troop = MBObjectManager.Instance.GetObject<CharacterObject>(characterId);
                     AgentBuildData agentBuildData = new AgentBuildData(troop).InitialPosition(position);
@@ -211,8 +217,6 @@ namespace RealmsForgotten.RFCustomSettlements
 
                     agent.AddComponent(huntAgentComponent);
 
-                    //animals.Add(agent, huntAgentComponent);
-
                     for (int i = 0; i < 3; i++)
                     {
                         agent.AgentVisuals.GetSkeleton().TickAnimations(0.1f, agent.AgentVisuals.GetGlobalFrame(), true);
@@ -231,7 +235,6 @@ namespace RealmsForgotten.RFCustomSettlements
             {
                 try
                 {
-
                     if (!banditIDs.Contains(pair.Value.Id))
                     {
                         banditIDs.Add(pair.Value.Id);
@@ -416,9 +419,6 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         protected override void OnEndMission()
         {
-            NextSceneData.Instance.goldLoot = goldLooted;
-            NextSceneData.Instance.itemLoot = loot;
-
             if (NextSceneData.Instance.shouldSwitchScenes == false)
                 NextSceneData.Instance.currentState = NextSceneData.RFExploreState.Finished;
             if (OnBattleEnd != null) this.OnBattleEnd();
@@ -567,13 +567,13 @@ namespace RealmsForgotten.RFCustomSettlements
                 foreach (ItemRosterElement item in component.GetItemDrops())
                 {
                     EquipmentElement element = item.EquipmentElement;
-                    loot.AddToCounts(element, item.Amount);
+                    MobileParty.MainParty.ItemRoster.AddToCounts(element, item.Amount);
                     HuntableHerds.SubModule.PrintDebugMessage("You looted " + item.Amount + " " + element.Item.Name + "!");
                 }
                 if (component.GoldDrop != 0)
                 {
-                    goldLooted += component.GoldDrop;
-                    HuntableHerds.SubModule.PrintDebugMessage("You found " + goldLooted + "<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">");
+                    Hero.MainHero.ChangeHeroGold(component.GoldDrop);
+                    HuntableHerds.SubModule.PrintDebugMessage("You found " + component.GoldDrop + "<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">");
                 }
                 if (playSound)
                     Mission.MakeSoundOnlyOnRelatedPeer(SoundEvent.GetEventIdFromString("event:/mission/combat/pickup_arrows"), agent.Position, Mission.MainAgent.Index);
@@ -607,14 +607,14 @@ namespace RealmsForgotten.RFCustomSettlements
                 string soundEventId = "";
                 if (itemId == "gold")
                 {
-                    goldLooted += amount;
+                    Hero.MainHero.ChangeHeroGold(amount);
                     soundEventId = "event:/ui/notification/coins_positive";
-                    HuntableHerds.SubModule.PrintDebugMessage("You found " + goldLooted + "<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">");
+                    HuntableHerds.SubModule.PrintDebugMessage("You found " + amount + "<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">");
                 }
                 else
                 {
                     ItemObject item = MBObjectManager.Instance.GetObject<ItemObject>(itemId);
-                    loot.AddToCounts(item, amount);
+                    MobileParty.MainParty.ItemRoster.AddToCounts(item, amount);
                     HuntableHerds.SubModule.PrintDebugMessage("You found " + item.Name + "!");
                     soundEventId = "event:/mission/combat/pickup_arrows";
                 }

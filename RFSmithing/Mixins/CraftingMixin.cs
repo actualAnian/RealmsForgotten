@@ -649,9 +649,12 @@ public class CraftingMixin : BaseViewModelMixin<CraftingVM>
                 itemRoster.AddToCounts(itemObject, smithingCostsForWeaponDesign[i]);
             }
         }
-        
-        int kardrathiumPrice = WeaponDesignMixin.Instance.KardrathiumButtonToggle.GetCurrentKardrathiumPrice();
-        itemRoster.AddToCounts(RFItems.Kardrathium, -kardrathiumPrice);
+
+        if (WeaponDesignMixin.Instance?.KardrathiumButtonToggle?.UseKardrathium == true)
+        {
+            int kardrathiumPrice = WeaponDesignMixin.Instance.KardrathiumButtonToggle.GetCurrentKardrathiumPrice();
+            itemRoster.AddToCounts(RFItems.Kardrathium, -kardrathiumPrice);
+        }
     }
 
     private void SpendMaterials()
@@ -687,8 +690,11 @@ public class CraftingMixin : BaseViewModelMixin<CraftingVM>
                 }
             }
             
-            int kardrathiumPrice = WeaponDesignMixin.Instance.KardrathiumButtonToggle.GetCurrentKardrathiumPrice();
-            itemRoster.AddToCounts(RFItems.Kardrathium, -kardrathiumPrice);
+            if (WeaponDesignMixin.Instance?.KardrathiumButtonToggle?.UseKardrathium == true)
+            {
+                int kardrathiumPrice = WeaponDesignMixin.Instance.KardrathiumButtonToggle.GetCurrentKardrathiumPrice();
+                itemRoster.AddToCounts(RFItems.Kardrathium, -kardrathiumPrice);
+            }
         }
     }
 
