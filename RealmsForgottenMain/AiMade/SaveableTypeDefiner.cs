@@ -25,8 +25,6 @@ namespace RealmsForgotten.AiMade
             ConstructContainerDefinition(typeof(Dictionary<string, ExampleConfig>));
             ConstructContainerDefinition(typeof(Dictionary<Hero, float>));
             ConstructContainerDefinition(typeof(List<Hero>));
-            ConstructContainerDefinition(typeof(List<CareerObject>));
-            ConstructContainerDefinition(typeof(List<CareerChoiceObject>));
             ConstructContainerDefinition(typeof(Dictionary<Hero, ReligionObject>));
             ConstructContainerDefinition(typeof(Dictionary<Clan, List<string>>));
             ConstructContainerDefinition(typeof(Dictionary<CultureObject, List<string>>));
@@ -42,7 +40,6 @@ namespace RealmsForgotten.AiMade
         protected override void DefineEnumTypes()
         {
             base.DefineEnumTypes();
-            AddEnumDefinition(typeof(CareerType), 100);
         }
 
         protected override void DefineClassTypes()
@@ -59,21 +56,14 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(CultureAppropriateTroopsBehavior), 12);
             AddClassDefinition(typeof(HouseTroopsTownsBehavior), 13);
             AddClassDefinition(typeof(RecruitPrisonersMissionBehavior), 14);
-            AddClassDefinition(typeof(BanditHideoutClearedBehavior), 16);
             AddClassDefinition(typeof(BanditDefeatChivalryBehavior), 17);
-            AddClassDefinition(typeof(CareerProgressionBehavior), 18);
             AddClassDefinition(typeof(ReligionObject), 19);
             AddClassDefinition(typeof(ADODInnBehavior), 20);
-            AddClassDefinition(typeof(DefendVillagersOrCaravansBehavior), 22);
-            AddClassDefinition(typeof(QuestCompletionBehavior), 23);
             AddClassDefinition(typeof(DivineShieldStateBehavior), 24);
             AddClassDefinition(typeof(DivineShieldMissionBehavior), 25);
             AddClassDefinition(typeof(BanditConversionManager), 26);
             AddClassDefinition(typeof(BanditConversionEvent), 27);
             AddClassDefinition(typeof(PietyManager), 28);
-            AddClassDefinition(typeof(CareerManager), 29);
-            AddClassDefinition(typeof(CareerObject), 30);
-            AddClassDefinition(typeof(CareerChoiceObject), 31);
             AddClassDefinition(typeof(ReligionsManager), 33);
             AddClassDefinition(typeof(BattleCryStateBehavior), 34);
             AddClassDefinition(typeof(BanditPartyGrowthBehavior), 35);

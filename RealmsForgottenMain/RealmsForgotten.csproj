@@ -97,6 +97,7 @@
   <ItemGroup>
     <Folder Include="AiMade\TroopUnlocker\" />
     <Folder Include="AiMade\Stealth\" />
+    <Folder Include="_Module\GUI\Prefabs\CharacterDeveloper\" />
   </ItemGroup>
 
 </Project>

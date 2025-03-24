@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="string">
+  <tags>
+    <tag language="English" />
+  </tags>
+    <strings>
+		<string id="rf_career_merc_1" text="Wandering Blade" />
+		<string id="rf_career_merc_2" text="Warlord of Coin" />
+		<string id="rf_career_merc_3" text="Mercenary Lord" />
+		<string id="rf_career_knight_1" text="Knight Errant" />
+		<string id="rf_career_knight_2" text="Field Marshall" />
+		<string id="rf_career_knight_3" text="Paragon Of Virue" />
+
+		<!-- descriptions-->
+		<string id="class_description.Mercenary" text="We are mercenaries. We have the resources. The will. To make these hours count! The clock is ticking, gentlemen. Let's begin." />
+
+		<string id="merc_merc_wage_reduction" text="Class mercenary wage reduction" />
+		<string id="knight_cav_wage_reduction" text="Class knight cavalry wage reduction" />
+		<string id="rf_raid_plunder" text="You plundered additional {NUMBER_OF} {PRODUCTS}." />
+		<string id="rf_caravan_plunder" text="You plundered additional {NUMBER_OF} {PRODUCTS}." />
+		
+		<!-- abilities -->
+		<string id="rf_mercenary_ability_name" text="Battle Cry" />
+		<string id="rf_knight_ability_name" text="Divine Shield" />
+
+		<string id="rf_career_battle_cry_desc" text="Increase your infantry's morale by 20, For the next 15 seconds, all your infantry get 30% melee damage resistance." />
+		<string id="rf_career_battle_cry_upgr_desc" text="During the effect of battle cry, your troops additionally get berzerker potion effect (+20% attack speed)" />
+
+		<!--perks-->
+		<string id="rf_career_5_arrows" text="5 extra arrows, bolts ammo" />
+		<string id="rf_career_20_hitpoints" text="Increases Hitpoints by 20" />
+		<string id="rf_career_40_hitpoints" text="Increases Hitpoints by 40" />
+		<string id="rf_career_magical_artifact" text="Gain a magical artifact" />
+		<string id="rf_career_wages_10_reduction" text="Party wages are reduced by 10%" />
+		<string id="rf_career_companion_two" text="Companion limit of party is increased by 2" />
+		<string id="rf_career_20_health_post_battle" text="Increases health regeneration after battles by 20" />
+		<string id="rf_career_merc_no_extra_wage" text="Mercenary troops cost no extra wage" />
+		<string id="rf_career_troop_ranged_attack_15" text="Increases ranged damage of your troops by 15%" />
+		<string id="rf_career_merc_contract_income_20" text="Increases income from mercenary contract by 20%" />
+		<string id="rf_career_spotting_MoFo_20" text="+20% spotting range in mountains and forests" />
+		<string id="rf_career_player_ranged_defence_15" text="Increases ranged damage resistance by 15%" />
+		<string id="rf_career_troop_melee_15" text="Increases melee damage your troops by 15%" />
+		<string id="rf_career_workshop_income_20" text="Increases income from workshops by 20%" />
+		<string id="rf_career_spotting_DeSt" text="+20% spotting range in deserts and steppes" />
+		<string id="rf_career_player_melee_defence_15" text="Increases melee damage resistance by 15%" />
+		<string id="rf_career_party_speed_FoMoSw_20" text="+20% party movement speed in forest, mountain and swamp terrain." />
+		<string id="rf_career_troop_ranged_attack_15" text="Increases the damage of all ranged troops by 15%" />
+		<string id="rf_career_raid_more_items" text="After raiding, get additional 20% of items valued less than 60" />
+		<string id="rf_career_troop_melee_attack_15" text="Increases the damage of all melee troops by 15%" />
+		<string id="rf_career_caravan_dest_more_items" text="After destroying a caravan, get additional 20% of items valued less than 60" />
+		<string id="rf_career_heal_on_kill_10" text="Restore 5 hitpoints on kill" />
+		<string id="rf_career_player_sword_axe_10" text="Increases one handed sword, axe damage by 10%." />
+		<string id="rf_career_player_dagger_mace_10" text="Increases damage from daggers, one-two handed maces by 10%." />
+		<string id="rf_career_player_melee_attack_15" text="Increase damage of all melee weapons by 15%" />
+		<string id="rf_career_player_ranged_attack_15" text="Increase damage of all ranged weapons by 15%" />
+		
+	</strings>
+</base>

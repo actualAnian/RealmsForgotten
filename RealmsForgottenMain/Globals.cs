@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 
@@ -9,8 +10,6 @@ namespace RealmsForgotten
 {
     public static class Globals
     {
-        public static Dictionary<string, int> RacesIds = new();
-
         public static Assembly realmsForgottenAssembly = Assembly.GetExecutingAssembly();
 
         public static ICustomSettingsProvider Settings { get { return RFSettings.Instance; } }
@@ -86,7 +85,19 @@ namespace RealmsForgotten
             ValidateRaceOrder(orderedRaces);
             return orderedRaces;
         }
+        public static bool IsBanditParty(PartyBase party)
+        {
+            return party?.MobileParty?.PartyComponent?.GetType()?.Name == "BanditPartyComponent";
+        }
 
+        public static bool IsCaravanParty(PartyBase party)
+        {
+            return party.MobileParty.PartyComponent.GetType().Name == "VillagerPartyComponent";
+        }
+        public static bool IsVillager(PartyBase party)
+        {
+            return party.MobileParty.PartyComponent.GetType().Name == "VillagerPartyComponent";
+        }
         private static void ValidateRaceOrder(List<string> orderedRaces)
         {
             foreach (string race in _playerSelectableRaces)
@@ -97,5 +108,20 @@ namespace RealmsForgotten
                 }
             }
         }
+        // Career.PlayerCareerExtension.DamageType
+        public readonly static List<(Func<BasicCharacterObject, bool> Check, float[] Resistances)> RaceResistances = new()
+        {
+            (character => character.IsDwarf(), new float[] { 0f, 0f, 0f, 0.4f, 0f, 0f }),
+            (character => character.IsGiant(), new float[] { 0f, 0.5f, 0.5f, -0.2f, -0.2f, 0f }),
+            //(character => character.IsTroll(), new float[] { 0f, 0.5f, 0.5f, 0.3f, -0.2f, 0f }),
+            (character => character.IsUndead(), new float[] { 0f, 0f, 0f, 0.1f, -0.2f, 0f }),
+            (character => character.IsHuman(), new float[] { 0f, 0f, 0f, 0f, 0f, 0f }),
+            (character => character.IsTlachiquiy(), new float[] { 0f, 0f, 0f, 0.3f, -0.1f, 0f }),
+            //(character => character.IsDemon(), new float[] { 0f, 0f, 0f, -0.2f, 0.5f, 0f }),
+            (character => character.IsMull(), new float[] { 0f, 0.2f, 0.2f, -0.1f, 0f, 0f }),
+            (character => character.IsUrkhai(), new float[] { 0f, 0f, 0f, 0.2f, -0.1f, 0f }),
+            (character => character.IsElvean(), new float[] { 0f, 0f, 0f, 0.15f, -0.15f, 0f }),
+            (character => character.IsXilantlacay(), new float[] { 0f, 0f, 0f, 0.15f, 0f, 0f })
+        };
     }
 }

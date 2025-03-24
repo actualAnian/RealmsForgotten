@@ -19,6 +19,7 @@ using System.Reflection;
 using HarmonyLib;
 using RealmsForgotten.AiMade.Career;
 using TaleWorlds.SaveSystem.Definition;
+using RealmsForgotten.Career;
 
 namespace RealmsForgotten
 {
@@ -54,8 +55,6 @@ namespace RealmsForgotten
                 yield break;
             }
         }
-
-        private CareerType selectedCareer = CareerType.None;
 
         protected override void OnCultureSelected()
         {
@@ -1378,7 +1377,7 @@ namespace RealmsForgotten
         {
             ChooseCharacterEquipment(characterCreation, StartType.Mercenary);
             Manager.SetStoryOption(3);
-            Campaign.Current.GetCampaignBehavior<CareerProgressionBehavior>().StartCareer(CareerType.Mercenary);
+            PlayerCareerExtension.AddCareer(RFCareers.Mercenary);
         }
         private Equipment getMaleEquipment(IEnumerable<Equipment> eq) { return eq.FirstOrDefault(); }
         private Equipment getFemaleEquipment(IEnumerable<Equipment> eq) { return eq.LastOrDefault(); }
@@ -1437,7 +1436,7 @@ namespace RealmsForgotten
         {
             ChooseCharacterEquipment(characterCreation, StartType.VassalFief);
             Manager.SetStoryOption(5);
-            Campaign.Current.GetCampaignBehavior<CareerProgressionBehavior>().StartCareer(CareerType.Knight);
+            PlayerCareerExtension.AddCareer(RFCareers.Knight);
         }
 
         protected void WandererMysticalStartOnConsequence(CharacterCreation characterCreation)

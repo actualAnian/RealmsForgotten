@@ -12,6 +12,8 @@ using TaleWorlds.Localization;
 using RealmsForgotten.Quest;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
+using RealmsForgotten.Career.Logic;
+using RealmsForgotten.Career;
 
 namespace RealmsForgotten.Models
 {
@@ -52,7 +54,22 @@ namespace RealmsForgotten.Models
 
             if(QuestPatches.AvoidDisbanding && party?.Army?.Parties?.Contains(MobileParty.MainParty) == true)
                 baseValue.AddFactor(2.0f);
+
+
+            if (partyOwner != null &&
+                 (partyOwner.Culture.StringId == "devils" || partyOwner.Culture.StringId == "urkhai"))
+            {
+                // Add a 20% factor to the existing speed
+                baseValue.AddFactor(0.20f, new TextObject("{=culture_bonus}Culture Speed Bonus"));
+            }
             return baseValue;
+        }
+        public override ExplainedNumber CalculateFinalSpeed(MobileParty mobileParty, ExplainedNumber finalSpeed)
+        {
+            ExplainedNumber value = base.CalculateFinalSpeed(mobileParty, finalSpeed);
+            if (mobileParty == MobileParty.MainParty && mobileParty.LeaderHero != null && mobileParty.LeaderHero == Hero.MainHero)
+                CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.PartyMovementSpeed, false);
+            return value;
         }
     }
 }
