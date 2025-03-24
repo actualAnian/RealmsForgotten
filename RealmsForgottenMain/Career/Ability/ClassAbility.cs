@@ -144,13 +144,14 @@ namespace RealmsForgotten.Career.Ability
         }
         private void InvokeActions(AbilityData.ActionTrigger trigger, Dictionary<AbilityData.ActionTrigger, List<Delegate>> actionDict, params object[] par )
         {
-            actionDict.TryGetValue(AbilityData.ActionTrigger.OnActivate, out List<Delegate>? actions);
             switch (trigger)
             {
                 case AbilityData.ActionTrigger.OnActivate or AbilityData.ActionTrigger.OnDeactivate:
+                    actionDict.TryGetValue(AbilityData.ActionTrigger.OnActivate, out List<Delegate>? actions);
                     actions.OfType<Action>().ToList().ForEach(a => a());
                     break;
-                case AbilityData.ActionTrigger.OnTroopHit:
+                case AbilityData.ActionTrigger.OnTroopPreHit:
+                    actionDict.TryGetValue(AbilityData.ActionTrigger.OnTroopPreHit, out actions);
                     var attacker = (Agent)par[0];
                     var victim = (Agent)par[1];
                     float[] additionalDamage = ((float[])par[2]);
@@ -159,6 +160,17 @@ namespace RealmsForgotten.Career.Ability
                         if (action is Action<Agent, Agent, float[], float[]> troopHitDelegate)
                             troopHitDelegate(attacker, victim, additionalDamage, resistancePercentages);
                     break;
+                case AbilityData.ActionTrigger.OnAgentHit:
+                    actionDict.TryGetValue(AbilityData.ActionTrigger.OnAgentHit, out actions);
+                    attacker = (Agent)par[0];
+                    victim = (Agent)par[1];
+                    MissionWeapon weapon = (MissionWeapon)par[2];
+                    Blow blow = (Blow)par[3];
+                    AttackCollisionData collisionData = (AttackCollisionData)par[4];
+                    foreach (var action in actions)
+                        if (action is Action<Agent, Agent, MissionWeapon, Blow, AttackCollisionData> agentHitDelegate)
+                            agentHitDelegate(attacker, victim, weapon, blow, collisionData);
+                        break;
             }
         }
 
@@ -169,12 +181,17 @@ namespace RealmsForgotten.Career.Ability
             if (IsUpgraded)
                 InvokeActions(AbilityData.ActionTrigger.OnActivate, data.UpgradedActions);
         }
-
-        internal void OnTroopHit(Agent attacker, Agent victim, ref float[] additionalDamagePercentages, ref float[] resistancePercentages)
+        internal void OnAgentHit(Agent affectedAgent, Agent affectorAgent, in MissionWeapon affectorWeapon, in Blow blow, in AttackCollisionData attackCollisionData)
         {
-            InvokeActions(AbilityData.ActionTrigger.OnTroopHit, data.BaseActions, attacker, victim, additionalDamagePercentages, resistancePercentages);
+            InvokeActions(AbilityData.ActionTrigger.OnAgentHit, data.BaseActions, affectorAgent, affectedAgent, affectorWeapon, blow, attackCollisionData);
             if (IsUpgraded)
-                InvokeActions(AbilityData.ActionTrigger.OnActivate, data.UpgradedActions, attacker, victim, additionalDamagePercentages, resistancePercentages);
+                InvokeActions(AbilityData.ActionTrigger.OnAgentHit, data.UpgradedActions, affectorAgent, affectedAgent, affectorWeapon, blow, attackCollisionData);
+        }
+        internal void OnTroopPreHit(Agent attacker, Agent victim, ref float[] additionalDamagePercentages, ref float[] resistancePercentages)
+        {
+            InvokeActions(AbilityData.ActionTrigger.OnTroopPreHit, data.BaseActions, attacker, victim, additionalDamagePercentages, resistancePercentages);
+            if (IsUpgraded)
+                InvokeActions(AbilityData.ActionTrigger.OnTroopPreHit, data.UpgradedActions, attacker, victim, additionalDamagePercentages, resistancePercentages);
         }
         protected virtual void Deactivate(Agent casterAgent)
         {
@@ -186,15 +203,16 @@ namespace RealmsForgotten.Career.Ability
         {
             AbilityData mercAbilityData = new(15, 15, baseActions: new()
             {
-                [AbilityData.ActionTrigger.OnTroopHit] = new() { ((Agent attacker, Agent victim, float[] additionalDamagePercentages, float[] resistancePercentages) => AbilityEffects.GiveThirtyMeleeResistanceToInfantry(attacker, victim, additionalDamagePercentages, resistancePercentages)) },
+                [AbilityData.ActionTrigger.OnTroopPreHit] = new() { ((Agent attacker, Agent victim, float[] additionalDamagePercentages, float[] resistancePercentages) => AbilityEffects.GiveThirtyMeleeResistanceToInfantry(attacker, victim, additionalDamagePercentages, resistancePercentages)) },
                 [AbilityData.ActionTrigger.OnActivate] = new() { () => AbilityEffects.IncreaseInfantryMorale() },
+                [AbilityData.ActionTrigger.OnAgentHit] = new() { (Agent attacker, Agent victim, MissionWeapon weapon, Blow blow, AttackCollisionData colData) => AbilityEffects.DamageAttackerIfShieldBlocked(attacker, victim, weapon, blow, colData) }
             },
             upgradedActions: new()
             {
                 [AbilityData.ActionTrigger.OnActivate] = new() { () => AbilityEffects.GiveBerserkerEffects() },
                 [AbilityData.ActionTrigger.OnDeactivate] = new() { () => AbilityEffects.RemoveBerserkerEffects() }
             });
-            All.Add(new ClassAbility("knight_ability", "{=rf_knight_ability_name}Divine Shield", "divine_shield_perk_a_", "divine_shield_perk_b", "{=rf_career_battle_cry_desc} Increase your infantry's morale by 20, For the next 15 seconds, all your infantry get 30% melee damage resistance.", "{=rf_career_battle_cry_upgr_desc} During the effect of battle cry, your troops additionally get berzerker potion effect (+20% attack speed)", mercAbilityData));
+            All.Add(new ClassAbility("knight_ability", "{=rf_knight_ability_name}Divine Shield", "divine_shield_perk_a", "divine_shield_perk_b", "{=rf_career_battle_cry_desc} shield damage", "{=rf_career_battle_cry_upgr_desc} During the effect of battle cry, your troops additionally get berzerker potion effect (+20% attack speed)", mercAbilityData));
             All.Add(new ClassAbility("merc_ability", "{=rf_mercenary_ability_name}Battle Cry", "battle_cry_perk_a", "battle_cry_perk_b", "{=rf_career_battle_cry_desc} For the next 15 seconds, all your troops get 50% melee damage resistance.", "{=rf_career_battle_cry_upgr_desc} During the effect of battle cry, your infantry additionally get berzerker potion effect (+20% attack speed)", mercAbilityData));
         }
 

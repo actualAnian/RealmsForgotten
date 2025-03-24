@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
-using RealmsForgotten.ObjectExtensions;
+﻿using RealmsForgotten.ObjectExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.Core;
+using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.Career.Ability
@@ -24,7 +24,8 @@ namespace RealmsForgotten.Career.Ability
         {
             OnActivate,
             OnDeactivate,
-            OnTroopHit
+            OnAgentHit,
+            OnTroopPreHit
         }
         public Dictionary<ActionTrigger, List<Delegate>> BaseActions { get; set; }
         public Dictionary<ActionTrigger, List<Delegate>> UpgradedActions { get; set; }
@@ -73,6 +74,26 @@ namespace RealmsForgotten.Career.Ability
                 if (agent.BelongsToMainParty() && agent.Character != null && agent.Character.IsInfantry)
                     agent.ChangeMorale(20);
             }
+        }
+        public static void DamageAttackerIfShieldBlocked(Agent attacker, Agent victim, MissionWeapon weapon, Blow blow, AttackCollisionData colData)
+        {
+            if (!colData.AttackBlockedWithShield) return;
+            Blow divineBlow = new(victim.Index)
+            {
+                DamageType = DamageTypes.Blunt,
+                BoneIndex = victim.Monster.HeadLookDirectionBoneIndex,
+                GlobalPosition = victim.Position,
+                BaseMagnitude = 2000f,
+                SwingDirection = victim.LookDirection,
+                InflictedDamage = 20
+            };
+            divineBlow.WeaponRecord.FillAsMeleeBlow(null, null, -1, -1);
+            AttackCollisionData attackCollisionDataForDebugPurpose = AttackCollisionData.GetAttackCollisionDataForDebugPurpose(false, false, false, true, false, false, false, false, false, false, false, false, 
+                CombatCollisionResult.StrikeAgent, -1, 0, 2, blow.BoneIndex, BoneBodyPartType.Head, victim.Monster.MainHandItemBoneIndex, Agent.UsageDirection.AttackLeft, -1,
+                CombatHitResultFlags.NormalHit, 0.5f, 1f, 0f, 0f, 0f, 0f, 0f, 0f, Vec3.Up, blow.Direction, blow.GlobalPosition, Vec3.Zero, Vec3.Zero, victim.Velocity,
+                Vec3.Up);
+
+            attacker.RegisterBlow(divineBlow, attackCollisionDataForDebugPurpose);
         }
     }
 }

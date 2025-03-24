@@ -70,7 +70,7 @@ namespace RealmsForgotten.Patches
                     ClassAbility ability = PlayerCareerExtension.GetCareer().Ability;
                     if (ability.IsActiveInMission)
                     {
-                        ability.OnTroopHit(attacker, victim, ref additionalDamagePercentages, ref resistancePercentages);
+                        ability.OnTroopPreHit(attacker, victim, ref additionalDamagePercentages, ref resistancePercentages);
                     }
                 }
             }
