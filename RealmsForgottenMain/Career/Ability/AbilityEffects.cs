@@ -1,4 +1,5 @@
-﻿using RealmsForgotten.ObjectExtensions;
+﻿using RealmsForgotten.Career.CareerPointsSystem;
+using RealmsForgotten.ObjectExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,9 +76,23 @@ namespace RealmsForgotten.Career.Ability
                     agent.ChangeMorale(20);
             }
         }
+
         public static void DamageAttackerIfShieldBlocked(Agent attacker, Agent victim, MissionWeapon weapon, Blow blow, AttackCollisionData colData)
         {
             if (!colData.AttackBlockedWithShield) return;
+
+            static double ExponentialFunction(double x, double targetValue, double baseValue)
+            {
+                double k = -Math.Log(1 - (targetValue / targetValue)) / baseValue;
+                return targetValue * (1 - Math.Exp(-k * x));
+            }
+            CareerObject career = PlayerCareerExtension.GetCareer()!;
+            bool isAbilityUpgraded = career.Ability.IsUpgraded;
+            int damage = 20;
+            if (isAbilityUpgraded && PlayerCareerExtension.PointsSystem is DeedsPointsSystem dps && dps.AllDeedsPoints() - 400 > 0)
+            {
+                damage += (int)Math.Min(60, ExponentialFunction(dps.AllDeedsPoints() - 400, 60, 400));
+            }
             Blow divineBlow = new(victim.Index)
             {
                 DamageType = DamageTypes.Blunt,
@@ -85,7 +100,7 @@ namespace RealmsForgotten.Career.Ability
                 GlobalPosition = victim.Position,
                 BaseMagnitude = 2000f,
                 SwingDirection = victim.LookDirection,
-                InflictedDamage = 20
+                InflictedDamage = damage
             };
             divineBlow.WeaponRecord.FillAsMeleeBlow(null, null, -1, -1);
             AttackCollisionData attackCollisionDataForDebugPurpose = AttackCollisionData.GetAttackCollisionDataForDebugPurpose(false, false, false, true, false, false, false, false, false, false, false, false, 

@@ -26,7 +26,7 @@ namespace RealmsForgotten.Career.Ability
         }
         public override void OnMissionTick(float dt)
         {
-            if (!hasAbility || Input.IsKeyDown(InputKey.Tab) || !Input.IsKeyDown(InputKey.E))
+            if (!hasAbility || Input.IsKeyDown(InputKey.Tab) || !Input.IsKeyDown(InputKey.E) || Agent.Main == null || !Globals.IsCurrentMainAgentPlayerHero())
                 return;
 
             if (!ability!.IsDisabled(Agent.Main) && !ability.IsOnCooldown())

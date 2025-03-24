@@ -11,6 +11,22 @@ namespace RealmsForgotten.Career.Ability
     public class ClassAbility
     {
         public static List<ClassAbility> All = new();
+        public static void RegisterAll()
+        {
+            AbilityData mercAbilityData = new(15, 15, baseActions: new()
+            {
+                [AbilityData.ActionTrigger.OnTroopPreHit] = new() { ((Agent attacker, Agent victim, float[] additionalDamagePercentages, float[] resistancePercentages) => AbilityEffects.GiveThirtyMeleeResistanceToInfantry(attacker, victim, additionalDamagePercentages, resistancePercentages)) },
+                [AbilityData.ActionTrigger.OnActivate] = new() { () => AbilityEffects.IncreaseInfantryMorale() },
+                [AbilityData.ActionTrigger.OnAgentHit] = new() { (Agent attacker, Agent victim, MissionWeapon weapon, Blow blow, AttackCollisionData colData) => AbilityEffects.DamageAttackerIfShieldBlocked(attacker, victim, weapon, blow, colData) }
+            },
+            upgradedActions: new()
+            {
+                [AbilityData.ActionTrigger.OnActivate] = new() { () => AbilityEffects.GiveBerserkerEffects() },
+                [AbilityData.ActionTrigger.OnDeactivate] = new() { () => AbilityEffects.RemoveBerserkerEffects() }
+            });
+            All.Add(new ClassAbility("knight_ability", "{=rf_knight_ability_name}Divine Shield", "divine_shield_perk_a", "divine_shield_perk_b", "{=rf_career_battle_cry_desc} Every attack blocked by your shield, deals 20 damage back to the enemy.", "{=rf_career_battle_cry_upgr_desc} The reflection damage scales exponentially with deeds points, +0 damage at 400 deeds points, up to +60 dmg at 800 deeds points", mercAbilityData));
+            All.Add(new ClassAbility("merc_ability", "{=rf_mercenary_ability_name}Battle Cry", "battle_cry_perk_a", "battle_cry_perk_b", "{=rf_career_battle_cry_desc} For the next 15 seconds, all your troops get 50% melee damage resistance.", "{=rf_career_battle_cry_upgr_desc} During the effect of battle cry, your infantry additionally get berzerker potion effect (+20% attack speed)", mercAbilityData));
+        }
         public enum AbilityType
         {
             TroopBuff
@@ -199,22 +215,5 @@ namespace RealmsForgotten.Career.Ability
             if (IsUpgraded)
                 InvokeActions(AbilityData.ActionTrigger.OnDeactivate, data.UpgradedActions);
         }
-        public static void RegisterAll()
-        {
-            AbilityData mercAbilityData = new(15, 15, baseActions: new()
-            {
-                [AbilityData.ActionTrigger.OnTroopPreHit] = new() { ((Agent attacker, Agent victim, float[] additionalDamagePercentages, float[] resistancePercentages) => AbilityEffects.GiveThirtyMeleeResistanceToInfantry(attacker, victim, additionalDamagePercentages, resistancePercentages)) },
-                [AbilityData.ActionTrigger.OnActivate] = new() { () => AbilityEffects.IncreaseInfantryMorale() },
-                [AbilityData.ActionTrigger.OnAgentHit] = new() { (Agent attacker, Agent victim, MissionWeapon weapon, Blow blow, AttackCollisionData colData) => AbilityEffects.DamageAttackerIfShieldBlocked(attacker, victim, weapon, blow, colData) }
-            },
-            upgradedActions: new()
-            {
-                [AbilityData.ActionTrigger.OnActivate] = new() { () => AbilityEffects.GiveBerserkerEffects() },
-                [AbilityData.ActionTrigger.OnDeactivate] = new() { () => AbilityEffects.RemoveBerserkerEffects() }
-            });
-            All.Add(new ClassAbility("knight_ability", "{=rf_knight_ability_name}Divine Shield", "divine_shield_perk_a", "divine_shield_perk_b", "{=rf_career_battle_cry_desc} shield damage", "{=rf_career_battle_cry_upgr_desc} During the effect of battle cry, your troops additionally get berzerker potion effect (+20% attack speed)", mercAbilityData));
-            All.Add(new ClassAbility("merc_ability", "{=rf_mercenary_ability_name}Battle Cry", "battle_cry_perk_a", "battle_cry_perk_b", "{=rf_career_battle_cry_desc} For the next 15 seconds, all your troops get 50% melee damage resistance.", "{=rf_career_battle_cry_upgr_desc} During the effect of battle cry, your infantry additionally get berzerker potion effect (+20% attack speed)", mercAbilityData));
-        }
-
     }
 }
