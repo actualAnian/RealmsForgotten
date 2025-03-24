@@ -34,6 +34,9 @@ namespace RealmsForgotten.AiMade
             ConstructContainerDefinition(typeof(Dictionary<string, TownSlaveData>));
             ConstructContainerDefinition(typeof(Dictionary<string, TownPrisonerData>));
             ConstructContainerDefinition(typeof(Dictionary<Settlement, CampaignTime>));
+            ConstructContainerDefinition(typeof(Dictionary<CharacterObject, CharacterRacialMix>));
+            ConstructContainerDefinition(typeof(Dictionary<int, double>));
+
         }
 
         protected override void DefineEnumTypes()
@@ -101,8 +104,9 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(AggressiveDwarfUrkhaiBehavior), 62);
             AddClassDefinition(typeof(MineBehavior), 63);
             AddClassDefinition(typeof(TownPrisonerData), 64);
-
-
+            AddClassDefinition(typeof(SturgiaCultureChangerBehavior), 65);
+            AddClassDefinition(typeof(RacialMixingBehavior), 66);
+            AddClassDefinition(typeof(CharacterRacialMix), 67);
         }
     }
 }

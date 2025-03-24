@@ -10,6 +10,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
+using TaleWorlds.Library;
 
 namespace RealmsForgotten.Models
 {
@@ -86,7 +87,13 @@ namespace RealmsForgotten.Models
                 // Urkhai Presence Effect
                 if (HasUrkhaiTroops(party))
                 {
-                    baseNumber.AddFactor(-0.10f, new TextObject("{=urkhai_fear}Enemy Morale Reduced by Urkhai Presence"));
+                    baseNumber.AddFactor(-0.15f, new TextObject("{=urkhai_fear}Enemy Morale Reduced by Urkhai Presence"));
+
+                    // Display the message to the player
+                    if (party.IsMainParty)
+                    {
+                        InformationManager.DisplayMessage(new InformationMessage("Enemy morale reduced by Urkhai presence!"));
+                    }
                 }
             }
             catch (Exception e)

@@ -94,38 +94,41 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new FirstTreeTempleLocation());
             campaignGameStarter.AddBehavior(new AggressiveDwarfUrkhaiBehavior());
             campaignGameStarter.AddBehavior(new MineBehavior());
+            campaignGameStarter.AddBehavior(new SturgiaCultureChangerBehavior());
+            campaignGameStarter.AddBehavior(new RacialMixingBehavior());
         }
         private void AddCustomModels(CampaignGameStarter campaignGameStarter)
         {
             // Register the custom inventory capacity model
             campaignGameStarter.AddModel(new CustomInventoryCapacityModel());
-            campaignGameStarter.AddModel(new CustomBerserkerApplyDamageModel(new SandboxAgentApplyDamageModel()));
-            campaignGameStarter.AddModel(new RFMapWeatherModel());
+            campaignGameStarter.AddModel(new UrkhaiPartySizeModel());
         }
         public override void OnMissionBehaviorInitialize(Mission mission)
         {
-            if (mission != null)
+            if (mission == null)
+                return;
+
+            // Add Custom Berserker Behavior for specific mission modes
+            if ((mission.Mode == MissionMode.Battle || mission.Mode == MissionMode.StartUp || mission.Mode == MissionMode.Conversation)
+                && mission.CombatType != Mission.MissionCombatType.ArenaCombat)
             {
-                if ((mission.Mode == MissionMode.Battle || mission.Mode == MissionMode.StartUp || mission.Mode == MissionMode.Conversation)
-                    && mission.CombatType != Mission.MissionCombatType.ArenaCombat)
-                {
-                    mission.AddMissionBehavior(new CustomBerserkerBehavior());
-                    mission.AddMissionBehavior(new ADODFireArrowsMissionBehavior());
-                }
+                var berserkerBehavior = new CustomBerserkerBehavior();
+                mission.AddMissionBehavior(berserkerBehavior);
 
-                if (mission?.MissionLogics?.OfType<CustomBattleAgentLogic>().Any() != true)
-                {
-                    if (mission?.MissionLogics?.OfType<SiegeDeploymentMissionController>().Any() != true)
-                    {
-                        if (mission?.MissionLogics?.OfType<DeploymentMissionController>().Any() == true)
-                        {
-                            mission.AddMissionBehavior(new ADODReinforcementsRunner());
-                        }
-                    }
-                }
-
-                mission.AddMissionBehavior(new FindMagicItemsMissionBehavior());
+                // Add Fire Arrows behavior
+                mission.AddMissionBehavior(new ADODFireArrowsMissionBehavior());
             }
+
+            // Add Reinforcements Runner if DeploymentMissionController is present
+            if (mission.MissionLogics.OfType<DeploymentMissionController>().Any()
+                && !mission.MissionLogics.OfType<CustomBattleAgentLogic>().Any()
+                && !mission.MissionLogics.OfType<SiegeDeploymentMissionController>().Any())
+            {
+                mission.AddMissionBehavior(new ADODReinforcementsRunner());
+            }
+
+            // Add Find Magic Items behavior to all missions
+            mission.AddMissionBehavior(new FindMagicItemsMissionBehavior());
         }
         public static void InitializeCareerSystem()
         {

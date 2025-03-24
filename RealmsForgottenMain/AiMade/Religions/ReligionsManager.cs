@@ -180,15 +180,19 @@ namespace RealmsForgotten.AiMade.Religions
         {
             foreach (var otherHero in Hero.AllAliveHeroes)
             {
-                if (hero != otherHero)
-                {
-                    var heroReligion = hero.GetReligion();
-                    var otherHeroReligion = otherHero.GetReligion();
+                if (hero == otherHero)
+                    continue;
 
-                    if (heroReligion != null && otherHeroReligion != null && heroReligion != otherHeroReligion)
-                    {
-                        ChangeRelationAction.ApplyRelationChangeBetweenHeroes(hero, otherHero, -10);
-                    }
+                // Skip penalty if either hero is a companion
+                if (hero.IsPlayerCompanion || otherHero.IsPlayerCompanion)
+                    continue;
+
+                var heroReligion = hero.GetReligion();
+                var otherHeroReligion = otherHero.GetReligion();
+
+                if (heroReligion != null && otherHeroReligion != null && heroReligion != otherHeroReligion)
+                {
+                    ChangeRelationAction.ApplyRelationChangeBetweenHeroes(hero, otherHero, -10);
                 }
             }
         }
