@@ -43,16 +43,43 @@
 		<string id="rf_career_workshop_income_20" text="Increases income from workshops by 20%" />
 		<string id="rf_career_spotting_DeSt" text="+20% spotting range in deserts and steppes" />
 		<string id="rf_career_player_melee_defence_15" text="Increases melee damage resistance by 15%" />
-		<string id="rf_career_party_speed_FoMoSw_20" text="+20% party movement speed in forest, mountain and swamp terrain." />
+		<string id="rf_career_party_speed_FoMoSw_20" text="+20% party movement speed in forest, mountain and swamp terrain" />
 		<string id="rf_career_troop_ranged_attack_15" text="Increases the damage of all ranged troops by 15%" />
 		<string id="rf_career_raid_more_items" text="After raiding, get additional 20% of items valued less than 60" />
 		<string id="rf_career_troop_melee_attack_15" text="Increases the damage of all melee troops by 15%" />
 		<string id="rf_career_caravan_dest_more_items" text="After destroying a caravan, get additional 20% of items valued less than 60" />
 		<string id="rf_career_heal_on_kill_10" text="Restore 5 hitpoints on kill" />
-		<string id="rf_career_player_sword_axe_10" text="Increases one handed sword, axe damage by 10%." />
-		<string id="rf_career_player_dagger_mace_10" text="Increases damage from daggers, one-two handed maces by 10%." />
+		<string id="rf_career_player_sword_axe_10" text="Increases one handed sword, axe damage by 10%" />
+		<string id="rf_career_player_dagger_mace_10" text="Increases damage from daggers, one-two handed maces by 10%" />
 		<string id="rf_career_player_melee_attack_15" text="Increase damage of all melee weapons by 15%" />
 		<string id="rf_career_player_ranged_attack_15" text="Increase damage of all ranged weapons by 15%" />
 		
+		<string id="rf_career_player_one_handed_10" text="Increases one handed weapon melee damage by 10%" />
+		<string id="rf_career_player_ranged_defence_10" text="Increases ranged damage resistance by 10%" />
+		<string id="rf_career_wages_10_reduction" text="cavalry troop wages are reduced by 10%" />
+		<string id="rf_career_60_mount_hitpoints" text="Increases mounts hitpoints by 60" />
+		<string id="rf_career_player_two_handed_10" text="Increases two handed weapon melee damage by 10%" />
+		<string id="rf_career_player_magic_defence_20" text="Increase magic damage resistance by 20%" />
+		<string id="rf_career_party_size_20" text="Increase max party size by 20" />
+		
+		
+		<string id="rf_career_troop_melee_attack_20_mounted_player_captain" text="Increases melee damage of mounted troops, if you are their formation leader by 20%" />
+		<string id="rf_career_no_stagger_15" text="Hits below 15 damage do not stagger the player" />
+		<string id="rf_career_troop_heal_20" text="Your troops heal 20% faster" />
+		<string id="rf_career_60_mount_hitpoints" text="Increases mounts hitpoints by 60" />
+		<string id="rf_career_town_income_10" text="Increases town income by 10%" />
+		<string id="rf_career_troop_melee_attack_10_mounted" text="Increases melee damage of mounted troops by 10%" />
+		<string id="rf_career_horse_speed_10" text="Increases horse speed by 10%" />
+		<string id="rf_career_40_hitpoints_companions" text="Increase your companions hitpoints by 40" />
+		<string id="rf_career_troops_wounded_5" text="Your troops have 5% higher chance to be wounded instead of killed in battle" />
+		<string id="rf_career_village_income_10" text="Increase village income by 10%" />            
+		<string id="rf_career_mount_charge_40" text="Increases your mounts charge damage by 40%" />
+		<string id="rf_career_player_two_handed_sword_axe_mace_both_polearm_20_mounted" text="While mounted, increases two handed sword, axe, mace, and one-two handed polearm weapon damage by 20%" />
+		<string id="rf_career_troop_melee_15_infantry" text="Your infantry get 15% melee damage resistance" />
+		<string id="rf_career_cav_thrust_reload_10" text="Your cavalry thrust their weapons and reload ranged weapons 10% faster" />
+		<string id="rf_career_mount_dash_30" text="Increases mounts dash acceleration by 30%" />
+		<string id="rf_career_player_one_handed_sword_axe_mace_20_mounted" text="While mounted, increases one handed sword, axe, mace weapon damage by 20%" />
+		<string id="rf_career_troop_melee_30_ranged" text="Your ranged units get 30% melee damage resistance" />
+		<string id="rf_career_cav_swing_10" text="Your cavalry troops swing their weapons 10% faster" />
 	</strings>
 </base>

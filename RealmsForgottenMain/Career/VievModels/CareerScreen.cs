@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RealmsForgotten.Career.VievModels;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Engine.GauntletUI;
@@ -13,7 +12,7 @@ using TaleWorlds.MountAndBlade.View.Screens;
 using TaleWorlds.ScreenSystem;
 using TaleWorlds.TwoDimension;
 
-namespace RealmsForgotten.Career
+namespace RealmsForgotten.Career.VievModels
 {
     [GameStateScreen(typeof(CareerScreenGameState))]
     public class CareerScreen : ScreenBase, IGameStateListener

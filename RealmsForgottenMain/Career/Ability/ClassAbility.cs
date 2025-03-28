@@ -170,10 +170,12 @@ namespace RealmsForgotten.Career.Ability
             {
                 case AbilityData.ActionTrigger.OnActivate or AbilityData.ActionTrigger.OnDeactivate:
                     actionDict.TryGetValue(AbilityData.ActionTrigger.OnActivate, out List<Delegate>? actions);
+                    if (actions == null) return;
                     actions.OfType<Action>().ToList().ForEach(a => a());
                     break;
                 case AbilityData.ActionTrigger.OnTroopPreHit:
                     actionDict.TryGetValue(AbilityData.ActionTrigger.OnTroopPreHit, out actions);
+                    if (actions == null) return;
                     var attacker = (Agent)par[0];
                     var victim = (Agent)par[1];
                     float[] additionalDamage = ((float[])par[2]);
@@ -184,6 +186,7 @@ namespace RealmsForgotten.Career.Ability
                     break;
                 case AbilityData.ActionTrigger.OnAgentHit:
                     actionDict.TryGetValue(AbilityData.ActionTrigger.OnAgentHit, out actions);
+                    if (actions == null) return;
                     attacker = (Agent)par[0];
                     victim = (Agent)par[1];
                     MissionWeapon weapon = (MissionWeapon)par[2];

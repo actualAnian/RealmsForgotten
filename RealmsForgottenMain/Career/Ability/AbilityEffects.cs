@@ -79,6 +79,15 @@ namespace RealmsForgotten.Career.Ability
 
         public static void DamageAttackerIfShieldBlocked(Agent attacker, Agent victim, MissionWeapon weapon, Blow blow, AttackCollisionData colData)
         {
+
+            bool a = attacker.Formation.Captain == Agent.Main;
+
+
+
+
+
+
+
             if (!colData.AttackBlockedWithShield) return;
 
             static double ExponentialFunction(double x, double targetValue, double baseValue)

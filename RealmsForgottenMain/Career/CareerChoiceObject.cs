@@ -67,6 +67,16 @@ namespace RealmsForgotten.Career
                 }
             }
         }
+
+        public class AgentPropertiesPassiveEffect : PassiveEffect
+        {
+            public Action<Agent, AgentDrivenProperties> OnAgentCreated;
+            public AgentPropertiesPassiveEffect(Action<Agent, AgentDrivenProperties> onAgentCreated)
+            {
+                OnAgentCreated = onAgentCreated;
+                PassiveEffectType = PassiveEffectType.Special;
+            }
+        }
         public class PassiveEffect
         {
             public float EffectMagnitude = 0f;
@@ -131,6 +141,7 @@ namespace RealmsForgotten.Career
         Ammo,               //arrows, crossbows , flat number
         SpellAmmo,          // + alchemical stones
         Health,             //Player health points, flat number
+        CompanionHealth,
         Damage,             //player damage, requires damage tuple
         Resistance,         //player resistance requires damage tuple
         TroopDamage,
@@ -144,7 +155,6 @@ namespace RealmsForgotten.Career
         HealthRegeneration,
         SpottingRange,
         TroopWages,
-        GetItem,
         PartyMovementSpeed,
         OnKill,
         CompanionLimit, 
@@ -152,6 +162,7 @@ namespace RealmsForgotten.Career
         HorseHealth,        //only player, percentage based
         HorseChargeDamage,  //Damage When Horse is raced into infantry.
         PartySize,
+        WoundedChance,
 
         //have to be enabled
         Special,           //For everything that requires special implementation

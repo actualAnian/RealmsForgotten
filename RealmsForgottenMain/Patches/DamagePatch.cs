@@ -87,6 +87,11 @@ namespace RealmsForgotten.Patches
             int resultDamage = (int)(baseDamage + baseDamage * summedBonus);
 
             b.InflictedDamage = resultDamage;
+
+            if (victim.ShouldShrugOffDamage(b.InflictedDamage))
+            {
+                b.BlowFlag |= BlowFlags.ShrugOff;
+            }
             if (attacker == Agent.Main || victim == Agent.Main)
                 DisplayDamageResult(baseDamage, resultDamage, summedBonus, victim == Agent.Main);
             return true;
