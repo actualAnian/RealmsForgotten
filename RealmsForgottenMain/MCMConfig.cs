@@ -81,5 +81,10 @@ namespace RealmsForgotten
         [SettingPropertyText("Use heal potion", RequireRestart = true)] 
         [SettingPropertyGroup("{=CustomSettings_KeyMapping}Key Mapping")]
         public string UseHealKey { get; set; } = "Numpad5";
+        
+        [DefaultKey("Q")]
+        [SettingPropertyText("Use ability", RequireRestart = true)]
+        [SettingPropertyGroup("{=CustomSettings_KeyMapping}Key Mapping")]
+        public string UseAbilityKey { get; set; } = "Q";
     }
 }
