@@ -21,7 +21,7 @@ namespace RealmsForgotten.Models
             ExplainedNumber value = base.MaxHitpoints(character, includeDescriptions);
             if (character.IsHero && character.HeroObject != Hero.MainHero && character.HeroObject.PartyBelongedTo == MobileParty.MainParty)
                 CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.CompanionHealth, false);
-            if (character == Hero.MainHero.CharacterObject) 
+            if (CharacterObject.PlayerCharacter != null &&  character.HeroObject == Hero.MainHero) 
                 CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.Health, false);
             return value;
         }
