@@ -4,6 +4,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameComponents;
 using static TaleWorlds.CampaignSystem.CampaignBehaviors.LordConversationsCampaignBehavior;
+using TaleWorlds.CampaignSystem.Party;
 
 namespace RealmsForgotten.Models
 {
@@ -18,8 +19,10 @@ namespace RealmsForgotten.Models
         public override ExplainedNumber MaxHitpoints(CharacterObject character, bool includeDescriptions = false)
         {
             ExplainedNumber value = base.MaxHitpoints(character, includeDescriptions);
-            if (CharacterObject.PlayerCharacter == null || character != Hero.MainHero.CharacterObject) return value;
-            CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.Health, false);
+            if (character.IsHero && character.HeroObject != Hero.MainHero && character.HeroObject.PartyBelongedTo == MobileParty.MainParty)
+                CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.CompanionHealth, false);
+            if (character == Hero.MainHero.CharacterObject) 
+                CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.Health, false);
             return value;
         }
     }

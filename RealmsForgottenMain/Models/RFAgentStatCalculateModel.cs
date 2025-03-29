@@ -8,11 +8,13 @@ using RealmsForgotten.Behaviors;
 using RealmsForgotten.Career;
 using RealmsForgotten.Career.Logic;
 using RealmsForgotten.CustomSkills;
+using RealmsForgotten.ObjectExtensions;
 using SandBox.GameComponents;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
+using static RealmsForgotten.Career.CareerChoiceObject;
 
 namespace RealmsForgotten.Models
 {
@@ -48,9 +50,24 @@ namespace RealmsForgotten.Models
                         agent.UpdateCustomDrivenProperties();
                     }
                 }
-                
                 AddSkillEffectsForAgent(agent, agentDrivenProperties);
-                //AddPerkEffectsForAgent(agent, agentDrivenProperties);
+                AddCareerAgentProperties(agent, agentDrivenProperties);
+            }
+        }
+
+        private void AddCareerAgentProperties(Agent agent, AgentDrivenProperties agentDrivenProperties)
+        {
+            if (!agent.BelongsToMainParty()) return;
+            PlayerClassInfo info = PlayerCareerExtension.PlayerCareerInfo;
+            if (info == null) return;
+            List<string> choices = info.CareerChoices;
+            foreach (var choiceID in choices)
+            {
+                CareerChoiceObject choice = RFCareerChoices.GetChoice(choiceID);
+                if(choice.Passive is AgentPropertiesPassiveEffect propertiesPassiveEffect)
+                {
+                    propertiesPassiveEffect.OnAgentCreated(agent, agentDrivenProperties);
+                }
             }
         }
 
