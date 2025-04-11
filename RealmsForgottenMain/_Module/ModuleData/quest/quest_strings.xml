@@ -470,4 +470,59 @@
 	<string id="rf_sixth_quest_after_demon_lords_defeated_owl_dialog_3" text="Indeed, we need to known in what state the kings banners are."/>
 	<string id="rf_sixth_quest_after_demon_lords_defeated_owl_dialog_4" text="But remember, we must also hunt down the Cultists and uncover the fate of your father."/>
 	<string id="rf_sixth_quest_after_demon_lords_defeated_owl_dialog_5" text="Damn it... I nearly forgot about that. Aye, I cannot escape my destiny. Let us proceed."/>
+
+	<string id="rf_seventh_quest_title" text="{=rf_seventh_quest_title}Realms Forgotten Quest: Part Seven" />
+	<string id="rf_seventh_quest_druid_dialog_1" text="I had to leave the temple and meet you here to avoid risking my neck. I am a priestess of the Tree, and my concern is with the natural world not the pity ambitions of kings. Whe carry the past, the oral traditions of the Elveans. We know that our ancestors have a dark stain left intentionaly out of memory. They raged war against an ancient people, to take hold of a magical stretch of land, where the first tree today stands. I am sure that after thousand of years is coming back upon us and i dont want to see our tree pay the price."/>
+	<string id="rf_seventh_quest_druid_dialog_2" text="We had gone very far already in this battle, and what you says resonates with all information we have gathered. But i believe this evil will go beyond of only hitting your beloved tree, but all peoples in Aeurth. Whatever the Elveans have done in the past, now is not time to delve into it. We need to stop this evil, but we dont know where to find its source."/>
+	<string id="rf_seventh_quest_druid_dialog_3" text="You should go and ask for a parley with the Dugrast King. The dugrast are older than memory, they exist since the old times."/>
+	<string id="rf_seventh_quest_druid_dialog_4" text="Aye, that was a piece in this board we were missing. Those who knows where we could find the roots of this evil to cut it for good."/>
+	<string id="rf_seventh_quest_druid_dialog_5" text="At my part i will provide you the guards of the Tree to help with your mission. May the old gods protect you."/>
+	<string id="rf_seventh_quest_druid_dialog_6" text="I apreciate that. It is a great help. Thank you and farewell."/>
+
+	<string id="rf_seventh_quest_druid_objective" text="{=rf_seventh_quest_druid_objective}Go to the First Tree." />
+	<string id="rf_seventh_quest_travel_log" text="{=rf_seventh_quest_druid_objective}You have to talk to the Priestess at the First Tree Temple" />
+	<string id="rf_seventh_quest_travel_task" text="{=rf_seventh_quest_druid_objective}Talk to the Priestess at the First Tree Temple" />
+
+	<string id="rf_seventh_quest_dwarf_king_objective" text="{=rf_seventh_quest_dwarf_king_objective}Dwarf King Objective: Meet the Dugrast King" />
+
+	<string id="rf_seventh_quest_interceptor_defeated_log" text="{=rf_seventh_quest_interceptor_defeated_log}You have defeated the Vortiak Army" />
+
+	<string id="rf_seventh_quest_necromancer_dialog_1" text="{=rf_seventh_quest_necromancer_dialog_1}So we meet again... We should get into a fight if you stay at the side of reason." />
+	<string id="rf_seventh_quest_necromancer_dialog_2" text="{=rf_seventh_quest_necromancer_dialog_2}What reason can you provide by bringing chaoes and destruction to innocent people?" />
+	<string id="rf_seventh_quest_necromancer_dialog_3" text="{=rf_seventh_quest_necromancer_dialog_3}We bring justice and justice has its claim. Those lives are a sacrifice for a greater good. This world is drwaning in misery and war, we are sought to cleanse it and bring back a new time of harmony and balance. But to cleanse the world we need to be fierce and impartial, unfortunatedly the innocent pay for the deeds of their lords." />
+	<string id="rf_seventh_quest_necromancer_dialog_4" text="{=rf_seventh_quest_necromancer_dialog_4}Thats where you got wrong. No justice is fair when innocents pay. If you had a path you lost it and i am here to stop you. Even, you are fighting against someone of your own kin. Besides me is one descendent of the Vortiak bloodline." />
+	<string id="rf_seventh_quest_necromancer_dialog_5" text="{=rf_seventh_quest_necromancer_dialog_5}What? How could you have known that!." />
+	<string id="rf_seventh_quest_necromancer_dialog_6" text="{=rf_seventh_quest_necromancer_dialog_6}Cause his father joined you, to defend your cause. What reason would he have if not to protect its own people?." />
+	<string id="rf_seventh_quest_necromancer_dialog_7" text="{=rf_seventh_quest_necromancer_dialog_7}What reason can you provide by bringing chaoes and destruction to innocent people?" />
+	<string id="rf_seventh_quest_necromancer_dialog_8" text="{=rf_seventh_quest_necromancer_dialog_8}Ahhh.. looking closelly now i can see his face on his. His father was a knowlegeable man, and gave his life in sacrifice to the old gods, so the armies of the other plane would join us! You should follow the bravery of your father lad, and join your people!" />
+	<string id="rf_seventh_quest_necromancer_dialog_9" text="{=rf_seventh_quest_necromancer_dialog_9}What will join you is my blade on your head bastard, preprae to die!" />
+
+	<string id="rf_seventh_quest_necromancer_dialog_2_1" text="{=rf_seventh_quest_necromancer_dialog_2_1}Reason? Do you have a reason beyond murder?" />
+	<string id="rf_seventh_quest_necromancer_dialog_3_1" text="{=rf_seventh_quest_necromancer_dialog_3_1}We bring justice to my people. They tried to protect the most important place of this world, where the life force that keeps harmony flows. There at the heart of Aeurth the usurpers planted their tree. And right now its roots drains the force of the land to feed their children with immortality." />
+	<string id="rf_seventh_quest_necromancer_dialog_4_1" text="{=rf_seventh_quest_necromancer_dialog_4_1}Thats sounds as nonsense...but i have heard about teh Vortiak war. How could you prove you were innocent?" />
+	<string id="rf_seventh_quest_necromancer_dialog_5_1" text="{=rf_seventh_quest_necromancer_dialog_5_1}If you at the confort of your home suddenly sees an army taking by force your land were you innocent or guilty? My poeple were guardians of eternal spring and those usurpers only wanted its power. We never used it, cause we knew the balance of the world depends on it. Join us and let destroy those whose lies corrupt our world." />
+
+	<string id="rf_seventh_quest_owl_dialog_1" text="{=rf_seventh_quest_owl_dialog_1}Now that we are close to put an end to this madness, i have to confess i have doubts in what path to take.My father gave his life to the Vortiaks cause...He was a distant man but an honoured one. I start to think that their cause can be true and we are actually deceived by appearances. Why if the real evil hides behind the white faces of the elveans? And those demons are actually a force of justice? Should we actually join the Vortiaks cause? I leave your judgement to decide." />
+	<string id="rf_seventh_quest_owl_dialog_2" text="{=rf_seventh_quest_owl_dialog_2}No, dont let yourself feel guilty about it! You have seen the monstrosities they brought into our world. If they cause one day have been just, it got lost by madness!" />
+	<string id="rf_seventh_quest_owl_dialog_3" text="{=rf_seventh_quest_owl_dialog_3}I dont feel guilty, actually i feel some part of me belongs to their cause. My father was an honourable man..." />
+	<string id="rf_seventh_quest_owl_dialog_4" text="{=rf_seventh_quest_owl_dialog_4}But to give his life to bring monsters to the world? Monsters that do not make a diference between teh innocent and teh guilty? There is no honour on this." />
+	<string id="rf_seventh_quest_owl_dialog_5" text="{=rf_seventh_quest_owl_dialog_5}Poor destiny met my father in the end... But i am relieved to find out his end. On his honour, lets finish thoise bastards good and for all!" />
+	<string id="rf_seventh_quest_owl_dialog_6" text="{=rf_seventh_quest_owl_dialog_6}Thats the spirit my lad, lets bring justice!" />
+
+	<string id="rf_seventh_quest_owl_dialog_7" text="{=rf_seventh_quest_owl_dialog_7}You are probably right. We know the elvean folk hides many secrets and after all those events we see they hide the true past of their people, behind a make to believe story..." />
+	<string id="rf_seventh_quest_owl_dialog_8" text="{=rf_seventh_quest_owl_dialog_8}Aye... and the priestess herself, so desperate to protect her Tree... maybe thats really whats going on, this tree drains the power of the world to give their people longevity and an advantage over all of us.." />
+	<string id="rf_seventh_quest_owl_dialog_9" text="{=rf_seventh_quest_owl_dialog_9}The Dugrast King confirmed the Vortiaks were the true owners of those lands...their cause is just." />
+	<string id="rf_seventh_quest_owl_dialog_10" text="{=rf_seventh_quest_owl_dialog_10}Aye, but he also said their hearts got corrupted by the spirits of the mountain, in their search for power." />
+	<string id="rf_seventh_quest_owl_dialog_11" text="{=rf_seventh_quest_owl_dialog_11}If you find a power so greate that would bring the dead back to life and help you avenge your people wouldnt you do it? Lets take teh right side this time and bring justice!." />
+
+
+	<string id="rf_seventh_quest_owl_log" text="{=rf_seventh_quest_owl_log}Talk to the Owl" />
+
+	<string id="rf_seventh_quest_boss_log" text="{=rf_seventh_quest_boss_log}Find the Vortiak Priestess" />
+	<string id="rf_seventh_quest_boss_task" text="{=rf_seventh_quest_boss_task}Go to the Vortiak Temple and defeat the Priestess" />
+
+	<string id="rf_seventh_quest_elven_destruction_log" text="{=rf_seventh_quest_elven_destruction_log}Defeat the Elveans." />
+	<string id="rf_seventh_quest_elven_destruction_task" text="{=rf_seventh_quest_elven_destruction_task}Destroy the High Kingdom of the Elveans." />
+
+
 </strings>

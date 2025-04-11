@@ -97,19 +97,27 @@ internal class MainPatch
             bool showQuickNotification,
             ChangeRelationAction.ChangeRelationDetail detail)
         {
-            if (ReligionBehavior.Instance?._heroes.TryGetValue(originalHero, 
-                    out HeroReligionModel heroReligionModel1) == true && ReligionBehavior.Instance?._heroes.TryGetValue(
-                    originalGainedRelationWith, out HeroReligionModel heroReligionModel2) == true)
+            // Exclude companions from religion-based penalties
+            if (originalHero.IsPlayerCompanion || originalGainedRelationWith.IsPlayerCompanion)
             {
-                if (heroReligionModel1.Religion != heroReligionModel2.Religion && ReligionLogicHelper.TolerableReligions.TryGetValue(heroReligionModel1.Religion,
-                        out Core.RFReligions compatibleReligion) && compatibleReligion != Core.RFReligions.All &&
-                        heroReligionModel2.Religion != compatibleReligion)
+                return;
+            }
+            if (ReligionBehavior.Instance?._heroes.TryGetValue(originalHero, out HeroReligionModel heroReligionModel1) == true &&
+        ReligionBehavior.Instance?._heroes.TryGetValue(originalGainedRelationWith, out HeroReligionModel heroReligionModel2) == true)
+            {
+                if (heroReligionModel1.Religion != heroReligionModel2.Religion &&
+                    ReligionLogicHelper.TolerableReligions.TryGetValue(heroReligionModel1.Religion, out Core.RFReligions compatibleReligion) &&
+                    compatibleReligion != Core.RFReligions.All &&
+                    heroReligionModel2.Religion != compatibleReligion)
                 {
                     int religionPenalty = (int)(relationChange * 0.1f);
                     relationChange = relationChange - religionPenalty;
-                    if(originalHero == Hero.MainHero)
-                        InformationManager.DisplayMessage(new InformationMessage($"{relationChange} of penalty on relation with {originalGainedRelationWith.Name.ToString()} for being an intolerable religion.", 
+                    if (originalHero == Hero.MainHero)
+                    {
+                        InformationManager.DisplayMessage(new InformationMessage(
+                            $"{relationChange} penalty on relation with {originalGainedRelationWith.Name} for being an intolerable religion.",
                             Colors.Yellow));
+                    }
                 }
             }
         }
