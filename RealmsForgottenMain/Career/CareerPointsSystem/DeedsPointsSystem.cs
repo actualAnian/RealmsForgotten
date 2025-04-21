@@ -41,38 +41,58 @@ namespace RealmsForgotten.Career.CareerPointsSystem
         }
         public override void OnQuestCompleted(QuestBase quest, QuestBase.QuestCompleteDetails details)
         {
+            if (quest == null) return;
             if (details != QuestBase.QuestCompleteDetails.Success) return;
-            //if (quest.QuestGiver?.IsNotable == true)
-            //{
-            if (goodQuestBehaviors.Contains(quest.GetType().Name))
-                AwardDeedsPoints(20);
-            else if (badQuestBehaviors.Contains(quest.GetType().Name))
-                AwardDeedsPoints(-20);
-            //}
+            foreach (string questBehavior in goodQuestBehaviors)
+            {
+                if (quest.Title.Value.Contains(questBehavior))
+                {
+                    AwardDeedsPoints(20);
+                    InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=rf_career_deeds_gained}You gain 20 deeds points!").ToString(), new Color(0, 255, 0)));
+                    return;
+                }
+            }
+            foreach (string questBehavior in badQuestBehaviors)
+            {
+                if (quest.Title.Value.Contains(questBehavior))
+                {
+                    AwardDeedsPoints(-20);
+                    InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=rf_career_deeds_lost}You lose 20 deeds points for your disgusting actions!").ToString(), new Color(255, 0, 0)));
+                    return;
+                }
+            }
         }
-        private readonly HashSet<string> goodQuestBehaviors = new()
+        static readonly List<string> goodQuestBehaviors = new()
         {
-            "RescueDaughterIssueBehavior",
-            "EscortMerchantCaravanBehavior",
-            "LandlordNeedsGarrisonBehavior",
-            "GangLeaderNeedsSpecialWeaponsIssueBehavior",
-            "LadysKnightOutIssueBehavior",
-            "MerchantArmyOfPoachersIssueBehavior",
-            "ExtortionByDesertersIssueBehavior"
+            "daughter found", // NotableWantsDaughterFoundIssueBehavior
+            "Escort Merchant Caravan", // EscortMerchantCaravanIssueBehavior
+            "Train troops for ", // LandlordTrainingForRetainersIssueBehavior
+            "The Art of The Trade", // LandLordTheArtOfTheTradeIssueBehavior
+            "Lady's Knight Out", //LadysKnightOutIssueBehavior
+            "Army of Poachers", //MerchantArmyOfPoachersIssueBehavior
+            "Needs Help With Brigands", //MerchantNeedsHelpWithOutlawsIssueQuestBehavior
+            "Caravan Ambush", //CaravanAmbushIssueBehavior
+            "Needs Grain Seeds", //HeadmanNeedsGrainIssueBehavior
+            "Extortion by Deserters ", //ExtortionByDesertersIssueBehavior
+            "Smugglers of ", //SmugglersIssueBehavior
+            "Bandit Base Near", //NearbyBanditBaseIssueBehavior
+            "Needs Tools", //VillageNeedsToolsIssueBehavior
         };
 
-        private readonly HashSet<string> badQuestBehaviors = new()
+        static readonly List<string> badQuestBehaviors = new()
         {
-            "GangLeaderNeedsRecruitsBehavior",
-            "LandlordNeedsManualLaborersBehavior",
-            "GangLeaderNeedsSpecialWeaponsIssueBehavior",
-            "GangLeaderNeedsToOffloadStolenGoodsIssueBehavior",
-             "GangLeaderNeedsWeaponsIssueQuestBehavior",
-             "SmugglersIssueBehavior",
-             "RaidVillageQuestTask"
+            "Gang Needs Recruits", //GangLeaderNeedsRecruitsBehavior
+            "Landlord needs access to", //LandlordNeedsAccessToVillageCommonsIssueBehavior
+            "Landowner Needs Manual Laborers", //LandLordNeedsManualLaborersIssueBehavior
+            "Special Weapon Order", //"GangLeaderNeedsSpecialWeaponsIssueBehavior",
+            "Purchase stolen goods from ", //GangLeaderNeedsToOffloadStolenGoodsIssueBehavior
+            "Gang leader needs weapons" , //GangLeaderNeedsWeaponsIssueBehavior
+            "Gang Needs Recruits", //GangLeaderNeedsRecruitsIssueBehavior
+             "Raid an Enemy Territory", //RaidAnEnemyTerritoryIssueBehavior
+             "Snare The Wealthy", //SnareTheWealthyIssueBehavior
         };
 
-        public override string Description => new TextObject("{=rf_pointsystem_deeds}You gain deeds points by destroying hideouts, helping caravans, villagers in battle, completing good quests. Every 50 points gives 1 perk point. Your current deeds: ").ToString() + deedsPoints;
+        public override string Description => new TextObject("{=rf_pointsystem_deeds}You gain deeds points by destroying hideouts, helping caravans, villagers in battle, completing good quests, you also lose points through completing bad quets. Every 50 points gives 1 perk point. Your current deeds: ").ToString() + deedsPoints;
 
         private void AwardDeedsPoints(int points)
         {
