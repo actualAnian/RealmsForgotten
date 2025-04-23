@@ -82,5 +82,10 @@
 		<string id="rf_career_player_one_handed_sword_axe_mace_20_mounted" text="While mounted, increases one handed sword, axe, mace weapon damage by 20%" />
 		<string id="rf_career_troop_melee_30_ranged" text="Your ranged units get 30% melee damage resistance" />
 		<string id="rf_career_cav_swing_10" text="Your cavalry troops swing their weapons 10% faster" />
+		
+		
+		<!--points system-->
+		<string id="rf_career_deeds_gained" text="You gain 20 deeds points!" />
+		<string id="rf_career_deeds_lost" text="You lose 20 deeds points for your disgusting actions!" />
 	</strings>
 </base>
