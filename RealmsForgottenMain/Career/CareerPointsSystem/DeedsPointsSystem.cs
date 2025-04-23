@@ -42,65 +42,58 @@ namespace RealmsForgotten.Career.CareerPointsSystem
         }
         public override void OnQuestCompleted(QuestBase quest, QuestBase.QuestCompleteDetails details)
         {
-            if (quest == null)
-            {
-                Debug.Print($"WARNING: DeedsPointsSystem.OnQuestCompleted received a null quest.");
-                return;
-            }
-
+            if (quest == null) return;
             if (details != QuestBase.QuestCompleteDetails.Success) return;
-
-            try // Add try-catch around the logic just in case
+            foreach (string questBehavior in goodQuestBehaviors)
             {
-                string questTypeName = quest.GetType().Name;
-                Debug.Print($"DeedsPointsSystem: Quest '{questTypeName}' completed successfully."); // Log which quest completed
-
-                if (goodQuestBehaviors.Contains(questTypeName))
+                if (quest.Title.Value.Contains(questBehavior))
                 {
-                    Debug.Print($"DeedsPointsSystem: Quest '{questTypeName}' is GOOD. Awarding points.");
                     AwardDeedsPoints(20);
-                }
-                else if (badQuestBehaviors.Contains(questTypeName))
-                {
-                    Debug.Print($"DeedsPointsSystem: Quest '{questTypeName}' is BAD. Awarding points.");
-                    AwardDeedsPoints(-20);
-                }
-                else
-                {
-                    Debug.Print($"DeedsPointsSystem: Quest '{questTypeName}' not found in good/bad lists.");
+                    InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=rf_career_deeds_gained}You gain 20 deeds points!").ToString(), new Color(0, 255, 0)));
+                    return;
                 }
             }
-            catch (Exception ex)
+            foreach (string questBehavior in badQuestBehaviors)
             {
-                Debug.Print($"ERROR in DeedsPointsSystem.OnQuestCompleted for quest '{quest?.GetType()?.Name ?? "NULL"}': {ex.Message}\n{ex.StackTrace}");
-                // Optionally show an in-game message too
-                InformationManager.DisplayMessage(new InformationMessage($"Crash Prevented in DeedsPointsSystem: {ex.Message}", Colors.Red));
+                if (quest.Title.Value.Contains(questBehavior))
+                {
+                    AwardDeedsPoints(-20);
+                    InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=rf_career_deeds_lost}You lose 20 deeds points for your disgusting actions!").ToString(), new Color(255, 0, 0)));
+                    return;
+                }
             }
         }
-        private readonly HashSet<string> goodQuestBehaviors = new()
+        static readonly List<string> goodQuestBehaviors = new()
         {
-            "RescueDaughterIssueBehavior",
-            "EscortMerchantCaravanBehavior",
-            "LandlordNeedsGarrisonBehavior",
-            "GangLeaderNeedsSpecialWeaponsIssueBehavior", // Note: This appears in both lists? Intentional?
-            "LadysKnightOutIssueBehavior",
-            "MerchantArmyOfPoachersIssueBehavior",
-            "ExtortionByDesertersIssueBehavior",
-            "RescueUliahQuest"
+            "daughter found", // NotableWantsDaughterFoundIssueBehavior
+            "Escort Merchant Caravan", // EscortMerchantCaravanIssueBehavior
+            "Train troops for ", // LandlordTrainingForRetainersIssueBehavior
+            "The Art of The Trade", // LandLordTheArtOfTheTradeIssueBehavior
+            "Lady's Knight Out", //LadysKnightOutIssueBehavior
+            "Army of Poachers", //MerchantArmyOfPoachersIssueBehavior
+            "Needs Help With Brigands", //MerchantNeedsHelpWithOutlawsIssueQuestBehavior
+            "Caravan Ambush", //CaravanAmbushIssueBehavior
+            "Needs Grain Seeds", //HeadmanNeedsGrainIssueBehavior
+            "Extortion by Deserters ", //ExtortionByDesertersIssueBehavior
+            "Smugglers of ", //SmugglersIssueBehavior
+            "Bandit Base Near", //NearbyBanditBaseIssueBehavior
+            "Needs Tools", //VillageNeedsToolsIssueBehavior
         };
 
-        private readonly HashSet<string> badQuestBehaviors = new()
+        static readonly List<string> badQuestBehaviors = new()
         {
-            "GangLeaderNeedsRecruitsBehavior",
-            "LandlordNeedsManualLaborersBehavior",
-            "GangLeaderNeedsSpecialWeaponsIssueBehavior", // Note: This appears in both lists? Intentional?
-            "GangLeaderNeedsToOffloadStolenGoodsIssueBehavior",
-             "GangLeaderNeedsWeaponsIssueQuestBehavior",
-             "SmugglersIssueBehavior",
-             "RaidVillageQuestTask" // Assuming this is a quest type name
+            "Gang Needs Recruits", //GangLeaderNeedsRecruitsBehavior
+            "Landlord needs access to", //LandlordNeedsAccessToVillageCommonsIssueBehavior
+            "Landowner Needs Manual Laborers", //LandLordNeedsManualLaborersIssueBehavior
+            "Special Weapon Order", //"GangLeaderNeedsSpecialWeaponsIssueBehavior",
+            "Purchase stolen goods from ", //GangLeaderNeedsToOffloadStolenGoodsIssueBehavior
+            "Gang leader needs weapons" , //GangLeaderNeedsWeaponsIssueBehavior
+            "Gang Needs Recruits", //GangLeaderNeedsRecruitsIssueBehavior
+             "Raid an Enemy Territory", //RaidAnEnemyTerritoryIssueBehavior
+             "Snare The Wealthy", //SnareTheWealthyIssueBehavior
         };
 
-        public override string Description => new TextObject("{=rf_pointsystem_deeds}You gain deeds points by destroying hideouts, helping caravans, villagers in battle, completing good quests. Every 50 points gives 1 perk point. Your current deeds: ").ToString() + deedsPoints;
+        public override string Description => new TextObject("{=rf_pointsystem_deeds}You gain deeds points by destroying hideouts, helping caravans, villagers in battle, completing good quests, you also lose points through completing bad quets. Every 50 points gives 1 perk point. Your current deeds: ").ToString() + deedsPoints;
 
         private void AwardDeedsPoints(int points)
         {

@@ -36,8 +36,8 @@ namespace RealmsForgotten.Career
         {
             ClassAbility.RegisterAll();
 
-            _mercenary = Game.Current.ObjectManager.RegisterPresumedObject(new CareerObject("mercenary", ClassAbility.All.First(a => a.StringId == "merc_ability"), PointsSystemType.Renown));
-            _Knight = Game.Current.ObjectManager.RegisterPresumedObject(new CareerObject("knight", ClassAbility.All.First(a => a.StringId == "knight_ability"), PointsSystemType.Deeds));
+            _mercenary = Game.Current.ObjectManager.RegisterPresumedObject(new CareerObject("mercenary", ClassAbility.All.First(a => a.StringId == "merc_ability"), Career.PointsSystemType.Renown));
+            _Knight = Game.Current.ObjectManager.RegisterPresumedObject(new CareerObject("knight", ClassAbility.All.First(a => a.StringId == "knight_ability"), Career.PointsSystemType.Deeds));
 
             _allCareers = new()
             {
