@@ -103,7 +103,7 @@ namespace RealmsForgotten
                 campaignGameStarter.AddModel(new RFClanTierModel());
                 campaignGameStarter.AddModel(new RFStrikeMagnitudeModel());
 
-                
+
                 new RFAttributes().Initialize();
                 new RFSkills().Initialize();
                 new RFSkillEffects().InitializeAll();

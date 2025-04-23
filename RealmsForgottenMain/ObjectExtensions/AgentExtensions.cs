@@ -1,8 +1,10 @@
-﻿using System;
+﻿using RealmsForgotten.Career;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.MountAndBlade;
 
@@ -25,6 +27,12 @@ namespace RealmsForgotten.ObjectExtensions
         {
             var party = agent.GetOriginMobileParty();
             return party != null && party.IsMainParty;
+        }
+        public static bool ShouldShrugOffDamage(this Agent agent, int damage)
+        {
+            if (damage >= 15 && PlayerCareerExtension.GetCareer() != null && agent.Character != null && agent.Character.IsPlayerCharacter && PlayerCareerExtension.HasCareerChoice("FieldMarshall1_2"))
+                return true;
+            return false;
         }
     }
 }

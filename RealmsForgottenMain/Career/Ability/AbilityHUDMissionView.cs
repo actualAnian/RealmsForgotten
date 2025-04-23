@@ -38,7 +38,8 @@ namespace RealmsForgotten.Career.Ability
                                         MissionScreen.CustomCamera == null &&
                                         !MissionScreen.IsViewingCharacter() &&
                                         !MissionScreen.IsPhotoModeEnabled &&
-                                        !ScreenManager.GetMouseVisibility();
+                                        !ScreenManager.GetMouseVisibility() &&
+                                        Globals.IsCurrentMainAgentPlayerHero();
                 if (canHudBeVisible)
                 {
                     if (_hasCareerAbility)
