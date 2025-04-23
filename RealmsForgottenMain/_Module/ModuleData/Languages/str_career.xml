@@ -22,6 +22,7 @@
 		<!-- abilities -->
 		<string id="rf_mercenary_ability_name" text="Battle Cry" />
 		<string id="rf_knight_ability_name" text="Divine Shield" />
+		<string id="rf_lightwarden_ability_name" text="Radiant Benediction" />
 
 		<string id="rf_career_battle_cry_desc" text="Increase your infantry's morale by 20, For the next 15 seconds, all your infantry get 30% melee damage resistance." />
 		<string id="rf_career_battle_cry_upgr_desc" text="During the effect of battle cry, your troops additionally get berzerker potion effect (+20% attack speed)" />

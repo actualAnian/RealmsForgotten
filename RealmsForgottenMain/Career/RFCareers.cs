@@ -10,6 +10,7 @@ namespace RealmsForgotten.Career
         private MBReadOnlyList<CareerObject> _allCareers;
         private CareerObject _Knight;
         private CareerObject _mercenary;
+        private CareerObject _lightwarden;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
         public RFCareers()
@@ -30,6 +31,7 @@ namespace RealmsForgotten.Career
         }
         public static CareerObject Knight => Instance._Knight;
         public static CareerObject Mercenary => Instance._mercenary;
+        public static CareerObject Lightwarden => Instance._lightwarden;
 
         public static MBReadOnlyList<CareerObject> All => Instance._allCareers;
         private void RegisterAll()
@@ -38,11 +40,14 @@ namespace RealmsForgotten.Career
 
             _mercenary = Game.Current.ObjectManager.RegisterPresumedObject(new CareerObject("mercenary", ClassAbility.All.First(a => a.StringId == "merc_ability"), Career.PointsSystemType.Renown));
             _Knight = Game.Current.ObjectManager.RegisterPresumedObject(new CareerObject("knight", ClassAbility.All.First(a => a.StringId == "knight_ability"), Career.PointsSystemType.LevelUp));
+            //Need to change the PointSystem, I'll thinking about it yet.
+            _lightwarden = Game.Current.ObjectManager.RegisterPresumedObject(new CareerObject("lightwarden", ClassAbility.All.First(a => a.StringId == "lightwarden_ability"), Career.PointsSystemType.Renown));
 
             _allCareers = new()
             {
                 _mercenary,
                 _Knight,
+                _lightwarden,
             };
 
         }
@@ -50,6 +55,7 @@ namespace RealmsForgotten.Career
         {
             _mercenary.Initialize("Mercenary");
             _Knight.Initialize("Knight");
+            _lightwarden.Initialize("Lightwarden");
         }
     }
 }

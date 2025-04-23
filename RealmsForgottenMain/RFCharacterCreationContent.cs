@@ -1423,6 +1423,7 @@ namespace RealmsForgotten
         {
             ChooseCharacterEquipment(characterCreation, StartType.KingdomRuler);
             Manager.SetStoryOption(6);
+            PlayerCareerExtension.AddCareer(RFCareers.Lightwarden);
         }
 
         protected void CastleRulerStartOnConsequence(CharacterCreation characterCreation)

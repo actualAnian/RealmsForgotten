@@ -46,6 +46,23 @@ namespace RealmsForgotten.Career.Ability
                 agent.UpdateCustomDrivenProperties();
             }
         }
+
+        public static void GiveRadiantBenedictionEffects()
+        {
+            IEnumerable<Agent> agents = Mission.Current.Agents.Where(a => a.BelongsToMainParty());
+            float radiusSquared = 5.0f * 5.0f; //5 meters radius
+            //var agentPlayer = agents.Where(P => P.IsMine).First();
+            foreach (Agent? agent in agents)
+            {
+                if (agent.Character != null && Agent.Main.Position.DistanceSquared(agent.Position) <= radiusSquared && agent.State.ToString() != "4")
+                {
+                    agent.Health = Math.Min(agent.Health + (float)(agent.HealthLimit * 0.30), agent.HealthLimit);
+                }
+            }
+        }
+
+        public static void RemoveRadiantBenedictionEffects() => throw new NotImplementedException();
+
         public static void CheckAgents()
         {
             for (int i = agentsWithProperties.Count - 1; i >= 0; i--)

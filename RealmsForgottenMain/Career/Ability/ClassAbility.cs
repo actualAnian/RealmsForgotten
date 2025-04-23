@@ -30,8 +30,19 @@ namespace RealmsForgotten.Career.Ability
             upgradedActions: new()
             {
             });
+            AbilityData lightwardenAbilityData = new(15, 15, baseActions: new()
+            {
+                [AbilityData.ActionTrigger.OnActivate] = new() { () => AbilityEffects.GiveRadiantBenedictionEffects() },
+                [AbilityData.ActionTrigger.OnDeactivate] = new() { () => AbilityEffects.RemoveRadiantBenedictionEffects() }
+            },
+            upgradedActions: new()
+            {
+            });
+
+            //Instance
             All.Add(new ClassAbility("merc_ability", "{=rf_mercenary_ability_name}Battle Cry", "battle_cry_perk_a", "battle_cry_perk_b", "{=rf_career_battle_cry_desc} For the next 15 seconds, all your troops get 50% melee damage resistance.", "{=rf_career_battle_cry_upgr_desc} During the effect of battle cry, your infantry additionally get berzerker potion effect (+20% attack speed)", mercAbilityData));
             All.Add(new ClassAbility("knight_ability", "{=rf_knight_ability_name}Divine Shield", "divine_shield_perk_a", "divine_shield_perk_b", "{=rf_career_battle_cry_desc} Every attack blocked by your shield, deals 20 damage back to the enemy.", "{=rf_career_battle_cry_upgr_desc} The reflection damage scales exponentially with deeds points, +0 damage at 400 deeds points, up to +60 dmg at 800 deeds points", knightAbilityData));
+            All.Add(new ClassAbility("lightwarden_ability", "{=rf_lightwarden_ability_name}Radiant Benediction", "radiant_benediction_perk_a", "radiant_benediction_perk_b", "{=rf_career_battle_cry_desc} When is activated, heals all of your troops by 30% in a range of 5 meters.", "{=rf_career_battle_cry_upgr_desc} When is activated, heals all of your troops by 60% in a range of 15 meters.", lightwardenAbilityData));
         }
         public enum AbilityType
         {
