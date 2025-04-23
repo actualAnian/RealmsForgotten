@@ -30,12 +30,22 @@ public static class ReligionUIHelper
     public static StringPairItemVM GetHeroReligion(Hero hero)
     {
         var campaignBehavior = ReligionBehavior.Instance;
+
+        // Force check for player first
+        if (hero == Hero.MainHero && campaignBehavior._heroes.TryGetValue(Hero.MainHero, out var playerReligionModel))
+        {
+            var religion = playerReligionModel.Religion;
+            return new StringPairItemVM(_religionStr.ToString(), GetReligionName(religion).ToString(), null);
+        }
+
+        // Fallback for NPCs
         if (campaignBehavior._heroes.ContainsKey(hero))
         {
             var religion = campaignBehavior._heroes[hero].Religion;
             return new StringPairItemVM(_religionStr.ToString(), GetReligionName(religion).ToString(), null);
         }
 
+        // Atheist fallback
         return new StringPairItemVM(_religionStr.ToString(), _atheist.ToString(), null);
     }
 
@@ -43,12 +53,24 @@ public static class ReligionUIHelper
     public static StringPairItemVM GetHeroReligionDevotion(Hero hero)
     {
         var campaignBehavior = ReligionBehavior.Instance;
-        if (!campaignBehavior._heroes.ContainsKey(hero))
-            return new StringPairItemVM(_devotion.ToString(), _atheist.ToString(), null);
-        var religion = campaignBehavior._heroes[hero].Religion;
-        var devotionToCurrentReligion = campaignBehavior._heroes[hero].GetDevotionToCurrentReligion();
-        return new StringPairItemVM(_devotion.ToString(), GetHeroReligionToolTip(religion, devotionToCurrentReligion),
-            null);
+
+        // Player check first
+        if (hero == Hero.MainHero && campaignBehavior._heroes.TryGetValue(Hero.MainHero, out var playerReligionModel))
+        {
+            var religion = playerReligionModel.Religion;
+            var devotion = playerReligionModel.GetDevotionToCurrentReligion();
+            return new StringPairItemVM(_devotion.ToString(), GetHeroReligionToolTip(religion, devotion), null);
+        }
+
+        // NPC fallback
+        if (campaignBehavior._heroes.ContainsKey(hero))
+        {
+            var religion = campaignBehavior._heroes[hero].Religion;
+            var devotion = campaignBehavior._heroes[hero].GetDevotionToCurrentReligion();
+            return new StringPairItemVM(_devotion.ToString(), GetHeroReligionToolTip(religion, devotion), null);
+        }
+
+        return new StringPairItemVM(_devotion.ToString(), _atheist.ToString(), null);
     }
 
 

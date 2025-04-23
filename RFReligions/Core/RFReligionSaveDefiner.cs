@@ -16,6 +16,7 @@ public class RFReligionSaveDefiner : SaveableTypeDefiner
     {
         AddClassDefinition(typeof(SettlementReligionModel), 1);
         AddClassDefinition(typeof(HeroReligionModel), 2);
+        AddClassDefinition(typeof(ReligionPartySpeedModel), 3);
     }
 
 

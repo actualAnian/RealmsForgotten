@@ -518,11 +518,27 @@
 
 	<string id="rf_seventh_quest_owl_log" text="{=rf_seventh_quest_owl_log}Talk to the Owl" />
 
+	<string id="rf_seventh_quest_lair_log" text="{=rf_seventh_quest_lair_log}Find the Vortiak Lair." />
+	<string id="rf_seventh_quest_lair_task" text="{=rf_seventh_quest_lair_task}Destroy the Vortiaks." />
+
 	<string id="rf_seventh_quest_boss_log" text="{=rf_seventh_quest_boss_log}Find the Vortiak Priestess" />
 	<string id="rf_seventh_quest_boss_task" text="{=rf_seventh_quest_boss_task}Go to the Vortiak Temple and defeat the Priestess" />
 
 	<string id="rf_seventh_quest_elven_destruction_log" text="{=rf_seventh_quest_elven_destruction_log}Defeat the Elveans." />
 	<string id="rf_seventh_quest_elven_destruction_task" text="{=rf_seventh_quest_elven_destruction_task}Destroy the High Kingdom of the Elveans." />
+
+	<string id="rf_seventh_quest_priestess_army_log" text="{=1asd23}Stop the Priestess!" />
+	<string id="rf_seventh_quest_priestess_army_task" text="{=2bsf24}The Evil Witch has escaped and is gathering the last of her army. You must find her near the Ruined Temple and defeat her once and for all." />
+	<!-- Evil Witch Post-Battle Dialogue -->
+	<string id="rf_seventh_quest_witch_final_1" text="{=witch_final_1}You think this ends with me bleeding on the floor?" />
+	<string id="rf_seventh_quest_witch_final_2" text="{=witch_final_2}You’ve lost, Witch. This land will be free of your poison." />
+	<string id="rf_seventh_quest_witch_final_3" text="{=witch_final_3}Foolish mortal. You’ve only shattered the vessel. The storm is still coming." />
+	<string id="rf_seventh_quest_witch_final_4" text="{=witch_final_4}We will face whatever comes. And we will win." />
+	<string id="rf_seventh_quest_witch_final_5" text="{=witch_final_5}Then prepare your grave, champion. My children are not done yet..." />
+
+	<string id="rf_seventh_quest_priestess_army_log" text="{=seventhquest_log_priestess}Defeat the final army of the Priestess." />
+	<string id="rf_seventh_quest_priestess_army_task" text="{=seventhquest_task_priestess}The Priestess has returned with a final force. Stop her before she regains power!" />
+	<string id="rf_seventh_quest_completed_log" text="{=rf_quest7_log_complete}The final battle is over. A new age begins — for better or worse." />
 
 
 </strings>

@@ -8,7 +8,6 @@ using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.ObjectSystem;
-
 namespace RealmsForgotten.Models
 {
     internal class RFVolunteerModel : DefaultVolunteerModel
@@ -74,16 +73,22 @@ namespace RealmsForgotten.Models
 
         private static readonly Dictionary<string, List<VolunteerChance>> FromSettlementStringId = new()
         {
-            //["town_ES1"] = new List<VolunteerChance> { new("mordor_rhun_bloodspear", 5), new("mordor_harad_golden_fang", 1) }
-            // This is set up to be Clan > Settlement > Culture. Therefore, Dol Amroth will always spawn Gondor units, even if the settlement is owned by a different clan. So this will need to be empty.
+            ["town_W1"] = new List<VolunteerChance> { new("wulf_raider", 5) },
+            ["town_W2"] = new List<VolunteerChance> { new("dunland_scout", 5) },
+            ["town_W3"] = new List<VolunteerChance> { new("wulf_raider", 5) },
+            ["town_W4"] = new List<VolunteerChance> { new("dunland_scout", 5) },
+            ["town_W5"] = new List<VolunteerChance> { new("wulf_raider", 5) }
         };
         private static readonly Dictionary<string, List<VolunteerChance>> FromSettlementOwnerClanStringId = new()
         {
-            ["clan_sturgia_9"] = new List<VolunteerChance> { new("legendary_dugrast", 2), new("legendary_dugrast", 1) },
+            ["wulf_faction_1"] = new List<VolunteerChance> { new("wulf_troop", 2) },
+            ["wulf_faction_2"] = new List<VolunteerChance> { new("wulf_troop", 2) },
+            ["wulf_faction_3"] = new List<VolunteerChance> { new("wulf_troop", 2) },
+            ["wulf_faction_4"] = new List<VolunteerChance> { new("wulf_troop", 2) }
         };
         private static readonly Dictionary<string, List<VolunteerChance>> FromSettlementCultureStringId = new()
         {
-            ["exampleFaction"] = new List<VolunteerChance> { new("troop_75%chance", 3), new("troop_25%chance", 1) },
+            ["wulf"] = new List<VolunteerChance> { new("wulf_troop", 3) },
         };
         public class VolunteerChance
         {

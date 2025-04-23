@@ -699,25 +699,27 @@ namespace RealmsForgotten.Managers
                 new TroopSpawnInfo("mercenary_volunteer", 10) }},
 
             { ("wulf", StartType.VassalNoFief), new List<TroopSpawnInfo> {
-                 new TroopSpawnInfo("dunland_light_infantry", 10),
-                new TroopSpawnInfo("dunland_light_archer", 5),
-                new TroopSpawnInfo("wulf_cavalry", 3) }},
+                 new TroopSpawnInfo("wulf_infantry", 10),
+                new TroopSpawnInfo("wulf_archer", 5),
+                new TroopSpawnInfo("dunland_skirmisher", 3) }},
 
             { ("wulf", StartType.KingdomRuler), new List<TroopSpawnInfo> {
-                new TroopSpawnInfo("dunland_medium_infantry", 20),
+                new TroopSpawnInfo("wulf_militia_veteran_archer", 15),
+                new TroopSpawnInfo("dunland_medium_axemen", 20),
                 new TroopSpawnInfo("dunland_medium_spearmen", 10),
                 new TroopSpawnInfo("dunland_heavy_axemen", 10),
-                new TroopSpawnInfo("wulf_cavalry", 10) }},
+                new TroopSpawnInfo("dunland_skirmisher", 10),
+                new TroopSpawnInfo("wulf_raider", 10) }},
 
             { ("wulf", StartType.CastleRuler), new List<TroopSpawnInfo> {
                 new TroopSpawnInfo("wulf_militia_veteran_archer", 15),
                 new TroopSpawnInfo("dunland_medium_spearmen", 10),
-                new TroopSpawnInfo("wulf_cavalry", 5) }},
+                new TroopSpawnInfo("dunland_skirmisher", 5) }},
 
             { ("wulf", StartType.VassalFief), new List<TroopSpawnInfo> {
-                new TroopSpawnInfo("wulf_axemen", 10),
+                new TroopSpawnInfo("dunland_light_axemen", 10),
                 new TroopSpawnInfo("wulf_militia_veteran_archer", 5),
-                new TroopSpawnInfo("wulf_cavalry", 5) }},
+                new TroopSpawnInfo("dunland_skirmisher", 5) }},
 
              };
 

@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Extensions;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
+using TaleWorlds.ObjectSystem;
 
 namespace RealmsForgotten.RFReligions.Helper;
 
@@ -210,6 +212,15 @@ public static class ReligionLogicHelper
         return false;
     }
 
+    public static bool HasEnoughItem(Hero hero, string itemId, int requiredAmount)
+    {
+        if (hero?.PartyBelongedTo == null) return false;
+
+        var item = MBObjectManager.Instance.GetObject<ItemObject>(itemId);
+        if (item == null) return false;
+
+        return hero.PartyBelongedTo.ItemRoster.GetItemNumber(item) >= requiredAmount;
+    }
 
     public static bool SacrificeItems(Core.RFReligions rel, int requiredItemCount, ItemRoster roster)
     {
