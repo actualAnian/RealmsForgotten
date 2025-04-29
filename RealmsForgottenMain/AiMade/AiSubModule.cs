@@ -14,6 +14,7 @@ using RealmsForgotten.AiMade.Enlistement;
 using static RealmsForgotten.AiMade.ADODReinforcementsSystem;
 using System.Linq;
 
+
 namespace RealmsForgotten.AiMade
 {
     public class AiSubModule : MBSubModuleBase
@@ -60,7 +61,7 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new TavernRecruitmentBehavior());
             campaignGameStarter.AddBehavior(new HouseTroopsCastleBehavior());
             campaignGameStarter.AddBehavior(new HelpPeregrineBehavior());
-            campaignGameStarter.AddBehavior(new MerchantEventBehavior());
+            campaignGameStarter.AddBehavior(new MerchantDeliveryBehavior());
             campaignGameStarter.AddBehavior(new StorytellerBehavior());
             campaignGameStarter.AddBehavior(new ListeningToStoryBehavior());
             campaignGameStarter.AddBehavior(new BanditDefeatChivalryBehavior());
@@ -91,7 +92,7 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new MineBehavior());
             campaignGameStarter.AddBehavior(new SturgiaCultureChangerBehavior());
             campaignGameStarter.AddBehavior(new RacialMixingBehavior());
-        }
+           }
         private void AddCustomModels(CampaignGameStarter campaignGameStarter)
         {
             // Register the custom inventory capacity model

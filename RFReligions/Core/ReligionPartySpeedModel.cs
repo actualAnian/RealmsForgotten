@@ -15,10 +15,15 @@ namespace RealmsForgotten.RFReligions.Core
     {
         public override ExplainedNumber CalculateFinalSpeed(MobileParty party, ExplainedNumber finalSpeed)
         {
+            if (party == null || party.Party == null || party.LeaderHero == null)
+            {
+                // Skip calculation if party is broken
+                return finalSpeed;
+            }
+
             finalSpeed = base.CalculateFinalSpeed(party, finalSpeed);
 
-            if (party.LeaderHero != null &&
-                ReligionBehavior.Instance.IsHeroBlessed(party.LeaderHero, RFReligions.TengralorOrkhai))
+            if (ReligionBehavior.Instance.IsHeroBlessed(party.LeaderHero, RFReligions.TengralorOrkhai))
             {
                 finalSpeed.Add(0.3f, new TextObject("Tengralor Orkhai Blessing"));
             }

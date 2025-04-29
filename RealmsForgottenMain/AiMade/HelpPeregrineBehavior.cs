@@ -1,278 +1,139 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Party;
-using TaleWorlds.CampaignSystem.Party.PartyComponents;
-using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
-// Required for FirstOrDefault
 
 namespace RealmsForgotten.AiMade
 {
     public class HelpPeregrineBehavior : CampaignBehaviorBase
     {
-        private static readonly TextObject HelpPeregrineTitleText = new TextObject("{=HelpPeregrineTitle}HELP A PEREGRINE");
-        private static readonly TextObject HelpPeregrineText = new TextObject("{=HelpPeregrineText}AS YOU WENT PAST A CROSSROADS, A LONELY PEREGRINE CALLED FOR YOUR HELP. HE HAS BEEN ROBBED AND LOOKS SCARED. THE THIEVES STOLE AN OFFERING HE WAS BRINGING TO A SHRINE. WILL YOU HELP HIM?");
-        private static readonly TextObject AcceptText = new TextObject("{=Accept}ACCEPT AND ESCORT THE PEREGRINE");
-        private static readonly TextObject DeclineText = new TextObject("{=Decline}DECLINE AND RESUME YOUR PATH");
-
-        private CampaignTime lastEventTime;  // Variable to store the last event trigger time.
-        private Settlement targetSettlement;
-        private int banditAttackCount = 0;
-        private const int MaxBanditAttacks = 1; // Only one bandit party attack
-        private CharacterObject questMonasteryMonk;
-        private bool questAccepted = false;
-        private CampaignTime questAcceptedTime;
-        private const float MaxEscortTimeInDays = 7f; // Maximum time to complete the escort mission
+        private CampaignTime _lastEventTime;
+        private const int DaysBetweenEvents = 90;
 
         public override void RegisterEvents()
         {
             CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, OnNewGameCreated);
             CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, OnGameLoaded);
             CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, DailyTick);
-            CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, HourlyTick);
         }
 
         public override void SyncData(IDataStore dataStore)
         {
-            dataStore.SyncData("HelpPeregrine_lastEventTime", ref lastEventTime);
-            dataStore.SyncData("HelpPeregrine_targetSettlement", ref targetSettlement);
-            dataStore.SyncData("HelpPeregrine_banditAttackCount", ref banditAttackCount);
-            dataStore.SyncData("HelpPeregrine_questMonasteryMonk", ref questMonasteryMonk);
-            dataStore.SyncData("HelpPeregrine_questAccepted", ref questAccepted);
-            dataStore.SyncData("HelpPeregrine_questAcceptedTime", ref questAcceptedTime);
+            dataStore.SyncData("HelpPeregrine_LastEventTime", ref _lastEventTime);
         }
 
         private void OnNewGameCreated(CampaignGameStarter campaignGameStarter)
         {
-            Initialize();
-            lastEventTime = CampaignTime.Now; // Set the initial time when the game starts
+            _lastEventTime = CampaignTime.Now - CampaignTime.Days(60) + CampaignTime.Days(MBRandom.RandomInt(5, 15));
         }
 
         private void OnGameLoaded(CampaignGameStarter campaignGameStarter)
         {
-            Initialize();
-            // lastEventTime should already be loaded via SyncData
-        }
-
-        private void Initialize()
-        {
-            // Potential Initialization code.
+            // Nothing special needed here
         }
 
         private void DailyTick()
         {
-            if (CampaignTime.Now - lastEventTime >= CampaignTime.Days(30))
+            if (CampaignTime.Now - _lastEventTime >= CampaignTime.Days(DaysBetweenEvents))
             {
-                if (!questAccepted)
-                {
-                    CreateHelpPeregrinePopUp();
-                    lastEventTime = CampaignTime.Now; // Reset the last event time after triggering
-                }
-                else
-                {
-                    HealPlayerAndTroops();
-                }
+                CreateHelpPeregrinePopup();
+                _lastEventTime = CampaignTime.Now;
             }
         }
 
-        private void HourlyTick()
+        private Hero CreateMonkHero()
         {
-            if (!questAccepted || targetSettlement == null || questMonasteryMonk == null)
-                return;
-
-            // Check if the mission has exceeded the maximum escort time
-            if (CampaignTime.Now - questAcceptedTime > CampaignTime.Days(MaxEscortTimeInDays))
+            CharacterObject monkTemplate = CharacterObject.Find("quest_monastery_monk");
+            if (monkTemplate == null)
             {
-                InformationManager.DisplayMessage(new InformationMessage("THE PEREGRINE MONK HAS LEFT YOUR PARTY DUE TO THE DELAY.", Colors.Red));
-                EndEscortMission();
-                return;
+                InformationManager.DisplayMessage(new InformationMessage("❌ Monk template not found!", Colors.Red));
+                return null;
             }
 
-            // Check proximity to the destination and handle bandit attacks or mission completion
-            if (MobileParty.MainParty.Position2D.Distance(targetSettlement.Position2D) < 5f)
+            Hero newMonk = HeroCreator.CreateSpecialHero(
+                monkTemplate,
+                Settlement.CurrentSettlement, // where he spawns
+                null, // no father
+                null, // no mother
+                MBRandom.RandomInt(25, 40) // age between 25 and 40
+            );
+
+            // Correctly setting name: needs BOTH first and full name
+            TextObject firstName = new TextObject("Peregrine");
+            TextObject fullName = new TextObject("Pilgrim Monk");
+            newMonk.SetName(firstName, fullName);
+
+            newMonk.ChangeState(Hero.CharacterStates.Active); // make him active and usable
+            newMonk.SetHasMet();
+            newMonk.ChangeHeroGold(100);
+
+            // Optional: set him neutral (PlayerClan or create neutral clan if you want)
+            newMonk.Clan = Clan.PlayerClan;
+
+            // Clean up party AI if needed
+            if (newMonk.PartyBelongedTo != null)
             {
-                if (banditAttackCount < MaxBanditAttacks)
-                {
-                    SpawnBanditParty();
-                    banditAttackCount++;
-                }
-                else
-                {
-                    InformationManager.DisplayMessage(new InformationMessage("YOU HAVE SUCCESSFULLY ESCORTED THE PEREGRINE TO THE TOWN.", Colors.Green));
-                    EndEscortMission();
-                }
+                newMonk.PartyBelongedTo.Ai.SetMoveGoToSettlement(Settlement.CurrentSettlement);
             }
+
+            return newMonk;
         }
 
-        private void CreateHelpPeregrinePopUp()
+        private void CreateHelpPeregrinePopup()
         {
-            InformationManager.ShowInquiry(new InquiryData(
-                HelpPeregrineTitleText.ToString(),
-                HelpPeregrineText.ToString(),
+            TextObject title = new TextObject("{=HelpPeregrineTitle}HELP A PEREGRINE");
+            TextObject description = new TextObject("{=HelpPeregrineText}AS YOU WENT PAST A CROSSROADS, A LONELY PEREGRINE CALLED FOR YOUR HELP. HE HAS BEEN ROBBED AND LOOKS SCARED. THE THIEVES STOLE AN OFFERING HE WAS BRINGING TO A SHRINE. WILL YOU HELP HIM?");
+            TextObject accept = new TextObject("{=Accept}ACCEPT AND ESCORT THE PEREGRINE");
+            TextObject decline = new TextObject("{=Decline}DECLINE AND RESUME YOUR PATH");
+
+            InquiryData inquiry = new InquiryData(
+                title.ToString(),
+                description.ToString(),
                 true,
                 true,
-                AcceptText.ToString(),
-                DeclineText.ToString(),
-                OnAccept,
-                OnDecline
-            ));
+                accept.ToString(),
+                decline.ToString(),
+                OnAcceptEscort,
+                OnDeclineEscort
+            );
+
+            InformationManager.ShowInquiry(inquiry, true, false);
         }
 
-        private void OnAccept()
+        private void OnAcceptEscort()
         {
-            lastEventTime = CampaignTime.Now;
-            InformationManager.DisplayMessage(new InformationMessage("YOU HAVE ACCEPTED TO ESCORT THE PEREGRINE.", Colors.Yellow));
-            StartEscortMission();
-            questAcceptedTime = CampaignTime.Now;
-        }
-
-        private void OnDecline()
-        {
-            InformationManager.DisplayMessage(new InformationMessage("YOU HAVE DECLINED TO HELP THE PEREGRINE.", Colors.Red));
-        }
-
-        private Settlement GetRandomTown()
-        {
-            var towns = Settlement.All.Where(x => x.IsTown).ToList();
-            var randomIndex = MBRandom.RandomInt(towns.Count);
-            return towns[randomIndex];
-        }
-
-        private void StartEscortMission()
-        {
-            targetSettlement = GetRandomTown(); // Ensure the town is randomly selected here.
-            questMonasteryMonk = CharacterObject.Find("quest_monastery_monk");
-
-            if (targetSettlement == null || questMonasteryMonk == null)
+            var towns = Settlement.All.Where(s => s.IsTown).ToList();
+            if (towns.Count == 0)
             {
-                InformationManager.DisplayMessage(new InformationMessage("ERROR: TARGET SETTLEMENT OR MONK NOT FOUND.", Colors.Red));
+                InformationManager.DisplayMessage(new InformationMessage("❌ No towns found.", Colors.Red));
                 return;
             }
 
-            MobileParty.MainParty.AddElementToMemberRoster(questMonasteryMonk, 1);
-            questAccepted = true;
-
-            // Updated message to include the name of the target settlement.
-            InformationManager.DisplayMessage(new InformationMessage($"THE PEREGRINE MONK HAS JOINED YOUR PARTY. ESCORT HIM TO {targetSettlement.Name}.", Colors.Yellow));
-        }
-
-        private void EndEscortMission()
-        {
-            foreach (var element in MobileParty.MainParty.MemberRoster.GetTroopRoster())
+            var randomTown = towns[MBRandom.RandomInt(towns.Count)];
+            if (randomTown == null)
             {
-                InformationManager.DisplayMessage(new InformationMessage($"Roster contains: {element.Character.Name}, Count: {element.Number}", Colors.Yellow));
-            }
-
-            if (questMonasteryMonk != null && MobileParty.MainParty.MemberRoster.Contains(questMonasteryMonk))
-            {
-                MobileParty.MainParty.MemberRoster.RemoveTroop(questMonasteryMonk);
-            }
-            else
-            {
-                InformationManager.DisplayMessage(new InformationMessage("WARNING: The peregrine monk was not found in the party roster.", Colors.Red));
-            }
-
-            targetSettlement = null;
-            banditAttackCount = 0;
-            questMonasteryMonk = null;
-            questAccepted = false;
-
-            InformationManager.DisplayMessage(new InformationMessage("THE PEREGRINE MONK HAS LEFT YOUR PARTY.", Colors.Green));
-        }
-
-
-        private void HealPlayerAndTroops()
-        {
-            // Heal the player's character
-            Hero.MainHero.HitPoints = Math.Min(Hero.MainHero.MaxHitPoints, Hero.MainHero.HitPoints + (int)(Hero.MainHero.MaxHitPoints * 0.15));
-
-            // Heal the troops in the player's party
-            TroopRoster roster = MobileParty.MainParty.MemberRoster;
-            for (int i = 0; i < roster.Count; i++)
-            {
-                TroopRosterElement troop = roster.GetElementCopyAtIndex(i);
-
-                if (troop.Character.IsHero)
-                {
-                    Hero hero = troop.Character.HeroObject;
-                    hero.HitPoints = Math.Min(hero.MaxHitPoints, hero.HitPoints + (int)(hero.MaxHitPoints * 0.15));
-                }
-                else
-                {
-                    int healAmount = (int)(troop.Number * 0.15);
-                    troop.WoundedNumber = Math.Max(0, troop.WoundedNumber - healAmount);
-                }
-            }
-
-            InformationManager.DisplayMessage(new InformationMessage("THE PEREGRINE MONK HAS HEALED YOUR PARTY BY 15%.", Colors.Green));
-        }
-
-
-        private void SpawnBanditParty()
-        {
-            // Find the looter character object
-            CharacterObject looter = CharacterObject.Find("looter");
-
-            if (looter == null)
-            {
-                InformationManager.DisplayMessage(new InformationMessage("ERROR: LOOTER CHARACTER OBJECT NOT FOUND.", Colors.Red));
+                InformationManager.DisplayMessage(new InformationMessage("❌ No town selected.", Colors.Red));
                 return;
             }
 
-            // Create a new bandit party near the player
-            Clan looterClan = Clan.BanditFactions.FirstOrDefault(clan => clan.StringId == "looters");
-            if (looterClan == null)
+            Hero monkHero = CreateMonkHero();
+            if (monkHero == null)
             {
-                InformationManager.DisplayMessage(new InformationMessage("ERROR: LOOTER CLAN NOT FOUND.", Colors.Red));
-                return;
+                return; // Monk creation failed
             }
 
-            // Get the bandit party template using the ID from the XML
-            PartyTemplateObject partyTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
-            if (partyTemplate == null)
-            {
-                InformationManager.DisplayMessage(new InformationMessage("ERROR: LOOTER BANDIT PARTY TEMPLATE NOT FOUND.", Colors.Red));
-                return;
-            }
-            // Generate a random position near the player
-            float randomX = MBRandom.RandomFloatRanged(2f, 5f) * (MBRandom.RandomFloat >= 0.5f ? 1 : -1);
-            float randomY = MBRandom.RandomFloatRanged(2f, 5f) * (MBRandom.RandomFloat >= 0.5f ? 1 : -1);
-            Vec2 spawnPosition = MobileParty.MainParty.Position2D + new Vec2(randomX, randomY);
+            string questId = "help_peregrine_escort_" + MBRandom.RandomInt(100000, 999999);
+            var quest = new HelpPeregrineQuest(questId, monkHero, CampaignTime.Days(7), randomTown);
+            quest.StartQuest();
 
-            // Create the bandit party using the standard method
-            MobileParty banditParty = BanditPartyComponent.CreateLooterParty("looter_party", looterClan, null, false);
-            banditParty.InitializeMobilePartyAroundPosition(partyTemplate, spawnPosition, 2f);
-
-            if (banditParty == null)
-            {
-                InformationManager.DisplayMessage(new InformationMessage("ERROR: FAILED TO CREATE BANDIT PARTY.", Colors.Red));
-                return;
-            }
-
-            // Add looters to the bandit party
-            banditParty.MemberRoster.AddToCounts(looter, 20);
-
-            // Set the AI behavior to engage the player's party
-            SetBanditPartyAiToEngagePlayer(banditParty);
-
-            // Make the bandit party visible
-            banditParty.SetCustomName(new TextObject("BANDIT PARTY"));
-            banditParty.IsVisible = true;
-
-            InformationManager.DisplayMessage(new InformationMessage("A BANDIT PARTY HAS BEEN SPAWNED TO ATTACK YOU NEAR THE DESTINATION.", Colors.Red));
+            InformationManager.DisplayMessage(new InformationMessage($"✅ The peregrine monk has joined you. Escort him to {randomTown.Name}.", Colors.Yellow));
         }
 
-        private void SetBanditPartyAiToEngagePlayer(MobileParty banditParty)
+        private void OnDeclineEscort()
         {
-            banditParty.Ai.SetMoveEngageParty(MobileParty.MainParty);
-            banditParty.Ai.SetDoNotMakeNewDecisions(true);
+            InformationManager.DisplayMessage(new InformationMessage("❌ You declined to help the peregrine monk.", Colors.Red));
         }
     }
 }
-
-
-

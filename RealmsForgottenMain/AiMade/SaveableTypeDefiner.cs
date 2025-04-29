@@ -46,7 +46,7 @@ namespace RealmsForgotten.AiMade
         {
             AddClassDefinition(typeof(ExampleConfig), 1);
             AddClassDefinition(typeof(MaestersTowerBehavior), 3);
-            AddClassDefinition(typeof(MerchantEventBehavior), 5);
+            AddClassDefinition(typeof(MerchantDeliveryBehavior), 5);
             AddClassDefinition(typeof(DuelCampaignBehavior), 6);
             AddClassDefinition(typeof(Story2Behavior), 7);
             AddClassDefinition(typeof(HelpPeregrineBehavior), 8);
@@ -97,6 +97,6 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(SturgiaCultureChangerBehavior), 65);
             AddClassDefinition(typeof(RacialMixingBehavior), 66);
             AddClassDefinition(typeof(CharacterRacialMix), 67);
-        }
+           }
     }
 }

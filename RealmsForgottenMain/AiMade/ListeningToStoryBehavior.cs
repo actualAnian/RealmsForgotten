@@ -40,8 +40,9 @@ namespace RealmsForgotten.AiMade
 
         private CampaignTime _lastStoryTime;
         private CampaignTime _gameStartTime;
-        private const int StoryCooldownDays = 30;
+        private const int StoryCooldownDays = 100;
 
+        private bool _hasFinishedStory = false;
         public override void RegisterEvents()
         {
             CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, OnNewGameCreated);
@@ -53,6 +54,7 @@ namespace RealmsForgotten.AiMade
         {
             dataStore.SyncData("last_story_time", ref _lastStoryTime);
             dataStore.SyncData("game_start_time", ref _gameStartTime);
+            dataStore.SyncData("has_finished_story", ref _hasFinishedStory);
         }
 
         private void OnNewGameCreated(CampaignGameStarter campaignGameStarter)
@@ -74,6 +76,9 @@ namespace RealmsForgotten.AiMade
 
         private void OnHourlyTick()
         {
+            if (_hasFinishedStory)
+                return; // ✅ Player already finished the story. Never trigger again.
+
             if (CampaignTime.Now > _gameStartTime + CampaignTime.Days(30) &&
                 (_lastStoryTime == null || CampaignTime.Now > _lastStoryTime + CampaignTime.Days(StoryCooldownDays)))
             {
@@ -140,6 +145,7 @@ namespace RealmsForgotten.AiMade
 
         private void EndStory()
         {
+            _hasFinishedStory = true; // ✅ Mark story as completed forever
             InformationManager.DisplayMessage(new InformationMessage("YOU HAVE FINISHED LISTENING TO THE STORY.", Colors.Green));
             DeletePopupVMLayer();
         }

@@ -134,32 +134,41 @@ namespace RealmsForgotten.Models
             int shaitan = FaceGen.GetRaceOrDefault("shaitan");
             int kharach = FaceGen.GetRaceOrDefault("kharach");
             int brute = FaceGen.GetRaceOrDefault("brute");
+            int balrog = FaceGen.GetRaceOrDefault("balrog");
+           
 
             // Get race IDs for special absorption and increase
             int bark = FaceGen.GetRaceOrDefault("bark");
             int nurh = FaceGen.GetRaceOrDefault("nurh");
             int daimo = FaceGen.GetRaceOrDefault("daimo");
             int sillok = FaceGen.GetRaceOrDefault("sillok");
-
+            int evil_witch = FaceGen.GetRaceOrDefault("evil_witch");
             // Get race ID for zombies
             int zombie = FaceGen.GetRaceOrDefault("zombie");
 
             // List of races that partake in the same logic
             List<int> standardRaces = new List<int> { thog, shaitan, kharach, brute };
-            List<int> specialRaces = new List<int> { bark, nurh, daimo, sillok };
+            List<int> specialRaces = new List<int> { bark, nurh, daimo, sillok, evil_witch };
 
             if (weapon.Item.ItemType == ItemObject.ItemTypeEnum.Polearm ||
                 weapon.Item.ItemType == ItemObject.ItemTypeEnum.TwoHandedWeapon ||
                 weapon.Item.ItemType == ItemObject.ItemTypeEnum.OneHandedWeapon)
             {
                 // If victim is a half-giant, reduce damage by 70%
-                if (attackInformation.VictimAgent?.Character != null && attackInformation.VictimAgent.Character.Race == half_giant)
+                if (attackInformation.VictimAgent?.Character != null && (attackInformation.VictimAgent.Character.Race == half_giant || attackInformation.VictimAgent.Character.Race == balrog))
                 {
                     baseNumber -= ((70f / 100f) * baseNumber);
                 }
 
+                // If attacker is a half-giant OR a balrog, increase damage by 45%
+                if (attackInformation.AttackerAgent?.Character != null &&
+                    (attackInformation.AttackerAgent.Character.Race == half_giant || attackInformation.AttackerAgent.Character.Race == balrog))
+                {
+                    baseNumber += ((45f / 100f) * baseNumber);
+                }
+
                 // If attacker is a half-giant, increase damage by 45%
-                if (attackInformation.AttackerAgent?.Character != null && attackInformation.AttackerAgent.Character.Race == half_giant)
+                if (attackInformation.AttackerAgent?.Character != null && (attackInformation.AttackerAgent.Character.Race == half_giant || attackInformation.AttackerAgent.Character.Race == balrog))
                 {
                     baseNumber += ((45f / 100f) * baseNumber);
                 }
