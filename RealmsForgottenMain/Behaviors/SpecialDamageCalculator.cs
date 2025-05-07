@@ -43,6 +43,7 @@ namespace RealmsForgotten.Behaviors
             if (raceId == RaceUtility.GetRaceId("nurh")) return "nurh";
             if (raceId == RaceUtility.GetRaceId("daimo")) return "daimo";
             if (raceId == RaceUtility.GetRaceId("sillok")) return "sillok";
+            if (raceId == RaceUtility.GetRaceId("evil_witch")) return "evil_witch";
             return "unknown";
         }
 

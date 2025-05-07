@@ -6,6 +6,7 @@ using RealmsForgotten.AiMade.Models;
 using RealmsForgotten.AiMade.PartyOverrides;
 using RealmsForgotten.AiMade.Patches;
 using RealmsForgotten.AiMade.Religions;
+using RealmsForgotten.AiMade.RF_Diplomacy;
 using RealmsForgotten.Behaviors;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -97,6 +98,8 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(SturgiaCultureChangerBehavior), 65);
             AddClassDefinition(typeof(RacialMixingBehavior), 66);
             AddClassDefinition(typeof(CharacterRacialMix), 67);
-           }
+            AddClassDefinition(typeof(AlignmentWarBehavior), 68);
+            AddClassDefinition(typeof(AlignmentMomentumBehavior), 69);
+        }
     }
 }

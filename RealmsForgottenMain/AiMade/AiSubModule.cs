@@ -13,6 +13,7 @@ using SandBox.GameComponents;
 using RealmsForgotten.AiMade.Enlistement;
 using static RealmsForgotten.AiMade.ADODReinforcementsSystem;
 using System.Linq;
+using RealmsForgotten.AiMade.RF_Diplomacy;
 
 
 namespace RealmsForgotten.AiMade
@@ -92,12 +93,15 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new MineBehavior());
             campaignGameStarter.AddBehavior(new SturgiaCultureChangerBehavior());
             campaignGameStarter.AddBehavior(new RacialMixingBehavior());
-           }
+            campaignGameStarter.AddBehavior(new AlignmentWarBehavior());
+            campaignGameStarter.AddBehavior(new AlignmentMomentumBehavior());
+        }
         private void AddCustomModels(CampaignGameStarter campaignGameStarter)
         {
             // Register the custom inventory capacity model
             campaignGameStarter.AddModel(new CustomInventoryCapacityModel());
             campaignGameStarter.AddModel(new UrkhaiPartySizeModel());
+            campaignGameStarter.AddModel(new AlignmentDiplomacyModel(Campaign.Current.Models.DiplomacyModel));
         }
         public override void OnMissionBehaviorInitialize(Mission mission)
         {

@@ -29,6 +29,7 @@ namespace RealmsForgotten.Quest
             {
                 gameStarter.AddBehavior(new SaveCurrentQuestCampaignBehavior());
                 gameStarter.AddBehavior(new SpawnNpcInLordsHallBecomeKnightBehavior());
+                gameStarter.AddBehavior(new DeformedWaveSniffer());
             }
         }
     }
@@ -53,7 +54,8 @@ namespace RealmsForgotten.Quest
             AddClassDefinition(typeof(EighthQuest), 10);
             AddClassDefinition(typeof(SpawnNpcInLordsHallBecomeKnightBehavior), 20);
             AddClassDefinition(typeof(BecomeKnightQuest), 21);
-            
+            AddClassDefinition(typeof(DeformedWaveSniffer), 22);
+
         }
     }
 }

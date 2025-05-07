@@ -61,9 +61,10 @@ namespace RealmsForgotten
         public static bool IsSillok(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("sillok"); }
         public static bool IsDwarf(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("dwarf"); }
         public static bool IsUrkhai(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("urkhai"); }
-       
+        public static bool IsOrcbase(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("orc_base"); }
+        public static bool IsEvilWitch(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("evil_witch"); }
         internal static List<string>  PlayerSelectableRaces { get { return _playerSelectableRaces; } }
-        private static List<string> _playerSelectableRaces = new() { "human", "elvean", "undead", "mull", "half_giant", "Xilantlacay", "tlachiquiy", "dwarf", "urkhai" };
+        private static List<string> _playerSelectableRaces = new() { "human", "elvean", "undead", "mull", "half_giant", "Xilantlacay", "dwarf", "urkhai" };
 
         public static bool IsMissionInitialized = false;
 
@@ -77,7 +78,6 @@ namespace RealmsForgotten
                 "mull",
                 "half_giant",
                 "Xilantlacay",
-                "tlachiquiy",
                 "dwarf",
                 "urkhai"
             };
@@ -121,8 +121,10 @@ namespace RealmsForgotten
             (character => character.IsMull(), new float[] { 0f, 0.2f, 0.2f, -0.1f, 0f, 0f }),
             (character => character.IsUrkhai(), new float[] { 0f, 0f, 0f, 0.2f, -0.1f, 0f }),
             (character => character.IsElvean(), new float[] { 0f, 0f, 0f, 0.15f, -0.15f, 0f }),
-            (character => character.IsXilantlacay(), new float[] { 0f, 0f, 0f, 0.15f, 0f, 0f })
-        };
+            (character => character.IsXilantlacay(), new float[] { 0f, 0f, 0f, 0.15f, 0f, 0f }),
+            (character => character.IsOrcbase(), new float[] { 0f, 0.15f, 0f, 0.1f, 0f, 0f }),
+            (character => character.IsEvilWitch(), new float[] { 0f, 0f, 0f, 0.15f, -0.2f, 0f })
+         };
         public static bool IsCurrentMainAgentPlayerHero()
         {
             return TaleWorlds.MountAndBlade.Agent.Main != null && TaleWorlds.MountAndBlade.Agent.Main.Character == CharacterObject.PlayerCharacter;

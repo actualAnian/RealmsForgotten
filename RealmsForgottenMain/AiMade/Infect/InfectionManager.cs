@@ -17,7 +17,7 @@ namespace RealmsForgotten.AiMade.Infect
             if (deadAgent == null || killerAgent == null)
                 return;
 
-            if (killerAgent.Character?.StringId != "orc_base_infantry")
+            if (killerAgent.Character?.StringId != "deformed_villager_bandit")
                 return;
 
             if (!deadAgent.IsHuman || deadAgent.IsHero)
@@ -31,7 +31,7 @@ namespace RealmsForgotten.AiMade.Infect
             InformationManager.DisplayMessage(new InformationMessage(
                 $"☣️ Infection triggered: {deadAgent.Name} was killed by {killerAgent.Name}.", Colors.Yellow));
 
-            CharacterObject orcInfecter = CharacterObject.All.FirstOrDefault(c => c.StringId == "orc_base_infantry");
+            CharacterObject orcInfecter = CharacterObject.All.FirstOrDefault(c => c.StringId == "deformed_villager_bandit");
             if (orcInfecter == null)
             {
                 InformationManager.DisplayMessage(new InformationMessage("❌ Orc infecter template not found!", Colors.Red));

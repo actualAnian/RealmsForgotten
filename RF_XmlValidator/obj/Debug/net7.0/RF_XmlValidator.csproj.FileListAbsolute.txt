@@ -1,0 +1,15 @@
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RF_XmlValidator\bin\Debug\net7.0\RF_XmlValidator.exe
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RF_XmlValidator\bin\Debug\net7.0\RF_XmlValidator.deps.json
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RF_XmlValidator\bin\Debug\net7.0\RF_XmlValidator.runtimeconfig.json
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RF_XmlValidator\bin\Debug\net7.0\RF_XmlValidator.dll
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RF_XmlValidator\bin\Debug\net7.0\RF_XmlValidator.pdb
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RF_XmlValidator\obj\Debug\net7.0\RF_XmlValidator.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RF_XmlValidator\obj\Debug\net7.0\RF_XmlValidator.AssemblyInfoInputs.cache
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RF_XmlValidator\obj\Debug\net7.0\RF_XmlValidator.AssemblyInfo.cs
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RF_XmlValidator\obj\Debug\net7.0\RF_XmlValidator.csproj.CoreCompileInputs.cache
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RF_XmlValidator\obj\Debug\net7.0\RF_XmlValidator.sourcelink.json
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RF_XmlValidator\obj\Debug\net7.0\RF_XmlValidator.dll
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RF_XmlValidator\obj\Debug\net7.0\refint\RF_XmlValidator.dll
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RF_XmlValidator\obj\Debug\net7.0\RF_XmlValidator.pdb
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RF_XmlValidator\obj\Debug\net7.0\RF_XmlValidator.genruntimeconfig.cache
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RF_XmlValidator\obj\Debug\net7.0\ref\RF_XmlValidator.dll

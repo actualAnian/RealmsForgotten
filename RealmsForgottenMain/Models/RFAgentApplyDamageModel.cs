@@ -145,7 +145,7 @@ namespace RealmsForgotten.Models
             int evil_witch = FaceGen.GetRaceOrDefault("evil_witch");
             // Get race ID for zombies
             int zombie = FaceGen.GetRaceOrDefault("zombie");
-
+            int orc_base = FaceGen.GetRaceOrDefault("orc_base");
             // List of races that partake in the same logic
             List<int> standardRaces = new List<int> { thog, shaitan, kharach, brute };
             List<int> specialRaces = new List<int> { bark, nurh, daimo, sillok, evil_witch };
@@ -207,13 +207,14 @@ namespace RealmsForgotten.Models
                 }
 
                 // If victim is a zombie, reduce damage by 50%
-                if (attackInformation.VictimAgent?.Character != null && attackInformation.VictimAgent.Character.Race == zombie)
+                if ((attackInformation.VictimAgent?.Character != null && (attackInformation.VictimAgent.Character.Race == zombie)) || (attackInformation.AttackerAgent?.Character != null && (attackInformation.AttackerAgent.Character.Race == orc_base))
+                )
                 {
                     baseNumber -= ((50f / 100f) * baseNumber);
                 }
 
                 // If attacker is a zombie, increase damage by 20%
-                if (attackInformation.AttackerAgent?.Character != null && attackInformation.AttackerAgent.Character.Race == zombie)
+                if (attackInformation.AttackerAgent?.Character != null && (attackInformation.AttackerAgent.Character.Race == zombie || attackInformation.AttackerAgent.Character.Race == orc_base))
                 {
                     baseNumber += ((20f / 100f) * baseNumber);
                 }

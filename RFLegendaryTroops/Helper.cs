@@ -24,7 +24,7 @@ namespace RealmsForgotten.RFLegendaryTroops
             {"mage", "red_mage_elite"},
             {"dwarf", "legendary_dugrast"},
              {"urkhai", "legendary_urkhai"},
-
+            {"wulf", "wulfhart_legendary_warrior"},
         }; 
         public static CharacterObject ChooseLegendaryTroop(CultureObject culture)
         {

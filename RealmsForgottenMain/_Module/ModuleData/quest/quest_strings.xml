@@ -556,7 +556,7 @@
 
 
 		<string id="rf_seventh_quest_priestess_army_log" text="{=seventhquest_log_priestess}Defeat the final army of the Priestess." />
-		<string id="rf_seventh_quest_priestess_army_task" text="{=seventhquest_task_priestess}The Priestess has returned with a final force. Stop her before she regains power!" />
+		<string id="rf_seventh_quest_priestess_army_task" text="{=seventhquest_task_priestess}The Priestess has returned with a final force. She teleported herself with an army around the Nippura capital!" />
 		<string id="rf_seventh_quest_completed_log" text="{=rf_quest7_log_complete}The final battle is over. As only you and the Owl noticed a new creature emerging from what was once before the witch´s body, you decided to keep that in secret. For now you all is needed is peace. With it a new age begins — for better or worse." />
 
 		<string id="rf_seventh_quest_outro" text="{=rf_seventh_quest_outro}The First Tree Priestess send you an messenger, asking for your presence." />
