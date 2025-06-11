@@ -157,12 +157,15 @@ namespace RealmsForgotten.Career
         TroopWages,
         PartyMovementSpeed,
         OnKill,
-        CompanionLimit, 
+        CompanionLimit,
         ArmorPenetration,   //player ignores armor with attack mask - this cant be Spells, will be ignored
         HorseHealth,        //only player, percentage based
         HorseChargeDamage,  //Damage When Horse is raced into infantry.
         PartySize,
         WoundedChance,
+        InfluenceIncome,
+        RenownIncome,
+        PartyMorale,
 
         //have to be enabled
         Special,           //For everything that requires special implementation

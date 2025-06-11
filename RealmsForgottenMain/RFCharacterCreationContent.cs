@@ -1417,13 +1417,13 @@ namespace RealmsForgotten
 
             ChooseCharacterEquipment(characterCreation, StartType.VassalFief);
             Manager.SetStoryOption(5);
+            PlayerCareerExtension.AddCareer(RFCareers.Lightwarden);
         }
 
         protected void KingdomStartOnConsequence(CharacterCreation characterCreation)
         {
             ChooseCharacterEquipment(characterCreation, StartType.KingdomRuler);
             Manager.SetStoryOption(6);
-            PlayerCareerExtension.AddCareer(RFCareers.Lightwarden);
         }
 
         protected void CastleRulerStartOnConsequence(CharacterCreation characterCreation)

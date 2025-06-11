@@ -9,7 +9,8 @@ namespace RealmsForgotten.Career
     {
         LevelUp,
         Renown,
-        Deeds
+        Deeds,
+        Virtue
     }
 
     public class CareerObject : PropertyObject

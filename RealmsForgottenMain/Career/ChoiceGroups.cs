@@ -21,6 +21,15 @@ namespace RealmsForgotten.Career
         private CareerChoiceGroupObject _field_marshall_2;
         private CareerChoiceGroupObject _paragon_of_virtue_1;
         private CareerChoiceGroupObject _paragon_of_virtue_2;
+
+        //Lightwarden
+        private CareerChoiceGroupObject _word_spreader_1;
+        private CareerChoiceGroupObject _word_spreader_2;
+        private CareerChoiceGroupObject _blessed_one_1;
+        private CareerChoiceGroupObject _blessed_one_2;
+        private CareerChoiceGroupObject _beacon_of_light_1;
+        private CareerChoiceGroupObject _beacon_of_light_2;
+
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
         public RFCareerChoiceGroups()
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
@@ -46,6 +55,14 @@ namespace RealmsForgotten.Career
             _field_marshall_2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("FieldMarshall2"));
             _paragon_of_virtue_1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("ParagonOfVirtue1"));
             _paragon_of_virtue_2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("ParagonOfVirtue2"));
+
+            //Lightwarden
+            _word_spreader_1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("WordSpreader1"));
+            _word_spreader_2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("WordSpreader2"));
+            _blessed_one_1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("BlessedOne1"));
+            _blessed_one_2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("BlessedOne2"));
+            _beacon_of_light_1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("BeaconOfLight1"));
+            _beacon_of_light_2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("BeaconOfLight2"));
         }
 
         private void InitializeAll()
@@ -65,6 +82,14 @@ namespace RealmsForgotten.Career
             _field_marshall_1.Initialize("{=rf_career_knight_2}Field Marshall", RFCareers.Knight, 2);
             _paragon_of_virtue_1.Initialize("{=rf_career_knight_3}Paragon Of Virtue", RFCareers.Knight, 3);
             _paragon_of_virtue_2.Initialize("{=rf_career_knight_3}Paragon Of Virtue", RFCareers.Knight, 3);
+
+            //Lightwarden
+            _word_spreader_1.Initialize("{=rf_career_lightwarden_1}Word Spreader", RFCareers.Lightwarden, 1);
+            _word_spreader_2.Initialize("{=rf_career_lightwarden_1}Word Spreader", RFCareers.Lightwarden, 1);
+            _blessed_one_2.Initialize("{=rf_career_lightwarden_2}Blessed One", RFCareers.Lightwarden, 2);
+            _blessed_one_1.Initialize("{=rf_career_lightwarden_2}Blessed One", RFCareers.Lightwarden, 2);
+            _beacon_of_light_1.Initialize("{=rf_career_lightwarden_3}Beacon of Light", RFCareers.Lightwarden, 3);
+            _beacon_of_light_2.Initialize("{=rf_career_lightwarden_3}Beacon of Light", RFCareers.Lightwarden, 3);
         }
     }
 }

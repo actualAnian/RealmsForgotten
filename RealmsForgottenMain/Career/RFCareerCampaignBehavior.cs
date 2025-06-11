@@ -80,6 +80,9 @@ namespace RealmsForgotten.Career
                 case PointsSystemType.Deeds:
                     pointsSystem = new DeedsPointsSystem();
                     break;
+                case PointsSystemType.Virtue:
+                    pointsSystem = new VirtuePointsSystem();
+                    break;
             }
         }
         private void OnLevelUp(Hero hero, bool arg2)

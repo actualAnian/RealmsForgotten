@@ -10,6 +10,9 @@
 		<string id="rf_career_knight_1" text="Knight Errant" />
 		<string id="rf_career_knight_2" text="Field Marshall" />
 		<string id="rf_career_knight_3" text="Paragon Of Virue" />
+		<string id="rf_career_lightwarden_1" text="Word Spreader" />
+		<string id="rf_career_lightwarden_2" text="Blessed One" />
+		<string id="rf_career_lightwarden_3" text="Beacon Of Light" />
 
 		<!-- descriptions-->
 		<string id="class_description.Mercenary" text="We are mercenaries. We have the resources. The will. To make these hours count! The clock is ticking, gentlemen. Let's begin." />

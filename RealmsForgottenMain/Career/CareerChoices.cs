@@ -19,6 +19,7 @@ namespace RealmsForgotten.Career
             {
                 new MercenaryCareerChoices(RFCareers.Mercenary),
                 new KnightCareerChoices(RFCareers.Knight),
+                new LightwardenCareerChoice(RFCareers.Lightwarden),
             };
         }
 
