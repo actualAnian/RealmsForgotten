@@ -63,6 +63,18 @@ namespace RealmsForgotten.Models
                 }
                 if (totalReduction > 0) value.Add(-1 * totalReduction, new("{=merc_merc_wage_reduction}Class mercenary wage reduction"));
             }
+
+            //Test
+            if (PlayerCareerExtension.HasCareerChoice("WordSpeader1_5"))
+            {
+                var choice = career.AllChoices.First(c => c.StringId == "WordSpeader1_5");
+                float totalReduction = 0;
+                foreach (TaleWorlds.CampaignSystem.Roster.TroopRosterElement troop in mobileParty.MemberRoster.GetTroopRoster())
+                    totalReduction += troop.Number * troop.Character.TroopWage;
+
+                if (totalReduction > 0) value.Add(-1 * totalReduction, new("{=rf_career_party_reduced_5}Class Lightwarden wage reduction"));
+            }
+
             return value;
         }
     }
