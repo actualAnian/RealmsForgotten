@@ -19,6 +19,7 @@ using System.Reflection;
 using HarmonyLib;
 using RealmsForgotten.AiMade.Career;
 using TaleWorlds.SaveSystem.Definition;
+using RealmsForgotten.Career;
 
 namespace RealmsForgotten
 {
@@ -54,8 +55,6 @@ namespace RealmsForgotten
                 yield break;
             }
         }
-
-        private CareerType selectedCareer = CareerType.None;
 
         protected override void OnCultureSelected()
         {
@@ -1280,26 +1279,26 @@ namespace RealmsForgotten
                 DefaultSkills.Roguery,
                 DefaultSkills.Scouting
             }, null, 1, 25, 0, null, new(LooterStartOnConsequence), new(DoNothingOnApply), new("{=CulturedStart18}Left impoverished from war, you found a group of like-minded ruffians who were desperate to get by." + $"\n{startingSkillMult[StartType.Looter]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 0, 0, 0, 0);
-            characterCreationCategory.AddCategoryOption(new("{=CulturedStart19}An Knight of {CULTURE}", null), new MBList<SkillObject>
+            characterCreationCategory.AddCategoryOption(new("{=CulturedStart19}An ursurper of {CULTURE}", null), new MBList<SkillObject>
             {
                 DefaultSkills.Steward,
                 DefaultSkills.Charm
-            }, null, 1, 50, 0, null, new(KingdomStartOnConsequence), new(DoNothingOnApply), new("{=CulturedStart20}A young noble who came into an arrangement with the king for a chance at land." + $"\n{startingSkillMult[StartType.VassalNoFief]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 150, 0, 0, 0);
+            }, null, 1, 50, 0, null, new(KingdomStartOnConsequence), new(DoNothingOnApply), new("{=CulturedStart20}With the support of companions you have gathered an army. With limited funds and food you decided it's time for action." + $"\n{startingSkillMult[StartType.VassalNoFief]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 150, 0, 0, 0);
             characterCreationCategory.AddCategoryOption(new("{=CulturedStart21}A cleric of {CULTURE}", null), new MBList<SkillObject>
             {
                 RFSkills.Faith,
                 DefaultSkills.Riding
-            }, DefaultCharacterAttributes.Social, 1, 50, 1, null, new(VassalStartOnConsequence), new(DoNothingOnApply), new("{=CulturedStart22}With the support of companions you have gathered an army. With limited funds and food you decided it's time for action." + $"\n{startingSkillMult[StartType.KingdomRuler]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 900, 0, 0, 0);
+            }, DefaultCharacterAttributes.Social, 1, 50, 1, null, new(VassalStartOnConsequence), new(DoNothingOnApply), new("{=CulturedStart22}A young noble who came into an arrangement with the king for a chance at land." + $"\n{startingSkillMult[StartType.KingdomRuler]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 900, 0, 0, 0);
             characterCreationCategory.AddCategoryOption(new("{=CulturedStart23}A lord with a castle", null), new MBList<SkillObject>
             {
                 DefaultSkills.Leadership,
                 DefaultSkills.Steward
             }, DefaultCharacterAttributes.Social, 1, 25, 1, null, new(CastleRulerStartOnConsequence), new(DoNothingOnApply), new("{=CulturedStart24}You acquired a castle through your own means and declared yourself a kingdom for better or worse." + $"\n{startingSkillMult[StartType.CastleRuler]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 900, 0, 0, 0);
-            characterCreationCategory.AddCategoryOption(new("{=CulturedStart25}An ursurper of {CULTURE}", null), new MBList<SkillObject>
+            characterCreationCategory.AddCategoryOption(new("{=CulturedStart25}A Knight of {CULTURE}", null), new MBList<SkillObject>
             {
                 DefaultSkills.Steward,
                 DefaultSkills.Roguery
-            }, null, 1, 50, 0, null, new(KnightStartOnConsequence), new(DoNothingOnApply), new("{=CulturedStart26}A young noble who came into an arrangement with the king for land." + $"\n{startingSkillMult[StartType.VassalFief]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 150, 0, 0, 0);
+            }, null, 1, 50, 0, null, new(KnightStartOnConsequence), new(DoNothingOnApply), new("{=CulturedStart26}Under the weight of an oath you came into an arrangement with the king for a chance at land." + $"\n{startingSkillMult[StartType.VassalFief]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 150, 0, 0, 0);
             characterCreationCategory.AddCategoryOption(new("{=CulturedStart27}A wanderer mystic of {CULTURE}", null), new MBList<SkillObject>
             {
                 RFSkills.Arcane,
@@ -1378,7 +1377,7 @@ namespace RealmsForgotten
         {
             ChooseCharacterEquipment(characterCreation, StartType.Mercenary);
             Manager.SetStoryOption(3);
-            Campaign.Current.GetCampaignBehavior<CareerProgressionBehavior>().StartCareer(CareerType.Mercenary);
+            PlayerCareerExtension.AddCareer(RFCareers.Mercenary);
         }
         private Equipment getMaleEquipment(IEnumerable<Equipment> eq) { return eq.FirstOrDefault(); }
         private Equipment getFemaleEquipment(IEnumerable<Equipment> eq) { return eq.LastOrDefault(); }
@@ -1437,7 +1436,7 @@ namespace RealmsForgotten
         {
             ChooseCharacterEquipment(characterCreation, StartType.VassalFief);
             Manager.SetStoryOption(5);
-            Campaign.Current.GetCampaignBehavior<CareerProgressionBehavior>().StartCareer(CareerType.Knight);
+            PlayerCareerExtension.AddCareer(RFCareers.Knight);
         }
 
         protected void WandererMysticalStartOnConsequence(CharacterCreation characterCreation)

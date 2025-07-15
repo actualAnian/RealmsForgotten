@@ -5,11 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using Helpers;
 using RealmsForgotten.Behaviors;
+using RealmsForgotten.Career;
+using RealmsForgotten.Career.Logic;
 using RealmsForgotten.CustomSkills;
+using RealmsForgotten.ObjectExtensions;
 using SandBox.GameComponents;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
+using static RealmsForgotten.Career.CareerChoiceObject;
 
 namespace RealmsForgotten.Models
 {
@@ -45,9 +50,24 @@ namespace RealmsForgotten.Models
                         agent.UpdateCustomDrivenProperties();
                     }
                 }
-                
                 AddSkillEffectsForAgent(agent, agentDrivenProperties);
-                //AddPerkEffectsForAgent(agent, agentDrivenProperties);
+                AddCareerAgentProperties(agent, agentDrivenProperties);
+            }
+        }
+
+        private void AddCareerAgentProperties(Agent agent, AgentDrivenProperties agentDrivenProperties)
+        {
+            if (!agent.BelongsToMainParty()) return;
+            PlayerClassInfo info = PlayerCareerExtension.PlayerCareerInfo;
+            if (info == null) return;
+            List<string> choices = info.CareerChoices;
+            foreach (var choiceID in choices)
+            {
+                CareerChoiceObject choice = RFCareerChoices.GetChoice(choiceID);
+                if(choice.Passive is AgentPropertiesPassiveEffect propertiesPassiveEffect)
+                {
+                    propertiesPassiveEffect.OnAgentCreated(agent, agentDrivenProperties);
+                }
             }
         }
 
@@ -83,9 +103,9 @@ namespace RealmsForgotten.Models
 
                     agent.SetWeaponAmountInSlot(equipmentIndex, (short)number.ResultNumber, true);
                 }
-                    
             }
-            
+            if (agent == Agent.Main)
+                CareerLogic.ApplyExtraAmmo();
         }
         private void AddSkillEffectsForAgent(Agent agent, AgentDrivenProperties agentDrivenProperties)
         {
@@ -106,6 +126,14 @@ namespace RealmsForgotten.Models
                 agentDrivenProperties.MissileSpeedMultiplier = missileSpeed.ResultNumber;
             }
 
+        }
+        public override float GetEffectiveMaxHealth(Agent agent)
+        {
+            if (agent == null) return 0;
+            ExplainedNumber explainedNumber = new ExplainedNumber(base.GetEffectiveMaxHealth(agent));
+            if (agent.IsMount && agent.RiderAgent != null && agent.RiderAgent.IsHero && agent.RiderAgent == Agent.Main)
+                CareerHelper.ApplyBasicCareerPassives(ref explainedNumber, PassiveEffectType.HorseHealth, true);
+            return explainedNumber.ResultNumber;
         }
         public override float GetWeaponInaccuracy(Agent agent, WeaponComponentData weapon, int weaponSkill)
         {

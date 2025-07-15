@@ -10,6 +10,8 @@ using RealmsForgotten.Behaviors;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.MountAndBlade.ComponentInterfaces;
+using RealmsForgotten.Career.Logic;
+using RealmsForgotten.Career;
 
 namespace RealmsForgotten.Models
 {
@@ -95,9 +97,19 @@ namespace RealmsForgotten.Models
                 }
 
                 CrusaderDamageModel.CalculateDamage(attackedCharacterObject, attackedCharacterObject, ref baseNumber);
+
+                if (attackerCharacterObject == Hero.MainHero.CharacterObject)
+                    CareerLogic.ApplyExtraShieldDamage(weapon);
             }
             DemonRaceDamageModel.CalculateDamage(attackInformation.AttackerAgent, weapon, ref baseNumber);
 
+
+            if ((attackInformation.IsAttackerAgentMount ? attackInformation.AttackerRiderAgentCharacter : attackInformation.AttackerAgentCharacter) is CharacterObject attacker && collisionData.IsHorseCharge && attacker.IsMounted && attacker.IsPlayerCharacter && PlayerCareerExtension.HasAnyCareer())
+            {
+                var resultDamage = new ExplainedNumber(baseNumber);
+                CareerHelper.ApplyBasicCareerPassives(ref resultDamage, PassiveEffectType.HorseChargeDamage);
+                baseNumber = resultDamage.ResultNumber;
+            }
             return baseNumber;
         }
 

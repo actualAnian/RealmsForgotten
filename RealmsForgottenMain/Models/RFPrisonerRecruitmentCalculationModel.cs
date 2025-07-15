@@ -8,6 +8,7 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.Core;
+using RealmsForgotten.Career;
 
 namespace RealmsForgotten.Models
 {
@@ -33,6 +34,8 @@ namespace RealmsForgotten.Models
                 party.Owner?.CharacterObject.Race == FaceGen.GetRaceOrDefault("undead"))
                 return 0;
             if (character.Occupation == Occupation.Bandit && party.Owner?.Culture.StringId == "aqarun")
+                return 0;
+            if (character.Occupation == Occupation.Bandit && party == PartyBase.MainParty && PlayerCareerExtension.PlayerCareerInfo != null && PlayerCareerExtension.PlayerCareerInfo.CareerID == "mercenary")
                 return 0;
             return baseNumber;
         }

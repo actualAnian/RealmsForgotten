@@ -25,6 +25,7 @@ namespace RealmsForgotten.Behaviors
 
         private void OnDailyTickParty(MobileParty party)
         {
+            if (party.LeaderHero != null && party.LeaderHero == Hero.MainHero) return;
             // Check if the party belongs to the Sturgian culture
             if (party.LeaderHero != null && party.LeaderHero.Culture != null && party.LeaderHero.Culture.StringId == "sturgia")
             {

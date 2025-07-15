@@ -13,7 +13,6 @@ using TaleWorlds.CampaignSystem.ViewModelCollection.GameMenu.Recruitment;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ViewModelCollection;
 using TaleWorlds.Core.ViewModelCollection.Information;
-using TaleWorlds.Core;
 
 namespace RealmsForgotten.Patches
 {

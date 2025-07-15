@@ -29,6 +29,12 @@ using TaleWorlds.Library;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.MountAndBlade.ComponentInterfaces;
 using RealmsForgotten.AiMade.Patches;
+using RealmsForgotten.UI;
+using RealmsForgotten.Career;
+using SandBox.GameComponents;
+using SandBox.Missions.MissionLogics;
+using RealmsForgotten.Career.Logic;
+using RealmsForgotten.Career.Ability;
 
 namespace RealmsForgotten
 {
@@ -73,30 +79,37 @@ namespace RealmsForgotten
                 campaignGameStarter.AddBehavior(new CulturesCampaignBehavior());
                 
                 campaignGameStarter.AddBehavior(RFHorseSpawningCampaignBehavior.Instance);
-                
+                campaignGameStarter.AddBehavior(new RFCareerCampaignBehavior());
+
                 campaignGameStarter.AddModel(new RFAgentApplyDamageModel(campaignGameStarter.GetExistingModel<AgentApplyDamageModel>()));
                 campaignGameStarter.AddModel(new RFBuildingConstructionModel(campaignGameStarter.GetExistingModel<BuildingConstructionModel>()));
                 campaignGameStarter.AddModel(new RFCombatXpModel(campaignGameStarter.GetExistingModel<CombatXpModel>()));
                 campaignGameStarter.AddModel(new RFDefaultCharacterDevelopmentModel(campaignGameStarter.GetExistingModel<CharacterDevelopmentModel>()));
                 campaignGameStarter.AddModel(new RFPartyMoraleModel(campaignGameStarter.GetExistingModel<PartyMoraleModel>()));
                 campaignGameStarter.AddModel(new RFPartySpeedCalculatingModel(campaignGameStarter.GetExistingModel<PartySpeedModel>()));
+                campaignGameStarter.AddModel(new RFCharacterStatsModel(campaignGameStarter.GetExistingModel<CharacterStatsModel>()));
+                campaignGameStarter.AddModel(new RFPartyHealingModel(campaignGameStarter.GetExistingModel<PartyHealingModel>()));
+                campaignGameStarter.AddModel(new RFClanPoliticsModel(campaignGameStarter.GetExistingModel<ClanPoliticsModel>()));
                 campaignGameStarter.AddModel(new RFPrisonerRecruitmentCalculationModel(campaignGameStarter.GetExistingModel<PrisonerRecruitmentCalculationModel>()));
                 campaignGameStarter.AddModel(new RFRaidModel(campaignGameStarter.GetExistingModel<RaidModel>()));
                 campaignGameStarter.AddModel(new RFVolunteerModel(campaignGameStarter.GetExistingModel<VolunteerModel>()));
                 campaignGameStarter.AddModel(new RFWageModel(campaignGameStarter.GetExistingModel<PartyWageModel>()));
                 campaignGameStarter.AddModel(new RFBattleCaptainModel(campaignGameStarter.GetExistingModel<BattleCaptainModel>()));
                 campaignGameStarter.AddModel(new RFInventoryCapacityModel(campaignGameStarter.GetExistingModel<InventoryCapacityModel>()));
-                campaignGameStarter.AddModel(new RFRaceSpeedBonusModel(campaignGameStarter.GetExistingModel<PartySpeedModel>()));
                 campaignGameStarter.AddModel(new RFBanditDensityModel(campaignGameStarter.GetExistingModel<BanditDensityModel>()));
+                campaignGameStarter.AddModel(new RFClanFinanceModel(campaignGameStarter.GetExistingModel<ClanFinanceModel>()));
+                campaignGameStarter.AddModel(new RFMapVisibilityModel(campaignGameStarter.GetExistingModel<MapVisibilityModel>()));
+                campaignGameStarter.AddModel(new RFPartySizeLimitModel(campaignGameStarter.GetExistingModel<PartySizeLimitModel>()));
+                campaignGameStarter.AddModel(new RFClanTierModel());
+                campaignGameStarter.AddModel(new RFStrikeMagnitudeModel());
 
-                
+
                 new RFAttributes().Initialize();
                 new RFSkills().Initialize();
                 new RFSkillEffects().InitializeAll();
                 new RFPerks().Initialize();
                 
                 AiSubModule.AddCampaignBehaviors(campaignGameStarter);
-                AiSubModule.InitializeCareerSystem();
 
                 QuestSubModule.AddQuestBehaviors((CampaignGameStarter)gameStarterObject);
 
@@ -147,6 +160,9 @@ namespace RealmsForgotten
         {
             if (mission != null)
             {
+                mission.AddMissionBehavior(new AbilityManagerMissionLogic());
+                mission.AddMissionBehavior(new AbilityHUDMissionView());
+
                 if ((mission.Mode == MissionMode.Battle || mission.Mode == MissionMode.StartUp) && mission.CombatType != Mission.MissionCombatType.ArenaCombat)
                 {
                     mission.AddMissionBehavior(new RFEnchantedWeaponsMissionBehavior());
@@ -171,7 +187,25 @@ namespace RealmsForgotten
 
                 mission.AddMissionBehavior(new HealOnKillMissionBehavior()); // Add this line
             }
+            if (Game.Current.GameType is Campaign)
+            {
+                mission.AddMissionBehavior(new CareerPerkMissionBehavior());
+            }
         }
+        public override void BeginGameStart(Game game)
+        {
+            if (game.GameType is Campaign)
+            {
+                game.ObjectManager.RegisterType<CareerObject>("Career", "Careers", 103U, true);
+                game.ObjectManager.RegisterType<CareerChoiceObject>("CareerChoice", "CareerChoices", 104U, true);
+                game.ObjectManager.RegisterType<CareerChoiceGroupObject>("CareerChoiceGroup", "CareerChoiceGroups", 105U, true);
+
+                _ = new RFCareers();
+                _ = new RFCareerChoiceGroups();
+                _ = new RFCareerChoices();
+            }
+        }
+
         protected override void OnBeforeInitialModuleScreenSetAsRoot() { }
         public override void OnGameInitializationFinished(Game game)
         {
@@ -211,6 +245,7 @@ namespace RealmsForgotten
             //var types = Globals.realmsForgottenAssembly.GetTypes().ToList();
             //var patch = types.Where(t => t is FaceGenPatch);
             base.OnSubModuleLoad();
+            ViewModelExtensionManager.Initialize(); //has to happen before harmony PatchAll
             harmony.PatchAll();
 
             TextObject coreContentDisabledReason = new("Disabled during installation.", null);
