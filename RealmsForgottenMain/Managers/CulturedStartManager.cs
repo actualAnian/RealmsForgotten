@@ -1,5 +1,5 @@
 ﻿// This mod adds new character creation options to customize the game start. It is a fork of the original mod by Barhidous, which has been uploaded and took over by OrderWOPower.
-namespace RealmsForgotten.Managers
+namespace RealmsForgotten.MissionLogic
 {
     public class CulturedStartManager
     {

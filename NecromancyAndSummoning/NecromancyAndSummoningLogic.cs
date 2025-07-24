@@ -7,7 +7,7 @@ using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.NecromancyAndSummoning
 {
-    internal class NecromancyAndSummoningLogic : MissionLogic
+    internal class NecromancyAndSummoningLogic : TaleWorlds.MountAndBlade.MissionLogic
 	{
         public override void AfterStart()
 		{

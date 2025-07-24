@@ -1,5 +1,5 @@
-﻿using RealmsForgotten.Quest.SecondUpdate;
-using RealmsForgotten.Quest.UI;
+﻿using RealmsForgotten.Quest.UI;
+using RealmsForgotten.RFMissionLogic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +13,9 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
+using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
 using TaleWorlds.SaveSystem;
-using static TaleWorlds.Core.ViewModelCollection.CharacterViewModel;
 
 
 
@@ -146,6 +146,20 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
             CampaignEvents.MobilePartyDestroyed.AddNonSerializedListener(this, OnMobilePartyDestroyed);
             CampaignEvents.HeroKilledEvent.AddNonSerializedListener(this, OnHeroKilled);
+
+            // behavior tree for the vortiak witch
+            CampaignEvents.OnMissionStartedEvent.AddNonSerializedListener(this, OnMissionStart);
+        }
+
+        private void OnMissionStart(IMission Imission)
+        {
+            if (Imission is not Mission mission || 
+                Settlement.CurrentSettlement == null ||
+                mission.Scene?.GetName() != "evil_witch_fight") return;
+            if (interceptorDefeatLog?.CurrentProgress != 2 || bossBattleLog?.CurrentProgress != 0) return;
+            // add special behaviors for the mission
+            mission.AddMissionBehavior(new WitchFightSceneMissionLogic());
+            mission.AddMissionBehavior(new RFMissionSoundManager());
         }
 
         protected override void OnStartQuest()
@@ -158,6 +172,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
         protected override void HourlyTick()
         {
+
             // 🔹 Check if the druid conversation should trigger
             if (druidInteractionLog != null && druidInteractionLog.CurrentProgress == 0)
             {

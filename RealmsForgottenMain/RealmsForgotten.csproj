@@ -63,6 +63,12 @@
     <Reference Include="ArtemsNostalgicConversation">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\RealmsForgotten\bin\Win64_Shipping_Client\ArtemsNostalgicConversation.dll</HintPath>
     </Reference>
+    <Reference Include="BehaviorTrees">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\RealmsForgotten\bin\Win64_Shipping_Client\BehaviorTrees.dll</HintPath>
+    </Reference>
+    <Reference Include="BehaviorTreeWrapper">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\RealmsForgotten\bin\Win64_Shipping_Client\BehaviorTreeWrapper.dll</HintPath>
+    </Reference>
     <Reference Include="MCMv5">
       <HintPath>_Module\bin\Win64_Shipping_Client\MCMv5.dll</HintPath>
     </Reference>

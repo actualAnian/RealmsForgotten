@@ -9,7 +9,7 @@ using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.Behaviors
 {
-    public class SpecialDamageMissionLogic : MissionLogic
+    public class SpecialDamageMissionLogic : TaleWorlds.MountAndBlade.MissionLogic
     {
         private SpecialDamageCalculator _damageCalculator = new SpecialDamageCalculator();
 

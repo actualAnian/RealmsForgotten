@@ -12,7 +12,7 @@ using TaleWorlds.ObjectSystem;
 
 namespace RealmsForgotten.Behaviors
 {
-    public class HealOnKillMissionBehavior : MissionLogic
+    public class HealOnKillMissionBehavior : TaleWorlds.MountAndBlade.MissionLogic
     {
         private readonly List<CharacterObject> _characterCache;
         private readonly List<MBGUID> _nullCharacterCache;

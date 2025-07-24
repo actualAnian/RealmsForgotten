@@ -34,6 +34,7 @@ namespace RealmsForgotten.Patches
         }
         public static List<Hideout> GetXHideouts(List<Hideout> hideouts, int count)
         {
+            if (hideouts.Count == 0) return new();
             var random = new Random();
             var result = new List<Hideout>(hideouts);
 

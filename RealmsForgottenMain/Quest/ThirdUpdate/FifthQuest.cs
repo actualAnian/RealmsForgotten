@@ -732,7 +732,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 MBObjectManager.Instance.GetObject<ItemObject>(ShieldTreasureId), 1);
         }
 
-        private class TavernConversationLogic : MissionLogic
+        private class TavernConversationLogic : TaleWorlds.MountAndBlade.MissionLogic
         {
             public override void OnMissionTick(float dt)
             {
@@ -763,7 +763,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 return agent;
             }
         }
-        private class FifthQuestRelicsLogic : MissionLogic
+        private class FifthQuestRelicsLogic : TaleWorlds.MountAndBlade.MissionLogic
         {
             public Agent TreasureFightAgent;
             public static FifthQuestRelicsLogic Instance { get; private set; }

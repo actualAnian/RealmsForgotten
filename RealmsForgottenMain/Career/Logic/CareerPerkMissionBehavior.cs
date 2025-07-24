@@ -9,7 +9,7 @@ using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.Career.Logic
 {
-    public class CareerPerkMissionBehavior : MissionLogic
+    public class CareerPerkMissionBehavior : TaleWorlds.MountAndBlade.MissionLogic
     {
         public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
         {

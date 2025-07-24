@@ -9,7 +9,7 @@ using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.Career.Ability
 {
-    public class AbilityManagerMissionLogic : MissionLogic
+    public class AbilityManagerMissionLogic : TaleWorlds.MountAndBlade.MissionLogic
     {
         private readonly bool hasAbility;
         readonly ClassAbility? ability;

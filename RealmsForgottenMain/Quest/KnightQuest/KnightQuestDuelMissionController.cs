@@ -18,7 +18,7 @@ using TaleWorlds.Localization;
 
 namespace RealmsForgotten.Quest.KnightQuest
 {
-    internal class KnightQuestDuelMissionController : MissionLogic
+    internal class KnightQuestDuelMissionController : TaleWorlds.MountAndBlade.MissionLogic
     {
         Agent? _player;
         Agent? _knightMaester;

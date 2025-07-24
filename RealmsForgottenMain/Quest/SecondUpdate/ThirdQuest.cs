@@ -822,7 +822,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             Campaign.Current.GameMenuManager.NextLocation = null;
             Campaign.Current.GameMenuManager.PreviousLocation = null;
         }
-        private class PersuadeScholarMissionLogic : MissionLogic
+        private class PersuadeScholarMissionLogic : TaleWorlds.MountAndBlade.MissionLogic
         {
             public override InquiryData OnEndMissionRequest(out bool canLeave)
             {

@@ -14,7 +14,7 @@ using TaleWorlds.Library;
 using TaleWorlds.ObjectSystem;
 using static RealmsForgotten.Globals;
 
-namespace RealmsForgotten.Managers
+namespace RealmsForgotten.MissionLogic
 {
     public class TroopSpawnInfo
     {

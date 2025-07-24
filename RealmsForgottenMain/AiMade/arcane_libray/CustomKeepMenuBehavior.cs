@@ -126,7 +126,7 @@ namespace RealmsForgotten.AiMade.arcane_libray
         }
 
 
-        public class CustomMissionLogic : MissionLogic
+        public class CustomMissionLogic : TaleWorlds.MountAndBlade.MissionLogic
         {
             // This method is called every mission tick (frame update) while the mission is active.
             public override void OnMissionTick(float dt)

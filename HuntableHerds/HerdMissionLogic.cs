@@ -16,7 +16,7 @@ using RealmsForgotten.HuntableHerds.Extensions;
 
 namespace RealmsForgotten.HuntableHerds
 {
-    public class HerdMissionLogic : MissionLogic {
+    public class HerdMissionLogic : TaleWorlds.MountAndBlade.MissionLogic {
         private Dictionary<Agent, HerdAgentComponent> animals = new();
 
         private bool isRandomScene = true;
