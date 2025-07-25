@@ -6,6 +6,7 @@ using RealmsForgotten.AiMade.Models;
 using RealmsForgotten.AiMade.PartyOverrides;
 using RealmsForgotten.AiMade.Patches;
 using RealmsForgotten.AiMade.Religions;
+using RealmsForgotten.AiMade.RF_Diplomacy;
 using RealmsForgotten.Behaviors;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -46,7 +47,7 @@ namespace RealmsForgotten.AiMade
         {
             AddClassDefinition(typeof(ExampleConfig), 1);
             AddClassDefinition(typeof(MaestersTowerBehavior), 3);
-            AddClassDefinition(typeof(MerchantEventBehavior), 5);
+            AddClassDefinition(typeof(MerchantDeliveryBehavior), 5);
             AddClassDefinition(typeof(DuelCampaignBehavior), 6);
             AddClassDefinition(typeof(Story2Behavior), 7);
             AddClassDefinition(typeof(HelpPeregrineBehavior), 8);
@@ -97,6 +98,8 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(SturgiaCultureChangerBehavior), 65);
             AddClassDefinition(typeof(RacialMixingBehavior), 66);
             AddClassDefinition(typeof(CharacterRacialMix), 67);
+            AddClassDefinition(typeof(AlignmentWarBehavior), 68);
+            AddClassDefinition(typeof(AlignmentMomentumBehavior), 69);
         }
     }
 }

@@ -29,7 +29,8 @@ namespace RealmsForgotten.Career.CareerPointsSystem
                 AwardDeedsPoints(20);
             }
 
-            if (attackerParty != null && Globals.IsBanditParty(attackerParty) && Globals.IsCaravanParty(defenderParty))
+            // Added null checks for safety
+            if (attackerParty != null && defenderParty != null && Globals.IsBanditParty(attackerParty) && Globals.IsCaravanParty(defenderParty))
             {
                 AwardDeedsPoints(10);
                 InformationManager.DisplayMessage(new InformationMessage("You have successfully defended the villagers/caravan and gained chivalry points!"));
@@ -96,11 +97,61 @@ namespace RealmsForgotten.Career.CareerPointsSystem
 
         private void AwardDeedsPoints(int points)
         {
-            deedsPoints += points;
-            int perkPoints = deedsPoints / pointsForPerk;
-            deedsPoints -= perkPoints * pointsForPerk;
-            spentDeedsPoints += perkPoints * pointsForPerk;
-            AddPoints(perkPoints);
+            // --- Add Debugging HERE ---
+            Debug.Print($"DeedsPointsSystem: Attempting to award {points} deeds points.");
+            try
+            {
+                deedsPoints += points;
+                int perkPoints = 0; // Default to 0
+
+                // Prevent division by zero
+                if (pointsForPerk != 0)
+                {
+                    perkPoints = deedsPoints / pointsForPerk;
+                    if (perkPoints != 0) // Only adjust if perk points were actually earned/lost
+                    {
+                        deedsPoints -= perkPoints * pointsForPerk;
+                        spentDeedsPoints += perkPoints * pointsForPerk;
+                    }
+                }
+                else
+                {
+                    Debug.Print("ERROR: pointsForPerk is zero in DeedsPointsSystem.AwardDeedsPoints");
+                    return; // Don't proceed if config is broken
+                }
+
+                Debug.Print($"DeedsPointsSystem: Calculated {perkPoints} perk points to add.");
+
+                // --- Check before calling base method ---
+                if (Hero.MainHero == null)
+                {
+                    Debug.Print("ERROR: Hero.MainHero is NULL before calling AddPoints!");
+                    // Consider throwing a more specific exception or handling this case
+                    return; // Prevent calling AddPoints if MainHero is null
+                }
+                if (Hero.MainHero.HeroDeveloper == null)
+                {
+                    Debug.Print("ERROR: Hero.MainHero.HeroDeveloper is NULL before calling AddPoints!");
+                    // Consider throwing or handling
+                    return;
+                }
+
+                // --- Call the base method ---
+                Debug.Print($"DeedsPointsSystem: Calling base.AddPoints({perkPoints}).");
+                AddPoints(perkPoints); // This calls the method in AbstractPointsSystem
+                Debug.Print($"DeedsPointsSystem: Successfully returned from base.AddPoints({perkPoints}).");
+
+            }
+            catch (NullReferenceException nre)
+            {
+                Debug.Print($"NullReferenceException INSIDE AwardDeedsPoints or base.AddPoints!: {nre.Message}\n{nre.StackTrace}");
+                InformationManager.DisplayMessage(new InformationMessage($"Crash Prevented in AwardDeedsPoints: {nre.Message}", Colors.Red));
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Exception INSIDE AwardDeedsPoints or base.AddPoints!: {ex.Message}\n{ex.StackTrace}");
+                InformationManager.DisplayMessage(new InformationMessage($"Crash Prevented in AwardDeedsPoints: {ex.Message}", Colors.Red));
+            }
         }
     }
 }

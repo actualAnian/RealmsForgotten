@@ -5,7 +5,7 @@ namespace RealmsForgotten.Career.CareerPointsSystem
 {
     public class RenownPointsSystem : AbstractPointsSystem
     {
-        public override string Description => new TextObject("{=rf_pointsystem_renown}Every 20 renown you get, you receive one perk point.").ToString();
+        public override string Description => new TextObject("{=rf_pointsystem_renown}As a mercenary, fame is everything that matters. For every 20 renown you get, you receive one perk point.").ToString();
 
 
         public static readonly int RenownForPoint = 20;

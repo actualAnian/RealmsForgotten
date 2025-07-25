@@ -56,6 +56,8 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
         private Agent _treasureFightWinner;
 
+        private bool devilsSpawningEnabled = false;
+
         private bool _persuasionFailed;
         private const string MysticWeaponId = "ancient_elvish_polearm";
         private const string ShieldTreasureId = "ulvor_dec_shield";
@@ -86,89 +88,176 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
         private void OnWeeklyTick()
         {
-            if (deliverNelrogToNasorianLog?.CurrentProgress == 0)
+            // STEP 1: Enable devil spawning when quest hits stage 0
+            if (!devilsSpawningEnabled && deliverNelrogToNasorianLog?.CurrentProgress == 0)
             {
-                for (int i = 0; i < 5; i++)
-                {
-                    Hideout hideout = Hideout.All.GetRandomElement();
-                    MobileParty party = BanditPartyComponent.CreateBanditParty("nelrogs", Clan.FindFirst(x => x.StringId == "cs_nelrog_raiders"),
-                        null, true);
-                    TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
-
-                    int random = MBRandom.RandomInt(0, 10);
-                    var nelrogIds = new[]
-                        { "cs_nelrog_bandits_bandit", "cs_nelrog_bandits_raider", "cs_nelrog_bandits_chief" };
-                    for (int j = 0; j < random; j++)
-                    {
-                        troopRoster.AddToCounts(
-                            CharacterObject.Find(nelrogIds[MBRandom.RandomInt(0, nelrogIds.Length - 1)]), 1);
-                    }
-
-                    party.InitializeMobilePartyAroundPosition(
-                        troopRoster, TroopRoster.CreateDummyTroopRoster(),
-                        hideout.Settlement.Position2D,
-                        100f, 10f);
-                }
+                devilsSpawningEnabled = true;
             }
-        }
 
-        private void OnDailyTick()
-        {
-            try
+            // STEP 2: Once enabled, devils spawn weekly regardless of quest progress
+            if (devilsSpawningEnabled)
             {
-                Random rnd = new Random();
-                int devilsAmount = rnd.Next(100, 251);
+                SpawnNelrogParties();
 
-                // Iterate through all hideouts on the map
-                foreach (Hideout hideout in Hideout.All)
+                try
                 {
-                    if (hideout == null || hideout.Settlement == null)
-                    {
-                        InformationManager.DisplayMessage(new InformationMessage("Hideout or its settlement is null."));
-                        continue;
-                    }
+                    Random rnd = new Random();
+                    int devilsAmount = rnd.Next(100, 251); // Large number per party!
 
                     Clan devilsClan = Clan.FindFirst(x => x.StringId == "cs_devils_raiders");
                     if (devilsClan == null)
                     {
-                        InformationManager.DisplayMessage(new InformationMessage("Devils clan not found."));
-                        continue;
+                        Debug.PrintError("FifthQuest Error: Devils clan 'cs_devils_raiders' not found in WeeklyTick.");
+                        return;
                     }
 
-                    // Create the troop roster
-                    TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
-                    CharacterObject devilsBanditRaider = CharacterObject.Find("cs_devils_bandits_raider");
-                    if (devilsBanditRaider == null)
+                    // Declare war on all other factions (optional, but evil 😈)
+                    foreach (Clan clan in Clan.All)
                     {
-                        InformationManager.DisplayMessage(new InformationMessage("Devils bandit raider not found."));
-                        continue;
+                        if (clan != devilsClan && !clan.IsEliminated)
+                        {
+                            FactionManager.DeclareWar(devilsClan, clan);
+                        }
                     }
-                    troopRoster.AddToCounts(devilsBanditRaider, devilsAmount);
 
-                    // Create the devils party
-                    MobileParty party = BanditPartyComponent.CreateBanditParty("devils", devilsClan, hideout, true);
+                    foreach (Hideout hideout in Hideout.All)
+                    {
+                        if (hideout?.Settlement == null)
+                        {
+                            Debug.Print("FifthQuest Warning: WeeklyTick found null hideout or settlement.");
+                            continue;
+                        }
+
+                        CharacterObject devilsBanditRaider = CharacterObject.Find("cs_devils_bandits_raider");
+                        if (devilsBanditRaider == null)
+                        {
+                            Debug.PrintError("FifthQuest Error: Devils bandit raider 'cs_devils_bandits_raider' not found.");
+                            continue;
+                        }
+
+                        TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
+                        troopRoster.AddToCounts(devilsBanditRaider, devilsAmount);
+
+                        string partyId = "devils_" + hideout.Id + "_" + CampaignTime.Now.GetHashCode();
+                        MobileParty party = BanditPartyComponent.CreateBanditParty(partyId, devilsClan, hideout, true);
+
+                        if (party == null)
+                        {
+                            Debug.PrintError($"FifthQuest Error: Failed to create Devil party '{partyId}' near {hideout.Settlement.Name}.");
+                            continue;
+                        }
+
+                        party.SetCustomName(new TextObject("Devils Party"));
+
+                        party.InitializeMobilePartyAroundPosition(
+                            troopRoster,
+                            TroopRoster.CreateDummyTroopRoster(),
+                            hideout.Settlement.Position2D,
+                            200f, 10f);
+
+                        party.Aggressiveness = 100f;
+                        party.SetPartyObjective(MobileParty.PartyObjective.Aggressive);
+                        party.Ai.SetDoNotMakeNewDecisions(false);
+
+                        MobileParty closestTarget = MobileParty.All
+                            .Where(p =>
+                                p != party &&
+                                p.IsActive &&
+                                p.MapFaction != null &&
+                                party.MapFaction != null &&
+                                p.MapFaction.IsAtWarWith(party.MapFaction)
+                            )
+                            .OrderBy(p => party.Position2D.DistanceSquared(p.Position2D))
+                            .FirstOrDefault();
+
+                        if (closestTarget != null)
+                        {
+                            party.Ai.SetMoveEngageParty(closestTarget);
+                        }
+
+                        InformationManager.DisplayMessage(new InformationMessage($"Devils spawned at {hideout.Settlement.Name} with {devilsAmount} raiders."));
+                    }
+
+                    InformationManager.DisplayMessage(new InformationMessage($"Devil parties refreshed this week."));
+                }
+                catch (Exception ex)
+                {
+                    Debug.PrintError($"Exception in OnWeeklyTick (Devil Spawn): {ex}");
+                    InformationManager.DisplayMessage(new InformationMessage($"Exception spawning Devils weekly: {ex.Message}", Colors.Red));
+                }
+            }
+        }
+
+        private void SpawnNelrogParties()
+        {
+            try
+            {
+                Clan nelrogClan = Clan.FindFirst(c => c.StringId == "cs_nelrog_raiders");
+                if (nelrogClan == null)
+                {
+                    InformationManager.DisplayMessage(new InformationMessage("Nelrog clan not found."));
+                    return;
+                }
+
+                List<Hideout> seaRaiderHideouts = Hideout.All
+                    .Where(h => h?.Settlement?.Culture?.StringId == "sea_raiders")
+                    .ToList();
+
+                if (!seaRaiderHideouts.Any())
+                {
+                    InformationManager.DisplayMessage(new InformationMessage("No sea raider hideouts found."));
+                    return;
+                }
+
+                var nelrogTroopIds = new[] { "cs_nelrog_bandits_bandit", "cs_nelrog_bandits_raider", "cs_nelrog_bandits_chief" };
+
+                foreach (Hideout hideout in seaRaiderHideouts)
+                {
+                    TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
+                    int troopCount = MBRandom.RandomInt(3, 7);
+
+                    for (int j = 0; j < troopCount; j++)
+                    {
+                        var troop = CharacterObject.Find(nelrogTroopIds[MBRandom.RandomInt(nelrogTroopIds.Length)]);
+                        if (troop != null)
+                        {
+                            troopRoster.AddToCounts(troop, 1);
+                        }
+                    }
+
+                    MobileParty party = BanditPartyComponent.CreateBanditParty("nelrogs", nelrogClan, null, true);
                     if (party == null)
                     {
-                        InformationManager.DisplayMessage(new InformationMessage("Failed to create devils party."));
+                        InformationManager.DisplayMessage(new InformationMessage("Failed to create nelrog party."));
                         continue;
                     }
 
-                    // Set the custom name for the devils party
-                    party.SetCustomName(new TextObject("Devils Party"));
-
-                    // Initialize the party around the hideout position with the defined troop roster
                     party.InitializeMobilePartyAroundPosition(
-                        troopRoster, TroopRoster.CreateDummyTroopRoster(),
+                        troopRoster,
+                        TroopRoster.CreateDummyTroopRoster(),
                         hideout.Settlement.Position2D,
-                        200f, 10f);
+                        100f, 10f);
 
-                    InformationManager.DisplayMessage(new InformationMessage($"Devils spawned at {hideout.Settlement.Name} with {devilsAmount} raiders."));
+                    party.Aggressiveness = 100f;
+
+                    if (MobileParty.MainParty != null)
+                    {
+                        party.Ai.SetMoveEngageParty(MobileParty.MainParty);
+                    }
                 }
+
+                InformationManager.DisplayMessage(new InformationMessage($"Nelrog parties spawned at {seaRaiderHideouts.Count} sea raider hideouts."));
             }
             catch (Exception ex)
             {
-                InformationManager.DisplayMessage(new InformationMessage($"Exception in OnDailyTick: {ex.Message}"));
+                InformationManager.DisplayMessage(new InformationMessage($"[NELROG SPAWN ERROR]: {ex.Message}"));
             }
+        }
+
+
+        private void OnDailyTick()
+        {
+           
         }
 
         private void OnMissionStart(IMission imission)

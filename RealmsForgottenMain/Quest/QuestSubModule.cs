@@ -5,6 +5,7 @@ using TaleWorlds.SaveSystem;
 using RealmsForgotten.Quest.KnightQuest;
 using RealmsForgotten.Quest.AI_Quest;
 using RealmsForgotten.Quest.FourthUpdate;
+using TaleWorlds.Engine;
 
 namespace RealmsForgotten.Quest
 {
@@ -28,6 +29,7 @@ namespace RealmsForgotten.Quest
             {
                 gameStarter.AddBehavior(new SaveCurrentQuestCampaignBehavior());
                 gameStarter.AddBehavior(new SpawnNpcInLordsHallBecomeKnightBehavior());
+                gameStarter.AddBehavior(new DeformedWaveSniffer());
             }
         }
     }
@@ -49,9 +51,11 @@ namespace RealmsForgotten.Quest
             AddClassDefinition(typeof(FifthQuest), 7);
             AddClassDefinition(typeof(SixthQuest), 8);
             AddClassDefinition(typeof(SeventhQuest), 9);
+            AddClassDefinition(typeof(EighthQuest), 10);
             AddClassDefinition(typeof(SpawnNpcInLordsHallBecomeKnightBehavior), 20);
             AddClassDefinition(typeof(BecomeKnightQuest), 21);
-            
+            AddClassDefinition(typeof(DeformedWaveSniffer), 22);
+
         }
     }
 }

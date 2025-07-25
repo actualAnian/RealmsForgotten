@@ -126,7 +126,7 @@ namespace RealmsForgotten.Career.CareerTypes
                     return faceTerrainType == TerrainType.Desert || faceTerrainType == TerrainType.Steppe;
                 }, true));
             _warlord_of_coin_2_passive4.Initialize(CareerID, "{=rf_career_player_melee_defence_15}Increases melee damage resistance by 15%", "WarlordOfCoin2", new CareerChoiceObject.PassiveEffect(PassiveEffectType.Resistance, new DamageProportionTuple(DamageType.PhysicalMelee, 15)));
-            _warlord_of_coin_2_passive5.Initialize(CareerID, "{=}Gain a special armor set", "WarlordOfCoin2", new CareerChoiceObject.ActiveEffect(() => { MobileParty.MainParty.ItemRoster.AddToCounts(MBObjectManager.Instance.GetObject<ItemObject>("poisoned_knife"), 1); }));
+            _warlord_of_coin_2_passive5.Initialize(CareerID, "{=}Gain a special armor set", "WarlordOfCoin2", new CareerChoiceObject.ActiveEffect(() => { MobileParty.MainParty.ItemRoster.AddToCounts(MBObjectManager.Instance.GetObject<ItemObject>("blackheart_sword_rfonehanded50"), 1); }));
 
             //tier 3
             _mercenary_lord_1_passive1.Initialize(CareerID, "{=rf_career_party_speed_FoMoSw_20}+20% party movement speed in forest, mountain and swamp terrain", "MercenaryLord1", new CareerChoiceObject.PassiveEffect(20, PassiveEffectType.PartyMovementSpeed,

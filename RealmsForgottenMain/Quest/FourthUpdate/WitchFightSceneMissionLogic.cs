@@ -1,11 +1,10 @@
 ﻿using BehaviorTrees;
 using BehaviorTreeWrapper;
-using RealmsForgotten.MissionLogic;
 using RealmsForgotten.Quest.FourthUpdate.BehaviorTrees;
 using System.Linq;
-using System.Xml.Linq;
+using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.Core;
-using TaleWorlds.Engine;
 using TaleWorlds.InputSystem;
 using TaleWorlds.MountAndBlade;
 
@@ -13,9 +12,11 @@ namespace RealmsForgotten.Quest.FourthUpdate
 {
     public class WitchFightSceneMissionLogic : TaleWorlds.MountAndBlade.MissionLogic
     {
+        int _balrogHealth = 300;
         float timer;
         bool isInitialized = false;
-
+        bool _isPlayerDead = false;
+        float _playerDeadTimer = 0f;
         public override void OnMissionTick(float dt)
         {
             timer += dt;
@@ -28,37 +29,35 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 witch.TeleportToPosition(VortiakWitchTree.platformA);
                 string demonId = VortiakWitchTree.demonSummonStringId;
                 Agent balrog = Mission.Agents.FirstOrDefault(agent => agent.Character?.StringId == demonId);
+                balrog.Health = _balrogHealth;
                 balrog.TeleportToPosition(VortiakWitchTree.platformC);
                 isInitialized = true;
                 InitializeWitch(witch);
             }
-            if(Input.IsKeyPressed(InputKey.G))
-            {
-                Agent.Main.TeleportToPosition(VortiakWitchTree.entrance);
-            }
-            if (Input.IsKeyPressed(InputKey.H))
-            {
-                Agent.Main.TeleportToPosition(VortiakWitchTree.platformA);
-            }
-            if (Input.IsKeyPressed(InputKey.J))
-            {
-                Agent.Main.TeleportToPosition(VortiakWitchTree.platformB);
-            }
-            if (Input.IsKeyPressed(InputKey.K))
-            {
-                Agent.Main.TeleportToPosition(VortiakWitchTree.playerPositionToStartStage3);
-            }
 
+            if (_isPlayerDead) //kill the player
+            {
+                _playerDeadTimer += dt;
+                if (_playerDeadTimer > 4)
+                {
+                    _isPlayerDead = false;
+                    KillCharacterAction.ApplyByWounds(Hero.MainHero, true);
+                }
+            }
+        }
+        public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
+        {
+            if (affectedAgent.IsHero && affectedAgent.Character.StringId == Hero.MainHero.CharacterObject.StringId)
+            {
+                _isPlayerDead = true;
+            }
+            base.OnAgentRemoved(affectedAgent, affectorAgent, agentState, blow);
         }
         public void InitializeWitch(Agent witch)
         {
             witch.Health = witch.HealthLimit * 3;
             BTRegister.RegisterClass("VortiakWitchTree", objects => VortiakWitchTree.BuildTree(objects));
             witch.AddComponent(new BehaviorTreeAgentComponent(witch, "VortiakWitchTree"));
-        }
-        public override void OnAgentAlarmedStateChanged(Agent agent, Agent.AIStateFlag flag)
-        {
-            base.OnAgentAlarmedStateChanged(agent, flag);
         }
     }
 }

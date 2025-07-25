@@ -1,4 +1,6 @@
-﻿using RealmsForgotten.Quest.UI;
+﻿using RealmsForgotten.AiMade.RF_Diplomacy;
+using RealmsForgotten.Quest.MissionBehaviors;
+using RealmsForgotten.Quest.UI;
 using RealmsForgotten.RFMissionLogic;
 using System;
 using System.Collections.Generic;
@@ -6,6 +8,9 @@ using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Conversation;
+using TaleWorlds.CampaignSystem.Encounters;
+using TaleWorlds.CampaignSystem.GameState;
+using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Party.PartyComponents;
 using TaleWorlds.CampaignSystem.Roster;
@@ -52,8 +57,6 @@ namespace RealmsForgotten.Quest.FourthUpdate
         [SaveableField(8)]
         private bool _druidConversationTriggered;
 
-      
-
         [SaveableField(10)]
         private bool _playerChoseToDestroyElveans;
 
@@ -66,16 +69,65 @@ namespace RealmsForgotten.Quest.FourthUpdate
         [SaveableField(13)]
         private JournalLog? owlRebellionlLog;
 
+        [SaveableField(14)]
+        private JournalLog? priestessArmyLog;
+
+        [SaveableField(15)]
+        private MobileParty? _witchFinalArmy;
+
+        [SaveableField(16)]
+        private JournalLog? vortiakLairLog;
+
+        [SaveableField(17)]
+        private bool deformedSpawningEnabled = false;
+
+        [SaveableField(18)]
+        private CampaignTime _nextDeformedSpawnTime = CampaignTime.Zero;
+
+        [SaveableField(19)]
+        private int _deformedPartySpawnCount = 0;
+
+        [SaveableField(20)]
+        private bool _eighthQuestStarted = false;
+
+        [SaveableField(21)]
+        private bool _witchConversationCompleted = false;
+           
+
+        [SaveableField(23)]
+        private JournalLog eighthPriestessLog;
+
+        [SaveableField(24)]
+        private bool _priestessConversationTriggered;
+
+        [SaveableField(25)]
+        private bool _owlDialogueAttempted;
+
         private const int travelObjectiveTarget = 1;
         private bool IsTravelObjectiveCompleted => travelObjectiveLog?.CurrentProgress >= travelObjectiveTarget;
 
         public static bool IsVortiakClanSpawned { get; set; } = false;
 
-             
+        private Settlement witchHideout => Settlement.Find("vortiak_ruined_temple");
+
+        private static readonly string witchCharacterId = "evil_witch";
+
         private Vec2 _lastPlayerPosition = Vec2.Invalid;
 
+        private bool _dialogEventsRegistered = false;
         public int DruidInteractionStage => druidInteractionLog?.CurrentProgress ?? -1;
 
+        private Hero? DeformedLeaderHero = null;
+        public record TroopDetail(string TroopId, int Quantity);
+
+        static Dictionary<string, WitchLord>? _witchLords;
+
+        private bool _shouldCleanupPartiesNextTick = false;
+
+        public static SeventhQuest? ActiveSeventhQuestInstance;
+
+        private bool _postQuestEventsRegistered = false;
+        public record WitchLord(string CharacterId, string ClanId, List<TroopDetail> TroopDetails, Settlement SpawnSettlement);
         // Interceptor army configuration
         private static readonly Dictionary<string, List<TroopDetail>> InterceptorArmies =
             new Dictionary<string, List<TroopDetail>>
@@ -83,13 +135,12 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 ["rf_interceptor_default"] = new List<TroopDetail>
                 {
                     new TroopDetail("vortiak_mounted_necromancer_lord", 1),
-                    new TroopDetail("vortiak_warrior", 1),
-                    new TroopDetail("vortiak_crossbowman", 1),
-                    new TroopDetail("vortiak_swordsman", 2),
-                    new TroopDetail("cs_nelrog_bandits_chief", 1),
-                    new TroopDetail("vortiak_crossbowman", 1),
-                    new TroopDetail("hellbound_boss", 1),
-                    new TroopDetail("hellbound_chief", 2)
+                    new TroopDetail("vortiak_warrior", 150),
+                    new TroopDetail("vortiak_crossbowman", 200),
+                    new TroopDetail("vortiak_swordsman", 300),
+                    new TroopDetail("cs_nelrog_bandits_chief", 150),
+                    new TroopDetail("hellbound_boss", 50),
+                    new TroopDetail("hellbound_chief", 100)
                 }
             };
 
@@ -98,15 +149,40 @@ namespace RealmsForgotten.Quest.FourthUpdate
     {
         ["rf_vortiak_army"] = new List<TroopDetail>
     {
-        new TroopDetail("vortiak_mounted_necromancer_lord", 1),       
-        new TroopDetail("vortiak_warrior", 200),   
-        new TroopDetail("vortiak_crossbowman", 250), 
-        new TroopDetail("vortiak_swordsman", 300),
-        new TroopDetail("cs_nelrog_bandits_chief", 50),
-        new TroopDetail("hellbound_boss", 50),
-        new TroopDetail("hellbound_chief", 100)    
+        new TroopDetail("sturgian_warrior", 200),
+        new TroopDetail("sturgian_woodsman", 250),
+        new TroopDetail("sturgian_veteran_warrior", 300),
+        new TroopDetail("druzhinnik", 150),
+        new TroopDetail("druzhinnik_champion", 50),
+        new TroopDetail("sturgian_brigand", 100)
     }
     };
+
+        public static Dictionary<string, WitchLord> WitchLords
+        {
+            get
+            {
+                _witchLords ??= new()
+                {
+                    ["vortiak_coven"] = new WitchLord(
+                        "vortiak_witch_boss",    // Character ID of the first Witch Lord leader
+                        "vortiak_witch",             // ** The required Clan ID **
+                        new List<TroopDetail> {      // Troop composition
+                        new TroopDetail("vortiak_witch_bandit",700),
+                        new TroopDetail("vortiak_witch_raider", 600),
+                        new TroopDetail("vortiak_witch_chief", 450),
+                        new TroopDetail("cs_devils_bandits_bandit", 450),
+                        new TroopDetail("vortiak_boss", 100)
+                        },
+                        Settlement.FindFirst(s => s.StringId == "vortiak_ruined_temple") // Example spawn settlement ID (Sargot)
+                    ),
+
+                };
+
+                return _witchLords;
+            }
+        }    
+       
 
         public static Hero TheOwl
         {
@@ -124,7 +200,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
         public SeventhQuest(string questId, Hero questGiver, CampaignTime duration, int rewardGold)
      : base(questId, questGiver, duration, rewardGold)
         {
-           
+            ActiveSeventhQuestInstance = this;
         }
         public override TextObject Title => GameTexts.FindText("rf_seventh_quest_title");
         public override bool IsSpecialQuest => true;
@@ -132,6 +208,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
         protected override void InitializeQuestOnGameLoad()
         {
+            ActiveSeventhQuestInstance = this;
             SetDialogs();
         }
 
@@ -143,12 +220,22 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
             // We'll rely on HourlyTick to check distance & possibly open the conversation
             CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, HourlyTick);
-
             CampaignEvents.MobilePartyDestroyed.AddNonSerializedListener(this, OnMobilePartyDestroyed);
-            CampaignEvents.HeroKilledEvent.AddNonSerializedListener(this, OnHeroKilled);
-
-            // behavior tree for the vortiak witch
+            CampaignEvents.OnSettlementLeftEvent.AddNonSerializedListener(this, OnLeaveSettlement);
+            //CampaignEvents.OnMissionStartedEvent.AddNonSerializedListener(this, OnMissionStarted);
+            CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnMapEventEnded);
+            CampaignEvents.TickEvent.AddNonSerializedListener(this, OnTick);            // behavior tree for the vortiak witch
             CampaignEvents.OnMissionStartedEvent.AddNonSerializedListener(this, OnMissionStart);
+            CampaignEvents.SettlementEntered.AddNonSerializedListener(this, OnSettlementEntered);
+        }
+
+        private void OnSettlementEntered(MobileParty party, Settlement settlement, Hero hero)
+        {
+            if (party != MobileParty.MainParty 
+                || settlement.StringId != "vortiak_ruined_temple"
+                || interceptorDefeatLog?.CurrentProgress != 2 
+                || bossBattleLog?.CurrentProgress != 0) return;
+            Campaign.Current.SaveHandler.SaveAs("rfAutosave");
         }
 
         private void OnMissionStart(IMission Imission)
@@ -170,22 +257,27 @@ namespace RealmsForgotten.Quest.FourthUpdate
             _druidConversationTriggered = false; // We haven't forced the conversation yet
         }
 
+        private void OnTick(float dt)
+        {
+            if (_shouldCleanupPartiesNextTick)
+            {
+                _shouldCleanupPartiesNextTick = false;
+                CleanupDevilsAndNelrogParties();
+            }
+        }
+
         protected override void HourlyTick()
         {
-
-            // 🔹 Check if the druid conversation should trigger
+            // 🔹 1. FIRST PRIESTESS interaction (original quest flow)
             if (druidInteractionLog != null && druidInteractionLog.CurrentProgress == 0)
             {
                 if (!_druidConversationTriggered && FirstTreeSettlement != null)
                 {
                     float distance = MobileParty.MainParty.Position2D.Distance(FirstTreeSettlement.GatePosition);
-                    float threshold = 50f; // Distance threshold for druid conversation
-
-                    if (distance <= threshold)
+                    if (distance <= 50f)
                     {
                         _druidConversationTriggered = true;
 
-                        // Force conversation on campaign map with "elvean_first_tree_druid_quest"
                         CharacterObject druidCharacter = CharacterObject.Find("elvean_first_tree_druid_quest");
                         if (druidCharacter != null)
                         {
@@ -202,39 +294,94 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 }
             }
 
-           
+            // 🔹 2. SECOND PRIESTESS interaction (for Eighth Quest launch)
+            if (eighthPriestessLog != null && eighthPriestessLog.CurrentProgress == 0 && !_priestessConversationTriggered)
+            {
+                if (FirstTreeSettlement != null)
+                {
+                    float distance = MobileParty.MainParty.Position2D.Distance(FirstTreeSettlement.GatePosition);
+                    if (distance <= 50f)
+                    {
+                        // Force second conversation with the SAME Priestess NPC but new dialogue
+                        CharacterObject priestessCharacter = CharacterObject.Find("elvean_first_tree_druid_quest_2");
+                        if (priestessCharacter != null)
+                        {
+                            _priestessConversationTriggered = true;
+                            CampaignMapConversation.OpenConversation(
+                                new ConversationCharacterData(CharacterObject.PlayerCharacter),
+                                new ConversationCharacterData(priestessCharacter)
+                            );
+                        }
+                        else
+                        {
+                            InformationManager.DisplayMessage(new InformationMessage("Priestess character not found!"));
+                        }
+                    }
+                }
+            }
+
+            // 🔹 3. OWL trigger (your original)
             if (_shouldTriggerOwlDialogue)
             {
-               
                 if (_lastPlayerPosition.IsValid)
                 {
                     float movedDistance = MobileParty.MainParty.Position2D.Distance(_lastPlayerPosition);
-
-                    if (movedDistance > 20f) // ✅ Adjust distance as needed
+                    if (movedDistance > 20f)
                     {
-                        _shouldTriggerOwlDialogue = false; // ✅ Prevent re-triggering
-                       
+                        _shouldTriggerOwlDialogue = false;
                         return;
                     }
                 }
-
-             
                 _lastPlayerPosition = MobileParty.MainParty.Position2D;
             }
         }
 
+
         private void OnDailyTick()
         {
-           if (_shouldShowPopups)
+            if (_shouldShowPopups)
             {
                 _shouldShowPopups = false;
                 ShowSeventhQuestNotification();
             }
 
+            if (deformedSpawningEnabled && CampaignTime.Now > _nextDeformedSpawnTime)
+            {
+                SpawnDeformedParties();
+                _nextDeformedSpawnTime = CampaignTime.DaysFromNow(3);
+            }
+
+            // 🔥 Show the Eighth Quest inquiry once when spawn count hits 3
+            if (_deformedPartySpawnCount >= 3 && !_eighthQuestStarted)
+            {
+                ShowEighthQuestPrompt(); // the inquiry
+            }
+
+            if (_deformedPartySpawnCount >= 3 && !_eighthQuestStarted && !_owlDialogueAttempted)
+            {
+                _owlDialogueAttempted = true;
+                TryStartOwlConversation();
+            }
+
             CheckTempleProximity();
+            CheckElveanDestructionProgress();
         }
 
-       
+        private void OnMapEventEnded(MapEvent mapEvent)
+        {
+            if (mapEvent == null)
+                return;
+
+            if (!mapEvent.IsPlayerMapEvent)
+                return;
+
+            if (MobileParty.MainParty.PrisonRoster != null)
+            {
+                RemoveEvilWitchFromPrisoners();
+            }
+        }
+
+
         // Show the "letter from the Elven King" after 1 day
         private void ShowSeventhQuestNotification()
         {
@@ -262,8 +409,182 @@ namespace RealmsForgotten.Quest.FourthUpdate
         {
             druidInteractionLog = AddLog(GameTexts.FindText("rf_seventh_quest_druid_objective"));
             druidInteractionLog.UpdateCurrentProgress(0);
-           
+
         }
+
+        //private void OnMissionStarted(IMission imission)
+        //{
+        //    if (imission is Mission mission)
+        //    {
+        //        if (Settlement.CurrentSettlement == witchHideout && mission.SceneName == "evil_witch_fight" && bossBattleLog?.CurrentProgress == 0)
+        //        {
+        //            mission.AddMissionBehavior(new RecordDamageMissionLogic((victim, attacker, damage) =>
+        //            {
+        //                if (victim.Character?.StringId == "evil_witch" && damage >= victim.Health)
+        //                    bossBattleLog.UpdateCurrentProgress(1);
+
+        //            }));
+        //        }
+        //    }
+        //}
+        public static void OnWitchDefeated()
+        {
+            QuestBase? quest = Campaign.Current.QuestManager.Quests.FirstOrDefault(q => q.StringId == "rf_seventh_quest");
+            if (quest == null)
+            {
+                InformationManager.DisplayMessage(new InformationMessage("Seventh Quest not found!"));
+                return;
+            }
+            SeventhQuest seventhQuest = (SeventhQuest)quest;
+            seventhQuest.bossBattleLog?.UpdateCurrentProgress(1);
+        }
+        private void OnLeaveSettlement(MobileParty mobileParty, Settlement settlement)
+        {
+            if (bossBattleLog?.CurrentProgress == 1 && settlement == witchHideout)
+            {
+                PlayerEncounter.Finish();
+                bossBattleLog.UpdateCurrentProgress(2);
+                CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty), new ConversationCharacterData(CharacterObject.Find(witchCharacterId)));
+
+            }
+        }
+        private void TryStartOwlConversation()
+        {
+            Hero owl = Hero.FindFirst(h => h.StringId == "rf_the_owl");
+            if (owl != null && Game.Current?.GameStateManager?.ActiveState is MapState)
+            {
+                CharacterObject owlChar = owl.CharacterObject;
+                if (owlChar != null)
+                {
+                    Campaign.Current.ConversationManager.AddDialogFlow(PriestessEighthQuestDialog, this);
+                    CampaignMapConversation.OpenConversation(
+                        new ConversationCharacterData(CharacterObject.PlayerCharacter),
+                        new ConversationCharacterData(owlChar)
+                    );
+                    return;
+                }
+            }
+
+            // Fallback retry on next DailyTick if conversation failed
+            _owlDialogueAttempted = false;
+        }
+
+        public void SpawnAllWitchLords()
+        {
+            foreach (WitchLord lord in WitchLords.Values)
+            {
+                var party = CreateWitchLordParty(lord.CharacterId, lord.ClanId, lord.SpawnSettlement, lord.TroopDetails);
+                _witchFinalArmy = party; // ✅ Track the one coven as the final witch army
+            }
+
+            InformationManager.DisplayMessage(
+                new InformationMessage("The Vortiak Witch was spotted around Nippura!", Colors.Magenta));
+        }
+
+
+        public MobileParty? CreateWitchLordParty(string witchLordCharacterId, string clanId, Settlement spawnSettlement, List<TroopDetail> troopDetails)
+        {
+            if (spawnSettlement == null)
+            {
+                InformationManager.DisplayMessage(new InformationMessage($"❌ Spawn settlement is null for Witch Lord '{witchLordCharacterId}'.", Colors.Red));
+                return null;
+            }
+
+            try
+            {
+                Clan clan = Clan.FindFirst(x => x.StringId == clanId);
+                if (clan == null)
+                {
+                    InformationManager.DisplayMessage(new InformationMessage($"Error: Clan '{clanId}' not found for Witch Lord '{witchLordCharacterId}'.", Colors.Red));
+                    return null;
+                }
+
+                if (!clan.IsBanditFaction && !clan.IsMinorFaction && !FactionManager.IsAtWarAgainstFaction(clan, Hero.MainHero.MapFaction))
+                {
+                    InformationManager.DisplayMessage(new InformationMessage($"Warning: Witch Lord Clan '{clanId}' is not hostile to the player.", Colors.Yellow));
+                }
+
+                // ✅ Create bandit-style party like Demon Lords
+                MobileParty party = BanditPartyComponent.CreateBanditParty($"vortiak_witch_party_{witchLordCharacterId}", clan, null, true);
+                if (party == null)
+                {
+                    InformationManager.DisplayMessage(new InformationMessage($"Error: Failed to create party for Witch Lord clan '{clanId}'.", Colors.Red));
+                    return null;
+                }
+
+                TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
+                CharacterObject leaderCharacter = CharacterObject.Find(witchLordCharacterId);
+                if (leaderCharacter == null)
+                {
+                    InformationManager.DisplayMessage(new InformationMessage($"Error: Character '{witchLordCharacterId}' not found for Witch Lord.", Colors.Red));
+                    party.RemoveParty();
+                    return null;
+                }
+
+                // ✅ DO NOT assign party leader (matches Demon Lords)
+                troopRoster.AddToCounts(leaderCharacter, 1);
+
+                foreach (var troopDetail in troopDetails)
+                {
+                    CharacterObject troop = CharacterObject.Find(troopDetail.TroopId);
+                    if (troop == null)
+                    {
+                        InformationManager.DisplayMessage(new InformationMessage($"Warning: Troop '{troopDetail.TroopId}' not found for Witch Lord party '{witchLordCharacterId}'.", Colors.Yellow));
+                        continue;
+                    }
+                    troopRoster.AddToCounts(troop, troopDetail.Quantity);
+                }
+
+                if (troopRoster.GetTroopCount(leaderCharacter) == 0)
+                    troopRoster.AddToCounts(leaderCharacter, 1);
+
+                Settlement fixedSpawnSettlement = Settlement.Find("town_S2");
+                Vec2 spawnPosition = fixedSpawnSettlement?.Position2D ?? spawnSettlement.Position2D;
+
+                party.InitializeMobilePartyAroundPosition(
+                    troopRoster,
+                    TroopRoster.CreateDummyTroopRoster(),
+                    spawnPosition,
+                    30f,
+                    10f
+                );
+
+                MobileParty? target = MobileParty.All
+                .Where(p =>
+                    p != party &&
+                    p.IsActive &&
+                    (p.IsLordParty || p.IsCaravan || p.IsBandit || p.IsMilitia || p.IsVillager) &&
+                    p.MapFaction != null &&
+                    FactionManager.IsAtWarAgainstFaction(party.MapFaction, p.MapFaction)
+                )
+                 .OrderBy(p => p.Position2D.DistanceSquared(party.Position2D))
+                   .FirstOrDefault();
+
+                if (target != null)
+                {
+                    party.Ai.SetMoveEngageParty(target);
+                    InformationManager.DisplayMessage(new InformationMessage($"Witch Lord party is attacking {target.Name}."));
+                }
+                else
+                {
+                    party.Ai.SetMovePatrolAroundPoint(spawnSettlement.Position2D); // fallback
+                }
+
+                party.ActualClan = clan;
+                party.SetCustomName(new TextObject($"Vortiak Coven ({leaderCharacter.Name})"));
+                party.Aggressiveness = 10f;
+                party.Party.SetVisualAsDirty();
+               
+                InformationManager.DisplayMessage(new InformationMessage($"A Vortiak Witch Lord coven led by {leaderCharacter.Name} has been sighted near {spawnSettlement.Name}.", Colors.Red));
+                return party;
+            }
+            catch (Exception ex)
+            {
+                InformationManager.DisplayMessage(new InformationMessage($"Exception creating Witch Lord Party ({witchLordCharacterId}): {ex.Message}", Colors.Red));
+                return null;
+            }
+        }
+
 
         // ------------------------------------------------------
         // DRUID DIALOG - no Settlement check, since we open it from the campaign map
@@ -352,13 +673,14 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 // Example: dwarven armor set
                 GivePlayerArmorSet(new List<string>
                 {
-                    "dwarf_lord_gen_helmet_a",
-                    "dwarf_lord_gen_armor_a",
-                    "dwarf_lord_gen_gautlets_a",
-                    "dwarf_lord_gen_boots_a"
+                    "sk_dwarf_erebor_helmet_plate_elite_a",
+                    "sk_dwarf_erebor_chest_plate_elite_a",
+                    "sk_dwarf_erebor_bracers_elite_a",
+                    "sk_dwarf_erebor_boots_med_b",
+                    "sk_dwarf_erebor_pauldron_plate_elite_a"
                 });
 
-                
+
                 // Add the travel objective log: "Go to the Ruined Temple"
                 travelObjectiveLog = AddDiscreteLog(
                     GameTexts.FindText("rf_seventh_quest_travel_log"),
@@ -370,10 +692,20 @@ namespace RealmsForgotten.Quest.FourthUpdate
                     "You have received dwarven armor and learned the temple’s location. Head to the Vortiak Lair!",
                     null,
                     true,
-                    "demonic_horde"
+                    "huntthewitch"
                 );
             })
             .CloseDialog();
+
+        private void StartFindVortiakLairObjective()
+        {
+            vortiakLairLog = AddDiscreteLog(
+                GameTexts.FindText("rf_seventh_quest_lair_log"),
+                GameTexts.FindText("rf_seventh_quest_lair_task"),
+                0, 1
+            );
+
+        }
 
         // ------------------------------------------------------
         // Checks distance to Ruined Temple, spawns interceptor, etc.
@@ -488,85 +820,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 InformationManager.DisplayMessage(new InformationMessage($"Added {detail.Quantity} {troop.Name} to your party (non-counted)."));
             }
         }
-
-        private void SpawnVortiakClanParty()
-        {
-            // 1) Get origin settlement and culture
-            Settlement originSettlement = Settlement.Find("town_S1") ?? Settlement.FindFirst(s => s.IsTown);
-            if (originSettlement == null)
-            {
-                InformationManager.DisplayMessage(new InformationMessage("Origin settlement not found.", Colors.Red));
-                return;
-            }
-
-            CultureObject sturgiaCulture = MBObjectManager.Instance.GetObject<CultureObject>("sturgia");
-            if (sturgiaCulture == null)
-            {
-                InformationManager.DisplayMessage(new InformationMessage("Sturgia culture not found.", Colors.Red));
-                return;
-            }
-
-            Kingdom sturgiaKingdom = Kingdom.All.FirstOrDefault(k => k.StringId == "sturgia");
-
-            // 2) Create Vortiak hero
-            Hero vortiakHero = HeroCreator.CreateSpecialHero(
-                CharacterObject.PlayerCharacter,
-                originSettlement,
-                null,
-                null
-            );
-            vortiakHero.Culture = sturgiaCulture;
-            vortiakHero.ChangeState(Hero.CharacterStates.Active);
-            vortiakHero.SetName(new TextObject("Vortiak Lord"), new TextObject("Vortiak Lord"));
-
-            // 3) Create clan
-            Clan vortiakClan = Clan.CreateClan(
-                "vortiak",
-                originSettlement,
-                vortiakHero,
-                sturgiaKingdom,
-                sturgiaCulture,
-                new TextObject("Vortiak Clan"),
-                4,
-                0
-            );
-
-            // 4) Create party with spawn parameters
-            MobileParty vortiakParty = LordPartyComponent.CreateLordParty(
-                "vortiak_army",
-                vortiakHero,
-                MobileParty.MainParty.Position2D, // Spawn near the player
-                10f, 
-                originSettlement,               // Home settlement
-                vortiakHero                     // Party owner
-            );
-
-            // 5) Add troops
-            if (VortiakArmies.TryGetValue("rf_vortiak_army", out var vortiakTroops))
-            {
-                foreach (var detail in vortiakTroops)
-                {
-                    CharacterObject troop = MBObjectManager.Instance.GetObject<CharacterObject>(detail.TroopId);
-                    if (troop != null)
-                    {
-                        vortiakParty.MemberRoster.AddToCounts(troop, detail.Quantity);
-                    }
-                }
-            }
-
-
-            if (MobileParty.MainParty.Army != null)
-            {
-                vortiakParty.Army = MobileParty.MainParty.Army;
-                InformationManager.DisplayMessage(new InformationMessage("Vortiak Party has joined your army!"));
-            }
-                      
-            vortiakParty.Ai.SetMoveEscortParty(MobileParty.MainParty);
-
-            InformationManager.DisplayMessage(new InformationMessage("Vortiak party has joined your army!"));
-        }
-
-
+        
         private void OnMobilePartyDestroyed(MobileParty party, PartyBase destroyer)
         {
             if (_interceptorParty != null && party == _interceptorParty)
@@ -590,23 +844,47 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 }
                 OpenOwlRebelionDialogue();
             }
+
+            if (_witchFinalArmy != null && party == _witchFinalArmy)
+            {
+                // Always show the Witch defeated notification, no matter the path!
+                ShowWitchDefeatedNotification();
+                if (priestessArmyLog != null && priestessArmyLog.CurrentProgress == 0)
+                {
+                    priestessArmyLog.UpdateCurrentProgress(1);
+                }
+            }
         }
 
-        private void StartNecromancerDialogue()
+        private DialogFlow InterceptorEncounterDialogue => DialogFlow.CreateDialogFlow("interceptor_encounter", 120)
+    .NpcLine("Steel your hearts! The Vortiaks spring their ambush!")
+    .Condition(() => PlayerEncounter.EncounteredParty == _interceptorParty.Party)
+    .BeginPlayerOptions()
+        .PlayerOption("Stand and fight!")
+            .NpcLine("So be it—blood will flow!")
+             .Consequence(() =>
+             {
+                 // Optional: Set quest flags or start battle
+                 // e.g., PlayerEncounter.StartBattle();
+             })
+    .EndPlayerOptions()
+    .CloseDialog();
+
+       private void StartNecromancerDialogue()
         {
-            
+
             CharacterObject necroChar = CharacterObject.Find("vortiak_mounted_necromancer_lord");
             if (necroChar != null)
             {
                 // Register the necromancer flow
                 Campaign.Current.ConversationManager.AddDialogFlow(NecromancerDialogue, this);
-                
+
                 // Force conversation on campaign map
                 CampaignMapConversation.OpenConversation(
                     new ConversationCharacterData(CharacterObject.PlayerCharacter),
                     new ConversationCharacterData(necroChar)
                 );
-                
+
             }
             else
             {
@@ -629,10 +907,10 @@ namespace RealmsForgotten.Quest.FourthUpdate
              {
                  interceptorDefeatLog?.UpdateCurrentProgress(1);
                  InformationManager.DisplayMessage(new InformationMessage("Fight the Vortiaks!"));
-                
+
              })
              .CloseDialog();
-               
+
 
         private DialogFlow OwlRebelionDialog => DialogFlow.CreateDialogFlow("start", 115)
           .NpcLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_1")).Condition(() => owlRebellionlLog?.CurrentProgress == 0 &&
@@ -644,13 +922,13 @@ namespace RealmsForgotten.Quest.FourthUpdate
             .PlayerLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_4"))
             .NpcLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_5"))
              .PlayerLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_6"))
-            .Consequence(() => 
-             {
-                 owlRebellionlLog?.UpdateCurrentProgress(1);
-                 StartBossBattleObjective();
-             })
+            .Consequence(() =>
+            {
+                owlRebellionlLog?.UpdateCurrentProgress(1);
+                StartBossBattleObjective();
+            })
           .CloseDialog()
-         // ⚔️ Player chooses to betray the Elveans and join the Vortiaks
+        // ⚔️ Player chooses to betray the Elveans and join the Vortiaks
         .PlayerOption(GameTexts.FindText("rf_seventh_quest_owl_dialog_7"))
         .NpcLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_8"))
         .PlayerLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_9"))
@@ -659,11 +937,10 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
             .Consequence(() =>
             {
-            _playerChoseToDestroyElveans = true;
-            owlRebellionlLog?.UpdateCurrentProgress(1);
-            SpawnVortiakClanParty();
-            StartDestroyElveanObjective();
-             })
+                _playerChoseToDestroyElveans = true;
+                owlRebellionlLog?.UpdateCurrentProgress(1);
+                StartDestroyElveanObjective();
+            })
           .CloseDialog()
           .EndPlayerOptions()
            .CloseDialog();
@@ -696,50 +973,138 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 0, 1
             );
             QuestUIManager.ShowNotification(
-                "Your next objective is to defeat the priest of darkness. Seek out the Vortiak Priestess!",
+                "Your next objective is to defeat the Queen of Darkness. Seek out the Vortiak Priestess!",
                 null,
                 true,
-                "demon_fight_scaled"
+                "huntthewitch"
             );
         }
 
-        private void OnHeroKilled(Hero victim, Hero killer, KillCharacterAction.KillCharacterActionDetail detail, bool someFlag)
+        private DialogFlow PostBattleWitchDialog => DialogFlow.CreateDialogFlow("start", 125)
+         .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_1")) // "You think this ends with me bleeding on the floor?"
+         .Condition(() => bossBattleLog?.CurrentProgress == 2 && CharacterObject.OneToOneConversationCharacter?.StringId == "evil_witch")
+         .PlayerLine(GameTexts.FindText("rf_seventh_quest_witch_final_2")) // "You’ve lost, Witch. This land will be free of your poison."
+         .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_3")) // "Foolish mortal. You’ve only shattered the vessel. The storm is still coming."
+         .PlayerLine(GameTexts.FindText("rf_seventh_quest_witch_final_4")) // "We will face whatever comes. And we will win."
+         .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_5")) // "Then prepare your grave, champion. My children are not done yet..."
+         .Consequence(() =>
+         {
+             StartFinalWitchArmySequence();
+         })
+         .CloseDialog();
+
+        private void StartFinalWitchArmySequence()
         {
-            if (victim != null && victim.StringId == "vortiak_priest_boss")
-            {
-                OnBossDefeated();
-            }
+            priestessArmyLog = AddDiscreteLog(
+                GameTexts.FindText("rf_seventh_quest_priestess_army_log"),
+                GameTexts.FindText("rf_seventh_quest_priestess_army_task"),
+                0, 1
+            );
+            SpawnAllWitchLords();
+            bossBattleLog?.UpdateCurrentProgress(3);
         }
 
-        private void OnBossDefeated()
+        private DialogFlow WitchFinalEncounterDialogue => DialogFlow.CreateDialogFlow("start", 125)
+     .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_6"))
+     .Condition(() => !_witchConversationCompleted
+           && priestessArmyLog?.CurrentProgress == 0
+           && PlayerEncounter.EncounteredParty?.MobileParty?.StringId.StartsWith("vortiak_witch_party") == true)
+     // 🧠 Persuasion Fork: Begin Choices
+     .BeginPlayerOptions()
+     .PlayerOption(GameTexts.FindText("rf_seventh_quest_witch_final_7"))
+     .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_8"))
+     .PlayerLine(GameTexts.FindText("rf_seventh_quest_witch_final_9"))
+     .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_10"))
+     .Consequence(() =>
+     {
+         _witchConversationCompleted = true;
+         _playerChoseToDestroyElveans = true;
+          StartDestroyElveanObjective();
+        
+
+     })
+         .CloseDialog()
+
+      // 🛡 Option 2: Reject her offer and remain honorable
+      .PlayerOption(GameTexts.FindText("rf_seventh_quest_witch_final_11"))
+     .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_12"))
+     .PlayerLine(GameTexts.FindText("rf_seventh_quest_witch_final_13"))
+     .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_14"))
+         .Consequence(() =>
+         {
+             _witchConversationCompleted = true;
+         })
+            .CloseDialog()
+          .EndPlayerOptions()
+           .CloseDialog();
+
+       
+        private void RemoveEvilWitchFromPrisoners()
         {
-            if (bossBattleLog != null && bossBattleLog.CurrentProgress < 1)
+            var prison = MobileParty.MainParty.PrisonRoster;
+            if (prison == null) return;
+
+            var witch = CharacterObject.Find("vortiak_witch_boss");
+            if (witch == null)
             {
-                bossBattleLog.UpdateCurrentProgress(1);
+                InformationManager.DisplayMessage(new InformationMessage("Error: Evil Witch character not found."));
+                return;
             }
-            InformationManager.ShowInquiry(new InquiryData(
-                "Final Trial Conquered",
-                "You have defeated the priest of darkness! The land is freed from his blight.",
-                true, false, "Continue", null, null, null
-            ));
-            CompleteQuestWithSuccess();
+
+            int witchCount = prison.GetTroopCount(witch);
+            if (witchCount > 0)
+            {
+                prison.AddToCounts(witch, -witchCount);
+                InformationManager.DisplayMessage(new InformationMessage("The Evil Witch has escaped from your prisoners."));
+            }
+        }
+        private void ShowWitchDefeatedNotification()
+        {
+            QuestUIManager.ShowNotification(
+                   "The corpses amount by thousands, and the sky seemed to be red reflecting the blood on the ground. As the ones survived prayed in gratitude, a strange shadow formed amidst the dead bodies.",
+                ShowTreatyNotification,
+                true,
+                "postwitchfight"   // your custom sprite
+            );
+        }
+
+        private void ShowTreatyNotification()
+        {
+            QuestUIManager.ShowNotification(
+                "In a twisted blurry shape it rose up above you, a strange light within it staring at you as flickering eyes. She is not dead,” said the Owl. “Her spirit prevails.",
+                ShowOwlNotification,
+                true,
+                "watchtheshadow"
+            );
+        }
+
+        private void ShowOwlNotification()
+        {
+            QuestUIManager.ShowNotification(
+                "But from within the shadow, a dark winged creature took shape. With incredible speed, it flew towards the highest mountain peak, fading from sight.",
+                ShowFinalNotification,
+                true,
+                "flyingshadow"
+            );
+        }
+
+        private void ShowFinalNotification()
+        {
+            QuestUIManager.ShowNotification(
+                "As it desappears into the horizon, a sense of fulfillment lay mixed in your heart with an underlying feeling of despair. Now you celebrate, cause you have defeated this evil. But for how long?",
+                FinalizeSeventhQuestSuccess,
+                true,
+                "witchdefeat"
+            );
         }
 
         private void StartDestroyElveanObjective()
         {
-                elveanDestructionObjectiveLog = AddDiscreteLog(
-                GameTexts.FindText("rf_seventh_quest_elven_destruction_log"),
-                GameTexts.FindText("rf_seventh_quest_elven_destruction_task"),
-                0, 1
-            );
-
-            QuestUIManager.ShowNotification(
-                "You have chosen to ally with the Vortiaks! Your new objective: Destroy the Elveans.",
-                null,
-                true,
-                "demon_hordes_marching"
-            );
-
+            elveanDestructionObjectiveLog = AddDiscreteLog(
+            GameTexts.FindText("rf_seventh_quest_elven_destruction_log"),
+            GameTexts.FindText("rf_seventh_quest_elven_destruction_task"),
+            0, 1
+        );
             InformationManager.DisplayMessage(new InformationMessage("You have chosen to destroy the Elveans!"));
 
             _shouldTriggerOwlDialogue = true;
@@ -756,18 +1121,306 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
                     InformationManager.ShowInquiry(new InquiryData(
                         "Elveans Destroyed!",
-                        "The Elveans have been wiped out. The Vortiaks now rule unchallenged.",
-                        true, false, "Continue", null, null, null
-                    ));
+                        "The Elveans have been wiped out. The Vortiaks are now free to rise!",
+                        true, false, "Continue", null, null, () =>
+                        {
+                            // 🔥 Now that they are truly dead, spawn the Dark Kingdom
+                            SpawnDarkElveanKingdom();
 
-                    CompleteQuestWithSuccess();
+                            // Finish the dark path
+                            InformationManager.ShowInquiry(new InquiryData(
+                                "Revenge Successfull",
+                                "The Vortiaks have been avenged under your leadership!",
+                                true, false, "Continue", null, null, null
+                            ));
+
+                            Hero.MainHero.Clan.Renown += 450;
+                            Clan.PlayerClan.Influence += 1000f;
+                            Hero.MainHero.Gold += 500000;
+                            ApplyDarkPathConsequences();
+                        }
+                    ));
                 }
             }
+        }
+
+        private void FinalizeSeventhQuestSuccess()
+        {
+            CreateNewVortiaksKingdom(); 
+                
+            _deformedPartySpawnCount = 0;
+            deformedSpawningEnabled = true;
+            _nextDeformedSpawnTime = CampaignTime.DaysFromNow(3);
+            if (Campaign.Current.GetCampaignBehavior<AlignmentWarBehavior>() is { } behavior)
+                behavior.StartGlobalAlignmentWar();
+            _shouldCleanupPartiesNextTick = true;
+           
+            if (_playerChoseToDestroyElveans)
+            {
+                InformationManager.ShowInquiry(new InquiryData(
+                    "Dark Path Unlocked",
+                    "You have chosen to destroy the Elveans. Their downfall now depends on your actions!",
+                    true, false, "Continue", null, null, null
+                ));
+            }
+            else
+            {
+                InformationManager.ShowInquiry(new InquiryData(
+                    "The Vortiak Mystery Has Been Unveiled!",
+                    "The defeat of the Vortiak Priestess has not brought peace to the land as expected. All kingdoms are now aware of the Vortiaks’ and the Elvish kind’s shared past, and the war that followed. As a result, the Elveans have lost prestige, and their claim to rightful inheritance of the land they rule is now in question. That triggered a war between kingdoms, some decided to backup the Elveans while others took the side of the Dreadrealms. The Dreadking took the Owl under his banner and granted him a castle, making him a lord of his own clan. But only you and the Owl know the truth — that the Vortiak Priestess still lives, somewhere. You chose to remain silent, leaving her fate to the gods, uncertain if or when she will return.",
+                    true, false, "Continue", null, null, null
+                ));
+
+                Hero.MainHero.Clan.Renown += 1000;
+                Clan.PlayerClan.Influence += 1000f;
+                Hero.MainHero.Gold += 500000;
+            }
+
+            AddLog(GameTexts.FindText("rf_seventh_quest_completed_log"));
+            priestessArmyLog?.UpdateCurrentProgress(2);
+           
+            CompleteQuestWithSuccess();
+            CampaignEvents.DailyTickEvent.ClearListeners(this);
+            CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, DeformedPostQuestTick);
+        }
+        private void DeformedPostQuestTick()
+        {
+            if (_shouldCleanupPartiesNextTick)
+            {
+                _shouldCleanupPartiesNextTick = false; // prevent repeating
+                CleanupDevilsAndNelrogParties(); // ← your cleanup logic
+            }
+            if (_deformedPartySpawnCount >= 3)
+            {
+                // Optional: remove if you want it to end after 3
+                CampaignEvents.DailyTickEvent.ClearListeners(this);
+                return;
+            }
+
+            if (CampaignTime.Now >= _nextDeformedSpawnTime)
+            {
+                SpawnDeformedParties();
+                _nextDeformedSpawnTime = CampaignTime.DaysFromNow(60);
+            }
+        }
+        private void ApplyDarkPathConsequences()
+        {
+            foreach (Kingdom kingdom in Kingdom.All)
+            {
+                string cultureId = kingdom.Culture.StringId;
+
+                if (cultureId != "sturgia" && cultureId != "aserai" && cultureId != "urkhai")
+                {
+                    // Reduce relation with their leaders
+                    if (kingdom.Leader != null)
+                    {
+                        Hero.MainHero.SetPersonalRelation(kingdom.Leader, -200);
+                    }
+
+                    // Declare war
+                    if (!FactionManager.IsAtWarAgainstFaction(Hero.MainHero.MapFaction, kingdom))
+                    {
+                        FactionManager.DeclareWar(Hero.MainHero.MapFaction, kingdom);
+                    }
+                }
+            }
+
+            InformationManager.DisplayMessage(new InformationMessage(
+                "You have declared war on the realms of Aeurth (except for Sturgia, Aserai, and Urkhai). Relations have worsened.", Colors.Red));
+            
+        }       
+
+        private void SpawnDeformedParties()
+        {
+            try
+            {
+                Clan deformedClan = Clan.FindFirst(c => c.StringId == "deformed_villagers");
+                if (deformedClan == null)
+                {
+                    InformationManager.DisplayMessage(new InformationMessage("❌ Deformed clan not found."));
+                    return;
+                }
+
+                var hideouts = Hideout.All
+                    .Where(h => h.IsInfested && h.Settlement != null)
+                    .OrderBy(_ => MBRandom.RandomInt())
+                    .Take(10);
+
+                foreach (var hideout in hideouts)
+                {
+                    SpawnDeformedParty(hideout, deformedClan);
+                }
+
+                _deformedPartySpawnCount++;
+
+                InformationManager.ShowInquiry(new InquiryData(
+                    "Reports of attacks are growing!",
+                    "Twisted hosts have been spotted attacking villagers and caravans.",
+                    true, false, "Close", null, null, null
+                ));
+
+                InformationManager.DisplayMessage(new InformationMessage($"✅ Deformed Villager parties spawned. Total spawns: {_deformedPartySpawnCount}"));
+            }
+            catch (Exception ex)
+            {
+                InformationManager.DisplayMessage(new InformationMessage($"❌ Exception spawning Deformed parties: {ex.Message}", Colors.Red));
+            }
+        }
+
+        private void SpawnDeformedParty(Hideout hideout, Clan clan)
+        {
+            try
+            {
+                string partyId = $"deformed_party_{hideout.Settlement.StringId}_{MBRandom.RandomInt(10000, 99999)}";
+                MobileParty party = BanditPartyComponent.CreateBanditParty(partyId, clan, hideout, true);
+
+                if (party == null)
+                {
+                    InformationManager.DisplayMessage(new InformationMessage($"❌ Failed to create party for hideout: {hideout.Settlement.Name}."));
+                    return;
+                }
+
+                TroopRoster roster = TroopRoster.CreateDummyTroopRoster();
+
+                CharacterObject boss = CharacterObject.Find("deformed_villager_boss");
+                if (boss != null)
+                    roster.AddToCounts(boss, 1);
+
+                CharacterObject troop = CharacterObject.Find("deformed_villager_bandit");
+                if (troop != null)
+                    roster.AddToCounts(troop, 80);
+
+                party.InitializeMobilePartyAroundPosition(
+                    roster,
+                    TroopRoster.CreateDummyTroopRoster(),
+                    hideout.Settlement.Position2D,
+                    100f,
+                    10f
+                );
+
+                party.SetCustomName(new TextObject("Deformed Villagers"));
+                party.Aggressiveness = 100f;
+                party.SetPartyObjective(MobileParty.PartyObjective.Aggressive);
+                party.Ai.SetDoNotMakeNewDecisions(false);
+
+                var target = MobileParty.All
+                    .Where(p => p != party && p.IsActive && p.MapFaction != null && party.MapFaction != null && p.MapFaction.IsAtWarWith(party.MapFaction))
+                    .OrderBy(p => party.Position2D.DistanceSquared(p.Position2D))
+                    .FirstOrDefault();
+
+                if (target != null)
+                    party.Ai.SetMoveEngageParty(target);
+                else
+                    party.Ai.SetMovePatrolAroundPoint(hideout.Settlement.Position2D);
+
+                InformationManager.DisplayMessage(new InformationMessage($"✅ Deformed party spawned at {hideout.Settlement.Name}."));
+            }
+            catch (Exception ex)
+            {
+                InformationManager.DisplayMessage(new InformationMessage($"❌ Error spawning Deformed party: {ex.Message}"));
+            }
+        }
+
+        public void ShowEighthQuestPrompt()
+        {
+            InformationManager.ShowInquiry(new InquiryData(
+                "The Forest Whispers",
+                "The Priestess of the First Tree sent you a messenger to inform you about recent attacks on innocent people. She asks your help to unveil the reason.",
+                true, false,
+                "Continue", null,
+                () =>
+                {
+                    eighthPriestessLog = AddLog(GameTexts.FindText("rf_seventh_quest_outro"));
+
+                    Hero owl = Hero.FindFirst(h => h.StringId == "rf_the_owl");
+
+                    if (owl?.CharacterObject != null)
+                    {
+                        // ✅ Register the dialog BEFORE conversation
+                        Campaign.Current.ConversationManager.AddDialogFlow(PriestessEighthQuestDialog, this);
+
+                        // ✅ Then start the conversation (this sets OneToOneConversationHero automatically)
+                        CampaignMapConversation.OpenConversation(
+                            new ConversationCharacterData(CharacterObject.PlayerCharacter),
+                            new ConversationCharacterData(owl.CharacterObject)
+                        );
+                    }
+                    else
+                    {
+                        InformationManager.DisplayMessage(new InformationMessage("❌ Could not find 'The Owl' character for dialogue!", Colors.Red));
+                    }
+                },
+                null
+            ));
+        }
+
+
+        private DialogFlow PriestessEighthQuestDialog => DialogFlow.CreateDialogFlow("start", 125)
+     .NpcLine(new TextObject("My friend, we just received a messenger from the First Tree Priestess. She's concerned about reports of strange mutations attacking villagers."))
+     .Condition(() =>
+    CharacterObject.OneToOneConversationCharacter?.StringId == "rf_the_owl"
+    && eighthPriestessLog != null
+    && eighthPriestessLog.CurrentProgress == 0)
+     .PlayerLine(new TextObject("Mutations? We've already faced zombies and demons. What else could there possibly be?"))
+     .NpcLine(new TextObject("She wants us to find out. And to be honest... that worries me."))
+     .PlayerLine(new TextObject("Let’s not jump to conclusions just yet. We haven’t even seen them. Did she mention where we could find a trail?"))
+     .NpcLine(new TextObject("The message says the latest sightings occurred near the Tremerid Kingdom."))
+     .PlayerLine(new TextObject("Then the Mages... could they be involved? Let's investigate."))
+     .Consequence(() =>
+     {
+         eighthPriestessLog.UpdateCurrentProgress(1);
+         StartEighthQuest();
+         InformationManager.DisplayMessage(
+             new InformationMessage("🌳 You accepted the Owl’s call. The Eighth Quest has begun!")
+         );
+     })
+     .CloseDialog();
+
+        private void StartEighthQuest()
+        {
+            if (_eighthQuestStarted)
+                return;
+
+            EighthQuest newChapter = new EighthQuest("rf_seventh_quest_outro", QuestGiver, CampaignTime.DaysFromNow(999), 20000);
+            newChapter.StartQuest();
         }
 
         // ------------------------------------------------------
         // UTILITIES: TROOPS & ARMOR
         // ------------------------------------------------------
+
+        private void CleanupDevilsAndNelrogParties()
+        {
+            var partiesToRemove = MobileParty.All
+                .Where(p =>
+                    p != null &&
+                    p.IsActive &&
+                    !p.IsDisbanding &&
+                    p.MapEvent == null &&  // 🔒 Never remove if it's in a battle
+                    (
+                        (p.Name?.ToString().Contains("Devils Party") == true) ||
+                        (p.Name?.ToString().Contains("Demon Lord") == true) ||
+                        (p.StringId?.Contains("nelrogs") == true)
+                    )
+                )
+                .ToList();
+
+            foreach (var party in partiesToRemove)
+            {
+                try
+                {
+                    party.RemoveParty();
+                    InformationManager.DisplayMessage(new InformationMessage(
+                        $"❌ Removed party: {party.Name} ({party.StringId})"));
+                }
+                catch (Exception ex)
+                {
+                    InformationManager.DisplayMessage(new InformationMessage(
+                        $"⚠️ Failed to remove {party?.Name} ({party?.StringId}): {ex.Message}", Colors.Red));
+                }
+            }
+        }
+
         private void GivePlayerTroops(List<(string troopId, int troopCount)> troops)
         {
             foreach (var (troopId, troopCount) in troops)
@@ -810,6 +1463,167 @@ namespace RealmsForgotten.Quest.FourthUpdate
             }
         }
 
+        private void CreateNewVortiaksKingdom()
+        {
+            var sturgiaCulture = MBObjectManager.Instance.GetObject<CultureObject>("sturgia");
+            var sturgiaKingdom = Kingdom.All.FirstOrDefault(k => k.StringId == "sturgia");
+
+            if (sturgiaCulture == null || sturgiaKingdom == null)
+            {
+                InformationManager.DisplayMessage(new InformationMessage("❌ Could not find Sturgian culture or kingdom."));
+                return;
+            }
+
+            Hero theOwl = Hero.AllAliveHeroes.FirstOrDefault(h => h.StringId == "rf_the_owl");
+            if (theOwl == null)
+            {
+                InformationManager.DisplayMessage(new InformationMessage("❌ Could not find 'rf_the_owl'."));
+                return;
+            }
+
+            // Cleanly detach the Owl from any previous clan or kingdom
+            if (theOwl.Clan != null && theOwl.Clan.Heroes.Contains(theOwl))
+                theOwl.Clan.Heroes.Remove(theOwl);
+
+            if (theOwl.Clan?.Kingdom != null)
+                theOwl.Clan.Kingdom.Clans.Remove(theOwl.Clan);
+
+            theOwl.Clan = null;
+
+            theOwl.SetName(new TextObject("The Owl"), new TextObject("The Owl"));
+
+            uint primaryColor = 0xff0B0C11;
+            uint secondaryColor = 0xffCEDAE7;
+            string bannerKey = "3.116.41.1140.1445.779.774.1.0.-91.116.22.116.203.203.920.955.1.0.0.306.21.116.248.248.630.578.1.0.0";
+            Banner banner = new Banner(bannerKey, primaryColor, secondaryColor);
+
+            Clan newClan = MBObjectManager.Instance.CreateObject<Clan>("clan_newvortiaks");
+            TextObject clanName = new TextObject("Clan of the Vortiaks");
+            newClan.InitializeClan(clanName, clanName, sturgiaCulture, banner, new Vec2(0, 0), false);
+
+            // Set the Owl as leader and register hero properly
+            newClan.SetLeader(theOwl);
+            newClan.Heroes.Add(theOwl);
+            theOwl.Clan = newClan;
+
+            // Assign to Sturgia
+            newClan.Kingdom = sturgiaKingdom;
+            if (!sturgiaKingdom.Clans.Contains(newClan))
+                sturgiaKingdom.Clans.Add(newClan);
+
+            // Optional: give settlement ownership
+            var settlement = Settlement.Find("castle_S8");
+            if (settlement != null)
+            {
+                ChangeOwnerOfSettlementAction.ApplyByDefault(theOwl, settlement);
+                InformationManager.DisplayMessage(new InformationMessage($"✅ {settlement.Name} granted to The Owl."));
+            }
+
+            InformationManager.DisplayMessage(new InformationMessage("🛡️ The Owl now leads the Clan of the Vortiaks under the banner of Sturgia."));
+        }
+        private void SpawnDarkElveanKingdom()
+        {
+            try
+            {
+                // 1. Find the NPC template first
+                CharacterObject darkElveanTemplate = CharacterObject.Find("dark_elvean_lord");
+                if (darkElveanTemplate == null)
+                {
+                    InformationManager.DisplayMessage(new InformationMessage("❌ Could not find 'dark_elvean_lord' template.", Colors.Red));
+                    return;
+                }
+
+                // 2. Create the main Hero from Template
+                Hero darkElveanHero = HeroCreator.CreateSpecialHero(
+                    darkElveanTemplate,
+                    Settlement.FindFirst(x => x.IsTown),
+                    null, null,
+                    30 // starting age
+                );
+
+                darkElveanHero.ChangeState(Hero.CharacterStates.Active);
+                darkElveanHero.SetName(new TextObject("Lord Varakar"), new TextObject("Lord Varakar of the Dark Elveans"));
+
+                // 3. Create a custom Banner (you can paste your own!)
+                string customBannerKey = "35.116.100.1140.1445.779.774.1.0.-91.434.121.116.240.240.920.955.1.0.0.407.121.116.248.248.630.578.1.0.0"; // <<< change this manually!
+                uint primaryColor = 0xff332c4d;
+                uint secondaryColor = 0xffFDE217;
+                Banner customBanner = new Banner(customBannerKey, primaryColor, secondaryColor);
+
+                // 4. Create the Clan
+                Clan darkElveanClan = MBObjectManager.Instance.CreateObject<Clan>("clan_dark_elveans");
+                darkElveanClan.InitializeClan(
+                    new TextObject("Dark Elveans"),
+                    new TextObject("Dark Elveans"),
+                    darkElveanHero.Culture,
+                    customBanner,
+                    new Vec2(0, 0),
+                    false
+                );
+                darkElveanClan.SetLeader(darkElveanHero);
+                darkElveanHero.Clan = darkElveanClan;
+
+                // 5. Now spawn extra lords AFTER clan creation
+                for (int i = 0; i < 2; i++) // Adjust number if you want more
+                {
+                    Hero newLord = HeroCreator.CreateSpecialHero(
+                        darkElveanTemplate,
+                        Settlement.FindFirst(x => x.IsTown),
+                        null, null,
+                        MBRandom.RandomInt(28, 40)
+                    );
+
+                    newLord.SetName(new TextObject($"Varakar Lieutenant {i + 1}"), new TextObject($"Varakar Lieutenant {i + 1}"));
+                    newLord.Clan = darkElveanClan;
+                    newLord.ChangeState(Hero.CharacterStates.Active);
+
+                    darkElveanClan.Heroes.Add(newLord);
+
+                    InformationManager.DisplayMessage(new InformationMessage($"✅ Spawned {newLord.Name} into Dark Elveans Clan!"));
+                }
+
+                // 6. Create the Kingdom
+                Kingdom darkElveanKingdom = MBObjectManager.Instance.CreateObject<Kingdom>("kingdom_dark_elveans");
+                darkElveanKingdom.InitializeKingdom(
+                    new TextObject("Dark Elvean Dominion"),
+                    new TextObject("Dark Elvean Dominion"),
+                    darkElveanHero.Culture,
+                    customBanner,
+                    primaryColor,
+                    secondaryColor,
+                    Settlement.FindFirst(s => s.Culture.StringId == "battania" && s.IsTown),
+                    new TextObject("Dark King"),
+                    new TextObject("Dark King"),
+                    new TextObject("Dark Elveans")
+                );
+
+                Campaign.Current.Kingdoms.Add(darkElveanKingdom);
+
+                darkElveanKingdom.RulingClan = darkElveanClan;
+                darkElveanClan.Kingdom = darkElveanKingdom;
+
+                // 7. Capture former Elvean settlements (Battanian towns and castles)
+                var battaniaSettlements = Settlement.All
+                    .Where(s => s.Culture.StringId == "battania" && (s.IsTown || s.IsCastle))
+                    .ToList();
+
+                foreach (var settlement in battaniaSettlements)
+                {
+                    if (settlement.OwnerClan != null)
+                    {
+                        ChangeOwnerOfSettlementAction.ApplyByDefault(darkElveanHero, settlement);
+                        InformationManager.DisplayMessage(new InformationMessage($"🏰 {settlement.Name} seized by the Dark Elveans!"));
+                    }
+                }
+
+                InformationManager.DisplayMessage(new InformationMessage("✅ Dark Elvean Dominion has risen under Lord Varakar!"));
+            }
+            catch (Exception ex)
+            {
+                InformationManager.DisplayMessage(new InformationMessage($"❌ Exception spawning Dark Elvean Kingdom: {ex.Message}", Colors.Red));
+            }
+        }
+
         protected override void SetDialogs()
         {
             // Force-add our druid, dwarf king, necromancer flows. 
@@ -818,6 +1632,10 @@ namespace RealmsForgotten.Quest.FourthUpdate
             Campaign.Current.ConversationManager.AddDialogFlow(DwarfKingDialog, this);
             Campaign.Current.ConversationManager.AddDialogFlow(NecromancerDialogue, this);
             Campaign.Current.ConversationManager.AddDialogFlow(OwlRebelionDialog, this);
+            Campaign.Current.ConversationManager.AddDialogFlow(PostBattleWitchDialog, this);
+            Campaign.Current.ConversationManager.AddDialogFlow(InterceptorEncounterDialogue, this);
+            Campaign.Current.ConversationManager.AddDialogFlow(WitchFinalEncounterDialogue, this);
+            Campaign.Current.ConversationManager.AddDialogFlow(PriestessEighthQuestDialog, this);
         }
     }
 
@@ -834,3 +1652,5 @@ namespace RealmsForgotten.Quest.FourthUpdate
         }
     }
 }
+
+

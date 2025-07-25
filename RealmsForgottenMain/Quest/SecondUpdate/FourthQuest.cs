@@ -6,6 +6,7 @@ using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.Conversation;
 using TaleWorlds.CampaignSystem.Conversation.Persuasion;
+using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.Extensions;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
@@ -13,6 +14,7 @@ using TaleWorlds.CampaignSystem.Party.PartyComponents;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
+using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
@@ -116,28 +118,33 @@ namespace RealmsForgotten.Quest.SecondUpdate
             if (QuestGiver.IsActive && GetDistanceFromQuestGiver() <= initialDistanceFromQuestGiver * 0.7 && takeBossToLordLog?.CurrentProgress == 0)
             {
                 takeBossToLordLog?.UpdateCurrentProgress(1);
-                Clan hellboundClan =
-                    Clan.FindFirst(x => x.StringId == "cs_nelrog_raiders");
 
-                MobileParty hellboundParty = BanditPartyComponent.CreateBanditParty("quest_hellbound_party", hellboundClan, null,
-                    true);
+                Clan hellboundClan = Clan.FindFirst(x => x.StringId == "cs_nelrog_raiders");
+                MobileParty hellboundParty = BanditPartyComponent.CreateBanditParty("quest_hellbound_party", hellboundClan, null, true);
+                TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
+                string[] units = { "cs_nelrog_bandits_bandit", "cs_nelrog_bandits_raider", "cs_nelrog_bandits_chief" };
 
-                TroopRoster hellBoundTroopRoster = TroopRoster.CreateDummyTroopRoster();
-
-                string[] characters = new[] { "cs_nelrog_bandits_bandit", "cs_nelrog_bandits_raider", "cs_nelrog_bandits_chief" };
-                hellBoundTroopRoster.AddToCounts(CharacterObject.Find("cs_nelrog_bandits_boss"), 1);
+                troopRoster.AddToCounts(CharacterObject.Find("cs_nelrog_bandits_boss"), 1);
                 for (int i = 0; i < 60; i++)
-                {
-                    hellBoundTroopRoster.AddToCounts(CharacterObject.Find(characters.GetRandomElement()), 1);
-                }
+                    troopRoster.AddToCounts(CharacterObject.Find(units.GetRandomElement()), 1);
 
-                hellboundParty.InitializeMobilePartyAtPosition(hellBoundTroopRoster,
-                    TroopRoster.CreateDummyTroopRoster(), MobileParty.MainParty.Position2D);
+                Vec2 spawnPos = MobileParty.MainParty.Position2D;
+                hellboundParty.InitializeMobilePartyAtPosition(troopRoster, TroopRoster.CreateDummyTroopRoster(), spawnPos);
 
-                hellboundParty.IgnoreForHours(24);
                 hellboundParty.Ai.SetMoveEngageParty(MobileParty.MainParty);
+                hellboundParty.IgnoreForHours(0.2f);
+                hellboundParty.SetCustomName(new TextObject("{=rf_hellbound_party}Hellbound Raiders"));
+                hellboundParty.Aggressiveness = 100f;
+
+                // Force battle
+                if (PlayerEncounter.Current == null)
+                {
+                    PlayerEncounter.RestartPlayerEncounter(hellboundParty.Party, MobileParty.MainParty.Party, true);
+                    PlayerEncounter.StartBattle();
+                }
             }
 
+            // 👇 this block must be OUTSIDE of the one above
             if (GetDistanceFromMonastery() <= initialDistanceToMonastery * 0.7 && takeBossToLordLog?.CurrentProgress == 3)
             {
                 takeBossToLordLog.UpdateCurrentProgress(4);

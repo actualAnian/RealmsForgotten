@@ -14,7 +14,8 @@ namespace RealmsForgotten.AiMade.Patches
     [HarmonyPatch(typeof(HeroCreator), "DeliverOffSpring")]
     internal class DeliverOffspringPatch
     {
-        private static readonly string LogFilePath = @"C:\Users\gupol\Desktop\Birthlog.txt"; // Custom file path
+        // Logging disabled for performance
+        // private static readonly string LogFilePath = @"C:\Users\gupol\Desktop\Birthlog.txt";
 
         [HarmonyPrefix]
         private static void Prefix(Hero mother, Hero father, bool isOffspringFemale, ref (int, int) __state)
@@ -26,7 +27,8 @@ namespace RealmsForgotten.AiMade.Patches
             ((BasicCharacterObject)mother.CharacterObject).Race = 0;
             ((BasicCharacterObject)father.CharacterObject).Race = 0;
 
-            // Logging to file & game messages
+            // In-game message and file log removed for performance
+            /*
             if (mother != null && father != null)
             {
                 string motherFaction = mother.Clan?.Kingdom?.Name?.ToString() ?? "No Faction";
@@ -36,15 +38,16 @@ namespace RealmsForgotten.AiMade.Patches
                                   $"Mother: {mother.Name} (ID: {mother.StringId}, Race: {__state.Item1}, Culture: {mother.Culture?.Name}, Faction: {motherFaction}) | " +
                                   $"Father: {father.Name} (ID: {father.StringId}, Race: {__state.Item2}, Culture: {father.Culture?.Name}, Faction: {fatherFaction})";
 
-                InformationManager.DisplayMessage(new InformationMessage(logEntry));
-                AppendToLogFile(logEntry);
+                // InformationManager.DisplayMessage(new InformationMessage(logEntry));
+                // AppendToLogFile(logEntry);
             }
             else
             {
                 string errorLog = "[ERROR] One or both parents are null! Possible issue?";
-                InformationManager.DisplayMessage(new InformationMessage(errorLog, Colors.Red));
-                AppendToLogFile(errorLog);
+                // InformationManager.DisplayMessage(new InformationMessage(errorLog, Colors.Red));
+                // AppendToLogFile(errorLog);
             }
+            */
         }
 
         [HarmonyPostfix]
@@ -57,7 +60,8 @@ namespace RealmsForgotten.AiMade.Patches
             // Apply custom racial mix logic
             CharacterRacialMix.CreateForNewborn(__result);
 
-            // Logging to file & game messages
+            // In-game message and file log removed for performance
+            /*
             if (__result != null)
             {
                 string childFaction = __result.Clan?.Kingdom?.Name?.ToString() ?? "No Faction";
@@ -65,28 +69,22 @@ namespace RealmsForgotten.AiMade.Patches
                 string logEntry = $"[POSTFIX] Offspring Created -> " +
                                   $"Name: {__result.Name} (ID: {__result.StringId}, Culture: {__result.Culture?.Name}, Faction: {childFaction})";
 
-                InformationManager.DisplayMessage(new InformationMessage(logEntry, Colors.Green));
-                AppendToLogFile(logEntry);
+                // InformationManager.DisplayMessage(new InformationMessage(logEntry, Colors.Green));
+                // AppendToLogFile(logEntry);
             }
             else
             {
                 string errorLog = "[ERROR] Offspring creation failed! NULL offspring.";
-                InformationManager.DisplayMessage(new InformationMessage(errorLog, Colors.Red));
-                AppendToLogFile(errorLog);
+                // InformationManager.DisplayMessage(new InformationMessage(errorLog, Colors.Red));
+                // AppendToLogFile(errorLog);
             }
+            */
         }
 
+        // Logging method disabled
         private static void AppendToLogFile(string logEntry)
         {
-            try
-            {
-                string timestampedEntry = $"{DateTime.Now}: {logEntry}";
-                File.AppendAllText(LogFilePath, timestampedEntry + Environment.NewLine);  // ✅ Fixes "File does not exist" error
-            }
-            catch (Exception ex)
-            {
-                InformationManager.DisplayMessage(new InformationMessage($"[ERROR] Could not write to log file: {ex.Message}", Colors.Red));
-            }
+            // Disabled for performance
         }
     }
 }
