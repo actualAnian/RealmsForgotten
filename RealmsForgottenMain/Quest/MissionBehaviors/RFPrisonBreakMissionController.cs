@@ -32,7 +32,7 @@ using TaleWorlds.CampaignSystem.AgentOrigins;
 
 namespace RealmsForgotten.Quest.MissionBehaviors
 {
-    public class RFPrisonBreakMissionController : MissionLogic
+    public class RFPrisonBreakMissionController : TaleWorlds.MountAndBlade.MissionLogic
     {
         private const int PrisonerSwitchToAlarmedDistance = 3;
         private List<Agent> _guardAgents;

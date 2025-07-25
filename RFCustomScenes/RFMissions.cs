@@ -1,11 +1,11 @@
-﻿using RFCustomSettlements;
+﻿using BehaviorTreeWrapper;
+using RFCustomSettlements;
 using SandBox;
 using SandBox.Missions.MissionLogics;
 using SandBox.Missions.MissionLogics.Arena;
 using SandBox.View;
 using SandBox.View.Missions;
 using System;
-using System.Collections.Generic;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
@@ -72,7 +72,7 @@ namespace RealmsForgotten.RFCustomSettlements
                     SandBoxViewCreator.CreateMissionNameMarkerUIHandler(mission),
                     SandBoxViewCreator.CreateMissionConversationView(mission),
 
-                    //new BehaviorTreeMissionLogic()
+                    new BehaviorTreeMissionLogic()
                     }, true, true);
             }
         [MissionMethod]

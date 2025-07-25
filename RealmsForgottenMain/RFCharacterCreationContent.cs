@@ -9,7 +9,7 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 using TaleWorlds.Library;
-using RealmsForgotten.Managers;
+using RealmsForgotten.MissionLogic;
 using static RealmsForgotten.Globals;
 using TaleWorlds.ObjectSystem;
 using RealmsForgotten.CustomSkills;

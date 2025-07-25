@@ -17,6 +17,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\HuntableHerds\HuntableHerds.csproj" />
 	  <ProjectReference Include="..\RealmsForgottenMain\RealmsForgotten.csproj" />
+	  <ProjectReference Include="..\RFEffects\RFEffects.csproj" />
 	</ItemGroup>
 
 
@@ -29,6 +30,14 @@
 		<Reference Include="$(GameFolder)\Modules\Native\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.View.dll">
 			<HintPath>%(Identity)</HintPath>
 			<Private>False</Private>
+		</Reference>
+		
+		<Reference Include="BehaviorTrees">
+		  <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\RealmsForgotten\bin\Win64_Shipping_Client\BehaviorTrees.dll</HintPath>
+		</Reference>
+		
+		<Reference Include="BehaviorTreeWrapper">
+		  <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\RealmsForgotten\bin\Win64_Shipping_Client\BehaviorTreeWrapper.dll</HintPath>
 		</Reference>
 		
 		<Reference Include="$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.*.dll">

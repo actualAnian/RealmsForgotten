@@ -1,7 +1,7 @@
 ﻿using RealmsForgotten.AiMade.RF_Diplomacy;
 using RealmsForgotten.Quest.MissionBehaviors;
-using RealmsForgotten.Quest.SecondUpdate;
 using RealmsForgotten.Quest.UI;
+using RealmsForgotten.RFMissionLogic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,16 +16,11 @@ using TaleWorlds.CampaignSystem.Party.PartyComponents;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
-using TaleWorlds.Engine.GauntletUI;
-using TaleWorlds.GauntletUI.Data;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
 using TaleWorlds.SaveSystem;
-using TaleWorlds.ScreenSystem;
-using static RealmsForgotten.Quest.FourthUpdate.SeventhQuest;
-using static TaleWorlds.Core.ViewModelCollection.CharacterViewModel;
 
 
 
@@ -227,9 +222,31 @@ namespace RealmsForgotten.Quest.FourthUpdate
             CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, HourlyTick);
             CampaignEvents.MobilePartyDestroyed.AddNonSerializedListener(this, OnMobilePartyDestroyed);
             CampaignEvents.OnSettlementLeftEvent.AddNonSerializedListener(this, OnLeaveSettlement);
-            CampaignEvents.OnMissionStartedEvent.AddNonSerializedListener(this, OnMissionStarted);
+            //CampaignEvents.OnMissionStartedEvent.AddNonSerializedListener(this, OnMissionStarted);
             CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnMapEventEnded);
-            CampaignEvents.TickEvent.AddNonSerializedListener(this, OnTick);
+            CampaignEvents.TickEvent.AddNonSerializedListener(this, OnTick);            // behavior tree for the vortiak witch
+            CampaignEvents.OnMissionStartedEvent.AddNonSerializedListener(this, OnMissionStart);
+            CampaignEvents.SettlementEntered.AddNonSerializedListener(this, OnSettlementEntered);
+        }
+
+        private void OnSettlementEntered(MobileParty party, Settlement settlement, Hero hero)
+        {
+            if (party != MobileParty.MainParty 
+                || settlement.StringId != "vortiak_ruined_temple"
+                || interceptorDefeatLog?.CurrentProgress != 2 
+                || bossBattleLog?.CurrentProgress != 0) return;
+            Campaign.Current.SaveHandler.SaveAs("rfAutosave");
+        }
+
+        private void OnMissionStart(IMission Imission)
+        {
+            if (Imission is not Mission mission || 
+                Settlement.CurrentSettlement == null ||
+                mission.Scene?.GetName() != "evil_witch_fight") return;
+            if (interceptorDefeatLog?.CurrentProgress != 2 || bossBattleLog?.CurrentProgress != 0) return;
+            // add special behaviors for the mission
+            mission.AddMissionBehavior(new WitchFightSceneMissionLogic());
+            mission.AddMissionBehavior(new RFMissionSoundManager());
         }
 
         protected override void OnStartQuest()
@@ -395,20 +412,31 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
         }
 
-        private void OnMissionStarted(IMission imission)
-        {
-            if (imission is Mission mission)
-            {
-                if (Settlement.CurrentSettlement == witchHideout && mission.SceneName == "evil_witch_fight" && bossBattleLog?.CurrentProgress == 0)
-                {
-                    mission.AddMissionBehavior(new RecordDamageMissionLogic((victim, attacker, damage) =>
-                    {
-                        if (victim.Character?.StringId == "evil_witch" && damage >= victim.Health)
-                            bossBattleLog.UpdateCurrentProgress(1);
+        //private void OnMissionStarted(IMission imission)
+        //{
+        //    if (imission is Mission mission)
+        //    {
+        //        if (Settlement.CurrentSettlement == witchHideout && mission.SceneName == "evil_witch_fight" && bossBattleLog?.CurrentProgress == 0)
+        //        {
+        //            mission.AddMissionBehavior(new RecordDamageMissionLogic((victim, attacker, damage) =>
+        //            {
+        //                if (victim.Character?.StringId == "evil_witch" && damage >= victim.Health)
+        //                    bossBattleLog.UpdateCurrentProgress(1);
 
-                    }));
-                }
+        //            }));
+        //        }
+        //    }
+        //}
+        public static void OnWitchDefeated()
+        {
+            QuestBase? quest = Campaign.Current.QuestManager.Quests.FirstOrDefault(q => q.StringId == "rf_seventh_quest");
+            if (quest == null)
+            {
+                InformationManager.DisplayMessage(new InformationMessage("Seventh Quest not found!"));
+                return;
             }
+            SeventhQuest seventhQuest = (SeventhQuest)quest;
+            seventhQuest.bossBattleLog?.UpdateCurrentProgress(1);
         }
         private void OnLeaveSettlement(MobileParty mobileParty, Settlement settlement)
         {

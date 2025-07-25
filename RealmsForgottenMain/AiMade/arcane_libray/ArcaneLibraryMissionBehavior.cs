@@ -13,7 +13,7 @@ using TaleWorlds.ObjectSystem;
 
 namespace RealmsForgotten.AiMade.ArcaneLibrary
 {
-    public class ArcaneLibraryMissionBehavior : MissionLogic
+    public class ArcaneLibraryMissionBehavior : TaleWorlds.MountAndBlade.MissionLogic
     {
         private Dictionary<string, TextObject> _dialogueStrings = new(); // Initialize to avoid null warning
         private bool _npcSpawned = false;

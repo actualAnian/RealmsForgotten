@@ -81,7 +81,7 @@ namespace RealmsForgotten.AiMade
             IsDisabled = false;
         }
     }
-    public class KingsguardMissionBehavior : MissionLogic
+    public class KingsguardMissionBehavior : TaleWorlds.MountAndBlade.MissionLogic
     {
         private readonly KingsguardSaveDataBehavior _saveDataBehavior;
         private Formation _kingsguardFormation;

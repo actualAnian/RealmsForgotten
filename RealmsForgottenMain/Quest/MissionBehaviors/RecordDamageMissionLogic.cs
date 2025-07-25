@@ -3,7 +3,7 @@ using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.Quest.MissionBehaviors;
 
-public class RecordDamageMissionLogic : MissionLogic
+public class RecordDamageMissionLogic : TaleWorlds.MountAndBlade.MissionLogic
 {
             
     public RecordDamageMissionLogic(Action<Agent, Agent, int> agentHitAction)

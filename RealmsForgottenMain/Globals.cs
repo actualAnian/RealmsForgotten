@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RealmsForgotten.MissionLogic;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using TaleWorlds.CampaignSystem;
@@ -63,6 +64,8 @@ namespace RealmsForgotten
         public static bool IsUrkhai(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("urkhai"); }
         public static bool IsOrcbase(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("orc_base"); }
         public static bool IsEvilWitch(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("evil_witch"); }
+        public static bool IsBalrog(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("balrog"); }
+        
         internal static List<string>  PlayerSelectableRaces { get { return _playerSelectableRaces; } }
         private static List<string> _playerSelectableRaces = new() { "human", "elvean", "undead", "mull", "half_giant", "Xilantlacay", "dwarf", "urkhai" };
 

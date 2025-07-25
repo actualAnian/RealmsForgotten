@@ -20,10 +20,10 @@ namespace RealmsForgotten.Patches
     [HarmonyPatch(typeof(MissionCombatMechanicsHelper), "DecideAgentShrugOffBlow")]
     static class MissionCombatMechanicsHelperPatch
     {
-        // patch to prevent half-giants from being staggered
+        // patch to prevent half-giants and balrog from being staggered
         public static void Postfix(Agent victimAgent, ref bool __result)
         {
-            if (victimAgent.Character != null && victimAgent.Character.IsGiant())
+            if (victimAgent.Character != null && (victimAgent.Character.IsGiant() || victimAgent.Character.IsBalrog()))
             {
                 __result = true;
             };

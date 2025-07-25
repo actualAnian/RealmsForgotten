@@ -1,5 +1,5 @@
 using HarmonyLib;
-using RealmsForgotten.Managers;
+using RealmsForgotten.MissionLogic;
 using System;
 using System.Collections.Generic;
 using System.IO;

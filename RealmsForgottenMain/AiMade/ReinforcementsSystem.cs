@@ -417,7 +417,7 @@ namespace RealmsForgotten.AiMade
             Unknown
         }
 
-        public class ADODReinforcementsRunner : MissionLogic
+        public class ADODReinforcementsRunner : TaleWorlds.MountAndBlade.MissionLogic
         {
             public void RelationFilter(MobileParty party)
             {

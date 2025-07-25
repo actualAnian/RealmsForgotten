@@ -13,7 +13,7 @@ using TaleWorlds.ModuleManager;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.SaveSystem.Load;
 
-namespace RealmsForgotten.Managers
+namespace RealmsForgotten.MissionLogic
 {
     public class RFCampaignManager : MBGameManager
     {

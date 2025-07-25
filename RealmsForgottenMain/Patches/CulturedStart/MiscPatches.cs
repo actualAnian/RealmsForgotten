@@ -3,7 +3,7 @@ using System.Reflection;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterCreationContent;
-using RealmsForgotten.Managers;
+using RealmsForgotten.MissionLogic;
 using RealmsForgotten.Utility;
 using Helpers;
 using TaleWorlds.Localization;

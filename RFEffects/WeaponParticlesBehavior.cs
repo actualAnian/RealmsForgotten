@@ -19,7 +19,7 @@ using TaleWorlds.ObjectSystem;
 namespace RealmsForgotten.RFEffects
 {
 
-    internal class WeaponParticlesBehavior : MissionLogic
+    internal class WeaponParticlesBehavior : TaleWorlds.MountAndBlade.MissionLogic
     {
         private static bool dropLock;
         public override void OnAgentHit(Agent affectedAgent, Agent affectorAgent, in MissionWeapon affectorWeapon, in Blow blow, in AttackCollisionData attackCollisionData)

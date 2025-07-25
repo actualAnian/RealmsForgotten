@@ -175,7 +175,7 @@ namespace RealmsForgotten.Models
             int orc_base = FaceGen.GetRaceOrDefault("orc_base");
             // List of races that partake in the same logic
             List<int> standardRaces = new List<int> { thog, shaitan, kharach, brute };
-            List<int> specialRaces = new List<int> { bark, nurh, daimo, sillok, evil_witch };
+            List<int> specialRaces = new List<int> { bark, nurh, daimo, sillok };
 
             if (weapon.Item.ItemType == ItemObject.ItemTypeEnum.Polearm ||
                 weapon.Item.ItemType == ItemObject.ItemTypeEnum.TwoHandedWeapon ||

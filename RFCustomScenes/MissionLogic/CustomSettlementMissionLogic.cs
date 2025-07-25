@@ -22,14 +22,14 @@ using System.Text;
 using static RealmsForgotten.RFCustomSettlements.ExploreSettlementStateHandler;
 using static RealmsForgotten.RFCustomSettlements.CustomSettlementBuildData;
 using System.Threading.Tasks;
-using RFCustomSettlements;
 using HuntableHerds.Models;
-using SandBox.AI;
 using RFCustomSettlements.Quests;
-using System.ComponentModel;
-
+using BehaviorTreeWrapper;
+using BehaviorTreeWrapper.Tests;
+using RFCustomSettlements.BehaviorTrees;
 namespace RealmsForgotten.RFCustomSettlements
 {
+
     internal class CustomSettlementMissionLogic : MissionBehavior
     {
         private class UsedObject
@@ -216,6 +216,13 @@ namespace RealmsForgotten.RFCustomSettlements
                     HerdAgentComponent huntAgentComponent = herdBuildData.IsPassive ? new PassiveHerdAgentComponent(agent) : new AggressiveHerdAgentComponent(agent);
 
                     agent.AddComponent(huntAgentComponent);
+                    
+                    //BehaviorTrees.BTRegister.RegisterClass("ExampleTree", objects => ExampleTree.BuildTree(objects));
+                    //if (agent.Monster.StringId == "rat")
+                    //{
+                    //    //agent.AddComponent(new TestComponent(agent));
+                    //    agent.AddComponent(new BehaviorTreeAgentComponent(agent, "ExampleTree"));
+                    //}
 
                     for (int i = 0; i < 3; i++)
                     {
@@ -301,6 +308,14 @@ namespace RealmsForgotten.RFCustomSettlements
                         if (currentBanditData.ItemDropsData != null)
                             AddLootableComponent(currentBanditData.ItemDropsData, agent);
                         InitializeBanditAgent(agent, standingPoint, false, defenderAgentObjects);
+
+
+                        BehaviorTrees.BTRegister.RegisterClass("AttackAndTeleportTree", objects => AttackAndTeleportTree.BuildTree(objects));
+                        if (agent.Character.StringId == "cyclops_giant")
+                        {
+                            object[] data = { new Vec3(338.8206f, 252.9949f, 26.57357f) };
+                            agent.AddComponent(new BehaviorTreeAgentComponent(agent, "AttackAndTeleportTree", data));
+                        }
                     }
                     catch (InvalidOperationException)
                     {
