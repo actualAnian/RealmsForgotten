@@ -22,8 +22,22 @@ public static class ReligionMapHelper
                 return Core.RFReligions.Anorites;
             case "aserai":
                 return Core.RFReligions.PharunAegis;
+            case "aqarun":
+                return Core.RFReligions.PharunAegis;
             case "giant":
                 return Core.RFReligions.Xochxinti;
+            case "wulf":
+                return Core.RFReligions.KharazDrathar;
+            case "tharnmar":
+                return Core.RFReligions.KharazDrathar;
+            case "valthorne":
+                return Core.RFReligions.Anorites;
+            case "katogai":
+                return Core.RFReligions.TengralorOrkhai;
+            case "dwarf":
+                return Core.RFReligions.KharazDrathar;
+            case "urkhai":
+                return Core.RFReligions.KharazDrathar;
             default:
                 return Core.RFReligions.AeternaFide;
         }

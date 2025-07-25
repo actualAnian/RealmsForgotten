@@ -79,7 +79,7 @@ namespace RealmsForgotten.AiMade
         private void StartMerchantQuest(Settlement destination)
         {
             string questId = "merchant_delivery_" + MBRandom.RandomInt(100000, 999999);
-            var quest = new MerchantDeliveryQuest(questId, Hero.MainHero, CampaignTime.Days(7), destination);
+            var quest = new MerchantDeliveryQuest(questId, Hero.MainHero, CampaignTime.Days(25), destination);
             quest.StartQuest();
         }
     }

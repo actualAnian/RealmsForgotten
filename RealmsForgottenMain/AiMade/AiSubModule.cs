@@ -10,19 +10,28 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using SandBox.GameComponents;
-using RealmsForgotten.AiMade.Enlistement;
 using static RealmsForgotten.AiMade.ADODReinforcementsSystem;
 using System.Linq;
 using RealmsForgotten.AiMade.RF_Diplomacy;
+using RealmsForgotten.AiMade.Utility;
+using System.Reflection;
+using System.Collections.Generic;
+using RealmsForgotten.AiMade.Encounters.Behaviors;
+using RealmsForgotten.AiMade.Adventurer;
+using RealmsForgotten.AiMade.MercenaryFaction;
+using Bannerlord.UIExtenderEx;
+using RealmsForgotten.AiMade.TradePact;
 
 
 namespace RealmsForgotten.AiMade
 {
     public class AiSubModule : MBSubModuleBase
     {
+        private UIExtender _extender;
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
+          
             try
             {
                 var harmony = new Harmony("com.realmsforgotten.aimade");
@@ -33,6 +42,7 @@ namespace RealmsForgotten.AiMade
             {
                 InformationManager.DisplayMessage(new InformationMessage($"RealmsForgotten: Failed to apply Harmony patches. {ex.Message}"));
             }
+           
         }
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
@@ -43,9 +53,11 @@ namespace RealmsForgotten.AiMade
                 var campaignStarter = (CampaignGameStarter)gameStarterObject;
                 AddCampaignBehaviors(campaignStarter);
                 AddCustomModels(campaignStarter);
+              
+
             }
         }
-
+            
         public static void AddCampaignBehaviors(CampaignGameStarter campaignGameStarter)
         {
             // Initialize quest behaviors
@@ -79,9 +91,6 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new BanditIncrease());
             campaignGameStarter.AddBehavior(new BanditPartyManager());
             campaignGameStarter.AddBehavior(new DocksMenuBehavior());
-            campaignGameStarter.AddBehavior(new MyModEnlistmentBehavior());
-            campaignGameStarter.AddBehavior(new MyModEnlistmentBehaviorExtension());
-            campaignGameStarter.AddBehavior(new MyModEnlistmentDialogBehavior());
             campaignGameStarter.AddBehavior(new KingsguardSaveDataBehavior());
             campaignGameStarter.AddBehavior(new RaceCraftingStaminaBehavior());
             campaignGameStarter.AddBehavior(new ADODChamberlainsBehavior());
@@ -95,6 +104,21 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new RacialMixingBehavior());
             campaignGameStarter.AddBehavior(new AlignmentWarBehavior());
             campaignGameStarter.AddBehavior(new AlignmentMomentumBehavior());
+            //campaignGameStarter.AddBehavior(new TickProfilerBehavior());
+            //campaignGameStarter.AddBehavior(new RFSnowBattleSceneBehavior());
+            //campaignGameStarter.AddBehavior(new EncounterSystemBehavior());
+            //campaignGameStarter.AddBehavior(new ALordDialogueCampaignBehavior());
+            //campaignGameStarter.AddBehavior(new ARandomEncountersBehavior());
+            //campaignGameStarter.AddBehavior(new PendingDuelMissionBehavior());
+            //campaignGameStarter.AddBehavior(new DuelChallengeDialogueBehavior());
+            campaignGameStarter.AddBehavior(new CapitulationSystemBehavior());
+            campaignGameStarter.AddBehavior(new MercenaryHireBehavior());
+            //campaignGameStarter.AddBehavior(new TradePactDialogBehavior());
+            //campaignGameStarter.AddBehavior(new TradePactSettlementMenuBehavior());
+            //campaignGameStarter.AddBehavior(new TradePactCampaignBehavior());
+            campaignGameStarter.AddBehavior(new AIBreakInBehavior());
+
+
         }
         private void AddCustomModels(CampaignGameStarter campaignGameStarter)
         {
@@ -102,7 +126,8 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddModel(new CustomInventoryCapacityModel());
             campaignGameStarter.AddModel(new UrkhaiPartySizeModel());
             campaignGameStarter.AddModel(new AlignmentDiplomacyModel(Campaign.Current.Models.DiplomacyModel));
-        }
+            //campaignGameStarter.AddModel(new RFSnowWeatherModel());
+                   }
         public override void OnMissionBehaviorInitialize(Mission mission)
         {
             if (mission == null)
@@ -115,8 +140,9 @@ namespace RealmsForgotten.AiMade
                 var berserkerBehavior = new CustomBerserkerBehavior();
                 mission.AddMissionBehavior(berserkerBehavior);
 
-                // Add Fire Arrows behavior
+                //mission.AddMissionBehavior(new ForceWinterMissionBehavior());
                 mission.AddMissionBehavior(new ADODFireArrowsMissionBehavior());
+                mission.AddMissionBehavior(new AttachWallSegmentDebugBehavior());
             }
 
             // Add Reinforcements Runner if DeploymentMissionController is present
@@ -129,6 +155,9 @@ namespace RealmsForgotten.AiMade
 
             // Add Find Magic Items behavior to all missions
             mission.AddMissionBehavior(new FindMagicItemsMissionBehavior());
+            
+
         }
     }
+
 }

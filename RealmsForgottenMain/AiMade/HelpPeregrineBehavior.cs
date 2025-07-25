@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
@@ -124,12 +125,23 @@ namespace RealmsForgotten.AiMade
                 return; // Monk creation failed
             }
 
+            // Optional: give unique string ID to avoid name collisions in saves
+            monkHero.StringId = "peregrine_monk_" + Guid.NewGuid().ToString();
+
+            // Ensure hero is tracked by clan
+            if (!Clan.PlayerClan.Heroes.Contains(monkHero))
+                Clan.PlayerClan.Heroes.Add(monkHero);
+
+            // Quest creation and startup
             string questId = "help_peregrine_escort_" + MBRandom.RandomInt(100000, 999999);
             var quest = new HelpPeregrineQuest(questId, monkHero, CampaignTime.Days(7), randomTown);
-            quest.StartQuest();
+            quest.StartQuest(); // this internally registers the quest
 
-            InformationManager.DisplayMessage(new InformationMessage($"✅ The peregrine monk has joined you. Escort him to {randomTown.Name}.", Colors.Yellow));
+            InformationManager.DisplayMessage(
+                new InformationMessage($"✅ The peregrine monk has joined you. Escort him to {randomTown.Name}.", Colors.Yellow));
         }
+
+
 
         private void OnDeclineEscort()
         {

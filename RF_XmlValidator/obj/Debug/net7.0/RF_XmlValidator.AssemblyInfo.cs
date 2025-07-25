@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RF_XmlValidator")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+638cf677b7773445edba58667f66b3d5962fd242")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1dad19266d295a709f3e9482c973c2fdffa234a7")]
 [assembly: System.Reflection.AssemblyProductAttribute("RF_XmlValidator")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RF_XmlValidator")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

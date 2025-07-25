@@ -10,6 +10,7 @@ using TaleWorlds.Library;
 using TaleWorlds.CampaignSystem.Roster;
 using System.IO;
 
+/*
 namespace RealmsForgotten.AiMade.Patches
 {
     [HarmonyPatch(typeof(TroopRoster), "ClampXp")]
@@ -66,3 +67,5 @@ namespace RealmsForgotten.AiMade.Patches
         }
     }
 }
+*/
+

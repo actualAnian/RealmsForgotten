@@ -1,4 +1,5 @@
 ﻿using System;
+using RealmsForgotten;
 using RealmsForgotten.CustomSkills;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.SaveSystem;

@@ -44,6 +44,9 @@ namespace RealmsForgotten.AiMade
             {
                 AddHeroToPartyAction.Apply(_monkHero, MobileParty.MainParty, true);
 
+                if (!Clan.PlayerClan.Heroes.Contains(_monkHero))
+                    Clan.PlayerClan.Heroes.Add(_monkHero);
+
                 _escortObjective = AddDiscreteLog(
                     new TextObject("Help the Peregrine Monk"),
                     new TextObject($"Escort the monk safely to {_destination.Name}."),
@@ -66,7 +69,7 @@ namespace RealmsForgotten.AiMade
 
         protected override void OnFinalize()
         {
-            if (_monkHero != null && MobileParty.MainParty.MemberRoster.Contains(_monkHero.CharacterObject))
+            if (_monkHero != null && _monkHero.PartyBelongedTo == MobileParty.MainParty)
             {
                 MobileParty.MainParty.MemberRoster.RemoveTroop(_monkHero.CharacterObject);
             }
@@ -74,10 +77,13 @@ namespace RealmsForgotten.AiMade
 
         protected override void HourlyTick()
         {
-            if (_questStartTime != CampaignTime.Never && CampaignTime.Now.ToHours - _questStartTime.ToHours < 2f)
-                return; // Wait 2 hours to stabilize party join
+            if (_questStartTime == CampaignTime.Never)
+                return;
 
-            if (_monkHero == null || !MobileParty.MainParty.MemberRoster.Contains(_monkHero.CharacterObject))
+            if (CampaignTime.Now.ToHours - _questStartTime.ToHours < 2f)
+                return;
+
+            if (_monkHero == null || _monkHero.PartyBelongedTo != MobileParty.MainParty)
             {
                 FailEscort("❌ The monk is no longer in your party.");
                 return;
@@ -85,14 +91,12 @@ namespace RealmsForgotten.AiMade
 
             float distanceToDestination = MobileParty.MainParty.Position2D.Distance(_destination.Position2D);
 
-            // Spawn Bandit Attack if near destination and not spawned yet
             if (!_banditAttackSpawned && distanceToDestination < 10f)
             {
                 SpawnBanditParty();
                 _banditAttackSpawned = true;
             }
 
-            // Complete quest if fully arrived
             if (distanceToDestination < 5f)
             {
                 _escortObjective.UpdateCurrentProgress(1);
@@ -128,16 +132,14 @@ namespace RealmsForgotten.AiMade
 
             MobileParty banditParty = BanditPartyComponent.CreateLooterParty("peregrine_bandit_party", looterClan, null, false);
             banditParty.InitializeMobilePartyAroundPosition(looterTemplate, spawnPosition, 1f);
-
             banditParty.MemberRoster.AddToCounts(looter, 20);
             banditParty.SetCustomName(new TextObject("Bandit Ambush"));
             banditParty.IsVisible = true;
 
-            // 🔥 THIS is critical: immediately tell the bandits to attack you
             if (banditParty.Ai != null)
             {
                 banditParty.Ai.SetMoveEngageParty(MobileParty.MainParty);
-                banditParty.Ai.SetDoNotMakeNewDecisions(true); // Force them to keep attacking without weird patrol recalculations
+                banditParty.Ai.SetDoNotMakeNewDecisions(true);
             }
 
             InformationManager.DisplayMessage(new InformationMessage("⚔️ A bandit party has appeared near your location!", Colors.Red));
@@ -150,13 +152,10 @@ namespace RealmsForgotten.AiMade
         }
 
         public override TextObject Title => new TextObject("{=HelpPeregrineQuestTitle}Help the Peregrine Monk");
-
         public override bool IsSpecialQuest => false;
-
         public override bool IsRemainingTimeHidden => false;
-
         protected override void SetDialogs() { }
-
         protected override void InitializeQuestOnGameLoad() { }
     }
 }
+

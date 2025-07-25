@@ -12,6 +12,7 @@ using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.MountAndBlade.ComponentInterfaces;
 using RealmsForgotten.Career.Logic;
 using RealmsForgotten.Career;
+using System;
 
 namespace RealmsForgotten.Models
 {
@@ -55,6 +56,32 @@ namespace RealmsForgotten.Models
         public override float CalculateDamage(in AttackInformation attackInformation, in AttackCollisionData collisionData, in MissionWeapon weapon, float baseDamage)
         {
             float baseNumber = _previousModel.CalculateDamage(attackInformation, collisionData, weapon, baseDamage);
+
+            // PREVENIR DANO ENTRE MAGOS E ALIADOS, EXCETO PROJÉTIL DE CURA
+            if (attackInformation.AttackerAgent != null && attackInformation.VictimAgent != null)
+            {
+                Agent attackerAgent = attackInformation.AttackerAgent;
+                Agent victimAgent = attackInformation.VictimAgent;
+
+                bool isSameTeam = attackerAgent.Team != null && victimAgent.Team != null && attackerAgent.Team == victimAgent.Team;
+                bool isMage = attackerAgent.Character?.StringId?.Contains("mage") ?? false;
+
+                if (isMage && isSameTeam)
+                {
+                    string weaponId = weapon.Item?.StringId ?? "";
+
+                    if (weaponId == "rfmisc_spell_healing_force" ||
+                    weaponId == "rfmisc_spell_healing_field" ||
+                    weaponId == "rfmisc_spell_healing_force_area_big")// Substitua pelo ID real do seu projétil de cura
+                    {
+                        victimAgent.Health = Math.Min(victimAgent.Health + 15f, victimAgent.HealthLimit);
+                        return 0f;
+                    }
+
+                    return 0f;
+                }
+            }
+
             CharacterObject captainCharacterObject =
                 attackInformation.AttackerAgent?.Formation?.Captain?.Character as CharacterObject;
 

@@ -9,6 +9,7 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem;
 using System.Diagnostics;
 
+/*
 namespace RealmsForgotten.AiMade.Patches
 {
     [HarmonyPatch(typeof(MobilePartyHelper))]
@@ -20,20 +21,18 @@ namespace RealmsForgotten.AiMade.Patches
         {
             Debug.WriteLine($"[CanTroopGainXpPatch] Called with owner: {(owner != null ? owner.Name : "null")}, troop: {(character != null ? character.StringId : "null")}");
 
-            // Check if the owner or its roster is null
             if (owner?.MemberRoster == null)
             {
                 Debug.WriteLine("[CanTroopGainXpPatch] MemberRoster is null.");
                 gainableMaxXp = 0;
                 __result = false;
-                return false; // Skip the original method
+                return false;
             }
 
             int rosterCount = owner.MemberRoster.Count;
             int index = owner.MemberRoster.FindIndexOfTroop(character);
             Debug.WriteLine($"[CanTroopGainXpPatch] Roster count: {rosterCount}, Found index: {index}");
 
-            // If the troop isn't found, skip the original method
             if (index < 0)
             {
                 Debug.WriteLine("[CanTroopGainXpPatch] Troop not found in roster.");
@@ -42,7 +41,6 @@ namespace RealmsForgotten.AiMade.Patches
                 return false;
             }
 
-            // Check if UpgradeTargets is valid
             if (character?.UpgradeTargets == null)
             {
                 Debug.WriteLine("[CanTroopGainXpPatch] UpgradeTargets is null.");
@@ -51,8 +49,10 @@ namespace RealmsForgotten.AiMade.Patches
                 return false;
             }
 
-            // Let the original method run
             return true;
         }
     }
 }
+*/
+
+

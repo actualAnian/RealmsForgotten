@@ -25,11 +25,19 @@ namespace RealmsForgotten.AiMade.AIQuest
         [SaveableField(1)]
         private CampaignTime _questStartTime;
 
-        private MobileParty _caravanParty;
+        [SaveableField(2)]
+        private string _caravanPartyId;
+
+        [SaveableField(3)]
         private bool _mercenariesSpawned = false;
 
         private const int CargoAmount = 20;
         private const int RewardGold = 2000;
+
+        private MobileParty CaravanParty =>
+            !string.IsNullOrEmpty(_caravanPartyId)
+                ? MobileParty.All.FirstOrDefault(p => p.StringId == _caravanPartyId)
+                : null;
 
         public MerchantDeliveryQuest(string questId, Hero questGiver, CampaignTime duration, Settlement destination)
             : base(questId, questGiver, CampaignTime.Now + duration, RewardGold)
@@ -47,35 +55,31 @@ namespace RealmsForgotten.AiMade.AIQuest
 
             AddDiscreteLog(
                 new TextObject("Deliver Merchant Goods"),
-                new TextObject($"Deliver the merchant's goods safely to {_destination.Name}."),
+                new TextObject($"Deliver the merchant's goods safely to {(_destination != null ? _destination.Name.ToString() : "Unknown destination")}."),
+
                 0, 1
             );
 
             InformationManager.DisplayMessage(new InformationMessage("🚚 You are now escorting the merchant's goods!", Colors.Yellow));
         }
 
-        protected override void OnTimedOut()
-        {
-            FailQuest("⏳ You took too long to deliver the merchant's goods!");
-        }
-
-        protected override void OnFinalize()
-        {
-            if (_caravanParty == null || !_caravanParty.IsActive)
-            {
-                _caravanParty.RemoveParty();
-            }
-        }
-
         protected override void HourlyTick()
         {
-            if (_caravanParty == null || !_caravanParty.IsActive)
+            var party = CaravanParty;
+
+            if (party == null || !party.IsActive)
             {
                 FailQuest("❌ The caravan was destroyed!");
                 return;
             }
 
-            float distanceToDestination = MobileParty.MainParty.Position2D.Distance(_destination.Position2D);
+            if (_destination == null)
+            {
+                FailQuest("❌ Quest destination data was lost.");
+                return;
+            }
+
+            float distanceToDestination = MobileParty.MainParty?.Position2D.Distance(_destination.Position2D) ?? float.MaxValue;
 
             if (!_mercenariesSpawned && distanceToDestination < 10f)
             {
@@ -89,13 +93,28 @@ namespace RealmsForgotten.AiMade.AIQuest
             }
         }
 
+        protected override void OnTimedOut()
+        {
+            FailQuest("⏳ You took too long to deliver the merchant's goods!");
+        }
+
+        protected override void OnFinalize()
+        {
+            var party = CaravanParty;
+            if (party != null && party.IsActive)
+            {
+                party.RemoveParty();
+            }
+        }
+
         private void CompleteDelivery()
         {
             RemoveCargoFromPlayer();
 
-            if (_caravanParty == null || !_caravanParty.IsActive)
+            var party = CaravanParty;
+            if (party != null && party.IsActive)
             {
-                _caravanParty.RemoveParty();
+                party.RemoveParty();
             }
 
             CompleteQuestWithSuccess();
@@ -108,16 +127,28 @@ namespace RealmsForgotten.AiMade.AIQuest
         {
             var template = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("escort_caravan");
 
+            if (template == null)
+            {
+                InformationManager.DisplayMessage(new InformationMessage("ERROR: escort_caravan template not found!", Colors.Red));
+                return;
+            }
+
             Vec2 spawnPos = MobileParty.MainParty.Position2D + new Vec2(2f, 2f);
 
-            _caravanParty = MobileParty.CreateParty("merchant_caravan_escort", null);
-            _caravanParty.InitializeMobilePartyAroundPosition(template, spawnPos, 1f);
-            _caravanParty.SetCustomName(new TextObject("Merchant Caravan"));
-            _caravanParty.IsVisible = true;
-            _caravanParty.Ai.SetDoNotMakeNewDecisions(true);
+            string partyId = $"merchant_caravan_escort_{MBRandom.RandomInt(100000, 999999)}";
+            MobileParty party = MobileParty.CreateParty(partyId, null);
+            _caravanPartyId = partyId;
 
-            MobileParty.MainParty.AttachedParties.Add(_caravanParty);
-            _caravanParty.IsActive = true;
+            party.InitializeMobilePartyAroundPosition(template, spawnPos, 1f);
+            party.SetCustomName(new TextObject("Merchant Caravan"));
+            party.IsVisible = true;
+            party.Ai?.SetDoNotMakeNewDecisions(true);
+            party.IsActive = true;
+
+            if (MobileParty.MainParty != null)
+            {
+                MobileParty.MainParty.AttachedParties.Add(party);
+            }
         }
 
         private void AddCargoToPlayer()
@@ -165,7 +196,7 @@ namespace RealmsForgotten.AiMade.AIQuest
                 return;
             }
 
-            Vec2 spawnPos = MobileParty.MainParty.Position2D + new Vec2(3f, 3f);
+            Vec2 spawnPos = MobileParty.MainParty?.Position2D + new Vec2(3f, 3f) ?? new Vec2(0, 0);
 
             MobileParty mercenaryParty = BanditPartyComponent.CreateLooterParty("mercenary_attack_party", looterClan, null, false);
             mercenaryParty.InitializeMobilePartyAroundPosition(looterTemplate, spawnPos, 1f);
@@ -174,26 +205,32 @@ namespace RealmsForgotten.AiMade.AIQuest
             mercenaryParty.SetCustomName(new TextObject("Mercenary Raiders"));
             mercenaryParty.IsVisible = true;
 
-            mercenaryParty.Ai.SetMoveEngageParty(_caravanParty);
-            mercenaryParty.Ai.SetDoNotMakeNewDecisions(true);
+            if (CaravanParty != null && CaravanParty.IsActive && mercenaryParty.Ai != null)
+            {
+                mercenaryParty.Ai.SetMoveEngageParty(CaravanParty);
+                mercenaryParty.Ai.SetDoNotMakeNewDecisions(true);
+            }
 
             InformationManager.DisplayMessage(new InformationMessage("⚔️ Mercenaries are attacking your caravan!", Colors.Red));
         }
 
         private void FailQuest(string reason)
         {
+            var party = CaravanParty;
+            if (party != null && party.IsActive)
+            {
+                party.RemoveParty();
+            }
+
             CompleteQuestWithFail();
             InformationManager.DisplayMessage(new InformationMessage(reason, Colors.Red));
         }
 
         public override TextObject Title => new TextObject("{=MerchantDeliveryQuestTitle}Merchant Delivery Quest");
-
         public override bool IsSpecialQuest => false;
-
         public override bool IsRemainingTimeHidden => false;
 
         protected override void SetDialogs() { }
-
         protected override void InitializeQuestOnGameLoad() { }
     }
 }

@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RFSmithing", "RFSmithing\RF
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marching", "Marching\Marching.csproj", "{ECC7F6C0-B0D8-4035-99A5-2788A4738853}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RF_XmlValidator", "RF_XmlValidator\RF_XmlValidator.csproj", "{93AB8A29-6C21-435E-A3C6-A8A0ED2D6AD0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RF_XmlValidator", "RF_XmlValidator\RF_XmlValidator.csproj", "{93AB8A29-6C21-435E-A3C6-A8A0ED2D6AD0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

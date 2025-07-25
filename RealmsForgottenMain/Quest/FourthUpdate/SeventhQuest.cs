@@ -906,12 +906,11 @@ namespace RealmsForgotten.Quest.FourthUpdate
         .PlayerLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_9"))
         .NpcLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_10"))
         .PlayerLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_11"))
-
+         .NpcLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_11_b"))
             .Consequence(() =>
             {
-                _playerChoseToDestroyElveans = true;
                 owlRebellionlLog?.UpdateCurrentProgress(1);
-                StartDestroyElveanObjective();
+                StartBossBattleObjective();
             })
           .CloseDialog()
           .EndPlayerOptions()

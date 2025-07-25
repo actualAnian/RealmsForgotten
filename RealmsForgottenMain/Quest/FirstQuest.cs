@@ -45,7 +45,7 @@ namespace RealmsForgotten.Quest
         private void HandleBandits()
         {
             new RescueUliahQuest("rescue_uliah_quest", Uliah, CampaignTime.Never, 0).StartQuest();
-            Hideout hideout = Hideout.All.Find(x => x.StringId == "hideout_mountain_7");
+            Hideout hideout = Hideout.All.Find(x => x.StringId == "hideout_mountain_18");
 
             InitializeHideoutIfNeeded(hideout);
 

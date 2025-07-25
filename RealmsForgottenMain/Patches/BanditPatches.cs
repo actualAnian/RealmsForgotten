@@ -22,20 +22,24 @@ namespace RealmsForgotten.Patches
 
 #pragma warning disable BHA0003 // Type was not found
         private static readonly MethodInfo banditPartyHome = AccessTools.PropertySetter("BanditPartyComponent:Hideout");
-#pragma warning restore BHA0003 // Type was not found
+#pragma warning restore BHA0003
 
         private static void TeleportAndInfestHideout(MobileParty banditParty, Hideout hideout)
         {
-
-            Vec2 accessiblePointNearPosition = Campaign.Current.MapSceneWrapper.GetAccessiblePointNearPosition(hideout.Settlement.Position2D, 10);
-            banditParty.Position2D = accessiblePointNearPosition;
+            Vec2 spawnPos = Campaign.Current.MapSceneWrapper.GetAccessiblePointNearPosition(hideout.Settlement.Position2D, 10);
+            banditParty.Position2D = spawnPos;
             banditParty.Ai.SetMoveGoToSettlement(hideout.Settlement);
-            banditPartyHome.Invoke(banditParty.BanditPartyComponent, new object[] {hideout});
+            banditPartyHome?.Invoke(banditParty.BanditPartyComponent, new object[] { hideout });
         }
+
         public static List<Hideout> GetXHideouts(List<Hideout> hideouts, int count)
         {
-            var random = new Random();
+            if (hideouts == null || hideouts.Count == 0 || count <= 0)
+                return new();
+
+            count = Math.Min(count, hideouts.Count);
             var result = new List<Hideout>(hideouts);
+            var random = new Random();
 
             for (int i = 0; i < count; i++)
             {
@@ -45,89 +49,115 @@ namespace RealmsForgotten.Patches
 
             return result.Take(count).ToList();
         }
+
         public static Dictionary<CultureObject, Tuple<List<MobileParty>, List<Hideout>>> GetClansBanditsHideouts()
         {
             Dictionary<CultureObject, Tuple<List<MobileParty>, List<Hideout>>> dict = new();
+
             foreach (Clan faction in Clan.BanditFactions)
             {
-                if (!faction.Culture.CanHaveSettlement) continue;
+                if (!faction.Culture.CanHaveSettlement)
+                    continue;
+
                 dict[faction.Culture] = new(new(), new());
             }
+
             foreach (MobileParty party in MobileParty.AllBanditParties)
             {
-                if (!party.ActualClan.Culture.CanHaveSettlement) continue;
-                dict[party.ActualClan.Culture].Item1.Add(party);
+                if (!party.ActualClan.Culture.CanHaveSettlement)
+                    continue;
+
+                if (dict.TryGetValue(party.ActualClan.Culture, out var data))
+                    data.Item1.Add(party);
             }
-            foreach(Hideout hideout in Hideout.All)
+
+            foreach (Hideout hideout in Hideout.All)
             {
-                //if (hideout.MapFaction.StringId == "looters") continue;
-                dict[hideout.Settlement.Culture].Item2.Add(hideout);
+                if (dict.TryGetValue(hideout.Settlement.Culture, out var data))
+                    data.Item2.Add(hideout);
             }
+
             return dict;
         }
+
         public static void TryToCreateNewHideoutsWithExcessBandits(List<MobileParty> factionsParties, List<Hideout> factionsHideouts)
         {
-            Dictionary<Hideout, BanditHideoutInfo> banditsForHideout = new();
-            foreach (Hideout hideout in factionsHideouts)
-                banditsForHideout.Add(hideout, new());
+            if (factionsParties == null || factionsHideouts == null || !factionsHideouts.Any())
+                return;
+
+            Dictionary<Hideout, BanditHideoutInfo> banditsForHideout = factionsHideouts.ToDictionary(h => h, h => new BanditHideoutInfo());
+
             foreach (MobileParty party in factionsParties)
             {
-                banditsForHideout[party.BanditPartyComponent.Hideout].Parties.Add(party);
-            }
-            int allBandits = 0;
-            for (int i = 0; i < banditsForHideout.Count(); i++)
-            {
-                BanditHideoutInfo item = banditsForHideout.Values.ToList()[i];
-                int banditsInHIdeout = item.Parties.Count();
-                allBandits += banditsInHIdeout;
-                item.Value = banditsInHIdeout;
-            }
-            int banditsPerHideout = allBandits / 3;
-            if (allBandits > Campaign.Current.Models.BanditDensityModel.NumberOfMaximumBanditPartiesAroundEachHideout)
-            {
-                IEnumerable<Hideout> hideoutChosen = factionsHideouts.Where(h => !h.IsInfested);
-                int hideoutToTakeFrom = 0;
-                Queue<MobileParty> bpartiesToMove = new();
-                List<Tuple<Hideout, int>> NOBanditsHideoutNeeds = new();
-                List<Hideout> filledHideouts = new();
-                foreach (KeyValuePair<Hideout, BanditHideoutInfo> valuePair in banditsForHideout)
+                var homeHideout = party.BanditPartyComponent?.Hideout;
+                if (homeHideout != null && banditsForHideout.ContainsKey(homeHideout))
                 {
-                    BanditHideoutInfo banditData = valuePair.Value;
-                    int banditNumber = banditData.Value;
-                    if (banditNumber == 0) continue;
-                    for (int i = banditsPerHideout; i < banditNumber; i++)
-                    {
-                        bpartiesToMove.Enqueue(banditData.Parties[i]);
-                    }
-                    int banditsToReceive = Math.Max(0, banditsPerHideout - banditNumber);
-                    NOBanditsHideoutNeeds.Add(new(valuePair.Key, banditsToReceive));
-                    filledHideouts.Add(valuePair.Key);
-                };
+                    banditsForHideout[homeHideout].Parties.Add(party);
+                }
+            }
 
-                factionsHideouts = GetXHideouts(factionsHideouts.Except(filledHideouts).ToList(), 3 - NOBanditsHideoutNeeds.Count);
-                factionsHideouts.ForEach(h => NOBanditsHideoutNeeds.Add(new(h, banditsPerHideout)));
-                foreach (Tuple<Hideout, int> t in NOBanditsHideoutNeeds)
+            int totalBandits = banditsForHideout.Sum(kv => kv.Value.Parties.Count);
+            int banditsPerHideout = totalBandits / 3;
+
+            if (totalBandits > Campaign.Current.Models.BanditDensityModel.NumberOfMaximumBanditPartiesAroundEachHideout)
+            {
+                var candidateHideouts = factionsHideouts.Where(h => !h.IsInfested).ToList();
+                var excessPartiesQueue = new Queue<MobileParty>();
+                var hideoutNeeds = new List<Tuple<Hideout, int>>();
+                var filledHideouts = new List<Hideout>();
+
+                foreach (var kv in banditsForHideout)
                 {
-                    for (int i = 0; i < t.Item2; i++)
+                    Hideout hideout = kv.Key;
+                    BanditHideoutInfo info = kv.Value;
+
+                    int count = info.Parties.Count;
+                    if (count == 0) continue;
+
+                    for (int i = banditsPerHideout; i < count; i++)
+                        excessPartiesQueue.Enqueue(info.Parties[i]);
+
+                    int needed = Math.Max(0, banditsPerHideout - count);
+                    hideoutNeeds.Add(new Tuple<Hideout, int>(hideout, needed));
+                    filledHideouts.Add(hideout);
+                }
+
+                int additionalNeeded = Math.Max(0, 3 - hideoutNeeds.Count);
+                var unfilled = GetXHideouts(candidateHideouts.Except(filledHideouts).ToList(), additionalNeeded);
+
+                foreach (var h in unfilled)
+                    hideoutNeeds.Add(new Tuple<Hideout, int>(h, banditsPerHideout));
+
+                foreach (var (targetHideout, amount) in hideoutNeeds)
+                {
+                    for (int i = 0; i < amount; i++)
                     {
-                        TeleportAndInfestHideout(bpartiesToMove.Dequeue(), t.Item1);
+                        if (excessPartiesQueue.Count == 0)
+                            break;
+
+                        TeleportAndInfestHideout(excessPartiesQueue.Dequeue(), targetHideout);
                     }
                 }
-                ++hideoutToTakeFrom;
             }
-
         }
+
         public static void Postfix()
         {
-            Dictionary<CultureObject, Tuple<List<MobileParty>, List<Hideout>>> banditsPerClan = GetClansBanditsHideouts();
-            foreach (KeyValuePair<CultureObject, Tuple<List<MobileParty>, List<Hideout>>> ClanData in banditsPerClan)
+            var banditsPerCulture = GetClansBanditsHideouts();
+
+            foreach (var kv in banditsPerCulture)
             {
-                List<Hideout> factionsHideouts = ClanData.Value.Item2;
-                List<MobileParty> factionsParties = ClanData.Value.Item1;
-                if (!factionsHideouts.Any()) continue;
-                if (factionsHideouts.Where(h => h.IsInfested).Count() >= 3) continue;
-                if (!factionsParties.Any()) continue;
-                TryToCreateNewHideoutsWithExcessBandits(factionsParties, factionsHideouts);
+                List<Hideout> hideouts = kv.Value.Item2;
+                List<MobileParty> parties = kv.Value.Item1;
+
+                if (!hideouts.Any() || !parties.Any())
+                    continue;
+
+                int infestedCount = hideouts.Count(h => h.IsInfested);
+                if (infestedCount >= 3)
+                    continue;
+
+                TryToCreateNewHideoutsWithExcessBandits(parties, hideouts);
             }
         }
     }

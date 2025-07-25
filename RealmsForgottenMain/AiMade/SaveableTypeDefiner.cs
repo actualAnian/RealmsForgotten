@@ -1,12 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using RealmsForgotten.AiMade.Adventurer;
+using RealmsForgotten.AiMade.AIQuest;
 using RealmsForgotten.AiMade.Career;
-using RealmsForgotten.AiMade.Enlistement;
+using RealmsForgotten.AiMade.Encounters.Behaviors;
 using RealmsForgotten.AiMade.Managers.RealmsForgotten.AiMade.Managers;
+using RealmsForgotten.AiMade.MercenaryFaction;
 using RealmsForgotten.AiMade.Models;
 using RealmsForgotten.AiMade.PartyOverrides;
 using RealmsForgotten.AiMade.Patches;
 using RealmsForgotten.AiMade.Religions;
 using RealmsForgotten.AiMade.RF_Diplomacy;
+using RealmsForgotten.AiMade.TradePact;
+using RealmsForgotten.AiMade.Utility;
 using RealmsForgotten.Behaviors;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -35,7 +41,8 @@ namespace RealmsForgotten.AiMade
             ConstructContainerDefinition(typeof(Dictionary<Settlement, CampaignTime>));
             ConstructContainerDefinition(typeof(Dictionary<CharacterObject, CharacterRacialMix>));
             ConstructContainerDefinition(typeof(Dictionary<int, double>));
-
+            ConstructContainerDefinition(typeof(HashSet<(string, string)>));
+            ConstructContainerDefinition(typeof(Tuple<string, string>));
         }
 
         protected override void DefineEnumTypes()
@@ -72,7 +79,7 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(HumanCohesionBehavior), 37);
             AddClassDefinition(typeof(HashSet<string>), 38);
             AddClassDefinition(typeof(BanditHordeBehavior), 39);
-            AddClassDefinition(typeof(DuelsBehavior), 41);
+            //AddClassDefinition(typeof(DuelsBehavior), 41);
             AddClassDefinition(typeof(BarbarianHordeInvasion), 42);
             AddClassDefinition(typeof(UndeadHordeBehavior), 43);
             AddClassDefinition(typeof(BanditIncrease), 44);
@@ -80,9 +87,6 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(DocksMenuBehavior), 46);
             AddClassDefinition(typeof(CustomAIBase), 47);
             AddClassDefinition(typeof(YourFactionAI), 48);
-            AddClassDefinition(typeof(MyModEnlistmentBehavior), 49);
-            AddClassDefinition(typeof(MyModEnlistmentBehaviorExtension), 50);
-            AddClassDefinition(typeof(MyModEnlistmentDialogBehavior), 52);
             AddClassDefinition(typeof(KingsguardSaveDataBehavior), 53);
             AddClassDefinition(typeof(RaceCraftingStaminaBehavior), 54);
             AddClassDefinition(typeof(ADODChamberlainsBehavior), 55);
@@ -100,6 +104,21 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(CharacterRacialMix), 67);
             AddClassDefinition(typeof(AlignmentWarBehavior), 68);
             AddClassDefinition(typeof(AlignmentMomentumBehavior), 69);
+            //AddClassDefinition(typeof(TickProfilerBehavior), 70);
+            AddClassDefinition(typeof(MerchantDeliveryQuest), 71);
+            AddClassDefinition(typeof(HelpPeregrineQuest), 72);
+            //AddClassDefinition(typeof(EncounterSystemBehavior), 73);
+            //AddClassDefinition(typeof(ALordDialogueCampaignBehavior), 74);
+            //AddClassDefinition(typeof(ARandomEncountersBehavior), 75);
+            //AddClassDefinition(typeof(PendingDuelMissionBehavior), 76);
+            //AddClassDefinition(typeof(DuelChallengeDialogueBehavior), 77);
+            AddClassDefinition(typeof(CapitulationSystemBehavior), 78);
+            AddClassDefinition(typeof(MercenaryHireBehavior), 79);
+            AddClassDefinition(typeof(TradePactDialogBehavior), 80);
+            AddClassDefinition(typeof(TradePactSettlementMenuBehavior), 81);
+            AddClassDefinition(typeof(TradePactCampaignBehavior), 82);
+            AddClassDefinition(typeof(AIBreakInBehavior), 83);
+
         }
     }
 }

@@ -55,7 +55,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
         CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, new Action(OnDailyTick));
         CampaignEvents.TickEvent.AddNonSerializedListener(this, new Action<float>(OnTick));
         CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnBattleEnded);
-
+        CampaignEvents.OnGovernorChangedEvent.AddNonSerializedListener(this, OnGovernorChanged);
     }
 
     private void OnBattleEnded(MapEvent mapEvent)
@@ -453,22 +453,81 @@ internal class ReligionBehavior : CampaignBehaviorBase
 
     public float SettlementGetLoyaltyEffect(Town town)
     {
-        var settlement = town.Settlement;
-        if (!settlement.IsTown || settlement.OwnerClan?.Leader == null ||
-            !_heroes.TryGetValue(settlement.OwnerClan.Leader, out var heroReligionModel))
+        Settlement settlement = town?.Settlement;
+        if (settlement == null || !_settlements.TryGetValue(settlement, out var settlementReligionModel))
             return 0f;
 
-        var mainReligionRatio = _settlements[settlement].GetMainReligionRatio();
-        var num = (double)mainReligionRatio < 0.6 ? mainReligionRatio / 2f * -1f : mainReligionRatio / 2f;
-        if (_settlements[settlement].GetMainReligion() != heroReligionModel.Religion) num -= 2f;
-        if (!_settlementEffect.ContainsKey(settlement))
-            _settlementEffect.Add(settlement, num);
-        else
-            _settlementEffect[settlement] = num;
-        return _settlementEffect[settlement];
+        RealmsForgotten.RFReligions.Core.RFReligions townReligion = settlementReligionModel.GetMainReligion();
+        float devotion = settlementReligionModel.GetDevotionToReligion(townReligion);
+        float devotionNormalized = MathF.Clamp(devotion / 100f, 0f, 1f);
 
+        Hero owner = settlement.OwnerClan?.Leader;
+        if (owner == null || !_heroes.TryGetValue(owner, out var heroReligionModel))
+            return 0f;
+
+        RealmsForgotten.RFReligions.Core.RFReligions heroReligion = heroReligionModel.Religion;
+
+        float loyaltyEffect;
+
+        if (heroReligion == townReligion)
+        {
+            loyaltyEffect = 0.5f * devotionNormalized;
+        }
+        else if (RealmsForgotten.RFReligions.Helper.ReligionLogicHelper.TolerableReligions.TryGetValue(heroReligion, out var tolerated) &&
+                 tolerated == townReligion)
+        {
+            loyaltyEffect = 0.1f * devotionNormalized;
+        }
+        else
+        {
+            loyaltyEffect = -0.5f * devotionNormalized;
+        }
+
+        // ✅ Governor religion bonus
+        Hero governor = settlement.Town?.Governor;
+        if (governor != null && _heroes.TryGetValue(governor, out var governorReligionModel))
+        {
+            var governorReligion = governorReligionModel.Religion;
+
+            if (governorReligion == townReligion)
+            {
+                loyaltyEffect += 0.2f * devotionNormalized; // Bonus loyalty if governor is aligned
+            }
+        }
+
+        return loyaltyEffect;
     }
 
+    private void OnGovernorChanged(Town town, Hero newGovernor, Hero oldGovernor)
+    {
+        if (newGovernor == null || town == null || !_heroes.TryGetValue(newGovernor, out var newGovModel))
+            return;
+
+        Settlement settlement = town.Settlement;
+
+        if (!_settlements.TryGetValue(settlement, out var settlementReligionModel))
+            return;
+
+        var townReligion = settlementReligionModel.GetMainReligion();
+        var governorReligion = newGovModel.Religion;
+
+        bool isTolerated = RealmsForgotten.RFReligions.Helper.ReligionLogicHelper.TolerableReligions
+            .TryGetValue(townReligion, out var toleratedReligion) &&
+            toleratedReligion == governorReligion;
+
+        if (governorReligion != townReligion && !isTolerated)
+        {
+            InformationManager.DisplayMessage(new InformationMessage(
+                $"{newGovernor.Name} follows a religion that is intolerable in {settlement.Name}. Their appointment may cause unrest.",
+                Colors.Red));
+
+            // Optional hard-block
+            // town.Governor = null;
+            // InformationManager.DisplayMessage(new InformationMessage(
+            //     $"Governor appointment was canceled due to religious incompatibility.",
+            //     Colors.Yellow));
+        }
+    }
 
     private void DailyHeroTick(Hero hero)
     {
