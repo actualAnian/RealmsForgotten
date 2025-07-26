@@ -3,7 +3,6 @@ using System.Reflection;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterCreationContent;
-using RealmsForgotten.MissionLogic;
 using RealmsForgotten.Utility;
 using Helpers;
 using TaleWorlds.Localization;
@@ -11,6 +10,7 @@ using TaleWorlds.CampaignSystem.Settlements;
 using System.Linq;
 using TaleWorlds.MountAndBlade.ViewModelCollection.FaceGenerator;
 using TaleWorlds.Core.ViewModelCollection.Selector;
+using RealmsForgotten.Managers;
 
 namespace RealmsForgotten.Patches.CulturedStart
 {

@@ -962,7 +962,17 @@ namespace RealmsForgotten.Quest.FourthUpdate
             );
         }
 
+        public void Temp()
+        {
 
+            interceptorDefeatLog = AddLog(GameTexts.FindText("rf_seventh_quest_interceptor_defeated_log"));
+            interceptorDefeatLog.UpdateCurrentProgress(2);
+            bossBattleLog = AddDiscreteLog(
+                GameTexts.FindText("rf_seventh_quest_boss_log"),
+                GameTexts.FindText("rf_seventh_quest_boss_task"),
+                0, 1
+            );
+        }
 
         private void StartBossBattleObjective()
         {

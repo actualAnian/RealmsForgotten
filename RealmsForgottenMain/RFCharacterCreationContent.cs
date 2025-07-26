@@ -9,7 +9,6 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 using TaleWorlds.Library;
-using RealmsForgotten.MissionLogic;
 using static RealmsForgotten.Globals;
 using TaleWorlds.ObjectSystem;
 using RealmsForgotten.CustomSkills;
@@ -20,6 +19,7 @@ using HarmonyLib;
 using RealmsForgotten.AiMade.Career;
 using TaleWorlds.SaveSystem.Definition;
 using RealmsForgotten.Career;
+using RealmsForgotten.Managers;
 
 namespace RealmsForgotten
 {
