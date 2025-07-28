@@ -42,7 +42,7 @@ namespace RealmsForgotten.AiMade.Encounters.Scenario
             MissionState.OpenNew(
                 "ProtectVillagers",
                 new MissionInitializerRecord("arena"),
-                (mission) => new MissionBehavior[]
+                mission => new MissionBehavior[]
                 {
                     new ProtectVillagersLogic(settlement)
                 }
@@ -50,7 +50,7 @@ namespace RealmsForgotten.AiMade.Encounters.Scenario
         }
     }
 
-    public class ProtectVillagersLogic : MissionLogic
+    public class ProtectVillagersLogic : MissionBehavior
     {
         private readonly Settlement _settlement;
         private bool _missionEnded = false;
@@ -59,6 +59,8 @@ namespace RealmsForgotten.AiMade.Encounters.Scenario
         {
             _settlement = settlement;
         }
+
+        public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;
 
         public override void AfterStart()
         {

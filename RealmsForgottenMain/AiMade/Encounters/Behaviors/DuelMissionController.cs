@@ -13,7 +13,7 @@ using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.AiMade.Encounters.Behaviors
 {
-    public class DuelMissionController : MissionLogic
+    public class DuelMissionController : TaleWorlds.MountAndBlade.MissionLogic
     {
         private readonly CharacterObject duelOpponent;
         private readonly bool spawnOnHorse;
@@ -32,7 +32,7 @@ namespace RealmsForgotten.AiMade.Encounters.Behaviors
         public override void AfterStart()
         {
             base.AfterStart();
-            Mission.SetMissionMode(MissionMode.Duel, true);
+            Mission.Current.SetMissionMode(MissionMode.Duel, true);
             isDuelEnded = false;
             endTimer = new BasicMissionTimer();
 
@@ -42,12 +42,14 @@ namespace RealmsForgotten.AiMade.Encounters.Behaviors
             playerAgent = SpawnAgent(CharacterObject.PlayerCharacter, playerSpawnFrame);
             opponentAgent = SpawnAgent(duelOpponent, opponentSpawnFrame);
         }
+
         private void InitializeMissionTeams()
         {
-            Mission.Teams.Add(BattleSideEnum.Defender, Hero.MainHero.MapFaction.Color, Hero.MainHero.MapFaction.Color2, Hero.MainHero.Clan.Banner, true, false, true);
-            Mission.Teams.Add(BattleSideEnum.Attacker, duelOpponent.HeroObject.MapFaction.Color, duelOpponent.HeroObject.MapFaction.Color2, duelOpponent.HeroObject.Clan.Banner, true, false, true);
-            Mission.PlayerTeam = Mission.Teams.Defender;
+            Mission.Current.Teams.Add(BattleSideEnum.Defender, Hero.MainHero.MapFaction.Color, Hero.MainHero.MapFaction.Color2, Hero.MainHero.Clan.Banner, true, false, true);
+            Mission.Current.Teams.Add(BattleSideEnum.Attacker, duelOpponent.HeroObject.MapFaction.Color, duelOpponent.HeroObject.MapFaction.Color2, duelOpponent.HeroObject.Clan.Banner, true, false, true);
+            Mission.Current.PlayerTeam = Mission.Current.Teams.Defender;
         }
+
         private void GetSpawnFrames(out MatrixFrame playerSpawnFrame, out MatrixFrame opponentSpawnFrame)
         {
             if (PlayerEncounter.Current != null && PlayerEncounter.InsideSettlement)
@@ -72,8 +74,8 @@ namespace RealmsForgotten.AiMade.Encounters.Behaviors
                 Vec2 opponentPosVec2 = new Vec2(spawnPoint.X, spawnPoint.Y + 5f);
                 float playerHeight = 0, opponentHeight = 0;
 
-                Mission.Scene.GetHeightAtPoint(playerPosVec2, BodyFlags.CommonCollisionExcludeFlags, ref playerHeight);
-                Mission.Scene.GetHeightAtPoint(opponentPosVec2, BodyFlags.CommonCollisionExcludeFlags, ref opponentHeight);
+                Mission.Current.Scene.GetHeightAtPoint(playerPosVec2, BodyFlags.CommonCollisionExcludeFlags, ref playerHeight);
+                Mission.Current.Scene.GetHeightAtPoint(opponentPosVec2, BodyFlags.CommonCollisionExcludeFlags, ref opponentHeight);
 
                 var playerPos = new Vec3(playerPosVec2.X, playerPosVec2.Y, playerHeight);
                 var opponentPos = new Vec3(opponentPosVec2.X, opponentPosVec2.Y, opponentHeight);
@@ -87,18 +89,19 @@ namespace RealmsForgotten.AiMade.Encounters.Behaviors
                 opponentSpawnFrame = new MatrixFrame(oppRot, opponentPos);
             }
         }
+
         private Agent SpawnAgent(CharacterObject character, MatrixFrame frame)
         {
             var agentBuildData = new AgentBuildData(character)
                 .BodyProperties(character.GetBodyPropertiesMax())
-                .Team(character == CharacterObject.PlayerCharacter ? Mission.PlayerTeam : Mission.PlayerEnemyTeam)
+                .Team(character == CharacterObject.PlayerCharacter ? Mission.Current.PlayerTeam : Mission.Current.PlayerEnemyTeam)
                 .InitialPosition(frame.origin)
                 .InitialDirection(frame.rotation.f.AsVec2.Normalized())
                 .NoHorses(!spawnOnHorse)
                 .Equipment(character.FirstBattleEquipment)
                 .TroopOrigin(new SimpleAgentOrigin(character));
 
-            var agent = Mission.SpawnAgent(agentBuildData);
+            var agent = Mission.Current.SpawnAgent(agentBuildData);
             agent.FadeIn();
 
             if (agent.IsAIControlled)
@@ -127,14 +130,12 @@ namespace RealmsForgotten.AiMade.Encounters.Behaviors
 
         public override void OnMissionTick(float dt)
         {
-            // The timer starts implicitly, so we just check the elapsed time
             if (isDuelEnded && endTimer.ElapsedTime > 4.0f)
             {
                 EndDuel();
-                // Reset the timer to prevent this block from running again
                 endTimer.Reset();
             }
-            else if (isDuelEnded) // This runs once when the duel ends
+            else if (isDuelEnded)
             {
                 MBInformationManager.AddQuickInformation(new TaleWorlds.Localization.TextObject("{=duel_has_ended}The duel has ended."));
             }
@@ -147,7 +148,7 @@ namespace RealmsForgotten.AiMade.Encounters.Behaviors
             {
                 encounterBehavior.EndDuel(isPlayerWinner);
             }
-            Mission.EndMission();
+            Mission.Current.EndMission();
         }
 
         public override InquiryData OnEndMissionRequest(out bool canLeave)

@@ -11,7 +11,7 @@ using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.AiMade.Adventurer
 {
-    public class SimpleDuelMissionLogic : MissionLogic
+    public class SimpleDuelMissionLogic : TaleWorlds.MountAndBlade.MissionLogic
     {
         private readonly Hero _opponent;
         private Agent _playerAgent;
@@ -29,14 +29,14 @@ namespace RealmsForgotten.AiMade.Adventurer
             Vec3 playerPos = new Vec3(0f, -2f, 0f);
             Vec3 enemyPos = new Vec3(0f, 2f, 0f);
 
-            _playerAgent = Mission.SpawnAgent(new AgentBuildData(Hero.MainHero.CharacterObject)
-                .Team(Mission.Teams.Defender)
+            _playerAgent = Mission.Current.SpawnAgent(new AgentBuildData(Hero.MainHero.CharacterObject)
+                .Team(Mission.Current.Teams.Defender)
                 .TroopOrigin(new SimpleAgentOrigin(Hero.MainHero.CharacterObject))
                 .InitialPosition(playerPos)
                 .InitialDirection(Vec2.Forward));
 
-            _opponentAgent = Mission.SpawnAgent(new AgentBuildData(_opponent.CharacterObject)
-                .Team(Mission.Teams.Attacker)
+            _opponentAgent = Mission.Current.SpawnAgent(new AgentBuildData(_opponent.CharacterObject)
+                .Team(Mission.Current.Teams.Attacker)
                 .TroopOrigin(new SimpleAgentOrigin(_opponent.CharacterObject))
                 .InitialPosition(enemyPos)
                 .InitialDirection(-Vec2.Forward));
@@ -52,13 +52,13 @@ namespace RealmsForgotten.AiMade.Adventurer
             if (_opponentAgent != null && _opponentAgent.State == AgentState.Killed)
             {
                 InformationManager.DisplayMessage(new InformationMessage($"{_opponent.Name} was defeated!"));
-                Mission.EndMission();
+                Mission.Current.EndMission();
             }
 
             if (_playerAgent != null && _playerAgent.State == AgentState.Killed)
             {
                 InformationManager.DisplayMessage(new InformationMessage($"You were defeated by {_opponent.Name}!"));
-                Mission.EndMission();
+                Mission.Current.EndMission();
             }
         }
     }
