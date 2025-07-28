@@ -24,10 +24,9 @@ Marching/bin
 Marching/obj
 RF_XmlValidator/bin
 RF_XmlValidator/obj
-BehaviorTrees/
-BehaviorTreeWrapper/
 packages
 fixCode.py
 .idea
 .vs
 .vscode
+RFCustomScenes/BehaviorTrees/
