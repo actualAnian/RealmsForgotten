@@ -310,12 +310,12 @@ namespace RealmsForgotten.RFCustomSettlements
                         InitializeBanditAgent(agent, standingPoint, false, defenderAgentObjects);
 
 
-                        BehaviorTrees.BTRegister.RegisterClass("AttackAndTeleportTree", objects => AttackAndTeleportTree.BuildTree(objects));
-                        if (agent.Character.StringId == "cyclops_giant")
-                        {
-                            object[] data = { new Vec3(338.8206f, 252.9949f, 26.57357f) };
-                            agent.AddComponent(new BehaviorTreeAgentComponent(agent, "AttackAndTeleportTree", data));
-                        }
+                        //BehaviorTrees.BTRegister.RegisterClass("AttackAndTeleportTree", objects => AttackAndTeleportTree.BuildTree(objects));
+                        //if (agent.Character.StringId == "cyclops_giant")
+                        //{
+                        //    object[] data = { new Vec3(338.8206f, 252.9949f, 26.57357f) };
+                        //    agent.AddComponent(new BehaviorTreeAgentComponent(agent, "AttackAndTeleportTree", data));
+                        //}
                     }
                     catch (InvalidOperationException)
                     {
