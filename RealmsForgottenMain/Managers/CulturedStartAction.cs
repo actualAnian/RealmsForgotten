@@ -14,7 +14,7 @@ using TaleWorlds.Library;
 using TaleWorlds.ObjectSystem;
 using static RealmsForgotten.Globals;
 
-namespace RealmsForgotten.MissionLogic
+namespace RealmsForgotten.Managers
 {
     public class TroopSpawnInfo
     {
@@ -801,7 +801,7 @@ namespace RealmsForgotten.MissionLogic
                 default:
                     break;
             }
-            mainHero.PartyBelongedTo.Position2D = locationOption != 9 ? (startingSettlement != null ? startingSettlement.GatePosition : Settlement.Find("tutorial_training_field").Position2D) : captor.PartyBelongedTo.Position2D;
+            mainHero.PartyBelongedTo.Position2D = locationOption != 9 ? startingSettlement != null ? startingSettlement.GatePosition : Settlement.Find("tutorial_training_field").Position2D : captor.PartyBelongedTo.Position2D;
             if (GameStateManager.Current.ActiveState is MapState mapState)
             {
                 mapState.Handler.ResetCamera(true, true);
@@ -941,7 +941,7 @@ namespace RealmsForgotten.MissionLogic
                     InformationManager.DisplayMessage(new InformationMessage("CULTURED START WANDERER ERROR", Colors.Red));
                     break;
                 }
-                
+
                 Hero companion = HeroCreator.CreateSpecialHero(wanderer, randomSettlement, null, null, 33);
 
                 companion.Clan = randomSettlement.OwnerClan;
@@ -978,7 +978,7 @@ namespace RealmsForgotten.MissionLogic
                 CharacterRelationManager.SetHeroRelation(mainHero, ruler, 10);
                 ChangeKingdomAction.ApplyByJoinToKingdom(mainHero.Clan, ruler.Clan.Kingdom, false);
                 mainHero.Clan.Influence = 10;
-                
+
                 if (startOption == StartType.KingdomRuler && mainHero.Clan.Kingdom?.Leader != mainHero)
                 {
                     Campaign.Current.KingdomManager.CreateKingdom(mainHero.Clan.Name, mainHero.Clan.InformalName, mainHero.Clan.Culture, mainHero.Clan);
@@ -989,7 +989,7 @@ namespace RealmsForgotten.MissionLogic
                     Settlement settlement =
                         mainHero.Clan.Kingdom.Settlements.GetRandomElementWithPredicate(settlement =>
                             settlement.IsCastle);
-                
+
                     ChangeOwnerOfSettlementAction.ApplyByDefault(mainHero, settlement);
 
                     startingSettlement = settlement;
@@ -997,15 +997,15 @@ namespace RealmsForgotten.MissionLogic
             }
         }
 
-        public static bool MatchWildcardString(String pattern, String input)
+        public static bool MatchWildcardString(string pattern, string input)
         {
-            if (String.Compare(pattern, input) == 0)
+            if (string.Compare(pattern, input) == 0)
             {
                 return true;
             }
-            else if (String.IsNullOrEmpty(input))
+            else if (string.IsNullOrEmpty(input))
             {
-                if (String.IsNullOrEmpty(pattern.Trim(new Char[] { '*' }))) // Minor correction: Ensure the array syntax is correct.
+                if (string.IsNullOrEmpty(pattern.Trim(new char[] { '*' }))) // Minor correction: Ensure the array syntax is correct.
                 {
                     return true;
                 }

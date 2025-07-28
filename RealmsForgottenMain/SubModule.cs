@@ -1,5 +1,4 @@
 using HarmonyLib;
-using RealmsForgotten.MissionLogic;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,13 +27,12 @@ using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.MountAndBlade.ComponentInterfaces;
-using RealmsForgotten.AiMade.Patches;
 using RealmsForgotten.UI;
 using RealmsForgotten.Career;
-using SandBox.GameComponents;
-using SandBox.Missions.MissionLogics;
 using RealmsForgotten.Career.Logic;
 using RealmsForgotten.Career.Ability;
+using RealmsForgotten.Quest.FourthUpdate;
+using RealmsForgotten.Managers;
 
 namespace RealmsForgotten
 {
@@ -303,10 +301,18 @@ namespace RealmsForgotten
 
         }
 
+        bool _firstTime = true;
         public override void OnNewGameCreated(Game game, object initializerObject)
         {
             base.OnNewGameCreated(game, initializerObject);
             QuestSubModule.OnNewGameCreated(game, initializerObject);
+            if(_firstTime)
+            {
+                SeventhQuest newChapter = new SeventhQuest("rf_seventh_quest", Hero.MainHero, CampaignTime.DaysFromNow(999), 20000);
+                newChapter.StartQuest();
+                newChapter.Temp();
+                _firstTime = false;
+            }
         }
 
         protected override void InitializeGameStarter(Game game, IGameStarter starterObject)

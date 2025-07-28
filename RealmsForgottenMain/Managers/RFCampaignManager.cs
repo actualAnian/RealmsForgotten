@@ -13,7 +13,7 @@ using TaleWorlds.ModuleManager;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.SaveSystem.Load;
 
-namespace RealmsForgotten.MissionLogic
+namespace RealmsForgotten.Managers
 {
     public class RFCampaignManager : MBGameManager
     {
@@ -106,7 +106,7 @@ namespace RealmsForgotten.MissionLogic
 
         public override void OnLoadFinished()
         {
-            if (!this._loadingSavedGame)
+            if (!_loadingSavedGame)
             {
                 MBDebug.Print("Switching to menu window...", 0, Debug.DebugColor.White, 17592186044416UL);
 
@@ -117,8 +117,8 @@ namespace RealmsForgotten.MissionLogic
                 string videoPath = str + "RF_lore_intro_b.ivf";
                 string audioPath = str + "RF_lore_intro_b.ogg";
                 state.SetStartingParameters(videoPath, audioPath, subtitleFileBasePath);
-                state.SetOnVideoFinisedDelegate(new Action(this.LaunchSandboxCharacterCreation));
-                Game.Current.GameStateManager.CleanAndPushState((GameState)state);
+                state.SetOnVideoFinisedDelegate(new Action(LaunchSandboxCharacterCreation));
+                Game.Current.GameStateManager.CleanAndPushState(state);
 
             }
             else
@@ -141,7 +141,7 @@ namespace RealmsForgotten.MissionLogic
                 }
                 CampaignEventDispatcher.Instance.OnGameLoadFinished();
             }
-            base.IsLoaded = true;
+            IsLoaded = true;
         }
 
         private void LaunchSandboxCharacterCreation()
