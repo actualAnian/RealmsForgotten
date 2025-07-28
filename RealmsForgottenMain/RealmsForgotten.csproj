@@ -33,6 +33,14 @@
 	    <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.UIExtenderEx\bin\Win64_Shipping_Client\Bannerlord.UIExtenderEx.dll</HintPath>
 	  </Reference>
 	  
+	  <Reference Include="BehaviorTrees">
+	    <HintPath>_Module\bin\Win64_Shipping_Client\BehaviorTrees.dll</HintPath>
+	  </Reference>
+	  
+	  <Reference Include="BehaviorTreeWrapper">
+	    <HintPath>_Module\bin\Win64_Shipping_Client\BehaviorTreeWrapper.dll</HintPath>
+	  </Reference>
+	  
 	  <Reference Include="C:\Program Files %28x86%29\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.AchievementSystem.dll">
 	    <HintPath>C:\Program Files %28x86%29\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.AchievementSystem.dll</HintPath>
 	    <Private>False</Private>
@@ -267,12 +275,6 @@
     </Reference>
     <Reference Include="ArtemsNostalgicConversation">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\RealmsForgotten\bin\Win64_Shipping_Client\ArtemsNostalgicConversation.dll</HintPath>
-    </Reference>
-    <Reference Include="BehaviorTrees">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\RealmsForgotten\bin\Win64_Shipping_Client\BehaviorTrees.dll</HintPath>
-    </Reference>
-    <Reference Include="BehaviorTreeWrapper">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\RealmsForgotten\bin\Win64_Shipping_Client\BehaviorTreeWrapper.dll</HintPath>
     </Reference>
     <Reference Include="MCMv5">
       <HintPath>_Module\bin\Win64_Shipping_Client\MCMv5.dll</HintPath>
