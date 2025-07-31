@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="module_sound">
+  <module_sounds>
+
+    <module_sound name="realmsforgotten/drink" is_2d="true" sound_category="ui" path="drinking_sound.wav" />
+
+
+      <module_sound name="jaguar_roar_a" is_2d="true" sound_category="mission_voice_shout" path="jaguar_roar_a.ogg" />
+
+
+    <module_sound name="jaguar_growling" is_2d="true" sound_category="mission_voice" path="jaguar_growling.ogg" />
+
+
+     <module_sound name="jaguar_running" is_2d="true" sound_category="mission_horse_gallop" path="jaguar_running_short.ogg" />
+
+    <module_sound name="jaguar_running_grass" is_2d="true" sound_category="mission_voice" path="jaguar_running_short.ogg" />
+
+    <module_sound name="jaguar_running_footsteps" is_2d="true" sound_category="mission_voice" path="jaguar_running_short.ogg" />
+
+     <module_sound name="wild_pig_roar" is_2d="true" sound_category="mission_voice_shout" path="wild_pig_roar.ogg" />
+
+
+    <module_sound name="wild_pig_atacking" is_2d="true" sound_category="mission_voice" path="wild_pig_atacking.ogg" />
+
+     <module_sound name="homestead/music/flute1" is_2d="true" sound_category="mission_ambient_3d_small" path="flute1.ogg" />
+     <module_sound name="homestead/music/flute2" is_2d="true" sound_category="mission_ambient_3d_small" path="flute2.ogg" />
+
+
+    <module_sound name="witch_voice_entrance" is_2d="true" sound_category="mission_ambient_3d_small" path="witch_voice_entrance.ogg" />
+    <module_sound name="witch_voice_laugh" is_2d="true" sound_category="mission_ambient_3d_small" path="witch_voice_laugh.ogg" />
+    <module_sound name="witch_voice_demon_command" is_2d="true" sound_category="mission_ambient_3d_small" path="witch_demon_command.ogg" />
+    <module_sound name="witch_voice_demon_defeated" is_2d="true" sound_category="mission_ambient_3d_small" path="witch_voice_demon_defeated.ogg" />
+    <module_sound name="witch_voice_defeated" is_2d="true" sound_category="mission_ambient_3d_small" path="witch_voice_defeated.ogg" />
+
+    <module_sound name="teleport_sound" is_2d="true" sound_category="mission_voice" path="teleport_sound.ogg" />
+
+  </module_sounds>
+</base>
