@@ -76,7 +76,6 @@ namespace RealmsForgotten.RFMissionLogic
             RFSoundEvent rfSoundEvent = new(sEvent, eventId, sound.Length, followPlayer);
             lock (_activeSoundsLock)
             {
-                InformationManager.DisplayMessage(new($"Thread {Thread.CurrentThread.ManagedThreadId} adding {name}"));
                 if (_activeSounds.Contains(rfSoundEvent)) return false;
                 if (_activeSounds.Count == 0) _hasActiveSounds = true;
                 _activeSounds.Add(rfSoundEvent);

@@ -3,6 +3,7 @@ using HarmonyLib;
 using RealmsForgotten.RFReligions.Behavior;
 using RealmsForgotten.RFReligions.Core;
 using RealmsForgotten.RFReligions.Models;
+using RFReligions.Behavior;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.InputSystem;
@@ -24,6 +25,8 @@ public class SubModule : MBSubModuleBase
         if (gameStarterObject is CampaignGameStarter campaignGameStarter)
         {
             campaignGameStarter.AddBehavior(new ReligionBehavior());
+            campaignGameStarter.AddBehavior(new ReligiousWarBehavior());
+            campaignGameStarter.AddBehavior(new CrusadeBehavior());
 
             campaignGameStarter.AddModel(new ReligionPartyMoraleModel());
             campaignGameStarter.AddModel(new ReligionSettlementLoyaltyModel());

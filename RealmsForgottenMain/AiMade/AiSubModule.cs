@@ -113,12 +113,12 @@ namespace RealmsForgotten.AiMade
             //campaignGameStarter.AddBehavior(new DuelChallengeDialogueBehavior());
             campaignGameStarter.AddBehavior(new CapitulationSystemBehavior());
             campaignGameStarter.AddBehavior(new MercenaryHireBehavior());
-            //campaignGameStarter.AddBehavior(new TradePactDialogBehavior());
-            //campaignGameStarter.AddBehavior(new TradePactSettlementMenuBehavior());
-            //campaignGameStarter.AddBehavior(new TradePactCampaignBehavior());
+            campaignGameStarter.AddBehavior(new CaravanTradePactBehavior());
+            campaignGameStarter.AddBehavior(new EconomicPactBehavior());
+            campaignGameStarter.AddBehavior(new RFWeatherCampaignBehavior());
             campaignGameStarter.AddBehavior(new AIBreakInBehavior());
-
-
+            campaignGameStarter.AddBehavior(new VassalPromotionBehavior());
+            campaignGameStarter.AddBehavior(new MercenaryFactionWarPactBehavior());
         }
         private void AddCustomModels(CampaignGameStarter campaignGameStarter)
         {
@@ -126,8 +126,8 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddModel(new CustomInventoryCapacityModel());
             campaignGameStarter.AddModel(new UrkhaiPartySizeModel());
             campaignGameStarter.AddModel(new AlignmentDiplomacyModel(Campaign.Current.Models.DiplomacyModel));
-            //campaignGameStarter.AddModel(new RFSnowWeatherModel());
-                   }
+            campaignGameStarter.AddModel(new CustomTradeItemPriceFactorModel());
+        }
         public override void OnMissionBehaviorInitialize(Mission mission)
         {
             if (mission == null)

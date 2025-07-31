@@ -20,7 +20,7 @@ namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees
         public static Vec3 entrance = new(787.9024f, 680.45f, 155.4046f);
         public static Vec3 platformA = new(789.72f, 646.49f, 179.97f);
         public static Vec3 platformB = new(691.44f, 736.63f, 246.34f);
-        public static Vec3 platformC = new(603.2f, 628.96f, 253.67f);
+        public static Vec3 platformC = new(534.06f, 566.85f, 253.57f);
 
         public static Vec3 playerPositionToTeleportToPlatformB = new(804.6071f, 722.5151f, 171.8341f);
         public static Vec3 playerPositionToTeleportToPlatformC = new(640.3368f, 725.8465f, 238.0678f);

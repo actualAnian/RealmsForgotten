@@ -308,31 +308,14 @@ internal class ReligionBehavior : CampaignBehaviorBase
 
                 if (!hero.IsDead)
                 {
-                    if (hero == Hero.MainHero || MBRandom.RandomInt(0, 100) >= 60)
-                        continue;
+                    // O bloco de código que penalizava os companheiros foi removido daqui.
+                    // Agora, o código verifica apenas se o herói é um lorde.
 
-                    if (hero.IsPlayerCompanion)
+                    if (hero.IsLord)
                     {
-                        if (!_heroes.ContainsKey(Hero.MainHero))
-                        {
-                            ChangeRelationAction.ApplyPlayerRelation(hero, -1, true, true);
-                        }
-                        else
-                        {
-                            var heroReligionModel2 = _heroes[Hero.MainHero];
-                            if (heroReligionModel2.Religion != heroReligionModel.Religion)
-                            {
-                                if (heroReligionModel2.GetDevotionToCurrentReligion() > 90f)
-                                    ChangeRelationAction.ApplyPlayerRelation(hero,
-                                        -1 * MBRandom.RandomInt(2, 3), true, true);
-                                else if (heroReligionModel2.GetDevotionToCurrentReligion() > 50f)
-                                    ChangeRelationAction.ApplyPlayerRelation(hero,
-                                        -1 * MBRandom.RandomInt(1, 2), true, true);
-                            }
-                        }
-                    }
-                    else if (hero.IsLord)
-                    {
+                        if (hero == Hero.MainHero || MBRandom.RandomInt(0, 100) >= 60)
+                            continue;
+
                         if (hero.CurrentSettlement != null)
                         {
                             var currentSettlement = hero.CurrentSettlement;

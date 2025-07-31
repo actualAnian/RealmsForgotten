@@ -26,7 +26,7 @@ using HuntableHerds.Models;
 using RFCustomSettlements.Quests;
 using BehaviorTreeWrapper;
 using BehaviorTreeWrapper.Tests;
-using RFCustomSettlements.BehaviorTrees;
+
 namespace RealmsForgotten.RFCustomSettlements
 {
 

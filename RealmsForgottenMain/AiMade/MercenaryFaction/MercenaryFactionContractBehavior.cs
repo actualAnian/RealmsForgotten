@@ -21,30 +21,47 @@ namespace RealmsForgotten.AiMade.MercenaryFaction
         private const int PricePerUnit = 250;
         private const float CooldownDays = 30f;
         private static readonly int[] CompanySizes = { 5, 10, 20 };
+             
+        private static readonly Dictionary<string, Dictionary<int, Dictionary<string, int>>> TownMercenaryRosterMap = new()
+    {
+        { "town_KTG5", new Dictionary<int, Dictionary<string, int>>
+            {
+                // Companhia de 5: 5 Batedores
+                { 5, new Dictionary<string, int> { { "khatogai_tier_1", 5 } } },
+                // Companhia de 10: 7 Lanceiros e 3 Arqueiros
+                { 10, new Dictionary<string, int> { { "khatogai_tier_1", 7 }, { "khatogai_tier_2", 3 } } },
+                // Companhia de 20: 12 Guardas, 5 Arqueiros Montados, 3 Cavaleiros Pesados
+                { 20, new Dictionary<string, int> { { "khatogai_tier_1", 12 }, { "khatogai_tier_2", 5 }, { "khatogai_tier_3", 3 } } }
+            }
+        },
+        { "town_CB7", new Dictionary<int, Dictionary<string, int>>
+            {
+                
+                { 5, new Dictionary<string, int> { { "valthorne_footman", 3 }, { "valthorne_levy_crossbowman", 2 } } },
+               
+                { 10, new Dictionary<string, int> { { "valthorne_billman", 7 }, { "valthorne_crossbowman", 3 } } },
+               
+                { 20, new Dictionary<string, int> { { "valthorne_knight", 15 } } }
+            }
+        }
+    };
 
-        // town ID → troop ID
-        private static readonly Dictionary<string, string> TownTroopMap = new()
-        {
-            { "town_KTG5", "khatogai_tier_1" },
-            { "town_CB7", "valthorne_knight" }
-        };
-
-        private static readonly HashSet<string> EligibleTowns = new(TownTroopMap.Keys);
+        private static readonly HashSet<string> EligibleTowns = new(TownMercenaryRosterMap.Keys);
 
         private Dictionary<string, CampaignTime> _lastHire = new();
         private string _captainHeroId;
         private MobileParty _activeMercParty;
 
+        // ... (O resto da classe permanece o mesmo até o método SpawnMercenaryParty) ...
+
         public override void RegisterEvents()
         {
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, OnSessionLaunched);
-
             CampaignEvents.HourlyTickPartyEvent.AddNonSerializedListener(this, p =>
             {
                 if (p == _activeMercParty)
                     p.Ai.SetMoveEscortParty(MobileParty.MainParty);
             });
-
             CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, OnGameLoaded);
         }
 
@@ -133,9 +150,21 @@ namespace RealmsForgotten.AiMade.MercenaryFaction
             GameMenu.ExitToLast();
         }
 
-        private void SpawnMercenaryParty(Settlement town, int count)
+        // --- MÉTODO ATUALIZADO ---
+        private void SpawnMercenaryParty(Settlement town, int size)
         {
-            string troopId = TownTroopMap.TryGetValue(town.StringId, out var tid) ? tid : "khatogai_tier_1";
+            // Define um "roster" padrão de fallback para garantir que o jogo não quebre.
+            var rosterToSpawn = new Dictionary<string, int> { { "imperial_recruit", size } };
+
+            // Tenta encontrar o roster específico para a cidade e o tamanho escolhido.
+            if (TownMercenaryRosterMap.TryGetValue(town.StringId, out var sizeMap))
+            {
+                if (sizeMap.TryGetValue(size, out var specificRoster))
+                {
+                    rosterToSpawn = specificRoster;
+                }
+            }
+
             string wandererId = town.Culture.StringId switch
             {
                 "empire" => "spc_wanderer_empire_0",
@@ -144,20 +173,28 @@ namespace RealmsForgotten.AiMade.MercenaryFaction
                 "khuzait" => "spc_wanderer_khuzait_0",
                 "aserai" => "spc_wanderer_aserai_0",
                 "sturgia" => "spc_wanderer_sturgia_0",
-                "katogai" => "spc_wanderer_khuzait_0",  // fallback
-                "valthorne" => "spc_wanderer_vlandia_0", // add more as needed
+                "katogai" => "spc_wanderer_khuzait_0",
+                "valthorne" => "spc_wanderer_vlandia_0",
                 _ => "spc_wanderer_empire_0"
             };
 
             CharacterObject leaderTemplate = MBObjectManager.Instance.GetObject<CharacterObject>(wandererId);
-            CharacterObject troopTemplate = MBObjectManager.Instance.GetObject<CharacterObject>(troopId);
-
             Hero captain = HeroCreator.CreateSpecialHero(leaderTemplate, town, Clan.PlayerClan);
             captain.SetName(new TextObject("Mercenary"), new TextObject("Captain"));
             captain.SetNewOccupation(Occupation.Mercenary);
 
             MobileParty party = Clan.PlayerClan.CreateNewMobileParty(captain);
-            party.MemberRoster.AddToCounts(troopTemplate, count);
+
+            // --- LÓGICA DE ADIÇÃO DE TROPAS ATUALIZADA ---
+            // Itera sobre o roster escolhido e adiciona cada tipo de tropa com sua respectiva quantidade.
+            foreach (var troopEntry in rosterToSpawn)
+            {
+                CharacterObject troopTemplate = MBObjectManager.Instance.GetObject<CharacterObject>(troopEntry.Key);
+                if (troopTemplate != null)
+                {
+                    party.MemberRoster.AddToCounts(troopTemplate, troopEntry.Value);
+                }
+            }
 
             party.Position2D = town.GatePosition;
             party.Ai.SetMoveEscortParty(MobileParty.MainParty);

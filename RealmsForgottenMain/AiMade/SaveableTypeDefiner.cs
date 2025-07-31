@@ -4,6 +4,7 @@ using RealmsForgotten.AiMade.Adventurer;
 using RealmsForgotten.AiMade.AIQuest;
 using RealmsForgotten.AiMade.Career;
 using RealmsForgotten.AiMade.Encounters.Behaviors;
+using RealmsForgotten.AiMade.Managers;
 using RealmsForgotten.AiMade.Managers.RealmsForgotten.AiMade.Managers;
 using RealmsForgotten.AiMade.MercenaryFaction;
 using RealmsForgotten.AiMade.Models;
@@ -43,6 +44,7 @@ namespace RealmsForgotten.AiMade
             ConstructContainerDefinition(typeof(Dictionary<int, double>));
             ConstructContainerDefinition(typeof(HashSet<(string, string)>));
             ConstructContainerDefinition(typeof(Tuple<string, string>));
+            ConstructContainerDefinition(typeof(Dictionary<string, WeatherRegion>));
         }
 
         protected override void DefineEnumTypes()
@@ -114,11 +116,13 @@ namespace RealmsForgotten.AiMade
             //AddClassDefinition(typeof(DuelChallengeDialogueBehavior), 77);
             AddClassDefinition(typeof(CapitulationSystemBehavior), 78);
             AddClassDefinition(typeof(MercenaryHireBehavior), 79);
-            AddClassDefinition(typeof(TradePactDialogBehavior), 80);
-            AddClassDefinition(typeof(TradePactSettlementMenuBehavior), 81);
-            AddClassDefinition(typeof(TradePactCampaignBehavior), 82);
-            AddClassDefinition(typeof(AIBreakInBehavior), 83);
-
+            AddClassDefinition(typeof(CaravanTradePactBehavior), 80);
+            AddClassDefinition(typeof(EconomicPactBehavior), 81);
+            AddClassDefinition(typeof(AIBreakInBehavior), 82);
+            AddClassDefinition(typeof(RFWeatherCampaignBehavior), 83);
+            AddClassDefinition(typeof(VassalPromotionBehavior), 84);
+            AddClassDefinition(typeof(MercenaryFactionWarPactBehavior), 85);
+            AddClassDefinition(typeof(WeatherRegion), 86);
         }
     }
 }
