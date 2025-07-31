@@ -31,7 +31,6 @@ using RealmsForgotten.UI;
 using RealmsForgotten.Career;
 using RealmsForgotten.Career.Logic;
 using RealmsForgotten.Career.Ability;
-using RealmsForgotten.Quest.FourthUpdate;
 using RealmsForgotten.Managers;
 
 namespace RealmsForgotten
@@ -223,7 +222,6 @@ namespace RealmsForgotten
 #pragma warning restore BHA0003 // Type was not found
             harmony.Patch(originalMethod, transpiler: new HarmonyMethod(typeof(PartyVMPatch), nameof(PartyVMPatch.PartyVMPopulatePartyListLabelPatch)));
             //          harmony.Patch(beardGetterMethod, transpiler: new HarmonyMethod(typeof(PartyVMPatch), nameof(PartyVMPatch.PartyVMPopulatePartyListLabelPatch)));
-
             QuestPatches.PatchAll();
 
         }
@@ -298,21 +296,12 @@ namespace RealmsForgotten
                 
                 AccessTools.Property(typeof(MissionGameModels), "AgentStatCalculateModel").SetValue(MissionGameModels.Current, rfAgentStatCalculateModel);
             }
-
         }
 
-        bool _firstTime = true;
         public override void OnNewGameCreated(Game game, object initializerObject)
         {
             base.OnNewGameCreated(game, initializerObject);
             QuestSubModule.OnNewGameCreated(game, initializerObject);
-            if(_firstTime)
-            {
-                SeventhQuest newChapter = new SeventhQuest("rf_seventh_quest", Hero.MainHero, CampaignTime.DaysFromNow(999), 20000);
-                newChapter.StartQuest();
-                newChapter.Temp();
-                _firstTime = false;
-            }
         }
 
         protected override void InitializeGameStarter(Game game, IGameStarter starterObject)

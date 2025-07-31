@@ -48,8 +48,28 @@ namespace RealmsForgotten.Career.Ability
         // data
         private readonly string sprite;
         private readonly string spriteUpgraded;
-        public bool IsUpgraded { get; set; } = false;
-        public bool IsEnabled { get; set; } = false;
+        public bool IsUpgraded
+        {
+            get
+            {
+                return RFCareerCampaignBehavior.Instance.ClassInfo.IsAbilityUpgraded;
+            }
+            set
+            {
+                RFCareerCampaignBehavior.Instance.ClassInfo.IsAbilityUpgraded = value;
+            }
+        }
+        public bool IsEnabled 
+        {
+            get
+            {
+                return RFCareerCampaignBehavior.Instance.ClassInfo.IsAbilityActive;
+            }
+            set
+            {
+                RFCareerCampaignBehavior.Instance.ClassInfo.IsAbilityActive = value;
+            }
+        }
         public bool IsActiveInMission 
         {
             get
@@ -96,7 +116,6 @@ namespace RealmsForgotten.Career.Ability
             spriteUpgraded = sspriteUpgraded;
             description = ddescription;
             descriptionUpdated = ddescriptionUpdated;
-            IsUpgraded = false;
             _timer = new Timer(1000);
             _timer.Elapsed += TimerElapsed;
             _timer.Enabled = false;

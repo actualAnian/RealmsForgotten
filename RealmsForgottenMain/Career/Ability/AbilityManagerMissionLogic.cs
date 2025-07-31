@@ -20,7 +20,7 @@ namespace RealmsForgotten.Career.Ability
             var career = PlayerCareerExtension.GetCareer();
             if (career != null)
             {
-                hasAbility = true;
+                hasAbility = career.Ability.IsEnabled;
                 ability = career.Ability;
             }
         }
