@@ -33,6 +33,9 @@ namespace RealmsForgotten.Models
             int nasoriaBonus = (int)(baseValue - 15f / 100f * baseValue);
             if (buyerHero.Culture.StringId == "vlandia" && troop.Occupation == Occupation.Mercenary && nasoriaBonus > 0)
                 return nasoriaBonus;
+            int LightwardenBonus = (int)(baseValue - 5f / 100f * baseValue);
+            if (PlayerCareerExtension.HasCareerChoice("WordSpeader2_1") && troop.IsInfantry)
+                return LightwardenBonus;
             return baseValue;
         }
         public override ExplainedNumber GetTotalWage(MobileParty mobileParty, bool includeDescriptions = false)
@@ -51,6 +54,16 @@ namespace RealmsForgotten.Models
                     if (troop.Character.IsMounted)
                         totalReduction += troop.Number * troop.Character.TroopWage;// * choice.Passive!.EffectMagnitude;
                 if (totalReduction > 0) value.Add(-1 * totalReduction, new("{=knight_cav_wage_reduction}Class knight cavalry wage reduction"));
+            }
+
+            if (PlayerCareerExtension.HasCareerChoice("WordSpeader1_5"))
+            {
+                var choice = career.AllChoices.First(c => c.StringId == "WordSpeader1_5");
+                float totalReduction = 0;
+                foreach (TaleWorlds.CampaignSystem.Roster.TroopRosterElement troop in mobileParty.MemberRoster.GetTroopRoster())
+                    if (troop.Character.IsInfantry)
+                        totalReduction += troop.Number * troop.Character.TroopWage;// * choice.Passive!.EffectMagnitude;
+                if (totalReduction > 0) value.Add(-1 * totalReduction, new("{=lightwarden_cav_wage_reduction}Class lightwarden infantry wage reduction"));
             }
 
             if (PlayerCareerExtension.HasCareerChoice("WanderingBlade2_5"))

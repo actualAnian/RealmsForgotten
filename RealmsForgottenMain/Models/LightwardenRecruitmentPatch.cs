@@ -1,22 +1,14 @@
 ﻿using HarmonyLib;
 using RealmsForgotten.Career;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.CampaignBehaviors;
+using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.CampaignSystem.ViewModelCollection.GameMenu.Recruitment;
+using TaleWorlds.Core;
 
 namespace RealmsForgotten.Models
 {
-    [HarmonyPatch(typeof(RecruitVolunteerTroopVM), nameof(RecruitVolunteerTroopVM.Cost), MethodType.Getter)]
-    internal class LightwardenRecruitmentPatch
-    {
-        static void Postfix(RecruitVolunteerTroopVM __instance, ref int __result)
-        {
-            CharacterObject ch = __instance.Character;
-            if (IsInfantry(ch))
-                __result = (int)MathF.Floor(__result * 0.95f); // 5 % de desconto
-        }
-    }
+
 }
 
