@@ -8,17 +8,17 @@ namespace RealmsForgotten.Career
 {
     public class RFCareerChoices
     {
-
         private readonly List<RFCareerChoicesBase> _allCareers;
         private static RFCareerChoices? instance;
 
         public RFCareerChoices()
         {
-            instance = this; 
+            instance = this;
             _allCareers = new()
             {
                 new MercenaryCareerChoices(RFCareers.Mercenary),
                 new KnightCareerChoices(RFCareers.Knight),
+                new WizardCareerChoices(RFCareers.Wizard),
             };
         }
 
@@ -31,7 +31,8 @@ namespace RealmsForgotten.Career
             }
         }
 
-        public static CareerChoiceObject GetChoice(string id) => Game.Current.ObjectManager.GetObject<CareerChoiceObject>(x => x.StringId == id);
+        public static CareerChoiceObject GetChoice(string id) =>
+            Game.Current.ObjectManager.GetObject<CareerChoiceObject>(x => x.StringId == id);
 
         public RFCareerChoicesBase GetCareerChoices(CareerObject id)
         {

@@ -16,10 +16,6 @@ namespace RealmsForgotten.AiMade.Patches
     [HarmonyPatch(typeof(MobileParty), "RecoverPositionsForNavMeshUpdate")]
     public class DebugSafePositionRecovery
     {
-        // Hardcoded to your Documents folder
-        private static readonly string LogFilePath =
-            @"C:\Users\gupol\Documents\party_position_debug.txt";
-
         static bool Prefix(MobileParty __instance)
         {
             try
@@ -77,15 +73,55 @@ namespace RealmsForgotten.AiMade.Patches
             return false; // Skip original method
         }
 
+        // ✅ Gets a safe log path: mod folder or fallback to Documents
+        private static string GetSafeLogPath()
+        {
+            string modPath = Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory,
+                "Modules",
+                "RealmsForgotten",
+                "party_position_debug.txt"
+            );
+
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(modPath));
+                return modPath;
+            }
+            catch
+            {
+                // Fallback: user Documents folder
+                string fallback = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                    "Mount and Blade II Bannerlord",
+                    "RealmsForgotten",
+                    "party_position_debug.txt"
+                );
+
+                try
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(fallback));
+                }
+                catch
+                {
+                    // Even fallback failed, give up silently
+                }
+
+                return fallback;
+            }
+        }
+
+        // ✅ Logging function using safe path
         private static void Log(string message)
         {
             try
             {
-                File.AppendAllText(LogFilePath, $"[{DateTime.Now:HH:mm:ss}] {message}{Environment.NewLine}");
+                string path = GetSafeLogPath();
+                File.AppendAllText(path, $"[{DateTime.Now:HH:mm:ss}] {message}{Environment.NewLine}");
             }
             catch
             {
-                // Fails silently if file write is blocked
+                // Silently fail
             }
         }
     }

@@ -36,7 +36,7 @@ namespace RealmsForgotten.Career.VievModels
             baseAbility = new(_career.Ability.Sprite, this, false);
             upgradedAbility = new(_career.Ability.SpriteUpgraded, this, true);
             _abilityName = _career.Ability.Name.ToString();
-            _description = PlayerCareerExtension.PointsSystem!.Description;
+            _description = career.Description.ToString();
             _abilityDescription = _career.Ability.Description;
             _freeCareerPoints = PlayerCareerExtension.PointsSystem.AvailablePoints.ToString();
             _topscreen = new();

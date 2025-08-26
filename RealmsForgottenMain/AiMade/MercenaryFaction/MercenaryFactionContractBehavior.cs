@@ -181,7 +181,10 @@ namespace RealmsForgotten.AiMade.MercenaryFaction
             CharacterObject leaderTemplate = MBObjectManager.Instance.GetObject<CharacterObject>(wandererId);
             Hero captain = HeroCreator.CreateSpecialHero(leaderTemplate, town, Clan.PlayerClan);
             captain.SetName(new TextObject("Mercenary"), new TextObject("Captain"));
-            captain.SetNewOccupation(Occupation.Mercenary);
+            captain.SetNewOccupation(Occupation.Wanderer);
+
+            // This is what flips IsPlayerCompanion and wires up all the right state
+            AddCompanionAction.Apply(Clan.PlayerClan, captain);
 
             MobileParty party = Clan.PlayerClan.CreateNewMobileParty(captain);
 

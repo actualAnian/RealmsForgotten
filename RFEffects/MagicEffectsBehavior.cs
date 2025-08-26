@@ -21,7 +21,7 @@ namespace RealmsForgotten.RFEffects
         public static MagicEffectsBehavior Instance;
         public List<AgentEffectData> AgentsUnderEffect = new();
         public Dictionary<int, Timer> BurningEffectStopwatch = new();
-        
+
 
         public MagicEffectsBehavior()
         {
@@ -49,15 +49,50 @@ namespace RealmsForgotten.RFEffects
             AgentsUnderEffect.RemoveAll(x => x.Agent == agent);
         }
 
+        public static void ApplyEffect(Agent victim, string effectId, float durationSeconds)
+        {
+            if (Instance == null || victim == null || !victim.IsActive()) return;
+
+            // refresh if already present
+            int idx = Instance.AgentsUnderEffect.FindIndex(e => e.Agent == victim && e.Effect == effectId);
+            if (idx >= 0)
+            {
+                var data = Instance.AgentsUnderEffect[idx];
+                data.Timer = new Timer(Time.ApplicationTime, durationSeconds, false);
+                Instance.AgentsUnderEffect[idx] = data;
+            }
+            else
+            {
+                var timer = new Timer(Time.ApplicationTime, durationSeconds, false);
+                Instance.AgentsUnderEffect.Add(new AgentEffectData(victim, effectId, timer, null));
+            }
+
+            // special handling for burn tick cadence
+            if (effectId == "Fire")
+                Instance.BurningEffectStopwatch[victim.Index] = new Timer(Time.ApplicationTime, 2f);
+        }
         private void FireTick(AgentEffectData agentEffect)
         {
 
             if (BurningEffectStopwatch.TryGetValue(agentEffect.Agent.Index, out Timer timer) && timer.Check(Time.ApplicationTime))
             {
-                Blow blow = CreateBlow(agentEffect.Agent, MBRandom.RandomInt(5, 10), agentEffect.Agent.Index);
-                AttackCollisionData attackCollisionData = default(AttackCollisionData);
-                ref AttackCollisionData collisionData = ref attackCollisionData;
-                agentEffect.Agent.RegisterBlow(blow, collisionData);
+                Agent victim = agentEffect.Agent;
+                Blow blow = CreateBlow(victim, MBRandom.RandomInt(5, 10), victim.Index);
+
+                // --- VERSÃO FINAL E CORRIGIDA DO ATTACKCOLLISIONDATA ---
+                AttackCollisionData attackCollisionData = AttackCollisionData.GetAttackCollisionDataForDebugPurpose(
+                    false, false, false, false, false, false, false, false, false, false, false, false,
+                    CombatCollisionResult.StrikeAgent,
+                    -1, 0, victim.Index,
+                    blow.BoneIndex, BoneBodyPartType.Head,
+                    victim.Monster.MainHandItemBoneIndex, Agent.UsageDirection.AttackLeft, -1,
+                    CombatHitResultFlags.NormalHit,
+                    0.5f, 1f, 0f, 0f, 0f, 0f, 0f, 0f,
+                    victim.LookDirection, blow.Direction, blow.GlobalPosition, Vec3.Zero, Vec3.Zero, victim.Velocity,
+                    Vec3.Zero);
+
+
+                victim.RegisterBlow(blow, attackCollisionData);
                 timer.Reset(Time.ApplicationTime);
 
                 if (agentEffect.Timer.Check(Time.ApplicationTime))
@@ -111,7 +146,7 @@ namespace RealmsForgotten.RFEffects
                 return;
             }
 
-            for (int i = 0; i < AgentsUnderEffect.Count; i++)
+            for (int i = AgentsUnderEffect.Count - 1; i >= 0; i--)
             {
                 AgentEffectData agentEffectData = AgentsUnderEffect[i];
 
@@ -137,7 +172,6 @@ namespace RealmsForgotten.RFEffects
 
 
         }
-
         protected override void OnEndMission()
         {
             base.OnEndMission();

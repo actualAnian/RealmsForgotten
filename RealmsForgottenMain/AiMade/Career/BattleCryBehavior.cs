@@ -20,7 +20,7 @@ namespace RealmsForgotten.AiMade.Career
                 battleCryState = Campaign.Current.GetCampaignBehavior<BattleCryStateBehavior>();
             }
 
-            if (battleCryState.CanUseBattleCry && Input.IsKeyPressed(InputKey.B)) // Assuming 'B' key is used for Battle Cry
+            if (battleCryState.CanUseBattleCry && Input.IsKeyPressed(InputKey.Z)) // Assuming 'Z' key is used for Battle Cry
             {
                 UseBattleCry();
             }

@@ -40,6 +40,8 @@ namespace RealmsForgotten.RFEffects
 
 
         }
+
+       
         public static void GreenSpark(Agent affectedAgent, Agent affectorAgent, in MissionWeapon affectorWeapon, in Blow blow, in AttackCollisionData attackCollisionData, GameEntity gameEntity = null)
         {
             WeaponEffectData weaponEffectData = RFEffectsLibrary.CurrentWeaponEffects[affectorWeapon.Item.StringId];
@@ -217,14 +219,17 @@ namespace RealmsForgotten.RFEffects
 
             MagicEffectsBehavior.Instance.AgentsUnderEffect.Add(new AgentEffectData(agent, weaponEffectData.Effect, timer, firstAffectedGameEntity));
         }
-        private static List<Agent> GetRadiusAgentsOrSingle(Agent affectedAgent, Agent affectorAgent, WeaponEffectData weaponEffectData, Blow blow, Func<Agent, bool> condition)
+        private static List<Agent> GetRadiusAgentsOrSingle(
+     Agent affectedAgent, Agent affectorAgent, WeaponEffectData weaponEffectData, Blow blow, Func<Agent, bool> condition)
         {
             float areaOfEffect = weaponEffectData.AreaOfEffect;
 
+          
             if (areaOfEffect <= 0)
                 return new List<Agent>() { affectedAgent };
 
-            return RFUtility.GetAgentsInRadius(blow.GlobalPosition.AsVec2, areaOfEffect).Where(condition).ToList();
+            return RFUtility.GetAgentsInRadius(blow.GlobalPosition.AsVec2, areaOfEffect)
+                            .Where(condition).ToList();
         }
     }
 }

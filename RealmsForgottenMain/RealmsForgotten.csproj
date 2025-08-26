@@ -279,6 +279,9 @@
     <Reference Include="MCMv5">
       <HintPath>_Module\bin\Win64_Shipping_Client\MCMv5.dll</HintPath>
     </Reference>
+    <Reference Include="RFEffects">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\RealmsForgotten\bin\Win64_Shipping_Client\RFEffects.dll</HintPath>
+    </Reference>
     <Reference Include="SandBox.View">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\SandBox\bin\Win64_Shipping_Client\SandBox.View.dll</HintPath>
     </Reference>

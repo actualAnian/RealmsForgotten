@@ -1532,6 +1532,7 @@ namespace RealmsForgotten
         {
             ChooseCharacterEquipment(characterCreation, StartType.EscapedPrisoner);
             Manager.SetStoryOption(8);
+            PlayerCareerExtension.AddCareer(RFCareers.Wizard);
         }
 
         protected void HometownLocationOnConsequence(CharacterCreation characterCreation)

@@ -50,6 +50,7 @@ namespace RealmsForgotten.AiMade
         protected override void DefineEnumTypes()
         {
             base.DefineEnumTypes();
+            AddEnumDefinition(typeof(WeatherType), 2);
         }
 
         protected override void DefineClassTypes()

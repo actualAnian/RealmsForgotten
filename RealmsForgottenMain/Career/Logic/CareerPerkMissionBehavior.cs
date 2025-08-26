@@ -1,59 +1,238 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using RealmsForgotten.Career.Ability;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
+using TaleWorlds.Library;
+using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.AgentOrigins;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RealmsForgotten.Career.Logic
 {
-    public class CareerPerkMissionBehavior : TaleWorlds.MountAndBlade.MissionLogic
+    public class CareerPerkMissionBehavior : MissionLogic
     {
-        public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
+        private bool _didWizardImmunitiesInit = false;
+
+        public override void OnBehaviorInitialize()
         {
-            List<string> choices = PlayerCareerExtension.GetAllCareerChoices();
-            if (affectorAgent != null && affectorAgent.IsMainAgent)
+            base.OnBehaviorInitialize();
+            AbilityEffects.BurningAgentsFromAbility.Clear();
+            AbilityEffects.RemoveArcaneSurgeFromWeapons();
+        }
+
+        public override void OnAgentRemoved(
+            Agent affectedAgent,
+            Agent affectorAgent,
+            AgentState agentState,
+            KillingBlow blow)
+        {
+            if (affectedAgent != null)
             {
-                foreach (var choiceID in choices)
+                if (AbilityEffects.BurningAgentsFromAbility.TryGetValue(affectedAgent, out var burningData))
                 {
-                    CareerChoiceObject choice = RFCareerChoices.GetChoice(choiceID);
-                    if (choice?.Passive == null || choice.Passive.PassiveEffectType != PassiveEffectType.OnKill) continue;
-                    choice.Passive.Activate();
+                    burningData.ParticleEntity?.Remove(0);
+                    AbilityEffects.BurningAgentsFromAbility.Remove(affectedAgent);
                 }
             }
+
+            base.OnAgentRemoved(affectedAgent, affectorAgent, agentState, blow);
+
+            try
+            {
+                if (!PlayerCareerExtension.HasAnyCareer() || affectorAgent == null) return;
+
+                if (affectorAgent.IsMainAgent)
+                {
+                    var choices = PlayerCareerExtension.GetAllCareerChoices();
+                    foreach (var choiceID in choices)
+                    {
+                        CareerChoiceObject choice = RFCareerChoices.GetChoice(choiceID);
+                        if (choice?.Passive?.PassiveEffectType == PassiveEffectType.OnKill)
+                        {
+                            choice.Passive.Activate();
+                        }
+                    }
+                }
+                else
+                {
+                    bool hasCompanionHealOnKill = false;
+                    foreach (var id in PlayerCareerExtension.GetAllCareerChoices())
+                    {
+                        var ch = RFCareerChoices.GetChoice(id);
+                        if (ch != null && ch.Description.ToString().Contains("Companions gain 5 HP on kill"))
+                        {
+                            hasCompanionHealOnKill = true;
+                            break;
+                        }
+                    }
+
+                    if (hasCompanionHealOnKill && IsPlayerCompanionAgent(affectorAgent))
+                    {
+                        float healAmount = 5f;
+                        affectorAgent.Health = MathF.Min(affectorAgent.HealthLimit, affectorAgent.Health + healAmount);
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                InformationManager.DisplayMessage(new InformationMessage("[RF Career] OnAgentRemoved Error: " + ex.Message, Colors.Red));
+            }
         }
+
         public override void OnAgentHit(Agent affectedAgent, Agent affectorAgent, in MissionWeapon affectorWeapon, in Blow blow, in AttackCollisionData attackCollisionData)
         {
             CareerObject? career = PlayerCareerExtension.GetCareer();
             if (career == null) return;
-            //if (!blow.IsMissile || !affectorAgent.IsMainAgent) return;  
-            //MissionEquipment equipment = Agent.Main.Equipment;
-            //for (int i = 0; i < 5; i++)
-            //{
-            //    EquipmentIndex equipmentIndex = (EquipmentIndex)i;
-            //    MissionWeapon missionWeapon = equipment[equipmentIndex];
-            //    if (missionWeapon.IsEmpty || missionWeapon.Item.StringId != affectorWeapon.Item.StringId) continue;
-            //    //WeaponComponentData currentUsageItem = missionWeapon.CurrentUsageItem;
-            //    short value = (short)(missionWeapon.Amount + 1);
-            //    affectorAgent.SetWeaponAmountInSlot(equipmentIndex, value, false);
-            //    //equipment.SetAmountOfSlot(equipmentIndex, value, true);
-            //    //affectorAgent.TryToWieldWeaponInSlot(slotIndex, Agent.WeaponWieldActionType.InstantAfterPickUp, false);
-            //}
-            Ability.ClassAbility ability = career.Ability;
+
+            var ability = career.Ability;
             if (ability.IsActiveInMission)
+            {
                 ability.OnAgentHit(affectedAgent, affectorAgent, affectorWeapon, blow, attackCollisionData);
+            }
         }
-        public override void OnMissileHit(Agent attacker, Agent victim, bool isCanceled, AttackCollisionData collisionData)
+
+        public override void OnAgentCreated(Agent agent)
         {
-            //List<string> choices = PlayerCareerExtension.GetAllCareerChoices();
-            //if (attacker.IsMainAgent 
-            //    && choices.Contains("SurvivalistKeystone") 
-            //    && collisionData.VictimHitBodyPart == BoneBodyPartType.Head || collisionData.VictimHitBodyPart == BoneBodyPartType.Neck)
-            //{
-            //    attacker.getatt
-            //}
+            base.OnAgentCreated(agent);
+
+            try
+            {
+                if (!PlayerCareerExtension.HasAnyCareer()) return;
+
+                bool hasPerk = false;
+                foreach (var id in PlayerCareerExtension.GetAllCareerChoices())
+                {
+                    var ch = RFCareerChoices.GetChoice(id);
+                    if (ch != null && ch.Description.ToString().Contains("Increase your companions hitpoints by 40"))
+                    {
+                        hasPerk = true;
+                        break;
+                    }
+                }
+
+                if (hasPerk && IsPlayerCompanionAgent(agent))
+                {
+                    agent.HealthLimit += 40f;
+                    agent.Health = agent.HealthLimit;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                InformationManager.DisplayMessage(new InformationMessage("[RF Career] OnAgentCreated Error: " + ex.Message, Colors.Red));
+            }
+        }
+
+        private bool IsPlayerCompanionAgent(Agent agent)
+        {
+            if (agent == null || agent.IsMainAgent || agent.Character == null)
+                return false;
+
+            var hero = (agent.Character as CharacterObject)?.HeroObject;
+            return hero != null && hero.IsPlayerCompanion;
+        }
+
+        public override void OnMissionTick(float dt)
+        {
+            base.OnMissionTick(dt);
+
+            if (Mission.Current == null) return;
+            float currentTime = Mission.Current.CurrentTime;
+
+            if (AbilityEffects.BurningAgentsFromAbility.Count > 0)
+            {
+                var agentsToCheck = AbilityEffects.BurningAgentsFromAbility.Keys.ToList();
+
+                foreach (Agent victim in agentsToCheck)
+                {
+                    if (victim == null || !victim.IsActive())
+                    {
+                        if (AbilityEffects.BurningAgentsFromAbility.TryGetValue(victim, out var oldData))
+                        {
+                            oldData.ParticleEntity?.Remove(0);
+                            AbilityEffects.BurningAgentsFromAbility.Remove(victim);
+                        }
+                        continue;
+                    }
+
+                    if (AbilityEffects.BurningAgentsFromAbility.TryGetValue(victim, out var data))
+                    {
+                        if (currentTime >= data.EndTime)
+                        {
+                            data.ParticleEntity?.Remove(0);
+                            AbilityEffects.BurningAgentsFromAbility.Remove(victim);
+                            continue;
+                        }
+
+                        data.ParticleEntity?.SetGlobalFrame(victim.AgentVisuals.GetGlobalFrame());
+
+                        if (currentTime >= data.NextTickTime)
+                        {
+                            int damage = MBRandom.RandomInt(5, 10);
+                            Blow blow = CreateMagicBlow(victim, damage);
+                            AttackCollisionData collisionData = CreateCollisionDataForMagic(victim, blow);
+                            victim.RegisterBlow(blow, collisionData);
+
+                            data.NextTickTime = currentTime + 2f;
+                        }
+                    }
+                }
+            }
+
+            if (!_didWizardImmunitiesInit && currentTime > 0.2f)
+            {
+                _didWizardImmunitiesInit = true;
+
+                float meleeSec = 0f;
+                float rangedSec = 0f;
+
+                foreach (var id in PlayerCareerExtension.GetAllCareerChoices())
+                {
+                    var ch = RFCareerChoices.GetChoice(id);
+                    if (ch?.Passive == null) continue;
+
+                    var s = ch.Description.ToString();
+                    if (s.Contains("Immune to melee damage for 30s"))
+                        meleeSec = MathF.Max(meleeSec, ch.Passive.EffectMagnitude);
+                    if (s.Contains("Immune to ranged damage for 30s"))
+                        rangedSec = MathF.Max(rangedSec, ch.Passive.EffectMagnitude);
+                }
+
+                if (meleeSec > 0f) AbilityEffects.StartPlayerMeleeImmunity(meleeSec);
+                if (rangedSec > 0f) AbilityEffects.StartPlayerRangedImmunity(rangedSec);
+            }
+        }
+
+        private Blow CreateMagicBlow(Agent victim, int damage)
+        {
+            Blow blow = new Blow(victim.Index)
+            {
+                DamageType = DamageTypes.Blunt,
+                BlowFlag = BlowFlags.ShrugOff | BlowFlags.NoSound,
+                BoneIndex = victim.Monster.HeadLookDirectionBoneIndex,
+                GlobalPosition = victim.Position,
+                BaseMagnitude = 0f,
+                InflictedDamage = damage,
+                SwingDirection = victim.LookDirection,
+                DamageCalculated = true
+            };
+            blow.Direction = blow.SwingDirection;
+            blow.WeaponRecord.FillAsMeleeBlow(null, null, -1, -1);
+            return blow;
+        }
+
+        private AttackCollisionData CreateCollisionDataForMagic(Agent victim, Blow blow)
+        {
+            return AttackCollisionData.GetAttackCollisionDataForDebugPurpose(
+                false, false, false, false, false, false, false, false, false, false, false, false,
+                CombatCollisionResult.StrikeAgent,
+                -1, 0, victim.Index,
+                blow.BoneIndex, BoneBodyPartType.Head,
+                victim.Monster.MainHandItemBoneIndex, Agent.UsageDirection.AttackLeft, -1,
+                CombatHitResultFlags.NormalHit,
+                0.5f, 1f, 0f, 0f, 0f, 0f, 0f, 0f,
+                victim.LookDirection, blow.Direction, blow.GlobalPosition, Vec3.Zero, Vec3.Zero, victim.Velocity,
+                Vec3.Zero);
         }
     }
 }

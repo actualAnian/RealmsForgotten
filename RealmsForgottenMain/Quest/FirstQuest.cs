@@ -137,7 +137,7 @@ namespace RealmsForgotten.Quest
 
             private readonly int minimumSoldiersAmountForQuest = 50;
 
-            private static Hideout questHideout => Hideout.All.Find(x => x.StringId == "hideout_mountain_7");
+            private static Hideout questHideout => Hideout.All.Find(x => x.StringId == "hideout_mountain_18");
 
             public RescueUliahQuest(string questId, Hero questGiver, CampaignTime duration, int rewardGold) : base(questId, questGiver, duration, rewardGold)
             {
