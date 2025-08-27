@@ -19,6 +19,7 @@ namespace RealmsForgotten.Career.Logic
             base.OnBehaviorInitialize();
             AbilityEffects.BurningAgentsFromAbility.Clear();
             AbilityEffects.RemoveArcaneSurgeFromWeapons();
+            AbilityEffects.PendingBurningDamage.Clear();
         }
 
         public override void OnAgentRemoved(
@@ -29,8 +30,11 @@ namespace RealmsForgotten.Career.Logic
         {
             if (affectedAgent != null)
             {
+                // Limpeza do efeito de burning. Essa lógica é OK aqui.
                 if (AbilityEffects.BurningAgentsFromAbility.TryGetValue(affectedAgent, out var burningData))
                 {
+                    // Remover partícula imediatamente ao remover o agente.
+                    // Isso é crucial para evitar acessar uma partícula associada a um agente que não existe mais.
                     burningData.ParticleEntity?.Remove(0);
                     AbilityEffects.BurningAgentsFromAbility.Remove(affectedAgent);
                 }
@@ -139,19 +143,18 @@ namespace RealmsForgotten.Career.Logic
             if (Mission.Current == null) return;
             float currentTime = Mission.Current.CurrentTime;
 
+            // --- Lógica de Burning Damage Over Time (DoT) ---
             if (AbilityEffects.BurningAgentsFromAbility.Count > 0)
             {
-                var agentsToCheck = AbilityEffects.BurningAgentsFromAbility.Keys.ToList();
+                var agentsToProcess = AbilityEffects.BurningAgentsFromAbility.Keys.ToList();
+                var agentsToRemoveFromBurning = new List<Agent>();
 
-                foreach (Agent victim in agentsToCheck)
+                foreach (Agent victim in agentsToProcess)
                 {
-                    if (victim == null || !victim.IsActive())
+                    // VERIFICAÇÃO INICIAL CRÍTICA: Se o agente não está ativo OU se AgentVisuals é nulo (não visível/preparado para renderização)
+                    if (victim == null || !victim.IsActive() || victim.AgentVisuals == null)
                     {
-                        if (AbilityEffects.BurningAgentsFromAbility.TryGetValue(victim, out var oldData))
-                        {
-                            oldData.ParticleEntity?.Remove(0);
-                            AbilityEffects.BurningAgentsFromAbility.Remove(victim);
-                        }
+                        agentsToRemoveFromBurning.Add(victim);
                         continue;
                     }
 
@@ -159,26 +162,63 @@ namespace RealmsForgotten.Career.Logic
                     {
                         if (currentTime >= data.EndTime)
                         {
-                            data.ParticleEntity?.Remove(0);
-                            AbilityEffects.BurningAgentsFromAbility.Remove(victim);
+                            agentsToRemoveFromBurning.Add(victim);
                             continue;
                         }
 
-                        data.ParticleEntity?.SetGlobalFrame(victim.AgentVisuals.GetGlobalFrame());
+                        // Tentar atualizar a posição da partícula.
+                        // Usar try-catch aqui É MAIS CRÍTICO AGORA.
+                        // Também verificar se data.ParticleEntity existe antes de tentar manipulá-lo.
+                        if (data.ParticleEntity != null)
+                        {
+                            try
+                            {
+                                data.ParticleEntity.SetGlobalFrame(victim.AgentVisuals.GetGlobalFrame());
+                            }
+                            catch (System.Exception ex)
+                            {
+                                InformationManager.DisplayMessage(new InformationMessage($"[RF Career] Burning particle update error for {victim.Name}: {ex.Message}", Colors.Yellow));
+                                agentsToRemoveFromBurning.Add(victim);
+                                continue;
+                            }
+                        }
+                        else // Se a partícula for nula, o efeito não está visualmente ativo, remova-o.
+                        {
+                            agentsToRemoveFromBurning.Add(victim);
+                            continue;
+                        }
+
 
                         if (currentTime >= data.NextTickTime)
                         {
-                            int damage = MBRandom.RandomInt(5, 10);
-                            Blow blow = CreateMagicBlow(victim, damage);
-                            AttackCollisionData collisionData = CreateCollisionDataForMagic(victim, blow);
-                            victim.RegisterBlow(blow, collisionData);
-
-                            data.NextTickTime = currentTime + 2f;
+                            if (victim.IsActive() && victim.AgentVisuals != null) // VERIFICAÇÃO DUPLA ANTES DE ADICIONAR DANO À FILA
+                            {
+                                int damage = MBRandom.RandomInt(5, 10);
+                                AbilityEffects.PendingBurningDamage.Add((victim, damage));
+                                data.NextTickTime = currentTime + 2f;
+                            }
+                            else
+                            {
+                                agentsToRemoveFromBurning.Add(victim);
+                            }
                         }
+                    }
+                }
+
+                foreach (Agent agentToRemove in agentsToRemoveFromBurning)
+                {
+                    if (AbilityEffects.BurningAgentsFromAbility.TryGetValue(agentToRemove, out var burningData))
+                    {
+                        burningData.ParticleEntity?.Remove(0);
+                        AbilityEffects.BurningAgentsFromAbility.Remove(agentToRemove);
                     }
                 }
             }
 
+            ApplyPendingBurningDamage();
+
+
+            // --- Lógica de Wizard Immunities Init (Inalterada) ---
             if (!_didWizardImmunitiesInit && currentTime > 0.2f)
             {
                 _didWizardImmunitiesInit = true;
@@ -203,11 +243,51 @@ namespace RealmsForgotten.Career.Logic
             }
         }
 
+        private void ApplyPendingBurningDamage()
+        {
+            var damagesToApply = new List<(Agent victim, int damage)>(AbilityEffects.PendingBurningDamage);
+            AbilityEffects.PendingBurningDamage.Clear();
+
+            foreach (var (victim, damage) in damagesToApply)
+            {
+                // CRÍTICO: Última verificação de validade ANTES de aplicar o dano, e também se AgentVisuals é nulo.
+                if (victim != null && victim.IsActive() && victim.AgentVisuals != null)
+                {
+                    try
+                    {
+                        Blow blow = CreateMagicBlow(victim, damage);
+                        AttackCollisionData collisionData = CreateCollisionDataForMagic(victim, blow);
+                        victim.RegisterBlow(blow, collisionData);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        InformationManager.DisplayMessage(new InformationMessage($"[RF Career] Burning damage application error for {victim.Name}: {ex.Message}", Colors.Red));
+                        if (AbilityEffects.BurningAgentsFromAbility.TryGetValue(victim, out var burningData))
+                        {
+                            burningData.ParticleEntity?.Remove(0);
+                            AbilityEffects.BurningAgentsFromAbility.Remove(victim);
+                        }
+                    }
+                }
+                else
+                {
+                    // Se o agente não está mais ativo ou visível, limpe o efeito de burning.
+                    if (AbilityEffects.BurningAgentsFromAbility.TryGetValue(victim, out var burningData))
+                    {
+                        burningData.ParticleEntity?.Remove(0);
+                        AbilityEffects.BurningAgentsFromAbility.Remove(victim);
+                    }
+                }
+            }
+        }
+
+
         private Blow CreateMagicBlow(Agent victim, int damage)
         {
             Blow blow = new Blow(victim.Index)
             {
                 DamageType = DamageTypes.Blunt,
+                // Mantido BlowFlag, mas considere testar com BlowFlags.None se o problema persistir.
                 BlowFlag = BlowFlags.ShrugOff | BlowFlags.NoSound,
                 BoneIndex = victim.Monster.HeadLookDirectionBoneIndex,
                 GlobalPosition = victim.Position,

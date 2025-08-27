@@ -50,6 +50,10 @@ namespace RealmsForgotten.Career.Ability
         public static Dictionary<Agent, CareerBurningAgentData> BurningAgentsFromAbility = new Dictionary<Agent, CareerBurningAgentData>();
         private static Dictionary<Agent, List<GameEntity>> TroopWeaponParticles = new Dictionary<Agent, List<GameEntity>>();
 
+        // NOVO: Lista para armazenar o dano de burning pendente
+        public static List<(Agent victim, int damage)> PendingBurningDamage = new();
+
+
         public static void TryApplyFireDotOnHit(Agent attacker, Agent victim, MissionWeapon weapon)
         {
             if (attacker == null || !attacker.BelongsToMainParty() || attacker.IsMainAgent) return;
@@ -73,7 +77,7 @@ namespace RealmsForgotten.Career.Ability
             }
             else
             {
-                string fireParticleName = "rf_fire_on_agent";
+                string fireParticleName = "fire_ground";
                 GameEntity particleEntity = null;
                 if (ParticleSystemManager.GetRuntimeIdByName(fireParticleName) != -1)
                 {
