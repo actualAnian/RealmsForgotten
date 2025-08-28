@@ -52,6 +52,7 @@ namespace RealmsForgotten.Quest
             AddClassDefinition(typeof(SixthQuest), 8);
             AddClassDefinition(typeof(SeventhQuest), 9);
             AddClassDefinition(typeof(EighthQuest), 10);
+            AddClassDefinition(typeof(NinthQuest), 11);
             AddClassDefinition(typeof(SpawnNpcInLordsHallBecomeKnightBehavior), 20);
             AddClassDefinition(typeof(BecomeKnightQuest), 21);
             AddClassDefinition(typeof(DeformedWaveSniffer), 22);

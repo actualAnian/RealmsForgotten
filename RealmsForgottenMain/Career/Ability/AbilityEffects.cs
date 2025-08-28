@@ -158,6 +158,25 @@ namespace RealmsForgotten.Career.Ability
 
         public static void GiveBerserkerEffects()
         {
+            try
+            {
+                int soundId = SoundEvent.GetEventIdFromString("berzerker_horn");
+                if (soundId != -1)
+                {
+                    SoundEvent soundEvent = SoundEvent.CreateEvent(soundId, Mission.Current.Scene);
+                    soundEvent.SetPosition(Agent.Main.Position);
+                    soundEvent.Play();
+                }
+                else
+                {
+                    InformationManager.DisplayMessage(new InformationMessage("[Berserker Sound] Evento 'berzerker_horn' não encontrado.", Colors.Red));
+                }
+            }
+            catch (Exception ex)
+            {
+                InformationManager.DisplayMessage(new InformationMessage($"[Berserker Sound ERROR] {ex.Message}", Colors.Red));
+            }
+
             Agent.Main.AgentDrivenProperties.SwingSpeedMultiplier *= (1 + battleCrySwingSpeedMult);
             IEnumerable<Agent> agents = Mission.Current.Agents.Where(a => a.BelongsToMainParty());
             foreach (Agent agent in agents)
@@ -167,6 +186,9 @@ namespace RealmsForgotten.Career.Ability
                 agent.UpdateCustomDrivenProperties();
             }
         }
+
+
+
 
         public static void CheckAgents()
         {
