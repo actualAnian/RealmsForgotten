@@ -69,11 +69,9 @@ namespace RealmsForgotten.Career
 
         private void InitializeAll()
         {
-            _mercenary.Initialize("Mercenary");
-            _Knight.Initialize("Knight");
-
-            // NEW
-            _wizard.Initialize("Wizard");
+            _mercenary.Initialize("Mercenary", "{=class_description_mercenary}We are mercenaries. We have the resources. The will. To make these hours count! The clock is ticking, gentlemen. Let's begin.");
+            _Knight.Initialize("Knight", "{=class_description_knight}TODO");
+            _wizard.Initialize("Wizard", "{=class_description_wizard}You dedicated your life to unfold the misteries of arcane knowledge. As such your mistic ability extend beyond spell casting.");
         }
     }
 }

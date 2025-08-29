@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using RealmsForgotten.Career.Ability;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
@@ -33,10 +34,9 @@ namespace RealmsForgotten.Career
         }
 
         public override string ToString() => Name.ToString();
-        public void Initialize(string name)
+        public void Initialize(string name, string description)
         {
-            var description = GameTexts.FindText("class_description", StringId);
-            Initialize(new TextObject(name), description);
+            Initialize(new TextObject(name), new TextObject(description));
             AfterInitialized();
         }
     }
