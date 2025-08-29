@@ -1405,7 +1405,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
             {
                 try
                 {
-                    party.RemoveParty();
+                    DestroyPartyAction.Apply(null, party);
                     InformationManager.DisplayMessage(new InformationMessage(
                         $"❌ Removed party: {party.Name} ({party.StringId})"));
                 }

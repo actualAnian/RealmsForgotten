@@ -39,7 +39,7 @@ namespace RealmsForgotten.Models
         public override ExplainedNumber GetPartySpottingRange(MobileParty party, bool includeDescriptions = false)
         {
             ExplainedNumber value = baseModel.GetPartySpottingRange(party, includeDescriptions);
-            if (party != MobileParty.MainParty || !PlayerCareerExtension.HasAnyCareer()) return value;
+            if (party != MobileParty.MainParty || !PlayerCareerExtension.HasAnyCareer() || Hero.MainHero.PartyBelongedTo == null) return value;
             CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.SpottingRange, true);
             return value;
         }
