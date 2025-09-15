@@ -15,8 +15,7 @@ namespace RealmsForgotten.RFReligions.Core
     {
         public new ExplainedNumber CalculateFinalSpeed(MobileParty party, ExplainedNumber finalSpeed)
         {
-            // ✅ Proteção COMPLETA contra nulls que causam crashes no base
-            if (party == null || party.Party == null || party.LeaderHero == null || party.LeaderHero.Culture == null)
+            if (party == null || party.Party == null || party.LeaderHero == null)
             {
                 return finalSpeed;
             }
