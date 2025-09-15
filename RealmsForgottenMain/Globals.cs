@@ -41,30 +41,81 @@ namespace RealmsForgotten
             [StartType.VassalFief] = 2.5,
             [StartType.EscapedPrisoner] = 1,
         };
-        internal static int GiantCountsAs { get { return 2; } }
-        internal static int GiantsCostMult {  get { return 2; } }
-        public static bool IsGiant(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("half_giant"); }
-        public static bool IsUndead(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("undead"); }
-        public static bool IsHuman(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("human"); }
-        public static bool IsMull(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("mull"); }
-        public static bool IsElvean(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("elvean"); }
-        public static bool IsXilantlacay(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("Xilantlacay"); }
-        public static bool IsTlachiquiy(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("tlachiquiy"); }
-        public static bool IsUrkrish(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("urkrish"); }
-        public static bool IsThog(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("thog"); }
-        public static bool IsShaitan(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("shaitan"); }
-        public static bool IsKharach(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("kharach"); }
-        public static bool IsBrute(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("brute"); }
-        public static bool IsBark(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("bark"); }
-        public static bool IsNurh(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("nurh"); }
-        public static bool IsDaimo(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("daimo"); }
-        public static bool IsSillok(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("sillok"); }
-        public static bool IsDwarf(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("dwarf"); }
-        public static bool IsUrkhai(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("urkhai"); }
-        public static bool IsOrcbase(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("orc_base"); }
-        public static bool IsEvilWitch(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("evil_witch"); }
-        public static bool IsBalrog(this BasicCharacterObject character) { return character.Race == FaceGen.GetRaceOrDefault("balrog"); }
-        
+        internal static int GiantCountsAs => 2;
+        internal static int GiantsCostMult => 2;
+
+        // ---------- CACHED RACE IDS (int) ----------
+        private static readonly int _raceHalfGiantId = FaceGen.GetRaceOrDefault("half_giant");
+        private static readonly int _raceUndeadId = FaceGen.GetRaceOrDefault("undead");
+        private static readonly int _raceHumanId = FaceGen.GetRaceOrDefault("human");
+        private static readonly int _raceMullId = FaceGen.GetRaceOrDefault("mull");
+        private static readonly int _raceElveanId = FaceGen.GetRaceOrDefault("elvean");
+        private static readonly int _raceXilantId = FaceGen.GetRaceOrDefault("Xilantlacay");
+        private static readonly int _raceTlachId = FaceGen.GetRaceOrDefault("tlachiquiy");
+        private static readonly int _raceUrkrishId = FaceGen.GetRaceOrDefault("urkrish");
+        private static readonly int _raceThogId = FaceGen.GetRaceOrDefault("thog");
+        private static readonly int _raceShaitanId = FaceGen.GetRaceOrDefault("shaitan");
+        private static readonly int _raceKharachId = FaceGen.GetRaceOrDefault("kharach");
+        private static readonly int _raceBruteId = FaceGen.GetRaceOrDefault("brute");
+        private static readonly int _raceBarkId = FaceGen.GetRaceOrDefault("bark");
+        private static readonly int _raceNurhId = FaceGen.GetRaceOrDefault("nurh");
+        private static readonly int _raceDaimoId = FaceGen.GetRaceOrDefault("daimo");
+        private static readonly int _raceSillokId = FaceGen.GetRaceOrDefault("sillok");
+        private static readonly int _raceDwarfId = FaceGen.GetRaceOrDefault("dwarf");
+        private static readonly int _raceUrkhaiId = FaceGen.GetRaceOrDefault("urkhai");
+        private static readonly int _raceOrcbaseId = FaceGen.GetRaceOrDefault("orc_base");
+        private static readonly int _raceEvilWitchId = FaceGen.GetRaceOrDefault("evil_witch");
+        private static readonly int _raceBalrogId = FaceGen.GetRaceOrDefault("balrog");
+
+        // Small helper
+        private static bool HasRace(int race, int target) => race == target;
+
+        // ---------- EXTENSIONS FOR BasicCharacterObject ----------
+        public static bool IsGiant(this BasicCharacterObject c) => c != null && HasRace(c.Race, _raceHalfGiantId);
+        public static bool IsUndead(this BasicCharacterObject c) => c != null && HasRace(c.Race, _raceUndeadId);
+        public static bool IsHuman(this BasicCharacterObject c) => c != null && HasRace(c.Race, _raceHumanId);
+        public static bool IsMull(this BasicCharacterObject c) => c != null && HasRace(c.Race, _raceMullId);
+        public static bool IsElvean(this BasicCharacterObject c) => c != null && HasRace(c.Race, _raceElveanId);
+        public static bool IsXilantlacay(this BasicCharacterObject c) => c != null && HasRace(c.Race, _raceXilantId);
+        public static bool IsTlachiquiy(this BasicCharacterObject c) => c != null && HasRace(c.Race, _raceTlachId);
+        public static bool IsUrkrish(this BasicCharacterObject c) => c != null && HasRace(c.Race, _raceUrkrishId);
+        public static bool IsThog(this BasicCharacterObject c) => c != null && HasRace(c.Race, _raceThogId);
+        public static bool IsShaitan(this BasicCharacterObject c) => c != null && HasRace(c.Race, _raceShaitanId);
+        public static bool IsKharach(this BasicCharacterObject c) => c != null && HasRace(c.Race, _raceKharachId);
+        public static bool IsBrute(this BasicCharacterObject c) => c != null && HasRace(c.Race, _raceBruteId);
+        public static bool IsBark(this BasicCharacterObject c) => c != null && HasRace(c.Race, _raceBarkId);
+        public static bool IsNurh(this BasicCharacterObject c) => c != null && HasRace(c.Race, _raceNurhId);
+        public static bool IsDaimo(this BasicCharacterObject c) => c != null && HasRace(c.Race, _raceDaimoId);
+        public static bool IsSillok(this BasicCharacterObject c) => c != null && HasRace(c.Race, _raceSillokId);
+        public static bool IsDwarf(this BasicCharacterObject c) => c != null && HasRace(c.Race, _raceDwarfId);
+        public static bool IsUrkhai(this BasicCharacterObject c) => c != null && HasRace(c.Race, _raceUrkhaiId);
+        public static bool IsOrcbase(this BasicCharacterObject c) => c != null && HasRace(c.Race, _raceOrcbaseId);
+        public static bool IsEvilWitch(this BasicCharacterObject c) => c != null && HasRace(c.Race, _raceEvilWitchId);
+        public static bool IsBalrog(this BasicCharacterObject c) => c != null && HasRace(c.Race, _raceBalrogId);
+
+        // ---------- EXTENSIONS FOR CharacterObject (forwarders) ----------
+        public static bool IsGiant(this CharacterObject c) => c != null && HasRace(c.Race, _raceHalfGiantId);
+        public static bool IsUndead(this CharacterObject c) => c != null && HasRace(c.Race, _raceUndeadId);
+        public static bool IsHuman(this CharacterObject c) => c != null && HasRace(c.Race, _raceHumanId);
+        public static bool IsMull(this CharacterObject c) => c != null && HasRace(c.Race, _raceMullId);
+        public static bool IsElvean(this CharacterObject c) => c != null && HasRace(c.Race, _raceElveanId);
+        public static bool IsXilantlacay(this CharacterObject c) => c != null && HasRace(c.Race, _raceXilantId);
+        public static bool IsTlachiquiy(this CharacterObject c) => c != null && HasRace(c.Race, _raceTlachId);
+        public static bool IsUrkrish(this CharacterObject c) => c != null && HasRace(c.Race, _raceUrkrishId);
+        public static bool IsThog(this CharacterObject c) => c != null && HasRace(c.Race, _raceThogId);
+        public static bool IsShaitan(this CharacterObject c) => c != null && HasRace(c.Race, _raceShaitanId);
+        public static bool IsKharach(this CharacterObject c) => c != null && HasRace(c.Race, _raceKharachId);
+        public static bool IsBrute(this CharacterObject c) => c != null && HasRace(c.Race, _raceBruteId);
+        public static bool IsBark(this CharacterObject c) => c != null && HasRace(c.Race, _raceBarkId);
+        public static bool IsNurh(this CharacterObject c) => c != null && HasRace(c.Race, _raceNurhId);
+        public static bool IsDaimo(this CharacterObject c) => c != null && HasRace(c.Race, _raceDaimoId);
+        public static bool IsSillok(this CharacterObject c) => c != null && HasRace(c.Race, _raceSillokId);
+        public static bool IsDwarf(this CharacterObject c) => c != null && HasRace(c.Race, _raceDwarfId);
+        public static bool IsUrkhai(this CharacterObject c) => c != null && HasRace(c.Race, _raceUrkhaiId);
+        public static bool IsOrcbase(this CharacterObject c) => c != null && HasRace(c.Race, _raceOrcbaseId);
+        public static bool IsEvilWitch(this CharacterObject c) => c != null && HasRace(c.Race, _raceEvilWitchId);
+        public static bool IsBalrog(this CharacterObject c) => c != null && HasRace(c.Race, _raceBalrogId);
+
         internal static List<string>  PlayerSelectableRaces { get { return _playerSelectableRaces; } }
         private static List<string> _playerSelectableRaces = new() { "human", "elvean", "undead", "mull", "half_giant", "Xilantlacay", "dwarf", "urkhai" };
 

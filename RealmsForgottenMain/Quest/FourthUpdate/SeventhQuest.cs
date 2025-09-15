@@ -77,24 +77,16 @@ namespace RealmsForgotten.Quest.FourthUpdate
         [SaveableField(16)]
         private JournalLog? vortiakLairLog;
 
-        [SaveableField(17)]
-        private bool deformedSpawningEnabled = false;
-
-        [SaveableField(18)]
-        private CampaignTime _nextDeformedSpawnTime = CampaignTime.Zero;
-
-        [SaveableField(19)]
-        private int _deformedPartySpawnCount = 0;
-
-        [SaveableField(20)]
-        private bool _eighthQuestStarted = false;
+        // ======================= CAMPOS REMOVIDOS =======================
+        // [SaveableField(17)] private bool deformedSpawningEnabled -> MOVIDO PARA O BEHAVIOR
+        // [SaveableField(18)] private CampaignTime _nextDeformedSpawnTime -> MOVIDO PARA O BEHAVIOR
+        // [SaveableField(19)] private int _deformedPartySpawnCount -> MOVIDO PARA O BEHAVIOR
+        // [SaveableField(20)] private bool _eighthQuestStarted -> MOVIDO PARA O BEHAVIOR
+        // [SaveableField(23)] private JournalLog eighthPriestessLog -> REMOVIDO (não é mais necessário)
+        // ================================================================
 
         [SaveableField(21)]
         private bool _witchConversationCompleted = false;
-           
-
-        [SaveableField(23)]
-        private JournalLog eighthPriestessLog;
 
         [SaveableField(24)]
         private bool _priestessConversationTriggered;
@@ -180,8 +172,8 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
                 return _witchLords;
             }
-        }    
-       
+        }
+
 
         public static Hero TheOwl
         {
@@ -214,36 +206,31 @@ namespace RealmsForgotten.Quest.FourthUpdate
         protected override void RegisterEvents()
         {
             base.RegisterEvents();
-            // Add a daily tick listener.
             CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, OnDailyTick);
-
-            // We'll rely on HourlyTick to check distance & possibly open the conversation
             CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, HourlyTick);
             CampaignEvents.MobilePartyDestroyed.AddNonSerializedListener(this, OnMobilePartyDestroyed);
             CampaignEvents.OnSettlementLeftEvent.AddNonSerializedListener(this, OnLeaveSettlement);
-            //CampaignEvents.OnMissionStartedEvent.AddNonSerializedListener(this, OnMissionStarted);
             CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnMapEventEnded);
-            CampaignEvents.TickEvent.AddNonSerializedListener(this, OnTick);            // behavior tree for the vortiak witch
+            CampaignEvents.TickEvent.AddNonSerializedListener(this, OnTick);
             CampaignEvents.OnMissionStartedEvent.AddNonSerializedListener(this, OnMissionStart);
             CampaignEvents.SettlementEntered.AddNonSerializedListener(this, OnSettlementEntered);
         }
 
         private void OnSettlementEntered(MobileParty party, Settlement settlement, Hero hero)
         {
-            if (party != MobileParty.MainParty 
+            if (party != MobileParty.MainParty
                 || settlement.StringId != "vortiak_ruined_temple"
-                || interceptorDefeatLog?.CurrentProgress != 2 
+                || interceptorDefeatLog?.CurrentProgress != 2
                 || bossBattleLog?.CurrentProgress != 0) return;
             Campaign.Current.SaveHandler.SaveAs("rfAutosave");
         }
 
         private void OnMissionStart(IMission Imission)
         {
-            if (Imission is not Mission mission || 
+            if (Imission is not Mission mission ||
                 Settlement.CurrentSettlement == null ||
                 mission.Scene?.GetName() != "evil_witch_fight") return;
             if (interceptorDefeatLog?.CurrentProgress != 2 || bossBattleLog?.CurrentProgress != 0) return;
-            // add special behaviors for the mission
             mission.AddMissionBehavior(new WitchFightSceneMissionLogic());
             mission.AddMissionBehavior(new RFMissionSoundManager());
         }
@@ -252,8 +239,8 @@ namespace RealmsForgotten.Quest.FourthUpdate
         {
             SetDialogs();
             RegisterEvents();
-            _shouldShowPopups = true;  // Wait one day, then show the “letter from the Elven King”
-            _druidConversationTriggered = false; // We haven't forced the conversation yet
+            _shouldShowPopups = true;
+            _druidConversationTriggered = false;
         }
 
         private void OnTick(float dt)
@@ -267,7 +254,9 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
         protected override void HourlyTick()
         {
-            // 🔹 1. FIRST PRIESTESS interaction (original quest flow)
+            // A lógica de interação com a Sacerdotisa para a OITAVA quest foi removida
+            // pois o DeformedSpawningBehavior cuidará disso.
+
             if (druidInteractionLog != null && druidInteractionLog.CurrentProgress == 0)
             {
                 if (!_druidConversationTriggered && FirstTreeSettlement != null)
@@ -276,7 +265,6 @@ namespace RealmsForgotten.Quest.FourthUpdate
                     if (distance <= 50f)
                     {
                         _druidConversationTriggered = true;
-
                         CharacterObject druidCharacter = CharacterObject.Find("elvean_first_tree_druid_quest");
                         if (druidCharacter != null)
                         {
@@ -293,33 +281,6 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 }
             }
 
-            // 🔹 2. SECOND PRIESTESS interaction (for Eighth Quest launch)
-            if (eighthPriestessLog != null && eighthPriestessLog.CurrentProgress == 0 && !_priestessConversationTriggered)
-            {
-                if (FirstTreeSettlement != null)
-                {
-                    float distance = MobileParty.MainParty.Position2D.Distance(FirstTreeSettlement.GatePosition);
-                    if (distance <= 50f)
-                    {
-                        // Force second conversation with the SAME Priestess NPC but new dialogue
-                        CharacterObject priestessCharacter = CharacterObject.Find("elvean_first_tree_druid_quest_2");
-                        if (priestessCharacter != null)
-                        {
-                            _priestessConversationTriggered = true;
-                            CampaignMapConversation.OpenConversation(
-                                new ConversationCharacterData(CharacterObject.PlayerCharacter),
-                                new ConversationCharacterData(priestessCharacter)
-                            );
-                        }
-                        else
-                        {
-                            InformationManager.DisplayMessage(new InformationMessage("Priestess character not found!"));
-                        }
-                    }
-                }
-            }
-
-            // 🔹 3. OWL trigger (your original)
             if (_shouldTriggerOwlDialogue)
             {
                 if (_lastPlayerPosition.IsValid)
@@ -344,34 +305,13 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 ShowSeventhQuestNotification();
             }
 
-            if (deformedSpawningEnabled && CampaignTime.Now > _nextDeformedSpawnTime)
-            {
-                SpawnDeformedParties();
-                _nextDeformedSpawnTime = CampaignTime.DaysFromNow(3);
-            }
-
-            // 🔥 Show the Eighth Quest inquiry once when spawn count hits 3
-            if (_deformedPartySpawnCount >= 3 && !_eighthQuestStarted)
-            {
-                ShowEighthQuestPrompt(); // the inquiry
-            }
-
-            if (_deformedPartySpawnCount >= 3 && !_eighthQuestStarted && !_owlDialogueAttempted)
-            {
-                _owlDialogueAttempted = true;
-                TryStartOwlConversation();
-            }
-
             CheckTempleProximity();
             CheckElveanDestructionProgress();
         }
 
         private void OnMapEventEnded(MapEvent mapEvent)
         {
-            if (mapEvent == null)
-                return;
-
-            if (!mapEvent.IsPlayerMapEvent)
+            if (mapEvent == null || !mapEvent.IsPlayerMapEvent)
                 return;
 
             if (MobileParty.MainParty.PrisonRoster != null)
@@ -380,8 +320,6 @@ namespace RealmsForgotten.Quest.FourthUpdate
             }
         }
 
-
-        // Show the "letter from the Elven King" after 1 day
         private void ShowSeventhQuestNotification()
         {
             string title = "A Mysterious Presence";
@@ -397,35 +335,18 @@ namespace RealmsForgotten.Quest.FourthUpdate
                     false,
                     "Continue",
                     null,
-                    OnPopupClosed, // Callback after user clicks "Continue"
+                    OnPopupClosed,
                     null
                 )
             );
         }
 
-        // Once the user closes the pop-up, we create the "talk to druid" objective
         private void OnPopupClosed()
         {
             druidInteractionLog = AddLog(GameTexts.FindText("rf_seventh_quest_druid_objective"));
             druidInteractionLog.UpdateCurrentProgress(0);
-
         }
 
-        //private void OnMissionStarted(IMission imission)
-        //{
-        //    if (imission is Mission mission)
-        //    {
-        //        if (Settlement.CurrentSettlement == witchHideout && mission.SceneName == "evil_witch_fight" && bossBattleLog?.CurrentProgress == 0)
-        //        {
-        //            mission.AddMissionBehavior(new RecordDamageMissionLogic((victim, attacker, damage) =>
-        //            {
-        //                if (victim.Character?.StringId == "evil_witch" && damage >= victim.Health)
-        //                    bossBattleLog.UpdateCurrentProgress(1);
-
-        //            }));
-        //        }
-        //    }
-        //}
         public static void OnWitchDefeated()
         {
             QuestBase? quest = Campaign.Current.QuestManager.Quests.FirstOrDefault(q => q.StringId == "rf_seventh_quest");
@@ -437,35 +358,15 @@ namespace RealmsForgotten.Quest.FourthUpdate
             SeventhQuest seventhQuest = (SeventhQuest)quest;
             seventhQuest.bossBattleLog?.UpdateCurrentProgress(1);
         }
+
         private void OnLeaveSettlement(MobileParty mobileParty, Settlement settlement)
         {
             if (bossBattleLog?.CurrentProgress == 1 && settlement == witchHideout)
             {
-                PlayerEncounter.Finish();
+                PlayerEncounter.Finish(true);
                 bossBattleLog.UpdateCurrentProgress(2);
                 CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty), new ConversationCharacterData(CharacterObject.Find(witchCharacterId)));
-
             }
-        }
-        private void TryStartOwlConversation()
-        {
-            Hero owl = Hero.FindFirst(h => h.StringId == "rf_the_owl");
-            if (owl != null && Game.Current?.GameStateManager?.ActiveState is MapState)
-            {
-                CharacterObject owlChar = owl.CharacterObject;
-                if (owlChar != null)
-                {
-                    Campaign.Current.ConversationManager.AddDialogFlow(PriestessEighthQuestDialog, this);
-                    CampaignMapConversation.OpenConversation(
-                        new ConversationCharacterData(CharacterObject.PlayerCharacter),
-                        new ConversationCharacterData(owlChar)
-                    );
-                    return;
-                }
-            }
-
-            // Fallback retry on next DailyTick if conversation failed
-            _owlDialogueAttempted = false;
         }
 
         public void SpawnAllWitchLords()
@@ -473,16 +374,16 @@ namespace RealmsForgotten.Quest.FourthUpdate
             foreach (WitchLord lord in WitchLords.Values)
             {
                 var party = CreateWitchLordParty(lord.CharacterId, lord.ClanId, lord.SpawnSettlement, lord.TroopDetails);
-                _witchFinalArmy = party; // ✅ Track the one coven as the final witch army
+                _witchFinalArmy = party;
             }
 
             InformationManager.DisplayMessage(
                 new InformationMessage("The Vortiak Witch was spotted around Nippura!", Colors.Magenta));
         }
 
-
         public MobileParty? CreateWitchLordParty(string witchLordCharacterId, string clanId, Settlement spawnSettlement, List<TroopDetail> troopDetails)
         {
+            // ... (Este método permanece inalterado)
             if (spawnSettlement == null)
             {
                 InformationManager.DisplayMessage(new InformationMessage($"❌ Spawn settlement is null for Witch Lord '{witchLordCharacterId}'.", Colors.Red));
@@ -503,7 +404,6 @@ namespace RealmsForgotten.Quest.FourthUpdate
                     InformationManager.DisplayMessage(new InformationMessage($"Warning: Witch Lord Clan '{clanId}' is not hostile to the player.", Colors.Yellow));
                 }
 
-                // ✅ Create bandit-style party like Demon Lords
                 MobileParty party = BanditPartyComponent.CreateBanditParty($"vortiak_witch_party_{witchLordCharacterId}", clan, null, true);
                 if (party == null)
                 {
@@ -520,7 +420,6 @@ namespace RealmsForgotten.Quest.FourthUpdate
                     return null;
                 }
 
-                // ✅ DO NOT assign party leader (matches Demon Lords)
                 troopRoster.AddToCounts(leaderCharacter, 1);
 
                 foreach (var troopDetail in troopDetails)
@@ -573,7 +472,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 party.SetCustomName(new TextObject($"Vortiak Coven ({leaderCharacter.Name})"));
                 party.Aggressiveness = 10f;
                 party.Party.SetVisualAsDirty();
-               
+
                 InformationManager.DisplayMessage(new InformationMessage($"A Vortiak Witch Lord coven led by {leaderCharacter.Name} has been sighted near {spawnSettlement.Name}.", Colors.Red));
                 return party;
             }
@@ -584,17 +483,12 @@ namespace RealmsForgotten.Quest.FourthUpdate
             }
         }
 
-
-        // ------------------------------------------------------
-        // DRUID DIALOG - no Settlement check, since we open it from the campaign map
-        // ------------------------------------------------------
         private DialogFlow DruidInteractionDialog => DialogFlow.CreateDialogFlow("start", 125)
+            // ... (Este método permanece inalterado)
             .PlayerLine(GameTexts.FindText("rf_seventh_quest_druid_dialog_1"))
             .Condition(() =>
-                // Must have the log assigned and must be at stage 0
                 druidInteractionLog != null
                 && druidInteractionLog.CurrentProgress == 0
-                // Must be talking to the correct druid
                 && CharacterObject.OneToOneConversationCharacter?.StringId == "elvean_first_tree_druid_quest"
             )
             .NpcLine(GameTexts.FindText("rf_seventh_quest_druid_dialog_2"))
@@ -604,26 +498,18 @@ namespace RealmsForgotten.Quest.FourthUpdate
             .NpcLine(GameTexts.FindText("rf_seventh_quest_druid_dialog_6"))
             .Consequence(() =>
             {
-                // Mark the druid conversation as complete
                 druidInteractionLog.UpdateCurrentProgress(1);
-
-                // The druid also gives you some troops (example)
                 GivePlayerTroops(new List<(string troopId, int troopCount)>
                 {
                     ("first_tree_ranger", 100)
                 });
-
-                // Next objective: talk to the dwarf king
                 dwarfKingLog = AddLog(GameTexts.FindText("rf_seventh_quest_dwarf_king_objective"));
                 dwarfKingLog.UpdateCurrentProgress(0);
-
             })
            .CloseDialog();
 
-        // ------------------------------------------------------
-        // DWARF KING DIALOG (unchanged)
-        // ------------------------------------------------------
         private DialogFlow DwarfKingDialog => DialogFlow.CreateDialogFlow("start", 125)
+            // ... (Este método permanece inalterado)
             .NpcLine(new TextObject(
                 "So you've come seeking our aid? We, the Dugrast folk, have long prepared for these dark times."
             ))
@@ -668,8 +554,6 @@ namespace RealmsForgotten.Quest.FourthUpdate
             .Consequence(() =>
             {
                 dwarfKingLog.UpdateCurrentProgress(1);
-
-                // Example: dwarven armor set
                 GivePlayerArmorSet(new List<string>
                 {
                     "sk_dwarf_erebor_helmet_plate_elite_a",
@@ -678,15 +562,11 @@ namespace RealmsForgotten.Quest.FourthUpdate
                     "sk_dwarf_erebor_boots_med_b",
                     "sk_dwarf_erebor_pauldron_plate_elite_a"
                 });
-
-
-                // Add the travel objective log: "Go to the Ruined Temple"
                 travelObjectiveLog = AddDiscreteLog(
                     GameTexts.FindText("rf_seventh_quest_travel_log"),
                     GameTexts.FindText("rf_seventh_quest_travel_task"),
                     0, travelObjectiveTarget
                 );
-
                 QuestUIManager.ShowNotification(
                     "You have received dwarven armor and learned the temple’s location. Head to the Vortiak Lair!",
                     null,
@@ -703,15 +583,11 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 GameTexts.FindText("rf_seventh_quest_lair_task"),
                 0, 1
             );
-
         }
 
-        // ------------------------------------------------------
-        // Checks distance to Ruined Temple, spawns interceptor, etc.
-        // ------------------------------------------------------
         private void CheckTempleProximity()
         {
-            // Only proceed if the dwarf king conversation is complete
+            // ... (Este método permanece inalterado)
             if (dwarfKingLog == null || dwarfKingLog.CurrentProgress < 1)
                 return;
 
@@ -719,32 +595,26 @@ namespace RealmsForgotten.Quest.FourthUpdate
             if (sacredGrove != null)
             {
                 float distance = MobileParty.MainParty.Position2D.Distance(sacredGrove.Position2D);
-                float proximityThreshold = 50f; // Adjust as needed.
+                float proximityThreshold = 50f;
                 if (distance <= proximityThreshold)
                 {
-                    // Mark traveling objective complete
                     if (travelObjectiveLog != null && travelObjectiveLog.CurrentProgress < travelObjectiveTarget)
                     {
                         travelObjectiveLog.UpdateCurrentProgress(travelObjectiveTarget);
                         InformationManager.DisplayMessage(new InformationMessage("You are nearing the temple."));
                     }
-                    // Spawn an interceptor party if not yet done
                     if (!hasBeenIntercepted)
                     {
                         CreateInterceptorParty("rf_interceptor_default", sacredGrove);
                         hasBeenIntercepted = true;
                     }
-
-
                 }
             }
         }
 
-        // ------------------------------------------------------
-        // INTERCEPTOR, NECROMANCER, BOSS LOGIC
-        // ------------------------------------------------------
         private void CreateInterceptorParty(string key, Settlement nearSettlement)
         {
+            // ... (Este método permanece inalterado)
             interceptorDefeatLog?.UpdateCurrentProgress(0);
             try
             {
@@ -775,11 +645,10 @@ namespace RealmsForgotten.Quest.FourthUpdate
                     troopRoster.AddToCounts(troop, detail.Quantity);
                 }
 
-                // Now spawn around the settlement instead of the player's party
                 interceptorParty.InitializeMobilePartyAroundPosition(
                     troopRoster,
                     TroopRoster.CreateDummyTroopRoster(),
-                    nearSettlement.Position2D, // use settlement coords
+                    nearSettlement.Position2D,
                     10f,
                     10f
                 );
@@ -799,6 +668,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
         private void AddVortiakTroopsToPlayer()
         {
+            // ... (Este método permanece inalterado)
             if (!VortiakArmies.TryGetValue("rf_vortiak_army", out var vortiakTroops))
             {
                 InformationManager.DisplayMessage(new InformationMessage("Vortiak army configuration not found.", Colors.Red));
@@ -814,14 +684,14 @@ namespace RealmsForgotten.Quest.FourthUpdate
                     continue;
                 }
 
-                // The 'false' parameter ensures these troops do not count towards the party's size limit.
                 MobileParty.MainParty.MemberRoster.AddToCounts(troop, detail.Quantity, false);
                 InformationManager.DisplayMessage(new InformationMessage($"Added {detail.Quantity} {troop.Name} to your party (non-counted)."));
             }
         }
-        
+
         private void OnMobilePartyDestroyed(MobileParty party, PartyBase destroyer)
         {
+            // ... (Este método permanece inalterado)
             if (_interceptorParty != null && party == _interceptorParty)
             {
                 interceptorDefeatLog = AddLog(GameTexts.FindText("rf_seventh_quest_interceptor_defeated_log"));
@@ -846,7 +716,6 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
             if (_witchFinalArmy != null && party == _witchFinalArmy)
             {
-                // Always show the Witch defeated notification, no matter the path!
                 ShowWitchDefeatedNotification();
                 if (priestessArmyLog != null && priestessArmyLog.CurrentProgress == 0)
                 {
@@ -856,34 +725,29 @@ namespace RealmsForgotten.Quest.FourthUpdate
         }
 
         private DialogFlow InterceptorEncounterDialogue => DialogFlow.CreateDialogFlow("interceptor_encounter", 120)
-    .NpcLine("Steel your hearts! The Vortiaks spring their ambush!")
-    .Condition(() => PlayerEncounter.EncounteredParty == _interceptorParty.Party)
-    .BeginPlayerOptions()
-        .PlayerOption("Stand and fight!")
-            .NpcLine("So be it—blood will flow!")
-             .Consequence(() =>
-             {
-                 // Optional: Set quest flags or start battle
-                 // e.g., PlayerEncounter.StartBattle();
-             })
-    .EndPlayerOptions()
-    .CloseDialog();
+            // ... (Este método permanece inalterado)
+            .NpcLine("Steel your hearts! The Vortiaks spring their ambush!")
+            .Condition(() => PlayerEncounter.EncounteredParty == _interceptorParty.Party)
+            .BeginPlayerOptions()
+                .PlayerOption("Stand and fight!")
+                    .NpcLine("So be it—blood will flow!")
+                     .Consequence(() =>
+                     {
+                     })
+            .EndPlayerOptions()
+            .CloseDialog();
 
-       private void StartNecromancerDialogue()
+        private void StartNecromancerDialogue()
         {
-
+            // ... (Este método permanece inalterado)
             CharacterObject necroChar = CharacterObject.Find("vortiak_mounted_necromancer_lord");
             if (necroChar != null)
             {
-                // Register the necromancer flow
                 Campaign.Current.ConversationManager.AddDialogFlow(NecromancerDialogue, this);
-
-                // Force conversation on campaign map
                 CampaignMapConversation.OpenConversation(
                     new ConversationCharacterData(CharacterObject.PlayerCharacter),
                     new ConversationCharacterData(necroChar)
                 );
-
             }
             else
             {
@@ -892,58 +756,58 @@ namespace RealmsForgotten.Quest.FourthUpdate
         }
 
         private DialogFlow NecromancerDialogue => DialogFlow.CreateDialogFlow("start", 125)
-     .NpcLine(GameTexts.FindText("rf_seventh_quest_necromancer_dialog_1"))
-     .Condition(() => CharacterObject.OneToOneConversationCharacter?.StringId == "vortiak_mounted_necromancer_lord")
-
-         .PlayerLine(GameTexts.FindText("rf_seventh_quest_necromancer_dialog_2"))
-             .NpcLine(GameTexts.FindText("rf_seventh_quest_necromancer_dialog_3"))
-             .PlayerLine(GameTexts.FindText("rf_seventh_quest_necromancer_dialog_4"))
-             .NpcLine(GameTexts.FindText("rf_seventh_quest_necromancer_dialog_5"))
-             .PlayerLine(GameTexts.FindText("rf_seventh_quest_necromancer_dialog_6"))
-             .NpcLine(GameTexts.FindText("rf_seventh_quest_necromancer_dialog_8"))
-             .PlayerLine(GameTexts.FindText("rf_seventh_quest_necromancer_dialog_9"))
-             .Consequence(() =>
-             {
-                 interceptorDefeatLog?.UpdateCurrentProgress(1);
-                 InformationManager.DisplayMessage(new InformationMessage("Fight the Vortiaks!"));
-
-             })
-             .CloseDialog();
+            // ... (Este método permanece inalterado)
+            .NpcLine(GameTexts.FindText("rf_seventh_quest_necromancer_dialog_1"))
+            .Condition(() => CharacterObject.OneToOneConversationCharacter?.StringId == "vortiak_mounted_necromancer_lord")
+            .PlayerLine(GameTexts.FindText("rf_seventh_quest_necromancer_dialog_2"))
+            .NpcLine(GameTexts.FindText("rf_seventh_quest_necromancer_dialog_3"))
+            .PlayerLine(GameTexts.FindText("rf_seventh_quest_necromancer_dialog_4"))
+            .NpcLine(GameTexts.FindText("rf_seventh_quest_necromancer_dialog_5"))
+            .PlayerLine(GameTexts.FindText("rf_seventh_quest_necromancer_dialog_6"))
+            .NpcLine(GameTexts.FindText("rf_seventh_quest_necromancer_dialog_8"))
+            .PlayerLine(GameTexts.FindText("rf_seventh_quest_necromancer_dialog_9"))
+            .Consequence(() =>
+            {
+                interceptorDefeatLog?.UpdateCurrentProgress(1);
+                InformationManager.DisplayMessage(new InformationMessage("Fight the Vortiaks!"));
+            })
+            .CloseDialog();
 
 
         private DialogFlow OwlRebelionDialog => DialogFlow.CreateDialogFlow("start", 115)
-          .NpcLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_1")).Condition(() => owlRebellionlLog?.CurrentProgress == 0 &&
-            Hero.OneToOneConversationHero != null && Hero.OneToOneConversationHero.StringId == "rf_the_owl")
+            // ... (Este método permanece inalterado)
+            .NpcLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_1")).Condition(() => owlRebellionlLog?.CurrentProgress == 0 &&
+                Hero.OneToOneConversationHero != null && Hero.OneToOneConversationHero.StringId == "rf_the_owl")
             .BeginPlayerOptions()
-            // 🏹 Player chooses to fight the Vortiaks (Original Quest Path)
             .PlayerOption(GameTexts.FindText("rf_seventh_quest_owl_dialog_2"))
             .NpcLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_3"))
             .PlayerLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_4"))
             .NpcLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_5"))
-             .PlayerLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_6"))
+            .PlayerLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_6"))
             .Consequence(() =>
             {
                 owlRebellionlLog?.UpdateCurrentProgress(1);
                 StartBossBattleObjective();
             })
-          .CloseDialog()
-        // ⚔️ Player chooses to betray the Elveans and join the Vortiaks
-        .PlayerOption(GameTexts.FindText("rf_seventh_quest_owl_dialog_7"))
-        .NpcLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_8"))
-        .PlayerLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_9"))
-        .NpcLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_10"))
-        .PlayerLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_11"))
-         .NpcLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_11_b"))
+            .CloseDialog()
+            .PlayerOption(GameTexts.FindText("rf_seventh_quest_owl_dialog_7"))
+            .NpcLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_8"))
+            .PlayerLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_9"))
+            .NpcLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_10"))
+            .PlayerLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_11"))
+            .NpcLine(GameTexts.FindText("rf_seventh_quest_owl_dialog_11_b"))
             .Consequence(() =>
             {
                 owlRebellionlLog?.UpdateCurrentProgress(1);
                 StartBossBattleObjective();
             })
-          .CloseDialog()
-          .EndPlayerOptions()
-           .CloseDialog();
+            .CloseDialog()
+            .EndPlayerOptions()
+            .CloseDialog();
+
         private void OpenOwlRebelionDialogue()
         {
+            // ... (Este método permanece inalterado)
             Hero owlHero = TheOwl;
 
             if (owlHero == null)
@@ -952,7 +816,6 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 return;
             }
 
-            // Ensure dialogue is added before conversation opens
             Campaign.Current.ConversationManager.AddDialogFlow(OwlRebelionDialog, this);
 
             CampaignMapConversation.OpenConversation(
@@ -977,12 +840,12 @@ namespace RealmsForgotten.Quest.FourthUpdate
         }
 
         private DialogFlow PostBattleWitchDialog => DialogFlow.CreateDialogFlow("start", 125)
-         .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_1")) // "You think this ends with me bleeding on the floor?"
+         .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_1"))
          .Condition(() => bossBattleLog?.CurrentProgress == 2 && CharacterObject.OneToOneConversationCharacter?.StringId == "evil_witch")
-         .PlayerLine(GameTexts.FindText("rf_seventh_quest_witch_final_2")) // "You’ve lost, Witch. This land will be free of your poison."
-         .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_3")) // "Foolish mortal. You’ve only shattered the vessel. The storm is still coming."
-         .PlayerLine(GameTexts.FindText("rf_seventh_quest_witch_final_4")) // "We will face whatever comes. And we will win."
-         .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_5")) // "Then prepare your grave, champion. My children are not done yet..."
+         .PlayerLine(GameTexts.FindText("rf_seventh_quest_witch_final_2"))
+         .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_3"))
+         .PlayerLine(GameTexts.FindText("rf_seventh_quest_witch_final_4"))
+         .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_5"))
          .Consequence(() =>
          {
              StartFinalWitchArmySequence();
@@ -1001,40 +864,34 @@ namespace RealmsForgotten.Quest.FourthUpdate
         }
 
         private DialogFlow WitchFinalEncounterDialogue => DialogFlow.CreateDialogFlow("start", 125)
-     .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_6"))
-     .Condition(() => !_witchConversationCompleted
-           && priestessArmyLog?.CurrentProgress == 0
-           && PlayerEncounter.EncounteredParty?.MobileParty?.StringId.StartsWith("vortiak_witch_party") == true)
-     // 🧠 Persuasion Fork: Begin Choices
-     .BeginPlayerOptions()
-     .PlayerOption(GameTexts.FindText("rf_seventh_quest_witch_final_7"))
-     .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_8"))
-     .PlayerLine(GameTexts.FindText("rf_seventh_quest_witch_final_9"))
-     .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_10"))
-     .Consequence(() =>
-     {
-         _witchConversationCompleted = true;
-         _playerChoseToDestroyElveans = true;
-          StartDestroyElveanObjective();
-        
-
-     })
-         .CloseDialog()
-
-      // 🛡 Option 2: Reject her offer and remain honorable
-      .PlayerOption(GameTexts.FindText("rf_seventh_quest_witch_final_11"))
-     .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_12"))
-     .PlayerLine(GameTexts.FindText("rf_seventh_quest_witch_final_13"))
-     .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_14"))
-         .Consequence(() =>
-         {
-             _witchConversationCompleted = true;
-         })
+            .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_6"))
+            .Condition(() => !_witchConversationCompleted
+                && priestessArmyLog?.CurrentProgress == 0
+                && PlayerEncounter.EncounteredParty?.MobileParty?.StringId.StartsWith("vortiak_witch_party") == true)
+            .BeginPlayerOptions()
+            .PlayerOption(GameTexts.FindText("rf_seventh_quest_witch_final_7"))
+            .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_8"))
+            .PlayerLine(GameTexts.FindText("rf_seventh_quest_witch_final_9"))
+            .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_10"))
+            .Consequence(() =>
+            {
+                _witchConversationCompleted = true;
+                _playerChoseToDestroyElveans = true;
+                StartDestroyElveanObjective();
+            })
             .CloseDialog()
-          .EndPlayerOptions()
-           .CloseDialog();
+            .PlayerOption(GameTexts.FindText("rf_seventh_quest_witch_final_11"))
+            .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_12"))
+            .PlayerLine(GameTexts.FindText("rf_seventh_quest_witch_final_13"))
+            .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_14"))
+            .Consequence(() =>
+            {
+                _witchConversationCompleted = true;
+            })
+            .CloseDialog()
+            .EndPlayerOptions()
+            .CloseDialog();
 
-       
         private void RemoveEvilWitchFromPrisoners()
         {
             var prison = MobileParty.MainParty.PrisonRoster;
@@ -1054,13 +911,14 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 InformationManager.DisplayMessage(new InformationMessage("The Evil Witch has escaped from your prisoners."));
             }
         }
+
         private void ShowWitchDefeatedNotification()
         {
             QuestUIManager.ShowNotification(
                    "The corpses amount by thousands, and the sky seemed to be red reflecting the blood on the ground. As the ones survived prayed in gratitude, a strange shadow formed amidst the dead bodies.",
                 ShowTreatyNotification,
                 true,
-                "postwitchfight"   // your custom sprite
+                "postwitchfight"
             );
         }
 
@@ -1120,16 +978,12 @@ namespace RealmsForgotten.Quest.FourthUpdate
                         "The Elveans have been wiped out. The Vortiaks are now free to rise!",
                         true, false, "Continue", null, null, () =>
                         {
-                            // 🔥 Now that they are truly dead, spawn the Dark Kingdom
                             SpawnDarkElveanKingdom();
-
-                            // Finish the dark path
                             InformationManager.ShowInquiry(new InquiryData(
                                 "Revenge Successfull",
                                 "The Vortiaks have been avenged under your leadership!",
                                 true, false, "Continue", null, null, null
                             ));
-
                             Hero.MainHero.Clan.Renown += 450;
                             Clan.PlayerClan.Influence += 1000f;
                             Hero.MainHero.Gold += 500000;
@@ -1140,17 +994,19 @@ namespace RealmsForgotten.Quest.FourthUpdate
             }
         }
 
+        // ======================= MÉTODO PRINCIPAL AJUSTADO =======================
         private void FinalizeSeventhQuestSuccess()
         {
-            CreateNewVortiaksKingdom(); 
-                
-            _deformedPartySpawnCount = 0;
-            deformedSpawningEnabled = true;
-            _nextDeformedSpawnTime = CampaignTime.DaysFromNow(3);
+            CreateNewVortiaksKingdom();
+
+            // ✅ INICIA A LÓGICA DE SPAWN NO NOVO BEHAVIOR PERSISTENTE
+            RealmsForgotten.Quest.FourthUpdate.DeformedSpawningBehavior.Instance?.BeginSpawning();
+
             if (Campaign.Current.GetCampaignBehavior<AlignmentWarBehavior>() is { } behavior)
                 behavior.StartGlobalAlignmentWar();
+
             _shouldCleanupPartiesNextTick = true;
-           
+
             if (_playerChoseToDestroyElveans)
             {
                 InformationManager.ShowInquiry(new InquiryData(
@@ -1174,31 +1030,24 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
             AddLog(GameTexts.FindText("rf_seventh_quest_completed_log"));
             priestessArmyLog?.UpdateCurrentProgress(2);
-           
-            CompleteQuestWithSuccess();
-            CampaignEvents.DailyTickEvent.ClearListeners(this);
-            CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, DeformedPostQuestTick);
-        }
-        private void DeformedPostQuestTick()
-        {
-            if (_shouldCleanupPartiesNextTick)
-            {
-                _shouldCleanupPartiesNextTick = false; // prevent repeating
-                CleanupDevilsAndNelrogParties(); // ← your cleanup logic
-            }
-            if (_deformedPartySpawnCount >= 3)
-            {
-                // Optional: remove if you want it to end after 3
-                CampaignEvents.DailyTickEvent.ClearListeners(this);
-                return;
-            }
 
-            if (CampaignTime.Now >= _nextDeformedSpawnTime)
-            {
-                SpawnDeformedParties();
-                _nextDeformedSpawnTime = CampaignTime.DaysFromNow(60);
-            }
+            CompleteQuestWithSuccess();
+
+            // ✅ REMOVE A LIGAÇÃO COM O ANTIGO MÉTODO DE TICK PÓS-QUEST
+            // O listener de DailyTick da quest será removido automaticamente ao completá-la.
         }
+
+        // ======================= MÉTODOS REMOVIDOS =======================
+        // DeformedPostQuestTick() -> REMOVIDO
+        // ApplyDarkPathConsequences() -> REMOVIDO (mas você pode querer movê-lo para o Behavior se for parte do resultado do spawn)
+        // SpawnDeformedParties() -> REMOVIDO
+        // SpawnDeformedParty() -> REMOVIDO
+        // ShowEighthQuestPrompt() -> REMOVIDO
+        // PriestessEighthQuestDialog -> REMOVIDO
+        // StartEighthQuest() -> REMOVIDO
+        // SyncData() -> REMOVIDO (não salva mais dados de spawn)
+        // ================================================================
+
         private void ApplyDarkPathConsequences()
         {
             foreach (Kingdom kingdom in Kingdom.All)
@@ -1207,13 +1056,11 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
                 if (cultureId != "sturgia" && cultureId != "aserai" && cultureId != "urkhai")
                 {
-                    // Reduce relation with their leaders
                     if (kingdom.Leader != null)
                     {
                         Hero.MainHero.SetPersonalRelation(kingdom.Leader, -200);
                     }
 
-                    // Declare war
                     if (!FactionManager.IsAtWarAgainstFaction(Hero.MainHero.MapFaction, kingdom))
                     {
                         FactionManager.DeclareWar(Hero.MainHero.MapFaction, kingdom);
@@ -1223,167 +1070,8 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
             InformationManager.DisplayMessage(new InformationMessage(
                 "You have declared war on the realms of Aeurth (except for Sturgia, Aserai, and Urkhai). Relations have worsened.", Colors.Red));
-            
-        }       
 
-        private void SpawnDeformedParties()
-        {
-            try
-            {
-                Clan deformedClan = Clan.FindFirst(c => c.StringId == "deformed_villagers");
-                if (deformedClan == null)
-                {
-                    InformationManager.DisplayMessage(new InformationMessage("❌ Deformed clan not found."));
-                    return;
-                }
-
-                var hideouts = Hideout.All
-                    .Where(h => h.IsInfested && h.Settlement != null)
-                    .OrderBy(_ => MBRandom.RandomInt())
-                    .Take(10);
-
-                foreach (var hideout in hideouts)
-                {
-                    SpawnDeformedParty(hideout, deformedClan);
-                }
-
-                _deformedPartySpawnCount++;
-
-                InformationManager.ShowInquiry(new InquiryData(
-                    "Reports of attacks are growing!",
-                    "Twisted hosts have been spotted attacking villagers and caravans.",
-                    true, false, "Close", null, null, null
-                ));
-
-                InformationManager.DisplayMessage(new InformationMessage($"✅ Deformed Villager parties spawned. Total spawns: {_deformedPartySpawnCount}"));
-            }
-            catch (Exception ex)
-            {
-                InformationManager.DisplayMessage(new InformationMessage($"❌ Exception spawning Deformed parties: {ex.Message}", Colors.Red));
-            }
         }
-
-        private void SpawnDeformedParty(Hideout hideout, Clan clan)
-        {
-            try
-            {
-                string partyId = $"deformed_party_{hideout.Settlement.StringId}_{MBRandom.RandomInt(10000, 99999)}";
-                MobileParty party = BanditPartyComponent.CreateBanditParty(partyId, clan, hideout, true);
-
-                if (party == null)
-                {
-                    InformationManager.DisplayMessage(new InformationMessage($"❌ Failed to create party for hideout: {hideout.Settlement.Name}."));
-                    return;
-                }
-
-                TroopRoster roster = TroopRoster.CreateDummyTroopRoster();
-
-                CharacterObject boss = CharacterObject.Find("deformed_villager_boss");
-                if (boss != null)
-                    roster.AddToCounts(boss, 1);
-
-                CharacterObject troop = CharacterObject.Find("deformed_villager_bandit");
-                if (troop != null)
-                    roster.AddToCounts(troop, 80);
-
-                party.InitializeMobilePartyAroundPosition(
-                    roster,
-                    TroopRoster.CreateDummyTroopRoster(),
-                    hideout.Settlement.Position2D,
-                    100f,
-                    10f
-                );
-
-                party.SetCustomName(new TextObject("Deformed Villagers"));
-                party.Aggressiveness = 100f;
-                party.SetPartyObjective(MobileParty.PartyObjective.Aggressive);
-                party.Ai.SetDoNotMakeNewDecisions(false);
-
-                var target = MobileParty.All
-                    .Where(p => p != party && p.IsActive && p.MapFaction != null && party.MapFaction != null && p.MapFaction.IsAtWarWith(party.MapFaction))
-                    .OrderBy(p => party.Position2D.DistanceSquared(p.Position2D))
-                    .FirstOrDefault();
-
-                if (target != null)
-                    party.Ai.SetMoveEngageParty(target);
-                else
-                    party.Ai.SetMovePatrolAroundPoint(hideout.Settlement.Position2D);
-
-                InformationManager.DisplayMessage(new InformationMessage($"✅ Deformed party spawned at {hideout.Settlement.Name}."));
-            }
-            catch (Exception ex)
-            {
-                InformationManager.DisplayMessage(new InformationMessage($"❌ Error spawning Deformed party: {ex.Message}"));
-            }
-        }
-
-        public void ShowEighthQuestPrompt()
-        {
-            InformationManager.ShowInquiry(new InquiryData(
-                "The Forest Whispers",
-                "The Priestess of the First Tree sent you a messenger to inform you about recent attacks on innocent people. She asks your help to unveil the reason.",
-                true, false,
-                "Continue", null,
-                () =>
-                {
-                    eighthPriestessLog = AddLog(GameTexts.FindText("rf_seventh_quest_outro"));
-
-                    Hero owl = Hero.FindFirst(h => h.StringId == "rf_the_owl");
-
-                    if (owl?.CharacterObject != null)
-                    {
-                        // ✅ Register the dialog BEFORE conversation
-                        Campaign.Current.ConversationManager.AddDialogFlow(PriestessEighthQuestDialog, this);
-
-                        // ✅ Then start the conversation (this sets OneToOneConversationHero automatically)
-                        CampaignMapConversation.OpenConversation(
-                            new ConversationCharacterData(CharacterObject.PlayerCharacter),
-                            new ConversationCharacterData(owl.CharacterObject)
-                        );
-                    }
-                    else
-                    {
-                        InformationManager.DisplayMessage(new InformationMessage("❌ Could not find 'The Owl' character for dialogue!", Colors.Red));
-                    }
-                },
-                null
-            ));
-        }
-
-
-        private DialogFlow PriestessEighthQuestDialog => DialogFlow.CreateDialogFlow("start", 125)
-     .NpcLine(new TextObject("My friend, we just received a messenger from the First Tree Priestess. She's concerned about reports of strange mutations attacking villagers."))
-     .Condition(() =>
-    CharacterObject.OneToOneConversationCharacter?.StringId == "rf_the_owl"
-    && eighthPriestessLog != null
-    && eighthPriestessLog.CurrentProgress == 0)
-     .PlayerLine(new TextObject("Mutations? We've already faced zombies and demons. What else could there possibly be?"))
-     .NpcLine(new TextObject("She wants us to find out. And to be honest... that worries me."))
-     .PlayerLine(new TextObject("Let’s not jump to conclusions just yet. We haven’t even seen them. Did she mention where we could find a trail?"))
-     .NpcLine(new TextObject("The message says the latest sightings occurred near the Tremerid Kingdom."))
-     .PlayerLine(new TextObject("Then the Mages... could they be involved? Let's investigate."))
-     .Consequence(() =>
-     {
-         eighthPriestessLog.UpdateCurrentProgress(1);
-         StartEighthQuest();
-         InformationManager.DisplayMessage(
-             new InformationMessage("🌳 You accepted the Owl’s call. The Eighth Quest has begun!")
-         );
-     })
-     .CloseDialog();
-
-        private void StartEighthQuest()
-        {
-            if (_eighthQuestStarted)
-                return;
-
-            EighthQuest newChapter = new EighthQuest("rf_seventh_quest_outro", QuestGiver, CampaignTime.DaysFromNow(999), 20000);
-            newChapter.StartQuest();
-        }
-
-        // ------------------------------------------------------
-        // UTILITIES: TROOPS & ARMOR
-        // ------------------------------------------------------
 
         private void CleanupDevilsAndNelrogParties()
         {
@@ -1392,7 +1080,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
                     p != null &&
                     p.IsActive &&
                     !p.IsDisbanding &&
-                    p.MapEvent == null &&  // 🔒 Never remove if it's in a battle
+                    p.MapEvent == null &&
                     (
                         (p.Name?.ToString().Contains("Devils Party") == true) ||
                         (p.Name?.ToString().Contains("Demon Lord") == true) ||
@@ -1405,7 +1093,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
             {
                 try
                 {
-                    party.RemoveParty();
+                    DestroyPartyAction.Apply(null, party);
                     InformationManager.DisplayMessage(new InformationMessage(
                         $"❌ Removed party: {party.Name} ({party.StringId})"));
                 }
@@ -1461,6 +1149,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
         private void CreateNewVortiaksKingdom()
         {
+            // ... (Este método permanece inalterado)
             var sturgiaCulture = MBObjectManager.Instance.GetObject<CultureObject>("sturgia");
             var sturgiaKingdom = Kingdom.All.FirstOrDefault(k => k.StringId == "sturgia");
 
@@ -1477,7 +1166,6 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 return;
             }
 
-            // Cleanly detach the Owl from any previous clan or kingdom
             if (theOwl.Clan != null && theOwl.Clan.Heroes.Contains(theOwl))
                 theOwl.Clan.Heroes.Remove(theOwl);
 
@@ -1497,17 +1185,14 @@ namespace RealmsForgotten.Quest.FourthUpdate
             TextObject clanName = new TextObject("Clan of the Vortiaks");
             newClan.InitializeClan(clanName, clanName, sturgiaCulture, banner, new Vec2(0, 0), false);
 
-            // Set the Owl as leader and register hero properly
             newClan.SetLeader(theOwl);
             newClan.Heroes.Add(theOwl);
             theOwl.Clan = newClan;
 
-            // Assign to Sturgia
             newClan.Kingdom = sturgiaKingdom;
             if (!sturgiaKingdom.Clans.Contains(newClan))
                 sturgiaKingdom.Clans.Add(newClan);
 
-            // Optional: give settlement ownership
             var settlement = Settlement.Find("castle_S8");
             if (settlement != null)
             {
@@ -1519,9 +1204,9 @@ namespace RealmsForgotten.Quest.FourthUpdate
         }
         private void SpawnDarkElveanKingdom()
         {
+            // ... (Este método permanece inalterado)
             try
             {
-                // 1. Find the NPC template first
                 CharacterObject darkElveanTemplate = CharacterObject.Find("dark_elvean_lord");
                 if (darkElveanTemplate == null)
                 {
@@ -1529,24 +1214,21 @@ namespace RealmsForgotten.Quest.FourthUpdate
                     return;
                 }
 
-                // 2. Create the main Hero from Template
                 Hero darkElveanHero = HeroCreator.CreateSpecialHero(
                     darkElveanTemplate,
                     Settlement.FindFirst(x => x.IsTown),
                     null, null,
-                    30 // starting age
+                    30
                 );
 
                 darkElveanHero.ChangeState(Hero.CharacterStates.Active);
                 darkElveanHero.SetName(new TextObject("Lord Varakar"), new TextObject("Lord Varakar of the Dark Elveans"));
 
-                // 3. Create a custom Banner (you can paste your own!)
-                string customBannerKey = "35.116.100.1140.1445.779.774.1.0.-91.434.121.116.240.240.920.955.1.0.0.407.121.116.248.248.630.578.1.0.0"; // <<< change this manually!
+                string customBannerKey = "35.116.100.1140.1445.779.774.1.0.-91.434.121.116.240.240.920.955.1.0.0.407.121.116.248.248.630.578.1.0.0";
                 uint primaryColor = 0xff332c4d;
                 uint secondaryColor = 0xffFDE217;
                 Banner customBanner = new Banner(customBannerKey, primaryColor, secondaryColor);
 
-                // 4. Create the Clan
                 Clan darkElveanClan = MBObjectManager.Instance.CreateObject<Clan>("clan_dark_elveans");
                 darkElveanClan.InitializeClan(
                     new TextObject("Dark Elveans"),
@@ -1559,8 +1241,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 darkElveanClan.SetLeader(darkElveanHero);
                 darkElveanHero.Clan = darkElveanClan;
 
-                // 5. Now spawn extra lords AFTER clan creation
-                for (int i = 0; i < 2; i++) // Adjust number if you want more
+                for (int i = 0; i < 2; i++)
                 {
                     Hero newLord = HeroCreator.CreateSpecialHero(
                         darkElveanTemplate,
@@ -1572,13 +1253,10 @@ namespace RealmsForgotten.Quest.FourthUpdate
                     newLord.SetName(new TextObject($"Varakar Lieutenant {i + 1}"), new TextObject($"Varakar Lieutenant {i + 1}"));
                     newLord.Clan = darkElveanClan;
                     newLord.ChangeState(Hero.CharacterStates.Active);
-
                     darkElveanClan.Heroes.Add(newLord);
-
                     InformationManager.DisplayMessage(new InformationMessage($"✅ Spawned {newLord.Name} into Dark Elveans Clan!"));
                 }
 
-                // 6. Create the Kingdom
                 Kingdom darkElveanKingdom = MBObjectManager.Instance.CreateObject<Kingdom>("kingdom_dark_elveans");
                 darkElveanKingdom.InitializeKingdom(
                     new TextObject("Dark Elvean Dominion"),
@@ -1598,7 +1276,6 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 darkElveanKingdom.RulingClan = darkElveanClan;
                 darkElveanClan.Kingdom = darkElveanKingdom;
 
-                // 7. Capture former Elvean settlements (Battanian towns and castles)
                 var battaniaSettlements = Settlement.All
                     .Where(s => s.Culture.StringId == "battania" && (s.IsTown || s.IsCastle))
                     .ToList();
@@ -1622,8 +1299,6 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
         protected override void SetDialogs()
         {
-            // Force-add our druid, dwarf king, necromancer flows. 
-            // They no longer rely on a settlement condition.
             Campaign.Current.ConversationManager.AddDialogFlow(DruidInteractionDialog, this);
             Campaign.Current.ConversationManager.AddDialogFlow(DwarfKingDialog, this);
             Campaign.Current.ConversationManager.AddDialogFlow(NecromancerDialogue, this);
@@ -1631,7 +1306,9 @@ namespace RealmsForgotten.Quest.FourthUpdate
             Campaign.Current.ConversationManager.AddDialogFlow(PostBattleWitchDialog, this);
             Campaign.Current.ConversationManager.AddDialogFlow(InterceptorEncounterDialogue, this);
             Campaign.Current.ConversationManager.AddDialogFlow(WitchFinalEncounterDialogue, this);
-            Campaign.Current.ConversationManager.AddDialogFlow(PriestessEighthQuestDialog, this);
+
+            // ✅ REMOVIDO: O PriestessEighthQuestDialog não pertence mais a esta quest.
+            // Campaign.Current.ConversationManager.AddDialogFlow(PriestessEighthQuestDialog, this);
         }
     }
 
@@ -1648,5 +1325,3 @@ namespace RealmsForgotten.Quest.FourthUpdate
         }
     }
 }
-
-

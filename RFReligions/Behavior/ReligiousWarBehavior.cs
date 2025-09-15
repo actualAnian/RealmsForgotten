@@ -16,11 +16,11 @@ namespace RealmsForgotten.RFReligions.Behavior
     public class ReligiousWarBehavior : CampaignBehaviorBase
     {
         // --- Configuration ---
-        private const float WeeklyWarDeclarationChance = 0.15f;
-        private const int TensionThresholdForWar = 100;
-        private const int TensionIncreasePerWeek = 5;
-        private const int TensionDecayPerWeek = 2;
-        private const int WarCooldownWeeks = 20;
+        private const float WeeklyWarDeclarationChance = 0.05f;
+        private const int TensionThresholdForWar = 150;
+        private const int TensionIncreasePerWeek = 3;
+        private const int TensionDecayPerWeek = 4;
+        private const int WarCooldownWeeks = 40;
 
         // Using your existing cooldown tracker
         private Dictionary<long, int> _cooldownTracker = new Dictionary<long, int>();

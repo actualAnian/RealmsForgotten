@@ -47,8 +47,8 @@ namespace RealmsForgotten.Career.Ability
 
     public static class AbilityEffects
     {
-        public static Dictionary<Agent, CareerBurningAgentData> BurningAgentsFromAbility = new Dictionary<Agent, CareerBurningAgentData>();
-        private static Dictionary<Agent, List<GameEntity>> TroopWeaponParticles = new Dictionary<Agent, List<GameEntity>>();
+        public static Dictionary<Agent, CareerBurningAgentData> BurningAgentsFromAbility = new();
+        private static List<GameEntity> TroopWeaponParticles = new();
 
         // NOVO: Lista para armazenar o dano de burning pendente
         public static List<(Agent victim, int damage)> PendingBurningDamage = new();
@@ -95,9 +95,10 @@ namespace RealmsForgotten.Career.Ability
         public static void ApplyArcaneSurgeToWeapons()
         {
             if (Mission.Current == null) return;
-            RemoveArcaneSurgeFromWeapons();
+            //RemoveArcaneSurgeFromWeapons();
 
             string weaponFireParticleId = "fire_sword";
+            //string weaponFireParticleId = "harmonic_convergence";
             if (ParticleSystemManager.GetRuntimeIdByName(weaponFireParticleId) == -1)
             {
                 InformationManager.DisplayMessage(new InformationMessage($"[Arcane Surge ERROR] Particle '{weaponFireParticleId}' not found!", Colors.Red));
@@ -116,22 +117,17 @@ namespace RealmsForgotten.Career.Ability
 
                     if (RFEffectsLibrary.CurrentWeaponEffects.ContainsKey(weapon.Item.StringId)) continue;
 
-                    var particleEntities = new List<GameEntity>();
                     Skeleton skeleton = agent.AgentVisuals.GetSkeleton();
 
                     int weaponLength = weapon.GetWeaponStatsData()[0].WeaponLength;
+                    GameEntity? weaponEntity = null;
                     for (int i = 1; i < weaponLength / 10; i++)
                     {
-                        TOWParticleSystem.ApplyParticleToWeapon(agent, weaponFireParticleId, wieldedItemIndex, i * 0.1f, skeleton, out GameEntity particleEntity);
-                        if (particleEntity != null)
-                        {
-                            particleEntities.Add(particleEntity);
-                        }
+                        TOWParticleSystem.ApplyParticleToWeapon(agent, weaponFireParticleId, wieldedItemIndex, i * 0.1f, skeleton, out weaponEntity);
                     }
-
-                    if (particleEntities.Count > 0)
+                    if (weaponEntity != null)
                     {
-                        TroopWeaponParticles.Add(agent, particleEntities);
+                        TroopWeaponParticles.Add(weaponEntity);
                     }
                 }
                 catch (Exception ex)
@@ -143,13 +139,8 @@ namespace RealmsForgotten.Career.Ability
 
         public static void RemoveArcaneSurgeFromWeapons()
         {
-            foreach (var entry in TroopWeaponParticles)
-            {
-                foreach (var particleEntity in entry.Value)
-                {
-                    particleEntity?.Remove(10);
-                }
-            }
+            foreach (GameEntity particleEntity in TroopWeaponParticles)
+                particleEntity.RemoveAllParticleSystems();
             TroopWeaponParticles.Clear();
         }
 

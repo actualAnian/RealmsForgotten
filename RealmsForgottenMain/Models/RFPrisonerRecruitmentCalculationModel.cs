@@ -9,6 +9,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.Core;
 using RealmsForgotten.Career;
+using TaleWorlds.Library;
 
 namespace RealmsForgotten.Models
 {
@@ -29,16 +30,34 @@ namespace RealmsForgotten.Models
         }
         public override int GetPrisonerRecruitmentMoraleEffect(PartyBase party, CharacterObject character, int num)
         {
+            // DEBUG: mostra sempre que esse método for chamado
+            InformationManager.DisplayMessage(
+                new InformationMessage("[DEBUG] CareerID = " + PlayerCareerExtension.PlayerCareerInfo?.CareerID)
+            );
+
             int baseNumber = _previousModel.GetPrisonerRecruitmentMoraleEffect(party, character, num);
+
             if (character.Occupation == Occupation.Bandit && character.Culture.StringId == "sea_raiders" &&
                 party.Owner?.CharacterObject.Race == FaceGen.GetRaceOrDefault("undead"))
                 return 0;
+
             if (character.Occupation == Occupation.Bandit && party.Owner?.Culture.StringId == "aqarun")
                 return 0;
-            if (character.Occupation == Occupation.Bandit && party == PartyBase.MainParty && PlayerCareerExtension.PlayerCareerInfo != null && PlayerCareerExtension.PlayerCareerInfo.CareerID == "mercenary")
+
+            if (character.Occupation == Occupation.Bandit
+                && party == PartyBase.MainParty
+                && PlayerCareerExtension.PlayerCareerInfo != null
+                && PlayerCareerExtension.PlayerCareerInfo.CareerID == "mercenary")
+            {
+                InformationManager.DisplayMessage(
+                    new InformationMessage("[DEBUG] Mercenary detected → morale penalty removed")
+                );
                 return 0;
+            }
+
             return baseNumber;
         }
+
         public override bool ShouldPartyRecruitPrisoners(PartyBase party)
         {
             bool baseBool = _previousModel.ShouldPartyRecruitPrisoners(party);

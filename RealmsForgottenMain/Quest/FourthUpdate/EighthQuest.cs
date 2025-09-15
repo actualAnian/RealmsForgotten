@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Conversation;
 using TaleWorlds.CampaignSystem.MapEvents;
@@ -13,13 +14,16 @@ using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
 using TaleWorlds.SaveSystem;
-using RealmsForgotten.Quest.MissionBehaviors; // para RecordDamageMissionLogic (mesmo padrão da ThirdQuest)
+using RealmsForgotten.Quest.MissionBehaviors;
 
 namespace RealmsForgotten.Quest.FourthUpdate
 {
     public class EighthQuest : QuestBase
     {
-        // ======== Campos base (fase 1) ========
+        // ======================= CAMPOS DE ESTADO DA QUEST =======================
+        [SaveableField(100)] private JournalLog _talkToOwlLog;
+        [SaveableField(101)] private bool _pendingStartSacredObjectDialogue = false;
+
         [SaveableField(0)] private JournalLog _meetPriestessLog;
         [SaveableField(1)] internal JournalLog _findSacredObjectLog;
         [SaveableField(2)] internal JournalLog _returnSacredObjectLog;
@@ -30,53 +34,67 @@ namespace RealmsForgotten.Quest.FourthUpdate
         [SaveableField(7)] private CampaignTime _ambushCheckStartTime = CampaignTime.Never;
         [SaveableField(8)] private bool _shouldTriggerPostAmbushOwlDialogue = false;
 
-        // ======== Continuação (magos → site custom → boss → survivor → urkhai) ========
         [SaveableField(9)] private JournalLog _investigateMagesLog;
         [SaveableField(10)] private JournalLog _mageSiteLog;
         [SaveableField(11)] private JournalLog _orcTrailLog;
         [SaveableField(12)] private bool _mageInquiryTriggered = false;
         [SaveableField(13)] private bool _mageSiteMarked = false;
-
-        [SaveableField(14)] private bool _mageBossDefeated = false;         // boss morreu dentro da missão
-        [SaveableField(15)] private bool _survivorPendingAfterExit = false; // aguarda sair do site para conversar
+        [SaveableField(14)] private bool _mageBossDefeated = false;
+        [SaveableField(15)] private bool _survivorPendingAfterExit = false;
         [SaveableField(16)] private bool _mageSurvivorDialogueDone = false;
         [SaveableField(17)] private bool _ninthQuestStarted = false;
 
-        // ======== IDs (ajuste conforme seu mod) ========
-        private const string RF_MAGE_SITE = "rf_mage_site";              // settlement custom (site dos magos)
-        private const string RF_MAGE_BOSS_AGENT = "rf_mage_boss_agent";  // Character/Agent boss na missão do site
-        private const string RF_MAGE_SURVIVOR_HERO = "rf_mage_survivor"; // herói/NPC sobrevivente
+        [NonSerialized] private bool _eventsRewiredAfterLoad;
+
+        // ======================= IDs E REFERÊNCIAS =======================
+        private const string RF_MAGE_SITE = "mage_hideout";
+        private const string RF_MAGE_BOSS_AGENT = "rf_mage_boss_agent";
+        private const string RF_MAGE_SURVIVOR_HERO = "rf_mage_survivor";
         private const string FIRST_TREE_TOWN = "town_FirstTree";
         private const string OWL_HERO_ID = "rf_the_owl";
         private const string PRIESTESS_CHAR_ID = "elvean_first_tree_druid_quest";
         private const string SACRED_OBJECT_ID = "sacred_object";
 
+        private Hero TheOwl => Hero.FindFirst(h => h.StringId == OWL_HERO_ID);
+        private Settlement QuestHideoutSettlement => Settlement.Find("hideout_mountain_13");
         private static Settlement FirstTreeSettlement => Settlement.Find(FIRST_TREE_TOWN);
-        private static Settlement MageInvestigationSpot => Settlement.Find("castle_EN3"); // spot de “pista”
+        private static Settlement MageInvestigationSpot => Settlement.Find("castle_EN3");
         private static Settlement MageSite => Settlement.Find(RF_MAGE_SITE);
 
         public EighthQuest(string questId, Hero questGiver, CampaignTime duration, int rewardGold)
             : base(questId, questGiver, duration, rewardGold) { }
 
-        // ======== Ciclo de vida ========
+        // ======================= CICLO DE VIDA DA QUEST =======================
+        protected override void OnStartQuest()
+        {
+            SetDialogs();
+            RegisterEvents();
+
+            // ✅ CORRIGIDO: O método AddLog foi chamado corretamente.
+            _talkToOwlLog = AddLog(new TextObject("The recent reports of deformed creatures have caused concern. The Owl wishes to speak with you about the matter. Find him in your party to discuss the next steps."));
+
+            if (TheOwl != null) AddTrackedObject(TheOwl);
+        }
+
         protected override void InitializeQuestOnGameLoad()
         {
             SetDialogs();
             ReinforceQuestLogs();
         }
 
-        protected override void OnStartQuest()
+        public void PostLoadRewire()
         {
+            if (_eventsRewiredAfterLoad) return;
+            _eventsRewiredAfterLoad = true;
+
             SetDialogs();
             RegisterEvents();
+            ReinforceQuestLogs();
 
-            _findSacredObjectLog = AddDiscreteLog(
-                new TextObject("The Priestess Awaits"),
-                new TextObject("Strange parties with deformed raiders spread across the land. Investigate the rumours and search for clues."),
-                0, 1
-            );
-
-            InitializeEighthQuestHideout();
+            if (_findSacredObjectLog != null)
+            {
+                InitializeEighthQuestHideout();
+            }
         }
 
         protected override void RegisterEvents()
@@ -87,7 +105,8 @@ namespace RealmsForgotten.Quest.FourthUpdate
             CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, OnDailyTick);
             CampaignEvents.OnSettlementLeftEvent.AddNonSerializedListener(this, OnLeaveSettlement);
             CampaignEvents.OnPlayerBattleEndEvent.AddNonSerializedListener(this, OnPlayerBattleEnd);
-            CampaignEvents.OnMissionStartedEvent.AddNonSerializedListener(this, OnMissionStarted); // <<< como na ThirdQuest
+            CampaignEvents.OnMissionStartedEvent.AddNonSerializedListener(this, OnMissionStarted);
+            CampaignEvents.OnMissionEndedEvent.AddNonSerializedListener(this, OnHideoutMissionEnded);
         }
 
         protected override void OnTimedOut()
@@ -97,54 +116,68 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
         protected override void OnFinalize()
         {
-            CleanupEighthQuestHideout();
+            if (QuestHideoutSettlement != null) RemoveTrackedObject(QuestHideoutSettlement);
             if (MageSite != null) RemoveTrackedObject(MageSite);
+            if (TheOwl != null) RemoveTrackedObject(TheOwl);
         }
 
         public override TextObject Title => new TextObject("Eighth Quest: Call of the First Tree");
         public override bool IsSpecialQuest => true;
-        public override bool IsRemainingTimeHidden => false;
 
-        // ======== Logs defensivos ========
-        private void ReinforceQuestLogs()
+        // ✅ CORRIGIDO: A propriedade obrigatória foi adicionada novamente.
+        public override bool IsRemainingTimeHidden => true;
+
+        // ======================= MANIPULADORES DE EVENTOS =======================
+
+        private void OnTick(float dt)
         {
-            if (_findSacredObjectLog == null)
+            if (_pendingStartSacredObjectDialogue)
             {
-                _findSacredObjectLog = AddDiscreteLog(
-                    new TextObject("The Priestess Awaits"),
-                    new TextObject("Strange parties with deformed raiders spread across the land. Investigate the rumours and search for clues."),
-                    0, 1
-                );
-                InformationManager.DisplayMessage(new InformationMessage("🛠 Reinstated missing 'Find Sacred Object' log."));
-            }
-
-            if (_returnSacredObjectLog == null && _findSacredObjectLog?.CurrentProgress == 1 && PlayerHasSacredObject())
-            {
-                _returnSacredObjectLog = AddDiscreteLog(
-                    new TextObject("Return the Sacred Object"),
-                    new TextObject("Return the sacred object to the First Tree Priestess."),
-                    0, 1
-                );
-                InformationManager.DisplayMessage(new InformationMessage("🛠 Reinstated missing 'Return Sacred Object' log."));
-            }
-        }
-
-        // ======== Eventos ========
-        private void OnLeaveSettlement(MobileParty party, Settlement settlement)
-        {
-            if (!party.IsMainParty) return;
-
-            // Saída do hideout inicial (teu fluxo Owl)
-            if (settlement.StringId == "hideout_mountain_13")
-            {
-                if (!_owlSacredObjectDialogueStarted && _findSacredObjectLog?.CurrentProgress == 0)
+                _pendingStartSacredObjectDialogue = false;
+                if (!_owlSacredObjectDialogueStarted)
                 {
                     _owlSacredObjectDialogueStarted = true;
                     StartSacredObjectDialogue();
                 }
             }
 
-            // Saída do site custom dos magos → só agora conversa com o sobrevivente
+            if (_shouldTriggerPostAmbushOwlDialogue)
+            {
+                _shouldTriggerPostAmbushOwlDialogue = false;
+                if (TheOwl != null)
+                {
+                    CampaignMapConversation.OpenConversation(
+                        new ConversationCharacterData(CharacterObject.PlayerCharacter),
+                        new ConversationCharacterData(TheOwl.CharacterObject, PartyBase.MainParty)
+                    );
+                }
+            }
+        }
+
+        private void OnHideoutMissionEnded(IMission iMission)
+        {
+            if (Settlement.CurrentSettlement?.IsHideout != true || Settlement.CurrentSettlement.StringId != "hideout_mountain_13")
+                return;
+
+            if (_owlSacredObjectDialogueStarted || _findSacredObjectLog?.CurrentProgress != 0)
+                return;
+
+            _pendingStartSacredObjectDialogue = true;
+        }
+
+        private void OnLeaveSettlement(MobileParty party, Settlement settlement)
+        {
+            if (!party.IsMainParty) return;
+
+            if (settlement?.Hideout != null && !settlement.Hideout.IsInfested &&
+                _findSacredObjectLog?.CurrentProgress == 0 && !_owlSacredObjectDialogueStarted)
+            {
+                _owlSacredObjectDialogueStarted = true;
+                InformationManager.DisplayMessage(new InformationMessage("✅ Hideout cleared! Triggering Owl conversation (fallback OnLeaveSettlement)."));
+                StartSacredObjectDialogue();
+                return;
+            }
+
             if (settlement.StringId == RF_MAGE_SITE && _mageBossDefeated && !_mageSurvivorDialogueDone)
             {
                 if (_survivorPendingAfterExit)
@@ -155,39 +188,8 @@ namespace RealmsForgotten.Quest.FourthUpdate
             }
         }
 
-        private void OnTick(float dt)
-        {
-            // Pós-emboscada: abre conversa com o Owl uma vez
-            if (_shouldTriggerPostAmbushOwlDialogue)
-            {
-                _shouldTriggerPostAmbushOwlDialogue = false;
-
-                Hero owl = Hero.FindFirst(h => h.StringId == OWL_HERO_ID);
-                if (owl != null)
-                {
-                    CampaignMapConversation.OpenConversation(
-                        new ConversationCharacterData(CharacterObject.PlayerCharacter),
-                        new ConversationCharacterData(owl.CharacterObject, PartyBase.MainParty)
-                    );
-                }
-            }
-        }
-
         protected override void HourlyTick()
         {
-            // Owl após limpar hideout (fase 1)
-            var hideout = Settlement.Find("hideout_mountain_13")?.Hideout;
-
-            if (!_owlSacredObjectDialogueStarted
-                && _findSacredObjectLog?.CurrentProgress == 0
-                && hideout != null && !hideout.IsInfested)
-            {
-                _owlSacredObjectDialogueStarted = true;
-                InformationManager.DisplayMessage(new InformationMessage("✅ Owl conversation triggered after hideout cleared."));
-                StartSacredObjectDialogue();
-            }
-
-            // Investigação dos magos → marcar site
             OnHourlyTick_MageInvestigation();
         }
 
@@ -208,11 +210,9 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
         private void OnPlayerBattleEnd(MapEvent mapEvent)
         {
-            if (!mapEvent.IsPlayerMapEvent) return;
+            if (mapEvent == null || !mapEvent.IsPlayerMapEvent) return;
 
-            // Detecta party da emboscada (fase 1)
             MobileParty ambushParty = null;
-
             var attackerParty = mapEvent.AttackerSide.LeaderParty?.MobileParty;
             var defenderParty = mapEvent.DefenderSide.LeaderParty?.MobileParty;
 
@@ -231,27 +231,19 @@ namespace RealmsForgotten.Quest.FourthUpdate
             {
                 _ambushTriggered = true;
                 _ambushCheckStartTime = CampaignTime.Never;
-
                 ForceRemoveSacredObject();
-
                 _returnSacredObjectLog?.UpdateCurrentProgress(1);
-
                 _shouldTriggerPostAmbushOwlDialogue = true;
-
                 AddDiscreteLog(
                     new TextObject("The Vessel Was Taken"),
                     new TextObject("You were ambushed and the vessel is gone. Speak with the Owl, then return to the Priestess."),
                     0, 1
                 );
             }
-
-            // A morte do boss dos magos é tratada dentro da missão (OnMissionStarted + RecordDamageMissionLogic)
         }
 
-        // ======== Missão do site dos magos: marcar morte do boss sem behavior externo ========
         private void OnMissionStarted(IMission imission)
         {
-            // Mesmo padrão da ThirdQuest: injeta RecordDamageMissionLogic com callback
             if (Settlement.CurrentSettlement != null &&
                 Settlement.CurrentSettlement.StringId == RF_MAGE_SITE &&
                 !_mageBossDefeated)
@@ -260,21 +252,13 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 {
                     mission.AddMissionBehavior(new RecordDamageMissionLogic((victim, attacker, damage) =>
                     {
-                        if (victim?.Character == null) return;
-
-                        // Quando o agente BOSS morrer…
-                        if (victim.Character.StringId == RF_MAGE_BOSS_AGENT && damage >= victim.Health)
+                        if (victim?.Character != null && victim.Character.StringId == RF_MAGE_BOSS_AGENT && damage >= victim.Health)
                         {
                             _mageBossDefeated = true;
-
-                            // Se o player está dentro do site, só conversa ao sair
-                            if (MobileParty.MainParty.CurrentSettlement != null &&
-                                MobileParty.MainParty.CurrentSettlement.StringId == RF_MAGE_SITE)
+                            if (MobileParty.MainParty.CurrentSettlement?.StringId == RF_MAGE_SITE)
                             {
                                 _survivorPendingAfterExit = true;
                             }
-
-                            // Marca o passo do site como concluído e remove tracking
                             _mageSiteLog?.UpdateCurrentProgress(1);
                             if (MageSite != null) RemoveTrackedObject(MageSite);
                         }
@@ -283,13 +267,12 @@ namespace RealmsForgotten.Quest.FourthUpdate
             }
         }
 
-        // ======== Proximidade da sacerdotisa (fase 1) ========
+        // ======================= LÓGICA DA QUEST =======================
+
         private void CheckPriestessProximity()
         {
-            if (_hasTriggeredPriestessReturnDialogue || FirstTreeSettlement == null)
-                return;
-
-            if (_meetPriestessLog == null || _meetPriestessLog.CurrentProgress != 1)
+            if (_hasTriggeredPriestessReturnDialogue || FirstTreeSettlement == null ||
+                _meetPriestessLog == null || _meetPriestessLog.CurrentProgress != 1)
                 return;
 
             float distance = MobileParty.MainParty.Position2D.Distance(FirstTreeSettlement.GatePosition);
@@ -307,7 +290,6 @@ namespace RealmsForgotten.Quest.FourthUpdate
             }
         }
 
-        // ======== Ambush (fase 1) ========
         private void TriggerAmbush()
         {
             try
@@ -321,10 +303,8 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
                 var troopPool = new Dictionary<string, int>
                 {
-                    { "deformed_villager_bandit", 30 },
-                    { "deformed_villager_raider", 15 },
-                    { "deformed_villager_chief", 5 },
-                    { "deformed_villager_boss", 1 }
+                    { "deformed_villager_bandit", 30 }, { "deformed_villager_raider", 15 },
+                    { "deformed_villager_chief", 5 }, { "deformed_villager_boss", 1 }
                 };
 
                 TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
@@ -332,29 +312,16 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 {
                     var character = CharacterObject.Find(kv.Key);
                     if (character != null) troopRoster.AddToCounts(character, kv.Value);
-                    else InformationManager.DisplayMessage(new InformationMessage($"⚠️ Troop not found: {kv.Key}"));
                 }
 
                 string uniqueId = $"rf_deformed_ambush_{MBRandom.RandomInt(10000)}";
                 MobileParty ambushParty = BanditPartyComponent.CreateBanditParty(uniqueId, deformedClan, null, true);
-                if (ambushParty == null)
-                {
-                    InformationManager.DisplayMessage(new InformationMessage("❌ Failed to create ambush party."));
-                    return;
-                }
+                if (ambushParty == null) return;
 
-                ambushParty.InitializeMobilePartyAroundPosition(
-                    troopRoster,
-                    TroopRoster.CreateDummyTroopRoster(),
-                    MobileParty.MainParty.Position2D,
-                    0f,
-                    0f);
-
+                ambushParty.InitializeMobilePartyAroundPosition(troopRoster, TroopRoster.CreateDummyTroopRoster(), MobileParty.MainParty.Position2D, 0f, 0f);
                 ambushParty.Aggressiveness = 100f;
                 ambushParty.Ai.SetMoveEngageParty(MobileParty.MainParty);
                 ambushParty.SetCustomName(new TextObject("Deformed Ambushers"));
-
-                InformationManager.DisplayMessage(new InformationMessage("☠️ A deformed ambush party has been spawned on your position!"));
             }
             catch (Exception ex)
             {
@@ -362,7 +329,6 @@ namespace RealmsForgotten.Quest.FourthUpdate
             }
         }
 
-        // ======== Continuação: investigação dos magos ========
         private void OnHourlyTick_MageInvestigation()
         {
             if (_investigateMagesLog == null || _mageInquiryTriggered || MageInvestigationSpot == null)
@@ -372,202 +338,195 @@ namespace RealmsForgotten.Quest.FourthUpdate
             if (distance <= 50f)
             {
                 _mageInquiryTriggered = true;
-
                 InformationManager.ShowInquiry(new InquiryData(
-                    "Strange Tracks",
-                    "Your scouts notice drag marks and a faint magical residue leading into the mountains.",
-                    true, false,
-                    "Investigate", null,
+                    "Strange Tracks", "Your scouts notice drag marks and a faint magical residue leading into the mountains.",
+                    true, false, "Investigate", null,
                     () =>
                     {
-                        _mageSiteLog ??= AddDiscreteLog(
-                            new TextObject("Mage Site"),
-                            new TextObject("Follow the tracks and investigate the suspicious site where the mages are hiding."),
-                            0, 1
-                        );
-
+                        _mageSiteLog ??= AddDiscreteLog(new TextObject("Mage Site"), new TextObject("Follow the tracks and investigate the suspicious site where the mages are hiding."), 0, 1);
                         if (MageSite != null && !_mageSiteMarked)
                         {
                             AddTrackedObject(MageSite);
                             _mageSiteMarked = true;
                         }
-                    },
-                    null
-                ));
+                    }, null));
             }
         }
 
-        // ======== Conversa com o sobrevivente (após sair do site e boss morto) ========
         private void TriggerMageSurvivorConversation()
         {
-            Hero survivor = Hero.FindFirst(h => h.StringId == RF_MAGE_SURVIVOR_HERO);
-            if (survivor != null)
+            CharacterObject survivorChar = CharacterObject.Find(RF_MAGE_SURVIVOR_HERO);
+            if (survivorChar != null)
             {
                 CampaignMapConversation.OpenConversation(
                     new ConversationCharacterData(CharacterObject.PlayerCharacter),
-                    new ConversationCharacterData(survivor.CharacterObject, PartyBase.MainParty)
+                    new ConversationCharacterData(survivorChar, PartyBase.MainParty)
                 );
             }
             else
             {
-                // Fallback se o NPC não existir no XML
                 InformationManager.ShowInquiry(new InquiryData(
-                    "Sobrevivente",
-                    "Eles nos forçaram a beber líquidos fétidos que entorpeciam e transformavam alguns... Muitos foram levados para as terras dos Urkhai.",
-                    true, false,
-                    "Entendido", null,
+                    "Survivor", "They forced us to drink foul liquids that numbed and transformed some... Many were taken to the lands of the Urkhai.",
+                    true, false, "Understood", null,
                     () =>
                     {
-                        _orcTrailLog ??= AddDiscreteLog(
-                            new TextObject("Trail to the Orcs"),
-                            new TextObject("The survivor revealed that captives were taken into Urkhai territory. Travel there to continue your investigation."),
-                            0, 1
-                        );
+                        _orcTrailLog ??= AddDiscreteLog(new TextObject("Trail to the Orcs"), new TextObject("The survivor revealed that captives were taken into Urkhai territory. Travel there to continue your investigation."), 0, 1);
                         _mageSurvivorDialogueDone = true;
-
-                        // Inicia a Ninth quest (sem concluir a Eight)
                         StartNinthQuest();
-                    },
-                    null
-                ));
+                    }, null));
             }
         }
 
-        // ======== DialogFlows ========
+        // ======================= DIÁLOGOS =======================
         protected override void SetDialogs()
         {
-            Campaign.Current.ConversationManager.AddDialogFlow(SacredObjectDialogue, this);
-            Campaign.Current.ConversationManager.AddDialogFlow(PriestessReturnDialog, this);
-            Campaign.Current.ConversationManager.AddDialogFlow(PriestessFinalDialog, this);
-            Campaign.Current.ConversationManager.AddDialogFlow(MageSurvivorDialog, this);
+            Campaign.Current.ConversationManager.AddDialogFlow(IntroductoryOwlDialog(), this);
+            Campaign.Current.ConversationManager.AddDialogFlow(SacredObjectDialogue(), this);
+            Campaign.Current.ConversationManager.AddDialogFlow(PriestessReturnDialog(), this);
+            Campaign.Current.ConversationManager.AddDialogFlow(PriestessFinalDialog(), this);
+            Campaign.Current.ConversationManager.AddDialogFlow(MageSurvivorDialog(), this);
         }
 
-        private DialogFlow SacredObjectDialogue => DialogFlow.CreateDialogFlow("start", 125)
-            .PlayerLine(new TextObject("Que diabos eram aquelas coisas? Pareciam humanas... mas torcidas. E encontrei isto entre os corpos."))
-            .Condition(() =>
-                Hero.OneToOneConversationHero?.StringId == OWL_HERO_ID &&
-                _findSacredObjectLog?.CurrentProgress == 0)
-            .NpcLine(new TextObject("Parece algum tipo de vaso."))
-            .PlayerLine(new TextObject("A Sacerdotisa precisa ver isso. Talvez seja a pista que procurávamos."))
-            .Consequence(() =>
-            {
-                var item = MBObjectManager.Instance.GetObject<ItemObject>(SACRED_OBJECT_ID);
-                if (item != null)
+        private DialogFlow IntroductoryOwlDialog()
+        {
+            return DialogFlow.CreateDialogFlow("start", 125)
+                .NpcLine(new TextObject("My friend, we just received a messenger from the First Tree Priestess. She's concerned about reports of strange mutations attacking villagers."))
+                .Condition(() => Hero.OneToOneConversationHero == TheOwl && _talkToOwlLog != null && _talkToOwlLog.CurrentProgress == 0)
+                .PlayerLine(new TextObject("Mutations? We've already faced zombies and demons. What else could there possibly be?"))
+                .NpcLine(new TextObject("She wants us to find out. And to be honest... that worries me."))
+                .PlayerLine(new TextObject("Let’s not jump to conclusions just yet. We haven’t even seen them. Did she mention where we could find a trail?"))
+                .NpcLine(new TextObject("The message says the latest sightings occurred near the Tremerid Kingdom. I've marked a hideout on your map where the activity seems concentrated."))
+                .PlayerLine(new TextObject("Then the Mages... could they be involved? Let's investigate."))
+                .Consequence(() =>
                 {
-                    MobileParty.MainParty.ItemRoster.AddToCounts(item, 1);
-                    InformationManager.DisplayMessage(new InformationMessage("✅ Sacred Object adicionado ao seu inventário."));
+                    _talkToOwlLog.UpdateCurrentProgress(1);
+                    if (TheOwl != null) RemoveTrackedObject(TheOwl);
 
-                    _findSacredObjectLog?.UpdateCurrentProgress(1);
-
-                    _returnSacredObjectLog ??= AddDiscreteLog(
-                        new TextObject("Return the Sacred Object"),
-                        new TextObject("Return the sacred object to the First Tree Priestess."),
+                    _findSacredObjectLog = AddDiscreteLog(
+                        new TextObject("Investigate the Hideout"),
+                        new TextObject("Investigate the rumours and search for clues at the marked hideout."),
                         0, 1
                     );
 
-                    _ambushCheckStartTime = CampaignTime.Now;
-                    InformationManager.DisplayMessage(new InformationMessage("⚠️ Você sente que está sendo observado..."));
-                }
-                else
-                {
-                    InformationManager.DisplayMessage(new InformationMessage("❌ Sacred Object não encontrado.", Colors.Red));
-                }
-            })
-            .CloseDialog();
+                    InitializeEighthQuestHideout();
+                })
+                .CloseDialog();
+        }
 
-        private DialogFlow PriestessReturnDialog => DialogFlow.CreateDialogFlow("start", 125)
-            .PlayerLine(new TextObject("O que foi aquilo? Saíram do nada!"))
-            .Condition(() =>
-                CharacterObject.OneToOneConversationCharacter?.HeroObject?.StringId == OWL_HERO_ID &&
-                _returnSacredObjectLog?.CurrentProgress == 1 &&
-                !PlayerHasSacredObject())
-            .NpcLine(new TextObject("Nem nossos batedores viram. Pode ser feitiçaria."))
-            .PlayerLine(new TextObject("O vaso... Eu o perdi na luta."))
-            .NpcLine(new TextObject("Ou foi roubado. Se há magia, talvez nos seguiram. A emboscada pode ter sido só distração."))
-            .PlayerLine(new TextObject("É possível. Mas não temos pistas."))
-            .NpcLine(new TextObject("A não ser que os magos estejam envolvidos. Talvez possam rastrear — se estiverem dispostos."))
-            .PlayerLine(new TextObject("Tem razão. Não temos outra pista."))
+        private DialogFlow SacredObjectDialogue()
+        {
+            return DialogFlow.CreateDialogFlow("start", 125)
+                .PlayerLine(new TextObject("What the hell were those things? They looked human... but twisted. And I found this among the bodies."))
+                .Condition(() => Hero.OneToOneConversationHero?.StringId == OWL_HERO_ID && _findSacredObjectLog?.CurrentProgress == 0)
+                .NpcLine(new TextObject("It looks like some kind of vessel."))
+                .PlayerLine(new TextObject("The Priestess needs to see this. Perhaps it's the clue we were looking for."))
+                .Consequence(() =>
+                {
+                    CleanupEighthQuestHideout();
+                    var item = MBObjectManager.Instance.GetObject<ItemObject>(SACRED_OBJECT_ID);
+                    if (item != null)
+                    {
+                        MobileParty.MainParty.ItemRoster.AddToCounts(item, 1);
+                        InformationManager.DisplayMessage(new InformationMessage("✅ Sacred Object added to your inventory."));
+                        _findSacredObjectLog?.UpdateCurrentProgress(1);
+                        _returnSacredObjectLog = AddDiscreteLog(new TextObject("Return the Sacred Object"), new TextObject("Return the sacred object to the First Tree Priestess."), 0, 1);
+                        _ambushCheckStartTime = CampaignTime.Now;
+                        InformationManager.DisplayMessage(new InformationMessage("⚠️ You feel like you are being watched..."));
+                    }
+                    else
+                    {
+                        InformationManager.DisplayMessage(new InformationMessage("❌ Sacred Object (Item ID) not found.", Colors.Red));
+                    }
+                })
+                .CloseDialog();
+        }
+
+        private DialogFlow PriestessReturnDialog() => DialogFlow.CreateDialogFlow("start", 125)
+            .PlayerLine(new TextObject("What was that? They came out of nowhere!"))
+            .Condition(() => CharacterObject.OneToOneConversationCharacter?.HeroObject?.StringId == OWL_HERO_ID && _returnSacredObjectLog?.CurrentProgress == 1 && !PlayerHasSacredObject())
+            .NpcLine(new TextObject("Not even our scouts saw them. It could be sorcery."))
+            .PlayerLine(new TextObject("The vessel... I lost it in the fight."))
+            .NpcLine(new TextObject("Or it was stolen. If magic is involved, perhaps they were tracking us. The ambush might have been just a distraction."))
+            .PlayerLine(new TextObject("It's possible. But we have no leads."))
+            .NpcLine(new TextObject("Unless the mages are involved. Perhaps they can track it—if they are willing."))
+            .PlayerLine(new TextObject("You're right. We have no other leads."))
             .Consequence(() =>
             {
                 ForceRemoveSacredObject();
-
-                _meetPriestessLog ??= AddDiscreteLog(
-                    new TextObject("Find the Priestess"),
-                    new TextObject("Return to the Priestess at the First Tree and report what happened."),
-                    0, 1
-                );
+                _meetPriestessLog = AddDiscreteLog(new TextObject("Find the Priestess"), new TextObject("Return to the Priestess at the First Tree and report what happened."), 0, 1);
                 _meetPriestessLog.UpdateCurrentProgress(1);
             })
             .CloseDialog();
 
-        private DialogFlow PriestessFinalDialog => DialogFlow.CreateDialogFlow("start", 125)
-            .PlayerLine(new TextObject("Sacerdotisa, fomos emboscados. O vaso foi levado."))
-            .Condition(() =>
-                CharacterObject.OneToOneConversationCharacter?.StringId == PRIESTESS_CHAR_ID &&
-                _meetPriestessLog != null && _meetPriestessLog.CurrentProgress == 1 &&
-                !PlayerHasSacredObject())
-            .NpcLine(new TextObject("A magia antiga se move... Não foi acaso. Suspeito dos magos, mas sem provas."))
-            .PlayerLine(new TextObject("Então vou investigá-los."))
+        private DialogFlow PriestessFinalDialog() => DialogFlow.CreateDialogFlow("start", 125)
+            .PlayerLine(new TextObject("Priestess, we were ambushed. The vessel was taken."))
+            .Condition(() => CharacterObject.OneToOneConversationCharacter?.StringId == PRIESTESS_CHAR_ID && _meetPriestessLog != null && _meetPriestessLog.CurrentProgress == 1 && !PlayerHasSacredObject())
+            .NpcLine(new TextObject("Ancient magic is stirring... This was no accident. I suspect the mages, but I have no proof."))
+            .PlayerLine(new TextObject("Then I will investigate them."))
             .Consequence(() =>
             {
-                _investigateMagesLog ??= AddDiscreteLog(
-                    new TextObject("Investigate the Mages"),
-                    new TextObject("Travel near their lands and search for clues about their involvement."),
-                    0, 1
-                );
+                _investigateMagesLog = AddDiscreteLog(new TextObject("Investigate the Mages"), new TextObject("Travel near their lands and search for clues about their involvement."), 0, 1);
             })
             .CloseDialog();
 
-        private DialogFlow MageSurvivorDialog => DialogFlow.CreateDialogFlow("start", 125)
-            .PlayerLine(new TextObject("Calma. Você está seguro. O que aconteceu aqui?"))
-            .Condition(() =>
-                CharacterObject.OneToOneConversationCharacter?.HeroObject?.StringId == RF_MAGE_SURVIVOR_HERO
-                && _mageBossDefeated
-                && !_mageSurvivorDialogueDone)
-            .NpcLine(new TextObject("Eles nos forçaram a beber líquidos fétidos... Aos poucos, alguns enlouqueciam, outros mudavam."))
-            .PlayerLine(new TextObject("Quem são 'eles'?"))
-            .NpcLine(new TextObject("Magos. Ou algo pior, usando-os. Vi símbolos... E vi prisioneiros sendo levados para o leste, para as terras dos Urkhai."))
-            .PlayerLine(new TextObject("Urkhai... Então é lá que devo procurar."))
-            .NpcLine(new TextObject("Se for, vá rápido. Quem é levado para lá... raramente volta."))
+        private DialogFlow MageSurvivorDialog() => DialogFlow.CreateDialogFlow("start", 125)
+            .PlayerLine(new TextObject("Easy now. You are safe. What happened here?"))
+            .Condition(() => CharacterObject.OneToOneConversationCharacter?.StringId == RF_MAGE_SURVIVOR_HERO && _mageBossDefeated && !_mageSurvivorDialogueDone)
+            .NpcLine(new TextObject("They forced us to drink foul liquids... Little by little, some went mad, others... changed."))
+            .PlayerLine(new TextObject("Who are 'they'?"))
+            .NpcLine(new TextObject("Mages. Or something worse, using them. I saw symbols... And I saw prisoners being taken east, to the lands of the Urkhai."))
+            .PlayerLine(new TextObject("Urkhai... Then that is where I must look."))
+            .NpcLine(new TextObject("If you go, be quick. Those who are taken there... rarely return."))
             .Consequence(() =>
             {
-                _orcTrailLog ??= AddDiscreteLog(
-                    new TextObject("Trail to the Orcs"),
-                    new TextObject("The survivor revealed that captives were taken into Urkhai territory. Travel there to continue your investigation."),
-                    0, 1
-                );
+                _orcTrailLog = AddDiscreteLog(new TextObject("Trail to the Orcs"), new TextObject("The survivor revealed that captives were taken into Urkhai territory. Travel there to continue your investigation."), 0, 1);
                 _mageSurvivorDialogueDone = true;
-
                 StartNinthQuest();
             })
             .CloseDialog();
 
-        // ======== Utils ========
+        // ======================= MÉTODOS UTILITÁRIOS =======================
+
         private void InitializeEighthQuestHideout()
         {
-            var hideout = Settlement.Find("hideout_mountain_13")?.Hideout;
-            if (hideout != null)
+            if (QuestHideoutSettlement?.Hideout != null)
             {
-                QuestLibrary.InitializeHideoutIfNeeded(hideout);
-                AddTrackedObject(hideout.Settlement);
+                QuestLibrary.InitializeHideoutIfNeeded(QuestHideoutSettlement.Hideout);
+                AddTrackedObject(QuestHideoutSettlement);
             }
         }
 
         private void CleanupEighthQuestHideout()
         {
-            var hideout = Settlement.Find("hideout_mountain_13")?.Hideout;
-            if (hideout != null) RemoveTrackedObject(hideout.Settlement);
+            if (QuestHideoutSettlement != null) RemoveTrackedObject(QuestHideoutSettlement);
         }
 
         private void StartSacredObjectDialogue()
         {
-            var owl = Hero.FindFirst(h => h.StringId == OWL_HERO_ID);
-            if (owl != null)
+            if (TheOwl != null)
             {
                 CampaignMapConversation.OpenConversation(
                     new ConversationCharacterData(CharacterObject.PlayerCharacter),
-                    new ConversationCharacterData(owl.CharacterObject, PartyBase.MainParty)
+                    new ConversationCharacterData(TheOwl.CharacterObject, PartyBase.MainParty)
                 );
+            }
+            else
+            {
+                InformationManager.DisplayMessage(new InformationMessage("❌ Não foi possível encontrar o Owl para iniciar a conversa!", Colors.Red));
+            }
+        }
+
+        private void ReinforceQuestLogs()
+        {
+            if (_talkToOwlLog == null && _findSacredObjectLog == null)
+            {
+                // ✅ CORRIGIDO: O método AddLog foi chamado corretamente.
+                _talkToOwlLog = AddLog(new TextObject("The Owl wishes to speak with you about the recent reports of deformed creatures."));
+            }
+
+            if (_returnSacredObjectLog == null && _findSacredObjectLog?.CurrentProgress == 1 && PlayerHasSacredObject())
+            {
+                _returnSacredObjectLog = AddDiscreteLog(new TextObject("Return the Sacred Object"), new TextObject("Return the sacred object to the First Tree Priestess."), 0, 1);
             }
         }
 
@@ -580,28 +539,20 @@ namespace RealmsForgotten.Quest.FourthUpdate
         private void ForceRemoveSacredObject()
         {
             var sacredObject = MBObjectManager.Instance.GetObject<ItemObject>(SACRED_OBJECT_ID);
-            if (sacredObject == null)
-            {
-                InformationManager.DisplayMessage(new InformationMessage("❌ Sacred Object definition missing."));
-                return;
-            }
+            if (sacredObject == null) return;
 
             int count = MobileParty.MainParty.ItemRoster.GetItemNumber(sacredObject);
             if (count > 0)
             {
                 MobileParty.MainParty.ItemRoster.AddToCounts(sacredObject, -count);
-                InformationManager.DisplayMessage(new InformationMessage("⚠️ The Sacred Object was forcibly removed.", Colors.Red));
             }
         }
 
-        // Tenta iniciar a NinthQuest direto; também emite um evento para quem preferir iniciar externamente.
         private void StartNinthQuest()
         {
-            if (_ninthQuestStarted)
-                return;
-
-            NinthQuest newChapter = new NinthQuest("rf_nínth_quest_outro", QuestGiver, CampaignTime.DaysFromNow(999), 20000);
-            newChapter.StartQuest();
+            if (_ninthQuestStarted) return;
+            _ninthQuestStarted = true;
+            new NinthQuest("rf_ninth_quest", QuestGiver, CampaignTime.Never, 0).StartQuest();
         }
     }
 }

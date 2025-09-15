@@ -430,8 +430,42 @@ internal class ReligionBehavior : CampaignBehaviorBase
     }
 
 
-    public float PartyGetMoraleEffect(MobileParty party) =>
-        _partyMoraleEffect.TryGetValue(party, out var effect) ? effect : 0f;
+    public float PartyGetMoraleEffect(MobileParty party)
+    {
+        try
+        {
+            if (party == null || !party.IsActive)
+            {
+                // Avoid spam: log only for main party if needed
+#if DEBUG
+                if (party == MobileParty.MainParty)
+                    InformationManager.DisplayMessage(new InformationMessage("[ReligionBehavior] Main party is null or inactive.", Colors.Yellow));
+#endif
+                return 0f;
+            }
+
+            if (_partyMoraleEffect.TryGetValue(party, out var effect))
+            {
+                return effect;
+            }
+
+            // Optional: Log only for main party if missing
+#if DEBUG
+            if (party == MobileParty.MainParty)
+            {
+                InformationManager.DisplayMessage(new InformationMessage("[ReligionBehavior] Main party has no morale effect.", Colors.Red));
+            }
+#endif
+            return 0f;
+        }
+        catch (Exception ex)
+        {
+            InformationManager.DisplayMessage(new InformationMessage($"[ReligionBehavior] PartyGetMoraleEffect ERROR: {ex.Message}", Colors.Red));
+            return 0f;
+        }
+    }
+
+
 
 
     public float SettlementGetLoyaltyEffect(Town town)

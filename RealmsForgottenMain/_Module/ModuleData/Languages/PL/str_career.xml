@@ -7,6 +7,7 @@
 		<string id="class_group1_name_Mercenary" text="Witch Hunter Initiate" />
 		<!-- descriptions-->
 		<string id="class_description.Mercenary" text="We are mercenaries. We have the resources. The will. To make these hours count! The clock is ticking, gentlemen. Let's begin." />
+		<string id="class_description.Wizard" text="You dedicated your life to unfold the misteries of arcane knowledge. As such your mistic ability extend beyond spell casting. " />
 
 		<string id="merc_merc_wage_reduction" text="Class mercenary wage reduction" />
 		<string id="rf_raid_plunder" text="You plundered additional {NUMBER_OF} {PRODUCTS}." />

@@ -13,17 +13,20 @@ namespace RealmsForgotten.RFReligions.Core
 {
     public class ReligionPartySpeedModel : DefaultPartySpeedCalculatingModel
     {
-        public override ExplainedNumber CalculateFinalSpeed(MobileParty party, ExplainedNumber finalSpeed)
+        public new ExplainedNumber CalculateFinalSpeed(MobileParty party, ExplainedNumber finalSpeed)
         {
-            if (party == null || party.Party == null || party.LeaderHero == null)
+            // ✅ Proteção COMPLETA contra nulls que causam crashes no base
+            if (party == null || party.Party == null || party.LeaderHero == null || party.LeaderHero.Culture == null)
             {
-                // Skip calculation if party is broken
                 return finalSpeed;
             }
 
+            // 🔐 Agora é seguro chamar o método base
             finalSpeed = base.CalculateFinalSpeed(party, finalSpeed);
 
-            if (ReligionBehavior.Instance.IsHeroBlessed(party.LeaderHero, RFReligions.TengralorOrkhai))
+            // ✅ Aplica a bênção da religião
+            if (ReligionBehavior.Instance != null &&
+                ReligionBehavior.Instance.IsHeroBlessed(party.LeaderHero, RFReligions.TengralorOrkhai))
             {
                 finalSpeed.Add(0.3f, new TextObject("Tengralor Orkhai Blessing"));
             }

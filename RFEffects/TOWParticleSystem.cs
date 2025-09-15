@@ -58,7 +58,7 @@ namespace RealmsForgotten.RFEffects
                 localFrame.Elevate(elevationOffset);
                 if (ParticleSystemManager.GetRuntimeIdByName(particleId) == -1)
                 {
-                    InformationManager.DisplayMessage(new InformationMessage($"Particle '{particleId}' doens't exist."));
+                    //InformationManager.DisplayMessage(new InformationMessage($"Particle '{particleId}' doens't exist."));
                     return;
                 }
 
@@ -88,7 +88,7 @@ namespace RealmsForgotten.RFEffects
                 ParticleSystem component = ParticleSystem.CreateParticleSystemAttachedToEntity(particleId, temporaryWeaponEntity, ref boneLocalFrame2);
                 if (ParticleSystemManager.GetRuntimeIdByName(particleId) == -1)
                 {
-                    InformationManager.DisplayMessage(new InformationMessage($"Particle '{particleId}' doens't exist."));
+                    //InformationManager.DisplayMessage(new InformationMessage($"Particle '{particleId}' doens't exist."));
                     return;
                 }
 

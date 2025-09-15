@@ -14,6 +14,8 @@ using RealmsForgotten.AiMade.Religions;
 using RealmsForgotten.AiMade.RF_Diplomacy;
 using RealmsForgotten.AiMade.TradePact;
 using RealmsForgotten.AiMade.Utility;
+using RealmsForgotten.AiMade.Village_Inn_Quests;
+using RealmsForgotten.AiMade.Village_Inn_Quests.RealmsForgotten.AiMade.Village_Inn_Quests;
 using RealmsForgotten.Behaviors;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -45,6 +47,7 @@ namespace RealmsForgotten.AiMade
             ConstructContainerDefinition(typeof(HashSet<(string, string)>));
             ConstructContainerDefinition(typeof(Tuple<string, string>));
             ConstructContainerDefinition(typeof(Dictionary<string, WeatherRegion>));
+            ConstructContainerDefinition(typeof(List<PendingRecruitment>));
         }
 
         protected override void DefineEnumTypes()
@@ -124,6 +127,13 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(VassalPromotionBehavior), 84);
             AddClassDefinition(typeof(MercenaryFactionWarPactBehavior), 85);
             AddClassDefinition(typeof(WeatherRegion), 86);
+            AddClassDefinition(typeof(PendingRecruitment), 87);
+            AddClassDefinition(typeof(ConsulHallRecruitmentBehavior), 88);
+            AddClassDefinition(typeof(VillageInnNPCBehavior), 89);
+            AddClassDefinition(typeof(WerewolfQuest), 90);
+            AddClassDefinition(typeof(RuinsQuest), 91);
+            AddClassDefinition(typeof(WerewolfVillageMenuBehavior), 92);
+            AddClassDefinition(typeof(RuinsQuestBehavior), 93);
         }
     }
 }

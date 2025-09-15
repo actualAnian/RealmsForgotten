@@ -16,6 +16,7 @@ using TaleWorlds.Localization;
 using RealmsForgotten.AiMade.Patches.ADODVillageInnsHelper;
 using TaleWorlds.CampaignSystem.AgentOrigins;
 using TaleWorlds.Core;
+using TaleWorlds.Library;
 
 namespace RealmsForgotten.AiMade.Patches
 {
@@ -204,6 +205,8 @@ namespace RealmsForgotten.AiMade.Patches
         {
             Location locationWithId = LocationComplex.Current.GetLocationWithId("village_inn");
 
+            locationWithId.AddLocationCharacters(CreateStoryteller, settlement.Culture, LocationCharacter.CharacterRelations.Neutral, 1);
+
             List<Hero> allNotables = settlement.Notables.ToList();
             foreach (Hero notable in allNotables)
             {
@@ -252,6 +255,50 @@ namespace RealmsForgotten.AiMade.Patches
                 }
             }
         }
+
+        private static LocationCharacter CreateStoryteller(CultureObject culture, LocationCharacter.CharacterRelations relation)
+        {
+            CharacterObject storyteller = CharacterObject.Find("peregrin_storyteller");
+            if (storyteller == null)
+            {
+                InformationManager.DisplayMessage(new InformationMessage("⚠ Storyteller NPC not found (id = npc_storyteller)."));
+                return null;
+            }
+
+            // Monster + animação idle
+            Monster monster = TaleWorlds.Core.FaceGen.GetMonsterWithSuffix(storyteller.Race, "_settlement");
+
+            string actionSet;
+            if (culture.StringId.ToLower() == "aserai" || culture.StringId.ToLower() == "khuzait")
+                actionSet = ActionSetCode.GenerateActionSetNameWithSuffix(monster, storyteller.IsFemale, "_villager_in_aserai_tavern");
+            else
+                actionSet = ActionSetCode.GenerateActionSetNameWithSuffix(monster, storyteller.IsFemale, "_villager_in_tavern");
+
+            // Dados do agente
+            AgentData agentData = new AgentData(new SimpleAgentOrigin(storyteller))
+                .Monster(monster)
+                .Age(35) // opcional
+                .NoHorses(true)
+                .ClothingColor1(culture.Color)
+                .ClothingColor2(culture.Color2);
+
+            // Garante spawn em pontos "npc_common" (sempre existem na cena do inn)
+            return new LocationCharacter(
+                agentData,
+                SandBoxManager.Instance.AgentBehaviorManager.AddWandererBehaviors,
+                "npc_common", // 🔑 usa spots livres
+                true,
+                relation,
+                actionSet,
+                true,
+                false,
+                null,
+                false,
+                false,
+                true
+            );
+        }
+
         private void AddWanderersToInn(Settlement settlement)
         {
             var wanderers = settlement.HeroesWithoutParty.Where(hero => hero.IsWanderer && hero.CompanionOf == null).ToList();

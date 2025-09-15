@@ -13,6 +13,7 @@ using TaleWorlds.CampaignSystem.ViewModelCollection.GameMenu.Recruitment;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ViewModelCollection;
 using TaleWorlds.Core.ViewModelCollection.Information;
+using TaleWorlds.Core;
 
 namespace RealmsForgotten.Patches
 {
@@ -32,17 +33,30 @@ namespace RealmsForgotten.Patches
     [HarmonyPatch(typeof(TroopRoster), "TotalManCount", MethodType.Getter)]
     static class TotalManCountGetPatch
     {
-        // makes giants count as more than 1 member
         public static void Postfix(TroopRoster __instance, ref int __result)
         {
-            __result = 0;
-            foreach (TroopRosterElement rosterElement in __instance.GetTroopRoster())
+            try
             {
-                if (!rosterElement.Character.IsGiant()) __result += rosterElement.Number;
-                else __result += rosterElement.Number * Globals.GiantCountsAs;
+                __result = 0;
+                foreach (TroopRosterElement rosterElement in __instance.GetTroopRoster())
+                {
+                    var character = rosterElement.Character;
+                    if (character == null)
+                        continue;
+
+                    if (((BasicCharacterObject)character).IsGiant())
+                        __result += rosterElement.Number * Globals.GiantCountsAs;
+                    else
+                        __result += rosterElement.Number;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"[RealmsForgotten] ERROR in TotalManCount patch: {ex.Message}");
             }
         }
     }
+
     internal class PartyVMPatch
     {
         private static TextObject SetTextVariable(MBBindingList<PartyCharacterVM> partyList)

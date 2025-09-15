@@ -21,6 +21,10 @@ using RealmsForgotten.AiMade.Adventurer;
 using RealmsForgotten.AiMade.MercenaryFaction;
 using Bannerlord.UIExtenderEx;
 using RealmsForgotten.AiMade.TradePact;
+using RealmsForgotten.AiMade.CustomOrderofBattle;
+using SandBox.Missions.MissionLogics;
+using RealmsForgotten.AiMade.Village_Inn_Quests;
+using RealmsForgotten.AiMade.Village_Inn_Quests.RealmsForgotten.AiMade.Village_Inn_Quests;
 
 
 namespace RealmsForgotten.AiMade
@@ -119,6 +123,11 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new AIBreakInBehavior());
             campaignGameStarter.AddBehavior(new VassalPromotionBehavior());
             campaignGameStarter.AddBehavior(new MercenaryFactionWarPactBehavior());
+            campaignGameStarter.AddBehavior(new ConsulHallRecruitmentBehavior());
+            campaignGameStarter.AddBehavior(new VillageInnNPCBehavior());
+            campaignGameStarter.AddBehavior(new PeregrinQuestBehavior());
+            campaignGameStarter.AddBehavior(new WerewolfVillageMenuBehavior());
+            campaignGameStarter.AddBehavior(new RuinsQuestBehavior());
         }
         private void AddCustomModels(CampaignGameStarter campaignGameStarter)
         {
@@ -127,6 +136,8 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddModel(new UrkhaiPartySizeModel());
             campaignGameStarter.AddModel(new AlignmentDiplomacyModel(Campaign.Current.Models.DiplomacyModel));
             campaignGameStarter.AddModel(new CustomTradeItemPriceFactorModel());
+            //campaignGameStarter.AddModel(new SpearAwareBattleSpawnModel());
+            campaignGameStarter.AddModel(new RFDiplomacyModel());
         }
         public override void OnMissionBehaviorInitialize(Mission mission)
         {
@@ -151,6 +162,14 @@ namespace RealmsForgotten.AiMade
                 && !mission.MissionLogics.OfType<SiegeDeploymentMissionController>().Any())
             {
                 mission.AddMissionBehavior(new ADODReinforcementsRunner());
+            }
+
+            if (mission.Scene != null
+                 && mission.CombatType == Mission.MissionCombatType.Combat
+                 && Mission.Current?.HasMissionBehavior<CampaignMissionComponent>() == true)
+            {
+                mission.AddMissionBehavior(new AutoOOBConfigMissionBehavior()); // optional but nice for OOB cards
+                mission.AddMissionBehavior(new InfantrySpearSorterOnSpawn());   // the actual splitter using SpawnEquipment
             }
 
             // Add Find Magic Items behavior to all missions

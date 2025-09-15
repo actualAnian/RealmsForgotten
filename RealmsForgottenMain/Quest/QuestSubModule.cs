@@ -6,6 +6,7 @@ using RealmsForgotten.Quest.KnightQuest;
 using RealmsForgotten.Quest.AI_Quest;
 using RealmsForgotten.Quest.FourthUpdate;
 using TaleWorlds.Engine;
+using RealmsForgotten.Quest.FourthUpdate.BehaviorTrees;
 
 namespace RealmsForgotten.Quest
 {
@@ -15,12 +16,16 @@ namespace RealmsForgotten.Quest
         {
             CampaignGameStarter gameStarter = (CampaignGameStarter)initializerObject;
             gameStarter.AddBehavior(new RescueUliahBehavior(true));
+            gameStarter.AddBehavior(new EighthQuestBehavior(true));
+            gameStarter.AddBehavior(new DeformedSpawningBehavior());
         }
 
         public static void OnGameLoaded(Game game, object initializerObject)
         {
             CampaignGameStarter gameStarter = (CampaignGameStarter)initializerObject;
             gameStarter.AddBehavior(new RescueUliahBehavior(false));
+            gameStarter.AddBehavior(new EighthQuestBehavior(false));
+            gameStarter.AddBehavior(new DeformedSpawningBehavior());
         }
 
         public static void AddQuestBehaviors(CampaignGameStarter gameStarter)
@@ -29,7 +34,7 @@ namespace RealmsForgotten.Quest
             {
                 gameStarter.AddBehavior(new SaveCurrentQuestCampaignBehavior());
                 gameStarter.AddBehavior(new SpawnNpcInLordsHallBecomeKnightBehavior());
-                gameStarter.AddBehavior(new DeformedWaveSniffer());
+              
             }
         }
     }
@@ -55,7 +60,7 @@ namespace RealmsForgotten.Quest
             AddClassDefinition(typeof(NinthQuest), 11);
             AddClassDefinition(typeof(SpawnNpcInLordsHallBecomeKnightBehavior), 20);
             AddClassDefinition(typeof(BecomeKnightQuest), 21);
-            AddClassDefinition(typeof(DeformedWaveSniffer), 22);
+           
 
         }
     }

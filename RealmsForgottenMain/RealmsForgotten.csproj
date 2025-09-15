@@ -359,6 +359,7 @@
     <PackageReference Include="Lib.Harmony" Version="2.2.2" IncludeAssets="compile" />
     <PackageReference Include="Harmony.Extensions" Version="3.1.0.67" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
     <PackageReference Include="BUTR.Harmony.Analyzer" Version="1.0.1.44" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
+	  <PackageReference Include="DynamicExpresso.Core" PrivateAssets="all" Version="2.19.2" />
   </ItemGroup>
 
   <ItemGroup>
