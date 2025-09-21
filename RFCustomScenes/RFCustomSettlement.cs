@@ -1,5 +1,8 @@
 ﻿using RFCustomSettlements;
+using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Xml;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.ObjectSystem;
@@ -57,7 +60,8 @@ namespace RealmsForgotten.RFCustomSettlements
         public bool CanEnterAnytime { get; private set; }
         public int EnterStart { get; private set; }
         public int EnterEnd { get; private set; }
-        internal ISettlementStateHandler StateHandler { get; private set; }   
+        internal ISettlementStateHandler StateHandler { get; private set; }
 
+        public override IFaction MapFaction => Campaign.Current.Factions.First(f => f.Culture.StringId == "neutral_culture"); //@TODO check
     }
 }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -13,6 +11,8 @@ using TaleWorlds.Localization;
 using TaleWorlds.SaveSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
+using static Helpers.PartyScreenHelper;
+using Helpers;
 
 namespace RealmsForgotten.AiMade
  {
@@ -181,7 +181,7 @@ namespace RealmsForgotten.AiMade
                 }, null, false, 4);
 
             campaignGameStarter.AddGameMenu("town_manage_slavery", "", null,
-                TaleWorlds.CampaignSystem.Overlay.GameOverlays.MenuOverlayType.SettlementWithBoth,
+                GameMenu.MenuOverlayType.SettlementWithBoth,
                 GameMenu.MenuFlags.None, this);
 
             campaignGameStarter.AddGameMenuOption("town", "town_manage_slavery", "{=bo_manage_slavery}Manage plantation",
@@ -250,7 +250,7 @@ namespace RealmsForgotten.AiMade
             TroopRoster slaveRoster = TroopRoster.CreateDummyTroopRoster();
             slaveRoster.AddToCounts(CharacterObject.Find("looter"),
                 SlaveData[Settlement.CurrentSettlement.StringId].SlaveAmount);
-            PartyScreenManager.OpenScreenWithCondition(
+            PartyScreenHelper.OpenScreenWithCondition(
                 (CharacterObject character, PartyScreenLogic.TroopType type, PartyScreenLogic.PartyRosterSide side,
                     PartyBase LeftOwnerParty) => !character.IsHero, null, OnSlaveDonationDone, null,
                 PartyScreenLogic.TransferState.NotTransferable,

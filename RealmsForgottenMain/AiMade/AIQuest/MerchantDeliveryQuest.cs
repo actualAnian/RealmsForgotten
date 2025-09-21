@@ -79,7 +79,7 @@ namespace RealmsForgotten.AiMade.AIQuest
                 return;
             }
 
-            float distanceToDestination = MobileParty.MainParty?.Position2D.Distance(_destination.Position2D) ?? float.MaxValue;
+            float distanceToDestination = MobileParty.MainParty?.Position.Distance(_destination.Position) ?? float.MaxValue;
 
             if (!_mercenariesSpawned && distanceToDestination < 10f)
             {
@@ -102,9 +102,7 @@ namespace RealmsForgotten.AiMade.AIQuest
         {
             var party = CaravanParty;
             if (party != null && party.IsActive)
-            {
-                party.RemoveParty();
-            }
+                DestroyPartyAction.Apply(null, party);
         }
 
         private void CompleteDelivery()
@@ -113,9 +111,7 @@ namespace RealmsForgotten.AiMade.AIQuest
 
             var party = CaravanParty;
             if (party != null && party.IsActive)
-            {
-                party.RemoveParty();
-            }
+                DestroyPartyAction.Apply(null, party);
 
             CompleteQuestWithSuccess();
             GiveGoldAction.ApplyBetweenCharacters(null, Hero.MainHero, RewardGold);
@@ -133,22 +129,19 @@ namespace RealmsForgotten.AiMade.AIQuest
                 return;
             }
 
-            Vec2 spawnPos = MobileParty.MainParty.Position2D + new Vec2(2f, 2f);
+            CampaignVec2 spawnPos = MobileParty.MainParty.Position + new Vec2(2f, 2f);
 
             string partyId = $"merchant_caravan_escort_{MBRandom.RandomInt(100000, 999999)}";
             MobileParty party = MobileParty.CreateParty(partyId, null);
             _caravanPartyId = partyId;
 
             party.InitializeMobilePartyAroundPosition(template, spawnPos, 1f);
-            party.SetCustomName(new TextObject("Merchant Caravan"));
+            party.Party.SetCustomName(new TextObject("Merchant Caravan"));
             party.IsVisible = true;
             party.Ai?.SetDoNotMakeNewDecisions(true);
             party.IsActive = true;
 
-            if (MobileParty.MainParty != null)
-            {
-                MobileParty.MainParty.AttachedParties.Add(party);
-            }
+            MobileParty.MainParty?.AttachedParties.Add(party);
         }
 
         private void AddCargoToPlayer()
@@ -196,18 +189,18 @@ namespace RealmsForgotten.AiMade.AIQuest
                 return;
             }
 
-            Vec2 spawnPos = MobileParty.MainParty?.Position2D + new Vec2(3f, 3f) ?? new Vec2(0, 0);
+            CampaignVec2 spawnPos = MobileParty.MainParty?.Position + new Vec2(3f, 3f) ?? CampaignVec2.Zero;
 
             MobileParty mercenaryParty = BanditPartyComponent.CreateLooterParty("mercenary_attack_party", looterClan, null, false);
             mercenaryParty.InitializeMobilePartyAroundPosition(looterTemplate, spawnPos, 1f);
 
             mercenaryParty.MemberRoster.AddToCounts(looter, 25);
-            mercenaryParty.SetCustomName(new TextObject("Mercenary Raiders"));
+            mercenaryParty.Party.SetCustomName(new TextObject("Mercenary Raiders"));
             mercenaryParty.IsVisible = true;
 
             if (CaravanParty != null && CaravanParty.IsActive && mercenaryParty.Ai != null)
             {
-                mercenaryParty.Ai.SetMoveEngageParty(CaravanParty);
+                mercenaryParty.SetMoveEngageParty(CaravanParty, MobileParty.NavigationType.All);
                 mercenaryParty.Ai.SetDoNotMakeNewDecisions(true);
             }
 
@@ -218,9 +211,7 @@ namespace RealmsForgotten.AiMade.AIQuest
         {
             var party = CaravanParty;
             if (party != null && party.IsActive)
-            {
-                party.RemoveParty();
-            }
+                DestroyPartyAction.Apply(null, party);
 
             CompleteQuestWithFail();
             InformationManager.DisplayMessage(new InformationMessage(reason, Colors.Red));

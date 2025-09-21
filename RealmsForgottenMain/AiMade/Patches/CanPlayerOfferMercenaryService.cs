@@ -34,7 +34,7 @@ namespace RealmsForgotten.AiMade.Patches
 
                 foreach (Kingdom kingdom in Kingdom.All)
                 {
-                    if (Clan.PlayerClan.MapFaction.IsAtWarWith(kingdom) && kingdom.TotalStrength > threshold)
+                    if (Clan.PlayerClan.MapFaction.IsAtWarWith(kingdom) && kingdom.CurrentTotalStrength > threshold)
                     {
                         playerWars.Add(kingdom);
                     }

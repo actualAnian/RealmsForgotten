@@ -1,4 +1,5 @@
-﻿using TaleWorlds.CampaignSystem.Party.PartyComponents;
+﻿using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Party.PartyComponents;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Localization;
 
@@ -15,6 +16,6 @@ namespace RealmsForgotten.RFCustomBandits
                 return textObject;
             }
         }
-        protected internal SlaversBanditPartyComponent(Hideout hideout, bool isBossParty) : base(hideout, isBossParty) {}
+        protected internal SlaversBanditPartyComponent(Hideout hideout, bool isBossParty, Clan clan) : base(hideout, isBossParty, new(clan)) {}
     }
 }

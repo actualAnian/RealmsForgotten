@@ -66,6 +66,7 @@ namespace RealmsForgotten
         private static readonly int _raceOrcbaseId = FaceGen.GetRaceOrDefault("orc_base");
         private static readonly int _raceEvilWitchId = FaceGen.GetRaceOrDefault("evil_witch");
         private static readonly int _raceBalrogId = FaceGen.GetRaceOrDefault("balrog");
+        private static readonly int _raceZombieId = FaceGen.GetRaceOrDefault("zombie"); 
 
         // Small helper
         private static bool HasRace(int race, int target) => race == target;
@@ -92,6 +93,7 @@ namespace RealmsForgotten
         public static bool IsOrcbase(this BasicCharacterObject c) => c != null && HasRace(c.Race, _raceOrcbaseId);
         public static bool IsEvilWitch(this BasicCharacterObject c) => c != null && HasRace(c.Race, _raceEvilWitchId);
         public static bool IsBalrog(this BasicCharacterObject c) => c != null && HasRace(c.Race, _raceBalrogId);
+        public static bool IsZombie(this BasicCharacterObject c) => HasRace(c.Race, _raceZombieId);
 
         // ---------- EXTENSIONS FOR CharacterObject (forwarders) ----------
         public static bool IsGiant(this CharacterObject c) => c != null && HasRace(c.Race, _raceHalfGiantId);

@@ -147,12 +147,12 @@ namespace RealmsForgotten.Quest.SecondUpdate
                             continue;
                         }
 
-                        party.SetCustomName(new TextObject("Devils Party"));
+                        party.Party.SetCustomName(new TextObject("Devils Party"));
 
                         party.InitializeMobilePartyAroundPosition(
                             troopRoster,
                             TroopRoster.CreateDummyTroopRoster(),
-                            hideout.Settlement.Position2D,
+                            hideout.Settlement.Position,
                             200f, 10f);
 
                         party.Aggressiveness = 100f;
@@ -167,13 +167,11 @@ namespace RealmsForgotten.Quest.SecondUpdate
                                 party.MapFaction != null &&
                                 p.MapFaction.IsAtWarWith(party.MapFaction)
                             )
-                            .OrderBy(p => party.Position2D.DistanceSquared(p.Position2D))
+                            .OrderBy(p => party.Position.DistanceSquared(p.Position))
                             .FirstOrDefault();
 
                         if (closestTarget != null)
-                        {
-                            party.Ai.SetMoveEngageParty(closestTarget);
-                        }
+                            party.SetMoveEngageParty(closestTarget, MobileParty.NavigationType.Default);
 
                         InformationManager.DisplayMessage(new InformationMessage($"Devils spawned at {hideout.Settlement.Name} with {devilsAmount} raiders."));
                     }
@@ -235,15 +233,13 @@ namespace RealmsForgotten.Quest.SecondUpdate
                     party.InitializeMobilePartyAroundPosition(
                         troopRoster,
                         TroopRoster.CreateDummyTroopRoster(),
-                        hideout.Settlement.Position2D,
+                        hideout.Settlement.Position,
                         100f, 10f);
 
                     party.Aggressiveness = 100f;
 
                     if (MobileParty.MainParty != null)
-                    {
-                        party.Ai.SetMoveEngageParty(MobileParty.MainParty);
-                    }
+                        party.SetMoveEngageParty(MobileParty.MainParty, MobileParty.NavigationType.Default);
                 }
 
                 InformationManager.DisplayMessage(new InformationMessage($"Nelrog parties spawned at {seaRaiderHideouts.Count} sea raider hideouts."));

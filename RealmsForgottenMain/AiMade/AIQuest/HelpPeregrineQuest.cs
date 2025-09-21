@@ -89,7 +89,7 @@ namespace RealmsForgotten.AiMade
                 return;
             }
 
-            float distanceToDestination = MobileParty.MainParty.Position2D.Distance(_destination.Position2D);
+            float distanceToDestination = MobileParty.MainParty.Position.Distance(_destination.Position);
 
             if (!_banditAttackSpawned && distanceToDestination < 10f)
             {
@@ -128,17 +128,17 @@ namespace RealmsForgotten.AiMade
                 return;
             }
 
-            Vec2 spawnPosition = MobileParty.MainParty.Position2D + new Vec2(MBRandom.RandomFloatRanged(2f, 4f), MBRandom.RandomFloatRanged(2f, 4f));
+            CampaignVec2 spawnPosition = MobileParty.MainParty.Position + new Vec2(MBRandom.RandomFloatRanged(2f, 4f), MBRandom.RandomFloatRanged(2f, 4f));
 
             MobileParty banditParty = BanditPartyComponent.CreateLooterParty("peregrine_bandit_party", looterClan, null, false);
             banditParty.InitializeMobilePartyAroundPosition(looterTemplate, spawnPosition, 1f);
             banditParty.MemberRoster.AddToCounts(looter, 20);
-            banditParty.SetCustomName(new TextObject("Bandit Ambush"));
+            banditParty.Party.SetCustomName(new TextObject("Bandit Ambush"));
             banditParty.IsVisible = true;
 
             if (banditParty.Ai != null)
             {
-                banditParty.Ai.SetMoveEngageParty(MobileParty.MainParty);
+                banditParty.SetMoveEngageParty(MobileParty.MainParty, MobileParty.NavigationType.All);
                 banditParty.Ai.SetDoNotMakeNewDecisions(true);
             }
 

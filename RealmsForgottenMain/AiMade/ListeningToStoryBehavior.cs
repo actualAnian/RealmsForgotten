@@ -35,7 +35,7 @@ namespace RealmsForgotten.AiMade
         private static readonly TextObject DeclineText = new TextObject("{=Decline}IGNORE");
 
         private static GauntletLayer _gauntletLayer;
-        private static GauntletMovie _gauntletMovie;
+        private static GauntletMovieIdentifier _gauntletMovie;
         private static YourPopupVM _popupVM;
 
         private CampaignTime _lastStoryTime;
@@ -167,7 +167,7 @@ namespace RealmsForgotten.AiMade
 
             try
             {
-                _gauntletMovie = (GauntletMovie)_gauntletLayer.LoadMovie("YourPopupXMLFileName", _popupVM);
+                _gauntletMovie = _gauntletLayer.LoadMovie("YourPopupXMLFileName", _popupVM);
             }
             catch (Exception e)
             {

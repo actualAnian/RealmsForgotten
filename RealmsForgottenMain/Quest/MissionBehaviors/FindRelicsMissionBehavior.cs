@@ -82,7 +82,7 @@ namespace RealmsForgotten.Quest
                         {
                             _findMapJournalLog.UpdateCurrentProgress(1);
                             textObject.SetTextVariable("CURRENT_COUNT", 1);
-                            MBInformationManager.AddQuickInformation(textObject, 0, null, "");
+                            MBInformationManager.AddQuickInformation(textObject);
                         }));
 
 
@@ -90,12 +90,12 @@ namespace RealmsForgotten.Quest
                     case "hideout_seaside_14":
                         _findMapJournalLog.UpdateCurrentProgress(2);
                         textObject.SetTextVariable("CURRENT_COUNT", 2);
-                        MBInformationManager.AddQuickInformation(textObject, 0, null, "");
+                        MBInformationManager.AddQuickInformation(textObject);
                         break;
                     case "hideout_seaside_11":
                         _findMapJournalLog.UpdateCurrentProgress(3);
                         textObject.SetTextVariable("CURRENT_COUNT", 3);
-                        MBInformationManager.AddQuickInformation(textObject, 0, null, "");
+                        MBInformationManager.AddQuickInformation(textObject);
                         break;
                 }
 
@@ -104,10 +104,6 @@ namespace RealmsForgotten.Quest
                 pickedMap = true;
             }
 
-        }
-        public override void OnMissionTick(float dt)
-        {
-            int i = 0;
         }
         public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;
     }

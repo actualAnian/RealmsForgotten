@@ -1,12 +1,12 @@
-﻿using System;
-using HarmonyLib;
+﻿using HarmonyLib;
 using RealmsForgotten.RFReligions.Behavior;
 using RealmsForgotten.RFReligions.Core;
 using RealmsForgotten.RFReligions.Helper;
 using RealmsForgotten.RFReligions.Overlay;
+using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
-using TaleWorlds.CampaignSystem.Overlay;
+using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Pages;
 using TaleWorlds.CampaignSystem.ViewModelCollection.GameMenu.Overlay;
 using TaleWorlds.Core.ViewModelCollection.Generic;
@@ -20,16 +20,16 @@ internal class MainPatch
     [HarmonyPatch(typeof(GameMenuOverlay), "GetOverlay")]
     public static class GetOverlayPatch
     {
-        internal static GameOverlays.MenuOverlayType currentMenuOverlayType;
+        internal static GameMenu.MenuOverlayType currentMenuOverlayType;
 
-        public static bool Prefix(GameOverlays.MenuOverlayType menuOverlayType, ref GameMenuOverlay __result)
+        public static bool Prefix(GameMenu.MenuOverlayType menuOverlayType, ref GameMenuOverlay __result)
         {
             currentMenuOverlayType = menuOverlayType;
             try
             {
-                if (menuOverlayType - GameOverlays.MenuOverlayType.SettlementWithParties > 2)
+                if (menuOverlayType - GameMenu.MenuOverlayType.SettlementWithParties > 2)
                 {
-                    if (menuOverlayType == GameOverlays.MenuOverlayType.Encounter)
+                    if (menuOverlayType == GameMenu.MenuOverlayType.Encounter)
                         __result = new EncounterMenuOverlayVM();
                     else
                         __result = null;

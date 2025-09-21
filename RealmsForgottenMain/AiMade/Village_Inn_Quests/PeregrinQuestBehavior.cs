@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Localization;
@@ -35,7 +33,7 @@ namespace RealmsForgotten.AiMade.Village_Inn_Quests
                         // fallback: pega a vila mais próxima do jogador
                         var nearest = Settlement.All
                             .Where(s => s.IsVillage)
-                            .OrderBy(s => s.GatePosition.DistanceSquared(MobileParty.MainParty.Position2D))
+                            .OrderBy(s => s.GatePosition.DistanceSquared(MobileParty.MainParty.Position))
                             .FirstOrDefault();
                         targetVillage = nearest?.Village;
                     }
@@ -64,7 +62,7 @@ namespace RealmsForgotten.AiMade.Village_Inn_Quests
                     {
                         var nearestVillage = Settlement.All
                             .Where(s => s.IsVillage)
-                            .OrderBy(s => s.GatePosition.DistanceSquared(MobileParty.MainParty.Position2D))
+                            .OrderBy(s => s.GatePosition.DistanceSquared(MobileParty.MainParty.Position))
                             .FirstOrDefault();
                         targetVillage = nearestVillage?.Village;
                     }
@@ -74,7 +72,7 @@ namespace RealmsForgotten.AiMade.Village_Inn_Quests
                     // escolhe o hideout mais próximo da vila
                     var nearestHideout = Settlement.All
                         .Where(s => s.IsHideout && s.Hideout != null && !s.Hideout.IsInfested)
-                        .OrderBy(s => s.Position2D.DistanceSquared(targetVillage.Settlement.Position2D))
+                        .OrderBy(s => s.Position.DistanceSquared(targetVillage.Settlement.Position))
                         .FirstOrDefault();
 
                     if (nearestHideout != null)

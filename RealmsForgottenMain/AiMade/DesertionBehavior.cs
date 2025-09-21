@@ -56,19 +56,19 @@ namespace RealmsForgotten.AiMade
         {
             if (_partiesGoingToSettlement.ContainsKey(party))
             {
-                if (party.Position2D.DistanceSquared(_partiesGoingToSettlement[party].GatePosition) <= 30)
+                if (party.Position.DistanceSquared(_partiesGoingToSettlement[party].GatePosition) <= 30)
                 {
                     JoinSettlementMilitia(party, _partiesGoingToSettlement[party], null);
                     _partiesGoingToSettlement.Remove(party);
                 }
                 else
-                    party.Ai.SetMoveGoToSettlement(_partiesGoingToSettlement[party]);
+                    party.SetMoveGoToSettlement(_partiesGoingToSettlement[party], MobileParty.NavigationType.Default, false);
             }
 
         }
         private void CheckDesertion(MapEvent mapEvent)
         {
-            if (mapEvent.HasWinner && (mapEvent.IsFieldBattle || mapEvent.IsSiegeAssault) && mapEvent.IsFinished)
+            if (mapEvent.HasWinner && (mapEvent.IsFieldBattle || mapEvent.IsSiegeAssault) && mapEvent.IsFinalized)
             {
                 if (mapEvent.IsSiegeAssault && mapEvent.DefeatedSide == BattleSideEnum.Defender)
                     return;
@@ -103,7 +103,7 @@ namespace RealmsForgotten.AiMade
                     if (i % 100 == 0)
                     {
 
-                        deserterParties.Add(MobileParty.CreateParty("deserter_party", new DeserterPartyComponent(defeatedSide.LeaderParty.MobileParty.HomeSettlement), mobileParty => mobileParty.ActualClan = DesertersClan));
+                        deserterParties.Add(MobileParty.CreateParty("deserter_party", new DeserterPartyComponent(defeatedSide.LeaderParty.MobileParty.HomeSettlement, DesertersClan)));
                         currentParty = defeatedSide.Parties.First(x => x.Party.MobileParty.StringId == allTroops[i].Item2).Party.MobileParty;
                     }
                     if (currentParty.MemberRoster.Count > 0 && currentParty.MemberRoster.FindIndexOfTroop(allTroops[i].Item1.Troop) != -1)
@@ -117,11 +117,10 @@ namespace RealmsForgotten.AiMade
         }
         private void CreateDeserterParty(MobileParty party, MobileParty leaveParty)
         {
-            party.InitializeMobilePartyAroundPosition(party.MemberRoster, TroopRoster.CreateDummyTroopRoster(), leaveParty.Position2D, 20f, 5f);
+            party.InitializeMobilePartyAroundPosition(party.MemberRoster, TroopRoster.CreateDummyTroopRoster(), leaveParty.Position, 20f, 5f);
             party.InitializePartyTrade(500);
             party.ItemRoster.AddToCounts(Items.All.Find(x => x.StringId == "fish"), party.MemberRoster.TotalManCount / 2);
-            party.SetCustomName(new TextObject("{=deserters}Deserters"));
-
+            party.Party.SetCustomName(new TextObject("{=deserters}Deserters"));
 
             Kingdom randomKingdom = Kingdom.All.GetRandomElementWithPredicate(x => x != leaveParty.ActualClan.Kingdom);
 
@@ -131,7 +130,7 @@ namespace RealmsForgotten.AiMade
             if (poorTown != null && party.Party.NumberOfAllMembers < 50 && MBRandom.RandomFloat > 0.5)
             {
                 party.Ai.SetInitiative(0.1f, 0.8f, 9999f);
-                SetPartyAiAction.GetActionForVisitingSettlement(party, poorTown);
+                SetPartyAiAction.GetActionForVisitingSettlement(party, poorTown, MobileParty.NavigationType.Default, false, false);
                 _partiesGoingToSettlement.Add(party, poorTown);
             }
         }
@@ -166,10 +165,7 @@ namespace RealmsForgotten.AiMade
         }
         public class DeserterPartyComponent : BanditPartyComponent
         {
-
-            protected internal DeserterPartyComponent(Settlement settlement) : base(settlement)
-            {
-            }
+            protected internal DeserterPartyComponent(Settlement settlement, Clan clan) : base(settlement.Hideout, false, new(clan)) { }
         }
 
         public override void SyncData(IDataStore dataStore)

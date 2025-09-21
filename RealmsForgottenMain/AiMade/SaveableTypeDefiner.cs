@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using RealmsForgotten.AiMade.Adventurer;
 using RealmsForgotten.AiMade.AIQuest;
 using RealmsForgotten.AiMade.Career;
-using RealmsForgotten.AiMade.Encounters.Behaviors;
 using RealmsForgotten.AiMade.Managers;
 using RealmsForgotten.AiMade.Managers.RealmsForgotten.AiMade.Managers;
 using RealmsForgotten.AiMade.MercenaryFaction;
 using RealmsForgotten.AiMade.Models;
-using RealmsForgotten.AiMade.PartyOverrides;
 using RealmsForgotten.AiMade.Patches;
 using RealmsForgotten.AiMade.Religions;
 using RealmsForgotten.AiMade.RF_Diplomacy;
 using RealmsForgotten.AiMade.TradePact;
-using RealmsForgotten.AiMade.Utility;
 using RealmsForgotten.AiMade.Village_Inn_Quests;
 using RealmsForgotten.AiMade.Village_Inn_Quests.RealmsForgotten.AiMade.Village_Inn_Quests;
 using RealmsForgotten.Behaviors;
@@ -91,11 +87,11 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(BanditIncrease), 44);
             AddClassDefinition(typeof(BanditPartyManager), 45);
             AddClassDefinition(typeof(DocksMenuBehavior), 46);
-            AddClassDefinition(typeof(CustomAIBase), 47);
-            AddClassDefinition(typeof(YourFactionAI), 48);
+            //AddClassDefinition(typeof(CustomAIBase), 47); @TODO
+            //AddClassDefinition(typeof(YourFactionAI), 48); @TODO
             AddClassDefinition(typeof(KingsguardSaveDataBehavior), 53);
             AddClassDefinition(typeof(RaceCraftingStaminaBehavior), 54);
-            AddClassDefinition(typeof(ADODChamberlainsBehavior), 55);
+            //AddClassDefinition(typeof(ADODChamberlainsBehavior), 55); @TODO
             AddClassDefinition(typeof(SlaveBehavior), 56);
             AddClassDefinition(typeof(TownSlaveData), 57);
             AddClassDefinition(typeof(ADODSpecialSettlementTroopsModel), 58);

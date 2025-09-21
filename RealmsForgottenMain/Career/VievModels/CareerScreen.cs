@@ -31,7 +31,7 @@ namespace RealmsForgotten.Career.VievModels
             //load inventory ui category
             var spriteData = UIResourceManager.SpriteData;
             var resourceContext = UIResourceManager.ResourceContext;
-            var resourceDepot = UIResourceManager.UIResourceDepot;
+            var resourceDepot = UIResourceManager.ResourceDepot;
 
             _inventoryCategory = spriteData.SpriteCategories["ui_inventory"];
             _clanCategory = spriteData.SpriteCategories["ui_clan"];
@@ -43,10 +43,8 @@ namespace RealmsForgotten.Career.VievModels
         {
             base.OnFrameTick(dt);
             LoadingWindow.DisableGlobalLoadingWindow();
-            if (_gauntletLayer == null || _gauntletLayer.Input.IsHotKeyDownAndReleased("Exit") || _gauntletLayer.Input.IsGameKeyDownAndReleased(41))
-            {
+            if (_gauntletLayer == null || _gauntletLayer.Input.IsHotKeyReleased("Exit"))// || _gauntletLayer.Input.IsHotKeyReleased(41)) //@TODO check
                 CloseScreen();
-            }
         }
 
         void IGameStateListener.OnActivate()

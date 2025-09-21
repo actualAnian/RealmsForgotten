@@ -2,12 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Conversation;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.Extensions;
-using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -29,9 +27,7 @@ namespace RealmsForgotten.RFCustomBandits
         public static int ChangeTotalSizeLimitIfSlavers(PartyBase party)
         {
             if (party.IsSlaverParty())
-            {
                 return 50;
-            }
             return 0;
         }
 
@@ -54,10 +50,7 @@ namespace RealmsForgotten.RFCustomBandits
         }
 
 #pragma warning disable IDE1006 // Naming Styles
-        private void conversation_bandit_set_hostile_on_consequence()
-        {
-
-        }
+        private void conversation_bandit_set_hostile_on_consequence() { }
 
         private bool enslavers_attacker_on_condition()
         {
@@ -67,7 +60,6 @@ namespace RealmsForgotten.RFCustomBandits
                 && PlayerEncounter.EncounteredMobileParty.IsSlaverParty()
                 && PlayerEncounter.PlayerIsAttacker
                 && MobileParty.ConversationParty != null;
-
         }
 
         private bool enslavers_defenders_condition()
@@ -120,32 +112,12 @@ namespace RealmsForgotten.RFCustomBandits
             if (!infestedHideouts.Any()) return;
             Hideout randomHideout = infestedHideouts.ElementAt(MBRandom.RandomInt(0, infestedHideouts.Count()));
 
-            //Clan looterClan = Clan.All.WhereQ((Clan c) => c.StringId == "looters").Single();
-            Clan looterClan = Clan.All.WhereQ((Clan c) => c.StringId == "athas_enslavers").Single();
-            MobileParty enslaversParty = MobileParty.CreateParty("Slavers", new SlaversBanditPartyComponent(randomHideout, false), delegate (MobileParty mobileParty)
-            {
-                mobileParty.ActualClan = looterClan;
-            });
-
+            Clan enslaversClan = Clan.All.WhereQ((Clan c) => c.StringId == "athas_enslavers").Single();
+            MobileParty enslaversParty = MobileParty.CreateParty("Slavers", new SlaversBanditPartyComponent(randomHideout, false, enslaversClan));
             if (randomHideout != null)
             {
-                float num = 45f * 1.5f;
-                enslaversParty.InitializeMobilePartyAtPosition(troopTemplate, randomHideout.Settlement.GatePosition, 50);
-                Vec2 vec = enslaversParty.Position2D;
-                float radiusAroundPlayerPartySquared = 20;
-                for (int i = 0; i < 15; i++)
-                {
-                    Vec2 vec2 = MobilePartyHelper.FindReachablePointAroundPosition(vec, num, 0f);
-                    if (vec2.DistanceSquared(MobileParty.MainParty.Position2D) > radiusAroundPlayerPartySquared)
-                    {
-                        vec = vec2;
-                        break;
-                    }
-                }
-                if (vec != enslaversParty.Position2D)
-                {
-                    enslaversParty.Position2D = vec;
-                }
+                CampaignVec2 spawnPositionAroundSettlement = GetSpawnPositionAroundSettlement(randomHideout.Settlement);
+                enslaversParty.InitializeMobilePartyAtPosition(troopTemplate, randomHideout.Settlement.GatePosition);
                 enslaversParty.Party.SetVisualAsDirty();
                 int initialGold = (int)(10f * (float)enslaversParty.Party.MemberRoster.TotalManCount * (0.5f + 1f * MBRandom.RandomFloat));
                 enslaversParty.InitializePartyTrade(initialGold);
@@ -153,8 +125,7 @@ namespace RealmsForgotten.RFCustomBandits
                 {
                     if (itemObject.IsFood)
                     {
-                        int num3 = 8;
-                        int num2 = MBRandom.RoundRandomized((float)enslaversParty.MemberRoster.TotalManCount * (1f / (float)itemObject.Value) * (float)num3 * MBRandom.RandomFloat * MBRandom.RandomFloat * MBRandom.RandomFloat * MBRandom.RandomFloat);
+                        int num2 = MBRandom.RoundRandomized((float)enslaversParty.MemberRoster.TotalManCount * (1f / (float)itemObject.Value) * 8f * MBRandom.RandomFloat * MBRandom.RandomFloat * MBRandom.RandomFloat * MBRandom.RandomFloat);
                         if (num2 > 0)
                         {
                             enslaversParty.ItemRoster.AddToCounts(itemObject, num2);
@@ -163,8 +134,30 @@ namespace RealmsForgotten.RFCustomBandits
                 }
                 if (Globals.Settings.SmartAthasEnslavers) AddHorsesToParty(enslaversParty);
                 enslaversParty.Aggressiveness = 1f - 0.2f * MBRandom.RandomFloat;
-                enslaversParty.Ai.SetMovePatrolAroundPoint(randomHideout.Settlement.Position2D);
+                enslaversParty.SetMovePatrolAroundPoint(new CampaignVec2(randomHideout.Settlement.GetPosition2D, true), MobileParty.NavigationType.Default);
             }
+        }
+        private CampaignVec2 GetSpawnPositionAroundSettlement(Settlement settlement)
+        {
+            float radius = MobileParty.MainParty.SeeingRange * MobileParty.MainParty.SeeingRange;
+            CampaignVec2 campaignVec = NavigationHelper.FindPointAroundPosition(settlement.GatePosition, MobileParty.NavigationType.Default, 50, 0f, true, false);
+            if (campaignVec.DistanceSquared(MobileParty.MainParty.Position) < radius)
+            {
+                for (int i = 0; i < 15; i++)
+                {
+                    CampaignVec2 campaignVec2 = NavigationHelper.FindReachablePointAroundPosition(campaignVec, MobileParty.NavigationType.Default, 50, 0f, false);
+                    if (NavigationHelper.IsPositionValidForNavigationType(campaignVec2, MobileParty.NavigationType.Default))
+                    {
+                        float num = DistanceHelper.FindClosestDistanceFromMobilePartyToPoint(MobileParty.MainParty, campaignVec2, MobileParty.NavigationType.Default, out float num2);
+                        if (num * num > radius)
+                        {
+                            campaignVec = campaignVec2;
+                            break;
+                        }
+                    }
+                }
+            }
+            return campaignVec;
         }
 
         private void AddHorsesToParty(MobileParty enslaversParty)

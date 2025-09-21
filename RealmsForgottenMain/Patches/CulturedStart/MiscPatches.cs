@@ -29,39 +29,40 @@ namespace RealmsForgotten.Patches.CulturedStart
             }
         }
         //private static readonly AccessTools.StructFieldRef<BodyProperties, StaticBodyProperties> StaticBodyProps = AccessTools.StructFieldRefAccess<BodyProperties, StaticBodyProperties>("_staticBodyProperties");
-        [HarmonyPatch(typeof(SandboxCharacterCreationContent), "OnCultureSelected")]
-        public class SandboxCharacterCreationContentRefreshPropsAndClothing
-        {
-            public static void Postfix()
-            {
-                CharacterObject playerCharacter = CharacterObject.PlayerCharacter;
-                playerCharacter.UpdatePlayerCharacterBodyProperties(Helper.GenerateCultureBodyProperties(playerCharacter.Culture.StringId), playerCharacter.Race, playerCharacter.IsFemale);
-            }
-        }
+        //[HarmonyPatch(typeof(SandboxCharacterCreationContent), "OnCultureSelected")] @TODO, fix this
+        //public class SandboxCharacterCreationContentRefreshPropsAndClothing
+        //{
+        //    public static void Postfix()
+        //    {
+        //        CharacterObject playerCharacter = CharacterObject.PlayerCharacter;
+        //        playerCharacter.UpdatePlayerCharacterBodyProperties(Helper.GenerateCultureBodyProperties(playerCharacter.Culture.StringId), playerCharacter.Race, playerCharacter.IsFemale);
+        //    }
+        //}
+
         // This class does not contain any actual patches. Copied from original version so I left it in.
-        [HarmonyPatch]
-        public class CSPatchCharacterCreationInitialized
-        {
-            private static IEnumerable<MethodBase> TargetMethods()
-            {
-                yield return AccessTools.Method("TaleWorlds.CampaignSystem.CharacterCreationContent.SandboxCharacterCreationContent:OnInitialized", null, null);
-                yield return AccessTools.Method("StoryMode.CharacterCreationContent.StoryModeCharacterCreationContent:OnInitialized", null, null);
-                yield return AccessTools.Method("RealmsForgotten.RFCharacterCreationContent:OnInitialized", null, null);
-                yield break;
-            }
-        }
-        [HarmonyPatch]
-        public class CSPatchCharacterCreationFinalized
-        {
-            private static IEnumerable<MethodBase> TargetMethods()
-            {
-                yield return AccessTools.Method("TaleWorlds.CampaignSystem.CharacterCreationContent.SandboxCharacterCreationContent:OnCharacterCreationFinalized", null, null);
-                yield return AccessTools.Method("StoryMode.CharacterCreationContent.StoryModeCharacterCreationContent:OnCharacterCreationFinalized", null, null);
-                yield return AccessTools.Method("RealmsForgotten.RFCharacterCreationContent:OnCharacterCreationFinalized", null, null);
-                yield break;
-            }
-            public static void Postfix() => CulturedStartAction.Apply(CulturedStartManager.Current.StoryOption, CulturedStartManager.Current.LocationOption);
-        }
+        //[HarmonyPatch]
+        //public class CSPatchCharacterCreationInitialized
+        //{
+        //    private static IEnumerable<MethodBase> TargetMethods()
+        //    {
+        //        yield return AccessTools.Method("TaleWorlds.CampaignSystem.CharacterCreationContent.SandboxCharacterCreationContent:OnInitialized", null, null);
+        //        yield return AccessTools.Method("StoryMode.CharacterCreationContent.StoryModeCharacterCreationContent:OnInitialized", null, null);
+        //        yield return AccessTools.Method("RealmsForgotten.RFCharacterCreationContent:OnInitialized", null, null);
+        //        yield break;
+        //    }
+        //}
+        //[HarmonyPatch]
+        //public class CSPatchCharacterCreationFinalized
+        //{
+        //    private static IEnumerable<MethodBase> TargetMethods()
+        //    {
+        //        yield return AccessTools.Method("TaleWorlds.CampaignSystem.CharacterCreationContent.SandboxCharacterCreationContent:OnCharacterCreationFinalized", null, null);
+        //        yield return AccessTools.Method("StoryMode.CharacterCreationContent.StoryModeCharacterCreationContent:OnCharacterCreationFinalized", null, null);
+        //        yield return AccessTools.Method("RealmsForgotten.RFCharacterCreationContent:OnCharacterCreationFinalized", null, null);
+        //        yield break;
+        //    }
+        //    public static void Postfix() => CulturedStartAction.Apply(CulturedStartManager.Current.StoryOption, CulturedStartManager.Current.LocationOption);
+        //}
         [HarmonyPatch(typeof(FaceGenVM), "Refresh")]
         public class FaceGenVMRefreshPatch
         {

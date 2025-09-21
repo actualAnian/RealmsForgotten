@@ -27,7 +27,7 @@ namespace RealmsForgotten.AiMade.Village_Inn_Quests
             // Spawna o player sozinho
             AgentBuildData playerBuildData = new AgentBuildData(Hero.MainHero.CharacterObject)
                 .Team(Mission.Current.DefenderTeam)
-                .Controller(Agent.ControllerType.Player);
+                .Controller(AgentControllerType.Player);
 
             Agent player = Mission.Current.SpawnAgent(playerBuildData);
             if (player != null)

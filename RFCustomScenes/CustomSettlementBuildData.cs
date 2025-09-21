@@ -36,7 +36,7 @@ namespace RealmsForgotten.RFCustomSettlements
             private readonly string? _dropDataId;
             //private readonly string _dropDataId2;
 
-            public RFBanditData(string id, string value2, string dropDataId)
+            public RFBanditData(string id, string value2, string? dropDataId = null)
             {
                 _dropDataId = dropDataId;
                 _id = id;

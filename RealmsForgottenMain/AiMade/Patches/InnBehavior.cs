@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameMenus;
-using TaleWorlds.CampaignSystem.Overlay;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements.Locations;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -112,7 +109,7 @@ namespace RealmsForgotten.AiMade.Patches
                 IsInInn = true;
             }, false, 1, false);
 
-            campaignGameStarter.AddGameMenu("village_inn", "{=ADOD_Inn_GameMenu_InInn}You are in the village inn", VillageInnOnInit, GameOverlays.MenuOverlayType.SettlementWithCharacters, GameMenu.MenuFlags.None, null);
+            campaignGameStarter.AddGameMenu("village_inn", "{=ADOD_Inn_GameMenu_InInn}You are in the village inn", VillageInnOnInit, GameMenu.MenuOverlayType.SettlementWithCharacters, GameMenu.MenuFlags.None, null);
 
             campaignGameStarter.AddGameMenuOption("village_inn", "village_inn_visit", "{=ADOD_Inn_GameMenu_VisitTheInn}Visit the inn", VisitInnOnCondition, VisitInnOnConsequence, false, 0, false);
 

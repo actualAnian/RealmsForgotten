@@ -92,7 +92,7 @@ namespace RFCustomSettlements
             RFCustomSettlement? rFCustomSettlement;
             if (__instance.IsSettlement && __instance.Settlement.SettlementComponent != null && (rFCustomSettlement = __instance.Settlement.SettlementComponent as RFCustomSettlement) != null)
             {
-                if (MobileParty.MainParty.Position2D.Distance(__instance.Settlement.Position2D) > mainPartySeeingRange)
+                if (MobileParty.MainParty.GetPosition2D.Distance(__instance.Settlement.GetPosition2D) > mainPartySeeingRange)
                 {
                     __instance.Settlement.IsVisible = rFCustomSettlement.IsVisible = false;
                 }

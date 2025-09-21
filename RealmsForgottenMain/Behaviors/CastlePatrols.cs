@@ -43,13 +43,12 @@ namespace RealmsForgotten.Behaviors
 
         private void CreatePatrolParty(Settlement castle)
         {
-            var patrolParty = MobileParty.CreateParty("castle_patrol", new CastlePatrolPartyComponent(castle), (party) => {
-                party.InitializeMobilePartyAtPosition(castle.Culture.DefaultPartyTemplate, castle.Position2D); // Use DefaultPartyTemplate
-                party.AddElementToMemberRoster(castle.Culture.EliteBasicTroop, 30);
-                party.ItemRoster.AddToCounts(DefaultItems.Grain, 50); // Provide some starting food
-                party.IsVisible = false; // Make the party less visible to players
-                party.SetCustomName(new TextObject($"Defenders of {castle.Name}"));
-            });
+            var party = MobileParty.CreateParty("castle_patrol", new CastlePatrolPartyComponent(castle));
+            party.InitializeMobilePartyAtPosition(castle.Culture.DefaultPartyTemplate, new(castle.GetPosition2D, true)); // Use DefaultPartyTemplate
+            party.AddElementToMemberRoster(castle.Culture.EliteBasicTroop, 30);
+            party.ItemRoster.AddToCounts(DefaultItems.Grain, 50); // Provide some starting food
+            party.IsVisible = false; // Make the party less visible to players
+            party.Party.SetCustomName(new TextObject($"Defenders of {castle.Name}"));
         }
 
         public override void SyncData(IDataStore dataStore)
@@ -74,7 +73,7 @@ namespace RealmsForgotten.Behaviors
         {
             if (patrolParty.Food < 1 || patrolParty.MemberRoster.TotalManCount < 20)
             {
-                patrolParty.Ai.SetMoveGoToSettlement(HomeSettlement);
+                patrolParty.SetMoveGoToSettlement(HomeSettlement, MobileParty.NavigationType.Default, false);
             }
             else
             {
@@ -85,15 +84,20 @@ namespace RealmsForgotten.Behaviors
         private void SearchAndEngageEnemies(MobileParty patrolParty)
         {
             var enemiesNearby = MobileParty.All.Where(mp => mp.IsBandit && mp.IsActive && mp.CurrentSettlement == null &&
-                                                            HomeSettlement.GatePosition.Distance(mp.Position2D) <= 10f).ToList();
+                                                            HomeSettlement.GatePosition.Distance(mp.GetPosition2D) <= 10f).ToList();
             if (enemiesNearby.Count > 0)
             {
-                patrolParty.Ai.SetMoveEngageParty(enemiesNearby.First());
+                patrolParty.SetMoveEngageParty(enemiesNearby.First(), MobileParty.NavigationType.Default);
             }
             else
             {
-                patrolParty.Ai.SetMoveGoToSettlement(HomeSettlement);
+                patrolParty.SetMoveGoToSettlement(HomeSettlement, MobileParty.NavigationType.Default, false);
             }
+        }
+
+        public override Banner GetDefaultComponentBanner()
+        {
+            return HomeSettlement.Banner;
         }
     }
 }

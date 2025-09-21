@@ -1,30 +1,22 @@
-using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Party;
-using TaleWorlds.CampaignSystem.GameComponents;
-using TaleWorlds.Localization;
 using RealmsForgotten.Behaviors;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
+using TaleWorlds.CampaignSystem.GameComponents;
+using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.Roster;
+using TaleWorlds.Core;
+using TaleWorlds.Localization;
 
 namespace RealmsForgotten.Models
 {
-    public class RFInventoryCapacityModel : DefaultInventoryCapacityModel
+    public class RFInventoryCapacityModel : InventoryCapacityModel
     {
-        public override ExplainedNumber CalculateInventoryCapacity(
-            MobileParty mobileParty,
-            bool includeDescriptions = false,
-            int additionalTroops = 0,
-            int additionalSpareMounts = 0,
-            int additionalPackAnimals = 0,
-            bool includeFollowers = false)
+        readonly InventoryCapacityModel _baseModel;
+        public RFInventoryCapacityModel(InventoryCapacityModel baseModel) { _baseModel = baseModel; }
+        public override ExplainedNumber CalculateInventoryCapacity(MobileParty mobileParty, bool isCurrentlyAtSea, bool includeDescriptions = false, int additionalManOnFoot = 0, int additionalSpareMounts = 0, int additionalPackAnimals = 0, bool includeFollowers = false)
         {
             // Get base capacity from DefaultInventoryCapacityModel (base class)
-            ExplainedNumber baseValue = base.CalculateInventoryCapacity(
-                mobileParty,
-                includeDescriptions,
-                additionalTroops,
-                additionalSpareMounts,
-                additionalPackAnimals,
-                includeFollowers);
+            ExplainedNumber result = _baseModel.CalculateInventoryCapacity(mobileParty, isCurrentlyAtSea, includeDescriptions, additionalManOnFoot, additionalSpareMounts, additionalPackAnimals, includeFollowers);
 
             // Add slave bonus if in main party
             if (mobileParty.IsMainParty)
@@ -36,12 +28,54 @@ namespace RealmsForgotten.Models
                     int slaveCount = troopElement.Number;
                     if (slaveCount > 0)
                     {
-                        baseValue.Add(slaveCount * 5, new TextObject("{=slaves}Slaves"));
+                        result.Add(slaveCount * 5, new TextObject("{=slaves}Slaves"));
                     }
                 }
             }
 
-            return baseValue;
+            if (mobileParty.LeaderHero != null)
+            {
+                Equipment leaderEquipment = mobileParty.LeaderHero.BattleEquipment;
+                if (HasSpecificItemEquipped(leaderEquipment))
+                {
+                    // Increase inventory capacity by a set amount (example: 50) when the specific item is equipped
+                    result.Add(50, new TaleWorlds.Localization.TextObject("Bonus from hero equipped item"));
+                }
+            }
+
+            // Check if any of the troops in the party have the specific item equipped
+            foreach (TroopRosterElement troop in mobileParty.MemberRoster.GetTroopRoster())
+            {
+                // Check each individual troop's equipment
+                Equipment troopEquipment = troop.Character.Equipment;
+                if (HasSpecificItemEquipped(troopEquipment))
+                {
+                    // Increase inventory capacity by a set amount for each troop that has the specific item equipped
+                    result.Add(20, description: new TaleWorlds.Localization.TextObject("Bonus from troop equipped item"));
+                }
+            }
+
+
+
+            return result;
         }
+
+
+        private readonly string specificItemId = "dwarf_backpack";
+        private bool HasSpecificItemEquipped(Equipment equipment)
+        {
+            foreach (EquipmentIndex index in System.Enum.GetValues(typeof(EquipmentIndex)))
+            {
+                EquipmentElement equipmentElement = equipment[index];
+
+                if (!equipmentElement.IsEmpty && equipmentElement.Item.StringId == specificItemId)
+                    return true;
+            }
+            return false;
+        }
+
+        public override ExplainedNumber CalculateTotalWeightCarried(MobileParty mobileParty, bool isCurrentlyAtSea, bool includeDescriptions = false) => _baseModel.CalculateTotalWeightCarried(mobileParty, isCurrentlyAtSea, includeDescriptions);
+        public override int GetItemAverageWeight() => _baseModel.GetItemAverageWeight();
+        public override float GetItemEffectiveWeight(EquipmentElement equipmentElement, MobileParty mobileParty, out TextObject description) => _baseModel.GetItemEffectiveWeight(equipmentElement, mobileParty, out description);
     }
 }

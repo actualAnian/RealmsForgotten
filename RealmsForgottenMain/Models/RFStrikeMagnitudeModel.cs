@@ -1,16 +1,9 @@
-﻿using Helpers;
+﻿using RealmsForgotten.Career;
 using RealmsForgotten.Career.Logic;
-using RealmsForgotten.Career;
 using SandBox.GameComponents;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
-using TaleWorlds.MountAndBlade.ComponentInterfaces;
 
 namespace RealmsForgotten.Models
 {
@@ -19,11 +12,13 @@ namespace RealmsForgotten.Models
         public RFStrikeMagnitudeModel()
         {
         }
-        public override float CalculateAdjustedArmorForBlow(float baseArmor, BasicCharacterObject attackerCharacter, BasicCharacterObject attackerCaptainCharacter, BasicCharacterObject victimCharacter, BasicCharacterObject victimCaptainCharacter, WeaponComponentData weaponComponent)
+        public override float CalculateAdjustedArmorForBlow(in AttackInformation attackInformation, in AttackCollisionData collisionData, 
+            float baseArmor, BasicCharacterObject attackerCharacter, BasicCharacterObject attackerCaptainCharacter, 
+            BasicCharacterObject victimCharacter, BasicCharacterObject victimCaptainCharacter, WeaponComponentData weaponComponent)
         {
-            var result = base.CalculateAdjustedArmorForBlow(baseArmor, attackerCharacter, attackerCaptainCharacter, victimCharacter, victimCaptainCharacter, weaponComponent);
+            var result = base.CalculateAdjustedArmorForBlow(attackInformation, collisionData, baseArmor, attackerCharacter, attackerCaptainCharacter, 
+                victimCharacter, victimCaptainCharacter, weaponComponent);
             ExplainedNumber resultArmor = new ExplainedNumber(result);
-            var attackerCaptain = attackerCharacter as CharacterObject;
             if (weaponComponent != null && attackerCharacter is CharacterObject attacker)
             {
 

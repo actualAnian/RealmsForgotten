@@ -11,6 +11,7 @@ using TaleWorlds.Library;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.Core;
 using TaleWorlds.SaveSystem;
+using TaleWorlds.Core.ImageIdentifiers;
 
 namespace RealmsForgotten.AiMade
 {
@@ -86,7 +87,7 @@ namespace RealmsForgotten.AiMade
                 .Select(troop => new InquiryElement(
                     troop,
                     troop.Name.ToString(),
-                    new ImageIdentifier(CharacterCode.CreateFrom(troop))
+                    new CharacterImageIdentifier(CharacterCode.CreateFrom(troop))
                 )).ToList();
 
             MBInformationManager.ShowMultiSelectionInquiry(
@@ -147,7 +148,7 @@ namespace RealmsForgotten.AiMade
             // Nearest settlement of same culture for delivery time
             Settlement nearest = Settlement.All
                 .Where(s => s?.Culture == Hero.MainHero.Culture)
-                .OrderBy(s => s.Position2D.Distance(MobileParty.MainParty.Position2D))
+                .OrderBy(s => s.Position.Distance(MobileParty.MainParty.Position))
                 .FirstOrDefault();
 
             if (nearest == null)
@@ -156,7 +157,7 @@ namespace RealmsForgotten.AiMade
                 return;
             }
 
-            float distance = MobileParty.MainParty.Position2D.Distance(nearest.Position2D);
+            float distance = MobileParty.MainParty.Position.Distance(nearest.Position);
             float hours = distance / 4f;
             CampaignTime deliveryTime = CampaignTime.HoursFromNow(hours);
 

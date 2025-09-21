@@ -73,8 +73,8 @@ namespace RealmsForgotten.AiMade.Encounters.Behaviors
             {
                 // CORRECTED: Get MapPatchData first, then pass it to the method
                 IMapScene mapSceneWrapper = Campaign.Current.MapSceneWrapper;
-                MapPatchData mapPatchAtPosition = mapSceneWrapper.GetMapPatchAtPosition(MobileParty.MainParty.Position2D);
-                scene = PlayerEncounter.GetBattleSceneForMapPatch(mapPatchAtPosition);
+                MapPatchData mapPatchAtPosition = mapSceneWrapper.GetMapPatchAtPosition(MobileParty.MainParty.Position);
+                scene = Campaign.Current.Models.SceneModel.GetBattleSceneForMapPatch(mapPatchAtPosition, MobileParty.MainParty.IsCurrentlyAtSea);
             }
 
             if (forbiddenScenes.Contains(scene))
@@ -91,7 +91,7 @@ namespace RealmsForgotten.AiMade.Encounters.Behaviors
             initializerRecord.DamageToPlayerMultiplier = Campaign.Current.Models.DifficultyModel.GetDamageToPlayerMultiplier();
             initializerRecord.DamageToFriendsMultiplier = Campaign.Current.Models.DifficultyModel.GetPlayerTroopsReceivedDamageMultiplier();
             initializerRecord.PlayingInCampaignMode = Campaign.Current.GameMode == CampaignGameMode.Campaign;
-            initializerRecord.AtmosphereOnCampaign = Campaign.Current.Models.MapWeatherModel.GetAtmosphereModel(MobileParty.MainParty.GetLogicalPosition());
+            initializerRecord.AtmosphereOnCampaign = Campaign.Current.Models.MapWeatherModel.GetAtmosphereModel(MobileParty.MainParty.Position);
             initializerRecord.SceneLevels = "";
             initializerRecord.DoNotUseLoadingScreen = false;
             return initializerRecord;

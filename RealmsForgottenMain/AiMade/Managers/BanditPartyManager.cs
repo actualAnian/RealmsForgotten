@@ -157,10 +157,10 @@ namespace RealmsForgotten.AiMade.Managers
                     }
                 }
 
-                banditParty.InitializeMobilePartyAroundPosition(troopRoster, TroopRoster.CreateDummyTroopRoster(), targetHideout.Settlement.Position2D, 50f, 10f);
+                banditParty.InitializeMobilePartyAroundPosition(troopRoster, TroopRoster.CreateDummyTroopRoster(), targetHideout.Settlement.Position, 50f, 10f);
                 if (banditParty.Ai != null && targetHideout.Settlement != null)
                 {
-                    banditParty.Ai.SetMoveGoToSettlement(targetHideout.Settlement);
+                    banditParty.SetMoveGoToSettlement(targetHideout.Settlement, MobileParty.NavigationType.Default, false);
                 }
             }
         }

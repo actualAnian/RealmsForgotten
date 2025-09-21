@@ -11,11 +11,11 @@ using TaleWorlds.CampaignSystem.Conversation;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.MapEvents;
-using TaleWorlds.CampaignSystem.Overlay;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
+using TaleWorlds.Core.ImageIdentifiers;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
@@ -255,9 +255,9 @@ namespace RealmsForgotten.AiMade.Enlistement
             Hero.MainHero.Clan.AddRenown(gain);
         }
 
-        private void ContinueTimeAfterLeftSettlementWhileEnrolled(GameMenuOption obj)
+        private void ContinueTimeAfterLeftSettlementWhileEnrolled(GameMenu menu, GameMenuOption option)
         {
-            if (_enrollmentEnrolled && obj.IdString == "town_leave")
+            if (_enrollmentEnrolled && option.IdString == "town_leave")
             {
                 GameMenu.ActivateGameMenu("enrollment_menu");
                 Campaign.Current.TimeControlMode = CampaignTimeControlMode.StoppableFastForward;
@@ -846,7 +846,7 @@ namespace RealmsForgotten.AiMade.Enlistement
             {
                 string itemName = item.Name.ToString();
                 int itemPrice = item.Value;
-                inquiryElements.Add(new InquiryElement(item, itemName, new ImageIdentifier(item), true, $"Price: {itemPrice} Gold Coins"));
+                inquiryElements.Add(new InquiryElement(item, itemName, new ItemImageIdentifier(item), true, $"Price: {itemPrice} Gold Coins")); //@TODO check if thats the correct ImageIdentifier
             }
 
             MBInformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(
@@ -986,7 +986,7 @@ namespace RealmsForgotten.AiMade.Enlistement
         private void SetupBattleMenu(CampaignGameStarter campaignGameStarter)
         {
             TextObject enrollmentBattleTextMenu = new("To arms men!");
-            campaignGameStarter.AddGameMenu("enrollment_battle_menu", enrollmentBattleTextMenu.ToString(), party_wait_talk_to_other_members_on_init, GameOverlays.MenuOverlayType.Encounter);
+            campaignGameStarter.AddGameMenu("enrollment_battle_menu", enrollmentBattleTextMenu.ToString(), party_wait_talk_to_other_members_on_init, GameMenu.MenuOverlayType.Encounter);
 
             campaignGameStarter.AddGameMenuOption("enrollment_battle_menu", "enrollment_join_battle", "Join the battle!",
                 enrollment_battle_menu_join_battle_on_condition,
@@ -1235,7 +1235,7 @@ namespace RealmsForgotten.AiMade.Enlistement
                 }
 
                 var menu = Campaign.Current.GameMenuManager.GetGameMenu("enrollment_menu");
-                _durationInDays = Campaign.Current.CampaignStartTime.ElapsedDaysUntilNow - _entryServiceTimeStamp;
+                _durationInDays = Campaign.Current.Models.CampaignTimeModel.CampaignStartTime.ElapsedDaysUntilNow - _entryServiceTimeStamp;
                 menu?.RunOnTick(Campaign.Current.CurrentMenuContext, dt);
 
                 if (!_enrollmentWaitMenuShown)
@@ -1247,7 +1247,7 @@ namespace RealmsForgotten.AiMade.Enlistement
                 }
 
                 HidePlayerParty();
-                MobileParty.MainParty.Position2D = _enrollmentEnrollingLord.PartyBelongedTo.Position2D;
+                MobileParty.MainParty.SetPositionAfterMapChange(new (_enrollmentEnrollingLord.PartyBelongedTo.GetPosition2D, !_enrollmentEnrollingLord.PartyBelongedTo.IsCurrentlyAtSea)); // @TODO check if it works
 
                 if (_enrollmentEnrollingLord.PartyBelongedTo.MapEvent != null && MobileParty.MainParty.MapEvent == null)
                 {
@@ -1291,14 +1291,14 @@ namespace RealmsForgotten.AiMade.Enlistement
             HidePlayerParty();
             DisbandParty();
             _enrollmentEnrollingLord = CharacterObject.OneToOneConversationCharacter.HeroObject;
-            ChangeKingdomAction.ApplyByJoinFactionAsMercenary(Hero.MainHero.Clan, _enrollmentEnrollingLord.Clan.Kingdom, 25, false);
+            ChangeKingdomAction.ApplyByJoinFactionAsMercenary(Hero.MainHero.Clan, _enrollmentEnrollingLord.Clan.Kingdom, default, 25, false);
             GameTexts.SetVariable("ENROLLINGLORDNAME", _enrollmentEnrollingLord.EncyclopediaLinkWithName);
 
             while (Campaign.Current.CurrentMenuContext != null)
                 GameMenu.ExitToLast();
             _enrollmentEnrolled = true;
 
-            _entryServiceTimeStamp = Campaign.Current.CampaignStartTime.ElapsedDaysUntilNow;
+            _entryServiceTimeStamp = Campaign.Current.Models.CampaignTimeModel.CampaignStartTime.ElapsedDaysUntilNow;
 
             _enrollmentEnrollingLord.PartyBelongedTo.MemberRoster.AddToCounts(Hero.MainHero.CharacterObject, 1);
 
@@ -1314,7 +1314,7 @@ namespace RealmsForgotten.AiMade.Enlistement
         {
             if (_enrollmentEnrolled && _enrollmentEnrollingLord?.PartyBelongedTo != null)
             {
-                MobileParty.MainParty.Position2D = _enrollmentEnrollingLord.PartyBelongedTo.Position2D;
+                MobileParty.MainParty.SetPositionAfterMapChange(new(_enrollmentEnrollingLord.PartyBelongedTo.GetPosition2D, !_enrollmentEnrollingLord.PartyBelongedTo.IsCurrentlyAtSea));
             }
             else
             {

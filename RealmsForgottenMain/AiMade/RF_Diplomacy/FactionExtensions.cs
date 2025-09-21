@@ -18,14 +18,6 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
         }
 
         /// <summary>
-        /// Checks if two factions are allied.
-        /// </summary>
-        public static bool IsAlliedWith(this IFaction faction, IFaction other)
-        {
-            return faction != other && faction.GetStanceWith(other).IsAllied;
-        }
-
-        /// <summary>
         /// Returns true if both factions share the same alignment (both good or both evil).
         /// </summary>
         public static bool IsSameAlignment(this IFaction faction, IFaction other)
@@ -51,18 +43,6 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
                 .Cast<IFaction>()
                 .ToList();
         }
-
-        /// <summary>
-        /// Returns all factions that are currently allied with the given one.
-        /// </summary>
-        public static List<IFaction> GetAllies(this IFaction faction)
-        {
-            return Kingdom.All
-                .Where(k => k != faction && faction.GetStanceWith(k).IsAllied)
-                .Cast<IFaction>()
-                .ToList();
-        }
-
         /// <summary>
         /// Returns true if the faction belongs to a "good" culture.
         /// </summary>

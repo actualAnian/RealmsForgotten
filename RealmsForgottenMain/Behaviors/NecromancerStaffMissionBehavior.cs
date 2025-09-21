@@ -46,7 +46,7 @@ namespace RealmsForgotten.Behaviors
                 Agent main = Agent.Main;
                 if (isSpawning)
                 {
-                    if (main.GetCurrentAction(0).Name.Contains("act_cheer") && main.GetCurrentActionProgress(0) >= 0.8)
+                    if (main.GetCurrentAction(0).GetName().Contains("act_cheer") && main.GetCurrentActionProgress(0) >= 0.8)
                     {
                         main.SetActionChannel(0, ActionIndexCache.act_none, true);
                         isSpawning = false;

@@ -16,7 +16,7 @@ namespace RealmsForgotten.HuntableHerds.AgentComponents
             ;
         }
 
-        public override void OnTickAsAI(float dt)
+        public override void OnTick(float dt)
         {
             if (Agent.Main == null)
                 return;

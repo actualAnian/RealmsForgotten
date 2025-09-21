@@ -25,7 +25,7 @@ namespace RealmsForgotten.AiMade
 
             // Find nearby sieges
             var nearbySieges = Settlement.All
-                .Where(s => s.IsUnderSiege && party.Position2D.DistanceSquared(s.GatePosition) < 900f) // 30*30 radius
+                .Where(s => s.IsUnderSiege && party.Position.DistanceSquared(s.GatePosition) < 900f) // 30*30 radius
                 .ToList();
 
             if (!nearbySieges.Any())
@@ -58,19 +58,19 @@ namespace RealmsForgotten.AiMade
                 if (besiegingParty == null || besiegingParty == party)
                     continue;
 
-                float aiStrength = party.Party.TotalStrength;
-                float enemyStrength = besiegingParty.Party.TotalStrength;
+                float aiStrength = party.Party.EstimatedStrength;
+                float enemyStrength = besiegingParty.Party.EstimatedStrength;
 
                 // If stronger, attack the besieger. If not, move to the settlement to support.
                 if (aiStrength > enemyStrength)
                 {
                     // **Corrected Move Command**
-                    party.Ai.SetMoveEngageParty(besiegingParty);
+                    party.SetMoveEngageParty(besiegingParty, MobileParty.NavigationType.All);
                 }
                 else
                 {
                     // **Corrected Move Command**
-                    party.Ai.SetMoveGoToSettlement(settlement);
+                    party.SetMoveGoToSettlement(settlement, MobileParty.NavigationType.All, false);
                 }
             }
         }

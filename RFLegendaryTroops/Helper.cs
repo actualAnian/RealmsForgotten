@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.ObjectSystem;
 
-namespace RealmsForgotten.RFLegendaryTroops
+namespace RFLegendaryTroops
 {
         static class Helper 
         {
@@ -36,7 +36,7 @@ namespace RealmsForgotten.RFLegendaryTroops
 
         public static bool CanMainHeroRecruit(Settlement castle, out bool shouldBeDisabled, out TextObject disabledText)
         {
-            disabledText = TextObject.Empty;
+            disabledText = null;
             if (castle.MapFaction == Hero.MainHero.MapFaction && Hero.MainHero.IsFactionLeader)
             {
                 shouldBeDisabled = false;
@@ -51,8 +51,8 @@ namespace RealmsForgotten.RFLegendaryTroops
         }
         internal static bool IsRulerParty(this MobileParty mobileParty)
         {
-            return mobileParty != null && mobileParty.Owner != null && mobileParty.LeaderHero != null && mobileParty.ActualClan != null && mobileParty.ActualClan.Kingdom != null && mobileParty.LeaderHero.IsFactionLeader && 
-                Helper.legendaryTroops.ContainsKey(mobileParty.Owner.Clan.Kingdom.Culture.StringId) && mobileParty.LeaderHero != Hero.MainHero;
+            return mobileParty != null && mobileParty.Owner != null && mobileParty.LeaderHero != null && mobileParty.ActualClan != null && mobileParty.ActualClan.Kingdom != null && mobileParty.LeaderHero.IsFactionLeader &&
+                legendaryTroops.ContainsKey(mobileParty.Owner.Clan.Kingdom.Culture.StringId) && mobileParty.LeaderHero != Hero.MainHero;
         }
         public static int GetTargetNotableCountForSettlement(Settlement settlement)
         {

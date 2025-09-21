@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -74,7 +71,7 @@ namespace RealmsForgotten.AiMade.MercenaryFaction
                 if (kingdomForHire != null)
                 {
                     // FIX: 'IsAtWar' doesn't exist. We check the 'Stances' collection instead.
-                    bool isPlayerAtWar = Hero.MainHero.MapFaction != null && Hero.MainHero.MapFaction.Stances.Any(s => s.IsAtWar);
+                    bool isPlayerAtWar = Hero.MainHero.MapFaction != null && Hero.MainHero.MapFaction.FactionsAtWarWith.Count > 0;
 
                     args.IsEnabled = isPlayerAtWar && _contractedKingdom == null && kingdomForHire != Hero.MainHero.MapFaction;
 
@@ -114,10 +111,7 @@ namespace RealmsForgotten.AiMade.MercenaryFaction
             _contractedKingdom = kingdomForHire;
             _contractEndDate = CampaignTime.DaysFromNow(ContractDurationDays);
 
-            _playerEnemiesAtSigning = Hero.MainHero.MapFaction.Stances
-                .Where(s => s.IsAtWar)
-                .Select(s => s.Faction1 == Hero.MainHero.MapFaction ? s.Faction2 : s.Faction1)
-                .ToList();
+            _playerEnemiesAtSigning = Hero.MainHero.MapFaction.FactionsAtWarWith;
 
             foreach (var enemy in _playerEnemiesAtSigning)
             {

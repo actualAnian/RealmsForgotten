@@ -37,9 +37,7 @@ namespace RealmsForgotten
                 if (!CanCapitulate(weak))
                     continue;
 
-                var enemies = weak.Stances.Where(s => s.IsAtWar && s.Faction2 is Kingdom)
-                                          .Select(s => s.Faction2 as Kingdom)
-                                          .OrderByDescending(k => k.TotalStrength);
+                IEnumerable<Kingdom> enemies = weak.FactionsAtWarWith.Where(f => f.IsKingdomFaction).Cast<Kingdom>().OrderByDescending(k => k.CurrentTotalStrength);
 
                 foreach (var strong in enemies)
                 {
@@ -79,7 +77,7 @@ namespace RealmsForgotten
         private bool ShouldCapitulate(Kingdom weak, Kingdom strong)
         {
             int weakFiefs = weak.Fiefs.Count();
-            float strengthRatio = strong.TotalStrength / (weak.TotalStrength + 1);
+            float strengthRatio = strong.CurrentTotalStrength / (weak.CurrentTotalStrength + 1);
             return weakFiefs <= 2 && strengthRatio >= 3.0f;
         }
 

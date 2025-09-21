@@ -7,6 +7,7 @@
 using RealmsForgotten.NecromancyAndSummoning.CustomClass;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.AgentOrigins;
@@ -51,7 +52,7 @@ namespace RealmsForgotten.NecromancyAndSummoning
                 {
                     TextObject textObject = new TextObject("{=dead_ivalid_infect_troop}A {enemy_troop} cannot become a invalid troop", (Dictionary<string, object>)null);
                     textObject.SetTextVariable("enemy_troop", affectedAgent.Character.Name);
-                    InformationManager.DisplayMessage(new InformationMessage(((object)textObject).ToString(), new Color(0.0f, 10f, 0.0f, 1f)));
+                    InformationManager.DisplayMessage(new InformationMessage(((object)textObject).ToString(), new TaleWorlds.Library.Color(0.0f, 10f, 0.0f, 1f)));
                 }
             }
             return flag1;
@@ -71,14 +72,14 @@ namespace RealmsForgotten.NecromancyAndSummoning
                 TextObject textObject = new TextObject("{=dead_reanimated}A fallen enemy {enemy_troop} has been reanimated to fight for {spawned_on_party}", (Dictionary<string, object>)null);
                 textObject.SetTextVariable("enemy_troop", ((BasicCharacterObject)characterObject2).Name);
                 textObject.SetTextVariable("spawned_on_party", validParty.Name);
-                InformationManager.DisplayMessage(new InformationMessage(((object)textObject).ToString(), new Color(10f, 0.0f, 0.0f, 1f)));
+                InformationManager.DisplayMessage(new InformationMessage(((object)textObject).ToString(), new TaleWorlds.Library.Color(10f, 0.0f, 0.0f, 1f)));
             }
             else
             {
                 
                 TextObject textObject = new TextObject("{=dead_invalid_reanimated_troop}{enemy_troop} cannot reanimated as a invalid troop", (Dictionary<string, object>)null);
                 textObject.SetTextVariable("enemy_troop", ((BasicCharacterObject)characterObject2).Name);
-                InformationManager.DisplayMessage(new InformationMessage(((object)textObject).ToString(), new Color(0.0f, 10f, 0.0f, 1f)));
+                InformationManager.DisplayMessage(new InformationMessage(((object)textObject).ToString(), new TaleWorlds.Library.Color(0.0f, 10f, 0.0f, 1f)));
             }
         }
 
@@ -103,29 +104,31 @@ namespace RealmsForgotten.NecromancyAndSummoning
 
         public static void SpawnParty()
         {
-            List<BattleInfectedRecord> records = NecroSummon.records;
-            if (records.Count <= 0)
-                return;
-            foreach (KeyValuePair<Clan, List<BattleInfectedRecord>> keyValuePair in records.GroupBy<BattleInfectedRecord, Clan>((Func<BattleInfectedRecord, Clan>)(x => x.clan)).ToDictionary<IGrouping<Clan, BattleInfectedRecord>, Clan, List<BattleInfectedRecord>>((Func<IGrouping<Clan, BattleInfectedRecord>, Clan>)(x => x.Key), (Func<IGrouping<Clan, BattleInfectedRecord>, List<BattleInfectedRecord>>)(x => ((IEnumerable<BattleInfectedRecord>)x).ToList<BattleInfectedRecord>())))
-            {
-                TroopRoster dummyTroopRoster = TroopRoster.CreateDummyTroopRoster();
-                TextObject textObject1 = new TextObject("{=dead_reanimated_clan_count}Clan : {clan_name}", (Dictionary<string, object>)null);
-                textObject1.SetTextVariable("clan_name", ((object)keyValuePair.Key).ToString());
-                InformationManager.DisplayMessage(new InformationMessage(((object)textObject1).ToString()));
-                InformationManager.DisplayMessage(new InformationMessage(((object)new TextObject("{=dead_reanimated_count_title}Reanimated Troop : Reanimated Number", (Dictionary<string, object>)null)).ToString()));
-                foreach (BattleInfectedRecord battleInfectedRecord in keyValuePair.Value)
-                {
-                    TextObject textObject2 = new TextObject("{=dead_reanimated_count}{infected_unit} : {infected_number}", (Dictionary<string, object>)null);
-                    textObject2.SetTextVariable("infected_unit", battleInfectedRecord.infectedUnitId);
-                    textObject2.SetTextVariable("infected_number", battleInfectedRecord.infectedUnitNumber);
-                    InformationManager.DisplayMessage(new InformationMessage(((object)textObject2).ToString()));
-                    CharacterObject characterObject = NecroSummon.GetCharacterObject(battleInfectedRecord.infectedUnitId);
-                    if (characterObject != null)
-                        dummyTroopRoster.AddToCounts(characterObject, battleInfectedRecord.infectedUnitNumber, false, 0, 0, true, -1);
-                }
-                if (dummyTroopRoster.TotalManCount > SubModule.Config.SpawnPartyMinUnit)
-                    NecroSummon.CreateParty(dummyTroopRoster, keyValuePair.Key);
-            }
+            InformationManager.DisplayMessage(new InformationMessage("RF Necromany and summoning, NecroSummon.SpawnParty not implemented and needs to be fixed!"));
+
+            //List<BattleInfectedRecord> records = NecroSummon.records;
+            //if (records.Count <= 0)
+            //    return;
+            //foreach (KeyValuePair<Clan, List<BattleInfectedRecord>> keyValuePair in records.GroupBy<BattleInfectedRecord, Clan>((Func<BattleInfectedRecord, Clan>)(x => x.clan)).ToDictionary<IGrouping<Clan, BattleInfectedRecord>, Clan, List<BattleInfectedRecord>>((Func<IGrouping<Clan, BattleInfectedRecord>, Clan>)(x => x.Key), (Func<IGrouping<Clan, BattleInfectedRecord>, List<BattleInfectedRecord>>)(x => ((IEnumerable<BattleInfectedRecord>)x).ToList<BattleInfectedRecord>())))
+            //{
+            //    TroopRoster dummyTroopRoster = TroopRoster.CreateDummyTroopRoster();
+            //    TextObject textObject1 = new TextObject("{=dead_reanimated_clan_count}Clan : {clan_name}", (Dictionary<string, object>)null);
+            //    textObject1.SetTextVariable("clan_name", ((object)keyValuePair.Key).ToString());
+            //    InformationManager.DisplayMessage(new InformationMessage(((object)textObject1).ToString()));
+            //    InformationManager.DisplayMessage(new InformationMessage(((object)new TextObject("{=dead_reanimated_count_title}Reanimated Troop : Reanimated Number", (Dictionary<string, object>)null)).ToString()));
+            //    foreach (BattleInfectedRecord battleInfectedRecord in keyValuePair.Value)
+            //    {
+            //        TextObject textObject2 = new TextObject("{=dead_reanimated_count}{infected_unit} : {infected_number}", (Dictionary<string, object>)null);
+            //        textObject2.SetTextVariable("infected_unit", battleInfectedRecord.infectedUnitId);
+            //        textObject2.SetTextVariable("infected_number", battleInfectedRecord.infectedUnitNumber);
+            //        InformationManager.DisplayMessage(new InformationMessage(((object)textObject2).ToString()));
+            //        CharacterObject characterObject = NecroSummon.GetCharacterObject(battleInfectedRecord.infectedUnitId);
+            //        if (characterObject != null)
+            //            dummyTroopRoster.AddToCounts(characterObject, battleInfectedRecord.infectedUnitNumber, false, 0, 0, true, -1);
+            //    }
+            //    if (dummyTroopRoster.TotalManCount > SubModule.Config.SpawnPartyMinUnit)
+            //        NecroSummon.CreateParty(dummyTroopRoster, keyValuePair.Key);
+            //}
         }
 
         public static void SpawnTroop(Agent affectorAgent, Agent affectedAgent, string infectedTroopId)
@@ -166,7 +169,7 @@ namespace RealmsForgotten.NecromancyAndSummoning
                 return;
             PartyBase strongestParty = NecroSummon.GetStrongestParty(partyWithAffector);
             List<Tuple<string, int>> tupleList = NecroSummon.CountAffectorInParty(strongestParty);
-            int casualties = mapEventSide2.Casualties;
+            int casualties = mapEventSide2.TroopCasualties;
             int num = 0;
             foreach (Tuple<string, int> tuple in tupleList)
             {
@@ -204,7 +207,7 @@ namespace RealmsForgotten.NecromancyAndSummoning
             TextObject textObject = new TextObject("{=raise_criminal_rating}Player Criminal Rating Raised {rating}. Current: {current_rating}", (Dictionary<string, object>)null);
             textObject.SetTextVariable("rating", num);
             textObject.SetTextVariable("current_rating", playerClan.MainHeroCrimeRating);
-            InformationManager.DisplayMessage(new InformationMessage(((object)textObject).ToString(), new Color(10f, 0.0f, 0.0f, 1f)));
+            InformationManager.DisplayMessage(new InformationMessage(((object)textObject).ToString(), new TaleWorlds.Library.Color(10f, 0.0f, 0.0f, 1f)));
         }
 
         private static float GetInfectedProportion(PartyBase party)
@@ -264,28 +267,29 @@ namespace RealmsForgotten.NecromancyAndSummoning
 
         private static MobileParty CreateParty(TroopRoster troop, Clan clan)
         {
-            TroopRoster prisonerRoster = TroopRoster.CreateDummyTroopRoster();
-            TextObject partyName = new TextObject(NecroSummon.GetZombiePartyName(troop.Count), null);
-            PartyComponent.OnPartyComponentCreatedDelegate delegateFunction = delegate (MobileParty _party)
-            {
-                _party.Party.SetCustomOwner(clan.Heroes.First<Hero>());
-                _party.ChangePartyLeader(clan.Leader);
-                _party.Party.SetVisualAsDirty();
-                _party.SetCustomName(partyName);
-                _party.ActualClan = clan;
-                _party.Aggressiveness = 1f;
-                ((CustomPartyComponent)_party.PartyComponent).CustomPartyBaseSpeed = 1f;
-                ((CustomPartyComponent)_party.PartyComponent)._avoidHostileActions = false;
-            };
-            MobileParty mobileParty = MobileParty.CreateParty("dead_horde", new CustomPartyComponent(), delegateFunction);
-            mobileParty.ItemRoster.AddToCounts(DefaultItems.Grain, troop.Count + 10);
-            mobileParty.InitializeMobilePartyAroundPosition(troop, prisonerRoster, MobileParty.MainParty.MapEvent.Position, 0f, 0f);
-            mobileParty.SetPartyObjective(MobileParty.PartyObjective.Aggressive);
-            mobileParty.SetPartyUsedByQuest(true);
-            TextObject textObject = new TextObject("{=dead_party_spawned}{party_name} has been formed", null);
-            textObject.SetTextVariable("party_name", partyName.ToString());
-            InformationManager.DisplayMessage(new InformationMessage(textObject.ToString(), new Color(10f, 0f, 0f, 1f)));
-            return mobileParty;
+            //    TroopRoster prisonerRoster = TroopRoster.CreateDummyTroopRoster();
+            //    TextObject partyName = new TextObject(NecroSummon.GetZombiePartyName(troop.Count), null);
+            //    PartyComponent.OnPartyComponentCreatedDelegate delegateFunction = delegate (MobileParty _party)
+            //    {
+            //        _party.Party.SetCustomOwner(clan.Heroes.First<Hero>());
+            //        _party.ChangePartyLeader(clan.Leader);
+            //        _party.Party.SetVisualAsDirty();
+            //        _party.Party.SetCustomName(partyName);
+            //        _party.ActualClan = clan;
+            //        _party.Aggressiveness = 1f;
+            //        ((CustomPartyComponent)_party.PartyComponent).CustomPartyBaseSpeed = 1f;
+            //        ((CustomPartyComponent)_party.PartyComponent)._avoidHostileActions = false;
+            //    };
+            //    MobileParty mobileParty = MobileParty.CreateParty("dead_horde", new CustomPartyComponent(clan, ), delegateFunction);
+            //    mobileParty.ItemRoster.AddToCounts(DefaultItems.Grain, troop.Count + 10);
+            //    mobileParty.InitializeMobilePartyAroundPosition(troop, prisonerRoster, MobileParty.MainParty.MapEvent.Position, 0f, 0f);
+            //    mobileParty.SetPartyObjective(MobileParty.PartyObjective.Aggressive);
+            //    mobileParty.SetPartyUsedByQuest(true);
+            //    TextObject textObject = new TextObject("{=dead_party_spawned}{party_name} has been formed", null);
+            //    textObject.SetTextVariable("party_name", partyName.ToString());
+            //    InformationManager.DisplayMessage(new InformationMessage(textObject.ToString(), new Color(10f, 0f, 0f, 1f)));
+            //    return mobileParty;
+            return null;
         }
 
         internal static void FoodSupply(MobileParty party)
@@ -321,7 +325,7 @@ namespace RealmsForgotten.NecromancyAndSummoning
             PartyBase strongestParty = parties[0];
             foreach (PartyBase party in parties)
             {
-                if ((double)strongestParty.TotalStrength < (double)party.TotalStrength)
+                if ((double)strongestParty.EstimatedStrength < (double)party.EstimatedStrength)
                     strongestParty = party;
             }
             return strongestParty;
@@ -525,7 +529,7 @@ namespace RealmsForgotten.NecromancyAndSummoning
                         num1 += summonKillRecord1.killCount;
                     int num2 = num1 * summonEachKillXp / summonItemInParty.Count;
                     foreach (TroopRosterElement troopRosterElement in summonItemInParty)
-                        keyValuePair.Key.MemberRoster.AddXpToTroop(num2, troopRosterElement.Character);
+                        keyValuePair.Key.MemberRoster.AddXpToTroop(troopRosterElement.Character, num2);
                     TextObject textObject = new TextObject("{=summon_kill_share_xp}Summon has share total {xp} xp among summoner in {party_name}", (Dictionary<string, object>)null);
                     textObject.SetTextVariable("xp", num1 * summonEachKillXp);
                     textObject.SetTextVariable("party_name", keyValuePair.Key.Name);

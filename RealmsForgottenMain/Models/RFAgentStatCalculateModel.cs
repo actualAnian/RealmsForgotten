@@ -88,8 +88,7 @@ namespace RealmsForgotten.Models
                 if (agent.Equipment[equipmentIndex].Item.PrimaryWeapon.WeaponClass == WeaponClass.Cartridge)
                 {
                     ExplainedNumber number = new ExplainedNumber(agent.Equipment[equipmentIndex].Amount);
-                    SkillHelper.AddSkillBonusForCharacter(RFSkills.Arcane, RFSkillEffects.MagicStaffPower,
-                        agentCharacterObject, ref number);
+                    SkillHelper.AddSkillBonusForCharacter(RFSkillEffects.MagicStaffPower, agentCharacterObject, ref number);
 
 
                     agent.SetWeaponAmountInSlot(equipmentIndex, (short)number.ResultNumber, true);
@@ -97,9 +96,7 @@ namespace RealmsForgotten.Models
                 else if (agent.Equipment[equipmentIndex].Item.StringId.Contains("anorit_fire"))
                 {
                     ExplainedNumber number = new ExplainedNumber(agent.Equipment[equipmentIndex].Amount);
-                    SkillHelper.AddSkillBonusForCharacter(RFSkills.Alchemy, RFSkillEffects.BombStackMultiplier,
-                        agentCharacterObject, ref number);
-
+                    SkillHelper.AddSkillBonusForCharacter(RFSkillEffects.BombStackMultiplier, agentCharacterObject, ref number);
 
                     agent.SetWeaponAmountInSlot(equipmentIndex, (short)number.ResultNumber, true);
                 }
@@ -117,9 +114,9 @@ namespace RealmsForgotten.Models
                 ExplainedNumber reloadSpeed = new ExplainedNumber(agentDrivenProperties.ReloadSpeed);
                 ExplainedNumber missileSpeed = new ExplainedNumber(agentDrivenProperties.MissileSpeedMultiplier);
 
-                SkillHelper.AddSkillBonusForCharacter(RFSkills.Arcane, RFSkillEffects.WandReloadSpeed, character, ref reloadSpeed, effectiveSkill);
+                SkillHelper.AddSkillBonusForCharacter(RFSkillEffects.WandReloadSpeed, character, ref reloadSpeed);
 
-                SkillHelper.AddSkillBonusForCharacter(RFSkills.Arcane, RFSkillEffects.WandAccuracy, character, ref missileSpeed, effectiveSkill);
+                SkillHelper.AddSkillBonusForCharacter(RFSkillEffects.WandAccuracy, character, ref missileSpeed);
 
 
                 agentDrivenProperties.ReloadSpeed = reloadSpeed.ResultNumber;
@@ -144,12 +141,10 @@ namespace RealmsForgotten.Models
             {
                 if (weapon.WeaponClass == WeaponClass.Musket)
                 {
-                    SkillHelper.AddSkillBonusForCharacter(RFSkills.Arcane, RFSkillEffects.WandAccuracy, character, ref accuracy, weaponSkill, false, 0);
+                    SkillHelper.AddSkillBonusForCharacter(RFSkillEffects.WandAccuracy, character, ref accuracy);
                 }
             }
-
             return accuracy.ResultNumber;
-
         }
     }
 }

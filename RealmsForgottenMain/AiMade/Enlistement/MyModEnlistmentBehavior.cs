@@ -7,6 +7,7 @@ using TaleWorlds.MountAndBlade;
 using TaleWorlds.Library;
 using TaleWorlds.CampaignSystem.MapEvents;
 using System;
+using TaleWorlds.CampaignSystem.Actions;
 
 namespace RealmsForgotten.Behaviors
 {
@@ -91,7 +92,7 @@ namespace RealmsForgotten.Behaviors
 
                 // Add player to the appropriate formation
                 playerFormation.PlayerOwner = Agent.Main;
-                Mission.Current.MainAgent.Controller = Agent.ControllerType.AI;
+                Mission.Current.MainAgent.Controller = AgentControllerType.AI;
 
                 // Set movement order using the correct method
                 playerFormation.SetMovementOrder(MovementOrder.MovementOrderCharge);
@@ -145,7 +146,7 @@ namespace RealmsForgotten.Behaviors
                 _enlistedParty.MemberRoster.AddToCounts(Hero.MainHero.CharacterObject, 1);
 
                 // Remove the player's party
-                playerParty.RemoveParty();
+                DestroyPartyAction.Apply(null, playerParty);
 
                 // Show enlistment message
                 InformationManager.DisplayMessage(new InformationMessage($"You have enlisted in {targetHero.Name}'s party."));

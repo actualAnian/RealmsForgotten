@@ -10,7 +10,7 @@ namespace RealmsForgotten.AiMade.Village_Inn_Quests
 {
     public class WerewolfPartyComponent : BanditPartyComponent
     {
-        public WerewolfPartyComponent() : base(null) { }
+        public WerewolfPartyComponent(Clan clan) : base(null, false, new(clan)) { }
 
         public static MobileParty CreateWerewolfParty(Settlement village)
         {
@@ -38,7 +38,7 @@ namespace RealmsForgotten.AiMade.Village_Inn_Quests
             werewolfParty.MemberRoster.AddToCounts(werewolf, 3);
 
             werewolfParty.Aggressiveness = 100f;
-            werewolfParty.SetCustomName(new TaleWorlds.Localization.TextObject("Werewolf"));
+            werewolfParty.Party.SetCustomName(new TaleWorlds.Localization.TextObject("Werewolf"));
 
             return werewolfParty;
         }

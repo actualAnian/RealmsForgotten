@@ -801,7 +801,7 @@ namespace RealmsForgotten.Managers
                 default:
                     break;
             }
-            mainHero.PartyBelongedTo.Position2D = locationOption != 9 ? startingSettlement != null ? startingSettlement.GatePosition : Settlement.Find("tutorial_training_field").Position2D : captor.PartyBelongedTo.Position2D;
+            mainHero.PartyBelongedTo.Position = locationOption != 9 ? startingSettlement != null ? startingSettlement.GatePosition : Settlement.Find("tutorial_training_field").Position : captor.PartyBelongedTo.Position;
             if (GameStateManager.Current.ActiveState is MapState mapState)
             {
                 mapState.Handler.ResetCamera(true, true);
@@ -970,13 +970,13 @@ namespace RealmsForgotten.Managers
                 GiveGoldAction.ApplyBetweenCharacters(null, companion, 2000, true);
                 if (i < companionParties)
                 {
-                    MobilePartyHelper.CreateNewClanMobileParty(companion, mainHero.Clan, out bool fromMainclan);
+                    MobilePartyHelper.CreateNewClanMobileParty(companion, mainHero.Clan);
                 }
             }
             if (ruler != null && Clan.PlayerClan.Kingdom == null)
             {
                 CharacterRelationManager.SetHeroRelation(mainHero, ruler, 10);
-                ChangeKingdomAction.ApplyByJoinToKingdom(mainHero.Clan, ruler.Clan.Kingdom, false);
+                ChangeKingdomAction.ApplyByJoinToKingdom(mainHero.Clan, ruler.Clan.Kingdom, default, false);
                 mainHero.Clan.Influence = 10;
 
                 if (startOption == StartType.KingdomRuler && mainHero.Clan.Kingdom?.Leader != mainHero)

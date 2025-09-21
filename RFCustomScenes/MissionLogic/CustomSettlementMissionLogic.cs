@@ -26,6 +26,7 @@ using HuntableHerds.Models;
 using RFCustomSettlements.Quests;
 using BehaviorTreeWrapper;
 using BehaviorTreeWrapper.Tests;
+using RFCustomSettlements;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -138,7 +139,7 @@ namespace RealmsForgotten.RFCustomSettlements
                                  orderby area.AreaIndex
                                  select area);
             animalSpawnPositions.AddRange(Mission.Current.Scene.FindEntitiesWithTag("spawnpoint_herdanimal"));
-            Mission.MakeDefaultDeploymentPlans();
+            Mission.DeploymentPlan.MakeDefaultDeploymentPlans();
             NpcSpawnPositions = new();
             int i = 1;
             GameEntity gameEntity;
@@ -379,9 +380,9 @@ namespace RealmsForgotten.RFCustomSettlements
             {
                 if (formation.CountOfUnits > 0)
                 {
-                    formation.SetMovementOrder(MovementOrder.MovementOrderMove(formation.QuerySystem.MedianPosition));
+                    formation.SetMovementOrder(MovementOrder.MovementOrderMove(formation.CachedMedianPosition));
                 }
-                formation.FiringOrder = FiringOrder.FiringOrderHoldYourFire;
+                formation.SetFiringOrder(FiringOrder.FiringOrderHoldYourFire);
                 if (Mission.Current.AttackerTeam == Mission.Current.PlayerTeam)
                 {
                     formation.PlayerOwner = Mission.Current.MainAgent;
@@ -476,7 +477,7 @@ namespace RealmsForgotten.RFCustomSettlements
             Vec2 vec = matrixFrame.rotation.f.AsVec2;
             vec = vec.Normalized();
 
-            AgentBuildData agentBuildData2 = agentBuildData.InitialDirection(vec).CivilianEquipment(false).NoHorses(false).NoWeapons(false).ClothingColor1(base.Mission.PlayerTeam.Color).ClothingColor2(base.Mission.PlayerTeam.Color2).TroopOrigin(new PartyAgentOrigin(PartyBase.MainParty, playerCharacter, -1, default, false)).MountKey(MountCreationKey.GetRandomMountKeyString(playerCharacter.Equipment[EquipmentIndex.ArmorItemEndSlot].Item, playerCharacter.GetMountKeySeed())).Controller(Agent.ControllerType.Player);
+            AgentBuildData agentBuildData2 = agentBuildData.InitialDirection(vec).CivilianEquipment(false).NoHorses(false).NoWeapons(false).ClothingColor1(base.Mission.PlayerTeam.Color).ClothingColor2(base.Mission.PlayerTeam.Color2).TroopOrigin(new PartyAgentOrigin(PartyBase.MainParty, playerCharacter, -1, default, false)).MountKey(MountCreationKey.GetRandomMountKeyString(playerCharacter.Equipment[EquipmentIndex.ArmorItemEndSlot].Item, playerCharacter.GetMountKeySeed())).Controller(AgentControllerType.Player);
 
             Hero heroObject = playerCharacter.HeroObject;
 

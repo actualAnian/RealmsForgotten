@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.Party;
 using RealmsForgotten.Career;
 using RealmsForgotten.Career.Logic;
-using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
+using TaleWorlds.CampaignSystem.Roster;
 
 namespace RealmsForgotten.Models
 {
@@ -25,19 +21,18 @@ namespace RealmsForgotten.Models
         {
             return base.GetCharacterWage(character) * (character.IsGiant() ? Globals.GiantsCostMult : 1);
         }
-        public override int GetTroopRecruitmentCost(CharacterObject troop, Hero buyerHero, bool withoutItemCost = false)
+        public override ExplainedNumber GetTroopRecruitmentCost(CharacterObject troop, Hero buyerHero, bool withoutItemCost = false)
         {
-            int baseValue = base.GetTroopRecruitmentCost(troop, buyerHero, withoutItemCost);
+            ExplainedNumber baseValue = base.GetTroopRecruitmentCost(troop, buyerHero, withoutItemCost);
             if (buyerHero == null)
                 return baseValue;
-            int nasoriaBonus = (int)(baseValue - 15f / 100f * baseValue);
-            if (buyerHero.Culture.StringId == "vlandia" && troop.Occupation == Occupation.Mercenary && nasoriaBonus > 0)
-                return nasoriaBonus;
+            if (buyerHero.Culture.StringId == "vlandia" && troop.Occupation == Occupation.Mercenary)
+                baseValue.Add(-15f / 100f * baseValue.ResultNumber);
             return baseValue;
         }
-        public override ExplainedNumber GetTotalWage(MobileParty mobileParty, bool includeDescriptions = false)
+        public override ExplainedNumber GetTotalWage(MobileParty mobileParty, TroopRoster troopRoster, bool includeDescriptions = false)
         {
-            ExplainedNumber value = base.GetTotalWage(mobileParty, includeDescriptions);
+            ExplainedNumber value = base.GetTotalWage(mobileParty, troopRoster, includeDescriptions);
             if (mobileParty != MobileParty.MainParty) return value;
             var career = PlayerCareerExtension.GetCareer();
             if (career == null) return value;
@@ -47,7 +42,7 @@ namespace RealmsForgotten.Models
             {
                 var choice = career.AllChoices.First(c => c.StringId == "KnightErrant1_5");
                 float totalReduction = 0;
-                foreach (TaleWorlds.CampaignSystem.Roster.TroopRosterElement troop in mobileParty.MemberRoster.GetTroopRoster())
+                foreach (TroopRosterElement troop in mobileParty.MemberRoster.GetTroopRoster())
                     if (troop.Character.IsMounted)
                         totalReduction += troop.Number * troop.Character.TroopWage;// * choice.Passive!.EffectMagnitude;
                 if (totalReduction > 0) value.Add(-1 * totalReduction, new("{=knight_cav_wage_reduction}Class knight cavalry wage reduction"));
@@ -56,7 +51,7 @@ namespace RealmsForgotten.Models
             if (PlayerCareerExtension.HasCareerChoice("WanderingBlade2_5"))
             {
                 int totalReduction = 0;
-                foreach (TaleWorlds.CampaignSystem.Roster.TroopRosterElement troop in mobileParty.MemberRoster.GetTroopRoster())
+                foreach (TroopRosterElement troop in mobileParty.MemberRoster.GetTroopRoster())
                 {
                     if (troop.Character.Occupation == Occupation.Mercenary)
                         totalReduction += troop.Number * troop.Character.TroopWage / 3;

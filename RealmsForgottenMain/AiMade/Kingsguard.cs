@@ -246,7 +246,7 @@ namespace RealmsForgotten.AiMade
         }
         private bool CanAddToKingsguard(out TextObject exception)
         {
-            exception = TextObject.Empty;
+            exception = TextObject.GetEmpty();
 
             if (!(Hero.MainHero.MapFaction is Kingdom playerKingdom) || playerKingdom.Leader != Hero.MainHero)
             {

@@ -1,30 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RealmsForgotten.CustomSkills;
+﻿using RealmsForgotten.CustomSkills;
 using RealmsForgotten.UI;
 using RealmsForgotten.Utility;
-using SandBox.View.Map;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
-using TaleWorlds.CampaignSystem.Encounters;
-using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.MapEvents;
-using TaleWorlds.CampaignSystem.Overlay;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
-using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
-using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
-using TaleWorlds.MountAndBlade.GauntletUI;
 using TaleWorlds.ScreenSystem;
 
 namespace RealmsForgotten.Behaviors
@@ -104,7 +91,7 @@ namespace RealmsForgotten.Behaviors
 
         private void MakeFaithLearnMenu(CampaignGameStarter campaignGameStarter) //Will be replaced
         {
-            campaignGameStarter.AddGameMenu("town_temple", "{=temple_desc}The place where people of local culture praise their gods.", null, GameOverlays.MenuOverlayType.SettlementWithCharacters);
+            campaignGameStarter.AddGameMenu("town_temple", "{=temple_desc}The place where people of local culture praise their gods.", null, GameMenu.MenuOverlayType.SettlementWithCharacters);
 
             campaignGameStarter.AddGameMenuOption("town", "enter_temple", "{=visit_temple}Go to the temple", args =>
             {

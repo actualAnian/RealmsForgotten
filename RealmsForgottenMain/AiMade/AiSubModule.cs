@@ -97,7 +97,7 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new DocksMenuBehavior());
             campaignGameStarter.AddBehavior(new KingsguardSaveDataBehavior());
             campaignGameStarter.AddBehavior(new RaceCraftingStaminaBehavior());
-            campaignGameStarter.AddBehavior(new ADODChamberlainsBehavior());
+            //campaignGameStarter.AddBehavior(new ADODChamberlainsBehavior()); @TODO
             campaignGameStarter.AddBehavior(new SlaveBehavior());
             campaignGameStarter.AddBehavior(new ADODCustomLocationsBehavior());
             campaignGameStarter.AddBehavior(new NasorianHordeInvasion());
@@ -132,7 +132,6 @@ namespace RealmsForgotten.AiMade
         private void AddCustomModels(CampaignGameStarter campaignGameStarter)
         {
             // Register the custom inventory capacity model
-            campaignGameStarter.AddModel(new CustomInventoryCapacityModel());
             campaignGameStarter.AddModel(new UrkhaiPartySizeModel());
             campaignGameStarter.AddModel(new AlignmentDiplomacyModel(Campaign.Current.Models.DiplomacyModel));
             campaignGameStarter.AddModel(new CustomTradeItemPriceFactorModel());
@@ -153,7 +152,7 @@ namespace RealmsForgotten.AiMade
 
                 //mission.AddMissionBehavior(new ForceWinterMissionBehavior());
                 mission.AddMissionBehavior(new ADODFireArrowsMissionBehavior());
-                mission.AddMissionBehavior(new AttachWallSegmentDebugBehavior());
+                //mission.AddMissionBehavior(new AttachWallSegmentDebugBehavior()); @TODO
             }
 
             // Add Reinforcements Runner if DeploymentMissionController is present

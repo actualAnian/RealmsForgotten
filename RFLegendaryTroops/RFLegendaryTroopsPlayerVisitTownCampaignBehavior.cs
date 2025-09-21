@@ -5,19 +5,19 @@ using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Localization;
 
-namespace RealmsForgotten.RFLegendaryTroops
+namespace RFLegendaryTroops
 {
     public class RFLegendaryTroopsPlayerVisitTownCampaignBehavior: CampaignBehaviorBase
     {
         public override void RegisterEvents()
         {
-            CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnAfterNewGameCreated));
+            CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(OnAfterNewGameCreated));
             CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, OnAfterNewGameCreated);
         }
 
         public void OnAfterNewGameCreated(CampaignGameStarter campaignGameStarter)
         {
-            this.AddGameMenus(campaignGameStarter);
+            AddGameMenus(campaignGameStarter);
         }
         public override void SyncData(IDataStore dataStore)
         {

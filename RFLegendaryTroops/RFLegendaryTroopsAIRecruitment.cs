@@ -4,7 +4,7 @@ using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 
-namespace RealmsForgotten.RFLegendaryTroops
+namespace RFLegendaryTroops
 {
     public class RFLegendaryTroopsAIRecruitment : CampaignBehaviorBase
     {
@@ -12,8 +12,8 @@ namespace RealmsForgotten.RFLegendaryTroops
         public override void RegisterEvents()
         {
 
-            CampaignEvents.MobilePartyCreated.AddNonSerializedListener(this, new Action<MobileParty>(this.OnMobilePartyCreated));
-            CampaignEvents.SettlementEntered.AddNonSerializedListener(this, new Action<MobileParty, Settlement, Hero>(this.OnSettlementEntered));
+            CampaignEvents.MobilePartyCreated.AddNonSerializedListener(this, new Action<MobileParty>(OnMobilePartyCreated));
+            CampaignEvents.SettlementEntered.AddNonSerializedListener(this, new Action<MobileParty, Settlement, Hero>(OnSettlementEntered));
         }
 
 
@@ -21,8 +21,8 @@ namespace RealmsForgotten.RFLegendaryTroops
         {
             if(settlement.IsCastle&& mobileParty.IsRulerParty())
             {
-                if (mobileParty.Party.NumberOfAllMembers < mobileParty.LimitedPartySize && mobileParty.CanPayMoreWage())
-                    this.RecruitVolunteersFromNotable(mobileParty, settlement);
+                if (mobileParty.Party.NumberOfAllMembers < mobileParty.Party.PartySizeLimit && !mobileParty.IsWageLimitExceeded())
+                    RecruitVolunteersFromNotable(mobileParty, settlement);
             }
         }
 
@@ -43,18 +43,17 @@ namespace RealmsForgotten.RFLegendaryTroops
         }
         private void RecruitVolunteersFromNotable(MobileParty mobileParty, Settlement settlement)
         {
-            if (((float)mobileParty.Party.NumberOfAllMembers + 0.5f) / (float)mobileParty.LimitedPartySize <= 1f)
+            if ((mobileParty.Party.NumberOfAllMembers + 0.5f) / (float)mobileParty.Party.PartySizeLimit <= 1f)
             {
                 foreach (Hero notable in settlement.Notables)
                 {
                     for(int i = 0; i < notable.VolunteerTypes.Length; ++i) // party leader is able to recruit every troop from notable
                     {
                         CharacterObject recruit = notable.VolunteerTypes[i];
-                        if (recruit != null && mobileParty.LeaderHero.Gold > Campaign.Current.Models.PartyWageModel.GetTroopRecruitmentCost(recruit, mobileParty.LeaderHero, false) && 
-                            mobileParty.PaymentLimit >= mobileParty.TotalWage + Campaign.Current.Models.PartyWageModel.GetCharacterWage(recruit) &&
-                            mobileParty.LimitedPartySize > mobileParty.MemberRoster.TotalManCount)
+                        if (recruit != null && mobileParty.LeaderHero.Gold > Campaign.Current.Models.PartyWageModel.GetTroopRecruitmentCost(recruit, mobileParty.LeaderHero, false).ResultNumber &&
+                            mobileParty.GetAvailableWageBudget() >= Campaign.Current.Models.PartyWageModel.GetCharacterWage(recruit))
                         {
-                            this.GetRecruitVolunteerFromIndividual(mobileParty, notable.CurrentSettlement, recruit, notable, 1, i);
+                            GetRecruitVolunteerFromIndividual(mobileParty, notable.CurrentSettlement, recruit, notable, 1, i);
                         }
 
                         if (mobileParty.IsWageLimitExceeded())
@@ -67,7 +66,7 @@ namespace RealmsForgotten.RFLegendaryTroops
         }
         private void GetRecruitVolunteerFromIndividual(MobileParty kingsParty, Settlement castle, CharacterObject recruit, Hero notable, int number, int bitCode)
         {
-            int troopRecruitmentCost = Campaign.Current.Models.PartyWageModel.GetTroopRecruitmentCost(recruit, kingsParty.LeaderHero, false);
+            int troopRecruitmentCost = (int)Campaign.Current.Models.PartyWageModel.GetTroopRecruitmentCost(recruit, kingsParty.LeaderHero, false).ResultNumber;
             
             GiveGoldAction.ApplyBetweenCharacters(kingsParty.LeaderHero, null, troopRecruitmentCost, true);
             notable.VolunteerTypes[bitCode] = null;

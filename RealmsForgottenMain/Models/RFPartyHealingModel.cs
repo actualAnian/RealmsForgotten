@@ -9,25 +9,13 @@ using System;
 
 namespace RealmsForgotten.Models
 {
-    internal class RFPartyHealingModel : DefaultPartyHealingModel
+    internal class RFPartyHealingModel : PartyHealingModel
     {
-        private PartyHealingModel partyHealingModel;
+        private PartyHealingModel _baseModel;
 
         public RFPartyHealingModel(PartyHealingModel partyHealingModel)
         {
-            this.partyHealingModel = partyHealingModel;
-        }
-        public override ExplainedNumber GetDailyHealingForRegulars(MobileParty party, bool includeDescriptions = false)
-        {
-            var value = partyHealingModel.GetDailyHealingForRegulars(party, includeDescriptions);
-            if (party == MobileParty.MainParty) AddCareerPassivesForTroopRegeneration(party, ref value);
-            return value;
-        }
-        public override ExplainedNumber GetDailyHealingHpForHeroes(MobileParty party, bool includeDescriptions = false)
-        {
-            ExplainedNumber baseValue = partyHealingModel.GetDailyHealingHpForHeroes(party, includeDescriptions);
-            if (party == MobileParty.MainParty) AddCareerPassivesForHeroRegeneration(party, ref baseValue);
-            return baseValue;
+            _baseModel = partyHealingModel;
         }
         private void AddCareerPassivesForTroopRegeneration(MobileParty party, ref ExplainedNumber explainedNumber)
         {
@@ -46,7 +34,7 @@ namespace RealmsForgotten.Models
         }
         public override float GetSurvivalChance(PartyBase party, CharacterObject character, DamageTypes damageType, bool canDamageKillEvenIfBlunt, PartyBase enemyParty = null)
         {
-            float value = partyHealingModel.GetSurvivalChance(party, character, damageType, canDamageKillEvenIfBlunt, enemyParty);
+            float value = _baseModel.GetSurvivalChance(party, character, damageType, canDamageKillEvenIfBlunt, enemyParty);
             if (party == PartyBase.MainParty) value += AddCareerPassivesForSurvivalChance(party, character, damageType, canDamageKillEvenIfBlunt, enemyParty, ref value);
             return value;
         }
@@ -60,5 +48,30 @@ namespace RealmsForgotten.Models
             }
             return num.ResultNumber;
         }
+
+        public override float GetSurgeryChance(PartyBase party) => _baseModel.GetSurgeryChance(party);
+
+        public override int GetSkillXpFromHealingTroop(PartyBase party) => _baseModel.GetSkillXpFromHealingTroop(party);
+
+        public override ExplainedNumber GetDailyHealingForRegulars(PartyBase party, bool isPrisoner, bool includeDescriptions = false)
+        {
+            var value = _baseModel.GetDailyHealingForRegulars(party, includeDescriptions);
+            if (party == MobileParty.MainParty.Party) AddCareerPassivesForTroopRegeneration(MobileParty.MainParty, ref value);
+            return value;
+
+        }
+
+        public override ExplainedNumber GetDailyHealingHpForHeroes(PartyBase party, bool isPrisoners, bool includeDescriptions = false)
+        {
+            ExplainedNumber baseValue = _baseModel.GetDailyHealingHpForHeroes(party, includeDescriptions);
+            if (party == MobileParty.MainParty.Party) AddCareerPassivesForHeroRegeneration(MobileParty.MainParty, ref baseValue);
+            return baseValue;
+        }
+
+        public override int GetHeroesEffectedHealingAmount(Hero hero, float healingRate) =>_baseModel.GetHeroesEffectedHealingAmount(hero, healingRate);
+
+        public override float GetSiegeBombardmentHitSurgeryChance(PartyBase party) => _baseModel.GetSiegeBombardmentHitSurgeryChance(party);
+
+        public override ExplainedNumber GetBattleEndHealingAmount(PartyBase partyBase, Hero hero) => _baseModel.GetBattleEndHealingAmount(partyBase, hero);
     }
 }

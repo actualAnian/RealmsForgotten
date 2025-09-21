@@ -1,20 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Encounters;
-using TaleWorlds.CampaignSystem.GameMenus;
-using TaleWorlds.CampaignSystem.Overlay;
-using TaleWorlds.CampaignSystem.Settlements;
+﻿using System.Linq;
 using TaleWorlds.Library;
-using TaleWorlds.Localization;
 
 namespace RealmsForgotten.AiMade.Village_Inn_Quests
 {
     using TaleWorlds.CampaignSystem;
-    using TaleWorlds.CampaignSystem.Conversation;
     using TaleWorlds.Core;
     using TaleWorlds.Localization;
     using TaleWorlds.CampaignSystem.Party;

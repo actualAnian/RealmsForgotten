@@ -76,14 +76,14 @@ namespace RealmsForgotten.RFEffects
         }
         public static void ApplyParticleToWeapon(Agent agent, string particleId, EquipmentIndex equipmentIndex, float elevateAmount, Skeleton skeleton, out GameEntity weaponEntityFromEquipmentSlot)
         {
-            GameEntity temporaryWeaponEntity = null;
+            GameEntity? temporaryWeaponEntity = null;
             ExceptionHandler.HandleMethod(() =>
             {
-                temporaryWeaponEntity = agent.GetWeaponEntityFromEquipmentSlot(equipmentIndex);
+                temporaryWeaponEntity = GameEntity.CreateFromWeakEntity(agent.GetWeaponEntityFromEquipmentSlot(equipmentIndex));
                 if (temporaryWeaponEntity == null)
                     return;
 
-                MatrixFrame matrixFrame4 = new MatrixFrame(Mat3.Identity, default(Vec3));
+                MatrixFrame matrixFrame4 = new MatrixFrame(Mat3.Identity, default);
                 MatrixFrame boneLocalFrame2 = matrixFrame4.Elevate(elevateAmount);
                 ParticleSystem component = ParticleSystem.CreateParticleSystemAttachedToEntity(particleId, temporaryWeaponEntity, ref boneLocalFrame2);
                 if (ParticleSystemManager.GetRuntimeIdByName(particleId) == -1)

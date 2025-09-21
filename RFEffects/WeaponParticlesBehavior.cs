@@ -47,7 +47,7 @@ namespace RealmsForgotten.RFEffects
         {
             if (!hasRigidBody)
             {
-                Mission.Missile missile = Mission.Missiles.ElementAt(0);
+                Mission.Missile missile = Mission.MissilesList.ElementAt(0);
 
                 Skeleton skeleton = missile.Entity.Skeleton;
                 Scene scene = Mission.Current.Scene;
@@ -131,7 +131,7 @@ namespace RealmsForgotten.RFEffects
                         }
 
                         SetFireSwordEnable(enable: false);
-                        EquipmentIndex wieldedItemIndex = agent.GetWieldedItemIndex(Agent.HandIndex.MainHand);
+                        EquipmentIndex wieldedItemIndex = agent.GetPrimaryWieldedItemIndex();
                         if (wieldedItemIndex == EquipmentIndex.None)
                         {
                             return;

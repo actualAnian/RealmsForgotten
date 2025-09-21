@@ -109,7 +109,7 @@ namespace RealmsForgotten.Career.Ability
             {
                 try
                 {
-                    EquipmentIndex wieldedItemIndex = agent.GetWieldedItemIndex(Agent.HandIndex.MainHand);
+                    EquipmentIndex wieldedItemIndex = agent.GetPrimaryWieldedItemIndex();
                     if (wieldedItemIndex == EquipmentIndex.None) continue;
 
                     MissionWeapon weapon = agent.WieldedWeapon;

@@ -131,9 +131,9 @@ namespace RealmsForgotten.Behaviors
         }
         private void SetNextAmmoSlot()
         {
-            Agent main = Agent.Main;;
+            Agent main = Agent.Main;
 
-            List<EquipmentIndex> excludedIndexes = new() { main.GetWieldedItemIndex(Agent.HandIndex.MainHand) , CurrentAmmo };
+            List<EquipmentIndex> excludedIndexes = new() { main.GetPrimaryWieldedItemIndex() , CurrentAmmo };
 
             int min = 0;
             int current = (int)excludedIndexes[1];

@@ -95,7 +95,7 @@ namespace RealmsForgotten.Behaviors
                     if (Mission.Current != null && currentSettlement != null)
                     {
                         vendorItemRoster = CreateItemRoster();
-                        InventoryManager.OpenScreenAsTrade(vendorItemRoster, currentSettlement.SettlementComponent, InventoryManager.InventoryCategoryType.All, () => { });
+                        InventoryScreenHelper.OpenScreenAsTrade(vendorItemRoster, currentSettlement.SettlementComponent, InventoryScreenHelper.InventoryCategoryType.All, () => { });
                     }
                 }).GotoDialogState("start").PlayerOption("{=leave}Leave.").CloseDialog().EndPlayerOptions();
 
@@ -105,8 +105,8 @@ namespace RealmsForgotten.Behaviors
                     Settlement currentSettlement = Settlement.CurrentSettlement;
                     if (Mission.Current != null && currentSettlement != null)
                     {
-                        
-                        InventoryManager.OpenScreenAsTrade(vendorItemRoster, currentSettlement.SettlementComponent, InventoryManager.InventoryCategoryType.All, () => 
+
+                        InventoryScreenHelper.OpenScreenAsTrade(vendorItemRoster, currentSettlement.SettlementComponent, InventoryScreenHelper.InventoryCategoryType.All, () => 
                         {
 
                         });

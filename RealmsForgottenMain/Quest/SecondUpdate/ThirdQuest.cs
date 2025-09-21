@@ -188,7 +188,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
         }
         private void OnTick(float obj)
         {
-            if (goToHideoutLog?.CurrentProgress == 0 && questHideout.GatePosition.DistanceSquared(MobileParty.MainParty.Position2D) <= 5)
+            if (goToHideoutLog?.CurrentProgress == 0 && questHideout.GatePosition.DistanceSquared(MobileParty.MainParty.GetPosition2D) <= 5)
             {
                 InformationManager.ShowInquiry(new InquiryData(GameTexts.FindText("rf_event").ToString(), GameTexts.FindText("rf_near_hideout_message").ToString(), true, false, GameTexts.FindText("str_done").ToString(), "",
                     null, null), true);
@@ -352,7 +352,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
         }
         private void PrepareFeast()
         {
-            List<Hero> lords = Settlement.CurrentSettlement.OwnerClan.Kingdom.Lords.Where(x => x != Hero.MainHero && !x.IsChild).ToList();
+            List<Hero> lords = Settlement.CurrentSettlement.OwnerClan.Kingdom.AliveLords.Where(x => x != Hero.MainHero && !x.IsChild).ToList();
             lords.Randomize();
             int i = lords.Count > 12 ? 12 : lords.Count;
             for (; i >= 0; i--)
@@ -452,7 +452,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             MobileParty caravanParty =
                 QuestCaravanPartyComponent.CreateQuestCaravanParty(Owl, QuestGiver.HomeSettlement);
 
-            caravanParty.InitializeMobilePartyAtPosition(TroopRoster.CreateDummyTroopRoster(), TroopRoster.CreateDummyTroopRoster(), MobileParty.MainParty.Position2D);
+            caravanParty.InitializeMobilePartyAtPosition(TroopRoster.CreateDummyTroopRoster(), TroopRoster.CreateDummyTroopRoster(), new(MobileParty.MainParty.GetPosition2D, !MobileParty.MainParty.IsCurrentlyAtSea));
             caravanParty.AddElementToMemberRoster(TheOwl.CharacterObject, 1);
             caravanParty.ChangePartyLeader(TheOwl);
             SetCaravanObjective(caravanParty);
@@ -469,8 +469,8 @@ namespace RealmsForgotten.Quest.SecondUpdate
             MobileParty.MainParty.Army.AddPartyToMergedParties(MobileParty.MainParty);
 
             MobileParty.MainParty.Army.AiBehaviorObject = Ityr;
-            MobileParty.MainParty.Army.AIBehavior = Army.AIBehaviorFlags.GoToSettlement;
-            MobileParty.MainParty.Army.LeaderParty.Ai.SetMoveGoToSettlement(Ityr);
+            //MobileParty.MainParty.Army.AIBehavior = Army.AIBehaviorFlags.GoToSettlement; @TODO check if it works without this line
+            MobileParty.MainParty.Army.LeaderParty.SetMoveGoToSettlement(Ityr, MobileParty.NavigationType.All, false);
 
             MobileParty.MainParty.Army.LeaderParty.Ai.SetDoNotMakeNewDecisions(true);
 
@@ -619,7 +619,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             TransferPrisonerAction.Apply(athasScholarHero.CharacterObject, PartyBase.MainParty, partyBase != null ? partyBase : Settlement.CurrentSettlement.Party);
 
             escortAthasScholarLog?.UpdateCurrentProgress(2);
-            waitUntilDecipherLog = AddDiscreteLog(GameTexts.FindText("rf_third_quest_anorit_objective_6"), new TextObject(), 0, 1);
+            waitUntilDecipherLog = AddDiscreteLog(GameTexts.FindText("rf_third_quest_anorit_objective_6"), new TextObject(""), 0, 1);
         }
         private void AvoidBattleAfterConversation()
         {
@@ -810,7 +810,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             TextObject textObject = GameTexts.FindText("rf_third_quest_anorit_objective_3");
             textObject.SetTextVariable("SETTLEMENT", Ityr.BoundVillages[0].Settlement.EncyclopediaLinkWithName);
 
-            waitAthasScholarLog = AddDiscreteLog(textObject, new TextObject(), 0, 1);
+            waitAthasScholarLog = AddDiscreteLog(textObject, new TextObject(""), 0, 1);
             waitAthasScholarTime = CampaignTime.Now;
         }
 
@@ -839,24 +839,22 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
     public class QuestCaravanPartyComponent : CaravanPartyComponent
     {
-        protected internal QuestCaravanPartyComponent(Settlement settlement, Hero owner, Hero partyLeader) : base(settlement, owner, partyLeader)
+        protected internal QuestCaravanPartyComponent(Settlement settlement, Hero owner, Hero partyLeader) : base(settlement, owner, partyLeader, false, null)
         {
         }
         public static MobileParty CreateQuestCaravanParty(Hero caravanOwner, Settlement spawnSettlement, bool isInitialSpawn = false, Hero caravanLeader = null, ItemRoster caravanItems = null, int troopToBeGiven = 0, bool isElite = false)
         {
-            MobileParty mobileParty2 = MobileParty.CreateParty("caravan_template_" + spawnSettlement.Culture.StringId.ToLower() + "_1", new QuestCaravanPartyComponent(spawnSettlement, caravanOwner, caravanLeader), delegate (MobileParty mobileParty)
-            {
-                (mobileParty.PartyComponent as QuestCaravanPartyComponent).InitializeCaravanOnCreation(mobileParty, caravanLeader, caravanItems, troopToBeGiven, isElite);
-            });
+            MobileParty mobileParty2 = MobileParty.CreateParty("caravan_template_" + spawnSettlement.Culture.StringId.ToLower() + "_1", new QuestCaravanPartyComponent(spawnSettlement, caravanOwner, caravanLeader));
+            (mobileParty2.PartyComponent as QuestCaravanPartyComponent).InitializeCaravanOnCreation(mobileParty2, caravanLeader, caravanItems, troopToBeGiven, isElite);
             if (spawnSettlement.Party.MapEvent == null && spawnSettlement.SiegeEvent == null)
             {
-                mobileParty2.Ai.SetMoveGoToSettlement(spawnSettlement);
-                mobileParty2.Ai.RecalculateShortTermAi();
+                mobileParty2.SetMoveGoToSettlement(spawnSettlement, MobileParty.NavigationType.All, false);
+                //mobileParty2.Ai.RecalculateShortTermAi(); @TODO check if it works without it
                 EnterSettlementAction.ApplyForParty(mobileParty2, spawnSettlement);
             }
             else
             {
-                mobileParty2.Ai.SetMoveModeHold();
+                mobileParty2.SetMoveModeHold();
             }
 
             if (mobileParty2.LeaderHero != null)
@@ -882,8 +880,8 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 troopToBeGiven = num2;
             }
 
-            PartyTemplateObject pt = (isElite ? Settlement.Culture.EliteCaravanPartyTemplate : Settlement.Culture.CaravanPartyTemplate);
-            mobileParty.InitializeMobilePartyAtPosition(pt, Settlement.GatePosition, troopToBeGiven);
+            PartyTemplateObject pt = isElite ? Settlement.Culture.EliteCaravanPartyTemplates.GetRandomElement() : Settlement.Culture.CaravanPartyTemplates.GetRandomElement();
+            mobileParty.InitializeMobilePartyAtPosition(pt, Settlement.GatePosition);//, troopToBeGiven);  @TODO check this line
             if (caravanLeader != null)
             {
                 mobileParty.MemberRoster.AddToCounts(caravanLeader.CharacterObject, 1, insertAtFront: true);
@@ -925,12 +923,5 @@ namespace RealmsForgotten.Quest.SecondUpdate
             base.MobileParty.Aggressiveness = 0f;
 
         }
-        public override void ChangePartyLeader(Hero newLeader)
-        {
-            if (newLeader != null)
-                base.ChangePartyLeader(newLeader);
-        }
-
-
     }
 }

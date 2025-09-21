@@ -89,7 +89,7 @@ namespace RealmsForgotten.Managers
                 case GameManagerLoadingSteps.PostInitializeFourthState:
                     {
                         bool submodulesLoaded = true;
-                        foreach (MBSubModuleBase mbsubModuleBase in TaleWorlds.MountAndBlade.Module.CurrentModule.SubModules)
+                        foreach (MBSubModuleBase mbsubModuleBase in TaleWorlds.MountAndBlade.Module.CurrentModule.CollectSubModules())
                         {
                             submodulesLoaded = submodulesLoaded && mbsubModuleBase.DoLoading(Game.Current);
                         }

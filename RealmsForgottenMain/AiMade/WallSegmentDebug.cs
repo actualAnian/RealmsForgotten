@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
 
@@ -18,8 +14,8 @@ namespace RealmsForgotten.AiMade
 
         private void RunDebugCheck()
         {
-            GameEntity gameEntity = base.GameEntity.GetChildren().FirstOrDefault(ce => ce.HasTag("solid_child"));
-            GameEntity gameEntity2 = base.GameEntity.GetChildren().FirstOrDefault(ce => ce.HasTag("broken_child"));
+            WeakGameEntity gameEntity = base.GameEntity.GetChildren().FirstOrDefault(ce => ce.HasTag("solid_child"));
+            WeakGameEntity gameEntity2 = base.GameEntity.GetChildren().FirstOrDefault(ce => ce.HasTag("broken_child"));
 
             if (gameEntity2 == null)
             {

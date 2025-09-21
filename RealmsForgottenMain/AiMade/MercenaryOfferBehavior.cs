@@ -72,7 +72,7 @@ namespace RealmsForgotten.AiMade
 
         private bool IsKingdomAtWar(Kingdom kingdom)
         {
-            return kingdom.Stances.Any(stance => stance.IsAtWar);
+            return kingdom.FactionsAtWarWith.Count > 0;
         }
 
         private void CreateJoinWarDecisionPopUp()
@@ -91,7 +91,7 @@ namespace RealmsForgotten.AiMade
 
         private void OnAccept()
         {
-            ChangeKingdomAction.ApplyByJoinFactionAsMercenary(Clan.PlayerClan, _lordKingdom, 0);
+            ChangeKingdomAction.ApplyByJoinFactionAsMercenary(Clan.PlayerClan, _lordKingdom, default);
             _hasAcceptedOffer = true;
             InformationManager.DisplayMessage(new InformationMessage("You have joined the war as a mercenary."));
         }

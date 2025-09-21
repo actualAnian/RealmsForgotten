@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.ObjectSystem;
-using TaleWorlds.CampaignSystem.Party.PartyComponents;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.GameMenus;
+using Helpers;
 
 namespace RealmsForgotten.AiMade.MercenaryFaction
 {
@@ -60,7 +56,7 @@ namespace RealmsForgotten.AiMade.MercenaryFaction
             CampaignEvents.HourlyTickPartyEvent.AddNonSerializedListener(this, p =>
             {
                 if (p == _activeMercParty)
-                    p.Ai.SetMoveEscortParty(MobileParty.MainParty);
+                    p.SetMoveEscortParty(MobileParty.MainParty, MobileParty.NavigationType.Default, false);
             });
             CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, OnGameLoaded);
         }
@@ -77,7 +73,7 @@ namespace RealmsForgotten.AiMade.MercenaryFaction
             {
                 Hero captain = Hero.AllAliveHeroes.FirstOrDefault(h => h.StringId == _captainHeroId);
                 _activeMercParty = captain?.PartyBelongedTo;
-                _activeMercParty?.Ai.SetMoveEscortParty(MobileParty.MainParty);
+                _activeMercParty?.SetMoveEscortParty(MobileParty.MainParty, MobileParty.NavigationType.Default, false);
             }
         }
 
@@ -186,8 +182,7 @@ namespace RealmsForgotten.AiMade.MercenaryFaction
             // This is what flips IsPlayerCompanion and wires up all the right state
             AddCompanionAction.Apply(Clan.PlayerClan, captain);
 
-            MobileParty party = Clan.PlayerClan.CreateNewMobileParty(captain);
-
+            MobileParty party = MobilePartyHelper.CreateNewClanMobileParty(captain, Clan.PlayerClan);
             // --- LÓGICA DE ADIÇÃO DE TROPAS ATUALIZADA ---
             // Itera sobre o roster escolhido e adiciona cada tipo de tropa com sua respectiva quantidade.
             foreach (var troopEntry in rosterToSpawn)
@@ -199,10 +194,10 @@ namespace RealmsForgotten.AiMade.MercenaryFaction
                 }
             }
 
-            party.Position2D = town.GatePosition;
-            party.Ai.SetMoveEscortParty(MobileParty.MainParty);
+            party.Position = town.GatePosition;
+            party.SetMoveEscortParty(MobileParty.MainParty, MobileParty.NavigationType.Default, false);
 
-            party.SetCustomName(new TextObject("{=merc_party_name}Mercenary Company"));
+            party.Party.SetCustomName(new TextObject("{=merc_party_name}Mercenary Company"));
             _activeMercParty = party;
             _captainHeroId = captain.StringId;
         }

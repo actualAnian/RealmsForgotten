@@ -3,7 +3,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
-namespace RealmsForgotten.RFLegendaryTroops
+namespace RFLegendaryTroops
 {
     public class SubModule : MBSubModuleBase
     {
@@ -11,7 +11,6 @@ namespace RealmsForgotten.RFLegendaryTroops
         {
             base.OnSubModuleLoad(); 
             new Harmony("RFLegendaryTroops").PatchAll();
-
         }
 
         protected override void OnSubModuleUnloaded()
@@ -30,5 +29,4 @@ namespace RealmsForgotten.RFLegendaryTroops
             }
         }
     }
-
 }

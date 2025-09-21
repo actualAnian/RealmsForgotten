@@ -91,7 +91,7 @@ namespace RFCustomSettlements.Patches
                         break;
                     case RFUsableObjectType.Passage:
                         __instance.PrimaryInteractionMessage = button + " Go Through";
-                        __instance.IsFocusedOnExit = true;
+                        //__instance.IsFocusedOnExit = true; @TODO check
                         break;
                     case RFUsableObjectType.Healing:
                         __instance.PrimaryInteractionMessage = button + "Heal";

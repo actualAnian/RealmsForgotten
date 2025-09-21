@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem.Party.PartyComponents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
@@ -87,7 +85,7 @@ namespace RealmsForgotten.AiMade
                 var banditParty = CreateBanditParty(settlement);
                 if (banditParty != null)
                 {
-                    banditParty.Position2D = settlement.Position2D;
+                    banditParty.Position = settlement.Position;
                     if (banditParty.Ai != null)
                     {
                         EngageNearbyEnemies(banditParty);
@@ -129,8 +127,8 @@ namespace RealmsForgotten.AiMade
                 troopRoster.AddToCounts(troop, adjustedNumber);
             }
 
-            banditParty.InitializeMobilePartyAroundPosition(troopRoster, TroopRoster.CreateDummyTroopRoster(), settlement.Position2D, 50f, 10f);
-            banditParty.SetCustomName(new TextObject("Nasorian Horde"));
+            banditParty.InitializeMobilePartyAroundPosition(troopRoster, TroopRoster.CreateDummyTroopRoster(), settlement.Position, 50f, 10f);
+            banditParty.Party.SetCustomName(new TextObject("Nasorian Horde"));
             banditParty.Aggressiveness = 10f;
 
             return banditParty;
@@ -151,13 +149,13 @@ namespace RealmsForgotten.AiMade
         {
             List<MobileParty> nearbyEnemyParties = MobileParty.All
                 .Where(p => (p.IsLordParty || IsVillagerParty(p) || p.IsCaravan || p.IsBandit) && p.MapFaction.IsAtWarWith(banditParty.MapFaction))
-                .OrderBy(p => p.Position2D.DistanceSquared(banditParty.Position2D))
+                .OrderBy(p => p.Position.DistanceSquared(banditParty.Position))
                 .ToList();
 
             if (nearbyEnemyParties.Count > 0)
             {
                 MobileParty target = nearbyEnemyParties.First();
-                banditParty.Ai.SetMoveEngageParty(target);
+                banditParty.SetMoveEngageParty(target, MobileParty.NavigationType.Default);
             }
         }
 

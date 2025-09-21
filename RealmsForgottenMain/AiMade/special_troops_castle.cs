@@ -3,10 +3,10 @@ using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.GameMenus;
-using TaleWorlds.CampaignSystem.Overlay;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
+using TaleWorlds.Core.ImageIdentifiers;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.ObjectSystem;
@@ -43,7 +43,7 @@ namespace RealmsForgotten.AiMade
 
         private void AddGameMenus(CampaignGameStarter starter)
         {
-            starter.AddGameMenu("castle_recruit_troops", "You approach the Castellan's Chambers. You see him going over upkeep costs for the Castle.", null, GameOverlays.MenuOverlayType.SettlementWithBoth, GameMenu.MenuFlags.None, null);
+            starter.AddGameMenu("castle_recruit_troops", "You approach the Castellan's Chambers. You see him going over upkeep costs for the Castle.", null, GameMenu.MenuOverlayType.SettlementWithBoth, GameMenu.MenuFlags.None, null);
 
             starter.AddGameMenuOption("castle", "castle_recruit_troops_option", "{=ADODRECRUITTROOPSCASTLE}Visit the Castellan's Chambers", args => {
                 args.optionLeaveType = GameMenuOption.LeaveType.Submenu;
@@ -89,7 +89,7 @@ namespace RealmsForgotten.AiMade
             var troops = troopIds.Select(MBObjectManager.Instance.GetObject<CharacterObject>).ToList();
 
             string title = new TextObject(_configs[settlementId].DisplayName, null).ToString();
-            List<InquiryElement> options = troops.Select(troop => new InquiryElement(troop, troop.Name.ToString(), new ImageIdentifier(CharacterCode.CreateFrom(troop)))).ToList();
+            List<InquiryElement> options = troops.Select(troop => new InquiryElement(troop, troop.Name.ToString(), new CharacterImageIdentifier(CharacterCode.CreateFrom(troop)))).ToList();
 
             MBInformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(title, string.Empty, options, true, 1, 1, GameTexts.FindText("str_done", null).ToString(), GameTexts.FindText("str_cancel", null).ToString(), elements => OnTroopTypeSelected(elements, settlementId), null, "", false), false, false);
         }

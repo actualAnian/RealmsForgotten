@@ -89,7 +89,7 @@ namespace RealmsForgotten.AiMade.Village_Inn_Quests
                 village.GatePosition, 1f);
 
             _werewolfParty.MemberRoster.AddToCounts(werewolfChar, 5);
-            _werewolfParty.SetCustomName(new TextObject("Werewolf"));
+            _werewolfParty.Party.SetCustomName(new TextObject("Werewolf"));
             _werewolfParty.SetPartyUsedByQuest(true);
             _werewolfParty.Ai.DisableAi();
 
@@ -137,7 +137,7 @@ namespace RealmsForgotten.AiMade.Village_Inn_Quests
                 else
                     OnWerewolfDefeated();
 
-                _werewolfParty.RemoveParty();
+                DestroyPartyAction.Apply(null, _werewolfParty);
                 _werewolfParty = null;
             }
         }
