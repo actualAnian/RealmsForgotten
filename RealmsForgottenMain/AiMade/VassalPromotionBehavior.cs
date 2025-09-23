@@ -153,8 +153,8 @@ namespace RealmsForgotten.AiMade
             newClanName.SetTextVariable("COMPANION_NAME", companion.Name);
 
             Clan newClan = Clan.CreateClan(newClanName.ToString());
-            newClan.InitializeClan(newClan.Name, newClan.Name, companion.Culture, Banner.CreateRandomClanBanner(companion.StringId.GetDeterministicHashCode()));
-
+            newClan.Culture = companion.Culture;
+            newClan.Banner = Banner.CreateRandomClanBanner(companion.StringId.GetDeterministicHashCode());
             newClan.SetLeader(companion);
 
             ChangeOwnerOfSettlementAction.ApplyByGift(fief, companion);

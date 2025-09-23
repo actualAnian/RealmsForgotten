@@ -128,7 +128,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 for (int i = 0; i < 60; i++)
                     troopRoster.AddToCounts(CharacterObject.Find(units.GetRandomElement()), 1);
 
-                Vec2 spawnPos = MobileParty.MainParty.GetPosition2D;
+                CampaignVec2 spawnPos = MobileParty.MainParty.Position;
                 hellboundParty.InitializeMobilePartyAtPosition(troopRoster, TroopRoster.CreateDummyTroopRoster(), spawnPos);
 
                 hellboundParty.SetMoveEngageParty(MobileParty.MainParty, MobileParty.NavigationType.Default);

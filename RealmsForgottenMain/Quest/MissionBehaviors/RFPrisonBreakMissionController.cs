@@ -43,26 +43,28 @@ namespace RealmsForgotten.Quest.MissionBehaviors
         {
             Mission mission2 = MissionState.OpenNew("PrisonBreak", SandBoxMissions.CreateSandBoxMissionInitializerRecord(scene, "prison_break", true, DecalAtlasGroup.Town), delegate (Mission mission)
             {
-                List<MissionBehavior> list = new List<MissionBehavior>();
-                list.Add(new MissionOptionsComponent());
-                list.Add(new CampaignMissionComponent());
-                list.Add(new MissionBasicTeamLogic());
-                list.Add(new BasicLeaveMissionLogic());
-                list.Add(new LeaveMissionLogic());
-                list.Add(new SandBoxMissionHandler());
-                list.Add(new MissionAgentLookHandler());
-                list.Add(new MissionAgentHandler(location, null, "sp_prison_break"));
-                list.Add(new HeroSkillHandler());
-                list.Add(new MissionFightHandler());
-                list.Add(new BattleAgentLogic());
-                list.Add(new AgentHumanAILogic());
-                list.Add(new MissionCrimeHandler());
-                list.Add(new MissionFacialAnimationHandler());
-                list.Add(new LocationItemSpawnHandler());
-                list.Add(new RFPrisonBreakMissionController());
-                list.Add(new VisualTrackerMissionBehavior());
-                list.Add(new EquipmentControllerLeaveLogic());
-                list.Add(new BattleSurgeonLogic());
+                List<MissionBehavior> list = new()
+                {
+                    new MissionOptionsComponent(),
+                    new CampaignMissionComponent(),
+                    new MissionBasicTeamLogic(),
+                    new BasicLeaveMissionLogic(),
+                    new LeaveMissionLogic(),
+                    new SandBoxMissionHandler(),
+                    new MissionAgentLookHandler(),
+                    new MissionAgentHandler(),
+                    new HeroSkillHandler(),
+                    new MissionFightHandler(),
+                    new BattleAgentLogic(),
+                    new AgentHumanAILogic(),
+                    new MissionCrimeHandler(),
+                    new MissionFacialAnimationHandler(),
+                    new LocationItemSpawnHandler(),
+                    new RFPrisonBreakMissionController(),
+                    new VisualTrackerMissionBehavior(),
+                    new EquipmentControllerLeaveLogic(),
+                    new BattleSurgeonLogic()
+                };
                 return list.ToArray();
             }, true, true);
             mission2.ForceNoFriendlyFire = true;
@@ -86,7 +88,7 @@ namespace RealmsForgotten.Quest.MissionBehaviors
             MissionAgentHandler missionBehavior = this.Mission.GetMissionBehavior<MissionAgentHandler>();
             foreach (UsableMachine townPassageProp in missionBehavior.TownPassageProps)
                 townPassageProp.Deactivate();
-            missionBehavior.SpawnPlayer(this.Mission.DoesMissionRequireCivilianEquipment, true);
+            SandBoxHelpers.MissionHelper.SpawnPlayer(Mission.DoesMissionRequireCivilianEquipment, true);
             missionBehavior.SpawnLocationCharacters();
             this.ArrangeGuardCount();
             for (int index = 0; index < this._guardAgents.Count; ++index)
@@ -150,7 +152,8 @@ namespace RealmsForgotten.Quest.MissionBehaviors
                 List<LocationCharacter> list = LocationComplex.Current.GetListOfCharactersInLocation("prison").Where<LocationCharacter>((Func<LocationCharacter, bool>)(x => !x.Character.IsHero && x.Character.IsSoldier)).ToList<LocationCharacter>();
                 if (list.IsEmpty<LocationCharacter>())
                 {
-                    AgentData agentData = GuardsCampaignBehavior.PrepareGuardAgentDataFromGarrison(PlayerEncounter.LocationEncounter.Settlement.Culture.Guard, true);
+                    var m = AccessTools.Method(typeof(GuardsCampaignBehavior), "PrepareGuardAgentDataFromGarrison");
+                    AgentData agentData = (AgentData)m.Invoke(null, new object[] { PlayerEncounter.LocationEncounter.Settlement.Culture.Guard, true, false });
                     LocationCharacter locationCharacter = new LocationCharacter(agentData, new LocationCharacter.AddBehaviorsDelegate(SandBoxManager.Instance.AgentBehaviorManager.AddStandGuardBehaviors), "sp_guard", true, LocationCharacter.CharacterRelations.Neutral, ActionSetCode.GenerateActionSetNameWithSuffix(agentData.AgentMonster, agentData.AgentIsFemale, "_guard"), false);
                     list.Add(locationCharacter);
                 }

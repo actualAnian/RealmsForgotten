@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using psai.net;
+using System.Collections.Generic;
 using TaleWorlds.Engine;
 using TaleWorlds.ModuleManager;
 using TaleWorlds.MountAndBlade;
@@ -20,7 +21,7 @@ namespace RealmsForgotten.Patches
                 //{
                 //    path = fullPath + "music/soundtrack_steam.xml";
                 //}
-                PsaiCore.Instance.LoadSoundtrackFromProjectFile(path);
+                PsaiCore.Instance.LoadSoundtrackFromProjectFile(new List<string>() { path });
             }
         }
     }

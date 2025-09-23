@@ -895,7 +895,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                         // Removed the notification here
                         CharacterObject characterObject = CharacterObject.Find(TreasureFightCharacter);
                         Monster monsterWithSuffix = FaceGen.GetMonsterWithSuffix(characterObject.Race, FaceGen.MonsterSuffixSettlement);
-                        Equipment randomEquipmentElements = Equipment.GetRandomEquipmentElements(characterObject, true);
+                        Equipment randomEquipmentElements = Equipment.GetRandomEquipmentElements(characterObject, true, Equipment.EquipmentType.Battle);
 
                         AgentBuildData agentBuildData = new AgentBuildData(new SimpleAgentOrigin(characterObject)).Equipment(randomEquipmentElements)
                             .Monster(monsterWithSuffix);

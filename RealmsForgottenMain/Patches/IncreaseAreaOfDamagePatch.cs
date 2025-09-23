@@ -1,10 +1,6 @@
 ﻿using HarmonyLib;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using RealmsForgotten.CustomSkills;
 using TaleWorlds.CampaignSystem;
 using static TaleWorlds.MountAndBlade.Mission;
@@ -20,7 +16,7 @@ namespace RealmsForgotten.Patches
     {
         private static FieldInfo _attackBlockedWithShield =
             AccessTools.Field(typeof(AttackCollisionData), "_attackBlockedWithShield");
-        private static CombatLogData GetAttackCollisionResults(Agent attackerAgent, Agent victimAgent, GameEntity hitObject, float momentumRemaining, in MissionWeapon attackerWeapon, bool crushedThrough, bool cancelDamage, bool crushedThroughWithoutAgentCollision, ref AttackCollisionData attackCollisionData, out WeaponComponentData shieldOnBack, out CombatLogData combatLog)
+        private static CombatLogData GetAttackCollisionResults(Agent attackerAgent, Agent victimAgent, WeakGameEntity hitObject, float momentumRemaining, in MissionWeapon attackerWeapon, bool crushedThrough, bool cancelDamage, bool crushedThroughWithoutAgentCollision, ref AttackCollisionData attackCollisionData, out WeaponComponentData shieldOnBack, out CombatLogData combatLog)
         {
             AttackInformation attackInformation = new AttackInformation(attackerAgent, victimAgent, hitObject, in attackCollisionData, in attackerWeapon);
 
@@ -31,11 +27,11 @@ namespace RealmsForgotten.Patches
             attackCollisionData = (AttackCollisionData)checkShieldCollisionData;
             
             shieldOnBack = attackInformation.ShieldOnBack;
-            MissionCombatMechanicsHelper.GetAttackCollisionResults(in attackInformation, crushedThrough, momentumRemaining, in attackerWeapon, cancelDamage, ref attackCollisionData, out combatLog, out var _);
+            MissionCombatMechanicsHelper.GetAttackCollisionResults(in attackInformation, crushedThrough, momentumRemaining, cancelDamage, ref attackCollisionData, out combatLog, out var _);
             float num = attackCollisionData.InflictedDamage;
             if (num > 0f)
             {
-                float num2 = MissionGameModels.Current.AgentApplyDamageModel.CalculateDamage(in attackInformation, in attackCollisionData, in attackerWeapon, num);
+                float num2 = MissionGameModels.Current.AgentApplyDamageModel.CalculateDamage(in attackInformation, in attackCollisionData, num);
                 combatLog.ModifiedDamage = MathF.Round(num2 - num);
                 attackCollisionData.InflictedDamage = MathF.Round(num2);
             }
@@ -67,7 +63,7 @@ namespace RealmsForgotten.Patches
             if (!crushedThroughWithoutAgentCollision)
             {
                 combatLog.BodyPartHit = attackCollisionData.VictimHitBodyPart;
-                combatLog.IsVictimEntity = hitObject != null;
+                //combatLog.IsVictimEntity = hitObject != null; @TODO
             }
 
             return combatLog;
@@ -169,7 +165,7 @@ namespace RealmsForgotten.Patches
                         MissionWeapon attackerWeapon = ____missiles[attackCollisionData.AffectorWeaponSlotOrMissileIndex].Weapon;
 
 
-                        GetAttackCollisionResults(shooterAgent, item, null, 1f, in attackerWeapon, crushedThrough: false, cancelDamage: false, crushedThroughWithoutAgentCollision: false, ref attackCollisionData, out var _, out var combatLog);
+                        GetAttackCollisionResults(shooterAgent, item, default, 1f, in attackerWeapon, crushedThrough: false, cancelDamage: false, crushedThroughWithoutAgentCollision: false, ref attackCollisionData, out var _, out var combatLog);
                         b.BaseMagnitude = attackCollisionData.BaseMagnitude;
                         b.MovementSpeedDamageModifier = attackCollisionData.MovementSpeedDamageModifier;
                         b.InflictedDamage = attackCollisionData.InflictedDamage;

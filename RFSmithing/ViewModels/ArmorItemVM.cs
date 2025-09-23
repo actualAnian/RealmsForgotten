@@ -2,6 +2,7 @@ using System;
 using TaleWorlds.CampaignSystem.ViewModelCollection;
 using TaleWorlds.CampaignSystem.ViewModelCollection.WeaponCrafting.WeaponDesign;
 using TaleWorlds.Core;
+using TaleWorlds.Core.ViewModelCollection.ImageIdentifiers;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 
@@ -10,7 +11,7 @@ namespace RealmsForgotten.Smithing.ViewModels
     public class ArmorItemVM : ViewModel
     {
         private readonly ArmorCraftingVM _armorCrafting;
-        private ImageIdentifierVM _imageIdentifier;
+        private ItemImageIdentifierVM _imageIdentifier;
         private ItemObject _item;
 
         private ItemType _itemType;
@@ -26,7 +27,7 @@ namespace RealmsForgotten.Smithing.ViewModels
         public ArmorItemVM(ArmorCraftingVM armorCrafting, ItemObject item, int difficulty, ItemType type)
         {
             _armorCrafting = armorCrafting;
-            ImageIdentifier = new ImageIdentifierVM(item);
+            ImageIdentifier = new ItemImageIdentifierVM(item);
             Item = item;
             ItemType = type;
 
@@ -46,7 +47,7 @@ namespace RealmsForgotten.Smithing.ViewModels
         }
 
         [DataSourceProperty]
-        public ImageIdentifierVM ImageIdentifier
+        public ItemImageIdentifierVM ImageIdentifier
         {
             get => _imageIdentifier;
             set => SetField(ref _imageIdentifier, value, nameof(ImageIdentifier));

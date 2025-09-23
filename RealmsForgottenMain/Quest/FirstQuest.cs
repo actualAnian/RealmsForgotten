@@ -276,9 +276,9 @@ namespace RealmsForgotten.Quest
                 Clan clan = Clan.FindFirst(x => x.StringId == "clan_empire_north_7");
                 MobileParty mobileParty = LordPartyComponent.CreateLordParty("owl_party", TheOwl, MobileParty.MainParty.Position, 1f, QuestGiver.HomeSettlement, TheOwl);
                 mobileParty.MemberRoster.RemoveIf(x => x.Character.HeroObject?.StringId != TheOwl.StringId);
-                mobileParty.InitializeMobilePartyAroundPosition(clan.DefaultPartyTemplate, MobileParty.MainParty.Position2D, 1f, 0, 0);
+                mobileParty.InitializeMobilePartyAroundPosition(clan.DefaultPartyTemplate, MobileParty.MainParty.Position, 1f);
                 mobileParty.StringId = "owl_party";
-                mobileParty.Ai.SetMoveEngageParty(MobileParty.MainParty);
+                mobileParty.SetMoveEngageParty(MobileParty.MainParty, MobileParty.NavigationType.All);
                 mobileParty.IgnoreForHours(1);
             }
             private void DeliverPrisonersToQueen()
@@ -422,19 +422,19 @@ namespace RealmsForgotten.Quest
                 {
                     MobileParty owlparty = Hero.OneToOneConversationHero.PartyBelongedTo;
                     MergeDisbandParty(owlparty, MobileParty.MainParty.Party);
-                    owlparty.Ai.SetMoveGoToSettlement(QuestQueen.HomeSettlement);
-                    Vec2 pos = owlparty.Position2D;
-                    pos.x += 1;
-                    owlparty.Position2D = pos;
-                    owlparty.SetCustomName(new TextObject("{rf_messenger}Messenger"));
+                    owlparty.SetMoveGoToSettlement(QuestQueen.HomeSettlement, MobileParty.NavigationType.All, false);
+                    CampaignVec2 pos = owlparty.Position;
+                    pos.AddVec2(new(1,0));
+                    owlparty.Position = pos;
+                    owlparty.Party.SetCustomName(new TextObject("{rf_messenger}Messenger"));
                 }
                 else
                 {
-                    Vec2 position = Hero.OneToOneConversationHero.PartyBelongedTo.Position2D;
-                    position.x += 0.5f;
+                    CampaignVec2 position = Hero.OneToOneConversationHero.PartyBelongedTo.Position;
+                    position.AddVec2(new(0.5f, 0));
 
-                    Hero.OneToOneConversationHero.PartyBelongedTo.Ai.SetMoveGoToSettlement(QuestQueen.HomeSettlement);
-                    Hero.OneToOneConversationHero.PartyBelongedTo.Ai.RecalculateShortTermAi();
+                    Hero.OneToOneConversationHero.PartyBelongedTo.SetMoveGoToSettlement(QuestQueen.HomeSettlement, MobileParty.NavigationType.All, false);
+                    Hero.OneToOneConversationHero.PartyBelongedTo.RecalculateShortTermBehavior();
                 }
 
 

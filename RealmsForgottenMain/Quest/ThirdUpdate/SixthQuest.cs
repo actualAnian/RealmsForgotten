@@ -236,17 +236,17 @@ namespace RealmsForgotten.Quest.SecondUpdate
                     troopRoster.AddToCounts(troop, troopDetail.Quantity);
                     initialTroops[troop] = troopDetail.Quantity;
                 }
-                party.InitializeMobilePartyAroundPosition(troopRoster, TroopRoster.CreateDummyTroopRoster(), nearTown.Position2D, 50f, 10f);
-                party.SetCustomName(new TextObject($"Demon Lord {character.Name} Party"));
+                party.InitializeMobilePartyAroundPosition(troopRoster, TroopRoster.CreateDummyTroopRoster(), nearTown.Position, 50f, 10f);
+                party.Party.SetCustomName(new TextObject($"Demon Lord {character.Name} Party"));
                 party.Aggressiveness = 10f;
-                party.Ai.SetMovePatrolAroundPoint(nearTown.Position2D);
+                party.SetMovePatrolAroundPoint(nearTown.Position, MobileParty.NavigationType.All);
 
                 CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, () =>
                 {
                     if (party != null && party.IsActive)
                     {
                         //EngageNearbyEnemies(party);
-                        Settlement nearestSettlement = SettlementHelper.FindNearestSettlement(party.Position2D);
+                        Settlement nearestSettlement = SettlementHelper.FindNearestSettlement(party.GetPosition2D);
                         string nearestSettlementName = nearestSettlement != null ? nearestSettlement.Name.ToString() : "unknown settlement";
                         InformationManager.DisplayMessage(new InformationMessage($"You hear of an army from hell, laying ruin on the lands near the settlement of {nearestSettlementName}."));
                     }
@@ -267,7 +267,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
                 foreach (Settlement settlement in Settlement.All)
                 {
-                    float distance = settlement.Position2D.Distance(position);
+                    float distance = settlement.GetPosition2D.Distance(position);
                     if (distance < nearestDistance)
                     {
                         nearestDistance = distance;
@@ -284,13 +284,13 @@ namespace RealmsForgotten.Quest.SecondUpdate
             // Get nearby enemy parties and set them as targets
             List<MobileParty> nearbyEnemyParties = MobileParty.All
                 .Where(p => (p.IsLordParty || IsVillagerParty(p) || p.IsCaravan || p.IsBandit) && p.MapFaction.IsAtWarWith(party.MapFaction))
-                .OrderBy(p => p.Position2D.DistanceSquared(party.Position2D))
+                .OrderBy(p => p.Position.DistanceSquared(party.Position))
                 .ToList();
 
             if (nearbyEnemyParties.Count > 0)
             {
                 MobileParty target = nearbyEnemyParties.First();
-                party.Ai.SetMoveEngageParty(target);
+                party.SetMoveEngageParty(target, MobileParty.NavigationType.All);
             }
         }
 
@@ -454,7 +454,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
     public class SixthQuestBehaviour : CampaignBehaviorBase
     {
         private static GauntletLayer _gauntletLayer;
-        private static GauntletMovie _gauntletMovie;
+        private static GauntletMovieIdentifier _gauntletMovie;
         private static SixthQuestPopupVM _popupVM;
 
         public override void RegisterEvents()
@@ -481,7 +481,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 _popupVM.UpdatePopup(title, description, spriteName, continueAction, declineAction, buttonLabel);
             }
 
-            _gauntletMovie = (GauntletMovie)_gauntletLayer.LoadMovie("SixthQuestPopup", _popupVM);
+            _gauntletMovie = _gauntletLayer.LoadMovie("SixthQuestPopup", _popupVM);
             _gauntletLayer.InputRestrictions.SetInputRestrictions(true, InputUsageMask.All);
             ScreenManager.TopScreen.AddLayer(_gauntletLayer);
             _gauntletLayer.IsFocusLayer = true;

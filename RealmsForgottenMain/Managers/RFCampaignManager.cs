@@ -145,9 +145,9 @@ namespace RealmsForgotten.Managers
         }
 
         private void LaunchSandboxCharacterCreation()
-        {
-            CharacterCreationState gameState = Game.Current.GameStateManager.CreateState<CharacterCreationState>(new RFCharacterCreationContent());
-            Game.Current.GameStateManager.CleanAndPushState(gameState);
+        { //@TODO
+            //CharacterCreationState gameState = Game.Current.GameStateManager.CreateState<CharacterCreationState>(new RFCharacterCreationContent());
+            //Game.Current.GameStateManager.CleanAndPushState(gameState);
         }
 
         public override void OnAfterCampaignStart(Game game)

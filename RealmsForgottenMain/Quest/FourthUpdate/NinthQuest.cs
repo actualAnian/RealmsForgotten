@@ -289,7 +289,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
         {
             if (FirstTreeSettlement == null) return;
 
-            float distance = MobileParty.MainParty.Position2D.Distance(FirstTreeSettlement.GatePosition);
+            float distance = MobileParty.MainParty.Position.Distance(FirstTreeSettlement.GatePosition);
 
             if (distance > 50f) return; // only trigger when close
 
@@ -373,7 +373,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
                         if (mapEvent.PlayerSide == mapEvent.WinningSide)
                         {
                             Hero.MainHero.Clan.Renown += 250;
-                            GiveGoldAction.ApplyForQuestBetweenCharacters(null, Hero.MainHero, 50000);
+                            GiveGoldAction.ApplyBetweenCharacters(null, Hero.MainHero, 50000, false);
                             InformationManager.ShowInquiry(new InquiryData("A Threat Averted", "You have personally defeated the Deformed Horde and its champion, Ghor'Lag. Your heroic deed will be sung across the realms! You have been rewarded for your valor.", true, false, "Excellent!", null, null, null));
                         }
                     }
@@ -504,7 +504,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
         {
             if (!_convoySpawned && TriggerSettlement != null && _travelToUrkhaiLog?.CurrentProgress == 0)
             {
-                if (MobileParty.MainParty.Position2D.Distance(TriggerSettlement.GatePosition) <= 70f)
+                if (MobileParty.MainParty.Position.Distance(TriggerSettlement.GatePosition) <= 70f)
                 {
                     // ✅ CORREÇÃO: Completa o log anterior
                     _travelToUrkhaiLog.UpdateCurrentProgress(1);
@@ -651,7 +651,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 AddLog(new TextObject("With the Witch finally cast down, a fragile peace settles once more over Aeurth. Many were blind to the shadow she wove, yet you and the Owl carry the scars of a tale that few will ever truly grasp. The world itself has changed, for now it knows of the hidden powers that stir in the dark. And though their whispers may rise again, today their voices are silenced… and your victory will echo through the ages."));
                 CompleteQuestWithSuccess();
                 Hero.MainHero.Clan.Renown += 1500;
-                GiveGoldAction.ApplyForQuestBetweenCharacters(null, Hero.MainHero, 100000);
+                GiveGoldAction.ApplyBetweenCharacters(null, Hero.MainHero, 100000);
                 GainKingdomInfluenceAction.ApplyForDefault(Hero.MainHero, 500); 
 
                 
@@ -660,7 +660,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 {
                     foreach (Clan clan in battania.Clans)
                     {
-                        foreach (Hero lord in clan.Lords)
+                        foreach (Hero lord in clan.AliveLords)
                         {
                             if (lord != null && lord != Hero.MainHero && lord.IsAlive)
                             {
@@ -839,11 +839,11 @@ namespace RealmsForgotten.Quest.FourthUpdate
             prisonerRoster.AddToCounts(CharacterObject.Find("imperial_recruit"), 15);
             _orcConvoyParty = BanditPartyComponent.CreateBanditParty(ORC_CONVOY_PARTY_ID, urkhaiClan, null, true);
             if (_orcConvoyParty == null) { InformationManager.DisplayMessage(new InformationMessage("Error: Failed to create convoy party.", Colors.Red)); return; }
-            _orcConvoyParty.InitializeMobilePartyAroundPosition(convoyRoster, prisonerRoster, MobileParty.MainParty.Position2D, 10f, 5f);
+            _orcConvoyParty.InitializeMobilePartyAroundPosition(convoyRoster, prisonerRoster, MobileParty.MainParty.Position, 10f, 5f);
             _orcConvoyParty.ChangePartyLeader(convoyLeader);
-            _orcConvoyParty.SetCustomName(new TextObject("Convoy of {LEADER_NAME}").SetTextVariable("LEADER_NAME", convoyLeader.Name));
+            _orcConvoyParty.Party.SetCustomName(new TextObject("Convoy of {LEADER_NAME}").SetTextVariable("LEADER_NAME", convoyLeader.Name));
             Settlement destination = Settlement.Find("town_Urk2");
-            _orcConvoyParty.Ai.SetMoveGoToSettlement(destination);
+            _orcConvoyParty.SetMoveGoToSettlement(destination, MobileParty.NavigationType.All, false);
             _orcConvoyParty.Aggressiveness = 0.5f;
             _interceptConvoyLog = AddDiscreteLog(
       new TextObject("Intercept the Convoy"),
@@ -877,11 +877,11 @@ namespace RealmsForgotten.Quest.FourthUpdate
             hordeRoster.AddToCounts(CharacterObject.Find("deformed_villager_boss"), 5);
             hordeRoster.AddToCounts(CharacterObject.Find("deformed_villager_chief"), 20);
             hordeRoster.AddToCounts(CharacterObject.Find("deformed_villager_raider"), 50);
-            _deformedHordeParty.InitializeMobilePartyAroundPosition(hordeRoster, TroopRoster.CreateDummyTroopRoster(), spawnNear.Position2D, 100f, 20f);
+            _deformedHordeParty.InitializeMobilePartyAroundPosition(hordeRoster, TroopRoster.CreateDummyTroopRoster(), spawnNear.Position, 100f, 20f);
             _deformedHordeParty.ChangePartyLeader(_hordeLeaderHero);
-            _deformedHordeParty.SetCustomName(new TextObject("{=rf_horde_name}Deformed Horde of {LEADER_NAME}").SetTextVariable("LEADER_NAME", _hordeLeaderHero.Name));
+            _deformedHordeParty.Party.SetCustomName(new TextObject("{=rf_horde_name}Deformed Horde of {LEADER_NAME}").SetTextVariable("LEADER_NAME", _hordeLeaderHero.Name));
             _deformedHordeParty.Aggressiveness = 10f;
-            _deformedHordeParty.Ai.SetMovePatrolAroundSettlement(spawnNear);
+            _deformedHordeParty.SetMovePatrolAroundSettlement(spawnNear, MobileParty.NavigationType.All, false);
             TextObject logText = new TextObject("A massive Deformed Horde, led by Ghor'Lag the Unraveler, has appeared near {LOCATION}. It grows stronger with each victory. This threat must be eliminated.");
             logText.SetTextVariable("LOCATION", spawnNear.Name);
             _defeatHordeLog = AddLog(logText);

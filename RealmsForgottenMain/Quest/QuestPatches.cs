@@ -27,7 +27,7 @@ namespace RealmsForgotten.Quest
             SubModule.harmony.Patch(AccessTools.Method(typeof(EncounterGameMenuBehavior), "game_menu_encounter_order_attack_on_condition"), postfix: new HarmonyMethod(typeof(AvoidPlayerDontFightingPatch), nameof(AvoidPlayerDontFightingPatch.game_menu_encounter_order_attack_on_condition_postfix)));
             SubModule.harmony.Patch(AccessTools.Method(typeof(EncounterGameMenuBehavior), "game_menu_encounter_leave_your_soldiers_behind_on_condition"), postfix: new HarmonyMethod(typeof(AvoidPlayerDontFightingPatch), nameof(AvoidPlayerDontFightingPatch.game_menu_encounter_leave_your_soldiers_behind_on_condition_postfix)));
             SubModule.harmony.Patch(AccessTools.Method(typeof(EncounterGameMenuBehavior), "game_menu_encounter_surrender_on_condition"), postfix: new HarmonyMethod(typeof(AvoidPlayerDontFightingPatch), nameof(AvoidPlayerDontFightingPatch.game_menu_encounter_surrender_on_condition_postfix)));
-            SubModule.harmony.Patch(AccessTools.Method(typeof(BanditsCampaignBehavior), "bandit_start_barter_condition"), postfix: new HarmonyMethod(typeof(AvoidBarterPatch), nameof(AvoidBarterPatch.Postfix)));
+            //SubModule.harmony.Patch(AccessTools.Method(typeof(BanditsCampaignBehavior), "bandit_start_barter_condition"), postfix: new HarmonyMethod(typeof(AvoidBarterPatch), nameof(AvoidBarterPatch.Postfix))); @TODO
         }
 
         public static class AvoidPlayerDontFightingPatch
