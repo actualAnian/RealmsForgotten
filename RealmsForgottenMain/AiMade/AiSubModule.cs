@@ -25,6 +25,7 @@ using RealmsForgotten.AiMade.CustomOrderofBattle;
 using SandBox.Missions.MissionLogics;
 using RealmsForgotten.AiMade.Village_Inn_Quests;
 using RealmsForgotten.AiMade.Village_Inn_Quests.RealmsForgotten.AiMade.Village_Inn_Quests;
+using RealmsForgotten.AiMade.Infect;
 
 
 namespace RealmsForgotten.AiMade
@@ -153,7 +154,14 @@ namespace RealmsForgotten.AiMade
 
                 //mission.AddMissionBehavior(new ForceWinterMissionBehavior());
                 mission.AddMissionBehavior(new ADODFireArrowsMissionBehavior());
-                mission.AddMissionBehavior(new AttachWallSegmentDebugBehavior());
+                mission.AddMissionBehavior(new AttachWallSegmentDebugBehavior());              
+            }
+
+            if (mission.Mode == MissionMode.Battle
+       || mission.Mode == MissionMode.Stealth
+       || mission.Mode == MissionMode.Duel)
+            {
+                mission.AddMissionBehavior(new InfectionMissionBehavior());
             }
 
             // Add Reinforcements Runner if DeploymentMissionController is present

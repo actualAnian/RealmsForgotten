@@ -867,28 +867,77 @@ namespace RealmsForgotten.Quest.FourthUpdate
         private void SpawnDeformedHorde()
         {
             Clan deformedClan = Clan.FindFirst(c => c.StringId == "deformed_villagers");
-            if (deformedClan == null) { InformationManager.DisplayMessage(new InformationMessage("Error: Deformed clan not found.", Colors.Red)); return; }
-            Settlement spawnNear = Settlement.Find("town_S2");
-            if (spawnNear == null) { InformationManager.DisplayMessage(new InformationMessage("Error: Spawn location for horde not found.", Colors.Red)); return; }
-            _hordeLeaderHero = HeroCreator.CreateSpecialHero(CharacterObject.Find("deformed_villager_boss"), null, deformedClan, null, 35);
-            _hordeLeaderHero.SetName(new TextObject("Ghor'Lag the Unraveler"), new TextObject("The Blighted One"));
-            _deformedHordeParty = BanditPartyComponent.CreateBanditParty("deformed_horde_party", deformedClan, null, true);
-            TroopRoster hordeRoster = TroopRoster.CreateDummyTroopRoster();
-            hordeRoster.AddToCounts(CharacterObject.Find("deformed_villager_boss"), 5);
-            hordeRoster.AddToCounts(CharacterObject.Find("deformed_villager_chief"), 20);
-            hordeRoster.AddToCounts(CharacterObject.Find("deformed_villager_raider"), 50);
-            _deformedHordeParty.InitializeMobilePartyAroundPosition(hordeRoster, TroopRoster.CreateDummyTroopRoster(), spawnNear.Position2D, 100f, 20f);
-            _deformedHordeParty.ChangePartyLeader(_hordeLeaderHero);
-            _deformedHordeParty.SetCustomName(new TextObject("{=rf_horde_name}Deformed Horde of {LEADER_NAME}").SetTextVariable("LEADER_NAME", _hordeLeaderHero.Name));
-            _deformedHordeParty.Aggressiveness = 10f;
-            _deformedHordeParty.Ai.SetMovePatrolAroundSettlement(spawnNear);
-            TextObject logText = new TextObject("A massive Deformed Horde, led by Ghor'Lag the Unraveler, has appeared near {LOCATION}. It grows stronger with each victory. This threat must be eliminated.");
-            logText.SetTextVariable("LOCATION", spawnNear.Name);
-            _defeatHordeLog = AddLog(logText);
-            AddTrackedObject(_deformedHordeParty);
-            TextObject messageText = new TextObject("The Deformed Horde has spawned, menacing the lands around {LOCATION}!");
-            messageText.SetTextVariable("LOCATION", spawnNear.Name);
-            InformationManager.DisplayMessage(new InformationMessage(messageText.ToString(), Colors.Red));
+            if (deformedClan == null)
+            {
+                InformationManager.DisplayMessage(new InformationMessage("Error: Deformed clan not found.", Colors.Red));
+                return;
+            }
+
+            // culturas permitidas para spawn
+            string[] allowedCultures = { "battania", "empire", "khuzait", "wulf" };
+
+            // pega todas as vilas dessas culturas
+            var candidateVillages = Settlement.All
+                .Where(s => s.IsVillage
+                            && s.Culture != null
+                            && allowedCultures.Contains(s.Culture.StringId))
+                .ToList();
+
+            if (candidateVillages.Count < 4)
+            {
+                InformationManager.DisplayMessage(new InformationMessage("Error: Not enough candidate villages for 4 hordes.", Colors.Red));
+                return;
+            }
+
+            // escolhe 4 vilas aleatórias distintas
+            var spawnVillages = candidateVillages
+                .OrderBy(s => MBRandom.RandomFloat)
+                .Take(4)
+                .ToList();
+
+            for (int i = 0; i < spawnVillages.Count; i++)
+            {
+                Settlement spawnNear = spawnVillages[i];
+
+                Hero hordeLeader = HeroCreator.CreateSpecialHero(
+                    CharacterObject.Find("ghorlag_the_unraveler"),
+                    null, deformedClan, null, 35);
+
+                hordeLeader.SetName(
+                    new TextObject($"Ghor'Lag the Unraveler #{i + 1}"),
+                    new TextObject("The Blighted One"));
+
+                MobileParty hordeParty = BanditPartyComponent.CreateBanditParty($"deformed_horde_party_{i + 1}", deformedClan, null, true);
+
+                TroopRoster hordeRoster = TroopRoster.CreateDummyTroopRoster();
+                hordeRoster.AddToCounts(CharacterObject.Find("deformed_villager_boss"),35);
+                hordeRoster.AddToCounts(CharacterObject.Find("deformed_villager_chief"), 120);
+                hordeRoster.AddToCounts(CharacterObject.Find("deformed_villager_raider"), 250);
+
+                hordeParty.InitializeMobilePartyAroundPosition(
+                    hordeRoster,
+                    TroopRoster.CreateDummyTroopRoster(),
+                    spawnNear.Position2D,
+                    100f,
+                    20f);
+
+                hordeParty.ChangePartyLeader(hordeLeader);
+                hordeParty.SetCustomName(new TextObject("{=rf_horde_name}Deformed Horde of {LEADER_NAME}")
+                    .SetTextVariable("LEADER_NAME", hordeLeader.Name));
+                hordeParty.Aggressiveness = 10f;
+                hordeParty.Ai.SetMovePatrolAroundSettlement(spawnNear);
+
+                // log individual
+                TextObject logText = new TextObject("A Deformed Horde, led by {LEADER}, has appeared near {LOCATION}!");
+                logText.SetTextVariable("LEADER", hordeLeader.Name);
+                logText.SetTextVariable("LOCATION", spawnNear.Name);
+                AddLog(logText);
+                AddTrackedObject(hordeParty);
+
+                // mensagem global
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"The Deformed Horde #{i + 1} has spawned near {spawnNear.Name} ({spawnNear.Culture.Name}).", Colors.Red));
+            }
         }
 
         protected override void OnFinalize()

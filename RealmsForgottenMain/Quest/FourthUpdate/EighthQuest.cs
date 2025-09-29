@@ -119,6 +119,14 @@ namespace RealmsForgotten.Quest.FourthUpdate
             if (QuestHideoutSettlement != null) RemoveTrackedObject(QuestHideoutSettlement);
             if (MageSite != null) RemoveTrackedObject(MageSite);
             if (TheOwl != null) RemoveTrackedObject(TheOwl);
+            CampaignEvents.TickEvent.ClearListeners(this);
+            CampaignEvents.HourlyTickEvent.ClearListeners(this);
+            CampaignEvents.DailyTickEvent.ClearListeners(this);
+            CampaignEvents.OnSettlementLeftEvent.ClearListeners(this);
+            CampaignEvents.OnPlayerBattleEndEvent.ClearListeners(this);
+            CampaignEvents.OnMissionStartedEvent.ClearListeners(this);
+            CampaignEvents.OnMissionEndedEvent.ClearListeners(this);
+
         }
 
         public override TextObject Title => new TextObject("Eighth Quest: Call of the First Tree");

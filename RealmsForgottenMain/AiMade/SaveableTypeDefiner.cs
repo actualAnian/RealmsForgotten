@@ -4,6 +4,7 @@ using RealmsForgotten.AiMade.Adventurer;
 using RealmsForgotten.AiMade.AIQuest;
 using RealmsForgotten.AiMade.Career;
 using RealmsForgotten.AiMade.Encounters.Behaviors;
+using RealmsForgotten.AiMade.Infect;
 using RealmsForgotten.AiMade.Managers;
 using RealmsForgotten.AiMade.Managers.RealmsForgotten.AiMade.Managers;
 using RealmsForgotten.AiMade.MercenaryFaction;
@@ -134,6 +135,7 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(RuinsQuest), 91);
             AddClassDefinition(typeof(WerewolfVillageMenuBehavior), 92);
             AddClassDefinition(typeof(RuinsQuestBehavior), 93);
+            AddClassDefinition(typeof(InfectionMissionBehavior), 94);
         }
     }
 }

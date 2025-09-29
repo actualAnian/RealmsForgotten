@@ -16,7 +16,7 @@ namespace RealmsForgotten.Models
     internal class RFPrisonerRecruitmentCalculationModel : DefaultPrisonerRecruitmentCalculationModel
     {
         private PrisonerRecruitmentCalculationModel _previousModel;
-        
+        public static bool DebugMode = false;
         public RFPrisonerRecruitmentCalculationModel(PrisonerRecruitmentCalculationModel previousModel)
         {
             _previousModel = previousModel;
@@ -30,10 +30,12 @@ namespace RealmsForgotten.Models
         }
         public override int GetPrisonerRecruitmentMoraleEffect(PartyBase party, CharacterObject character, int num)
         {
-            // DEBUG: mostra sempre que esse método for chamado
-            InformationManager.DisplayMessage(
-                new InformationMessage("[DEBUG] CareerID = " + PlayerCareerExtension.PlayerCareerInfo?.CareerID)
-            );
+            if (DebugMode)
+            {
+                InformationManager.DisplayMessage(
+                    new InformationMessage("[DEBUG] CareerID = " + PlayerCareerExtension.PlayerCareerInfo?.CareerID)
+                );
+            }
 
             int baseNumber = _previousModel.GetPrisonerRecruitmentMoraleEffect(party, character, num);
 
@@ -49,9 +51,12 @@ namespace RealmsForgotten.Models
                 && PlayerCareerExtension.PlayerCareerInfo != null
                 && PlayerCareerExtension.PlayerCareerInfo.CareerID == "mercenary")
             {
-                InformationManager.DisplayMessage(
-                    new InformationMessage("[DEBUG] Mercenary detected → morale penalty removed")
-                );
+                if (DebugMode)
+                {
+                    InformationManager.DisplayMessage(
+                        new InformationMessage("[DEBUG] Mercenary detected → morale penalty removed")
+                    );
+                }
                 return 0;
             }
 
