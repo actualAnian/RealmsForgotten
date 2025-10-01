@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
-using HarmonyLib;
 using RealmsForgotten.Models;
 using RealmsForgotten.Utility;
-using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Issues;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
-using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.RFEffects
@@ -37,7 +30,7 @@ namespace RealmsForgotten.RFEffects
 
         private bool IsInBattle()
         {
-            return base.Mission.Mode == MissionMode.Battle || base.Mission.Mode == MissionMode.Duel || base.Mission.Mode == MissionMode.Stealth || base.Mission.Mode == MissionMode.Tournament;
+            return Mission.Mode == MissionMode.Battle || Mission.Mode == MissionMode.Duel || Mission.Mode == MissionMode.Stealth || Mission.Mode == MissionMode.Tournament;
         }
 
         public override void OnAgentDeleted(Agent agent)

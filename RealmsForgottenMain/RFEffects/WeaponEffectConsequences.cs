@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using RealmsForgotten.Utility;
 using System.Collections.Generic;
 using System.Linq;

@@ -17,7 +17,6 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\HuntableHerds\HuntableHerds.csproj" />
 	  <ProjectReference Include="..\RealmsForgottenMain\RealmsForgotten.csproj" />
-	  <ProjectReference Include="..\RFEffects\RFEffects.csproj" />
 	</ItemGroup>
 
 

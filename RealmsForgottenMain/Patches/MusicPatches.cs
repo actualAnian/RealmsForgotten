@@ -16,12 +16,7 @@ namespace RealmsForgotten.Patches
         {
             if (!NativeConfig.DisableSound)
             {
-                string path = ModuleHelper.GetModuleFullPath("realmsforgotten") + "music/soundtrack.xml";
-                //if (IsPlatformSteamWorkshop())
-                //{
-                //    path = fullPath + "music/soundtrack_steam.xml";
-                //}
-                PsaiCore.Instance.LoadSoundtrackFromProjectFile(new List<string>() { path });
+                PsaiCore.Instance.LoadSoundtrackFromProjectFile(new List<string>() { "realmsforgotten" });
             }
         }
     }

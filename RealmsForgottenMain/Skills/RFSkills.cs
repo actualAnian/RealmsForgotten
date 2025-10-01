@@ -30,8 +30,6 @@ namespace RealmsForgotten.CustomSkills
         public RFSkills()
         {
             Instance = this;
-
-
         }
     }
     public class RFSkillEffects

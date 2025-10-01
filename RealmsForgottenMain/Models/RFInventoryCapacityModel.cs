@@ -64,9 +64,9 @@ namespace RealmsForgotten.Models
         private readonly string specificItemId = "dwarf_backpack";
         private bool HasSpecificItemEquipped(Equipment equipment)
         {
-            foreach (EquipmentIndex index in System.Enum.GetValues(typeof(EquipmentIndex)))
+            for (EquipmentIndex equipmentIndex = EquipmentIndex.ArmorItemBeginSlot; equipmentIndex <= EquipmentIndex.ArmorItemEndSlot; equipmentIndex++)
             {
-                EquipmentElement equipmentElement = equipment[index];
+                EquipmentElement equipmentElement = equipment[equipmentIndex];
 
                 if (!equipmentElement.IsEmpty && equipmentElement.Item.StringId == specificItemId)
                     return true;

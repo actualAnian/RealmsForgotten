@@ -24,13 +24,11 @@ namespace RealmsForgotten.AiMade.Managers
             // Fields to sync across game sessions
             private int _totalBanditParties;
             private Dictionary<Clan, int> _banditClanPartyCounts;
-            private CampaignTime _lastDailyTick;
 
             public BanditPartyManager()
             {
                 _totalBanditParties = 0;
                 _banditClanPartyCounts = new Dictionary<Clan, int>();
-                _lastDailyTick = CampaignTime.Now;
             }
 
             public override void RegisterEvents()
@@ -47,13 +45,11 @@ namespace RealmsForgotten.AiMade.Managers
                 dataStore.SyncData("_banditClanPartyCounts", ref _banditClanPartyCounts);
 
                 // Sync the last time the daily tick occurred
-                dataStore.SyncData("_lastDailyTick", ref _lastDailyTick);
             }
 
             private void OnDailyTick()
             {
                 EnsureBanditParties();
-                _lastDailyTick = CampaignTime.Now;
             }
 
             public void EnsureBanditParties()

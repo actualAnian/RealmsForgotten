@@ -54,7 +54,7 @@ namespace RealmsForgotten.RFEffects
                 Skeleton skeleton = agent.AgentVisuals.GetSkeleton();
                 Scene scene = Mission.Current.Scene;
                 tempChildEntity = GameEntity.CreateEmpty(scene);
-                MatrixFrame localFrame = new MatrixFrame(Mat3.Identity, default(Vec3));
+                MatrixFrame localFrame = new MatrixFrame(Mat3.Identity, default);
                 localFrame.Elevate(elevationOffset);
                 if (ParticleSystemManager.GetRuntimeIdByName(particleId) == -1)
                 {

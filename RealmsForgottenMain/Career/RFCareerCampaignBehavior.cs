@@ -1,10 +1,6 @@
 ﻿using RealmsForgotten.Career.CareerPointsSystem;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Encounters;
-using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
@@ -44,7 +40,7 @@ namespace RealmsForgotten.Career
             CampaignEvents.RenownGained.AddNonSerializedListener(this, new Action<Hero, int, bool>(OnRenownGained));
             CampaignEvents.OnQuestCompletedEvent.AddNonSerializedListener(this, new Action<QuestBase, QuestBase.QuestCompleteDetails>(OnQuestompletedEvent));
             CampaignEvents.MapEventEnded.AddNonSerializedListener(this, new Action<MapEvent>(OnMapEventEnded));
-            CampaignEvents.MapEventEnded.AddNonSerializedListener(this, new Action<MapEvent>(OnMapEventEnded_AdjustRetreatCasualties)); // <— ensure this one is registered
+            CampaignEvents.MapEventEnded.AddNonSerializedListener(this, new Action<MapEvent>(OnMapEventEnded_AdjustRetreatCasualties));
             CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnMapEventEnded_WizardPostBattleHealing);
 
         }

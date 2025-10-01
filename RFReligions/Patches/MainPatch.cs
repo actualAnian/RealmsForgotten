@@ -50,8 +50,9 @@ internal class MainPatch
             return true;
         }
     }
+    //moved to ReplaceUIPatch
 
-    [HarmonyPatch(typeof(GauntletLayer), "LoadMovie")]
+    [HarmonyPatch(typeof(GauntletLayer), "LoadMovie", new Type[] { typeof(string), typeof(ViewModel) })]
     public static class LoadMoviePatch
     {
         public static void Prefix(ref string movieName, ref ViewModel dataSource)

@@ -20,7 +20,7 @@ namespace RealmsForgotten.Quest
 
         public static void PatchAll()
         {
-            SubModule.harmony.Patch(AccessTools.Method(typeof(Hero), "CanHaveQuestsOrIssues"), postfix: new HarmonyMethod(typeof(HeroPatches), nameof(HeroPatches.CanHaveQuestsOrIssuesPostfix)));
+            SubModule.harmony.Patch(AccessTools.Method(typeof(Hero), "CanHaveCampaignIssues"), postfix: new HarmonyMethod(typeof(HeroPatches), nameof(HeroPatches.CanHaveCampaignIssuesPostfix)));
             SubModule.harmony.Patch(AccessTools.Method(typeof(PrisonerReleaseCampaignBehavior), "DailyHeroTick"), prefix: new HarmonyMethod(typeof(PrisonerReleaseCampaignBehaviorPatches), nameof(PrisonerReleaseCampaignBehaviorPatches.Prefix)));
             SubModule.harmony.Patch(AccessTools.Method(typeof(DisbandArmyAction), "ApplyInternal"), prefix: new HarmonyMethod(typeof(AvoidArmyDispersePatch), nameof(AvoidArmyDispersePatch.Prefix)));
             SubModule.harmony.Patch(AccessTools.Method(typeof(PlayerArmyWaitBehavior), "wait_menu_army_leave_on_condition"), postfix: new HarmonyMethod(typeof(PlayerArmyWaitBehaviorPatches), nameof(PlayerArmyWaitBehaviorPatches.Postfix)));
@@ -70,7 +70,7 @@ namespace RealmsForgotten.Quest
         // Make this class public so it can be accessed in the PatchAll method
         public static class HeroPatches
         {
-            public static void CanHaveQuestsOrIssuesPostfix(ref bool __result, Hero __instance)
+            public static void CanHaveCampaignIssuesPostfix(ref bool __result, Hero __instance)
             {
                 var empireKingdom = Kingdom.All?.FirstOrDefault(x => x?.StringId == "empire");
 

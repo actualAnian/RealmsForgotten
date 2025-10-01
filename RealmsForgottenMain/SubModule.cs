@@ -1,37 +1,40 @@
 using HarmonyLib;
+using MCM.Abstractions.Attributes;
+using Newtonsoft.Json.Linq;
+using RealmsForgotten.AiMade;
+using RealmsForgotten.Behaviors;
+using RealmsForgotten.Career;
+using RealmsForgotten.Career.Ability;
+using RealmsForgotten.Career.Logic;
+using RealmsForgotten.CharacterCreation;
+using RealmsForgotten.CustomSkills;
+using RealmsForgotten.Managers;
+using RealmsForgotten.Models;
+using RealmsForgotten.Patches;
+using RealmsForgotten.Quest;
+using RealmsForgotten.RFCustomHorses;
+using RealmsForgotten.RFEffects;
+using RealmsForgotten.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Xml;
-using RealmsForgotten.Behaviors;
-using RealmsForgotten.CustomSkills;
-using RealmsForgotten.Models;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.CampaignBehaviors;
+using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
+using TaleWorlds.Engine.GauntletUI;
+using TaleWorlds.InputSystem;
+using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.ModuleManager;
 using TaleWorlds.MountAndBlade;
-using System.Reflection;
-using MCM.Abstractions.Attributes;
-using TaleWorlds.Engine.GauntletUI;
-using Module = TaleWorlds.MountAndBlade.Module;
-using Newtonsoft.Json.Linq;
-using RealmsForgotten.AiMade;
-using RealmsForgotten.Quest;
-using RealmsForgotten.Patches;
-using RealmsForgotten.RFCustomHorses;
-using TaleWorlds.InputSystem;
-using TaleWorlds.Library;
-using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.MountAndBlade.ComponentInterfaces;
-using RealmsForgotten.UI;
-using RealmsForgotten.Career;
-using RealmsForgotten.Career.Logic;
-using RealmsForgotten.Career.Ability;
-using RealmsForgotten.Managers;
+using Module = TaleWorlds.MountAndBlade.Module;
 
 namespace RealmsForgotten
 {
@@ -64,7 +67,6 @@ namespace RealmsForgotten
             "sturgia",
             "vlandia"
         };
-        
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
             if (gameStarterObject is CampaignGameStarter campaignGameStarter)
@@ -100,18 +102,18 @@ namespace RealmsForgotten
                 campaignGameStarter.AddModel(new RFPartySizeLimitModel(campaignGameStarter.GetExistingModel<PartySizeLimitModel>()));
                 campaignGameStarter.AddModel(new RFClanTierModel());
                 campaignGameStarter.AddModel(new RFStrikeMagnitudeModel());
+                campaignGameStarter.AddModel(new RFSettlementValueModel(campaignGameStarter.GetExistingModel<SettlementValueModel>()));
 
 
                 new RFAttributes().Initialize();
                 new RFSkills().Initialize();
                 new RFSkillEffects().InitializeAll();
                 new RFPerks().Initialize();
-                
-                AiSubModule.AddCampaignBehaviors(campaignGameStarter);
 
+                AiSubModule.AddCampaignBehaviors(campaignGameStarter);
                 QuestSubModule.AddQuestBehaviors((CampaignGameStarter)gameStarterObject);
 
-                ReadConfigFile();
+                ReadConfigFile(); //@TODO
             }
             if (CustomSettings.Instance != null)
                 CheckInvalidKeys();
@@ -160,7 +162,6 @@ namespace RealmsForgotten
             {
                 mission.AddMissionBehavior(new AbilityManagerMissionLogic());
                 mission.AddMissionBehavior(new AbilityHUDMissionView());
-
                 if ((mission.Mode == MissionMode.Battle || mission.Mode == MissionMode.StartUp) && mission.CombatType != Mission.MissionCombatType.ArenaCombat)
                 {
                     mission.AddMissionBehavior(new RFEnchantedWeaponsMissionBehavior());
@@ -169,9 +170,7 @@ namespace RealmsForgotten
                     mission.AddMissionBehavior(new DemonLordsAmbushLogic());
                     mission.AddMissionBehavior(new GandalfStaffMissionBehavior());
                 }
-
                 mission.AddMissionBehavior(new SpellAmmoMissionBehavior());
-
 
                 if (Campaign.Current != null)
                 {
@@ -180,19 +179,18 @@ namespace RealmsForgotten
                     if (!elixir.IsEmpty || !berserker.IsEmpty)
                         mission.AddMissionBehavior(new PotionsMissionBehavior(elixir, berserker));
                 }
-                
                 mission.AddMissionBehavior(new HealOnKillMissionBehavior());
-
-                mission.AddMissionBehavior(new HealOnKillMissionBehavior()); // Add this line
             }
             if (Game.Current.GameType is Campaign)
             {
                 mission.AddMissionBehavior(new CareerPerkMissionBehavior());
             }
+            mission.AddMissionBehavior(new MagicEffectsBehavior());
+            mission.AddMissionBehavior(new WeaponParticlesBehavior());
         }
         public override void BeginGameStart(Game game)
         {
-            if (game.GameType is Campaign)
+            if (game.GameType is Campaign campaign)
             {
                 game.ObjectManager.RegisterType<CareerObject>("Career", "Careers", 103U, true);
                 game.ObjectManager.RegisterType<CareerChoiceObject>("CareerChoice", "CareerChoices", 104U, true);
@@ -201,6 +199,11 @@ namespace RealmsForgotten
                 _ = new RFCareers();
                 _ = new RFCareerChoiceGroups();
                 _ = new RFCareerChoices();
+
+                //campaign start
+                CampaignGameStarter starter = campaign.SandBoxManager.GameStarter;
+                starter.RemoveBehaviors<CharacterCreationCampaignBehavior>();
+                starter.AddBehavior(new RFCharacterCreationCampaignBehavior());
             }
         }
 
@@ -255,6 +258,11 @@ namespace RealmsForgotten
                 () => MBGameManager.StartNewGame(new RFCampaignManager()),
                 () => (Module.CurrentModule.IsOnlyCoreContentEnabled, coreContentDisabledReason))
             );
+
+            foreach (var method in AccessTools.GetDeclaredMethods(typeof(WeaponEffectConsequences)).Where(x => x.IsPublic))
+            {
+                WeaponEffectConsequences.Methods.Add(method.Name, (VictimAgentConsequence)method.CreateDelegate(typeof(VictimAgentConsequence)));
+            }
         }
         public static Dictionary<string, int> undeadRespawnConfig { get; private set; }
         private void ReadConfigFile()

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RFEffectsLibrary>
+	<Effects>
+		<!-- id: id of the weapon | item_particle: name of the particle effect of the weapon |
+		victim_particle: name of the particle effect that the victim hit by the weapon will have
+		effect: mechanic effect of the weapon | duration: duration of the particle and the effect of the weapon | 
+		area_of_effect: area of effect of the effect-->
+		<WeaponEffect id="blowgun_bolt_d" item_particle="" victim_particle="poison_effect" effect="Fire" duration="10" area_of_effect=""/>
+		<WeaponEffect id="rfmisc_poisoned_javelin" item_particle="magic_sparks" victim_particle="poison_effect" effect="Fire" duration="5" area_of_effect=""/>
+		<WeaponEffect id="mage_western_spear_4_t3" item_particle="" victim_particle="blue_flames_body" effect="Fire" duration="5" area_of_effect=""/>
+		<WeaponEffect id="mage_pointed_falchion_sword_t4" item_particle="" victim_particle="purple_particle_explosion" effect="Fire" duration="5" area_of_effect=""/>
+		<WeaponEffect id="mage_northern_javelin_3_t4" item_particle="" victim_particle="harmonic_convergence" effect="PurpleSpark" duration="5" area_of_effect=""/>
+		<WeaponEffect id="mage_javelin_1_t2" item_particle="" victim_particle="psys_spellcasting_stance" effect="Fire" duration="5" area_of_effect=""/>
+		<WeaponEffect id="poisoned_knife" item_particle="" victim_particle="poison_effect" effect="Fire" duration="5" area_of_effect=""/>
+		<WeaponEffect id="rfmisc_mistic_polearm" item_particle="fire_sword" victim_particle="fire_ground" effect="Fire" duration="5" area_of_effect=""/>
+		<WeaponEffect id="rfmisc_spell_cosmic_ghost" item_particle="harmonic_convergence" victim_particle="white_particle_explosion" effect="Fire" duration="5" area_of_effect=""/>
+		<WeaponEffect id="rfmisc_spell_radiance_arrow" item_particle="harmonic_convergence" victim_particle="purple_particle_explosion" effect="Fire" duration="5" area_of_effect="3"/>
+		<WeaponEffect id="rfmisc_mage_mace" item_particle="magic_sparks" victim_particle="blue_flames_body" effect="Fire" duration="5" area_of_effect=""/>
+		<WeaponEffect id="rfmisc_eastern_javelin_3_t4" item_particle="fire_sword" victim_particle="fire_ground" effect="Fire" duration="5" area_of_effect=""/>
+		<WeaponEffect id="rfmisc_western_2hsword_t3_fire" item_particle="fire_sword" victim_particle="fire_ground" effect="Fire" duration="3" area_of_effect=""/>
+		<WeaponEffect id="rfmisc_western_2hsword_t4_fire" item_particle="fire_sword" victim_particle="fire_ground" effect="Fire" duration="3" area_of_effect=""/>
+		<WeaponEffect id="rfmisc_vlandia_2hsword_1_t5_fire" item_particle="fire_sword" victim_particle="fire_ground" effect="Fire" duration="3" area_of_effect=""/>
+		<WeaponEffect id="rfmisc_vlandia_2hsword_2_t5_fire" item_particle="fire_sword" victim_particle="fire_ground" effect="Fire" duration="3" area_of_effect=""/>
+		<WeaponEffect id="rfmisc_magic_arrows" item_particle="magic_arrow" victim_particle="blue_flames_body" effect="Fire" duration="10" area_of_effect=""/>
+		<WeaponEffect id="rfmisc_magic_northern_javelin_3_t4" item_particle="magic_arrow" victim_particle="blue_flames_body" effect="Fire" duration="5" area_of_effect=""/>
+		<WeaponEffect id="rfmisc_magic_arrows_b" item_particle="magic_arrow" victim_particle="spirit_flame" effect="Fire" duration="10" area_of_effect=""/>
+		<WeaponEffect id="rfmisc_spell_skull_terror" item_particle="skull_flame" victim_particle="blue_flames_body" effect="Terror" duration="10" area_of_effect="10"/>
+		<WeaponEffect id="rfmisc_spell_light_bolt" item_particle="magic_sparks" victim_particle="psys_energy_sphere" effect="Fire" duration="5" area_of_effect=""/>
+		<WeaponEffect id="rfmisc_spell_healing_force" item_particle="harmonic_convergence" victim_particle="healing_regeneration" effect="Heal" duration="1" area_of_effect="5"/>
+		<WeaponEffect id="rfmisc_spell_healing_field" item_particle="harmonic_convergence" victim_particle="healing_regeneration" effect="Heal" duration="2" area_of_effect="10"/>
+		<WeaponEffect id="rfmisc_spell_healing_force_area_big" item_particle="harmonic_convergence" victim_particle="healing_regeneration" effect="Heal" duration="3" area_of_effect="15"/>
+		<WeaponEffect id="rfmisc_spell_magic_force" item_particle="harmonic_convergence" victim_particle="white_particle_explosion" effect="Force" duration="10" area_of_effect="5"/>
+		<WeaponEffect id="rfmisc_spell_white_stone" item_particle="harmonic_convergence" victim_particle="white_particle_explosion" effect="Fire" duration="5" area_of_effect="2"/>
+		<WeaponEffect id="rfmisc_spell_radiance" item_particle="harmonic_convergence" victim_particle="white_particle_explosion" effect="Force" duration="5" area_of_effect="2"/>
+		<WeaponEffect id="rfmisc_flame_wall_fire" item_particle="fire_sword" victim_particle="fire_ground" effect="Fire" duration="10" area_of_effect="5"/>
+		<WeaponEffect id="rfmisc_spell_ground_fire" item_particle="fire_sword" victim_particle="fire_ground" effect="Fire" duration="10" area_of_effect="10"/>
+		<WeaponEffect id="rfmisc_fire_ball" item_particle="fire_weapon" victim_particle="fire_ground" effect="Fire" duration="5" area_of_effect=""/>
+		<WeaponEffect id="rfmisc_green_fire_ball" item_particle="magic_arrow" victim_particle="green_fire_ball" effect="Fire" duration="5" area_of_effect=""/>
+		<WeaponEffect id="rfmisc_green_arcane_force" item_particle="magic_arrow" victim_particle="green_fire_ball" effect="Fire" duration="5" area_of_effect="5"/>
+		<WeaponEffect id="rfmisc_spell_wind_breath" item_particle="harmonic_convergence" victim_particle="wind_effect" effect="Ice" duration="3" area_of_effect="2"/>
+		<WeaponEffect id="rfmisc_mistic_arcane_energy" item_particle="harmonic_convergence" victim_particle="mistic_force" effect="Fire" duration="5" area_of_effect=""/>
+		<WeaponEffect id="rfmisc_spell_arcane_shot_rfthrowing50" item_particle="harmonic_convergence" victim_particle="ice_arrow" effect="Fire" duration="5" area_of_effect=""/>
+		<WeaponEffect id="rfmisc_spell_arcane_energy" item_particle="harmonic_convergence" victim_particle="ice_arrow" effect="GreenSpark" duration="5" area_of_effect="2"/>
+		<WeaponEffect id="rfmisc_silver_bolt" item_particle="harmonic_convergence" victim_particle="harmonic_convergence" effect="Fire" duration="10" area_of_effect=""/>
+		<WeaponEffect id="rfmisc_flame_fire_rfthrowing50" item_particle="fire_weapon" victim_particle="fire_ground" effect="Fire" duration="5" area_of_effect=""/>
+		<WeaponEffect id="rfmisc_spell_blue_arcane" item_particle="psys_cannon_shot" victim_particle="psys_cannon_shot" effect="PurpleSpark" duration="5" area_of_effect=""/>
+		<WeaponEffect id="rfmisc_spell_blood_wave" item_particle="psys_cannon_shot" victim_particle="psys_cannon_shot" effect="PurpleSpark" duration="10" area_of_effect="5"/>
+		<WeaponEffect id="rfmisc_spell_earth_rocks" item_particle="undead_crumbling" victim_particle="undead_crumbling" effect="PurpleSpark" duration="5" area_of_effect="5"/>
+	    <WeaponEffect id="rfmisc_spell_dark_arcane_energy" item_particle="purple_convergence" victim_particle="purple_convergence" effect="PurpleSpark" duration="5" area_of_effect="2"/>
+		<WeaponEffect id="rfmisc_spell_ice_bolt_lv1" item_particle="harmonic_convergence" victim_particle="harmonic_convergence" effect="Ice" duration="5" area_of_effect=""/>
+		<WeaponEffect id="rfmisc_spell_ice_bolt_lv2" item_particle="harmonic_convergence" victim_particle="harmonic_convergence" effect="Ice" duration="8" area_of_effect=""/>
+		<WeaponEffect id="rfmisc_spell_ice_bolt_lv3" item_particle="harmonic_convergence" victim_particle="harmonic_convergence" effect="Ice" duration="10" area_of_effect=""/>
+		<WeaponEffect id="rfmisc_spell_ice_purge_lv1" item_particle="harmonic_convergence" victim_particle="harmonic_convergence" effect="Ice" duration="5" area_of_effect="5"/>
+		<WeaponEffect id="rfmisc_spell_ice_purge_lv2" item_particle="harmonic_convergence" victim_particle="harmonic_convergence" effect="Ice" duration="8" area_of_effect="10"/>
+		<WeaponEffect id="rfmisc_spell_ice_purge_lv3" item_particle="harmonic_convergence" victim_particle="harmonic_convergence" effect="Ice" duration="10" area_of_effect="15"/>
+		<WeaponEffect id="rfmisc_force_sphere" item_particle="comet_force" victim_particle="comet_force" effect="Force" duration="5" area_of_effect="5"/>
+		<WeaponEffect id="rfmisc_kinetic_force" item_particle="comet_force" victim_particle="comet_force" effect="Fire" duration="5" area_of_effect="5"/>
+	</Effects>
+</RFEffectsLibrary>

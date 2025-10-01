@@ -122,14 +122,14 @@ namespace RealmsForgotten.Patches
         }
     }
 
-    [HarmonyPatch(typeof(AiVisitSettlementBehavior), "ApproximateNumberOfVolunteersCanBeRecruitedFromSettlement")]
-    static class ApproximateNumberOfVolunteersCanBeRecruitedFromSettlementPatch
+    [HarmonyPatch(typeof(AiVisitSettlementBehavior), "GetApproximateVolunteersCanBeRecruitedDataFromSettlement")]
+    static class GetApproximateVolunteersCanBeRecruitedDataFromSettlementPatch
     {
         [HarmonyPostfix]
-        static void Postfix(Hero hero, Settlement settlement, ref int __result)
+        static void Postfix(Hero hero, Settlement settlement, ref ValueTuple<int, float> __result)
         {
             if (CustomSettings.Instance?.InfluenceCostForDifferentCultures == true && ((hero.Clan != null && !hero.Clan.IsClanTypeMercenary && !hero.Clan.IsMinorFaction && settlement.MapFaction.IsAtWarWith(hero.MapFaction)) || hero.Clan.Influence <= 0))
-                __result = 0;
+                __result = new(0, 0);
         }
     }
 }

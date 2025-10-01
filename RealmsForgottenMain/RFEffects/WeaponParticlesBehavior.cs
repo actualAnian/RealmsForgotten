@@ -5,21 +5,16 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime;
-using RealmsForgotten.RFEffects;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
-using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
-using TaleWorlds.ObjectSystem;
 
 namespace RealmsForgotten.RFEffects
 {
 
-    internal class WeaponParticlesBehavior : TaleWorlds.MountAndBlade.MissionLogic
+    internal class WeaponParticlesBehavior : MissionLogic
     {
         private static bool dropLock;
         public override void OnAgentHit(Agent affectedAgent, Agent affectorAgent, in MissionWeapon affectorWeapon, in Blow blow, in AttackCollisionData attackCollisionData)
@@ -67,7 +62,7 @@ namespace RealmsForgotten.RFEffects
                 if (particle != null)
                 {
                     missile.Entity.AddChild(childEntity);
-                    skeleton.AddComponentToBone((sbyte)0, particle);
+                    skeleton.AddComponentToBone(0, particle);
                 }
             }
         }
@@ -150,7 +145,7 @@ namespace RealmsForgotten.RFEffects
                         }
 
 
-                        int WeaponLength = (int)Math.Round((double)wieldedWeapon.GetWeaponStatsData()[0].WeaponLength / 10.0);
+                        int WeaponLength = (int)Math.Round(wieldedWeapon.GetWeaponStatsData()[0].WeaponLength / 10.0);
 
                         MBAgentVisuals agentVisuals = agent.AgentVisuals;
                         if (agentVisuals is null)

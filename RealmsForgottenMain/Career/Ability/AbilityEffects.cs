@@ -6,10 +6,9 @@ using System.Linq;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
-using RealmsForgotten.RFEffects;
-using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Engine;
+using RealmsForgotten.RFEffects;
 
 namespace RealmsForgotten.Career.Ability
 {

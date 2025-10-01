@@ -1,24 +1,18 @@
 ﻿using RealmsForgotten.AiMade.Encounters.Managers;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem;
-using RealmsForgotten.AiMade.Encounters.Interfaces;
-using RealmsForgotten.AiMade.Encounters.Scenario;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.MountAndBlade;
 using SandBox.Missions.MissionLogics;
-using SandBox.View.Missions;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade.Source.Missions;
 using TaleWorlds.MountAndBlade.View.MissionViews;
 using TaleWorlds.MountAndBlade.View;
 using TaleWorlds.CampaignSystem.Map;
+using SandBox.View.Missions;
 
 namespace RealmsForgotten.AiMade.Encounters.Behaviors
 {

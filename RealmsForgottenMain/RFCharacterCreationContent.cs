@@ -172,7 +172,7 @@
 //                string cultureId = cultureObject.StringId;
 
 //                FieldInfo _description = AccessTools.Field(typeof(PropertyObject), "_description");
-                
+
 //                _description.SetValue(DefaultCulturalFeats.BattanianMilitiaFeat, new TextObject("Towns owned by rulers with the current culture have +1 militia production."));
 //                _description.SetValue(DefaultCulturalFeats.KhuzaitAnimalProductionFeat, new TextObject("25% production bonus to horse, mule, cow and sheep in villages owned by All Khuur rulers."));
 
@@ -205,7 +205,7 @@
 //                        break;
 //                    case "aqarun":
 
-//                        if(cultureObject.CultureFeats.Contains(DefaultCulturalFeats.AseraiDesertFeat))
+//                        if (cultureObject.CultureFeats.Contains(DefaultCulturalFeats.AseraiDesertFeat))
 //                            cultureObject.CultureFeats.Remove(DefaultCulturalFeats.AseraiDesertFeat);
 //                        if (cultureObject.CultureFeats.Contains(DefaultCulturalFeats.AseraiTraderFeat))
 //                            cultureObject.CultureFeats.Remove(DefaultCulturalFeats.AseraiTraderFeat);
@@ -304,7 +304,7 @@
 //            giantsParentsCategory.AddCategoryOption(new("{=BCU6RezA}Smiths"), new() { DefaultSkills.Crafting, DefaultSkills.OneHanded }, DefaultCharacterAttributes.Endurance, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, XilatlacaySmithOnConsequence, base.BattaniaSmithOnApply, new("Your family were smiths, a revered profession among the Xilantlacay. They crafted everything from fine filigree jewelry in geometric designs to the well-balanced longswords favored by the Xilantlacay aristocracy."), null, 0, 0, 0, 0, 0);
 //            giantsParentsCategory.AddCategoryOption(new("{=7eWmU2mF}Foresters"), new() { DefaultSkills.Scouting, DefaultSkills.Tactics }, DefaultCharacterAttributes.Cunning, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, XilatlacayForesterOnConsequence, base.BattaniaWoodsmanOnApply, new("Your family had little land of their own, so they earned their living from the woods, hunting and trapping. They taught you from an early age that skills like finding game trails and killing an animal with one shot could make the difference between eating and starvation."), null, 0, 0, 0, 0, 0);
 //            giantsParentsCategory.AddCategoryOption(new("Sages"), new() { DefaultSkills.Roguery, DefaultSkills.Charm }, DefaultCharacterAttributes.Social, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, XilatlacaySageOnConsequence, base.BattaniaBardOnApply, new("Your Father was a Sage, a sacred duty for the Xilan Folk. Responsible to keep the history of their people alive, he went from halls to festivities, from rituals to war camps, to teach and inspire the people into the sacred ways. Your learned from him the cleverness of the tongue and the hability to tap into your people soul.\r\n"), null, 0, 0, 0, 0, 0);
-            
+
 //            // Aqarun
 //            CharacterCreationCategory aqarunParentsCategory = parentsMenu.AddMenuCategory(new(AqarunParentsOnCondition));
 //            aqarunParentsCategory.AddCategoryOption(new("Aqarun Champions"), new() { DefaultSkills.Riding, DefaultSkills.Throwing }, DefaultCharacterAttributes.Endurance, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, AqarunChampionsOnConsequence, base.AseraiTribesmanOnApply, new("Your parents were chosen between the champions of Aqarun warriors. Your father filled up the warking's private army and your mother a shieldmaiden at the warlord bodyguard. The champions were the only ones that could speak directly to the warkings. "), null, 0, 0, 0, 0, 0);
@@ -368,7 +368,7 @@
 //            wulfenParentsCategory.AddCategoryOption(new("Wulfen Clansfolk"), new() { DefaultSkills.Athletics, DefaultSkills.Throwing }, DefaultCharacterAttributes.Control, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, WulfTribesmanOnConsequence, base.BattaniaTribesmanOnApply, new("Your family were stalwart freemen, tending their own fields in the shadow of deep forests. Your father joined the clan’s main warband, loosing furious charges echoing with battle cries of old."), null, 0, 0, 0, 0, 0);
 //            wulfenParentsCategory.AddCategoryOption(new("Wulfen Smiths"), new() { DefaultSkills.Engineering, DefaultSkills.Athletics }, DefaultCharacterAttributes.Endurance, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, WulfSmithOnApply, base.EmpireFreeholderOnApply, new("Your kin were famed for forging stout iron blades and intricate jewelry. In smoky forges, they hammered steel into deadly axes and swords prized by chieftains across the land."), null, 0, 0, 0, 0, 0);
 //            wulfenParentsCategory.AddCategoryOption(new("Wulfen Foresters"), new() { DefaultSkills.Scouting, DefaultSkills.Tactics }, DefaultCharacterAttributes.Cunning, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, WulfWoodsmanOnConsequence, base.BattaniaWoodsmanOnApply, new("Your family survived off thick woodlands, hunting and trapping game among ancient oaks and firs. They taught you to move silently and live off the land—a skill that could save your life in enemy territory."), null, 0, 0, 0, 0, 0);
-//            wulfenParentsCategory.AddCategoryOption(new("Wulfen Skalds"),new() { DefaultSkills.Roguery, DefaultSkills.Charm }, DefaultCharacterAttributes.Social, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, WulfBardOnConsequence, base.BattaniaBardOnApply, new("Your father was a traveling skald, reciting heroic sagas and preserving clan lore. Through stirring verses at feasts and gatherings, you learned the power of the spoken word and the secrets of influencing men’s hearts."), null, 0, 0, 0, 0, 0);
+//            wulfenParentsCategory.AddCategoryOption(new("Wulfen Skalds"), new() { DefaultSkills.Roguery, DefaultSkills.Charm }, DefaultCharacterAttributes.Social, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, WulfBardOnConsequence, base.BattaniaBardOnApply, new("Your father was a traveling skald, reciting heroic sagas and preserving clan lore. Through stirring verses at feasts and gatherings, you learned the power of the spoken word and the secrets of influencing men’s hearts."), null, 0, 0, 0, 0, 0);
 
 //            characterCreation.AddNewMenu(parentsMenu);
 //        }
@@ -377,7 +377,7 @@
 //        {
 //            SetParentAndOccupationType(characterCreation, 1, OccupationTypes.Retainer);
 //        }
-        
+
 //        private void AqarunWariorSlaveOnConsequence(CharacterCreation characterCreation)
 //        {
 //            SetParentAndOccupationType(characterCreation, 2, OccupationTypes.Mercenary);
@@ -912,7 +912,7 @@
 //            }, DefaultCharacterAttributes.Cunning, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthCamperOnConsequence), new(base.YouthCamperOnApply), new("{=64rWqBLN}Arakhor, an Elvean term that translates loosely as - one who protects the forest -, were the Scounts sent to the borders of the Realm to watch over possible treats. Often you needed  trick your way into foreign armies and cities, cheating, entertaining, whatever disguise was at your disposal.", null), null, 0, 0, 0, 0, 0);
 
 //            // Aqarun
-            
+
 //            characterCreationCategory = characterCreationMenu.AddMenuCategory(new(AqarunParentsOnCondition));
 //            characterCreationCategory.AddCategoryOption(new("{=h2KnarLL}trained with the cavalry.", null), new()
 //            {
@@ -957,7 +957,7 @@
 //            {
 //                DefaultSkills.Riding,
 //                DefaultSkills.Polearm
-//            },  DefaultCharacterAttributes.Endurance, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthCavalryOnConsequence), new(base.YouthCavalryOnApply), new("{=7cHsIMLP}You could never have bought the equipment on your own but you were a good enough rider so that the local lord lent you a horse and equipment. You joined the armored cavalry, training with the lance.", null), null, 0, 0, 0, 0, 0);
+//            }, DefaultCharacterAttributes.Endurance, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthCavalryOnConsequence), new(base.YouthCavalryOnApply), new("{=7cHsIMLP}You could never have bought the equipment on your own but you were a good enough rider so that the local lord lent you a horse and equipment. You joined the armored cavalry, training with the lance.", null), null, 0, 0, 0, 0, 0);
 
 //            characterCreationCategory.AddCategoryOption(new("partrolled the cities.", null), new()
 //            {
@@ -975,7 +975,7 @@
 //            {
 //                DefaultSkills.Polearm,
 //                 DefaultSkills.OneHanded
-//            },  DefaultCharacterAttributes.Vigor, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, null, new(base.YouthInfantryOnApply), new("{=afH90aNs}Young Tribesmen armed with spear and shield, drawn from smallholding farmers, have always been the backbone of most armies of Athas.", null), null, 0, 0, 0, 0, 0);
+//            }, DefaultCharacterAttributes.Vigor, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, null, new(base.YouthInfantryOnApply), new("{=afH90aNs}Young Tribesmen armed with spear and shield, drawn from smallholding farmers, have always been the backbone of most armies of Athas.", null), null, 0, 0, 0, 0, 0);
 
 //            characterCreationCategory.AddCategoryOption(new("{=oMbOIPc9}joined the skirmishers.", null), new()
 //            {
@@ -1105,7 +1105,7 @@
 //                DefaultSkills.OneHanded
 //            }, DefaultCharacterAttributes.Cunning, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthCamperOnConsequence), new(base.YouthCamperOnApply), new("{=64rWqBLN}You avoided service with one of the main forces of your realm's armies, but followed instead in the train - the troops' wives, lovers and servants, and those who make their living by caring for, entertaining, or cheating the soldiery.", null), null, 0, 0, 0, 0, 0);
 //            characterCreation.AddNewMenu(characterCreationMenu);
-            
+
 //            // Urkhai
 
 //            characterCreationCategory = characterCreationMenu.AddMenuCategory(new(UrkhaiParentsOnCondition));
@@ -1177,8 +1177,8 @@
 //                DefaultSkills.Throwing
 //            }, DefaultCharacterAttributes.Cunning, FocusToAdd, SkillLevelToAdd, AttributeLevelToAdd, null, new(base.YouthCamperOnConsequence), new(base.YouthCamperOnApply), new("{=64rWqBLN}Raised in the shadow of the deepwood forts, the Dunharth Wardens patrol the ancient forest trails with bow and blade. Masters of terrain and ambush, they serve as the Wulfen’s eyes in the wild—unseen until the first arrow strikes.", null), null, 0, 0, 0, 0, 0);
 
-//                characterCreation.AddNewMenu(characterCreationMenu);
-//            }
+//            characterCreation.AddNewMenu(characterCreationMenu);
+//        }
 
 
 //        private void RFYouthOnInit(CharacterCreation characterCreation)
@@ -1373,7 +1373,7 @@
 //               DefaultSkills.Steward,
 //               DefaultSkills.Riding,
 //               DefaultSkills.Charm
-//            }, DefaultCharacterAttributes.Social, 1, 50, 1, null, new(VassalStartOnConsequence), new(DoNothingOnApply), new("{=CulturedStart22}A recognized ruler, you have a kingdom to rule." + "\n50 Skill Levels and 1 Focus Point to Leadership, Steward, Riding, and Charm" + "\n1 Attribute Point to Social" + "\n+700 renown" + $"\n{startingSkillMult[StartType.KingdomRuler]} " + "{=rf_skill_change}times starting skill level multiplier",null), null, 0, 900, 0, 0, 0);
+//            }, DefaultCharacterAttributes.Social, 1, 50, 1, null, new(VassalStartOnConsequence), new(DoNothingOnApply), new("{=CulturedStart22}A recognized ruler, you have a kingdom to rule." + "\n50 Skill Levels and 1 Focus Point to Leadership, Steward, Riding, and Charm" + "\n1 Attribute Point to Social" + "\n+700 renown" + $"\n{startingSkillMult[StartType.KingdomRuler]} " + "{=rf_skill_change}times starting skill level multiplier", null), null, 0, 900, 0, 0, 0);
 //            characterCreationCategory.AddCategoryOption(new("{=CulturedStart23}An ursurper of {CULTURE}", null), new MBList<SkillObject>
 //            {
 //                DefaultSkills.Leadership,
@@ -1476,16 +1476,16 @@
 //        {
 //            MBEquipmentRoster equipmentRoster;
 //            try
-//            { 
+//            {
 //                equipmentRoster = MBObjectManager.Instance.GetObject<MBEquipmentRoster>(CulturedStartAction.mainHeroStartingEquipment[startType][Hero.MainHero.Culture.StringId]);
 //                IEnumerable<Equipment> battleEquipments = equipmentRoster.GetBattleEquipments();
 //                IEnumerable<Equipment> civillianEquipments = equipmentRoster.GetCivilianEquipments();
-//                Equipment battleEquipment = CharacterObject.PlayerCharacter.IsFemale? getFemaleEquipment(battleEquipments) : getMaleEquipment(battleEquipments);
+//                Equipment battleEquipment = CharacterObject.PlayerCharacter.IsFemale ? getFemaleEquipment(battleEquipments) : getMaleEquipment(battleEquipments);
 //                Equipment civillianEquipment = CharacterObject.PlayerCharacter.IsFemale ? getFemaleEquipment(civillianEquipments) : getMaleEquipment(civillianEquipments);
 //                if (battleEquipment != null)
 //                {
 //                    var a = new List<int> { 1 };
-//                    characterCreation.ChangeCharactersEquipment(new List<Equipment>{ battleEquipment });
+//                    characterCreation.ChangeCharactersEquipment(new List<Equipment> { battleEquipment });
 //                    CharacterObject.PlayerCharacter.FirstBattleEquipment.FillFrom(battleEquipment);
 //                    ChangePlayerMount(characterCreation, Hero.MainHero);
 //                }
@@ -1586,7 +1586,7 @@
 //        {
 //            Manager.SetLocationOption(9);
 //        }
-        
+
 //        protected void UztlecotLocationOnConsequence(CharacterCreation characterCreation)
 //        {
 //            Manager.SetLocationOption(10);

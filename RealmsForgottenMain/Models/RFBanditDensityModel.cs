@@ -97,7 +97,7 @@ namespace RealmsForgotten.Models
             return MathF.Round(num);
         }
 
-        public override int GetMaxSupportedNumberOfLootersForClan(Clan clan) => GetMaxSupportedNumberOfLootersForClan(clan);
+        public override int GetMaxSupportedNumberOfLootersForClan(Clan clan) => _previousModel.GetMaxSupportedNumberOfLootersForClan(clan);
 
         public override int GetMinimumTroopCountForHideoutMission(MobileParty party) => _previousModel.GetMinimumTroopCountForHideoutMission(party);
 

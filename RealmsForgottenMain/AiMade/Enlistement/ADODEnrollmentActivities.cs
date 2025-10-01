@@ -1531,17 +1531,18 @@ namespace RealmsForgotten.AiMade.Enlistement
         public class ADODPostBattleDiplomaticEffectsPatch
         {
             [HarmonyPrefix]
-            private static bool AdjustPostBattleActions(ref PlayerEncounterState ____mapEventState, List<TroopRosterElement> ____freedHeroes, List<TroopRosterElement> ____capturedHeroes)
+            private static bool AdjustPostBattleActions(ref PlayerEncounterState ____mapEventState, List<TroopRosterElement> ____capturedAlreadyPrisonerHeroes, List<TroopRosterElement> ____capturedHeroes)
             {
                 var enrollmentBehavior = Campaign.Current?.GetCampaignBehavior<ADODEnrollmentCampaignBehavior>();
                 if (enrollmentBehavior != null && enrollmentBehavior.IsEnrolled())
                 {
-                    if (____capturedHeroes != null || ____freedHeroes != null)
+                    if (____capturedHeroes != null || ____capturedAlreadyPrisonerHeroes != null)
                     {
-                        foreach (var heroElement in (____capturedHeroes ?? new List<TroopRosterElement>()).Concat(____freedHeroes ?? new List<TroopRosterElement>()).ToList())
+                        foreach (var heroElement in (____capturedHeroes ?? new List<TroopRosterElement>()).Concat(____capturedAlreadyPrisonerHeroes ?? new List<TroopRosterElement>()).ToList())
                         {
                             if (heroElement.Character?.HeroObject != null)
                             {
+
                                 EndCaptivityAction.ApplyByReleasedAfterBattle(heroElement.Character.HeroObject);
                             }
                         }
