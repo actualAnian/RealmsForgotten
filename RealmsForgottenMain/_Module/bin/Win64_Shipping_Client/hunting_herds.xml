@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Herds>
+
+<Herd>
+    <notifMessage>Herd of Rats spotted</notifMessage>
+    <messageTitle>Herd Spotted</messageTitle>
+    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <spawnId>giant_rodent_baby</spawnId>
+    <totalAmountInHerd>3</totalAmountInHerd>
+    <isPassive>false</isPassive>
+    <startingHealth>40.0</startingHealth>
+    <maxSpeed>20.0</maxSpeed>
+    <hitboxRange>1.5</hitboxRange>
+    <damageToPlayer>10</damageToPlayer>
+    <sightRange>25.0</sightRange>
+    <fleeOnAttacked>false</fleeOnAttacked>
+    <ItemDrops>
+      <ItemDrop>
+        <itemId>fur</itemId>
+        <amount>1</amount>
+        <maxAmount>4</maxAmount>
+      </ItemDrop>
+      <ItemDrop>
+        <itemId>meat</itemId>
+        <amount>2</amount>
+      </ItemDrop>
+    </ItemDrops>
+    <SceneIds>
+      <sceneId>rat</sceneId>
+    </SceneIds>
+  </Herd>
+
+<Herd>
+    <notifMessage>Herd of Rats spotted</notifMessage>
+    <messageTitle>Herd Spotted</messageTitle>
+    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <spawnId>rat</spawnId>
+    <totalAmountInHerd>1</totalAmountInHerd>
+    <isPassive>false</isPassive>
+    <startingHealth>40.0</startingHealth>
+    <maxSpeed>15.0</maxSpeed>
+    <hitboxRange>2.1</hitboxRange>
+    <damageToPlayer>100</damageToPlayer>
+    <sightRange>25.0</sightRange>
+    <fleeOnAttacked>true</fleeOnAttacked>
+    <ItemDrops>
+      <ItemDrop>
+        <itemId>fur</itemId>
+        <amount>5</amount>
+        <maxAmount>4</maxAmount>
+      </ItemDrop>
+      <ItemDrop>
+        <itemId>meat</itemId>
+        <amount>5</amount>
+      </ItemDrop>
+    </ItemDrops>
+    <SceneIds>
+      <sceneId>rat</sceneId>
+    </SceneIds>
+  </Herd>
+
+<Herd>
+    <notifMessage>Herd of Cows spotted</notifMessage>
+    <messageTitle>Herd Spotted</messageTitle>
+    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <spawnId>cow</spawnId>
+    <totalAmountInHerd>20</totalAmountInHerd>
+    <isPassive>false</isPassive>
+    <startingHealth>65.0</startingHealth>
+    <maxSpeed>12.0</maxSpeed>
+    <hitboxRange>2.0</hitboxRange>
+    <damageToPlayer>20</damageToPlayer>
+    <sightRange>15.0</sightRange>
+    <fleeOnAttacked>true</fleeOnAttacked>
+    <ItemDrops>
+      <ItemDrop>
+        <itemId>fur</itemId>
+        <amount>5</amount>
+        <maxAmount>9</maxAmount>
+      </ItemDrop>
+      <ItemDrop>
+        <itemId>meat</itemId>
+        <amount>12</amount>
+        <maxAmount>20</maxAmount>
+      </ItemDrop>
+    </ItemDrops>
+      <SceneIds>
+      <sceneId>hunting_ground_e</sceneId>
+    </SceneIds>
+  </Herd>
+<Herd>
+    <notifMessage>Herd of Sheep spotted</notifMessage>
+    <messageTitle>Herd Spotted</messageTitle>
+    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <spawnId>sheep</spawnId>
+    <totalAmountInHerd>20</totalAmountInHerd>
+    <isPassive>false</isPassive>
+    <startingHealth>65.0</startingHealth>
+    <maxSpeed>12.0</maxSpeed>
+    <hitboxRange>2.0</hitboxRange>
+    <damageToPlayer>20</damageToPlayer>
+    <sightRange>15.0</sightRange>
+    <fleeOnAttacked>true</fleeOnAttacked>
+    <ItemDrops>
+      <ItemDrop>
+        <itemId>fur</itemId>
+        <amount>8</amount>
+        <maxAmount>12</maxAmount>
+      </ItemDrop>
+      <ItemDrop>
+        <itemId>meat</itemId>
+        <amount>2</amount>
+        <maxAmount>8</maxAmount>
+      </ItemDrop>
+    </ItemDrops>
+      <SceneIds>
+      <sceneId>hunting_ground_d</sceneId>
+    </SceneIds>
+  </Herd>
+<Herd>
+    <notifMessage>Herd of Cows spotted</notifMessage>
+    <messageTitle>Herd Spotted</messageTitle>
+    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <spawnId>cow</spawnId>
+    <totalAmountInHerd>20</totalAmountInHerd>
+    <isPassive>false</isPassive>
+    <startingHealth>65.0</startingHealth>
+    <maxSpeed>12.0</maxSpeed>
+    <hitboxRange>2.0</hitboxRange>
+    <damageToPlayer>20</damageToPlayer>
+    <sightRange>15.0</sightRange>
+    <fleeOnAttacked>true</fleeOnAttacked>
+    <ItemDrops>
+      <ItemDrop>
+        <itemId>fur</itemId>
+        <amount>5</amount>
+        <maxAmount>9</maxAmount>
+      </ItemDrop>
+      <ItemDrop>
+        <itemId>meat</itemId>
+        <amount>12</amount>
+        <maxAmount>20</maxAmount>
+      </ItemDrop>
+    </ItemDrops>
+      <SceneIds>
+      <sceneId>hunting_ground_c</sceneId>
+    </SceneIds>
+  </Herd>
+<Herd>
+    <notifMessage>Herd of Boars spotted</notifMessage>
+    <messageTitle>Herd Spotted</messageTitle>
+    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <spawnId>dugrast_boar</spawnId>
+    <totalAmountInHerd>20</totalAmountInHerd>
+    <isPassive>false</isPassive>
+    <startingHealth>65.0</startingHealth>
+    <maxSpeed>12.0</maxSpeed>
+    <hitboxRange>2.0</hitboxRange>
+    <damageToPlayer>20</damageToPlayer>
+    <sightRange>15.0</sightRange>
+    <fleeOnAttacked>true</fleeOnAttacked>
+    <ItemDrops>
+      <ItemDrop>
+        <itemId>fur</itemId>
+        <amount>2</amount>
+        <maxAmount>9</maxAmount>
+      </ItemDrop>
+      <ItemDrop>
+        <itemId>meat</itemId>
+        <amount>6</amount>
+        <maxAmount>8</maxAmount>
+      </ItemDrop>
+    </ItemDrops>
+      <SceneIds>
+      <sceneId>hunting_ground_b</sceneId>
+    </SceneIds>
+  </Herd>
+<Herd>
+    <notifMessage>Herd of Deers spotted</notifMessage>
+    <messageTitle>Herd Spotted</messageTitle>
+    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <spawnId>red_deer</spawnId>
+    <totalAmountInHerd>20</totalAmountInHerd>
+    <isPassive>false</isPassive>
+    <startingHealth>65.0</startingHealth>
+    <maxSpeed>15.0</maxSpeed>
+    <hitboxRange>3.0</hitboxRange>
+    <damageToPlayer>20</damageToPlayer>
+    <sightRange>20.0</sightRange>
+    <fleeOnAttacked>true</fleeOnAttacked>
+    <ItemDrops>
+      <ItemDrop>
+        <itemId>fur</itemId>
+        <amount>5</amount>
+        <maxAmount>9</maxAmount>
+      </ItemDrop>
+      <ItemDrop>
+        <itemId>meat</itemId>
+        <amount>5</amount>
+        <maxAmount>8</maxAmount>
+      </ItemDrop>
+    </ItemDrops>
+      <SceneIds>
+      <sceneId>hunting_ground_a</sceneId>
+    </SceneIds>
+  </Herd>
+<Herd>
+    <notifMessage>Herd of Hogs spotted</notifMessage>
+    <messageTitle>Herd Spotted</messageTitle>
+    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <spawnId>hog</spawnId>
+    <totalAmountInHerd>15</totalAmountInHerd>
+    <isPassive>false</isPassive>
+    <startingHealth>40.0</startingHealth>
+    <maxSpeed>10.0</maxSpeed>
+    <hitboxRange>2.1</hitboxRange>
+    <damageToPlayer>15</damageToPlayer>
+    <sightRange>15.0</sightRange>
+    <fleeOnAttacked>true</fleeOnAttacked>
+    <ItemDrops>
+      <ItemDrop>
+        <itemId>fur</itemId>
+        <amount>3</amount>
+        <maxAmount>9</maxAmount>
+      </ItemDrop>
+      <ItemDrop>
+        <itemId>meat</itemId>
+        <amount>3</amount>
+        <maxAmount>5</maxAmount>
+      </ItemDrop>
+    </ItemDrops>
+      <SceneIds>
+      <sceneId>cyclops_battle</sceneId>
+    </SceneIds>
+  </Herd>
+<Herd>
+    <notifMessage>Tracks of Wild Beast Spotted</notifMessage>
+    <messageTitle>You spotted tracks of a wild beast</messageTitle>
+    <message>You spotted tracks of a wild beast</message>
+    <spawnId>bison</spawnId>
+    <totalAmountInHerd>5</totalAmountInHerd>
+    <isPassive>false</isPassive>
+    <startingHealth>60.0</startingHealth>
+     <maxSpeed>20.0</maxSpeed>
+    <hitboxRange>1.2</hitboxRange>
+    <damageToPlayer>12</damageToPlayer>
+    <sightRange>30.0</sightRange>
+    <fleeOnAttacked>false</fleeOnAttacked>
+    <ItemDrops>
+      <ItemDrop>
+        <itemId>fur</itemId>
+        <amount>3</amount>
+        <maxAmount>5</maxAmount>
+      </ItemDrop>
+      <ItemDrop>
+        <itemId>meat</itemId>
+        <amount>5</amount>
+      </ItemDrop>
+    </ItemDrops>
+     <SceneIds>
+        <sceneId>tribal_island</sceneId>
+     </SceneIds>
+  </Herd>
+
+  <Herd>
+    <notifMessage>Herd of Deers spotted</notifMessage>
+    <messageTitle>Herd Spotted</messageTitle>
+    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <spawnId>ancient_deer</spawnId>
+    <totalAmountInHerd>2</totalAmountInHerd>
+    <isPassive>false</isPassive>
+    <startingHealth>65.0</startingHealth>
+    <maxSpeed>15.0</maxSpeed>
+    <hitboxRange>2.1</hitboxRange>
+    <damageToPlayer>20</damageToPlayer>
+    <sightRange>25.0</sightRange>
+    <fleeOnAttacked>true</fleeOnAttacked>
+    <ItemDrops>
+      <ItemDrop>
+        <itemId>fur</itemId>
+        <amount>9</amount>
+        <maxAmount>15</maxAmount>
+      </ItemDrop>
+      <ItemDrop>
+        <itemId>meat</itemId>
+        <amount>7</amount>
+        <maxAmount>12</maxAmount>
+      </ItemDrop>
+    </ItemDrops>
+      <SceneIds>
+      <sceneId>beast_hunt_1</sceneId>
+    </SceneIds>
+  </Herd>
+
+  <Herd>
+    <notifMessage>Herd of Deers spotted</notifMessage>
+    <messageTitle>Herd Spotted</messageTitle>
+    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <spawnId>red_deer</spawnId>
+    <totalAmountInHerd>12</totalAmountInHerd>
+    <isPassive>false</isPassive>
+    <startingHealth>40.0</startingHealth>
+    <maxSpeed>15.0</maxSpeed>
+    <hitboxRange>2.1</hitboxRange>
+    <damageToPlayer>100</damageToPlayer>
+    <sightRange>25.0</sightRange>
+    <fleeOnAttacked>true</fleeOnAttacked>
+    <ItemDrops>
+      <ItemDrop>
+        <itemId>fur</itemId>
+        <amount>5</amount>
+        <maxAmount>4</maxAmount>
+      </ItemDrop>
+      <ItemDrop>
+        <itemId>meat</itemId>
+        <amount>5</amount>
+      </ItemDrop>
+    </ItemDrops>
+    <SceneIds>
+      <sceneId>old_king_ruins</sceneId>
+    </SceneIds>
+  </Herd>
+  <Herd>
+    <notifMessage>Herd of mad cows spotted</notifMessage>
+    <messageTitle>Herd Spotted</messageTitle>
+    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <spawnId>cow</spawnId>
+    <totalAmountInHerd>100</totalAmountInHerd>
+    <isPassive>false</isPassive>
+    <startingHealth>40.0</startingHealth>
+    <maxSpeed>10.0</maxSpeed>
+    <hitboxRange>2.1</hitboxRange>
+    <damageToPlayer>15</damageToPlayer>
+    <sightRange>15.0</sightRange>
+    <fleeOnAttacked>true</fleeOnAttacked>
+    <ItemDrops>
+      <ItemDrop>
+        <itemId>fur</itemId>
+        <amount>3</amount>
+        <maxAmount>9</maxAmount>
+      </ItemDrop>
+      <ItemDrop>
+        <itemId>meat</itemId>
+        <amount>3</amount>
+        <maxAmount>5</maxAmount>
+      </ItemDrop>
+    </ItemDrops>
+  </Herd>
+  <Herd>
+    <notifMessage>Herd of chickens spotted</notifMessage>
+    <messageTitle>Herd Spotted</messageTitle>
+    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <spawnId>chicken</spawnId>
+    <totalAmountInHerd>100</totalAmountInHerd>
+    <isPassive>true</isPassive>
+    <startingHealth>5.0</startingHealth>
+    <maxSpeed>10.0</maxSpeed>
+    <hitboxRange>0.0</hitboxRange>
+    <damageToPlayer>0</damageToPlayer>
+    <sightRange>50.0</sightRange>
+    <fleeOnAttacked>true</fleeOnAttacked>
+    <ItemDrops>
+      <ItemDrop>
+        <itemId>meat</itemId>
+        <amount>1</amount>
+      </ItemDrop>
+    </ItemDrops>
+  </Herd>
+  <Herd>
+    <notifMessage>Herd of vengeful horses spotted</notifMessage>
+    <messageTitle>Herd Spotted</messageTitle>
+    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <spawnId>battania_horse_tournament</spawnId>
+    <totalAmountInHerd>1000</totalAmountInHerd>
+    <isPassive>false</isPassive>
+    <startingHealth>600.0</startingHealth>
+    <maxSpeed>40.0</maxSpeed>
+    <hitboxRange>2.25</hitboxRange>
+    <damageToPlayer>35</damageToPlayer>
+    <sightRange>100.0</sightRange>
+    <fleeOnAttacked>false</fleeOnAttacked>
+    <ItemDrops>
+      <ItemDrop>
+        <itemId>meat</itemId>
+        <amount>6</amount>
+        <maxAmount>58</maxAmount>
+      </ItemDrop>
+    </ItemDrops>
+  </Herd>
+  
+</Herds>
