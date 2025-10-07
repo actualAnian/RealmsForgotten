@@ -18,6 +18,7 @@ using System;
 
 namespace RFCustomSettlements.Patches
 {
+
 #pragma warning disable IDE0051 // Remove unused private members
     [HarmonyPatch(typeof(MissionMainAgentInteractionComponent), "FocusStateCheckTick")]
     public class FocusStateCheckTickPatch
@@ -160,13 +161,13 @@ namespace RFCustomSettlements.Patches
                     && codes[index + 3].opcode == OpCodes.Ldloc_S)
                     codes[index].labels.Add(startVanillaRecruitjumpLabel);
 
-
                 if (codes[index].opcode == OpCodes.Ldloc_S // checks if agent is used by RFCustomSettlements
                     && codes[index + 1].opcode == OpCodes.Brfalse_S
                     && codes[index + 2].opcode == OpCodes.Ldloc_S
                     && codes[index + 3].opcode == OpCodes.Callvirt
                     && codes[index + 4].opcode == OpCodes.Brfalse_S)
                     insertionAgentCheck = index;
+
                 if (codes[index].opcode == OpCodes.Ldloc_S // jump to if interactable agent
                     && codes[index + 1].opcode == OpCodes.Stloc_S
                     && codes[index + 2].opcode == OpCodes.Ldloc_S
@@ -195,7 +196,6 @@ namespace RFCustomSettlements.Patches
             codes.InsertRange(insertionAgentCheck, check_interactable_agent_instr_list);
             return codes.AsEnumerable();
         }
-
     }
 #pragma warning restore IDE0051 // Remove unused private members
 }

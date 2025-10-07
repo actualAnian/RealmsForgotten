@@ -67,7 +67,7 @@ namespace RealmsForgotten.Models
 
         public override float ApplyGeneralDamageModifiers(in AttackInformation attackInformation, in AttackCollisionData collisionData, float baseDamage)
         {
-            float baseNumber = _baseModel.CalculateDamage(attackInformation, collisionData, baseDamage);
+            float baseNumber = _baseModel.ApplyGeneralDamageModifiers(attackInformation, collisionData, baseDamage);
             MissionWeapon weapon = attackInformation.AttackerWeapon;
             CharacterObject captainCharacterObject =
                 attackInformation.AttackerAgent?.Formation?.Captain?.Character as CharacterObject;

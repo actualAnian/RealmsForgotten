@@ -98,7 +98,7 @@ namespace RealmsForgotten.Behaviors
         public override void OnMissionTick(float dt)
         {
             base.OnMissionTick(dt);
-            if (Input.IsKeyReleased(SubModule.Instance.KeysConfig[nameof(CustomSettings.ChangeSpellKey)]) && Agent.Main?.WieldedWeapon.Item?.Type == ItemObject.ItemTypeEnum.Musket)
+            if (Input.IsKeyReleased(SubModule.Instance.KeysConfig[nameof(RFSettings.Instance.ChangeSpellKey)]) && Agent.Main?.WieldedWeapon.Item?.Type == ItemObject.ItemTypeEnum.Musket)
             {
                 SetNextAmmoSlot();
             }

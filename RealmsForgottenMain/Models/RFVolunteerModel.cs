@@ -23,7 +23,7 @@ namespace RealmsForgotten.Models
         public override int MaximumIndexHeroCanRecruitFromHero(Hero buyerHero, Hero sellerHero, int useValueAsRelation = -101)
         {
             int baseValue = defaultModel.MaximumIndexHeroCanRecruitFromHero(buyerHero, sellerHero, useValueAsRelation);
-            if (CustomSettings.Instance?.InfluenceCostForDifferentCultures == true)
+            if (RFSettings.Instance?.InfluenceCostForDifferentCultures == true)
             {
                 IFaction buyerKingdom = buyerHero.MapFaction;
                 if (buyerKingdom == null || buyerHero.Clan != null && buyerHero.Clan.IsClanTypeMercenary && buyerHero.Clan.IsMinorFaction || sellerHero.HomeSettlement.Owner == buyerHero)

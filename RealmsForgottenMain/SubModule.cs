@@ -113,25 +113,25 @@ namespace RealmsForgotten
                 AiSubModule.AddCampaignBehaviors(campaignGameStarter);
                 QuestSubModule.AddQuestBehaviors((CampaignGameStarter)gameStarterObject);
 
-                ReadConfigFile(); //@TODO
+                ReadConfigFile();
             }
-            if (CustomSettings.Instance != null)
+            if (RFSettings.Instance != null)
                 CheckInvalidKeys();
         }
 
         private void CheckInvalidKeys()
         {
             string[] keys = Enum.GetNames(typeof(InputKey));
-            foreach (var property in AccessTools.GetDeclaredProperties(typeof(CustomSettings)))
+            foreach (var property in AccessTools.GetDeclaredProperties(typeof(ICustomSettingsProvider)))
                 if (Attribute.GetCustomAttribute(property, typeof(SettingPropertyGroupAttribute))
                     is SettingPropertyGroupAttribute keyAttribute && keyAttribute.GroupName.Contains("KeyMapping"))
                 {
-                    if (property.GetValue(CustomSettings.Instance) is string key)
+                    if (property.GetValue(RFSettings.Instance) is string key)
                     {
                         bool valid = false;
                         if (key.Length == 1 && keys.Contains(key.ToUpper()))
                         {
-                            property.SetValue(CustomSettings.Instance, key.ToUpper());
+                            property.SetValue(RFSettings.Instance, key.ToUpper());
                             key = key.ToUpper();
                             valid = true;
                         }
@@ -143,7 +143,7 @@ namespace RealmsForgotten
                             
                             InformationManager.ShowInquiry(new InquiryData("Error", $"Invalid key at {property.Name}, setting to default ({defaultKey.DefaultValue})", true,
                                 false, GameTexts.FindText("str_done").ToString(), "", null, null), true);
-                            property.SetValue(CustomSettings.Instance, defaultKey.DefaultValue);
+                            property.SetValue(RFSettings.Instance, defaultKey.DefaultValue);
                         }
 
                         if (valid)

@@ -149,14 +149,6 @@ namespace RFCustomSettlements
                 _isRemoved = true;
             }
         }
-        public void SetRouted()
-        {
-            if (!_isRemoved)
-            {
-                //               this._supplier.OnTroopRouted(this._descriptor);
-                _isRemoved = true;
-            }
-        }
         public void OnAgentRemoved(float agentHealth)
         {
             if (Troop.IsHero)
@@ -180,6 +172,15 @@ namespace RFCustomSettlements
         public TroopTraitsMask GetTraitsMask()
         {
             return AgentOriginUtilities.GetDefaultTraitsMask(this);
+        }
+
+        public void SetRouted(bool isOrderRetreat)
+        {
+            if (!_isRemoved)
+            {
+                //               this._supplier.OnTroopRouted(this._descriptor);
+                _isRemoved = true;
+            }
         }
 
         private bool _hasThrownWeapon;

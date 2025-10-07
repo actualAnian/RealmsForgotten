@@ -35,25 +35,42 @@ namespace RealmsForgotten
     }
     public interface ICustomSettingsProvider
     {
+        [SettingPropertyGroup("{=CustomSettings_General}General")]
         bool PunishingArenaDefeats { get; set; }
-        public bool SmartAthasEnslavers { get; set; }
-    }
 
+        [SettingPropertyGroup("{=CustomSettings_General}General")]
+        public bool SmartAthasEnslavers { get; set; }
+
+        [SettingPropertyGroup("{=CustomSettings_General}General")]
+        public bool InfluenceCostForDifferentCultures { get; set; }
+
+        [SettingPropertyGroup("{=CustomSettings_KeyMapping}Key Mapping")]
+        public string ChangeSpellKey { get; set; }
+        
+        [SettingPropertyGroup("{=CustomSettings_KeyMapping}Key Mapping")]
+        public string UseBerserkerKey { get; set; }
+        
+        [SettingPropertyGroup("{=CustomSettings_KeyMapping}Key Mapping")]
+        public string UseHealKey { get; set; }
+        
+        [SettingPropertyGroup("{=CustomSettings_KeyMapping}Key Mapping")]
+        public string UseAbilityKey { get; set; }
+    }
     public class HardcodedCustomSettings : ICustomSettingsProvider
     {
         public bool PunishingArenaDefeats { get; set; } = false;
         public bool SmartAthasEnslavers { get; set; } = false;
+        public bool InfluenceCostForDifferentCultures { get; set; } = true;
+        public string ChangeSpellKey { get; set; } = "V";
+        public string UseBerserkerKey { get; set; } = "Numpad8";
+        public string UseHealKey { get; set; } = "Numpad5";
+        public string UseAbilityKey { get; set; } = "Q";
     }
-
     public class CustomSettings : AttributeGlobalSettings<CustomSettings>, ICustomSettingsProvider
     {
         public override string Id { get; } = "Realms Forgotten Setings";
         public override string DisplayName => new TextObject("{=CustomSettings_Name}Realms Forgotten {VERSION}", new Dictionary<string, object>
-        {
-        { "VERSION", typeof(CustomSettings).Assembly.GetName().Version?.ToString(3) ?? "ERROR" }
-        }).ToString();
-        public override string FolderName { get; } = "Custom";
-        public override string FormatType { get; } = "json";
+        { { "VERSION", typeof(CustomSettings).Assembly.GetName().Version?.ToString(3) ?? "ERROR" } }).ToString();
 
         [SettingPropertyBool("Punishing arena defeats", RequireRestart = false, HintText = "Life in an arena is not an easy one, defeat means death!")]
         [SettingPropertyGroup("{=CustomSettings_General}General")]
