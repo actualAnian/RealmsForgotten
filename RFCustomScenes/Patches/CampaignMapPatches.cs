@@ -23,17 +23,17 @@ namespace RFCustomSettlements
             objectManager.RegisterType<RFCustomSettlement>("RFCustomSettlement", "Components", 100U, true, false);
         }
     }
-    [HarmonyPatch(typeof(MBObjectManager), "GetMergedXmlForManaged")]
-    public class SkipValidation { 
-        public static bool Prefix(string id, ref bool skipValidation)
-        {
-            if(id == "Settlements")
-            {
-                skipValidation = true;
-            }
-            return true;
-        }
-    }
+    //[HarmonyPatch(typeof(MBObjectManager), "GetMergedXmlForManaged")]
+    //public class SkipValidation { 
+    //    public static bool Prefix(string id, ref bool skipValidation)
+    //    {
+    //        if(id == "Settlements")
+    //        {
+    //            skipValidation = true;
+    //        }
+    //        return true;
+    //    }
+    //}
     [HarmonyPatch(typeof(DefaultEncounterGameMenuModel), "GetEncounterMenu")]
     public class RFEncounterMenu
     {

@@ -1,55 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using HarmonyLib;
 using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
-using TaleWorlds.GauntletUI;
 using TaleWorlds.InputSystem;
-using TaleWorlds.Library;
-using TaleWorlds.LinQuick;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.View.Screens;
-using static TaleWorlds.CampaignSystem.CampaignBehaviors.LordConversationsCampaignBehavior;
 
 namespace RealmsForgotten.Behaviors
 {
-    [HarmonyPatch(typeof(Agent), "OnWeaponAmmoReload")]
-    public static class OnWeaponAmmoReloadPatch
+    public static class RFSpellAmmo
     {
-        
-        public static void Prefix(EquipmentIndex slotIndex, ref EquipmentIndex ammoSlotIndex, ref short totalAmmo, Agent __instance)
+        public static void OnWeaponAmmoReloadPatch(EquipmentIndex slotIndex, ref EquipmentIndex ammoSlotIndex, ref short totalAmmo, Agent __instance)
         {
             if (__instance.IsMainAgent && __instance.Equipment[slotIndex].Item?.Type == ItemObject.ItemTypeEnum.Musket)
             {
                 SpellAmmoMissionBehavior.Instance?.SetUiVisible(true);
-                    if (__instance.Equipment[SpellAmmoMissionBehavior.CurrentAmmo].Amount >= 1)
+                if (__instance.Equipment[SpellAmmoMissionBehavior.CurrentAmmo].Amount >= 1)
+                {
+                    if (ammoSlotIndex != SpellAmmoMissionBehavior.CurrentAmmo)
                     {
-                        if (ammoSlotIndex != SpellAmmoMissionBehavior.CurrentAmmo)
-                        {
-
-                            __instance.SetWeaponAmountInSlot(SpellAmmoMissionBehavior.CurrentAmmo, (short)(__instance.Equipment[SpellAmmoMissionBehavior.CurrentAmmo].Amount - 1), true);
-                            __instance.SetWeaponAmountInSlot(ammoSlotIndex, (short)(__instance.Equipment[ammoSlotIndex].Amount + 1), true);
-
-
-                            totalAmmo = 0;
-
-                            ammoSlotIndex = SpellAmmoMissionBehavior.CurrentAmmo;
-                        }
+                        __instance.SetWeaponAmountInSlot(SpellAmmoMissionBehavior.CurrentAmmo, (short)(__instance.Equipment[SpellAmmoMissionBehavior.CurrentAmmo].Amount - 1), true);
+                        __instance.SetWeaponAmountInSlot(ammoSlotIndex, (short)(__instance.Equipment[ammoSlotIndex].Amount + 1), true);
+                        totalAmmo = 0;
+                        ammoSlotIndex = SpellAmmoMissionBehavior.CurrentAmmo;
                     }
-                    else
-                    {
-                        SpellAmmoMissionBehavior.CurrentAmmo = ammoSlotIndex;
-                        if (__instance.Equipment[ammoSlotIndex].Amount <= 0)
-                        {
-                            SpellAmmoMissionBehavior.Instance?.SetUiVisible(false);
-                        }
-                    }
-                    SpellAmmoMissionBehavior.Instance?.ChangeUiSpellName(__instance.Equipment[ammoSlotIndex]);
+                }
+                else
+                {
+                    SpellAmmoMissionBehavior.CurrentAmmo = ammoSlotIndex;
+                    if (__instance.Equipment[ammoSlotIndex].Amount <= 0)
+                        SpellAmmoMissionBehavior.Instance?.SetUiVisible(false);
+                }
+                SpellAmmoMissionBehavior.Instance?.ChangeUiSpellName(__instance.Equipment[ammoSlotIndex]);
             }
         }
     }

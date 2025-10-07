@@ -89,7 +89,6 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new BanditIncrease());
             campaignGameStarter.AddBehavior(new BanditPartyManager());
             campaignGameStarter.AddBehavior(new DocksMenuBehavior());
-            campaignGameStarter.AddBehavior(new KingsguardSaveDataBehavior());
             campaignGameStarter.AddBehavior(new RaceCraftingStaminaBehavior());
             //campaignGameStarter.AddBehavior(new ADODChamberlainsBehavior()); @TODO
             campaignGameStarter.AddBehavior(new SlaveBehavior());
@@ -99,7 +98,6 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new AggressiveDwarfUrkhaiBehavior());
             campaignGameStarter.AddBehavior(new MineBehavior());
             campaignGameStarter.AddBehavior(new SturgiaCultureChangerBehavior());
-            campaignGameStarter.AddBehavior(new RacialMixingBehavior());
             campaignGameStarter.AddBehavior(new AlignmentWarBehavior());
             campaignGameStarter.AddBehavior(new AlignmentMomentumBehavior());
             //campaignGameStarter.AddBehavior(new TickProfilerBehavior());

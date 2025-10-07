@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
-using RFCustomSettlements;
+using RealmsForgotten.Career;
+using RealmsForgotten.RFCustomSettlements;
 using RFCustomSettlements.Dialogues;
 using RFCustomSettlements.Patches;
 using RFCustomSettlements.Quests;
@@ -9,7 +10,7 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
-namespace RealmsForgotten.RFCustomSettlements
+namespace RFCustomSettlements
 {
     public class SubModule : MBSubModuleBase
     {
@@ -30,6 +31,10 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
+        }
+        public override void BeginGameStart(Game game)
+        {
+            game.ObjectManager.RegisterType<CareerChoiceObject>("Components", "RFCustomSettlement", 104U, true);
         }
         public override void OnAfterGameInitializationFinished(Game game, object obj)
         {
@@ -56,7 +61,7 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             var onFocusGained = AccessTools.Method("AgentInteractionInterfaceVM:OnFocusGained");
             var original = AccessTools.Method("MissionMainAgentInteractionComponent:FocusTick");
-            harmony.Patch(original, transpiler: new HarmonyMethod(typeof(MissionMainAgentInteractionComponentFocusTickPatch), nameof(MissionMainAgentInteractionComponentFocusTickPatch.FocusTickPatch)));
+            //harmony.Patch(original, transpiler: new HarmonyMethod(typeof(MissionMainAgentInteractionComponentFocusTickPatch), nameof(MissionMainAgentInteractionComponentFocusTickPatch.FocusTickPatch))); @TODO
             harmony.Patch(onFocusGained, transpiler: new HarmonyMethod(typeof(AgentInteractionInterfaceVMOnFocusGainedPatch), nameof(AgentInteractionInterfaceVMOnFocusGainedPatch.OnFocusGainedPatch)));
         }
 

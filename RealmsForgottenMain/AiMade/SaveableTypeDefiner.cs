@@ -38,7 +38,6 @@ namespace RealmsForgotten.AiMade
             ConstructContainerDefinition(typeof(Dictionary<string, TownSlaveData>));
             ConstructContainerDefinition(typeof(Dictionary<string, TownPrisonerData>));
             ConstructContainerDefinition(typeof(Dictionary<Settlement, CampaignTime>));
-            ConstructContainerDefinition(typeof(Dictionary<CharacterObject, CharacterRacialMix>));
             ConstructContainerDefinition(typeof(Dictionary<int, double>));
             ConstructContainerDefinition(typeof(HashSet<(string, string)>));
             ConstructContainerDefinition(typeof(Tuple<string, string>));
@@ -89,7 +88,6 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(DocksMenuBehavior), 46);
             //AddClassDefinition(typeof(CustomAIBase), 47); @TODO
             //AddClassDefinition(typeof(YourFactionAI), 48); @TODO
-            AddClassDefinition(typeof(KingsguardSaveDataBehavior), 53);
             AddClassDefinition(typeof(RaceCraftingStaminaBehavior), 54);
             //AddClassDefinition(typeof(ADODChamberlainsBehavior), 55); @TODO
             AddClassDefinition(typeof(SlaveBehavior), 56);
@@ -102,8 +100,6 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(MineBehavior), 63);
             AddClassDefinition(typeof(TownPrisonerData), 64);
             AddClassDefinition(typeof(SturgiaCultureChangerBehavior), 65);
-            AddClassDefinition(typeof(RacialMixingBehavior), 66);
-            AddClassDefinition(typeof(CharacterRacialMix), 67);
             AddClassDefinition(typeof(AlignmentWarBehavior), 68);
             AddClassDefinition(typeof(AlignmentMomentumBehavior), 69);
             //AddClassDefinition(typeof(TickProfilerBehavior), 70);

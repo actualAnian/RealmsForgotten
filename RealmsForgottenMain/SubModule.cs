@@ -226,6 +226,10 @@ namespace RealmsForgotten
 #pragma warning restore BHA0003 // Type was not found
             harmony.Patch(originalMethod, transpiler: new HarmonyMethod(typeof(PartyVMPatch), nameof(PartyVMPatch.PartyVMPopulatePartyListLabelPatch)));
             //          harmony.Patch(beardGetterMethod, transpiler: new HarmonyMethod(typeof(PartyVMPatch), nameof(PartyVMPatch.PartyVMPopulatePartyListLabelPatch)));
+
+            // run manually to remove broken bones when viewing characters
+            MethodInfo ammoMethod = AccessTools.Method("Agent:OnWeaponAmmoReload");
+            harmony.Patch(ammoMethod, prefix: new HarmonyMethod(typeof(RFSpellAmmo), nameof(RFSpellAmmo.OnWeaponAmmoReloadPatch)));
             QuestPatches.PatchAll();
 
         }

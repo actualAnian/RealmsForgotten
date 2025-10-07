@@ -94,7 +94,7 @@ namespace RealmsForgotten.CharacterCreation
             }
             Settlement? startingSettlement = startSettlement == RFCharacterCreationCampaignBehavior.IS_PLAYER_SETTLEMENT ? Clan.PlayerClan.Settlements.GetRandomElement() : Settlement.Find(startSettlement);
 
-            if (startSettlement == null)
+            if (startingSettlement == null)
                 InformationManager.DisplayMessage(new($"Error, settlement with id {startSettlement} not found."));
             else
             {

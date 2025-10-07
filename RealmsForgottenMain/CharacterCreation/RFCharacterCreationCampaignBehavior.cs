@@ -1,8 +1,10 @@
-﻿using RealmsForgotten.Career;
+﻿using HarmonyLib;
+using RealmsForgotten.Career;
 using RealmsForgotten.CustomSkills;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterCreationContent;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
@@ -118,11 +120,9 @@ namespace RealmsForgotten.CharacterCreation
         {
             if (stage is CharacterCreationCultureStage)
             {
-
                 BodyProperties.FromString(CharacterCreationConfig.GetBodyPropertiesFromCulture(Hero.MainHero.Culture.StringId), out BodyProperties properties);
                 CharacterObject.PlayerCharacter.UpdatePlayerCharacterBodyProperties(properties, CharacterObject.PlayerCharacter.Race, CharacterObject.PlayerCharacter.IsFemale);
                 MBTextManager.SetTextVariable("CULTURE", CharacterObject.PlayerCharacter.Culture.Name, false);
-
             }
             if (stage is CharacterCreationFaceGeneratorStage)
             {
@@ -165,6 +165,75 @@ namespace RealmsForgotten.CharacterCreation
             AddAgeSelectionMenu(characterCreationManager);
             AddRFSpecialStartMenu(characterCreationManager);
             AddCultureLocationMenu(characterCreationManager);
+
+
+            RFCulturalFeats culturalFeats = new();
+
+            foreach (CultureObject cultureObject in MBObjectManager.Instance.GetObjectTypeList<CultureObject>())
+            {
+                string cultureId = cultureObject.StringId;
+
+                FieldInfo _description = AccessTools.Field(typeof(PropertyObject), "_description");
+
+                _description.SetValue(DefaultCulturalFeats.BattanianMilitiaFeat, new TextObject("Towns owned by rulers with the current culture have +1 militia production."));
+                _description.SetValue(DefaultCulturalFeats.KhuzaitAnimalProductionFeat, new TextObject("25% production bonus to horse, mule, cow and sheep in villages owned by All Khuur rulers."));
+
+                switch (cultureId)
+                {
+                    case "vlandia":
+                        cultureObject.CultureFeats.Add(culturalFeats.nasoriaCheaperMercenaries);
+                        break;
+                    case "sturgia":
+                        cultureObject.CultureFeats.Add(culturalFeats.dreadrealmSoldiersRevive);
+                        break;
+                    case "battania":
+                        cultureObject.CultureFeats.Add(culturalFeats.elveanForestMorale);
+                        break;
+                    case "aserai":
+                        cultureObject.CultureFeats.Add(culturalFeats.athasFasterConstructions);
+                        break;
+                    case "empire":
+                        cultureObject.CultureFeats.Add(culturalFeats.empireAdittionalTier);
+                        break;
+                    case "khuzait":
+                        cultureObject.CultureFeats.Add(culturalFeats.allkhuurPrisonersJoinMilitia);
+                        break;
+                    case "giant":
+                        cultureObject.CultureFeats.Add(culturalFeats.xilantlacayRaidersBonus);
+                        if (cultureObject.CultureFeats.Contains(DefaultCulturalFeats.AseraiDesertFeat))
+                            cultureObject.CultureFeats.Remove(DefaultCulturalFeats.AseraiDesertFeat);
+                        if (cultureObject.CultureFeats.Contains(DefaultCulturalFeats.AseraiTraderFeat))
+                            cultureObject.CultureFeats.Remove(DefaultCulturalFeats.AseraiTraderFeat);
+                        break;
+                    case "aqarun":
+
+                        if (cultureObject.CultureFeats.Contains(DefaultCulturalFeats.AseraiDesertFeat))
+                            cultureObject.CultureFeats.Remove(DefaultCulturalFeats.AseraiDesertFeat);
+                        if (cultureObject.CultureFeats.Contains(DefaultCulturalFeats.AseraiTraderFeat))
+                            cultureObject.CultureFeats.Remove(DefaultCulturalFeats.AseraiTraderFeat);
+
+                        cultureObject.CultureFeats.Add(culturalFeats.aqarunRecruitBandits);
+                        break;
+                    case "south_realm":
+                        cultureObject.CultureFeats.Add(culturalFeats.empireAdittionalTier);
+                        break;
+                    case "west_realm":
+                        cultureObject.CultureFeats.Add(culturalFeats.empireAdittionalTier);
+                        break;
+                    case "mage":
+                        cultureObject.CultureFeats.Add(culturalFeats.empireAdittionalTier);
+                        break;
+                    case "dwarf":
+                        cultureObject.CultureFeats.Add(culturalFeats.athasFasterConstructions);
+                        break;
+                    case "urkhai":
+                        cultureObject.CultureFeats.Add(culturalFeats.xilantlacayRaidersBonus);
+                        break;
+                    case "wulf":
+                        cultureObject.CultureFeats.Add(culturalFeats.allkhuurPrisonersJoinMilitia);
+                        break;
+                }
+            }
         }
         public static readonly string IS_PLAYER_SETTLEMENT = "IS_PLAYER_SETTLEMENT";
         public void AddCultureLocationMenu(CharacterCreationManager characterCreationManager)
@@ -439,204 +508,125 @@ namespace RealmsForgotten.CharacterCreation
             AddAseraiParentNarrativeMenuOptions(narrativeMenu);
             AddBattaniaNarrativeMenuOptions(narrativeMenu);
             AddKhuzaitNarrativeMenuOptions(narrativeMenu);
+            AddXilanNarrativeMenuOptions(narrativeMenu);
+            AddAquarunNarrativeMenuOptions(narrativeMenu);
+            AddMageNarrativeMenuOptions(narrativeMenu);
+            AddDwarfNarrativeMenuOptions(narrativeMenu);
+            AddUrkhaiParentNarrativeMenuOptions(narrativeMenu);
+            AddWulfenNarrativeMenuOptions(narrativeMenu);
             characterCreationManager.AddNewMenu(narrativeMenu);
         }
 
         private void AddEmpireParentNarrativeMenuOptions(NarrativeMenu narrativeMenu)
         {
-            NarrativeMenuOption narrativeMenuOption = new NarrativeMenuOption("empire_lanlord_option", new TextObject("{=InN5ZZt3}A landlord's retainers", null), new TextObject("{=ivKl4mV2}Your father was a trusted lieutenant of the local landowning aristocrat. He rode with the lord's cavalry, fighting as an armored lancer.", null), new GetNarrativeMenuOptionArgsDelegate(GetEmpireLandlordNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(EmpireLandlordNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(EmpireLandlordNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption);
-            NarrativeMenuOption narrativeMenuOption2 = new NarrativeMenuOption("empire_merchant_option", new TextObject("{=651FhzdR}Urban merchants", null), new TextObject("{=FQntPChs}Your family were merchants in one of the main cities of the Empire. They sometimes organized caravans to nearby towns, and discussed issues in the town council.", null), new GetNarrativeMenuOptionArgsDelegate(GetEmpireUrbanNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(EmpireUrbanNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(EmpireUrbanNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption2);
-            NarrativeMenuOption narrativeMenuOption3 = new NarrativeMenuOption("empire_farmer_option", new TextObject("{=sb4gg8Ak}Freeholders", null), new TextObject("{=09z8Q08f}Your family were small farmers with just enough land to feed themselves and make a small profit. People like them were the pillars of the imperial rural economy, as well as the backbone of the levy.", null), new GetNarrativeMenuOptionArgsDelegate(GetEmpireFarmerNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(EmpireFarmerNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(EmpireFarmerNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption3);
-            NarrativeMenuOption narrativeMenuOption4 = new NarrativeMenuOption("empire_artisan_option", new TextObject("{=v48N6h1t}Urban artisans", null), new TextObject("{=ueCm5y1C}Your family owned their own workshop in a city, making goods from raw materials brought in from the countryside. Your father played an active if minor role in the town council, and also served in the militia.", null), new GetNarrativeMenuOptionArgsDelegate(GetEmpireArtisanNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(EmpireArtisanNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(EmpireArtisanNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption4);
-            NarrativeMenuOption narrativeMenuOption5 = new NarrativeMenuOption("empire_hunter_option", new TextObject("{=7eWmU2mF}Foresters", null), new TextObject("{=yRFSzSDZ}Your family lived in a village, but did not own their own land. Instead, your father supplemented paid jobs with long trips in the woods, hunting and trapping, always keeping a wary eye for the lord's game wardens.", null), new GetNarrativeMenuOptionArgsDelegate(GetEmpireHunterNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(EmpireHunterNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(EmpireHunterNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption5);
-            NarrativeMenuOption narrativeMenuOption6 = new NarrativeMenuOption("empire_vagabond_option", new TextObject("{=aEke8dSb}Urban vagabonds", null), new TextObject("{=Jvf6K7TZ}Your family numbered among the many poor migrants living in the slums that grow up outside the walls of imperial cities, making whatever money they could from a variety of odd jobs. Sometimes they did service for one of the Empire's many criminal gangs, and you had an early look at the dark side of life.", null), new GetNarrativeMenuOptionArgsDelegate(GetEmpireVagabondNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(EmpireVagabondNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(EmpireVagabondNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption6);
+            NarrativeMenuOption directDescendantsOption = new(
+                "human_direct_descendants",
+                new TextObject("Direct Descendants of the first people."),
+                new TextObject("{=ivKl4mV2}Descending from the ruler´s bloodline of the First People - the ancestors that made the pilgrimage to Aeurth - your father was a leader among his village and the cousin of the King of his Realm. He rode with the lord´s cavalry, fighting as an armored lancer."),
+                new GetNarrativeMenuOptionArgsDelegate(GetHumanDirectDescendantsNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(HumanNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(RetainerNarrativeOptionOnSelect),
+                null);
+            narrativeMenu.AddNarrativeMenuOption(directDescendantsOption);
+            NarrativeMenuOption humanMerchantsOption = new(
+                "human_merchants",
+                new TextObject("{=651FhzdR}Urban merchants"),
+                new TextObject("{=FQntPChs}Your family were merchants in one of the main cities of the Kingdoms of Man. They sometimes organized caravans to nearby towns, and discussed issues in the town council."),
+                new GetNarrativeMenuOptionArgsDelegate(GetHumanMerchantNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(HumanNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(MerchantNarrativeOptionOnSelect),
+                null);
+            narrativeMenu.AddNarrativeMenuOption(humanMerchantsOption);
+            NarrativeMenuOption humanFarmersOption = new(
+                "human_farmers",
+                new TextObject("Free Farmers"),
+                new TextObject("{=09z8Q08f}Your family were small farmers with just enough land to feed themselves and make a small profit. People like them were the pillars of the realm rural economy, as well as the backbone of the levy."),
+                new GetNarrativeMenuOptionArgsDelegate(GetHumanFarmerNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(HumanNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(FarmerNarrativeOptionOnSelect),
+                null);
+            narrativeMenu.AddNarrativeMenuOption(humanFarmersOption);
+            NarrativeMenuOption humanArtisansOption = new(
+                "human_artisans",
+                new TextObject("{=v48N6h1t}Urban artisans"),
+                new TextObject("{=ZKynvffv}Your family owned their own workshop in a city, making goods from raw materials brought in from the countryside. Your father played an active if minor role in the town council, and also served in the militia."),
+                new GetNarrativeMenuOptionArgsDelegate(GetHumanArtisanNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(HumanNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(ArtisanNarrativeOptionOnSelect),
+                null);
+            narrativeMenu.AddNarrativeMenuOption(humanArtisansOption);
+            NarrativeMenuOption humanForestCaretakersOption = new(
+                "human_forestcaretakers",
+                new TextObject("Forestcaretakers"),
+                new TextObject("Your family lived in a village, but did not own their own land. Instead, your father supplemented paid jobs with long trips in the woods, hunting and trapping, always keeping a wary eye for the lord's game wardens."),
+                new GetNarrativeMenuOptionArgsDelegate(GetHumanForestCaretakersNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(HumanNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(HunterNarrativeOptionOnSelect),
+                null);
+            narrativeMenu.AddNarrativeMenuOption(humanForestCaretakersOption);
+            NarrativeMenuOption humanVagabondsOption = new(
+                "human_vagabonds",
+                new TextObject("{=aEke8dSb}Urban vagabonds"),
+                new TextObject("{=Jvf6K7TZ}Your family numbered among the many poor migrants living in the slums that grow up outside the walls of cities, making whatever money they could from a variety of odd jobs. Sometimes they did service for one of the many criminal gangs, and you had an early look at the dark side of life."),
+                new GetNarrativeMenuOptionArgsDelegate(GetHumanVagabondsNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(HumanNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(VagabondNarrativeOptionOnSelect),
+                null);
+            narrativeMenu.AddNarrativeMenuOption(humanVagabondsOption);
         }
 
-        private void GetEmpireLandlordNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        private bool HumanNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
         {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Riding,
-                DefaultSkills.Polearm
-            };
-            args.SetAffectedSkills(affectedSkills);
+            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "empire";
+        }
+
+        private void GetHumanDirectDescendantsNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Riding, DefaultSkills.Polearm });
             args.SetFocusToSkills(_focusToAdd);
             args.SetLevelToSkills(_skillLevelToAdd);
             args.SetLevelToAttribute(DefaultCharacterAttributes.Vigor, _attributeLevelToAdd);
         }
 
-        private bool EmpireLandlordNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
+        private void GetHumanMerchantNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "empire";
-        }
-
-        private void EmpireLandlordNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("retainer");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_side_to_side_1";
-            string fatherAnimation = "act_character_creation_male_default_side_to_side_1";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
-        private void GetEmpireUrbanNarrativeOptionArgs(NarrativeMenuOptionArgs args)
-        {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Trade,
-                DefaultSkills.Charm
-            };
-            args.SetAffectedSkills(affectedSkills);
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Trade, DefaultSkills.Charm });
             args.SetFocusToSkills(_focusToAdd);
             args.SetLevelToSkills(_skillLevelToAdd);
             args.SetLevelToAttribute(DefaultCharacterAttributes.Social, _attributeLevelToAdd);
         }
 
-        private bool EmpireUrbanNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
+        private void GetHumanFarmerNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "empire";
-        }
-        private void EmpireUrbanNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("merchant_urban");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_mother_front";
-            string fatherAnimation = "act_character_creation_male_default_mother_front";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
-        private void GetEmpireFarmerNarrativeOptionArgs(NarrativeMenuOptionArgs args)
-        {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Athletics,
-                DefaultSkills.Polearm
-            };
-            args.SetAffectedSkills(affectedSkills);
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Athletics, DefaultSkills.Polearm });
             args.SetFocusToSkills(_focusToAdd);
             args.SetLevelToSkills(_skillLevelToAdd);
             args.SetLevelToAttribute(DefaultCharacterAttributes.Endurance, _attributeLevelToAdd);
         }
 
-        private bool EmpireFarmerNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
+        private void GetHumanArtisanNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "empire";
-        }
-
-        private void EmpireFarmerNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("farmer");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_father_sitting";
-            string fatherAnimation = "act_character_creation_male_default_father_sitting";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
-        private void GetEmpireArtisanNarrativeOptionArgs(NarrativeMenuOptionArgs args)
-        {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Crafting,
-                DefaultSkills.Crossbow
-            };
-            args.SetAffectedSkills(affectedSkills);
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Crafting, DefaultSkills.Crossbow });
             args.SetFocusToSkills(_focusToAdd);
             args.SetLevelToSkills(_skillLevelToAdd);
             args.SetLevelToAttribute(DefaultCharacterAttributes.Intelligence, _attributeLevelToAdd);
         }
 
-        private bool EmpireArtisanNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
+        private void GetHumanForestCaretakersNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "empire";
-        }
-
-        private void EmpireArtisanNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("artisan_urban");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_side_to_side_2";
-            string fatherAnimation = "act_character_creation_male_default_side_to_side_2";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
-        private void GetEmpireHunterNarrativeOptionArgs(NarrativeMenuOptionArgs args)
-        {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Scouting,
-                DefaultSkills.Bow
-            };
-            args.SetAffectedSkills(affectedSkills);
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Scouting, DefaultSkills.Bow });
             args.SetFocusToSkills(_focusToAdd);
             args.SetLevelToSkills(_skillLevelToAdd);
             args.SetLevelToAttribute(DefaultCharacterAttributes.Control, _attributeLevelToAdd);
         }
 
-        private bool EmpireHunterNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
+        private void GetHumanVagabondsNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "empire";
-        }
-
-        private void EmpireHunterNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("hunter");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_side_to_side_3";
-            string fatherAnimation = "act_character_creation_male_default_side_to_side_3";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
-        private void GetEmpireVagabondNarrativeOptionArgs(NarrativeMenuOptionArgs args)
-        {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Roguery,
-                DefaultSkills.Throwing
-            };
-            args.SetAffectedSkills(affectedSkills);
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Roguery, DefaultSkills.Throwing });
             args.SetFocusToSkills(_focusToAdd);
             args.SetLevelToSkills(_skillLevelToAdd);
             args.SetLevelToAttribute(DefaultCharacterAttributes.Cunning, _attributeLevelToAdd);
         }
-
-        private bool EmpireVagabondNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
-        {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "empire";
-        }
-
-        private void EmpireVagabondNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("vagabond_urban");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_hugging";
-            string fatherAnimation = "act_character_creation_male_default_hugging";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
         public void UpdateParentEquipment(CharacterCreationManager characterCreationManager, MBEquipmentRoster motherEquipment, MBEquipmentRoster fatherEquipment, string motherAnimation, string fatherAnimation)
         {
             foreach (NarrativeMenuCharacter narrativeMenuCharacter in characterCreationManager.CurrentMenu.Characters)
@@ -656,21 +646,69 @@ namespace RealmsForgotten.CharacterCreation
 
         private void AddVlandianParentNarrativeMenuOptions(NarrativeMenu narrativeMenu)
         {
-            NarrativeMenuOption narrativeMenuOption = new NarrativeMenuOption("vlandia_retainer_option", new TextObject("{=2TptWc4m}A baron's retainers", null), new TextObject("{=0Suu1Q9q}Your father was a bailiff for a local feudal magnate. He looked after his liege's estates, resolved disputes in the village, and helped train the village levy. He rode with the lord's cavalry, fighting as an armored knight.", null), new GetNarrativeMenuOptionArgsDelegate(GetVlandiaRetainerNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(VlandiaRetainerNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(VlandiaRetainerNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption);
-            NarrativeMenuOption narrativeMenuOption2 = new NarrativeMenuOption("vlandia_merchant_option", new TextObject("{=651FhzdR}Urban merchants", null), new TextObject("{=qNZFkxJb}Your family were merchants in one of the main cities of the kingdom. They organized caravans to nearby towns and were active in the local merchant's guild.", null), new GetNarrativeMenuOptionArgsDelegate(GetVlandiaMerchantNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(VlandiaMerchantNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(VlandiaMerchantNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption2);
-            NarrativeMenuOption narrativeMenuOption3 = new NarrativeMenuOption("vlandia_farmer_option", new TextObject("{=RDfXuVxT}Yeomen", null), new TextObject("{=BLZ4mdhb}Your family were small farmers with just enough land to feed themselves and make a small profit. People like them were the pillars of the kingdom's economy, as well as the backbone of the levy.", null), new GetNarrativeMenuOptionArgsDelegate(GetVlandiaFarmerNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(VlandiaFarmerNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(VlandiaFarmerNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption3);
-            NarrativeMenuOption narrativeMenuOption4 = new NarrativeMenuOption("vlandia_blacksmith_option", new TextObject("{=p2KIhGbE}Urban blacksmith", null), new TextObject("{=btsMpRcA}Your family owned a smithy in a city. Your father played an active if minor role in the town council, and also served in the militia.", null), new GetNarrativeMenuOptionArgsDelegate(GetVlandiaBlacksmithNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(VlandiaBlacksmithNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(VlandiaBlacksmithNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption4);
-            NarrativeMenuOption narrativeMenuOption5 = new NarrativeMenuOption("vlandia_hunter_option", new TextObject("{=YcnK0Thk}Hunters", null), new TextObject("{=yRFSzSDZ}Your family lived in a village, but did not own their own land. Instead, your father supplemented paid jobs with long trips in the woods, hunting and trapping, always keeping a wary eye for the lord's game wardens.", null), new GetNarrativeMenuOptionArgsDelegate(GetVlandiaHunterNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(VlandiaHunterNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(VlandiaHunterNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption5);
-            NarrativeMenuOption narrativeMenuOption6 = new NarrativeMenuOption("vlandia_mercenary_option", new TextObject("{=ipQP6aVi}Mercenaries", null), new TextObject("{=yYhX6JQC}Your father joined one of Vlandia's many mercenary companies, composed of men who got such a taste for war in their lord's service that they never took well to peace. Their crossbowmen were much valued across Calradia. Your mother was a camp follower, taking you along in the wake of bloody campaigns.", null), new GetNarrativeMenuOptionArgsDelegate(GetVlandiaMercenaryNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(VlandiaMercenaryNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(VlandiaMercenaryNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption6);
+            NarrativeMenuOption retainersQairthOption = new(
+                "nasorian_retainers_qairth",
+                new TextObject("Retainers of the Qairth"),
+                new TextObject("Your father was a bailiff for a local Qairth. He looked after his Qairth's estates, resolved disputes in the village, and helped train the village levy. He rode with the Qairth's cavalry, fighting as an armored knight."),
+                new GetNarrativeMenuOptionArgsDelegate(GetNasorianRetainersQairthNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(NasorianNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(RetainerNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(retainersQairthOption);
+            NarrativeMenuOption guildMerchantsOption = new(
+                "nasorian_guild_merchants",
+                new TextObject("Guildmerchants"),
+                new TextObject("{=qNZFkxJb}Your family were merchants in one of the main cities of the kingdom. They organized caravans to nearby towns and were active in the local merchant's guild."),
+                new GetNarrativeMenuOptionArgsDelegate(GetNasorianGuildMerchantsNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(NasorianNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(MerchantNarrativeOptionOnSelect),
+                null);
+            narrativeMenu.AddNarrativeMenuOption(guildMerchantsOption);
+            NarrativeMenuOption aldenariOption = new(
+                "nasorian_aldenari",
+                new TextObject("Aldenari"),
+                new TextObject("{=BLZ4mdhb}Your family were small farmers with just enough land to feed themselves and make a small profit. People like them were the pillars of the kingdom's economy, as well as the backbone of the levy."),
+                new GetNarrativeMenuOptionArgsDelegate(GetNasorianAldenariNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(NasorianNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(FarmerNarrativeOptionOnSelect),
+                null);
+            narrativeMenu.AddNarrativeMenuOption(aldenariOption);
+            NarrativeMenuOption blacksmithOption = new(
+            "nasorian_blacksmith",
+            new TextObject("Urban blacksmith"),
+            new TextObject("{=btsMpRcA}Your family owned a smithy in a city. Your father played an active if minor role in the town council, and also served in the militia."),
+            new GetNarrativeMenuOptionArgsDelegate(GetNasorianBlacksmithNarrativeOptionArgs),
+            new NarrativeMenuOptionOnConditionDelegate(NasorianNarrativeOptionOnCondition),
+            new NarrativeMenuOptionOnSelectDelegate(ArtisanNarrativeOptionOnSelect),
+            null);
+            narrativeMenu.AddNarrativeMenuOption(blacksmithOption);
+            NarrativeMenuOption huntersOption = new(
+            "nasorian_hunters",
+            new TextObject("Hunters"),
+            new TextObject("{=yRFSzSDZ}Your family lived in a village, but did not own their own land. Instead, your father supplemented paid jobs with long trips in the woods, hunting and trapping, always keeping a wary eye for the lord's game wardens."),
+            new GetNarrativeMenuOptionArgsDelegate(GetNasorianHuntersNarrativeOptionArgs),
+            new NarrativeMenuOptionOnConditionDelegate(NasorianNarrativeOptionOnCondition),
+            new NarrativeMenuOptionOnSelectDelegate(HunterNarrativeOptionOnSelect),
+            null);
+            narrativeMenu.AddNarrativeMenuOption(huntersOption);
+            NarrativeMenuOption MercenariesOption = new(
+                "nasorian_mercenaries",
+                new TextObject("Mercenaries"),
+                new TextObject("Your father joined one of the East many mercenary companies, composed of men who got such a taste for war in their clan's service that they never took well to peace. Their crossbowmen were much valued across the world. Your mother was a camp follower, taking you along in the wake of bloody campaigns."),
+                new GetNarrativeMenuOptionArgsDelegate(GetNasorianMercenariesNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(NasorianNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(MercenaryNarrativeOptionOnSelect),
+                null);
+            narrativeMenu.AddNarrativeMenuOption(MercenariesOption);
         }
 
-        private void GetVlandiaRetainerNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        private bool NasorianNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
+        {
+            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "vlandia";
+        }
+
+        private void GetNasorianRetainersQairthNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
             SkillObject[] affectedSkills = new SkillObject[]
             {
@@ -682,25 +720,7 @@ namespace RealmsForgotten.CharacterCreation
             args.SetLevelToSkills(_skillLevelToAdd);
             args.SetLevelToAttribute(DefaultCharacterAttributes.Social, _attributeLevelToAdd);
         }
-
-        private bool VlandiaRetainerNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
-        {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "vlandia";
-        }
-
-        private void VlandiaRetainerNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("retainer");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_side_to_side_1";
-            string fatherAnimation = "act_character_creation_male_default_side_to_side_1";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
-        private void GetVlandiaMerchantNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        private void GetNasorianGuildMerchantsNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
             SkillObject[] affectedSkills = new SkillObject[]
             {
@@ -710,27 +730,9 @@ namespace RealmsForgotten.CharacterCreation
             args.SetAffectedSkills(affectedSkills);
             args.SetFocusToSkills(_focusToAdd);
             args.SetLevelToSkills(_skillLevelToAdd);
-            args.SetLevelToAttribute(DefaultCharacterAttributes.Intelligence, _attributeLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Social, _attributeLevelToAdd);
         }
-
-        private bool VlandiaMerchantNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
-        {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "vlandia";
-        }
-
-        private void VlandiaMerchantNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("merchant_urban");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_mother_front";
-            string fatherAnimation = "act_character_creation_male_default_mother_front";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
-        private void GetVlandiaFarmerNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        private void GetNasorianAldenariNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
             SkillObject[] affectedSkills = new SkillObject[]
             {
@@ -740,57 +742,9 @@ namespace RealmsForgotten.CharacterCreation
             args.SetAffectedSkills(affectedSkills);
             args.SetFocusToSkills(_focusToAdd);
             args.SetLevelToSkills(_skillLevelToAdd);
-            args.SetLevelToAttribute(DefaultCharacterAttributes.Endurance, _attributeLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Social, _attributeLevelToAdd);
         }
-
-        private bool VlandiaFarmerNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
-        {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "vlandia";
-        }
-
-        private void VlandiaFarmerNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("farmer");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_father_sitting";
-            string fatherAnimation = "act_character_creation_male_default_father_sitting";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
-        private void GetVlandiaBlacksmithNarrativeOptionArgs(NarrativeMenuOptionArgs args)
-        {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Crafting,
-                DefaultSkills.TwoHanded
-            };
-            args.SetAffectedSkills(affectedSkills);
-            args.SetFocusToSkills(_focusToAdd);
-            args.SetLevelToSkills(_skillLevelToAdd);
-            args.SetLevelToAttribute(DefaultCharacterAttributes.Vigor, _attributeLevelToAdd);
-        }
-
-        private bool VlandiaBlacksmithNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
-        {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "vlandia";
-        }
-
-        private void VlandiaBlacksmithNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("artisan_urban");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_side_to_side_2";
-            string fatherAnimation = "act_character_creation_male_default_side_to_side_2";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
-        private void GetVlandiaHunterNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        private void GetNasorianHuntersNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
             SkillObject[] affectedSkills = new SkillObject[]
             {
@@ -800,27 +754,9 @@ namespace RealmsForgotten.CharacterCreation
             args.SetAffectedSkills(affectedSkills);
             args.SetFocusToSkills(_focusToAdd);
             args.SetLevelToSkills(_skillLevelToAdd);
-            args.SetLevelToAttribute(DefaultCharacterAttributes.Control, _attributeLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Social, _attributeLevelToAdd);
         }
-
-        private bool VlandiaHunterNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
-        {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "vlandia";
-        }
-
-        private void VlandiaHunterNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("hunter");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_side_to_side_3";
-            string fatherAnimation = "act_character_creation_male_default_side_to_side_3";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
-        private void GetVlandiaMercenaryNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        private void GetNasorianMercenariesNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
             SkillObject[] affectedSkills = new SkillObject[]
             {
@@ -830,212 +766,493 @@ namespace RealmsForgotten.CharacterCreation
             args.SetAffectedSkills(affectedSkills);
             args.SetFocusToSkills(_focusToAdd);
             args.SetLevelToSkills(_skillLevelToAdd);
-            args.SetLevelToAttribute(DefaultCharacterAttributes.Cunning, _attributeLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Social, _attributeLevelToAdd);
         }
-
-        private bool VlandiaMercenaryNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
+        private void GetNasorianBlacksmithNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "vlandia";
+            SkillObject[] affectedSkills = new SkillObject[]
+            {
+                DefaultSkills.Crafting,
+                DefaultSkills.TwoHanded
+            };
+            args.SetAffectedSkills(affectedSkills);
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Social, _attributeLevelToAdd);
         }
-
-        private void VlandiaMercenaryNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("merchant_urban");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_hugging";
-            string fatherAnimation = "act_character_creation_male_default_hugging";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
         private void AddSturgianParentNarrativeMenuOptions(NarrativeMenu narrativeMenu)
         {
-            NarrativeMenuOption narrativeMenuOption = new NarrativeMenuOption("sturgia_companion_option", new TextObject("{=mc78FEbA}A boyar's companions", null), new TextObject("{=hob3WVkU}Your father was a member of a boyar's druzhina, the 'companions' that make up his retinue. He sat at his lord's table in the great hall, oversaw the boyar's estates, and stood by his side in the center of the shield wall in battle.", null), new GetNarrativeMenuOptionArgsDelegate(GetSturgiaCompanionNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(SturgiaCompanionNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(SturgiaCompanionNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption);
-            NarrativeMenuOption narrativeMenuOption2 = new NarrativeMenuOption("sturgia_trader_option", new TextObject("{=HqzVBfpl}Urban traders", null), new TextObject("{=bjVMtW3W}Your family were merchants who lived in one of Sturgia's great river ports, organizing the shipment of the north's bounty of furs, honey and other goods to faraway lands.", null), new GetNarrativeMenuOptionArgsDelegate(GetSturgiaTraderNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(SturgiaTraderNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(SturgiaTraderNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption2);
-            NarrativeMenuOption narrativeMenuOption3 = new NarrativeMenuOption("sturgia_farmer_option", new TextObject("{=zrpqSWSh}Free farmers", null), new TextObject("{=Mcd3ZyKq}Your family had just enough land to feed themselves and make a small profit. People like them were the pillars of the kingdom's economy, as well as the backbone of the levy.", null), new GetNarrativeMenuOptionArgsDelegate(GetSturgiaFarmerNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(SturgiaFarmerNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(SturgiaFarmerNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption3);
-            NarrativeMenuOption narrativeMenuOption4 = new NarrativeMenuOption("sturgia_artisan_option", new TextObject("{=v48N6h1t}Urban artisans", null), new TextObject("{=ueCm5y1C}Your family owned their own workshop in a city, making goods from raw materials brought in from the countryside. Your father played an active if minor role in the town council, and also served in the militia.", null), new GetNarrativeMenuOptionArgsDelegate(GetSturgiaArtisanNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(SturgiaArtisanNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(SturgiaArtisanNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption4);
-            NarrativeMenuOption narrativeMenuOption5 = new NarrativeMenuOption("sturgia_hunter_option", new TextObject("{=YcnK0Thk}Hunters", null), new TextObject("{=WyZ2UtFF}Your family had no taste for the authority of the boyars. They made their living deep in the woods, slashing and burning fields which they tended for a year or two before moving on. They hunted and trapped fox, hare, ermine, and other fur-bearing animals.", null), new GetNarrativeMenuOptionArgsDelegate(GetSturgiaHunterNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(SturgiaHunterNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(SturgiaHunterNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption5);
-            NarrativeMenuOption narrativeMenuOption6 = new NarrativeMenuOption("sturgia_vagabond_option", new TextObject("{=TPoK3GSj}Vagabonds", null), new TextObject("{=2SDWhGmQ}Your family numbered among the poor migrants living in the slums that grow up outside the walls of the river cities, making whatever money they could from a variety of odd jobs. Sometimes they did services for one of the region's many criminal gangs.", null), new GetNarrativeMenuOptionArgsDelegate(GetSturgiaVagabondNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(SturgiaVagabondNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(SturgiaVagabondNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption6);
+            NarrativeMenuOption servantsUndeadOption = new(
+                "undead_servants",
+                new TextObject("Servants of the Undead"),
+                new TextObject("Your family served the Undead."),
+                new GetNarrativeMenuOptionArgsDelegate(GetUndeadServantsNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(UndeadNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(RetainerNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(servantsUndeadOption);
+            NarrativeMenuOption undeadTradersOption = new(
+                "undead_traders",
+                new TextObject("{=HqzVBfpl}Urban traders"),
+                new TextObject("Your family were merchants who lived in one of the land's great river ports, organizing the shipment of goods to faraway lands."),
+                new GetNarrativeMenuOptionArgsDelegate(GetUndeadTradersNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(UndeadNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(MerchantNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(undeadTradersOption);
+            NarrativeMenuOption undeadFarmersOption = new(
+                "undead_farmers",
+                new TextObject("Farmers"),
+                new TextObject("{=Mcd3ZyKq}Your family had just enough land to feed themselves and make a small profit. People like them were the pillars of the kingdom's economy, as well as the backbone of the levy."),
+                new GetNarrativeMenuOptionArgsDelegate(GetUndeadFarmersNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(UndeadNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(FarmerNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(undeadFarmersOption);
+            NarrativeMenuOption undeadArtisansOption = new(
+                "undead_artisans",
+                new TextObject("{=v48N6h1t}Urban artisans"),
+                new TextObject("{=ueCm5y1C}Your family owned their own workshop in a city, making goods from raw materials brought in from the countryside. Your father played an active if minor role in the town council, and also served in the militia."),
+                new GetNarrativeMenuOptionArgsDelegate(GetUndeadArtisansNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(UndeadNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(ArtisanNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(undeadArtisansOption);
+            NarrativeMenuOption forestfolkOption = new(
+                "undead_forestfolk",
+                new TextObject("Forestfolk"),
+                new TextObject("Your family had no taste for authority of others. They made their living deep in the woods, slashing and burning fields which they tended for a year or two before moving on. They hunted and trapped fox, hare, ermine, and other fur-bearing animals."),
+                new GetNarrativeMenuOptionArgsDelegate(GetUndeadForestfolkNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(UndeadNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(HunterNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(forestfolkOption);
+            NarrativeMenuOption undeadVagabondsOption = new(
+                "undead_vagabonds",
+                new TextObject("{=TPoK3GSj}Vagabonds"),
+                new TextObject("{=2SDWhGmQ}Your family numbered among the poor migrants living in the slums that grow up outside the walls of the river cities, making whatever money they could from a variety of odd jobs. Sometimes they did services for one of the region's many criminal gangs."),
+                new GetNarrativeMenuOptionArgsDelegate(GetUndeadVagabondsNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(UndeadNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(VagabondNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(undeadVagabondsOption);
         }
-        private void GetSturgiaCompanionNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+
+        private bool UndeadNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
         {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Riding,
-                DefaultSkills.TwoHanded
-            };
-            args.SetAffectedSkills(affectedSkills);
+            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "sturgia";
+        }
+
+        private void GetUndeadServantsNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Riding, DefaultSkills.TwoHanded });
             args.SetFocusToSkills(_focusToAdd);
             args.SetLevelToSkills(_skillLevelToAdd);
             args.SetLevelToAttribute(DefaultCharacterAttributes.Social, _attributeLevelToAdd);
         }
 
-        private bool SturgiaCompanionNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
+        private void GetUndeadTradersNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "sturgia";
-        }
-
-        private void SturgiaCompanionNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("retainer");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_side_to_side_1";
-            string fatherAnimation = "act_character_creation_male_default_side_to_side_1";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
-        private void GetSturgiaTraderNarrativeOptionArgs(NarrativeMenuOptionArgs args)
-        {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Trade,
-                DefaultSkills.Tactics
-            };
-            args.SetAffectedSkills(affectedSkills);
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Trade, DefaultSkills.Tactics });
             args.SetFocusToSkills(_focusToAdd);
             args.SetLevelToSkills(_skillLevelToAdd);
             args.SetLevelToAttribute(DefaultCharacterAttributes.Cunning, _attributeLevelToAdd);
         }
 
-        private bool SturgiaTraderNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
+        private void GetUndeadFarmersNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "sturgia";
-        }
-
-        private void SturgiaTraderNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("merchant_urban");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_mother_front";
-            string fatherAnimation = "act_character_creation_male_default_mother_front";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
-        private void GetSturgiaFarmerNarrativeOptionArgs(NarrativeMenuOptionArgs args)
-        {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Athletics,
-                DefaultSkills.Polearm
-            };
-            args.SetAffectedSkills(affectedSkills);
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Athletics, DefaultSkills.Polearm });
             args.SetFocusToSkills(_focusToAdd);
             args.SetLevelToSkills(_skillLevelToAdd);
             args.SetLevelToAttribute(DefaultCharacterAttributes.Endurance, _attributeLevelToAdd);
         }
 
-        private bool SturgiaFarmerNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
+        private void GetUndeadArtisansNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "sturgia";
-        }
-
-        private void SturgiaFarmerNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("farmer");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_father_sitting";
-            string fatherAnimation = "act_character_creation_male_default_father_sitting";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
-        private void GetSturgiaArtisanNarrativeOptionArgs(NarrativeMenuOptionArgs args)
-        {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Crafting,
-                DefaultSkills.OneHanded
-            };
-            args.SetAffectedSkills(affectedSkills);
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Crafting, DefaultSkills.OneHanded });
             args.SetFocusToSkills(_focusToAdd);
             args.SetLevelToSkills(_skillLevelToAdd);
             args.SetLevelToAttribute(DefaultCharacterAttributes.Intelligence, _attributeLevelToAdd);
         }
 
-        private bool SturgiaArtisanNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
+        private void GetUndeadForestfolkNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "sturgia";
-        }
-
-        private void SturgiaArtisanNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("artisan_urban");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_side_to_side_2";
-            string fatherAnimation = "act_character_creation_male_default_side_to_side_2";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
-        private void GetSturgiaHunterNarrativeOptionArgs(NarrativeMenuOptionArgs args)
-        {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Scouting,
-                DefaultSkills.Bow
-            };
-            args.SetAffectedSkills(affectedSkills);
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Scouting, DefaultSkills.Bow });
             args.SetFocusToSkills(_focusToAdd);
             args.SetLevelToSkills(_skillLevelToAdd);
             args.SetLevelToAttribute(DefaultCharacterAttributes.Vigor, _attributeLevelToAdd);
         }
 
-        private bool SturgiaHunterNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
+        private void GetUndeadVagabondsNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "sturgia";
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Roguery, DefaultSkills.Throwing });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Control, _attributeLevelToAdd);
+        }
+        private void AddAseraiParentNarrativeMenuOptions(NarrativeMenu narrativeMenu)
+        {
+            NarrativeMenuOption AthasInnerCircleOption = new(
+                "athas_inner_circle",
+                new TextObject("The inner circle of Atha's rulers"),
+                new TextObject("You were a family of some importance in the inner circle of Athas."),
+                new GetNarrativeMenuOptionArgsDelegate(GetAthasInnerCircleNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(AthasNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(RetainerNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(AthasInnerCircleOption);
+
+
+            // Warrior-slaves
+            NarrativeMenuOption AthasWarriorSlavesOption = new(
+                "athas_warrior_slaves",
+                new TextObject("{=ngFVgwDD}Warrior-slaves"),
+                new TextObject("{=GsPC2MgU}Your father was part of one of the slave-bodyguards maintained by the rulers. He fought by his master's side with tribe's armored cavalry, and was freed - perhaps for an act of valor, or perhaps he paid for his freedom with his share of the spoils of battle. He then married your mother."),
+                new GetNarrativeMenuOptionArgsDelegate(GetAthasWarriorSlavesNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(AthasNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(MercenaryNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(AthasWarriorSlavesOption);
+            NarrativeMenuOption athasMerchantsOption = new(
+                "athas_merchants",
+                new TextObject("{=651FhzdR}Urban merchants"),
+                new TextObject("{=1zXrlaav}Your family were respected traders in an oasis town. They ran caravans across the desert, and were experts in the finer points of negotiating passage through the desert tribes' territories."),
+                new GetNarrativeMenuOptionArgsDelegate(GetAthasMerchantsNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(AthasNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(MerchantNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(athasMerchantsOption);
+            NarrativeMenuOption athasSlaveFarmersOption = new(
+                "athas_slave_farmers",
+                new TextObject("Slave-farmers"),
+                new TextObject("{=5P0KqBAw}Your family tilled the soil in one of the oases of the Kalikhr tribe and tended the palm orchards that produced the desert's famous dates. Your father was a member of the main foot levy of his tribe, fighting with his kinsmen under the emir's banner."),
+                new GetNarrativeMenuOptionArgsDelegate(GetAthasSlaveFarmersNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(AthasNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(FarmerNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(athasSlaveFarmersOption);
+            NarrativeMenuOption athasFreeMenOption = new(
+                "athas_free_men",
+                new TextObject("Free men"),
+                new TextObject("{=PKhcPbBX}Your family were part of a nomadic clan, crisscrossing the wastes between wadi beds and wells to feed their herds of goats and camels on the scraggly scrubs of the Kalikhr."),
+                new GetNarrativeMenuOptionArgsDelegate(GetAthasFreeMenNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(AthasNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(HunterNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(athasFreeMenOption);
+            NarrativeMenuOption athasOrfansOption = new(
+                "athas_orfans",
+                new TextObject("Urban Orfans"),
+                new TextObject("{=6bUSbsKC}Your father was not your biological father, but took you under his protection to one day strenghten his army of thugs. He worked for a fitiwi , one of the strongmen who keep order in the poorer quarters of the oasis towns. He resolved disputes over land, dice and insults, imposing his authority with the fitiwi's traditional staff."),
+                new GetNarrativeMenuOptionArgsDelegate(GetAthasOrfansNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(AthasNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(VagabondNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(athasOrfansOption);
+        }
+        private bool AthasNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
+        {
+            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "aserai";
         }
 
-        private void SturgiaHunterNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
+        private void GetAthasInnerCircleNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("hunter");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_side_to_side_3";
-            string fatherAnimation = "act_character_creation_male_default_side_to_side_3";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Riding, DefaultSkills.Throwing });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Endurance, _attributeLevelToAdd);
         }
 
-        private void GetSturgiaVagabondNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        private void GetAthasWarriorSlavesNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Roguery,
-                DefaultSkills.Throwing
-            };
-            args.SetAffectedSkills(affectedSkills);
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Riding, DefaultSkills.Polearm });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Vigor, _attributeLevelToAdd);
+        }
+
+        private void GetAthasMerchantsNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Trade, DefaultSkills.Charm });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Social, _attributeLevelToAdd);
+        }
+
+        private void GetAthasSlaveFarmersNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Athletics, DefaultSkills.OneHanded });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Endurance, _attributeLevelToAdd);
+        }
+
+        private void GetAthasFreeMenNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Scouting, DefaultSkills.Bow });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Cunning, _attributeLevelToAdd);
+        }
+
+        private void GetAthasOrfansNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Roguery, DefaultSkills.Polearm });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Control, _attributeLevelToAdd);
+        }
+        private void AddBattaniaNarrativeMenuOptions(NarrativeMenu narrativeMenu)
+        {
+            NarrativeMenuOption elvean_highborn_option = new(
+                "elvean_highborn",
+                new TextObject("Elvean Highborn"),
+                new TextObject("Your family were the trusted kinfolk of an Elvean lord, and sat at his table in his great hall. Your father assisted his chief in running the affairs and trained with the traditional weapons of the warrior elite, the two-handed sword or falx and the bow."),
+                new GetNarrativeMenuOptionArgsDelegate(GetElveanHighbornNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(ElveanNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(RetainerNarrativeOptionOnSelect),
+                null);
+            narrativeMenu.AddNarrativeMenuOption(elvean_highborn_option);
+            NarrativeMenuOption elvean_druids_option = new(
+                "elvean_druids",
+                new TextObject("Druids"),
+                new TextObject("Your parents were healers who gathered herbs and treated the sick. As a living reservoir of elvean tradition, they were also asked to adjudicate many disputes between the clans."),
+                new GetNarrativeMenuOptionArgsDelegate(GetElveanDruidsNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(ElveanNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(HealerNarrativeOptionOnSelect),
+                null);
+            narrativeMenu.AddNarrativeMenuOption(elvean_druids_option);
+            NarrativeMenuOption elvean_folk_option = new(
+                "elvean_folk",
+                new TextObject("Elvean Folk"),
+                new TextObject("Your family were middle-ranking members of a society, who tilled their own land. Your father fought with the kern, the main body of his people's warriors, joining in the screaming charges for which the Elveans were famous."),
+                new GetNarrativeMenuOptionArgsDelegate(GetElveanFolkNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(ElveanNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(FarmerNarrativeOptionOnSelect),
+                null);
+            narrativeMenu.AddNarrativeMenuOption(elvean_folk_option);
+            NarrativeMenuOption elvean_smiths_option = new(
+                "elvean_smiths",
+                new TextObject("{=BCU6RezA}Smiths"),
+                new TextObject("Your family were smiths, a revered profession. They crafted everything from fine filigree jewelry in geometric designs to the well-balanced longswords favored by the Elvean aristocracy."),
+                new GetNarrativeMenuOptionArgsDelegate(GetElveanSmithsNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(ElveanNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(ArtisanNarrativeOptionOnSelect),
+                null);
+            narrativeMenu.AddNarrativeMenuOption(elvean_smiths_option);
+            NarrativeMenuOption elvean_foresters_option = new(
+                "elvean_foresters",
+                new TextObject("{=7eWmU2mF}Foresters"),
+                new TextObject("{=7jBroUUQ}Your family had little land of their own, so they earned their living from the woods, hunting and trapping. They taught you from an early age that skills like finding game trails and killing an animal with one shot could make the difference between eating and starvation."),
+                new GetNarrativeMenuOptionArgsDelegate(GetElveanForestersNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(ElveanNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(HunterNarrativeOptionOnSelect),
+                null);
+            narrativeMenu.AddNarrativeMenuOption(elvean_foresters_option);
+            NarrativeMenuOption elvean_bards_option = new(
+                "elvean_bards",
+                new TextObject("{=SpJqhEEh}Bards"),
+                new TextObject("Your Father was a Bard, a sacred duty for the Elvean Folk. Responsible to keep the Song alive, he went from halls to festivities, from rituals to war camps, to teach and inspire the people into the sacred ways. Your learned from him the cleverness of the tongue and the hability to tap into your people´s soul."),
+                new GetNarrativeMenuOptionArgsDelegate(GetElveanBardsNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(ElveanNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(BardNarrativeOptionOnSelect),
+                null);
+            narrativeMenu.AddNarrativeMenuOption(elvean_bards_option);
+        }
+        private bool ElveanNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
+        {
+            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "battania";
+        }
+        private void GetElveanHighbornNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.TwoHanded, DefaultSkills.Bow });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Vigor, _attributeLevelToAdd);
+        }
+
+        private void GetElveanDruidsNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Medicine, DefaultSkills.Charm });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Intelligence, _attributeLevelToAdd);
+        }
+
+        private void GetElveanFolkNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Athletics, DefaultSkills.Throwing });
             args.SetFocusToSkills(_focusToAdd);
             args.SetLevelToSkills(_skillLevelToAdd);
             args.SetLevelToAttribute(DefaultCharacterAttributes.Control, _attributeLevelToAdd);
         }
 
-        private bool SturgiaVagabondNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
+        private void GetElveanSmithsNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "sturgia";
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Crafting, DefaultSkills.TwoHanded });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Endurance, _attributeLevelToAdd);
         }
 
-        private void SturgiaVagabondNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
+        private void GetElveanForestersNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("vagabond_urban");
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Scouting, DefaultSkills.Tactics });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Cunning, _attributeLevelToAdd);
+        }
+
+        private void GetElveanBardsNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Roguery, DefaultSkills.Charm });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Social, _attributeLevelToAdd);
+        }
+        private void AddKhuzaitNarrativeMenuOptions(NarrativeMenu narrativeMenu)
+        {
+            NarrativeMenuOption alkahuur_kinsfolk_option = new(
+                "alkahuur_kinsfolk",
+                new TextObject("Al-Kahuur Kinsfolk"),
+                new TextObject("Your family were the trusted kinsfolk of a ruler, and shared his meals in the chieftain's yurt. Your father assisted his chief in running the affairs of the clan and fought in the core of armored lancers in the center of a battle line."),
+                new GetNarrativeMenuOptionArgsDelegate(GetAlKahuurKinsfolkNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(AlKahuurNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(RetainerNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(alkahuur_kinsfolk_option);
+            NarrativeMenuOption alkahuur_merchants_option = new(
+                "alkahuur_merchants",
+                new TextObject("{=TkgLEDRM}Merchants"),
+                new TextObject("Your family came from one of the merchant clans that dominated the cities in the northwestern part of the world."),
+                new GetNarrativeMenuOptionArgsDelegate(GetAlKahuurMerchantsNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(AlKahuurNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(MerchantNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(alkahuur_merchants_option);
+            NarrativeMenuOption alkahuur_tribespeople_option = new(
+                "alkahuur_tribespeople",
+                new TextObject("{=tGEStbxb}Tribespeople"),
+                new TextObject("Your family were middle-ranking members of one of the clans. They had some herds of thier own, but were not rich."),
+                new GetNarrativeMenuOptionArgsDelegate(GetAlKahuurTribespeopleNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(AlKahuurNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(ArtisanNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(alkahuur_tribespeople_option);
+            NarrativeMenuOption alkahuur_farmers_option = new(
+                "alkahuur_farmers",
+                new TextObject("{=gQ2tAvCz}Farmers"),
+                new TextObject("Your family tilled one of the small patches of arable land in the steppes for generations."),
+                new GetNarrativeMenuOptionArgsDelegate(GetAlKahuurFarmersNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(AlKahuurNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(FarmerNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(alkahuur_farmers_option);
+            NarrativeMenuOption alkahuur_spiritcatchers_option = new(
+                "alkahuur_spiritcatchers",
+                new TextObject("Spirit-Catchers"),
+                new TextObject("Your family were guardians of the sacred traditions, channelling the spirits of the wilderness and of the ancestors. They tended the sick and dispensed wisdom, resolving disputes and providing practical advice."),
+                new GetNarrativeMenuOptionArgsDelegate(GetAlKahuurSpiritCatchersNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(AlKahuurNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(HealerNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(alkahuur_spiritcatchers_option);
+            NarrativeMenuOption alkahuur_nomads_option = new(
+                "alkahuur_nomads",
+                new TextObject("{=Xqba1Obq}Nomads"),
+                new TextObject("{=9aoQYpZs}Your family's clan never pledged its loyalty to the khan and never settled down, preferring to live out in the deep steppe away from his authority. They remain some of the finest trackers and scouts in the grasslands, as the ability to spot an enemy coming and move quickly is often all that protects their herds from their neighbors' predations."),
+                new GetNarrativeMenuOptionArgsDelegate(GetAlKahuurNomadsNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(AlKahuurNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(HerderNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(alkahuur_nomads_option);
+        }
+        private bool AlKahuurNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
+        {
+            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "khuzait";
+        }
+        private void GetAlKahuurKinsfolkNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Riding, DefaultSkills.Polearm });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Endurance, _attributeLevelToAdd);
+        }
+
+        private void GetAlKahuurMerchantsNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Trade, DefaultSkills.Charm });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Social, _attributeLevelToAdd);
+        }
+
+        private void GetAlKahuurTribespeopleNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Bow, DefaultSkills.Riding });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Control, _attributeLevelToAdd);
+        }
+
+        private void GetAlKahuurFarmersNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Polearm, DefaultSkills.Throwing });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Vigor, _attributeLevelToAdd);
+        }
+
+        private void GetAlKahuurSpiritCatchersNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Medicine, DefaultSkills.Charm });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Intelligence, _attributeLevelToAdd);
+        }
+
+        private void GetAlKahuurNomadsNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Scouting, DefaultSkills.Riding });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Cunning, _attributeLevelToAdd);
+        }
+
+        /*
+         * ArtisanNarrativeOptionOnSelect
+         * HerderNarrativeOptionOnSelect
+         * HealerNarrativeOptionOnSelect
+         * BardNarrativeOptionOnSelect
+         * MerchantNarrativeOptionOnSelect
+         * RetainerNarrativeOptionOnSelect
+         * HunterNarrativeOptionOnSelect
+         * FarmerNarrativeOptionOnSelect
+         * VagabondNarrativeOptionOnSelect
+         * MercenaryNarrativeOptionOnSelect
+         * PhysicianNarrativeOptionOnSelect
+         */
+        private void ArtisanNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
+        {
+            characterCreationManager.CharacterCreationContent.SetParentOccupation("artisan_urban");
             string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
             string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
             MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
@@ -1044,162 +1261,7 @@ namespace RealmsForgotten.CharacterCreation
             string fatherAnimation = "act_character_creation_male_default_hugging";
             UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
         }
-
-        private void AddAseraiParentNarrativeMenuOptions(NarrativeMenu narrativeMenu)
-        {
-            NarrativeMenuOption narrativeMenuOption = new NarrativeMenuOption("aserai_kinsfolk_option", new TextObject("{=Sw8OxnNr}Kinsfolk of an emir", null), new TextObject("{=MFrIHJZM}Your family was from a smaller offshoot of an emir's tribe. Your father's land gave him enough income to afford a horse but he was not quite wealthy enough to buy the armor needed to join the heavier cavalry. He fought as one of the light horsemen for which the desert is famous.", null), new GetNarrativeMenuOptionArgsDelegate(GetAseraiKinsfolkNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(AseraiKinsfolkNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(AseraiKinsfolkNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption);
-            NarrativeMenuOption narrativeMenuOption2 = new NarrativeMenuOption("aserai_slave_option", new TextObject("{=ngFVgwDD}Warrior-slaves", null), new TextObject("{=GsPC2MgU}Your father was part of one of the slave-bodyguards maintained by the Aserai emirs. He fought by his master's side with tribe's armored cavalry, and was freed - perhaps for an act of valor, or perhaps he paid for his freedom with his share of the spoils of battle. He then married your mother.", null), new GetNarrativeMenuOptionArgsDelegate(GetAseraiSlaveNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(AseraiSlaveNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(AseraiSlaveNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption2);
-            NarrativeMenuOption narrativeMenuOption3 = new NarrativeMenuOption("aserai_physician_option", new TextObject("{=bgy8LVvY}Physician", null), new TextObject("{=BhQlmQoj}Your family were respected physicians in an oasis town. They set bones and cured the sick, and their skills were in much demand. They were respected in the higher echelons of society too.", null), new GetNarrativeMenuOptionArgsDelegate(GetAseraiPhysicianNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(AseraiPhysicianNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(AseraiPhysicianNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption3);
-            NarrativeMenuOption narrativeMenuOption4 = new NarrativeMenuOption("aserai_farmer_option", new TextObject("{=g31pXuqi}Oasis farmers", null), new TextObject("{=5P0KqBAw}Your family tilled the soil in one of the oases of the Nahasa and tended the palm orchards that produced the desert's famous dates. Your father was a member of the main foot levy of his tribe, fighting with his kinsmen under the emir's banner.", null), new GetNarrativeMenuOptionArgsDelegate(GetAseraiFarmerNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(AseraiFarmerNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(AseraiFarmerNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption4);
-            NarrativeMenuOption narrativeMenuOption5 = new NarrativeMenuOption("aserai_herder_option", new TextObject("{=EEedqolz}Bedouin", null), new TextObject("{=PKhcPbBX}Your family were part of a nomadic clan, crisscrossing the wastes between wadi beds and wells to feed their herds of goats and camels on the scraggly scrubs of the Nahasa.", null), new GetNarrativeMenuOptionArgsDelegate(GetAseraiHerderNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(AseraiHerderNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(AseraiHerderNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption5);
-            NarrativeMenuOption narrativeMenuOption6 = new NarrativeMenuOption("aserai_artisan_option", new TextObject("{=tRIrbTvv}Urban back-alley thugs", null), new TextObject("{=6bUSbsKC}Your father worked for a fitiwi, one of the strongmen who keep order in the poorer quarters of the oasis towns. He resolved disputes over land, dice and insults, imposing his authority with the fitiwi's traditional staff.", null), new GetNarrativeMenuOptionArgsDelegate(GetAseraiArtisanNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(AseraiArtisanNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(AseraiArtisanNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption6);
-        }
-
-        private void GetAseraiKinsfolkNarrativeOptionArgs(NarrativeMenuOptionArgs args)
-        {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Riding,
-                DefaultSkills.Throwing
-            };
-            args.SetAffectedSkills(affectedSkills);
-            args.SetFocusToSkills(_focusToAdd);
-            args.SetLevelToSkills(_skillLevelToAdd);
-            args.SetLevelToAttribute(DefaultCharacterAttributes.Social, _attributeLevelToAdd);
-        }
-
-        private bool AseraiKinsfolkNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
-        {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "aserai";
-        }
-
-        private void AseraiKinsfolkNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("retainer");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_side_to_side_1";
-            string fatherAnimation = "act_character_creation_male_default_side_to_side_1";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
-        private void GetAseraiSlaveNarrativeOptionArgs(NarrativeMenuOptionArgs args)
-        {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Riding,
-                DefaultSkills.Polearm
-            };
-            args.SetAffectedSkills(affectedSkills);
-            args.SetFocusToSkills(_focusToAdd);
-            args.SetLevelToSkills(_skillLevelToAdd);
-            args.SetLevelToAttribute(DefaultCharacterAttributes.Vigor, _attributeLevelToAdd);
-        }
-
-        private bool AseraiSlaveNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
-        {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "aserai";
-        }
-
-        private void AseraiSlaveNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("mercenary_urban");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_mother_front";
-            string fatherAnimation = "act_character_creation_male_default_mother_front";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
-        private void GetAseraiPhysicianNarrativeOptionArgs(NarrativeMenuOptionArgs args)
-        {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Medicine,
-                DefaultSkills.Charm
-            };
-            args.SetAffectedSkills(affectedSkills);
-            args.SetFocusToSkills(_focusToAdd);
-            args.SetLevelToSkills(_skillLevelToAdd);
-            args.SetLevelToAttribute(DefaultCharacterAttributes.Intelligence, _attributeLevelToAdd);
-        }
-
-        private bool AseraiPhysicianNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
-        {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "aserai";
-        }
-
-        private void AseraiPhysicianNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("physician_urban");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_father_sitting";
-            string fatherAnimation = "act_character_creation_male_default_father_sitting";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
-        private void GetAseraiFarmerNarrativeOptionArgs(NarrativeMenuOptionArgs args)
-        {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Athletics,
-                DefaultSkills.OneHanded
-            };
-            args.SetAffectedSkills(affectedSkills);
-            args.SetFocusToSkills(_focusToAdd);
-            args.SetLevelToSkills(_skillLevelToAdd);
-            args.SetLevelToAttribute(DefaultCharacterAttributes.Endurance, _attributeLevelToAdd);
-        }
-
-        private bool AseraiFarmerNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
-        {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "aserai";
-        }
-
-        private void AseraiFarmerNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("farmer");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_side_to_side_2";
-            string fatherAnimation = "act_character_creation_male_default_side_to_side_2";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
-        private void GetAseraiHerderNarrativeOptionArgs(NarrativeMenuOptionArgs args)
-        {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Scouting,
-                DefaultSkills.Bow
-            };
-            args.SetAffectedSkills(affectedSkills);
-            args.SetFocusToSkills(_focusToAdd);
-            args.SetLevelToSkills(_skillLevelToAdd);
-            args.SetLevelToAttribute(DefaultCharacterAttributes.Cunning, _attributeLevelToAdd);
-        }
-
-        private bool AseraiHerderNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
-        {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "aserai";
-        }
-
-        private void AseraiHerderNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
+        private void HerderNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
         {
             characterCreationManager.CharacterCreationContent.SetParentOccupation("herder");
             string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
@@ -1210,194 +1272,9 @@ namespace RealmsForgotten.CharacterCreation
             string fatherAnimation = "act_character_creation_male_default_side_to_side_3";
             UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
         }
-
-        private void GetAseraiArtisanNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        private void HealerNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
         {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Roguery,
-                DefaultSkills.Polearm
-            };
-            args.SetAffectedSkills(affectedSkills);
-            args.SetFocusToSkills(_focusToAdd);
-            args.SetLevelToSkills(_skillLevelToAdd);
-            args.SetLevelToAttribute(DefaultCharacterAttributes.Control, _attributeLevelToAdd);
-        }
-
-        private bool AseraiArtisanNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
-        {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "aserai";
-        }
-
-        private void AseraiArtisanNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("artisan_urban");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_hugging";
-            string fatherAnimation = "act_character_creation_male_default_hugging";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
-        private void AddBattaniaNarrativeMenuOptions(NarrativeMenu narrativeMenu)
-        {
-            NarrativeMenuOption narrativeMenuOption = new NarrativeMenuOption("battania_retainer_option", new TextObject("{=GeNKQlHR}Members of the chieftain's hearthguard", null), new TextObject("{=LpH8SYFL}Your family were the trusted kinfolk of a Battanian chieftain, and sat at his table in his great hall. Your father assisted his chief in running the affairs of the clan and trained with the traditional weapons of the Battanian elite, the two-handed sword or falx and the bow.", null), new GetNarrativeMenuOptionArgsDelegate(GetBattaniaRetainerNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(BattaniaRetainerNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(BattaniaRetainerNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption);
-            NarrativeMenuOption narrativeMenuOption2 = new NarrativeMenuOption("battania_healer_option", new TextObject("{=AeBzTj6w}Healers", null), new TextObject("{=j6py5Rv5}Your parents were healers who gathered herbs and treated the sick. As a living reservoir of Battanian tradition, they were also asked to adjudicate many disputes between the clans.", null), new GetNarrativeMenuOptionArgsDelegate(GetBattaniaHealerNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(BattaniaHealerNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(BattaniaHealerNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption2);
-            NarrativeMenuOption narrativeMenuOption3 = new NarrativeMenuOption("battania_farmer_option", new TextObject("{=tGEStbxb}Tribespeople", null), new TextObject("{=WchH8bS2}Your family were middle-ranking members of a Battanian clan, who tilled their own land. Your father fought with the kern, the main body of his people's warriors, joining in the screaming charges for which the Battanians were famous.", null), new GetNarrativeMenuOptionArgsDelegate(GetBattaniaFarmerNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(BattaniaFarmerNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(BattaniaFarmerNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption3);
-            NarrativeMenuOption narrativeMenuOption4 = new NarrativeMenuOption("battania_artisan_option", new TextObject("{=BCU6RezA}Smiths", null), new TextObject("{=kg9YtrOg}Your family were smiths, a revered profession among the Battanians. They crafted everything from fine filigree jewelry in geometric designs to the well-balanced longswords favored by the Battanian aristocracy.", null), new GetNarrativeMenuOptionArgsDelegate(GetBattaniaArtisanNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(BattaniaArtisanNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(BattaniaArtisanNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption4);
-            NarrativeMenuOption narrativeMenuOption5 = new NarrativeMenuOption("battania_hunter_option", new TextObject("{=7eWmU2mF}Foresters", null), new TextObject("{=7jBroUUQ}Your family had little land of their own, so they earned their living from the woods, hunting and trapping. They taught you from an early age that skills like finding game trails and killing an animal with one shot could make the difference between eating and starvation.", null), new GetNarrativeMenuOptionArgsDelegate(GetBattaniaHunterNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(BattaniaHunterNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(BattaniaHunterNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption5);
-            NarrativeMenuOption narrativeMenuOption6 = new NarrativeMenuOption("battania_bard_option", new TextObject("{=SpJqhEEh}Bards", null), new TextObject("{=aVzcyhhy}Your father was a bard, drifting from chieftain's hall to chieftain's hall making his living singing the praises of one Battanian aristocrat and mocking his enemies, then going to his enemy's hall and doing the reverse. You learned from him that a clever tongue could spare you  from a life toiling in the fields, if you kept your wits about you.", null), new GetNarrativeMenuOptionArgsDelegate(GetBattaniaBardNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(BattaniaBardNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(BattaniaBardNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption6);
-        }
-
-        private void GetBattaniaRetainerNarrativeOptionArgs(NarrativeMenuOptionArgs args)
-        {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.TwoHanded,
-                DefaultSkills.Bow
-            };
-            args.SetAffectedSkills(affectedSkills);
-            args.SetFocusToSkills(_focusToAdd);
-            args.SetLevelToSkills(_skillLevelToAdd);
-            args.SetLevelToAttribute(DefaultCharacterAttributes.Vigor, _attributeLevelToAdd);
-        }
-
-        private bool BattaniaRetainerNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
-        {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "battania";
-        }
-
-        private void BattaniaRetainerNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("retainer_urban");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_side_to_side_1";
-            string fatherAnimation = "act_character_creation_male_default_side_to_side_1";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
-        private void GetBattaniaHealerNarrativeOptionArgs(NarrativeMenuOptionArgs args)
-        {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Medicine,
-                DefaultSkills.Charm
-            };
-            args.SetAffectedSkills(affectedSkills);
-            args.SetFocusToSkills(_focusToAdd);
-            args.SetLevelToSkills(_skillLevelToAdd);
-            args.SetLevelToAttribute(DefaultCharacterAttributes.Intelligence, _attributeLevelToAdd);
-        }
-
-        private bool BattaniaHealerNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
-        {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "battania";
-        }
-
-        private void BattaniaHealerNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("healer");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_mother_front";
-            string fatherAnimation = "act_character_creation_male_default_mother_front";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
-        private void GetBattaniaFarmerNarrativeOptionArgs(NarrativeMenuOptionArgs args)
-        {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Athletics,
-                DefaultSkills.Throwing
-            };
-            args.SetAffectedSkills(affectedSkills);
-            args.SetFocusToSkills(_focusToAdd);
-            args.SetLevelToSkills(_skillLevelToAdd);
-            args.SetLevelToAttribute(DefaultCharacterAttributes.Control, _attributeLevelToAdd);
-        }
-
-        private bool BattaniaFarmerNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
-        {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "battania";
-        }
-
-        private void BattaniaFarmerNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("farmer");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_father_sitting";
-            string fatherAnimation = "act_character_creation_male_default_father_sitting";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
-        private void GetBattaniaArtisanNarrativeOptionArgs(NarrativeMenuOptionArgs args)
-        {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Crafting,
-                DefaultSkills.TwoHanded
-            };
-            args.SetAffectedSkills(affectedSkills);
-            args.SetFocusToSkills(_focusToAdd);
-            args.SetLevelToSkills(_skillLevelToAdd);
-            args.SetLevelToAttribute(DefaultCharacterAttributes.Endurance, _attributeLevelToAdd);
-        }
-
-        private bool BattaniaArtisanNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
-        {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "battania";
-        }
-
-        private void BattaniaArtisanNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("artisan_urban");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_side_to_side_2";
-            string fatherAnimation = "act_character_creation_male_default_side_to_side_2";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
-        private void GetBattaniaHunterNarrativeOptionArgs(NarrativeMenuOptionArgs args)
-        {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Scouting,
-                DefaultSkills.Tactics
-            };
-            args.SetAffectedSkills(affectedSkills);
-            args.SetFocusToSkills(_focusToAdd);
-            args.SetLevelToSkills(_skillLevelToAdd);
-            args.SetLevelToAttribute(DefaultCharacterAttributes.Cunning, _attributeLevelToAdd);
-        }
-
-        private bool BattaniaHunterNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
-        {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "battania";
-        }
-
-        private void BattaniaHunterNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("hunter");
+            characterCreationManager.CharacterCreationContent.SetParentOccupation("healer_urban");
             string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
             string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
             MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
@@ -1406,26 +1283,7 @@ namespace RealmsForgotten.CharacterCreation
             string fatherAnimation = "act_character_creation_male_default_side_to_side_3";
             UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
         }
-
-        private void GetBattaniaBardNarrativeOptionArgs(NarrativeMenuOptionArgs args)
-        {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Roguery,
-                DefaultSkills.Charm
-            };
-            args.SetAffectedSkills(affectedSkills);
-            args.SetFocusToSkills(_focusToAdd);
-            args.SetLevelToSkills(_skillLevelToAdd);
-            args.SetLevelToAttribute(DefaultCharacterAttributes.Social, _attributeLevelToAdd);
-        }
-
-        private bool BattaniaBardNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
-        {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "battania";
-        }
-
-        private void BattaniaBardNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
+        private void BardNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
         {
             characterCreationManager.CharacterCreationContent.SetParentOccupation("bard_urban");
             string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
@@ -1436,23 +1294,183 @@ namespace RealmsForgotten.CharacterCreation
             string fatherAnimation = "act_character_creation_male_default_hugging";
             UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
         }
-
-        private void AddKhuzaitNarrativeMenuOptions(NarrativeMenu narrativeMenu)
+        private void MerchantNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
         {
-            NarrativeMenuOption narrativeMenuOption = new NarrativeMenuOption("khuzait_retainer_option", new TextObject("{=FVaRDe2a}A noyan's kinsfolk", null), new TextObject("{=jAs3kDXh}Your family were the trusted kinsfolk of a Khuzait noyan, and shared his meals in the chieftain's yurt. Your father assisted his chief in running the affairs of the clan and fought in the core of armored lancers in the center of the Khuzait battle line.", null), new GetNarrativeMenuOptionArgsDelegate(GetKhuzaitRetainerNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(KhuzaitRetainerNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(KhuzaitRetainerNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption);
-            NarrativeMenuOption narrativeMenuOption2 = new NarrativeMenuOption("khuzait_merhant_option", new TextObject("{=TkgLEDRM}Merchants", null), new TextObject("{=qPg3IDiq}Your family came from one of the merchant clans that dominated the cities in eastern Calradia before the Khuzait conquest. They adjusted quickly to their new masters, keeping the caravan routes running and ensuring that the tariff revenues that once went into imperial coffers now flowed to the khanate.", null), new GetNarrativeMenuOptionArgsDelegate(GetKhuzaitMerchantNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(KhuzaitMerchantNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(KhuzaitMerchantNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption2);
-            NarrativeMenuOption narrativeMenuOption3 = new NarrativeMenuOption("khuzait_mercenary_option", new TextObject("{=tGEStbxb}Tribespeople", null), new TextObject("{=URgZ4ai4}Your family were middle-ranking members of one of the Khuzait clans. He had some herds of his own, but was not rich. When the Khuzait horde was summoned to battle, he fought with the horse archers, shooting and wheeling and wearing down the enemy before the lancers delivered the final punch.", null), new GetNarrativeMenuOptionArgsDelegate(GetKhuzaitHerderNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(KhuzaitHerderNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(KhuzaitHerderNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption3);
-            NarrativeMenuOption narrativeMenuOption4 = new NarrativeMenuOption("khuzait_farmer_option", new TextObject("{=gQ2tAvCz}Farmers", null), new TextObject("{=5QSGoRFj}Your family tilled one of the small patches of arable land in the steppes for generations. When the Khuzaits came, they ceased paying taxes to the emperor and providing conscripts for his army, and served the khan instead.", null), new GetNarrativeMenuOptionArgsDelegate(GetKhuzaitFarmerNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(KhuzaitFarmerNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(KhuzaitFarmerNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption4);
-            NarrativeMenuOption narrativeMenuOption5 = new NarrativeMenuOption("khuzait_healer_option", new TextObject("{=vfhVveLW}Shamans", null), new TextObject("{=WOKNhaG2}Your family were guardians of the sacred traditions of the Khuzaits, channelling the spirits of the wilderness and of the ancestors. They tended the sick and dispensed wisdom, resolving disputes and providing practical advice.", null), new GetNarrativeMenuOptionArgsDelegate(GetKhuzaitHealerNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(KhuzaitHealerNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(KhuzaitHealerNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption5);
-            NarrativeMenuOption narrativeMenuOption6 = new NarrativeMenuOption("khuzait_herder_option", new TextObject("{=Xqba1Obq}Nomads", null), new TextObject("{=9aoQYpZs}Your family's clan never pledged its loyalty to the khan and never settled down, preferring to live out in the deep steppe away from his authority. They remain some of the finest trackers and scouts in the grasslands, as the ability to spot an enemy coming and move quickly is often all that protects their herds from their neighbors' predations.", null), new GetNarrativeMenuOptionArgsDelegate(GetKhuzaitNomadHerderNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(KhuzaitNomadHerderNarrativeOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(KhuzaitNomadHerderNarrativeOptionOnSelect), null);
-            narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption6);
+            characterCreationManager.CharacterCreationContent.SetParentOccupation("merchant_urban");
+            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
+            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
+            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
+            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
+            string motherAnimation = "act_character_creation_female_default_mother_front";
+            string fatherAnimation = "act_character_creation_male_default_mother_front";
+            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
+        }
+        private void RetainerNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
+        {
+            characterCreationManager.CharacterCreationContent.SetParentOccupation("retainer");
+            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
+            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
+            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
+            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
+            string motherAnimation = "act_character_creation_female_default_side_to_side_1";
+            string fatherAnimation = "act_character_creation_male_default_side_to_side_1";
+            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
+        }
+        private void HunterNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
+        {
+            characterCreationManager.CharacterCreationContent.SetParentOccupation("hunter");
+            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
+            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
+            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
+            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
+            string motherAnimation = "act_character_creation_female_default_side_to_side_3";
+            string fatherAnimation = "act_character_creation_male_default_side_to_side_3";
+            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
+        }
+        private void FarmerNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
+        {
+            characterCreationManager.CharacterCreationContent.SetParentOccupation("farmer");
+            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
+            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
+            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
+            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
+            string motherAnimation = "act_character_creation_female_default_father_sitting";
+            string fatherAnimation = "act_character_creation_male_default_father_sitting";
+            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
+        }
+        private void VagabondNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
+        {
+            characterCreationManager.CharacterCreationContent.SetParentOccupation("vagabond_urban");
+            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
+            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
+            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
+            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
+            string motherAnimation = "act_character_creation_female_default_hugging";
+            string fatherAnimation = "act_character_creation_male_default_hugging";
+            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
+        }
+        private void MercenaryNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
+        {
+            characterCreationManager.CharacterCreationContent.SetParentOccupation("mercenary_urban");
+            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
+            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
+            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
+            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
+            string motherAnimation = "act_character_creation_female_default_mother_front";
+            string fatherAnimation = "act_character_creation_male_default_mother_front";
+            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
+        }
+        private void PhysicianNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
+        {
+            characterCreationManager.CharacterCreationContent.SetParentOccupation("physician_urban");
+            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
+            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
+            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
+            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
+            string motherAnimation = "act_character_creation_female_default_father_sitting";
+            string fatherAnimation = "act_character_creation_male_default_father_sitting";
+            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
+        }
+        private void AddAquarunNarrativeMenuOptions(NarrativeMenu narrativeMenu)
+        {
+            NarrativeMenuOption ChampionsOption = new(
+                "aqarun_champions", 
+                new TextObject("Aqarun Champions"), 
+                new TextObject("Your parents were chosen between the champions of Aqarun warriors. Your father filled up the warking's private army and your mother a shieldmaiden at the warlord bodyguard. The champions were the only ones that could speak directly to the warkings."), 
+                new GetNarrativeMenuOptionArgsDelegate(GetAqarunChampionNarrativeOptionArgs), 
+                new NarrativeMenuOptionOnConditionDelegate(AqarunNarrativeOptionOnCondition), 
+                new NarrativeMenuOptionOnSelectDelegate(MercenaryNarrativeOptionOnSelect), null);
+            narrativeMenu.AddNarrativeMenuOption(ChampionsOption);
+            NarrativeMenuOption warriorsOption = new(
+                "aqarun_warriors",
+                new TextObject("Warriors"),
+                new TextObject("Your father was part of one of the slave-bodyguards maintained by the Aqarun warkings. He fought by his master's side with tribe's armored cavalry, and was freed - perhaps for an act of valor, or perhaps he paid for his freedom with his share of the spoils of battle. He then married your mother."),
+                new GetNarrativeMenuOptionArgsDelegate(GetAqarunWarriorNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(AqarunNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(RetainerNarrativeOptionOnSelect), null);
+            narrativeMenu.AddNarrativeMenuOption(warriorsOption);
+            NarrativeMenuOption merchantsOption = new(
+                "aqarun_merchants",
+                new TextObject("{=651FhzdR}Urban merchants"),
+                new TextObject("{=1zXrlaav}Your family were respected traders in an oasis town. They ran caravans across the desert, and were experts in the finer points of negotiating passage through the desert tribes' territories."),
+                new GetNarrativeMenuOptionArgsDelegate(GetAqarunMerchantNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(AqarunNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(MerchantNarrativeOptionOnSelect), null);
+            narrativeMenu.AddNarrativeMenuOption(merchantsOption);
+            NarrativeMenuOption farmersOption = new(
+                "aqarun_farmers",
+                new TextObject("Free farmers"),
+                new TextObject("Your familly tilled the soil in one of the many oases under the aqarun territory and tended the palm orchards that produced the desert´s famous dates. Your father was a member of the main foot levy of his tribe, fighting with his kinsmen under his ruler´s banner."),
+                new GetNarrativeMenuOptionArgsDelegate(GetAqarunFarmerNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(AqarunNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(FarmerNarrativeOptionOnSelect), null);
+            narrativeMenu.AddNarrativeMenuOption(farmersOption);
+            NarrativeMenuOption freemenOption = new(
+                "aqarun_freemen",
+                new TextObject("Free men"),
+                new TextObject("{=PKhcPbBX}Your family were part of a nomadic clan, crisscrossing the wastes between wadi beds and wells to feed their herds of goats and camels on the scraggly scrubs of the Kalikhr."),
+                new GetNarrativeMenuOptionArgsDelegate(GetAqarunFreeMenNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(AqarunNarrativeOptionOnCondition), 
+                new NarrativeMenuOptionOnSelectDelegate(HunterNarrativeOptionOnSelect), null);
+            narrativeMenu.AddNarrativeMenuOption(freemenOption);
+            NarrativeMenuOption orphansOption = new(
+                "aqarun_orphans",
+                new TextObject("Orphans"),
+                new TextObject("Your father was not your biological father, but adopted you under his protection to one day strenghten his army of thugs. He worked for a fitiwi, one of the strongmen who keep order in the poorer quarters of the oasis towns. He resolved disputes over land, dice and insults, imposing his authority with the fitiwi's traditional staff."),
+                new GetNarrativeMenuOptionArgsDelegate(GetAqarunOrphansNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(AqarunNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(VagabondNarrativeOptionOnSelect), null);
+            narrativeMenu.AddNarrativeMenuOption(orphansOption);
+        }
+        private bool AqarunNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
+        {
+            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "aqarun";
         }
 
+        private void GetAqarunChampionNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Riding, DefaultSkills.Throwing });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Social, _attributeLevelToAdd);
+        }
+        private void GetAqarunWarriorNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.OneHanded, DefaultSkills.TwoHanded });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Vigor, _attributeLevelToAdd);
+        }
+
+        private void GetAqarunMerchantNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Trade, DefaultSkills.Charm });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Social, _attributeLevelToAdd);
+        }
+
+        private void GetAqarunFarmerNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Athletics, DefaultSkills.OneHanded });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Endurance, _attributeLevelToAdd);
+        }
+        private void GetAqarunFreeMenNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Scouting, DefaultSkills.Bow });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Cunning, _attributeLevelToAdd);
+        }
+        private void GetAqarunOrphansNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Roguery, DefaultSkills.Polearm });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Control, _attributeLevelToAdd);
+        }
         private void GetKhuzaitRetainerNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
             SkillObject[] affectedSkills = new SkillObject[]
@@ -1466,171 +1484,233 @@ namespace RealmsForgotten.CharacterCreation
             args.SetLevelToAttribute(DefaultCharacterAttributes.Endurance, _attributeLevelToAdd);
         }
 
-        private bool KhuzaitRetainerNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
+        private void AddXilanNarrativeMenuOptions(NarrativeMenu narrativeMenu)
         {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "khuzait";
+            NarrativeMenuOption xilatlacay_highborn_option = new(
+                "xilatlacay_highborn",
+                new TextObject("Xilatlacay Highborn"),
+                new TextObject("Your familly belonged to the noble bloodline of the Xilantlacay tribal leaders, descendent of the God Xilan. Your father assisted the Xilan king in running the affairs and trained with the sacred weapons of the warrior elite, the warclub and the crossbow."),
+                new GetNarrativeMenuOptionArgsDelegate(GetXilatlacayHighbornNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(XilanNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(RetainerNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(xilatlacay_highborn_option);
+            NarrativeMenuOption xilatlacay_shamans_option = new(
+                "xilatlacay_shamans",
+                new TextObject("Shamans"),
+                new TextObject("Your parents were shamans, who spoke with the spirits of the forests and mastered the art of healing herbs. As a reservoir of Xilan knowledge, they adjudicated many disputes between the tribes."),
+                new GetNarrativeMenuOptionArgsDelegate(GetXilatlacayShamansNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(XilanNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(HealerNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(xilatlacay_shamans_option);
+            NarrativeMenuOption xilatlacay_folk_option = new(
+                "xilatlacay_folk",
+                new TextObject("Xilan Folk"),
+                new TextObject("Your family were of Xilantlacay folk, who tilled their own land. Your father fought with the Xtlacay, the main body of his people´s warriors, joining in the screaming charges for which the Xtlacay were famous."),
+                new GetNarrativeMenuOptionArgsDelegate(GetXilatlacayFolkNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(XilanNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(FarmerNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(xilatlacay_folk_option);
+            NarrativeMenuOption xilatlacay_smiths_option = new(
+                "xilatlacay_smiths",
+                new TextObject("{=BCU6RezA}Smiths"),
+                new TextObject("Your family were smiths, a revered profession among the Xilantlacay. They crafted everything from fine filigree jewelry in geometric designs to the well-balanced longswords favored by the Xilantlacay aristocracy."),
+                new GetNarrativeMenuOptionArgsDelegate(GetXilatlacaySmithsNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(XilanNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(ArtisanNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(xilatlacay_smiths_option);
+            NarrativeMenuOption xilatlacay_foresters_option = new(
+                "xilatlacay_foresters",
+                new TextObject("{=7eWmU2mF}Foresters"),
+                new TextObject("Your family had little land of their own, so they earned their living from the woods, hunting and trapping. They taught you from an early age that skills like finding game trails and killing an animal with one shot could make the difference between eating and starvation."),
+                new GetNarrativeMenuOptionArgsDelegate(GetXilatlacayForestersNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(XilanNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(HunterNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(xilatlacay_foresters_option);
+            NarrativeMenuOption xilatlacay_sages_option = new(
+                "xilatlacay_sages",
+                new TextObject("Sages"),
+                new TextObject("Your Father was a Sage, a sacred duty for the Xilan Folk. Responsible to keep the history of their people alive, he went from halls to festivities, from rituals to war camps, to teach and inspire the people into the sacred ways. Your learned from him the cleverness of the tongue and the hability to tap into your people soul."),
+                new GetNarrativeMenuOptionArgsDelegate(GetXilatlacaySagesNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(XilanNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(BardNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(xilatlacay_sages_option);
         }
-
-        private void KhuzaitRetainerNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
+        private bool XilanNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
         {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("retainer_urban");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_side_to_side_1";
-            string fatherAnimation = "act_character_creation_male_default_side_to_side_1";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
+            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "giant";
         }
-
-        private void GetKhuzaitMerchantNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        private void GetXilatlacayHighbornNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Trade,
-                DefaultSkills.Charm
-            };
-            args.SetAffectedSkills(affectedSkills);
-            args.SetFocusToSkills(_focusToAdd);
-            args.SetLevelToSkills(_skillLevelToAdd);
-            args.SetLevelToAttribute(DefaultCharacterAttributes.Social, _attributeLevelToAdd);
-        }
-
-        private bool KhuzaitMerchantNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
-        {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "khuzait";
-        }
-
-        private void KhuzaitMerchantNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("merchant_urban");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_mother_front";
-            string fatherAnimation = "act_character_creation_male_default_mother_front";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
-        private void GetKhuzaitHerderNarrativeOptionArgs(NarrativeMenuOptionArgs args)
-        {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Bow,
-                DefaultSkills.Riding
-            };
-            args.SetAffectedSkills(affectedSkills);
-            args.SetFocusToSkills(_focusToAdd);
-            args.SetLevelToSkills(_skillLevelToAdd);
-            args.SetLevelToAttribute(DefaultCharacterAttributes.Control, _attributeLevelToAdd);
-        }
-
-        private bool KhuzaitHerderNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
-        {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "khuzait";
-        }
-
-        private void KhuzaitHerderNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("herder");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_father_sitting";
-            string fatherAnimation = "act_character_creation_male_default_father_sitting";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
-        private void GetKhuzaitFarmerNarrativeOptionArgs(NarrativeMenuOptionArgs args)
-        {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Polearm,
-                DefaultSkills.Throwing
-            };
-            args.SetAffectedSkills(affectedSkills);
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.TwoHanded, DefaultSkills.Crossbow });
             args.SetFocusToSkills(_focusToAdd);
             args.SetLevelToSkills(_skillLevelToAdd);
             args.SetLevelToAttribute(DefaultCharacterAttributes.Vigor, _attributeLevelToAdd);
         }
 
-        private bool KhuzaitFarmerNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
+        private void GetXilatlacayShamansNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "khuzait";
-        }
-
-        private void KhuzaitFarmerNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
-        {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("farmer");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_side_to_side_2";
-            string fatherAnimation = "act_character_creation_male_default_side_to_side_2";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
-        }
-
-        private void GetKhuzaitHealerNarrativeOptionArgs(NarrativeMenuOptionArgs args)
-        {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Medicine,
-                DefaultSkills.Charm
-            };
-            args.SetAffectedSkills(affectedSkills);
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Medicine, DefaultSkills.Charm });
             args.SetFocusToSkills(_focusToAdd);
             args.SetLevelToSkills(_skillLevelToAdd);
             args.SetLevelToAttribute(DefaultCharacterAttributes.Intelligence, _attributeLevelToAdd);
         }
 
-        private bool KhuzaitHealerNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
+        private void GetXilatlacayFolkNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "khuzait";
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Athletics, DefaultSkills.Throwing });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Control, _attributeLevelToAdd);
         }
 
-        private void KhuzaitHealerNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
+        private void GetXilatlacaySmithsNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("healer_urban");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_side_to_side_3";
-            string fatherAnimation = "act_character_creation_male_default_side_to_side_3";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Crafting, DefaultSkills.OneHanded });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Endurance, _attributeLevelToAdd);
         }
 
-        private void GetKhuzaitNomadHerderNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        private void GetXilatlacayForestersNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
-            SkillObject[] affectedSkills = new SkillObject[]
-            {
-                DefaultSkills.Scouting,
-                DefaultSkills.Riding
-            };
-            args.SetAffectedSkills(affectedSkills);
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Scouting, DefaultSkills.Tactics });
             args.SetFocusToSkills(_focusToAdd);
             args.SetLevelToSkills(_skillLevelToAdd);
             args.SetLevelToAttribute(DefaultCharacterAttributes.Cunning, _attributeLevelToAdd);
         }
 
-        private bool KhuzaitNomadHerderNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
+        private void GetXilatlacaySagesNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "khuzait";
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Roguery, DefaultSkills.Charm });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Social, _attributeLevelToAdd);
+        }
+        private void AddMageNarrativeMenuOptions(NarrativeMenu narrativeMenu)
+        {
+            NarrativeMenuOption mage_direct_descendants_option = new(
+                "mage_direct_descendants",
+                new TextObject("Direct Descendants of the first people"),
+                new TextObject("Descending from the ruler´s bloodline of the First People - the ancestors that made the pilgrimage to Aeurth - your father was a leader among his village and the cousin of the King of his Realm. He rode with the lord´s cavalry, fighting as an armored lancer."),
+                new GetNarrativeMenuOptionArgsDelegate(GetMageDirectDescendantsNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(MageNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(RetainerNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(mage_direct_descendants_option);
+            NarrativeMenuOption mage_urban_merchants_option = new(
+                "mage_urban_merchants",
+                new TextObject("{=651FhzdR}Urban merchants"),
+                new TextObject("{=FQntPChs}Your family were merchants in one of the main cities of the Kingdoms of Man. They sometimes organized caravans to nearby towns, and discussed issues in the town council."),
+                new GetNarrativeMenuOptionArgsDelegate(GetMageUrbanMerchantsNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(MageNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(MerchantNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(mage_urban_merchants_option);
+            NarrativeMenuOption mage_free_farmers_option = new(
+                "mage_free_farmers",
+                new TextObject("Free Farmers"),
+                new TextObject("{=09z8Q08f}Your family were small farmers with just enough land to feed themselves and make a small profit. People like them were the pillars of the realm rural economy, as well as the backbone of the levy."),
+                new GetNarrativeMenuOptionArgsDelegate(GetMageFreeFarmersNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(MageNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(FarmerNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(mage_free_farmers_option);
+            NarrativeMenuOption mage_urban_artisans_option = new(
+                "mage_urban_artisans",
+                new TextObject("{=v48N6h1t}Urban artisans"),
+                new TextObject("{=ZKynvffv}Your family owned their own workshop in a city, making goods from raw materials brought in from the countryside. Your father played an active if minor role in the town council, and also served in the militia."),
+                new GetNarrativeMenuOptionArgsDelegate(GetMageUrbanArtisansNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(MageNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(ArtisanNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(mage_urban_artisans_option);
+            NarrativeMenuOption mage_forestcaretakers_option = new(
+                "mage_forestcaretakers",
+                new TextObject("Forestcaretakers"),
+                new TextObject("Your family lived in a village, but did not own their own land. Instead, your father supplemented paid jobs with long trips in the woods, hunting and trapping, always keeping a wary eye for the lord's game wardens."),
+                new GetNarrativeMenuOptionArgsDelegate(GetMageForestCaretakersNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(MageNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(HunterNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(mage_forestcaretakers_option);
+            NarrativeMenuOption mage_urban_vagabonds_option = new(
+                "mage_urban_vagabonds",
+                new TextObject("{=aEke8dSb}Urban vagabonds"),
+                new TextObject("{=Jvf6K7TZ}Your family numbered among the many poor migrants living in the slums that grow up outside the walls of cities, making whatever money they could from a variety of odd jobs. Sometimes they did service for one of the many criminal gangs, and you had an early look at the dark side of life."),
+                new GetNarrativeMenuOptionArgsDelegate(GetMageUrbanVagabondsNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(MageNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(VagabondNarrativeOptionOnSelect),
+                null
+            );
+            narrativeMenu.AddNarrativeMenuOption(mage_urban_vagabonds_option);
+        }
+        private bool MageNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
+        {
+            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "aqarun";
+        }
+        private void GetMageDirectDescendantsNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Riding, DefaultSkills.Polearm });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Vigor, _attributeLevelToAdd);
         }
 
-        private void KhuzaitNomadHerderNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
+        private void GetMageUrbanMerchantsNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
-            characterCreationManager.CharacterCreationContent.SetParentOccupation("herder");
-            string motherEquipmentId = GetMotherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            string fatherEquipmentId = GetFatherEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedParentOccupation, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId);
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(motherEquipmentId);
-            MBEquipmentRoster object2 = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(fatherEquipmentId);
-            string motherAnimation = "act_character_creation_female_default_hugging";
-            string fatherAnimation = "act_character_creation_male_default_hugging";
-            UpdateParentEquipment(characterCreationManager, @object, object2, motherAnimation, fatherAnimation);
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Trade, DefaultSkills.Charm });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Social, _attributeLevelToAdd);
+        }
+
+        private void GetMageFreeFarmersNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Athletics, DefaultSkills.Polearm });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Endurance, _attributeLevelToAdd);
+        }
+
+        private void GetMageUrbanArtisansNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Crafting, DefaultSkills.Crossbow });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Intelligence, _attributeLevelToAdd);
+        }
+
+        private void GetMageForestCaretakersNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Scouting, DefaultSkills.Bow });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Control, _attributeLevelToAdd);
+        }
+
+        private void GetMageUrbanVagabondsNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Roguery, DefaultSkills.Throwing });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Cunning, _attributeLevelToAdd);
         }
 
         private List<NarrativeMenuCharacterArgs> GetChildhoodMenuNarrativeMenuCharacterArgs(CultureObject culture, string occupationType, CharacterCreationManager characterCreationManager)
@@ -1640,7 +1720,202 @@ namespace RealmsForgotten.CharacterCreation
             list.Add(new NarrativeMenuCharacterArgs("player_childhood_character", 7, playerChildhoodAgeEquipmentId, "act_childhood_schooled", "spawnpoint_player_1", "", "", null, true, CharacterObject.PlayerCharacter.IsFemale));
             return list;
         }
+        private void AddDwarfNarrativeMenuOptions(NarrativeMenu narrativeMenu)
+        {
+            NarrativeMenuOption dwarf_nobles_option = new(
+                "dwarf_nobles",
+                new TextObject("Dugrast Nobles"),
+                new TextObject("Your family was part of the noble dwarven houses, renowned for their craftsmanship and warrior skills."),
+                new GetNarrativeMenuOptionArgsDelegate(GetDwarfNoblesNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(DwarfNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(RetainerNarrativeOptionOnSelect),
+                null);
+            NarrativeMenuOption dwarf_merchants_option = new(
+                "dwarf_merchants",
+                new TextObject("{=651FhzdR}Urban merchants"),
+                new TextObject("{=FQntPChs}Your family were merchants in one of the main cities of the Dugrast Kingdom. They sometimes organized caravans to nearby towns, and discussed issues in the town council."),
+                new GetNarrativeMenuOptionArgsDelegate(GetDwarfMerchantsNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(DwarfNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(MerchantNarrativeOptionOnSelect),
+                null);
+            NarrativeMenuOption dwarf_artisans_option = new(
+                "dwarf_artisans",
+                new TextObject("Dugrast Artisans"),
+                new TextObject("Your family were famous artisans, crafting weapons, armor, and items of unmatched quality."),
+                new GetNarrativeMenuOptionArgsDelegate(GetDwarfArtisansNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(DwarfNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(ArtisanNarrativeOptionOnSelect),
+                null);
+            NarrativeMenuOption dwarf_miners_option = new(
+                "dwarf_miners",
+                new TextObject("Dugrast Miners"),
+                new TextObject("Your family worked in the deep mines, extracting precious metals and gems from the earth."),
+                new GetNarrativeMenuOptionArgsDelegate(GetDwarfMinersNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(DwarfNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(FarmerNarrativeOptionOnSelect),
+                null);
+            NarrativeMenuOption dwarf_warriors_option = new(
+                "dwarf_warriors",
+                new TextObject("Dugrast Warriors"),
+                new TextObject("Your family were part of the dwarven military, renowned for their resilience and tactical brilliance in battle."),
+                new GetNarrativeMenuOptionArgsDelegate(GetDwarfWarriorsNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(DwarfNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(RetainerNarrativeOptionOnSelect),
+                null);
+            NarrativeMenuOption dwarf_vagabonds_option = new(
+                "dwarf_vagabonds",
+                new TextObject("{=aEke8dSb}Urban vagabonds"),
+                new TextObject("{=Jvf6K7TZ}Your family numbered among the many poor migrants living in the slums that grow up outside the walls of cities, making whatever money they could from a variety of odd jobs. Sometimes they did service for one of the many criminal gangs, and you had an early look at the dark side of life."),
+                new GetNarrativeMenuOptionArgsDelegate(GetDwarfVagabondsNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(DwarfNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(VagabondNarrativeOptionOnSelect),
+                null);
+        }
+        private bool DwarfNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
+        {
+            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "dwarf";
+        }
+        private void GetDwarfNoblesNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.TwoHanded, DefaultSkills.Riding });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Vigor, _attributeLevelToAdd);
+        }
+        private void GetDwarfMerchantsNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Trade, DefaultSkills.Charm });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Social, _attributeLevelToAdd);
+        }
+        private void GetDwarfArtisansNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Crafting, DefaultSkills.Trade });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Intelligence, _attributeLevelToAdd);
+        }
+        private void GetDwarfMinersNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Engineering, DefaultSkills.Athletics });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Endurance, _attributeLevelToAdd);
+        }
+        private void GetDwarfWarriorsNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.OneHanded, DefaultSkills.Polearm });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Vigor, _attributeLevelToAdd);
+        }
+        private void GetDwarfVagabondsNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Roguery, DefaultSkills.Throwing });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Cunning, _attributeLevelToAdd);
+        }
 
+        private void AddUrkhaiParentNarrativeMenuOptions(NarrativeMenu narrativeMenu)
+        {
+            NarrativeMenuOption urkhai_commanders_option = new(
+                "urkhai_commanders",
+                new TextObject("Urkhai Commanders"),
+                new TextObject("You were born from a high rank Urkhai commander, renowned for his commanding skills and courage in battle."),
+                new GetNarrativeMenuOptionArgsDelegate(GetUrkhaiCommandersNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(UrkhaiNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(RetainerNarrativeOptionOnSelect),
+                null);
+            NarrativeMenuOption urkhai_merchants_option = new(
+                "urkhai_merchants",
+                new TextObject("{=651FhzdR}Urban merchants"),
+                new TextObject("{=FQntPChs}Your family were merchants in one of the main cities of the Urkhai Kingdom. They sometimes organized caravans to nearby towns, and discussed issues in the town council."),
+                new GetNarrativeMenuOptionArgsDelegate(GetUrkhaiMerchantsNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(UrkhaiNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(MerchantNarrativeOptionOnSelect),
+                null); 
+            NarrativeMenuOption urkhai_artisans_option = new(
+                "urkhai_artisans",
+                new TextObject("Urkhai Artisans"),
+                new TextObject("Your family were famous artisans, crafting weapons, armor, and items of unmatched quality."),
+                new GetNarrativeMenuOptionArgsDelegate(GetUrkhaiArtisansNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(UrkhaiNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(ArtisanNarrativeOptionOnSelect),
+                null);
+            NarrativeMenuOption urkhai_miners_option = new(
+                "urkhai_miners",
+                new TextObject("Urkhai Miners"),
+                new TextObject("Your family worked in the deep mines, extracting precious metals and gems from the earth."),
+                new GetNarrativeMenuOptionArgsDelegate(GetUrkhaiMinersNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(UrkhaiNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(ArtisanNarrativeOptionOnSelect),
+                null);
+            NarrativeMenuOption urkhai_troops_option = new(
+                "urkhai_troops",
+                new TextObject("Urkhai Troops"),
+                new TextObject("Your family were part of the urkhaish military, renowned for their brutality and courage in battle."),
+                new GetNarrativeMenuOptionArgsDelegate(GetUrkhaiTroopsNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(UrkhaiNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(RetainerNarrativeOptionOnSelect),
+                null);
+            NarrativeMenuOption urkhai_vagabonds_option = new(
+                "urkhai_vagabonds",
+                new TextObject("{=aEke8dSb}Urban vagabonds"),
+                new TextObject("{=Jvf6K7TZ}Your family numbered among the many poor migrants living in the slums that grow up outside the walls of cities, making whatever money they could from a variety of odd jobs. Sometimes they did service for one of the many criminal gangs, and you had an early look at the dark side of life."),
+                new GetNarrativeMenuOptionArgsDelegate(GetUrkhaiVagabondsNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(UrkhaiNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(VagabondNarrativeOptionOnSelect),
+                null);
+        }
+        private bool UrkhaiNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
+        {
+            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "urkhai";
+        }
+
+        private void GetUrkhaiCommandersNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.TwoHanded, DefaultSkills.Riding });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Vigor, _attributeLevelToAdd);
+        }
+        private void GetUrkhaiMerchantsNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Trade, DefaultSkills.Charm });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Social, _attributeLevelToAdd);
+        }
+        private void GetUrkhaiMinersNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Engineering, DefaultSkills.Athletics });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Endurance, _attributeLevelToAdd);
+        }
+        private void GetUrkhaiArtisansNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Crafting, DefaultSkills.Trade });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Intelligence, _attributeLevelToAdd);
+        }
+        private void GetUrkhaiTroopsNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.OneHanded, DefaultSkills.Polearm });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Vigor, _attributeLevelToAdd);
+        }
+        private void GetUrkhaiVagabondsNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Roguery, DefaultSkills.Throwing });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Cunning, _attributeLevelToAdd);
+        }
         private void AddChildhoodMenu(CharacterCreationManager characterCreationManager)
         {
             List<NarrativeMenuCharacter> list = new List<NarrativeMenuCharacter>();
@@ -1652,7 +1927,103 @@ namespace RealmsForgotten.CharacterCreation
             AddChildhoodNarrativeMenuOptions(narrativeMenu);
             characterCreationManager.AddNewMenu(narrativeMenu);
         }
-
+        private void AddWulfenNarrativeMenuOptions(NarrativeMenu narrativeMenu)
+        {
+            NarrativeMenuOption wulfen_highborn_option = new(
+                "wulfen_highborn",
+                new TextObject("Wulfen Highborn"),
+                new TextObject("Your family stood among the chieftain’s inner circle, sharing feasts at the mead-hall. They fought with fierce two-handed blades, and you learned woodland archery while training beside your clan’s champions."),
+                new GetNarrativeMenuOptionArgsDelegate(GetWulfenHighbornNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(WulfenNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(RetainerNarrativeOptionOnSelect),
+                null);
+            NarrativeMenuOption wulfen_druids_option = new(
+                "wulfen_druids",
+                new TextObject("Wulfen Druids"),
+                new TextObject("Your parents were wise druids, versed in sacred rites and herbal crafts. They ministered to the sick, mediated clan disputes, and kept alive the old Celtic-Germanic rituals that bound the tribe together."),
+                new GetNarrativeMenuOptionArgsDelegate(GetWulfenDruidsNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(WulfenNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(HealerNarrativeOptionOnSelect),
+                null);
+            NarrativeMenuOption wulfen_clansfolk_option = new(
+                "wulfen_clansfolk",
+                new TextObject("Wulfen Clansfolk"),
+                new TextObject("Your family were stalwart freemen, tending their own fields in the shadow of deep forests. Your father joined the clan’s main warband, loosing furious charges echoing with battle cries of old."),
+                new GetNarrativeMenuOptionArgsDelegate(GetWulfenClansfolkNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(WulfenNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(HerderNarrativeOptionOnSelect),
+                null);
+            NarrativeMenuOption wulfen_smiths_option = new(
+                "wulfen_smiths",
+                new TextObject("Wulfen Smiths"),
+                new TextObject("Your kin were famed for forging stout iron blades and intricate jewelry. In smoky forges, they hammered steel into deadly axes and swords prized by chieftains across the land."),
+                new GetNarrativeMenuOptionArgsDelegate(GetWulfenSmithsNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(WulfenNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(ArtisanNarrativeOptionOnSelect),
+                null);
+            NarrativeMenuOption wulfen_foresters_option = new(
+                "wulfen_foresters",
+                new TextObject("Wulfen Foresters"),
+                new TextObject("Your family survived off thick woodlands, hunting and trapping game among ancient oaks and firs. They taught you to move silently and live off the land—a skill that could save your life in enemy territory."),
+                new GetNarrativeMenuOptionArgsDelegate(GetWulfenForestersNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(WulfenNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(HunterNarrativeOptionOnSelect),
+                null);
+            NarrativeMenuOption wulfen_skalds_option = new(
+                "wulfen_skalds",
+                new TextObject("Wulfen Skalds"),
+                new TextObject("Your father was a traveling skald, reciting heroic sagas and preserving clan lore. Through stirring verses at feasts and gatherings, you learned the power of the spoken word and the secrets of influencing men’s hearts."),
+                new GetNarrativeMenuOptionArgsDelegate(GetWulfenSkaldsNarrativeOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(WulfenNarrativeOptionOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(BardNarrativeOptionOnSelect),
+                null);
+        }
+        private void GetWulfenHighbornNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.TwoHanded, DefaultSkills.Bow });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Vigor, _attributeLevelToAdd);
+        }
+        private void GetWulfenDruidsNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Medicine, DefaultSkills.Charm });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Intelligence, _attributeLevelToAdd);
+        }
+        private void GetWulfenClansfolkNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Athletics, DefaultSkills.Throwing });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Control, _attributeLevelToAdd);
+        }
+        private void GetWulfenSmithsNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Engineering, DefaultSkills.Athletics });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Endurance, _attributeLevelToAdd);
+        }
+        private void GetWulfenForestersNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Scouting, DefaultSkills.Tactics });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Cunning, _attributeLevelToAdd);
+        }
+        private void GetWulfenSkaldsNarrativeOptionArgs(NarrativeMenuOptionArgs args)
+        {
+            args.SetAffectedSkills(new SkillObject[] { DefaultSkills.Roguery, DefaultSkills.Charm });
+            args.SetFocusToSkills(_focusToAdd);
+            args.SetLevelToSkills(_skillLevelToAdd);
+            args.SetLevelToAttribute(DefaultCharacterAttributes.Social, _attributeLevelToAdd);
+        }
+        private bool WulfenNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
+        {
+            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "wulf";
+        }
         private void AddChildhoodNarrativeMenuOptions(NarrativeMenu narrativeMenu)
         {
             NarrativeMenuOption narrativeMenuOption = new NarrativeMenuOption("childhood_leadership_option", new TextObject("{=kmM68Qx4}your leadership skills.", null), new TextObject("{=FfNwXtii}If the wolf pup gang of your early childhood had an alpha, it was definitely you. All the other kids followed your lead as you decided what to play and where to play, and led them in games and mischief.", null), new GetNarrativeMenuOptionArgsDelegate(GetChildhoodLeadershipOptionArgs), new NarrativeMenuOptionOnConditionDelegate(ChildhoodLeadershipOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(ChildhoodLeadershipOptionOnSelect), null);
@@ -1686,7 +2057,6 @@ namespace RealmsForgotten.CharacterCreation
         {
             return true;
         }
-
         private void ChildhoodLeadershipOptionOnSelect(CharacterCreationManager characterCreationManager)
         {
             foreach (NarrativeMenuCharacter narrativeMenuCharacter in characterCreationManager.CurrentMenu.Characters)
