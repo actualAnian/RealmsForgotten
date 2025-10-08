@@ -14,7 +14,6 @@ using RealmsForgotten.Career.Ability;
 
 namespace RealmsForgotten.Patches
 {
-    [HarmonyPatch]
     public static class DamagePatch
     {
         [HarmonyPrefix]
@@ -24,10 +23,6 @@ namespace RealmsForgotten.Patches
             Agent attacker = b.OwnerId != -1 ? Current.FindAgentWithIndex(b.OwnerId) : __instance;
             Agent victim = __instance;
 
-            //if (!victim.IsHuman || !attacker.IsHuman)
-            //{
-            //    return true;
-            //}
             if (victim == attacker)
                 return true;
             int baseDamage = b.InflictedDamage;
@@ -96,7 +91,6 @@ namespace RealmsForgotten.Patches
                 DisplayDamageResult(baseDamage, resultDamage, summedBonus, victim == Agent.Main);
             return true;
         }
-
         private static MissionWeapon GetWeapon(Agent victim, Agent attacker, Blow b)
         {
             MissionWeapon missionWeapon;
@@ -104,7 +98,7 @@ namespace RealmsForgotten.Patches
             if (b.IsMissile)
             {
                 Type missionType = victim.Mission.GetType();
-                System.Reflection.FieldInfo missilesField = AccessTools.Field(missionType, "_missiles");
+                System.Reflection.FieldInfo missilesField = AccessTools.Field(missionType, "_missilesDictionary");
                 Dictionary<int, Missile> missilesValue = (Dictionary<int, Missile>)missilesField.GetValue(victim.Mission);
                 missionWeapon = missilesValue[affectorWeaponSlotOrMissileIndex].Weapon;
             }
@@ -130,7 +124,6 @@ namespace RealmsForgotten.Patches
                     return DamageType.PhysicalMelee;
             }
         }
-
         private static bool IsAlchemicalWeapon(this MissionWeapon missionWeapon)
         {
             List<string> allAlchemicalTexts = new()
@@ -154,6 +147,5 @@ namespace RealmsForgotten.Patches
             var resultText = $"{resultDamage} damage was dealt which was {baseDamage} {sign} {bonus} from bonuses.";
             InformationManager.DisplayMessage(new InformationMessage(resultText, displaycolor));
         }
-
     }
 }

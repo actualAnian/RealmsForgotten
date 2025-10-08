@@ -226,12 +226,12 @@ namespace RealmsForgotten
 #pragma warning restore BHA0003 // Type was not found
             harmony.Patch(originalMethod, transpiler: new HarmonyMethod(typeof(PartyVMPatch), nameof(PartyVMPatch.PartyVMPopulatePartyListLabelPatch)));
             //          harmony.Patch(beardGetterMethod, transpiler: new HarmonyMethod(typeof(PartyVMPatch), nameof(PartyVMPatch.PartyVMPopulatePartyListLabelPatch)));
-
             // run manually to remove broken bones when viewing characters
             MethodInfo ammoMethod = AccessTools.Method("Agent:OnWeaponAmmoReload");
+            MethodInfo damageInfo = AccessTools.Method("Agent:HandleBlow");
             harmony.Patch(ammoMethod, prefix: new HarmonyMethod(typeof(RFSpellAmmo), nameof(RFSpellAmmo.OnWeaponAmmoReloadPatch)));
+            harmony.Patch(damageInfo, prefix: new HarmonyMethod(typeof(DamagePatch), nameof(DamagePatch.PreHandleBlow)));
             QuestPatches.PatchAll();
-
         }
 
         private void RemoveSandboxAndStoryOptions()
@@ -246,8 +246,6 @@ namespace RealmsForgotten
         }
         protected override void OnSubModuleLoad()
         {
-            //var types = Globals.realmsForgottenAssembly.GetTypes().ToList();
-            //var patch = types.Where(t => t is FaceGenPatch);
             base.OnSubModuleLoad();
             ViewModelExtensionManager.Initialize(); //has to happen before harmony PatchAll
             harmony.PatchAll();
