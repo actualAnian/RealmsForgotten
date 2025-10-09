@@ -101,8 +101,6 @@ namespace RealmsForgotten.CharacterCreation
             characterCreationManager.CharacterCreationContent.DefaultSelectedTitleType = "guard";
             characterCreationManager.RegisterCharacterCreationContentHandler(this, 800);
         }
-
-
         void ICharacterCreationContentHandler.InitializeContent(CharacterCreationManager characterCreationManager)
         {
             characterCreationManager.CharacterCreationContent.AddEquipmentToUseGetter(delegate (string occupationId, out string equipmentId)
@@ -130,9 +128,7 @@ namespace RealmsForgotten.CharacterCreation
             }
         }
 
-        void ICharacterCreationContentHandler.OnCharacterCreationFinalize(CharacterCreationManager characterCreationManager)
-        {
-        }
+        void ICharacterCreationContentHandler.OnCharacterCreationFinalize(CharacterCreationManager characterCreationManager) { }
 
         public void InitializeCharacterCreationStages(CharacterCreationManager characterCreationManager)
         {
@@ -166,13 +162,11 @@ namespace RealmsForgotten.CharacterCreation
             AddRFSpecialStartMenu(characterCreationManager);
             AddCultureLocationMenu(characterCreationManager);
 
-
             RFCulturalFeats culturalFeats = new();
 
             foreach (CultureObject cultureObject in MBObjectManager.Instance.GetObjectTypeList<CultureObject>())
             {
                 string cultureId = cultureObject.StringId;
-
                 FieldInfo _description = AccessTools.Field(typeof(PropertyObject), "_description");
 
                 _description.SetValue(DefaultCulturalFeats.BattanianMilitiaFeat, new TextObject("Towns owned by rulers with the current culture have +1 militia production."));
@@ -240,11 +234,11 @@ namespace RealmsForgotten.CharacterCreation
         {
             BodyProperties bodyProperties = CharacterObject.PlayerCharacter.GetBodyProperties(CharacterObject.PlayerCharacter.Equipment, -1);
             bodyProperties = TaleWorlds.Core.FaceGen.GetBodyPropertiesWithAge(ref bodyProperties, characterCreationManager.CharacterCreationContent.StartingAge);
-            NarrativeMenuCharacter item = new("rf_start", bodyProperties, CharacterObject.PlayerCharacter.Race, CharacterObject.PlayerCharacter.IsFemale);
+            NarrativeMenuCharacter item = new("player_rf_menu_character", bodyProperties, CharacterObject.PlayerCharacter.Race, CharacterObject.PlayerCharacter.IsFemale);
             List<NarrativeMenuCharacter> list = new() { item };
             NarrativeMenu narrativeMenu = new("rf_start_location", "rf_start", "", new TextObject("{=CulturedStart29}Location Options", null), new TextObject("{=CulturedStart30}Beginning your new adventure...", null), list, new NarrativeMenu.GetNarrativeMenuCharacterArgsDelegate(GetRFStartMenuNarrativeMenuCharacterArgs));
 
-            narrativeMenu.AddNarrativeMenuOption(new("rf_start_location_0", new("{=CulturedStart31}Near your home in the city where your journey began"), new("{=CulturedStart32}Back to where you started"), null, null, null, null));
+            narrativeMenu.AddNarrativeMenuOption(new("rf_start_location_0", new("{=CulturedStart31}Near your home in the city where your journey began"), new("{=CulturedStart32}Back to where you started"), null, null, null, new NarrativeMenuOptionOnConsequenceDelegate(m => { ChosenSettlement =  Settlement.All.Where(s => s.IsTown && s.Culture == Hero.MainHero.Culture).GetRandomElementInefficiently().StringId; })));
             narrativeMenu.AddNarrativeMenuOption(new("rf_start_location_1", new("{=CulturedStart33}In a strange new city (Random)"), new("{=CulturedStart34}Travelling far and wide you arrive at an unknown city"), null, null, null, new NarrativeMenuOptionOnConsequenceDelegate(m => { ChosenSettlement = Settlement.All.GetRandomElement().StringId; })));
             narrativeMenu.AddNarrativeMenuOption(new("rf_start_location_2", new("{=CulturedStart35}In a caravan to the Athas city of Drakar"), new("{=CulturedStart36}You leave the caravan right at the gates"), null, null, null, new NarrativeMenuOptionOnConsequenceDelegate(m => { ChosenSettlement = "town_A8"; })));
             narrativeMenu.AddNarrativeMenuOption(new("rf_start_location_3", new("{=CulturedStart37}In a caravan to the Elvean city of Cormanthor"), new("{=CulturedStart36}You leave the caravan right at the gates"), null, null, null, new NarrativeMenuOptionOnConsequenceDelegate(m => { ChosenSettlement = "town_B2"; })));
@@ -266,7 +260,7 @@ namespace RealmsForgotten.CharacterCreation
         {
             BodyProperties bodyProperties = CharacterObject.PlayerCharacter.GetBodyProperties(CharacterObject.PlayerCharacter.Equipment, -1);
             bodyProperties = TaleWorlds.Core.FaceGen.GetBodyPropertiesWithAge(ref bodyProperties, characterCreationManager.CharacterCreationContent.StartingAge);
-            NarrativeMenuCharacter item = new("rf_start", bodyProperties, CharacterObject.PlayerCharacter.Race, CharacterObject.PlayerCharacter.IsFemale);
+            NarrativeMenuCharacter item = new("player_rf_menu_character", bodyProperties, CharacterObject.PlayerCharacter.Race, CharacterObject.PlayerCharacter.IsFemale);
             List<NarrativeMenuCharacter> list = new() { item };
             NarrativeMenu narrativeMenu = new("rf_start", "narrative_age_selection_menu", "rf_start_location", new TextObject("Who are you in Auerth", null), new TextObject("Who are you in Auerth", null), list, new NarrativeMenu.GetNarrativeMenuCharacterArgsDelegate(GetRFStartMenuNarrativeMenuCharacterArgs));
             
@@ -284,9 +278,10 @@ namespace RealmsForgotten.CharacterCreation
         }
         private List<NarrativeMenuCharacterArgs> GetRFStartMenuNarrativeMenuCharacterArgs(CultureObject culture, string occupationType, CharacterCreationManager characterCreationManager)
         {
+            
             List<NarrativeMenuCharacterArgs> list = new();
             string playerEquipmentId = GetPlayerEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedTitleType, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId, Hero.MainHero.IsFemale);
-            list.Add(new NarrativeMenuCharacterArgs("player_age_selection_character", characterCreationManager.CharacterCreationContent.StartingAge, playerEquipmentId, "act_childhood_schooled", "spawnpoint_player_1", "", "", null, true, CharacterObject.PlayerCharacter.IsFemale));
+            list.Add(new NarrativeMenuCharacterArgs("player_rf_menu_character", characterCreationManager.CharacterCreationContent.StartingAge, playerEquipmentId, "act_childhood_schooled", "spawnpoint_player_1", "", "", null, true, CharacterObject.PlayerCharacter.IsFemale));
             MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(playerEquipmentId);
             ItemObject item = @object.DefaultEquipment[EquipmentIndex.ArmorItemEndSlot].Item;
             list.Add(new NarrativeMenuCharacterArgs("narrative_character_horse", -1, "", "act_horse_stand_1", "spawnpoint_mount_1", @object.DefaultEquipment[EquipmentIndex.ArmorItemEndSlot].Item.StringId, @object.DefaultEquipment[EquipmentIndex.HorseHarness].Item.StringId, MountCreationKey.GetRandomMountKey(item, CharacterObject.PlayerCharacter.GetMountKeySeed()), false, false));
@@ -474,7 +469,12 @@ namespace RealmsForgotten.CharacterCreation
                     {
                         narrativeMenuCharacter.UpdateBodyProperties(bodyProperties, CharacterObject.PlayerCharacter.Race, false);
                     }
-                    if (narrativeMenuCharacter.StringId.Equals("player_childhood_character") || narrativeMenuCharacter.StringId.Equals("player_education_character") || narrativeMenuCharacter.StringId.Equals("player_youth_character") || narrativeMenuCharacter.StringId.Equals("player_adulthood_character") || narrativeMenuCharacter.StringId.Equals("player_age_selection_character"))
+                    if (narrativeMenuCharacter.StringId.Equals("player_childhood_character") 
+                        || narrativeMenuCharacter.StringId.Equals("player_education_character") 
+                        || narrativeMenuCharacter.StringId.Equals("player_youth_character") 
+                        || narrativeMenuCharacter.StringId.Equals("player_adulthood_character") 
+                        || narrativeMenuCharacter.StringId.Equals("player_age_selection_character")
+                        || narrativeMenuCharacter.StringId.Equals("player_rf_menu_character"))
                     {
                         narrativeMenuCharacter.UpdateBodyProperties(CharacterObject.PlayerCharacter.GetBodyProperties(null, -1), CharacterObject.PlayerCharacter.Race, false);
                     }

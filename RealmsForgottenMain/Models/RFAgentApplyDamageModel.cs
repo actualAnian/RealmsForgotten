@@ -144,7 +144,7 @@ namespace RealmsForgotten.Models
             MissionWeapon weapon = attackInformation.AttackerWeapon;
             BasicCharacterObject attackerCharacter = attackInformation.VictimAgent.Character;
             BasicCharacterObject victimCharacter = attackInformation.VictimAgent.Character;
-            if (attackerCharacter == null || victimCharacter == null) return baseNumber;
+            if (attackerCharacter == null || victimCharacter == null || weapon.Item == null) return baseNumber;
             if (weapon.Item.ItemType == ItemObject.ItemTypeEnum.Polearm ||
                 weapon.Item.ItemType == ItemObject.ItemTypeEnum.TwoHandedWeapon ||
                 weapon.Item.ItemType == ItemObject.ItemTypeEnum.OneHandedWeapon)
