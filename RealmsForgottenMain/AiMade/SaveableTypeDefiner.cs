@@ -86,8 +86,6 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(BanditIncrease), 44);
             AddClassDefinition(typeof(BanditPartyManager), 45);
             AddClassDefinition(typeof(DocksMenuBehavior), 46);
-            //AddClassDefinition(typeof(CustomAIBase), 47); @TODO
-            //AddClassDefinition(typeof(YourFactionAI), 48); @TODO
             AddClassDefinition(typeof(RaceCraftingStaminaBehavior), 54);
             //AddClassDefinition(typeof(ADODChamberlainsBehavior), 55); @TODO
             AddClassDefinition(typeof(SlaveBehavior), 56);

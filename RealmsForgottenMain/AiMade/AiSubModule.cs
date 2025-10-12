@@ -19,6 +19,7 @@ using RealmsForgotten.AiMade.CustomOrderofBattle;
 using RealmsForgotten.AiMade.Village_Inn_Quests;
 using RealmsForgotten.AiMade.Village_Inn_Quests.RealmsForgotten.AiMade.Village_Inn_Quests;
 using SandBox.Missions.MissionLogics;
+using RealmsForgotten.Chamberlain;
 
 
 namespace RealmsForgotten.AiMade
@@ -62,8 +63,6 @@ namespace RealmsForgotten.AiMade
             var customItemCategories = new RealmsForgotten.Behaviors.CustomItemCategories();
             customItemCategories.Initialize();
 
-            // Add quest behaviors
-
             // Add other behaviors
             campaignGameStarter.AddBehavior(new MercenaryOfferBehavior());
             campaignGameStarter.AddBehavior(new HouseTroopsTownsBehavior());
@@ -90,7 +89,7 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new BanditPartyManager());
             campaignGameStarter.AddBehavior(new DocksMenuBehavior());
             campaignGameStarter.AddBehavior(new RaceCraftingStaminaBehavior());
-            //campaignGameStarter.AddBehavior(new ADODChamberlainsBehavior()); @TODO
+            campaignGameStarter.AddBehavior(new RFChamberlainsBehavior());
             campaignGameStarter.AddBehavior(new SlaveBehavior());
             campaignGameStarter.AddBehavior(new ADODCustomLocationsBehavior());
             campaignGameStarter.AddBehavior(new NasorianHordeInvasion());
@@ -144,7 +143,6 @@ namespace RealmsForgotten.AiMade
 
                 //mission.AddMissionBehavior(new ForceWinterMissionBehavior());
                 mission.AddMissionBehavior(new ADODFireArrowsMissionBehavior());
-                //mission.AddMissionBehavior(new AttachWallSegmentDebugBehavior()); @TODO
             }
 
             // Add Reinforcements Runner if DeploymentMissionController is present

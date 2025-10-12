@@ -43,7 +43,7 @@ namespace RealmsForgotten.Career.VievModels
         {
             base.OnFrameTick(dt);
             LoadingWindow.DisableGlobalLoadingWindow();
-            if (_gauntletLayer == null || _gauntletLayer.Input.IsHotKeyReleased("Exit"))// || _gauntletLayer.Input.IsHotKeyReleased(41)) //@TODO check
+            if (_gauntletLayer == null || _gauntletLayer.Input.IsHotKeyReleased("Exit") ||  _gauntletLayer.Input.IsKeyReleased(InputKey.Escape))
                 CloseScreen();
         }
 

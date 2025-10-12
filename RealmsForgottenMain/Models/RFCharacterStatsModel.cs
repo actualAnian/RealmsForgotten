@@ -3,7 +3,6 @@ using RealmsForgotten.Career;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameComponents;
-using static TaleWorlds.CampaignSystem.CampaignBehaviors.LordConversationsCampaignBehavior;
 using TaleWorlds.CampaignSystem.Party;
 
 namespace RealmsForgotten.Models
@@ -20,9 +19,9 @@ namespace RealmsForgotten.Models
         {
             ExplainedNumber value = base.MaxHitpoints(character, includeDescriptions);
             if (character.IsHero && character.HeroObject != Hero.MainHero && character.HeroObject.PartyBelongedTo == MobileParty.MainParty)
-                CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.CompanionHealth, false);
+                CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.CompanionHealth);
             if (CharacterObject.PlayerCharacter != null &&  character.HeroObject == Hero.MainHero) 
-                CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.Health, false);
+                CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.Health);
             return value;
         }
     }

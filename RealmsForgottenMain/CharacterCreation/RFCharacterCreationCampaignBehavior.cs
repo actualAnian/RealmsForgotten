@@ -18,27 +18,23 @@ using static RealmsForgotten.Globals;
 
 namespace RealmsForgotten.CharacterCreation
 {
-    
     public class RFCharacterCreationCampaignBehavior : CampaignBehaviorBase, ICharacterCreationContentHandler
     {
         private string GetMotherEquipmentId(CharacterCreationManager characterCreationManager, string occupationType, string cultureId)
         {
-            string str;
-            characterCreationManager.CharacterCreationContent.TryGetEquipmentToUse(occupationType, out str);
+            characterCreationManager.CharacterCreationContent.TryGetEquipmentToUse(occupationType, out string str);
             return "mother_char_creation_" + str + "_" + cultureId;
         }
 
         private string GetFatherEquipmentId(CharacterCreationManager characterCreationManager, string occupationType, string cultureId)
         {
-            string str;
-            characterCreationManager.CharacterCreationContent.TryGetEquipmentToUse(occupationType, out str);
+            characterCreationManager.CharacterCreationContent.TryGetEquipmentToUse(occupationType, out string str);
             return "father_char_creation_" + str + "_" + cultureId;
         }
 
         private string GetPlayerChildhoodAgeEquipmentId(CharacterCreationManager characterCreationManager, string parentOccupationType, string cultureId, bool isFemale)
         {
-            string text;
-            characterCreationManager.CharacterCreationContent.TryGetEquipmentToUse(parentOccupationType, out text);
+            characterCreationManager.CharacterCreationContent.TryGetEquipmentToUse(parentOccupationType, out string text);
             return string.Concat(new string[]
             {
                 "player_char_creation_childhood_age_",
@@ -52,8 +48,7 @@ namespace RealmsForgotten.CharacterCreation
 
         private string GetPlayerEducationAgeEquipmentId(CharacterCreationManager characterCreationManager, string parentOccupationType, string cultureId, bool isFemale)
         {
-            string text;
-            characterCreationManager.CharacterCreationContent.TryGetEquipmentToUse(parentOccupationType, out text);
+            characterCreationManager.CharacterCreationContent.TryGetEquipmentToUse(parentOccupationType, out string text);
             return string.Concat(new string[]
             {
                 "player_char_creation_education_age_",
@@ -67,8 +62,7 @@ namespace RealmsForgotten.CharacterCreation
 
         private string GetPlayerEquipmentId(CharacterCreationManager characterCreationManager, string occupationType, string cultureId, bool isFemale)
         {
-            string text;
-            characterCreationManager.CharacterCreationContent.TryGetEquipmentToUse(occupationType, out text);
+            characterCreationManager.CharacterCreationContent.TryGetEquipmentToUse(occupationType, out string text);
             return string.Concat(new string[]
             {
                 "player_char_creation_",
@@ -200,7 +194,6 @@ namespace RealmsForgotten.CharacterCreation
                             cultureObject.CultureFeats.Remove(DefaultCulturalFeats.AseraiTraderFeat);
                         break;
                     case "aqarun":
-
                         if (cultureObject.CultureFeats.Contains(DefaultCulturalFeats.AseraiDesertFeat))
                             cultureObject.CultureFeats.Remove(DefaultCulturalFeats.AseraiDesertFeat);
                         if (cultureObject.CultureFeats.Contains(DefaultCulturalFeats.AseraiTraderFeat))

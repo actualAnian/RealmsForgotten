@@ -165,8 +165,7 @@ namespace RealmsForgotten.Models
                 {
                     baseNumber += ((80f / 100f) * baseNumber);
                 }
-                // If attacker is a zombie, increase damage by 20%
-                if (attackerCharacter.IsZombie()) //@TODO what is this|| attackInformation.AttackerAgent.Character.Race == orc_base))
+                if (attackerCharacter.IsZombie() || attackerCharacter.IsOrcbase())
                 {
                     baseNumber += ((20f / 100f) * baseNumber);
                 }
@@ -189,8 +188,7 @@ namespace RealmsForgotten.Models
                 {
                     baseNumber -= ((70f / 100f) * baseNumber);
                 }
-                // If victim is a zombie, reduce damage by 50%
-                if (victimCharacter.IsZombie()) //@TODO what is that??? ||  (attackInformation.AttackerAgent?.Character != null && (attackInformation.AttackerAgent.Character.Race == orc_base)))
+                if (victimCharacter.IsZombie() || victimCharacter.IsOrcbase())
                 {
                     baseNumber -= ((50f / 100f) * baseNumber);
                 }

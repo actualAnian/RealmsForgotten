@@ -19,7 +19,7 @@ namespace RealmsForgotten.Models
         {
             ExplainedNumber value = baseModel.GetPartyMemberSizeLimit(party, includeDescriptions);
             if (party != null && party.LeaderHero != null && party.LeaderHero == Hero.MainHero && PlayerCareerExtension.HasAnyCareer())
-                CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.PartySize, false);
+                CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.PartySize);
             return value;
         }
     }

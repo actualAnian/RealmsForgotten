@@ -1,30 +1,27 @@
-﻿using System;
+﻿using Helpers;
+using System;
 using System.Collections.Generic;
-using Helpers;
+using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.Conversation;
+using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.Extensions;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Party.PartyComponents;
+using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.ObjectSystem;
 using TaleWorlds.SaveSystem;
-using HarmonyLib;
-using TaleWorlds.CampaignSystem.Roster;
-using System.Linq;
-using RealmsForgotten.Quest.SecondUpdate;
-using TaleWorlds.CampaignSystem.Encounters;
 using static RealmsForgotten.Quest.QuestLibrary;
 
 namespace RealmsForgotten.Quest
 {
-
     public class RescueUliahBehavior : CampaignBehaviorBase
     {
         private static readonly string UliahId = "questGiver";
@@ -67,7 +64,6 @@ namespace RealmsForgotten.Quest
                 QuestQueen.HomeSettlement.Notables[0].SetHasMet();
                 QuestQueen.HomeSettlement.Notables[0].CompanionOf = QuestQueen.Clan;
                 StartQuest();
-
             }
         }
 
@@ -110,6 +106,8 @@ namespace RealmsForgotten.Quest
                 }), true);
 
             }, null), true);
+            //var aa = MBObjectManager.GetMergedXmlForManaged("GameText", false, false, Game.Current.GameType.GetType().Name);
+            //var bb = 14;
         }
         public override void SyncData(IDataStore dataStore)
         {

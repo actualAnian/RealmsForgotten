@@ -37,7 +37,7 @@ namespace RealmsForgotten.Models
             var career = PlayerCareerExtension.GetCareer();
             if (career == null) return value;
 
-            CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.TroopWages, true);
+            CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.TroopWages);
             if (PlayerCareerExtension.HasCareerChoice("KnightErrant1_5"))
             {
                 var choice = career.AllChoices.First(c => c.StringId == "KnightErrant1_5");

@@ -78,7 +78,7 @@ namespace RealmsForgotten.Career
         {
             pointsSystem?.OnLevelUp(hero, arg2);
         }
-        private void OnLoot(PartyBase party, ItemRoster roster) //@TODO check
+        private void OnLoot(PartyBase party, ItemRoster roster)
         {
             if (party != PartyBase.MainParty || !PlayerCareerExtension.HasAnyCareer()) return;
             if (!PlayerCareerExtension.GetAllCareerChoices().Contains("MercenaryLordPassive2_3")) return;
@@ -86,11 +86,11 @@ namespace RealmsForgotten.Career
             foreach (ItemRosterElement item in roster)
             {
                 ItemRosterElement newItem = new(item.EquipmentElement, (int)(item.Amount * 0.2));
-                if (item.Amount > 0)
+                if (newItem.Amount > 0)
                 {
-                    MobileParty.MainParty.ItemRoster.Add(item);
-                    MBTextManager.SetTextVariable("NUMBER_OF", item.Amount);
-                    MBTextManager.SetTextVariable("PRODUCTS", item.EquipmentElement.Item.Name, false);
+                    MobileParty.MainParty.ItemRoster.Add(newItem);
+                    MBTextManager.SetTextVariable("NUMBER_OF", newItem.Amount);
+                    MBTextManager.SetTextVariable("PRODUCTS", newItem.EquipmentElement.Item.Name, false);
                     InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=rf_caravan_plunder}You plundered additional {NUMBER_OF} {PRODUCTS}.", null).ToString()));
                 }
             }

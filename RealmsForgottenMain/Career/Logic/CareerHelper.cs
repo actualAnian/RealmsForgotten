@@ -9,7 +9,7 @@ namespace RealmsForgotten.Career.Logic
 {
     public static class CareerHelper
     {
-        public static void ApplyBasicCareerPassives(ref ExplainedNumber number, PassiveEffectType passiveEffectType, bool asFactor = true)
+        public static void ApplyBasicCareerPassives(ref ExplainedNumber number, PassiveEffectType passiveEffectType)
         {
             PlayerClassInfo info = PlayerCareerExtension.PlayerCareerInfo;
             if (info == null) return;
@@ -24,21 +24,17 @@ namespace RealmsForgotten.Career.Logic
 
                 if (!passive.IsValidCharacterObject(Hero.MainHero.CharacterObject)) continue;
 
-                if (passive.WithFactorFlatSwitch)
-                {
-                    asFactor = !asFactor;
-                }
                 float value = passive.EffectMagnitude;
                 TextObject? text = choice.BelongsToGroup?.Name;
-                if (asFactor)
-                {
+                if (passive.Operation == OperationType.Multiply)
                     number.AddFactor(value, text);
-                    continue;
-                }
-                number.Add(value, text);
+                else if (passive.Operation == OperationType.Replace)
+                    number = new(value);
+                else
+                    number.Add(value, text);
             }
         }
-        public static void ApplyBasicCareerPassives(ref int number, PassiveEffectType passiveEffectType, bool asFactor = true)
+        public static void ApplyBasicCareerPassives(ref int number, PassiveEffectType passiveEffectType)
         {
             CharacterObject characterObject = Hero.MainHero.CharacterObject;
             var info = PlayerCareerExtension.PlayerCareerInfo;
@@ -53,19 +49,16 @@ namespace RealmsForgotten.Career.Logic
                 var passive = choice.Passive;
 
                 if (!passive.IsValidCharacterObject(characterObject)) continue;
-
-                if (passive.WithFactorFlatSwitch)
-                {
-                    asFactor = !asFactor;
-                }
                 var value = passive.EffectMagnitude;
                 var text = choice.BelongsToGroup?.Name;
-                if (asFactor)
+                if (passive.Operation == OperationType.Multiply)
                 {
                     number = (int)(number * value);
                     continue;
                 }
-                number = (int)(number + value);
+                else if (passive.Operation == OperationType.Add)
+                    number = (int)(number + value);
+                else number = (int)value;
             }
         }
 

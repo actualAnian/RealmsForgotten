@@ -21,7 +21,7 @@ namespace RealmsForgotten.Models
         {
             if (PlayerCareerExtension.HasAnyCareer())
             {
-                CareerHelper.ApplyBasicCareerPassives(ref explainedNumber, PassiveEffectType.TroopRegeneration, false);
+                CareerHelper.ApplyBasicCareerPassives(ref explainedNumber, PassiveEffectType.TroopRegeneration);
             }
         }
 
@@ -29,7 +29,7 @@ namespace RealmsForgotten.Models
         {
             if (PlayerCareerExtension.HasAnyCareer())
             {
-                CareerHelper.ApplyBasicCareerPassives(ref explainedNumber, PassiveEffectType.HealthRegeneration, false);
+                CareerHelper.ApplyBasicCareerPassives(ref explainedNumber, PassiveEffectType.HealthRegeneration);
             }
         }
         public override float GetSurvivalChance(PartyBase party, CharacterObject character, DamageTypes damageType, bool canDamageKillEvenIfBlunt, PartyBase enemyParty = null)
@@ -44,7 +44,7 @@ namespace RealmsForgotten.Models
             ExplainedNumber num = new();
             if (PlayerCareerExtension.HasAnyCareer())
             {
-                CareerHelper.ApplyBasicCareerPassives(ref num, PassiveEffectType.HealthRegeneration, false);
+                CareerHelper.ApplyBasicCareerPassives(ref num, PassiveEffectType.HealthRegeneration);
             }
             return num.ResultNumber;
         }

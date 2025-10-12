@@ -38,11 +38,7 @@ namespace RealmsForgotten.Models
 
         public override ExplainedNumber CalculateLearningLimit(IReadOnlyPropertyOwner<CharacterAttribute> characterAttributes, int focusValue, SkillObject skill, bool includeDescriptions = false) => _baseModel.CalculateLearningLimit(characterAttributes, focusValue, skill, includeDescriptions);
         public override ExplainedNumber CalculateLearningRate(IReadOnlyPropertyOwner<CharacterAttribute> characterAttributes, int focusValue, int skillValue, SkillObject skill, bool includeDescriptions = false)
-        { //@TODO check if we can get hero
-            //float baseValue = _baseModel.CalculateLearningRate(hero, skill);
-            //if (hero.CharacterObject.Race == FaceGen.GetRaceOrDefault("elvean") && skill == DefaultSkills.Athletics)
-            //    return ((15f / 100f) * baseValue) + baseValue;
-            //return baseValue;
+        {
             return _baseModel.CalculateLearningRate(characterAttributes, focusValue, skillValue, skill, includeDescriptions);
         }
 

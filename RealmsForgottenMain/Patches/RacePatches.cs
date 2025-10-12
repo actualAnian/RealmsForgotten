@@ -31,33 +31,6 @@ namespace RealmsForgotten.Patches
             ;
         }
     }
-    [HarmonyPatch(typeof(TroopRoster), "TotalManCount", MethodType.Getter)]
-    static class TotalManCountGetPatch
-    {
-        public static void Postfix(TroopRoster __instance, ref int __result) //@TODO make sure this works without that patch
-        {
-            //try
-            //{
-            //    __result = 0;
-            //    foreach (TroopRosterElement rosterElement in __instance.GetTroopRoster())
-            //    {
-            //        var character = rosterElement.Character;
-            //        if (character == null)
-            //            continue;
-
-            //        if (((BasicCharacterObject)character).IsGiant())
-            //            __result += rosterElement.Number * Globals.GiantCountsAs;
-            //        else
-            //            __result += rosterElement.Number;
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    Debug.Print($"[RealmsForgotten] ERROR in TotalManCount patch: {ex.Message}");
-            //}
-        }
-    }
-
     internal class PartyVMPatch
     {
         private static TextObject SetTextVariable(MBBindingList<PartyCharacterVM> partyList)

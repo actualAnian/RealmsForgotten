@@ -41,7 +41,7 @@ namespace RealmsForgotten.Models
         {
             ExplainedNumber value = _baseModel.GetPartySpottingRange(party, includeDescriptions);
             if (party != MobileParty.MainParty || !PlayerCareerExtension.HasAnyCareer() || Hero.MainHero.PartyBelongedTo == null) return value;
-            CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.SpottingRange, true);
+            CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.SpottingRange);
             return value;
         }
 

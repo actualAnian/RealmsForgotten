@@ -129,7 +129,7 @@ namespace RealmsForgotten.Models
             if (agent == null) return 0;
             ExplainedNumber explainedNumber = new ExplainedNumber(base.GetEffectiveMaxHealth(agent));
             if (agent.IsMount && agent.RiderAgent != null && agent.RiderAgent.IsHero && agent.RiderAgent == Agent.Main)
-                CareerHelper.ApplyBasicCareerPassives(ref explainedNumber, PassiveEffectType.HorseHealth, true);
+                CareerHelper.ApplyBasicCareerPassives(ref explainedNumber, PassiveEffectType.HorseHealth);
             return explainedNumber.ResultNumber;
         }
         public override float GetWeaponInaccuracy(Agent agent, WeaponComponentData weapon, int weaponSkill)

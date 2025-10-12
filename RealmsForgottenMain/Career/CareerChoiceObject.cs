@@ -82,7 +82,6 @@ namespace RealmsForgotten.Career
             public float EffectMagnitude = 0f;
             public OperationType Operation = OperationType.None;
             public PassiveEffectType PassiveEffectType = PassiveEffectType.Special;
-            public bool WithFactorFlatSwitch;
             public DamageProportionTuple? DamageProportionTuple = null;
 
             public delegate bool SpecialCombatInteractionFunction(Agent attacker, Agent victim);
@@ -102,16 +101,16 @@ namespace RealmsForgotten.Career
                 _specialCombatInteractionFunction = function;
             }
 
-            public PassiveEffect(float effectValue = 0, PassiveEffectType type = PassiveEffectType.Special, SpecialCharacterEvaluationFunction? function = null, bool withFactorFlatSwitch = false)
+            public PassiveEffect(float effectValue = 0, PassiveEffectType type = PassiveEffectType.Special, SpecialCharacterEvaluationFunction? function = null, OperationType operationType = OperationType.Add)
             {
                 EffectMagnitude = effectValue;
-                Operation = OperationType.Add;
+                Operation = operationType;
                 PassiveEffectType = type;
                 _specialCharacterEvaluationFunction = function;
-                WithFactorFlatSwitch = withFactorFlatSwitch;
             }
-            public PassiveEffect(PassiveEffectType type, Action perkActivate)
+            public PassiveEffect(PassiveEffectType type, Action perkActivate, OperationType operationType = OperationType.Add)
             {
+                Operation = operationType;
                 _perkActivate = perkActivate;
                 PassiveEffectType = type;
             }

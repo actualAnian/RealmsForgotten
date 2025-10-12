@@ -93,7 +93,6 @@
         <Compile Remove="AiMade\Career\ContractorBehavior.cs" />
     </ItemGroup>
     <ItemGroup>
-        <Folder Include="AiMade\Enlistement\" />
         <Folder Include="AiMade\TroopUnlocker\" />
         <Folder Include="AiMade\Stealth\" />
         <Folder Include="_Module\GUI\Prefabs\CharacterDeveloper\" />

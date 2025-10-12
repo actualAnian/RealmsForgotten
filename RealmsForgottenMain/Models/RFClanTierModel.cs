@@ -19,7 +19,7 @@ namespace RealmsForgotten.Models
             if (clan != Clan.PlayerClan) return companionLimit;
 
             if (PlayerCareerExtension.HasAnyCareer())
-                CareerHelper.ApplyBasicCareerPassives(ref companionLimit, PassiveEffectType.CompanionLimit, false);
+                CareerHelper.ApplyBasicCareerPassives(ref companionLimit, PassiveEffectType.CompanionLimit);
             return companionLimit;
         }
     }
