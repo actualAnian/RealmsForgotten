@@ -183,9 +183,7 @@ namespace RealmsForgotten.Quest
         private static LocationCharacter CreateTheOwl(CultureObject culture, LocationCharacter.CharacterRelations relation)
         {
             CharacterObject @object = MBObjectManager.Instance.GetObject<CharacterObject>(TheOwlId);
-
             Campaign.Current.Models.AgeModel.GetAgeLimitForLocation(@object, out int minValue, out int maxValue, "");
-
             Monster monsterWithSuffix = FaceGen.GetMonsterWithSuffix(@object.Race, "_settlement");
             AgentData agentData = new AgentData(new SimpleAgentOrigin(@object, -1, null, default(UniqueTroopDescriptor))).Monster(monsterWithSuffix).Age((int)@object.Age).BodyProperties(@object.GetBodyProperties(@object.Equipment, 0));
             var owl = new LocationCharacter(agentData, SandBoxManager.Instance.AgentBehaviorManager.AddWandererBehaviors, "sp_tavern_townsman", true, relation, null, true, false, null, false, false, false);

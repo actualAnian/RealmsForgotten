@@ -114,7 +114,6 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             return !agent.IsActive() && agent.Components.Any(c => c is LootableAgentComponent);
         }
-
         public static void SetVMLook(AgentInteractionInterfaceVM vm)
         {
             GameKey key = HotKeyManager.GetCategory("CombatHotKeyCategory").GetGameKey(13);

@@ -1,32 +1,33 @@
-﻿using System;
+﻿using BehaviorTreeWrapper;
+using BehaviorTreeWrapper.Tests;
+using HuntableHerds.Models;
+using RealmsForgotten.HuntableHerds.AgentComponents;
+using RealmsForgotten.HuntableHerds.Extensions;
+using RealmsForgotten.HuntableHerds.Models;
+using RFCustomSettlements;
+using RFCustomSettlements.Quests;
+using SandBox;
+using SandBox.Objects.AreaMarkers;
+using SandBox.Objects.Usables;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.AgentOrigins;
 using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
-using RealmsForgotten.HuntableHerds.Extensions;
 using TaleWorlds.MountAndBlade.Objects;
 using TaleWorlds.MountAndBlade.Source.Objects;
-using SandBox.Objects.Usables;
-using System.Collections.Generic;
-using System.Linq;
-using SandBox.Objects.AreaMarkers;
-using SandBox;
-using TaleWorlds.CampaignSystem.Roster;
+using TaleWorlds.MountAndBlade.View.MissionViews;
 using TaleWorlds.ObjectSystem;
-using RealmsForgotten.HuntableHerds.AgentComponents;
-using RealmsForgotten.HuntableHerds.Models;
-using System.Text;
-using static RealmsForgotten.RFCustomSettlements.ExploreSettlementStateHandler;
 using static RealmsForgotten.RFCustomSettlements.CustomSettlementBuildData;
-using System.Threading.Tasks;
-using HuntableHerds.Models;
-using RFCustomSettlements.Quests;
-using BehaviorTreeWrapper;
-using BehaviorTreeWrapper.Tests;
-using RFCustomSettlements;
+using static RealmsForgotten.RFCustomSettlements.ExploreSettlementStateHandler;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -61,10 +62,8 @@ namespace RealmsForgotten.RFCustomSettlements
         private readonly Dictionary<int, NpcData> NpcsInSettlement = new();
         public delegate void UnitKilledHandler(string id);
         public event UnitKilledHandler? UnitKilled;
+        IFocusable? _focusedRFObject;
         public Dictionary<Agent, Vec3> LootableAgents { get; } = new();
-
-        //private  onStateChangeListeners
-
         public CustomSettlementMissionLogic(CustomSettlementBuildData buildData, Action? onBattleEnd = null)
         {
             defenderAgentObjects = new Dictionary<Agent, CustomSettlementMissionLogic.UsedObject>();
@@ -90,7 +89,7 @@ namespace RealmsForgotten.RFCustomSettlements
             if (Agent.Main == null)
                 return;
 
-            this.UsedObjectTick(dt);
+            UsedObjectTick(dt);
 
             if (!isMissionInitialized)
             {
@@ -99,6 +98,13 @@ namespace RealmsForgotten.RFCustomSettlements
                 Globals.IsMissionInitialized = true;
                 return;
             }
+            HandleRFFocusedObject();
+        }
+        private void HandleRFFocusedObject()
+        {
+            if (_focusedRFObject == null) return;
+            Helper.IsCloseEnough(Agent.Main, _focusedRFObject);
+            
         }
         private async Task AddBodyToLootableList(Agent agent)
         {
@@ -497,8 +503,8 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         public override void OnAgentAlarmedStateChanged(Agent agent, Agent.AIStateFlag flag)
         {
-            //BehaviorTree.Visit
-            bool flag2 = flag == Agent.AIStateFlag.Alarmed;
+            if (agent.Team == Agent.Main.Team) return;
+            bool flag2 = (flag & Agent.AIStateFlag.Alarmed) == Agent.AIStateFlag.Alarmed;
             if (flag2 || flag == Agent.AIStateFlag.Cautious)
             {
                 if (agent.IsUsingGameObject)
@@ -595,6 +601,14 @@ namespace RealmsForgotten.RFCustomSettlements
                     Mission.MakeSoundOnlyOnRelatedPeer(SoundEvent.GetEventIdFromString("event:/mission/combat/pickup_arrows"), agent.Position, Mission.MainAgent.Index);
                 LootableAgents.Remove(agent);
             }
+        }
+        public override void OnFocusGained(Agent agent, IFocusable focusableObject, bool isInteractable)
+        {
+            if (Helper.IsRFObject(focusableObject)) _focusedRFObject = focusableObject;
+        }
+        public override void OnFocusLost(Agent agent, IFocusable focusableObject)
+        {
+            _focusedRFObject = null;
         }
         internal void OnObjectUsed(UsablePlace usablePlace)
         {

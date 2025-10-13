@@ -1,20 +1,21 @@
 ﻿using HarmonyLib;
-using System.Collections.Generic;
-using System.Linq;
-using static RealmsForgotten.RFCustomSettlements.Helper;
-using TaleWorlds.Core;
-using TaleWorlds.InputSystem;
-using TaleWorlds.MountAndBlade.ViewModelCollection;
-using TaleWorlds.MountAndBlade;
-using TaleWorlds.ObjectSystem;
-using System.Reflection.Emit;
-using TaleWorlds.MountAndBlade.View.MissionViews;
 using RealmsForgotten.RFCustomSettlements;
 using SandBox.Objects.Usables;
-using System.Reflection;
-using TaleWorlds.MountAndBlade.View.Screens;
-using TaleWorlds.Localization;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Reflection.PortableExecutable;
+using TaleWorlds.Core;
+using TaleWorlds.InputSystem;
+using TaleWorlds.Localization;
+using TaleWorlds.MountAndBlade;
+using TaleWorlds.MountAndBlade.View.MissionViews;
+using TaleWorlds.MountAndBlade.View.Screens;
+using TaleWorlds.MountAndBlade.ViewModelCollection;
+using TaleWorlds.ObjectSystem;
+using static RealmsForgotten.RFCustomSettlements.Helper;
 
 namespace RFCustomSettlements.Patches
 {
@@ -59,11 +60,13 @@ namespace RFCustomSettlements.Patches
             return true;
         }
     }
-    [HarmonyPatch(typeof(AgentInteractionInterfaceVM), "SetUsableMachine")]
+    [HarmonyPatch(typeof(AgentInteractionInterfaceVM), "Tick")]
     public class AgentInteractionInterfaceVMSetUsableMachinePatch
     {
-        static void Postfix(UsableMachine machine, AgentInteractionInterfaceVM __instance)
+        static void Postfix(AgentInteractionInterfaceVM __instance, IFocusable ____currentFocusedObject)
         {
+            if (____currentFocusedObject == null || !Helper.IsRFObject(____currentFocusedObject)) return;
+            if (____currentFocusedObject is not UsablePlace machine) return;
             if (machine.GameEntity.Name.StartsWith("rf"))
             {
                 GameKey key = HotKeyManager.GetCategory("CombatHotKeyCategory").GetGameKey(13);
