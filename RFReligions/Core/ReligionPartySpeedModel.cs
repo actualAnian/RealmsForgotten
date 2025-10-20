@@ -19,11 +19,8 @@ namespace RealmsForgotten.RFReligions.Core
             {
                 return finalSpeed;
             }
-
-            // 🔐 Agora é seguro chamar o método base
             finalSpeed = base.CalculateFinalSpeed(party, finalSpeed);
 
-            // ✅ Aplica a bênção da religião
             if (ReligionBehavior.Instance != null &&
                 ReligionBehavior.Instance.IsHeroBlessed(party.LeaderHero, RFReligions.TengralorOrkhai))
             {

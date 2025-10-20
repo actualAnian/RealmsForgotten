@@ -211,9 +211,6 @@ internal class ReligionBehavior : CampaignBehaviorBase
             }
         }
     }
-
-
-
     private void OnDailyTick()
     {
         try
@@ -331,8 +328,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
                             if (hero3 != null) RelationshipReligionDecider(hero3, hero, heroReligionModel);
                         }
 
-                        if (hero.MapFaction != null)
-                            if (hero.MapFaction.Leader != hero)
+                        if (hero.MapFaction != null && hero.MapFaction.Leader != null && hero.MapFaction.Leader != hero)
                                 RelationshipReligionDecider(hero.MapFaction.Leader, hero, heroReligionModel);
                         if (hero.Clan != null && hero.Clan.Leader != hero)
                             RelationshipReligionDecider(hero.Clan.Leader, hero, heroReligionModel);
@@ -432,27 +428,9 @@ internal class ReligionBehavior : CampaignBehaviorBase
         try
         {
             if (party == null || !party.IsActive)
-            {
-                // Avoid spam: log only for main party if needed
-#if DEBUG
-                if (party == MobileParty.MainParty)
-                    InformationManager.DisplayMessage(new InformationMessage("[ReligionBehavior] Main party is null or inactive.", Colors.Yellow));
-#endif
                 return 0f;
-            }
-
             if (_partyMoraleEffect.TryGetValue(party, out var effect))
-            {
                 return effect;
-            }
-
-            // Optional: Log only for main party if missing
-#if DEBUG
-            if (party == MobileParty.MainParty)
-            {
-                InformationManager.DisplayMessage(new InformationMessage("[ReligionBehavior] Main party has no morale effect.", Colors.Red));
-            }
-#endif
             return 0f;
         }
         catch (Exception ex)
@@ -461,10 +439,6 @@ internal class ReligionBehavior : CampaignBehaviorBase
             return 0f;
         }
     }
-
-
-
-
     public float SettlementGetLoyaltyEffect(Town town)
     {
         Settlement settlement = town?.Settlement;
@@ -479,7 +453,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
         if (owner == null || !_heroes.TryGetValue(owner, out var heroReligionModel))
             return 0f;
 
-        RealmsForgotten.RFReligions.Core.RFReligions heroReligion = heroReligionModel.Religion;
+        Core.RFReligions heroReligion = heroReligionModel.Religion;
 
         float loyaltyEffect;
 
@@ -487,8 +461,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
         {
             loyaltyEffect = 0.5f * devotionNormalized;
         }
-        else if (RealmsForgotten.RFReligions.Helper.ReligionLogicHelper.TolerableReligions.TryGetValue(heroReligion, out var tolerated) &&
-                 tolerated == townReligion)
+        else if (ReligionLogicHelper.TolerableReligions.TryGetValue(heroReligion, out var tolerated) && tolerated == townReligion)
         {
             loyaltyEffect = 0.1f * devotionNormalized;
         }
@@ -496,8 +469,6 @@ internal class ReligionBehavior : CampaignBehaviorBase
         {
             loyaltyEffect = -0.5f * devotionNormalized;
         }
-
-        // ✅ Governor religion bonus
         Hero governor = settlement.Town?.Governor;
         if (governor != null && _heroes.TryGetValue(governor, out var governorReligionModel))
         {
@@ -508,7 +479,6 @@ internal class ReligionBehavior : CampaignBehaviorBase
                 loyaltyEffect += 0.2f * devotionNormalized; // Bonus loyalty if governor is aligned
             }
         }
-
         return loyaltyEffect;
     }
 
@@ -525,7 +495,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
         var townReligion = settlementReligionModel.GetMainReligion();
         var governorReligion = newGovModel.Religion;
 
-        bool isTolerated = RealmsForgotten.RFReligions.Helper.ReligionLogicHelper.TolerableReligions
+        bool isTolerated = ReligionLogicHelper.TolerableReligions
             .TryGetValue(townReligion, out var toleratedReligion) &&
             toleratedReligion == governorReligion;
 
@@ -534,12 +504,6 @@ internal class ReligionBehavior : CampaignBehaviorBase
             InformationManager.DisplayMessage(new InformationMessage(
                 $"{newGovernor.Name} follows a religion that is intolerable in {settlement.Name}. Their appointment may cause unrest.",
                 Colors.Red));
-
-            // Optional hard-block
-            // town.Governor = null;
-            // InformationManager.DisplayMessage(new InformationMessage(
-            //     $"Governor appointment was canceled due to religious incompatibility.",
-            //     Colors.Yellow));
         }
     }
 

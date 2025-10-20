@@ -1,5 +1,4 @@
-﻿using RealmsForgotten.RFCustomSettlements;
-using System;
+﻿using System;
 using TaleWorlds.CampaignSystem.Inventory;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Library;

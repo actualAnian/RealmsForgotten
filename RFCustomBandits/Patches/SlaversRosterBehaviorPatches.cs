@@ -10,6 +10,7 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.LinQuick;
 using RealmsForgotten.RFCustomSettlements;
 using RFCustomSettlements;
+using TaleWorlds.CampaignSystem.Settlements;
 
 namespace RealmsForgotten.RFCustomBandits.Patches
 {
@@ -61,7 +62,8 @@ namespace RealmsForgotten.RFCustomBandits.Patches
         static float tickStart = new Random().Next(0, 12);
         private static void Prefix(PlayerCaptivityCampaignBehavior __instance, float dt)
         {
-            if(PlayerCaptivity.CaptorParty.Culture.StringId == "aserai")
+            List<string> culturesCapturingSlaves = new() { "aserai", "athas_enslavers" };
+            if (culturesCapturingSlaves.Contains(PlayerCaptivity.CaptorParty.Culture.StringId))
             {
                 if(tickStart < hoursNeeded)
                 {

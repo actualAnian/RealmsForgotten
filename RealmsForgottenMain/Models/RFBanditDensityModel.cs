@@ -89,7 +89,7 @@ namespace RealmsForgotten.Models
 
         public override int GetMaximumTroopCountForHideoutMission(MobileParty party)
         {
-            float num = 10f;
+            float num = 25f;
             if (party.HasPerk(DefaultPerks.Tactics.SmallUnitTactics, false))
             {
                 num += DefaultPerks.Tactics.SmallUnitTactics.PrimaryBonus;

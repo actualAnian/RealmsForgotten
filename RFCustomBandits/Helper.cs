@@ -13,7 +13,6 @@ namespace RealmsForgotten.RFCustomBandits
 {
     internal static class Helper
     {
-
         internal static bool IsSlaverParty(this MobileParty mobileParty)
         {
             return mobileParty != null && mobileParty.Party != null && mobileParty.Party.Id.Contains("Slavers");

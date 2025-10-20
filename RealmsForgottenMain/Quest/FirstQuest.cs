@@ -1,4 +1,4 @@
-﻿using Helpers;
+﻿    using Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -361,8 +361,6 @@ namespace RealmsForgotten.Quest
 
                 _smallPlayerArmyJournalLog = AddDiscreteLog(SmallPlayerArmyText,
                     GameTexts.FindText("rf_soldiers_in_army"), PartyBase.MainParty.NumberOfHealthyMembers, minimumSoldiersAmountForQuest);
-
-
             }
             private TextObject SmallPlayerArmyText
             {

@@ -8,6 +8,7 @@ using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.SaveSystem;
 
@@ -22,6 +23,19 @@ namespace RealmsForgotten.RFCustomSettlements
         [SaveableField(1)]
         private static Dictionary<string, int> _dialogueStates = new();
         public static Dictionary<string, int> DialogueStates { get { return _dialogueStates; } }
+
+        [SaveableField(2)]
+        private static Dictionary<string, List<Vec3>> _explorationSettlementsPickedObjects = new();
+        public List<Vec3> GetPickedObjectsFromScene(string sceneName)
+        {
+            if (!_explorationSettlementsPickedObjects.ContainsKey(sceneName))
+                _explorationSettlementsPickedObjects[sceneName] = new ();
+            return _explorationSettlementsPickedObjects[sceneName];
+        }
+        public void SetExplorationSceneObjectAsPicked(string sceneName, Vec3 objectPosition)
+        {
+            _explorationSettlementsPickedObjects[sceneName].Add(objectPosition);
+        }
         public CustomSettlementsCampaignBehavior()
         {
             _dialogueStates = new();
@@ -159,13 +173,14 @@ namespace RealmsForgotten.RFCustomSettlements
         public override void SyncData(IDataStore dataStore)
         {
             dataStore.SyncData("custSetDialStates", ref _dialogueStates);
+            dataStore.SyncData("explSetObjects", ref _explorationSettlementsPickedObjects);
             if (dataStore.IsSaving)
             {
                 customSettlementComponents = (from Settlement settlement in customSettlements
                                               select (RFCustomSettlement)settlement.SettlementComponent).ToList();
             }
             if(customSettlementComponents != null)
-                dataStore.SyncData<List<RFCustomSettlement>>("ruinComponents", ref customSettlementComponents);
+                dataStore.SyncData("ruinComponents", ref customSettlementComponents);
         }
     }
 }

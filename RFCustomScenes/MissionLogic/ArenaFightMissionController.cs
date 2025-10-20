@@ -25,13 +25,13 @@ namespace RFCustomSettlements
             spawnPoints = new();
             aliveTeams = new();
             foreach (ArenaTeam team in stageData.ArenaTeams)
-                aliveTeams.Add(((ArenaTeam)team.Clone()));
+                aliveTeams.Add((ArenaTeam)team.Clone());
             OnBattleEnd = onbattleend;
             playerEquipment = stageData.PlayerEquipment;
         }
         public void StartArenaBattle()
         {
-            base.Mission.SetMissionMode(MissionMode.Battle, true);
+            Mission.SetMissionMode(MissionMode.Battle, true);
             List<GameEntity>.Enumerator spawnPointEnum = spawnPoints.GetEnumerator();
             GameEntity? spawnPoint;
 
@@ -131,7 +131,6 @@ namespace RFCustomSettlements
                 }
             }
         }
-        // public override InquiryData OnEndMissionRequest(out bool canPlayerLeave) { canPlayerLeave = false; }
         public override void OnMissionTick(float dt)
         {
             if (MatchEnded())

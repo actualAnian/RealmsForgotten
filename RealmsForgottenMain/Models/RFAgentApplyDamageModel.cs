@@ -179,9 +179,10 @@ namespace RealmsForgotten.Models
             BasicCharacterObject victimCharacter = attackInformation.VictimAgent.Character;
             if (attackerCharacter == null || victimCharacter == null) return baseNumber;
             if (
+                weapon.Item != null && (
                 weapon.Item.ItemType == ItemObject.ItemTypeEnum.Polearm ||
                 weapon.Item.ItemType == ItemObject.ItemTypeEnum.TwoHandedWeapon ||
-                weapon.Item.ItemType == ItemObject.ItemTypeEnum.OneHandedWeapon)
+                weapon.Item.ItemType == ItemObject.ItemTypeEnum.OneHandedWeapon))
             {
                 // If victim is a half-giant, reduce damage by 70%
                 if (attackInformation.VictimAgent?.Character != null && victimCharacter.IsGiant() || victimCharacter.IsBalrog())

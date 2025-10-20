@@ -12,13 +12,13 @@ using TaleWorlds.CampaignSystem.ViewModelCollection.GameMenu.Overlay;
 using TaleWorlds.Core.ViewModelCollection.Generic;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.Library;
+using SandBox.View.Overlay;
 
 namespace RealmsForgotten.RFReligions.Patches;
-
 internal class MainPatch
 {
-    [HarmonyPatch(typeof(GameMenuOverlay), "GetOverlay")]
-    public static class GetOverlayPatch
+    [HarmonyPatch(typeof(DefaultGameMenuOverlayProvider), "GetOverlay")]
+    public static class DefaultGameMenuOverlayProviderPatch
     {
         internal static GameMenu.MenuOverlayType currentMenuOverlayType;
 
@@ -27,21 +27,13 @@ internal class MainPatch
             currentMenuOverlayType = menuOverlayType;
             try
             {
-                if (menuOverlayType - GameMenu.MenuOverlayType.SettlementWithParties > 2)
-                {
-                    if (menuOverlayType == GameMenu.MenuOverlayType.Encounter)
-                        __result = new EncounterMenuOverlayVM();
-                    else
-                        __result = null;
-                }
+                if (menuOverlayType == GameMenu.MenuOverlayType.Encounter)
+                    __result = new EncounterMenuOverlayVM();
                 else
-                {
                     __result = new ReligionsSettlementMenuOverlayVM(menuOverlayType);
-                }
-
                 return false;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 InformationManager.DisplayMessage(new InformationMessage("ERROR INITIALIZING SETTLEMENT RELIGION VIEW",
                     Colors.Red));
@@ -50,8 +42,8 @@ internal class MainPatch
             return true;
         }
     }
-    //moved to ReplaceUIPatch
 
+    //moved to ReplaceUIPatch
     [HarmonyPatch(typeof(GauntletLayer), "LoadMovie", new Type[] { typeof(string), typeof(ViewModel) })]
     public static class LoadMoviePatch
     {
@@ -67,7 +59,6 @@ internal class MainPatch
         }
     }
 
-    [HarmonyPatch(typeof(EncyclopediaHeroPageVM), "Refresh")]
     public static class EncyclopediaHeroPageVMPatch
     {
         public static void Postfix(ref Hero ____hero, ref MBBindingList<StringPairItemVM> ____stats)
@@ -98,25 +89,19 @@ internal class MainPatch
             bool showQuickNotification,
             ChangeRelationAction.ChangeRelationDetail detail)
         {
-            // ✅ Null check to prevent crash
             if (originalHero == null || originalGainedRelationWith == null)
             {
                 Debug.PrintError("ChangeRelationActionPatch: one of the Hero parameters is null!");
                 return;
             }
 
-            // ✅ Safely exclude companions
             if (originalHero.IsPlayerCompanion || originalGainedRelationWith.IsPlayerCompanion)
-            {
                 return;
-            }
 
-            // ✅ Safe check for ReligionBehavior.Instance and heroes dictionary
             if (ReligionBehavior.Instance != null
                 && ReligionBehavior.Instance._heroes.TryGetValue(originalHero, out HeroReligionModel heroReligionModel1)
                 && ReligionBehavior.Instance._heroes.TryGetValue(originalGainedRelationWith, out HeroReligionModel heroReligionModel2))
             {
-                // ✅ Check religion mismatch and apply penalty
                 if (heroReligionModel1.Religion != heroReligionModel2.Religion &&
                     ReligionLogicHelper.TolerableReligions.TryGetValue(heroReligionModel1.Religion, out Core.RFReligions compatibleReligion) &&
                     compatibleReligion != Core.RFReligions.All &&

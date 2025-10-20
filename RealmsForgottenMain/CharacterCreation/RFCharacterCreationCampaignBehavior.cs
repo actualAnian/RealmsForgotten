@@ -97,6 +97,7 @@ namespace RealmsForgotten.CharacterCreation
         }
         void ICharacterCreationContentHandler.InitializeContent(CharacterCreationManager characterCreationManager)
         {
+
             characterCreationManager.CharacterCreationContent.AddEquipmentToUseGetter(delegate (string occupationId, out string equipmentId)
             {
                 return _occupationToEquipmentMapping.TryGetValue(occupationId, out equipmentId);
@@ -490,11 +491,11 @@ namespace RealmsForgotten.CharacterCreation
             TaleWorlds.Core.FaceGen.GenerateParentKey(bodyProperties = bodyProperties2 = CharacterObject.PlayerCharacter.GetBodyProperties(CharacterObject.PlayerCharacter.Equipment, -1), CharacterObject.PlayerCharacter.Race, ref bodyProperties2, ref bodyProperties);
             bodyProperties2 = new BodyProperties(new DynamicBodyProperties(33f, 0.3f, 0.2f), bodyProperties2.StaticProperties);
             bodyProperties = new BodyProperties(new DynamicBodyProperties(33f, 0.5f, 0.5f), bodyProperties.StaticProperties);
-            NarrativeMenuCharacter item = new NarrativeMenuCharacter("mother_character", bodyProperties2, CharacterObject.PlayerCharacter.Race, true);
+            NarrativeMenuCharacter item = new("mother_character", bodyProperties2, CharacterObject.PlayerCharacter.Race, true);
             list.Add(item);
-            NarrativeMenuCharacter item2 = new NarrativeMenuCharacter("father_character", bodyProperties, CharacterObject.PlayerCharacter.Race, false);
+            NarrativeMenuCharacter item2 = new("father_character", bodyProperties, CharacterObject.PlayerCharacter.Race, false);
             list.Add(item2);
-            NarrativeMenu narrativeMenu = new NarrativeMenu("narrative_parent_menu", "start", "narrative_childhood_menu", new TextObject("{=b4lDDcli}Family", null), new TextObject("{=XgFU1pCx}You were born into a family of...", null), list, new NarrativeMenu.GetNarrativeMenuCharacterArgsDelegate(GetParentMenuNarrativeMenuCharacterArgs));
+            NarrativeMenu narrativeMenu = new("narrative_parent_menu", "start", "narrative_childhood_menu", new TextObject("{=b4lDDcli}Family", null), new TextObject("{=XgFU1pCx}You were born into a family of...", null), list, new NarrativeMenu.GetNarrativeMenuCharacterArgsDelegate(GetParentMenuNarrativeMenuCharacterArgs));
             AddEmpireParentNarrativeMenuOptions(narrativeMenu);
             AddVlandianParentNarrativeMenuOptions(narrativeMenu);
             AddSturgianParentNarrativeMenuOptions(narrativeMenu);

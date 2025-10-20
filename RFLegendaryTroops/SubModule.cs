@@ -12,13 +12,10 @@ namespace RFLegendaryTroops
             base.OnSubModuleLoad(); 
             new Harmony("RFLegendaryTroops").PatchAll();
         }
-
         protected override void OnSubModuleUnloaded()
         {
             base.OnSubModuleUnloaded();
         }
-
-
         protected override void OnGameStart(Game game, IGameStarter starterObject)
         {
             if (starterObject is CampaignGameStarter starter)

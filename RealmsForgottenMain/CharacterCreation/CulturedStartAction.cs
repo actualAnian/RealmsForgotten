@@ -23,7 +23,6 @@ namespace RealmsForgotten.CharacterCreation
             try
             {
                 Hero mainHero = Hero.MainHero;
-                Hero captor = Hero.FindAll(hero => hero.Culture == mainHero.Culture && hero.IsAlive && hero.MapFaction != null && !hero.MapFaction.IsMinorFaction && hero.IsPartyLeader && hero.PartyBelongedTo.DefaultBehavior != AiBehavior.Hold).GetRandomElementInefficiently();
 
                 // remove original items
                 GiveGoldAction.ApplyBetweenCharacters(mainHero, null, mainHero.Gold, true);
@@ -130,14 +129,11 @@ namespace RealmsForgotten.CharacterCreation
                     try
                     {
                         companion.BattleEquipment.FillFrom(Campaign.Current.Models.EquipmentSelectionModel.GetEquipmentRostersForHeroComeOfAge(companion, false)[0].AllEquipments.GetRandomElement());
-                    }
-                    catch (Exception)
-                    {
-                        InformationManager.DisplayMessage(new InformationMessage("ERROR FILLING EQUIPMENT ON COMPANION", Colors.Red));
-                    }
-                    try
-                    {
-                        companion.CivilianEquipment.FillFrom(Campaign.Current.Models.EquipmentSelectionModel.GetEquipmentRostersForHeroComeOfAge(companion, true)[0].AllEquipments.GetRandomElement());
+                        if (companion.IsFemale)
+                            companion.CivilianEquipment.FillFrom(ChooseLadyCivillianEquipment(companion)[0].AllEquipments.GetRandomElement());
+                        else
+                            companion.CivilianEquipment.FillFrom(Campaign.Current.Models.EquipmentSelectionModel.GetEquipmentRostersForHeroComeOfAge(companion, true)[0].AllEquipments.GetRandomElement());
+
                     }
                     catch (Exception)
                     {
@@ -150,6 +146,13 @@ namespace RealmsForgotten.CharacterCreation
                 if (i < companionParties)
                     MobilePartyHelper.CreateNewClanMobileParty(companion, Hero.MainHero.Clan);
             }
+        }
+        private static List<MBEquipmentRoster> ChooseLadyCivillianEquipment(Hero companion)
+        {
+            return MBEquipmentRosterExtensions.All.Where(a => a.EquipmentCulture == companion.Culture
+                    && a.HasEquipmentFlags(EquipmentFlags.IsFemaleTemplate)
+                    && a.HasEquipmentFlags(EquipmentFlags.IsNobleTemplate)
+                    && a.HasEquipmentFlags(EquipmentFlags.IsNoncombatantTemplate)).ToList();
         }
     }
 }

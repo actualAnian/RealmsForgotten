@@ -25,13 +25,13 @@ namespace RFLegendaryTroops.Patches
             {
                 new CodeInstruction(OpCodes.Ldarg_1, null),
                 new CodeInstruction(OpCodes.Ldarg_2, null),
-                new CodeInstruction(OpCodes.Call, AccessTools.Method("RealmsForgotten.RFLegendaryTroops.Helper:CanRecruitIfInCastle")),
+                new CodeInstruction(OpCodes.Call, AccessTools.Method("RFLegendaryTroops.Helper:CanRecruitIfInCastle")),
                 new CodeInstruction(OpCodes.Brfalse, jumpLabel)
                 };
 
             for (int index = 0; index < codes.Count; index++)
             {
-                if (codes[Math.Abs(index - 1)].opcode == OpCodes.Brfalse_S && codes[index].opcode == OpCodes.Ldarg_0 && codes[index + 1].opcode == OpCodes.Ldarg_1 && codes[index + 2].opcode == OpCodes.Ldarg_2)
+                if (codes[Math.Abs(index - 1)].opcode == OpCodes.Brtrue_S && codes[index].opcode == OpCodes.Ldarg_0 && codes[index + 1].opcode == OpCodes.Ldarg_1 && codes[index + 2].opcode == OpCodes.Ldarg_2)
                 {
                     if (patchInsertionCheck) throw new ArgumentException("patch RFLegendaryTroops.CheckRecruitingPatch has been added multiple times!");
                     patchInsertionCheck = true;
