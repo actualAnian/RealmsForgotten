@@ -196,7 +196,10 @@ namespace RealmsForgotten.RFCustomSettlements
             if (Agent.Main == null) return false;
             foreach (var enemy in Mission.PlayerEnemyTeam.ActiveAgents)
                 if (Agent.Main.GetDistanceTo(enemy) < 10)
+                {
+                    MBInformationManager.AddQuickInformation(new("{rf_near_enemies}You are near enemies, you can't leave!"));
                     return true;
+                }
             return false;
         }
 
