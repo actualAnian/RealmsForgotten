@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using RealmsForgotten.Managers;
+using System.Collections;
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.MountAndBlade.Diamond;
@@ -771,7 +772,23 @@ namespace RealmsForgotten.CharacterCreation
             ["urkhai"] = HumanBodyPropString,
             ["wulf"] = WulfBodyPropString
         };
+        public static int GetRaceIdFromCulture(string culture)
+        {
+            if (cultureToRace.TryGetValue(culture, out string raceName))
+            {
+                return RaceManager.Instance.GetRaceIdFromName(raceName) ;
+            }
+            return 0;
+        }
 
+        static readonly Dictionary<string, string> cultureToRace = new()
+        {
+            ["battania"] = "elvean",
+            ["sturgia"] = "undead",
+            ["giant"] = "Xilantlacay",
+            ["dwarf"] = "dwarf",
+            ["urkhai"] = "urkhai"
+        };
         const string AthasBodyPropString = "<BodyProperties version=\"4\" age=\"22.23\" weight=\"0.0448\" build=\"0.6065\"  key=\"003FB40FCE001016AF9E6DFC6B0756871FF2FD9D8031BB1327CCC0244CAB9C060069160306EC96D8000000000000000000000000000000000000000010CC1004\"  />";
         const string NasoriaBodyPropString = "<BodyProperties version=\"4\" age=\"40\" weight=\"0.8288\" build=\"0.4213\"  key=\"001EAC0B80000004FFC53FE76E83CCEA36A3EC6D8174DF4070129ADF3E13E54B0366C6350684B8A7000000000000000000000000000000000000000026CC7002\"  />";
         const string AllKhuurBodyPropString = "<BodyProperties version=\"4\" age=\"22.49\" weight=\"0.9599\" build=\"0.3611\"  key=\"001EF80D8000200AB8708BB6CDC85229D3698B3ABDFE344CD22D3DD5388988680355E6350596723B0000000000000000000000000000000000000000609C1005\"  />";
@@ -786,7 +803,7 @@ namespace RealmsForgotten.CharacterCreation
         public static List<string> PlayerSelectableCultures = new()
         {
             "aserai", "battania", "empire", "khuzait", "sturgia", "vlandia", // DO NOT REMOVE, in Bannelord 1.3 beta removing one of the default cultures causes a crash
-            "urkhai",
+            "urkhai", "wulf"
         };
     }
 }

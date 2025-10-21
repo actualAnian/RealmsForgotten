@@ -114,7 +114,7 @@ namespace RealmsForgotten.CharacterCreation
             if (stage is CharacterCreationCultureStage)
             {
                 BodyProperties.FromString(CharacterCreationConfig.GetBodyPropertiesFromCulture(Hero.MainHero.Culture.StringId), out BodyProperties properties);
-                CharacterObject.PlayerCharacter.UpdatePlayerCharacterBodyProperties(properties, CharacterObject.PlayerCharacter.Race, CharacterObject.PlayerCharacter.IsFemale);
+                CharacterObject.PlayerCharacter.UpdatePlayerCharacterBodyProperties(properties, CharacterCreationConfig.GetRaceIdFromCulture(Hero.MainHero.Culture.StringId), CharacterObject.PlayerCharacter.IsFemale);
                 MBTextManager.SetTextVariable("CULTURE", CharacterObject.PlayerCharacter.Culture.Name, false);
             }
             if (stage is CharacterCreationFaceGeneratorStage)
@@ -902,8 +902,6 @@ namespace RealmsForgotten.CharacterCreation
                 null
             );
             narrativeMenu.AddNarrativeMenuOption(AthasInnerCircleOption);
-
-
             // Warrior-slaves
             NarrativeMenuOption AthasWarriorSlavesOption = new(
                 "athas_warrior_slaves",
@@ -1230,20 +1228,6 @@ namespace RealmsForgotten.CharacterCreation
             args.SetLevelToSkills(_skillLevelToAdd);
             args.SetLevelToAttribute(DefaultCharacterAttributes.Cunning, _attributeLevelToAdd);
         }
-
-        /*
-         * ArtisanNarrativeOptionOnSelect
-         * HerderNarrativeOptionOnSelect
-         * HealerNarrativeOptionOnSelect
-         * BardNarrativeOptionOnSelect
-         * MerchantNarrativeOptionOnSelect
-         * RetainerNarrativeOptionOnSelect
-         * HunterNarrativeOptionOnSelect
-         * FarmerNarrativeOptionOnSelect
-         * VagabondNarrativeOptionOnSelect
-         * MercenaryNarrativeOptionOnSelect
-         * PhysicianNarrativeOptionOnSelect
-         */
         private void ArtisanNarrativeOptionOnSelect(CharacterCreationManager characterCreationManager)
         {
             characterCreationManager.CharacterCreationContent.SetParentOccupation("artisan_urban");
@@ -1594,7 +1578,7 @@ namespace RealmsForgotten.CharacterCreation
         }
         private void AddMageNarrativeMenuOptions(NarrativeMenu narrativeMenu)
         {
-            NarrativeMenuOption mage_direct_descendants_option = new(
+            NarrativeMenuOption mageDirectDescendantsOption = new(
                 "mage_direct_descendants",
                 new TextObject("Direct Descendants of the first people"),
                 new TextObject("Descending from the ruler´s bloodline of the First People - the ancestors that made the pilgrimage to Aeurth - your father was a leader among his village and the cousin of the King of his Realm. He rode with the lord´s cavalry, fighting as an armored lancer."),
@@ -1603,8 +1587,8 @@ namespace RealmsForgotten.CharacterCreation
                 new NarrativeMenuOptionOnSelectDelegate(RetainerNarrativeOptionOnSelect),
                 null
             );
-            narrativeMenu.AddNarrativeMenuOption(mage_direct_descendants_option);
-            NarrativeMenuOption mage_urban_merchants_option = new(
+            narrativeMenu.AddNarrativeMenuOption(mageDirectDescendantsOption);
+            NarrativeMenuOption mageUrbanMerchantsOption = new(
                 "mage_urban_merchants",
                 new TextObject("{=651FhzdR}Urban merchants"),
                 new TextObject("{=FQntPChs}Your family were merchants in one of the main cities of the Kingdoms of Man. They sometimes organized caravans to nearby towns, and discussed issues in the town council."),
@@ -1613,8 +1597,8 @@ namespace RealmsForgotten.CharacterCreation
                 new NarrativeMenuOptionOnSelectDelegate(MerchantNarrativeOptionOnSelect),
                 null
             );
-            narrativeMenu.AddNarrativeMenuOption(mage_urban_merchants_option);
-            NarrativeMenuOption mage_free_farmers_option = new(
+            narrativeMenu.AddNarrativeMenuOption(mageUrbanMerchantsOption);
+            NarrativeMenuOption mageFreeFarmersOption = new(
                 "mage_free_farmers",
                 new TextObject("Free Farmers"),
                 new TextObject("{=09z8Q08f}Your family were small farmers with just enough land to feed themselves and make a small profit. People like them were the pillars of the realm rural economy, as well as the backbone of the levy."),
@@ -1623,8 +1607,8 @@ namespace RealmsForgotten.CharacterCreation
                 new NarrativeMenuOptionOnSelectDelegate(FarmerNarrativeOptionOnSelect),
                 null
             );
-            narrativeMenu.AddNarrativeMenuOption(mage_free_farmers_option);
-            NarrativeMenuOption mage_urban_artisans_option = new(
+            narrativeMenu.AddNarrativeMenuOption(mageFreeFarmersOption);
+            NarrativeMenuOption mageUrbanArtisansOption = new(
                 "mage_urban_artisans",
                 new TextObject("{=v48N6h1t}Urban artisans"),
                 new TextObject("{=ZKynvffv}Your family owned their own workshop in a city, making goods from raw materials brought in from the countryside. Your father played an active if minor role in the town council, and also served in the militia."),
@@ -1633,8 +1617,8 @@ namespace RealmsForgotten.CharacterCreation
                 new NarrativeMenuOptionOnSelectDelegate(ArtisanNarrativeOptionOnSelect),
                 null
             );
-            narrativeMenu.AddNarrativeMenuOption(mage_urban_artisans_option);
-            NarrativeMenuOption mage_forestcaretakers_option = new(
+            narrativeMenu.AddNarrativeMenuOption(mageUrbanArtisansOption);
+            NarrativeMenuOption mageForestcaretakersOption = new(
                 "mage_forestcaretakers",
                 new TextObject("Forestcaretakers"),
                 new TextObject("Your family lived in a village, but did not own their own land. Instead, your father supplemented paid jobs with long trips in the woods, hunting and trapping, always keeping a wary eye for the lord's game wardens."),
@@ -1643,8 +1627,8 @@ namespace RealmsForgotten.CharacterCreation
                 new NarrativeMenuOptionOnSelectDelegate(HunterNarrativeOptionOnSelect),
                 null
             );
-            narrativeMenu.AddNarrativeMenuOption(mage_forestcaretakers_option);
-            NarrativeMenuOption mage_urban_vagabonds_option = new(
+            narrativeMenu.AddNarrativeMenuOption(mageForestcaretakersOption);
+            NarrativeMenuOption mageUrbanVagabondsOption = new(
                 "mage_urban_vagabonds",
                 new TextObject("{=aEke8dSb}Urban vagabonds"),
                 new TextObject("{=Jvf6K7TZ}Your family numbered among the many poor migrants living in the slums that grow up outside the walls of cities, making whatever money they could from a variety of odd jobs. Sometimes they did service for one of the many criminal gangs, and you had an early look at the dark side of life."),
@@ -1653,7 +1637,7 @@ namespace RealmsForgotten.CharacterCreation
                 new NarrativeMenuOptionOnSelectDelegate(VagabondNarrativeOptionOnSelect),
                 null
             );
-            narrativeMenu.AddNarrativeMenuOption(mage_urban_vagabonds_option);
+            narrativeMenu.AddNarrativeMenuOption(mageUrbanVagabondsOption);
         }
         private bool MageNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
         {
@@ -1716,7 +1700,7 @@ namespace RealmsForgotten.CharacterCreation
         }
         private void AddDwarfNarrativeMenuOptions(NarrativeMenu narrativeMenu)
         {
-            NarrativeMenuOption dwarf_nobles_option = new(
+            NarrativeMenuOption dwarfNoblesOption = new(
                 "dwarf_nobles",
                 new TextObject("Dugrast Nobles"),
                 new TextObject("Your family was part of the noble dwarven houses, renowned for their craftsmanship and warrior skills."),
@@ -1724,7 +1708,8 @@ namespace RealmsForgotten.CharacterCreation
                 new NarrativeMenuOptionOnConditionDelegate(DwarfNarrativeOptionOnCondition),
                 new NarrativeMenuOptionOnSelectDelegate(RetainerNarrativeOptionOnSelect),
                 null);
-            NarrativeMenuOption dwarf_merchants_option = new(
+            narrativeMenu.AddNarrativeMenuOption(dwarfNoblesOption);
+            NarrativeMenuOption dwarfMerchantsOption = new(
                 "dwarf_merchants",
                 new TextObject("{=651FhzdR}Urban merchants"),
                 new TextObject("{=FQntPChs}Your family were merchants in one of the main cities of the Dugrast Kingdom. They sometimes organized caravans to nearby towns, and discussed issues in the town council."),
@@ -1732,7 +1717,8 @@ namespace RealmsForgotten.CharacterCreation
                 new NarrativeMenuOptionOnConditionDelegate(DwarfNarrativeOptionOnCondition),
                 new NarrativeMenuOptionOnSelectDelegate(MerchantNarrativeOptionOnSelect),
                 null);
-            NarrativeMenuOption dwarf_artisans_option = new(
+            narrativeMenu.AddNarrativeMenuOption(dwarfMerchantsOption);
+            NarrativeMenuOption dwarfArtisansOption = new(
                 "dwarf_artisans",
                 new TextObject("Dugrast Artisans"),
                 new TextObject("Your family were famous artisans, crafting weapons, armor, and items of unmatched quality."),
@@ -1740,7 +1726,8 @@ namespace RealmsForgotten.CharacterCreation
                 new NarrativeMenuOptionOnConditionDelegate(DwarfNarrativeOptionOnCondition),
                 new NarrativeMenuOptionOnSelectDelegate(ArtisanNarrativeOptionOnSelect),
                 null);
-            NarrativeMenuOption dwarf_miners_option = new(
+            narrativeMenu.AddNarrativeMenuOption(dwarfArtisansOption);
+            NarrativeMenuOption dwarfMinersOption = new(
                 "dwarf_miners",
                 new TextObject("Dugrast Miners"),
                 new TextObject("Your family worked in the deep mines, extracting precious metals and gems from the earth."),
@@ -1748,7 +1735,8 @@ namespace RealmsForgotten.CharacterCreation
                 new NarrativeMenuOptionOnConditionDelegate(DwarfNarrativeOptionOnCondition),
                 new NarrativeMenuOptionOnSelectDelegate(FarmerNarrativeOptionOnSelect),
                 null);
-            NarrativeMenuOption dwarf_warriors_option = new(
+            narrativeMenu.AddNarrativeMenuOption(dwarfMinersOption);
+            NarrativeMenuOption dwarfWarriorsOption = new(
                 "dwarf_warriors",
                 new TextObject("Dugrast Warriors"),
                 new TextObject("Your family were part of the dwarven military, renowned for their resilience and tactical brilliance in battle."),
@@ -1756,7 +1744,8 @@ namespace RealmsForgotten.CharacterCreation
                 new NarrativeMenuOptionOnConditionDelegate(DwarfNarrativeOptionOnCondition),
                 new NarrativeMenuOptionOnSelectDelegate(RetainerNarrativeOptionOnSelect),
                 null);
-            NarrativeMenuOption dwarf_vagabonds_option = new(
+            narrativeMenu.AddNarrativeMenuOption(dwarfWarriorsOption);
+            NarrativeMenuOption dwarfVagabondsOption = new(
                 "dwarf_vagabonds",
                 new TextObject("{=aEke8dSb}Urban vagabonds"),
                 new TextObject("{=Jvf6K7TZ}Your family numbered among the many poor migrants living in the slums that grow up outside the walls of cities, making whatever money they could from a variety of odd jobs. Sometimes they did service for one of the many criminal gangs, and you had an early look at the dark side of life."),
@@ -1764,6 +1753,7 @@ namespace RealmsForgotten.CharacterCreation
                 new NarrativeMenuOptionOnConditionDelegate(DwarfNarrativeOptionOnCondition),
                 new NarrativeMenuOptionOnSelectDelegate(VagabondNarrativeOptionOnSelect),
                 null);
+            narrativeMenu.AddNarrativeMenuOption(dwarfVagabondsOption);
         }
         private bool DwarfNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
         {
@@ -1814,7 +1804,7 @@ namespace RealmsForgotten.CharacterCreation
 
         private void AddUrkhaiParentNarrativeMenuOptions(NarrativeMenu narrativeMenu)
         {
-            NarrativeMenuOption urkhai_commanders_option = new(
+            NarrativeMenuOption urkhaiCommandersOption = new(
                 "urkhai_commanders",
                 new TextObject("Urkhai Commanders"),
                 new TextObject("You were born from a high rank Urkhai commander, renowned for his commanding skills and courage in battle."),
@@ -1822,15 +1812,17 @@ namespace RealmsForgotten.CharacterCreation
                 new NarrativeMenuOptionOnConditionDelegate(UrkhaiNarrativeOptionOnCondition),
                 new NarrativeMenuOptionOnSelectDelegate(RetainerNarrativeOptionOnSelect),
                 null);
-            NarrativeMenuOption urkhai_merchants_option = new(
+            narrativeMenu.AddNarrativeMenuOption(urkhaiCommandersOption);
+            NarrativeMenuOption urkhaiMerchantsOption = new(
                 "urkhai_merchants",
                 new TextObject("{=651FhzdR}Urban merchants"),
                 new TextObject("{=FQntPChs}Your family were merchants in one of the main cities of the Urkhai Kingdom. They sometimes organized caravans to nearby towns, and discussed issues in the town council."),
                 new GetNarrativeMenuOptionArgsDelegate(GetUrkhaiMerchantsNarrativeOptionArgs),
                 new NarrativeMenuOptionOnConditionDelegate(UrkhaiNarrativeOptionOnCondition),
                 new NarrativeMenuOptionOnSelectDelegate(MerchantNarrativeOptionOnSelect),
-                null); 
-            NarrativeMenuOption urkhai_artisans_option = new(
+                null);
+            narrativeMenu.AddNarrativeMenuOption(urkhaiMerchantsOption);
+            NarrativeMenuOption urkhaiArtisansOption = new(
                 "urkhai_artisans",
                 new TextObject("Urkhai Artisans"),
                 new TextObject("Your family were famous artisans, crafting weapons, armor, and items of unmatched quality."),
@@ -1838,7 +1830,8 @@ namespace RealmsForgotten.CharacterCreation
                 new NarrativeMenuOptionOnConditionDelegate(UrkhaiNarrativeOptionOnCondition),
                 new NarrativeMenuOptionOnSelectDelegate(ArtisanNarrativeOptionOnSelect),
                 null);
-            NarrativeMenuOption urkhai_miners_option = new(
+            narrativeMenu.AddNarrativeMenuOption(urkhaiArtisansOption);
+            NarrativeMenuOption urkhaiMinersOption = new(
                 "urkhai_miners",
                 new TextObject("Urkhai Miners"),
                 new TextObject("Your family worked in the deep mines, extracting precious metals and gems from the earth."),
@@ -1846,7 +1839,8 @@ namespace RealmsForgotten.CharacterCreation
                 new NarrativeMenuOptionOnConditionDelegate(UrkhaiNarrativeOptionOnCondition),
                 new NarrativeMenuOptionOnSelectDelegate(ArtisanNarrativeOptionOnSelect),
                 null);
-            NarrativeMenuOption urkhai_troops_option = new(
+            narrativeMenu.AddNarrativeMenuOption(urkhaiMinersOption);
+            NarrativeMenuOption urkhaiTroopsOption = new(
                 "urkhai_troops",
                 new TextObject("Urkhai Troops"),
                 new TextObject("Your family were part of the urkhaish military, renowned for their brutality and courage in battle."),
@@ -1854,7 +1848,8 @@ namespace RealmsForgotten.CharacterCreation
                 new NarrativeMenuOptionOnConditionDelegate(UrkhaiNarrativeOptionOnCondition),
                 new NarrativeMenuOptionOnSelectDelegate(RetainerNarrativeOptionOnSelect),
                 null);
-            NarrativeMenuOption urkhai_vagabonds_option = new(
+            narrativeMenu.AddNarrativeMenuOption(urkhaiTroopsOption);
+            NarrativeMenuOption urkhaiVagabondsOption = new(
                 "urkhai_vagabonds",
                 new TextObject("{=aEke8dSb}Urban vagabonds"),
                 new TextObject("{=Jvf6K7TZ}Your family numbered among the many poor migrants living in the slums that grow up outside the walls of cities, making whatever money they could from a variety of odd jobs. Sometimes they did service for one of the many criminal gangs, and you had an early look at the dark side of life."),
@@ -1862,6 +1857,7 @@ namespace RealmsForgotten.CharacterCreation
                 new NarrativeMenuOptionOnConditionDelegate(UrkhaiNarrativeOptionOnCondition),
                 new NarrativeMenuOptionOnSelectDelegate(VagabondNarrativeOptionOnSelect),
                 null);
+            narrativeMenu.AddNarrativeMenuOption(urkhaiVagabondsOption);
         }
         private bool UrkhaiNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
         {
@@ -1923,7 +1919,7 @@ namespace RealmsForgotten.CharacterCreation
         }
         private void AddWulfenNarrativeMenuOptions(NarrativeMenu narrativeMenu)
         {
-            NarrativeMenuOption wulfen_highborn_option = new(
+            NarrativeMenuOption wulfenHighbornOption = new(
                 "wulfen_highborn",
                 new TextObject("Wulfen Highborn"),
                 new TextObject("Your family stood among the chieftain’s inner circle, sharing feasts at the mead-hall. They fought with fierce two-handed blades, and you learned woodland archery while training beside your clan’s champions."),
@@ -1931,7 +1927,8 @@ namespace RealmsForgotten.CharacterCreation
                 new NarrativeMenuOptionOnConditionDelegate(WulfenNarrativeOptionOnCondition),
                 new NarrativeMenuOptionOnSelectDelegate(RetainerNarrativeOptionOnSelect),
                 null);
-            NarrativeMenuOption wulfen_druids_option = new(
+            narrativeMenu.AddNarrativeMenuOption(wulfenHighbornOption);
+            NarrativeMenuOption wulfenDruidsOption = new(
                 "wulfen_druids",
                 new TextObject("Wulfen Druids"),
                 new TextObject("Your parents were wise druids, versed in sacred rites and herbal crafts. They ministered to the sick, mediated clan disputes, and kept alive the old Celtic-Germanic rituals that bound the tribe together."),
@@ -1939,7 +1936,8 @@ namespace RealmsForgotten.CharacterCreation
                 new NarrativeMenuOptionOnConditionDelegate(WulfenNarrativeOptionOnCondition),
                 new NarrativeMenuOptionOnSelectDelegate(HealerNarrativeOptionOnSelect),
                 null);
-            NarrativeMenuOption wulfen_clansfolk_option = new(
+            narrativeMenu.AddNarrativeMenuOption(wulfenDruidsOption);
+            NarrativeMenuOption wulfenClansfolkOption = new(
                 "wulfen_clansfolk",
                 new TextObject("Wulfen Clansfolk"),
                 new TextObject("Your family were stalwart freemen, tending their own fields in the shadow of deep forests. Your father joined the clan’s main warband, loosing furious charges echoing with battle cries of old."),
@@ -1947,7 +1945,8 @@ namespace RealmsForgotten.CharacterCreation
                 new NarrativeMenuOptionOnConditionDelegate(WulfenNarrativeOptionOnCondition),
                 new NarrativeMenuOptionOnSelectDelegate(HerderNarrativeOptionOnSelect),
                 null);
-            NarrativeMenuOption wulfen_smiths_option = new(
+            narrativeMenu.AddNarrativeMenuOption(wulfenClansfolkOption);
+            NarrativeMenuOption wulfenSmithsOption = new(
                 "wulfen_smiths",
                 new TextObject("Wulfen Smiths"),
                 new TextObject("Your kin were famed for forging stout iron blades and intricate jewelry. In smoky forges, they hammered steel into deadly axes and swords prized by chieftains across the land."),
@@ -1955,7 +1954,8 @@ namespace RealmsForgotten.CharacterCreation
                 new NarrativeMenuOptionOnConditionDelegate(WulfenNarrativeOptionOnCondition),
                 new NarrativeMenuOptionOnSelectDelegate(ArtisanNarrativeOptionOnSelect),
                 null);
-            NarrativeMenuOption wulfen_foresters_option = new(
+            narrativeMenu.AddNarrativeMenuOption(wulfenSmithsOption);
+            NarrativeMenuOption wulfenForestersOption = new(
                 "wulfen_foresters",
                 new TextObject("Wulfen Foresters"),
                 new TextObject("Your family survived off thick woodlands, hunting and trapping game among ancient oaks and firs. They taught you to move silently and live off the land—a skill that could save your life in enemy territory."),
@@ -1963,7 +1963,8 @@ namespace RealmsForgotten.CharacterCreation
                 new NarrativeMenuOptionOnConditionDelegate(WulfenNarrativeOptionOnCondition),
                 new NarrativeMenuOptionOnSelectDelegate(HunterNarrativeOptionOnSelect),
                 null);
-            NarrativeMenuOption wulfen_skalds_option = new(
+            narrativeMenu.AddNarrativeMenuOption(wulfenForestersOption);
+            NarrativeMenuOption wulfenSkaldsOption = new(
                 "wulfen_skalds",
                 new TextObject("Wulfen Skalds"),
                 new TextObject("Your father was a traveling skald, reciting heroic sagas and preserving clan lore. Through stirring verses at feasts and gatherings, you learned the power of the spoken word and the secrets of influencing men’s hearts."),
@@ -1971,6 +1972,7 @@ namespace RealmsForgotten.CharacterCreation
                 new NarrativeMenuOptionOnConditionDelegate(WulfenNarrativeOptionOnCondition),
                 new NarrativeMenuOptionOnSelectDelegate(BardNarrativeOptionOnSelect),
                 null);
+            narrativeMenu.AddNarrativeMenuOption(wulfenSkaldsOption);
         }
         private void GetWulfenHighbornNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
