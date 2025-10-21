@@ -1,4 +1,5 @@
-﻿using HuntableHerds.Models;
+﻿using HarmonyLib;
+using HuntableHerds.Models;
 using RealmsForgotten.HuntableHerds.AgentComponents;
 using RealmsForgotten.HuntableHerds.Extensions;
 using RealmsForgotten.HuntableHerds.Models;
@@ -6,6 +7,8 @@ using RFCustomSettlements;
 using RFCustomSettlements.Quests;
 using SandBox;
 using SandBox.Missions.AgentBehaviors;
+using SandBox.Missions.MissionLogics;
+using SandBox.Objects;
 using SandBox.Objects.AreaMarkers;
 using SandBox.Objects.Usables;
 using System;
@@ -61,7 +64,7 @@ namespace RealmsForgotten.RFCustomSettlements
         public event UnitKilledHandler? UnitKilled;
         readonly CustomSettlementsCampaignBehavior _campaignBehavior = Campaign.Current.GetCampaignBehavior<CustomSettlementsCampaignBehavior>();
         IFocusable? _focusedRFObject;
-        string _sceneName;
+        readonly string _sceneName;
         int _pickableItemsRemaining = 0;
         bool _resetEndMissionTimer = false;
         private BasicMissionTimer? _endTimer;
@@ -72,7 +75,7 @@ namespace RealmsForgotten.RFCustomSettlements
             patrolAreas = new();
             areaMarkers = new();
             banditsInSettlement = CreateBanditData(buildData);
-            foreach (NpcData data in buildData.allNpcs)
+            foreach (NpcData data in buildData.AllNpcs)
             {
                 if (!NpcsInSettlement.ContainsKey(data.TagId))
                     NpcsInSettlement[data.TagId] = data;
@@ -167,6 +170,7 @@ namespace RealmsForgotten.RFCustomSettlements
                 ++i;
             } while (gameEntity != null);
 
+            SpawnDynamicPatrollingTroops();
             SpawnPatrollingTroops(patrolAreas);
             SpawnStandingTroops(areaMarkers);
             SpawnHuntableHerdsAnimals();
@@ -176,6 +180,7 @@ namespace RealmsForgotten.RFCustomSettlements
             _pickableItemsRemaining = Mission.Current.ActiveMissionObjects.Where(o => o.GameEntity.Name.Contains("rf_pickable")).Count();
             Mission.Current.IsFriendlyMission = false;
         }
+
         private void ResetLeaveMissionTimer()
         {
             if (!_resetEndMissionTimer) return;
@@ -288,7 +293,7 @@ namespace RealmsForgotten.RFCustomSettlements
 
             MobileParty mparty = new();
 
-            foreach (KeyValuePair<int, CustomSettlementBuildData.RFBanditData> pair in bd.patrolAreasBandits)
+            foreach (KeyValuePair<int, CustomSettlementBuildData.RFBanditData> pair in bd.PatrolAreasBandits)
             {
                 try
                 {
@@ -304,7 +309,7 @@ namespace RealmsForgotten.RFCustomSettlements
                     HuntableHerds.SubModule.PrintDebugMessage($"Error, there is no character with id \"{pair.Value.Id}\"", 255, 0, 0);
                 }
             }
-            foreach (KeyValuePair<int, List<CustomSettlementBuildData.RFBanditData>> pair in bd.stationaryAreasBandits)
+            foreach (KeyValuePair<int, List<CustomSettlementBuildData.RFBanditData>> pair in bd.StationaryAreasBandits)
             {
                 foreach (CustomSettlementBuildData.RFBanditData banditData in pair.Value)
                 {
@@ -328,12 +333,12 @@ namespace RealmsForgotten.RFCustomSettlements
             foreach (CommonAreaMarker commonAreaMarker in areaMarkers)
             {
                 int areaIndex = commonAreaMarker.AreaIndex;
-                if (!BanditsData.stationaryAreasBandits.ContainsKey(areaIndex)) continue;
+                if (!BanditsData.StationaryAreasBandits.ContainsKey(areaIndex)) continue;
                 List<StandingPoint> usableMachinesInArea = new();
                 StandingPoint standingPoint;
                 MatrixFrame globalFrame;
 
-                Dictionary<RFBanditData, int> banditsInArea = GetTroopsInArea(BanditsData.stationaryAreasBandits[areaIndex], out int allBandits);
+                Dictionary<RFBanditData, int> banditsInArea = GetTroopsInArea(BanditsData.StationaryAreasBandits[areaIndex], out int allBandits);
 
                 foreach (UsableMachine usableMachine in commonAreaMarker.GetUsableMachinesInRange(null))
                 {
@@ -367,6 +372,41 @@ namespace RealmsForgotten.RFCustomSettlements
                 }
             }
         }
+
+        private void SpawnDynamicPatrollingTroops()
+        {
+            List<DynamicPatrolAreaParent> dynamicPatrolAreas = new();
+            dynamicPatrolAreas.AddRange(from area in Mission.ActiveMissionObjects.FindAllWithType<DynamicPatrolAreaParent>()
+                                        orderby area.UniqueId
+                                        select area);
+            foreach (DynamicPatrolAreaParent dynamicPatrolArea in dynamicPatrolAreas)
+            {
+                int areaIndex = dynamicPatrolArea.UniqueId;
+                if (!BanditsData.DynamicPatrolAreasBandits.ContainsKey(areaIndex)) continue;
+                try
+                {
+                    RFBanditData currentBanditData = BanditsData.DynamicPatrolAreasBandits[areaIndex];
+                    for (int i = 0; i < currentBanditData.Amount; i++) 
+                    {
+                        MatrixFrame globalFrame = dynamicPatrolArea.GameEntity.GetGlobalFrame();
+                        GameEntity gameEntity = GameEntity.CreateFromWeakEntity(dynamicPatrolArea.GameEntity);
+                        RFAgentOrigin troopToSpawn = PrepareAgentToSpawn(currentBanditData.Id);
+                        Agent agent = Mission.Current.SpawnTroop(troopToSpawn, false, false, false, false, 0, 0, false, false, false, new Vec3?(globalFrame.origin), new Vec2?(globalFrame.rotation.f.AsVec2.Normalized()), "_hideout_bandit", null, FormationClass.NumberOfAllFormations, false);
+                        agent.SetAgentFlags(agent.GetAgentFlags() | AgentFlag.CanGetAlarmed);
+                        AgentNavigator nav = agent.GetComponent<CampaignAgentComponent>().CreateAgentNavigator();
+                        nav.AddBehaviorGroup<AlarmedBehaviorGroup>();
+                        DailyBehaviorGroup dailyBehavior = nav.AddBehaviorGroup<DailyBehaviorGroup>();
+                        dailyBehavior.AddBehavior<PatrolAgentBehavior>();
+                        dailyBehavior.GetBehavior<PatrolAgentBehavior>().SetDynamicPatrolArea(gameEntity);
+                    }
+                }
+                catch(Exception)
+                {
+                    HuntableHerds.SubModule.PrintDebugMessage($"error spawning the bandits in patrol area {areaIndex}");
+                }
+            }
+        }
+
         private void SpawnPatrollingTroops(List<PatrolArea> patrolAreas)
         {
             IEnumerable<PatrolArea> source = from area in patrolAreas
@@ -377,8 +417,8 @@ namespace RealmsForgotten.RFCustomSettlements
                 int areaIndex = area.AreaIndex;
                 try
                 {
-                    if (!BanditsData.patrolAreasBandits.ContainsKey(areaIndex)) continue;
-                    RFBanditData currentBanditData = BanditsData.patrolAreasBandits[areaIndex];
+                    if (!BanditsData.PatrolAreasBandits.ContainsKey(areaIndex)) continue;
+                    RFBanditData currentBanditData = BanditsData.PatrolAreasBandits[areaIndex];
 
                     MatrixFrame globalFrame = area.GameEntity.GetGlobalFrame();
                     globalFrame.rotation.OrthonormalizeAccordingToForwardAndKeepUpAsZAxis();
@@ -554,7 +594,8 @@ namespace RealmsForgotten.RFCustomSettlements
                         formation?.Team.DetachmentManager.RemoveScoresOfAgentFromDetachments(agent);
                     }
                 }
-                defenderAgentObjects[agent].IsMachineAITicked = false;
+                if (defenderAgentObjects.TryGetValue(agent, out var obj)) 
+                    obj.IsMachineAITicked = false;
             }
             else if (flag == Agent.AIStateFlag.None)
             {

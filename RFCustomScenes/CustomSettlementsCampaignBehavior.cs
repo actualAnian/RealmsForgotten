@@ -157,8 +157,8 @@ namespace RealmsForgotten.RFCustomSettlements
             if (!currentSettlement.StateHandler.IsInitialized())
                 try
                 {
-                    if (CustomSettlementBuildData.allCustomSettlementBuildDatas.ContainsKey(currentSettlement.CustomScene))
-                        currentSettlement.StateHandler.InitHandler(CustomSettlementBuildData.allCustomSettlementBuildDatas[currentSettlement.CustomScene]);
+                    if (CustomSettlementBuildData.AllCustomSettlementBuildDatas.ContainsKey(currentSettlement.CustomScene))
+                        currentSettlement.StateHandler.InitHandler(CustomSettlementBuildData.AllCustomSettlementBuildDatas[currentSettlement.CustomScene]);
                 }
                 catch(Exception)
                 {

@@ -60,28 +60,36 @@ namespace RealmsForgotten.RFCustomSettlements
                 }
             }
         }
-        internal static readonly Dictionary<string, CustomSettlementBuildData> allCustomSettlementBuildDatas = new();
-        public readonly Dictionary<int, List<RFBanditData>> stationaryAreasBandits;
-        public readonly Dictionary<int, RFBanditData> patrolAreasBandits;
+        public static readonly Dictionary<string, CustomSettlementBuildData> AllCustomSettlementBuildDatas = new();
+        public Dictionary<int, List<RFBanditData>> StationaryAreasBandits { get; private set; }
+        public Dictionary<int, RFBanditData> PatrolAreasBandits { get; private set; }
+        public Dictionary<int, RFBanditData> DynamicPatrolAreasBandits { get; private set; }
 
         public readonly bool canEnterOnlyAtSpecialHours;
-        public readonly int enterStartHour;
-        public readonly int enterEndHour;
-        public List<NpcData> allNpcs { get; private set; }
+        public int EnterStartHour { get; private set; }
+        public int EnterEndHour { get; private set; }
+        public List<NpcData> AllNpcs { get; private set; }
         public static Dictionary<string, ItemDropsData> AllItemDropsData { get; } = new();
 
-        private static string _mainPath = System.IO.Path.GetDirectoryName(Globals.realmsForgottenAssembly.Location);
+        private static readonly string _mainPath = System.IO.Path.GetDirectoryName(Globals.realmsForgottenAssembly.Location);
 
         private static readonly string _banditsXmlFileName = System.IO.Path.Combine(_mainPath, "settlement_bandits.xml");
         private static readonly string _itemDropsXmlFileName = System.IO.Path.Combine(_mainPath, "item_drops.xml");
-        public CustomSettlementBuildData(Dictionary<int, List<RFBanditData>> _stationaryAreasBandits, Dictionary<int, RFBanditData> _patrolAreasBandits, List<NpcData>Npcs, bool _canEnterOnlyAtSpecialHours = false, int _enterStartHour = 0, int _enterEndHour = 24)
+        public CustomSettlementBuildData(Dictionary<int, List<RFBanditData>> stationaryAreasBandits, 
+            Dictionary<int, RFBanditData> patrolAreasBandits,
+            Dictionary<int, RFBanditData> dynamicPatrolAreasBandits, 
+            List<NpcData> npcs, 
+            bool canEnterOnlyAtSpecialHours = false, 
+            int enterStartHour = 0, 
+            int enterEndHour = 24)
         {
-            stationaryAreasBandits = _stationaryAreasBandits;
-            patrolAreasBandits = _patrolAreasBandits;
-            canEnterOnlyAtSpecialHours = _canEnterOnlyAtSpecialHours;
-            enterStartHour = _enterStartHour;
-            enterEndHour = _enterEndHour;
-            allNpcs = Npcs;
+            StationaryAreasBandits = stationaryAreasBandits;
+            PatrolAreasBandits = patrolAreasBandits;
+            DynamicPatrolAreasBandits = dynamicPatrolAreasBandits;
+            this.canEnterOnlyAtSpecialHours = canEnterOnlyAtSpecialHours;
+            EnterStartHour = enterStartHour;
+            EnterEndHour = enterEndHour;
+            AllNpcs = npcs;
         }
         public static void BuildItemDrops()
         {
@@ -113,13 +121,13 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         public static void BuildAll()
         {
-
             XElement SettlementBandits = XElement.Load(_banditsXmlFileName);
 
             foreach (XElement element in SettlementBandits.Descendants("CustomScene"))
             {
                 Dictionary<int, List<RFBanditData>> buildStationaryAreasBandits = new();
                 Dictionary<int, RFBanditData> buildPatrolAreasBandits = new();
+                Dictionary<int, RFBanditData> buildDynamicPatrolAreasBandits = new();
                 string sceneId;
 
                 sceneId = element.Element("id").Value;
@@ -144,6 +152,14 @@ namespace RealmsForgotten.RFCustomSettlements
                     RFBanditData bd = new(xElement.Element("Bandit").Element("id").Value, xElement.Element("Bandit").Element("amount").Value, lootId);
                     buildPatrolAreasBandits.Add(int.Parse(xElement.Element("areaIndex").Value), bd);
                 }
+                foreach (XElement xElement in element.Descendants("Bandits").Descendants("DynamicPatrolArea"))
+                {
+                    XElement dropId = xElement.Element("Bandit").Element("lootId");
+                    string? lootId = dropId?.Value;
+                    RFBanditData bd = new(xElement.Element("Bandit").Element("id").Value, xElement.Element("Bandit").Element("amount").Value, lootId);
+                    buildDynamicPatrolAreasBandits.Add(int.Parse(xElement.Element("areaIndex").Value), bd);
+                }
+
                 XElement NpcElement = element.Descendants("Npcs").FirstOrDefault();
                 List<NpcData> NpcsList = new();
                 if (NpcElement != null)
@@ -153,10 +169,9 @@ namespace RealmsForgotten.RFCustomSettlements
                         NpcsList.Add(new(Npc.Element("NpcId").Value, Npc.Element("TagId").Value, Npc.Element("ActionSet").Value));
                     }
                 }
-                //                CustomSettlementBuildData buildData = new(buildStationaryAreasBandits, buildPatrolAreasBandits, maxPlayersideTroops);
-                CustomSettlementBuildData buildData = new(buildStationaryAreasBandits, buildPatrolAreasBandits, NpcsList, true, 8, 12);
+                CustomSettlementBuildData buildData = new(buildStationaryAreasBandits, buildPatrolAreasBandits, buildDynamicPatrolAreasBandits, NpcsList, true, 8, 12);
 
-                allCustomSettlementBuildDatas.Add(sceneId, buildData);
+                AllCustomSettlementBuildDatas.Add(sceneId, buildData);
             }
         }
     }

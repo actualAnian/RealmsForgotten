@@ -126,7 +126,7 @@ namespace RealmsForgotten.RFCustomSettlements
                     newSceneID = NextSceneData.Instance.newSceneId;
                     try
                     {
-                        CurrentBuildData = CustomSettlementBuildData.allCustomSettlementBuildDatas[newSceneID];
+                        CurrentBuildData = CustomSettlementBuildData.AllCustomSettlementBuildDatas[newSceneID];
                         RFMissions.StartExploreMission(newSceneID, CurrentBuildData);
                         return;
                     }
