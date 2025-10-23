@@ -46,8 +46,7 @@ namespace RFCustomSettlements
         }
         public void OnSessionLaunched(CampaignGameStarter campaignGameStarter)
         {
-            //this.AddDialogs(campaignGameStarter); 
-            this.AddGameMenus(campaignGameStarter); 
+            AddGameMenus(campaignGameStarter);
             arenaSettlement = Settlement.All.FirstOrDefault(s => s.SettlementComponent is RFCustomSettlement settlement && settlement.StateHandler is ArenaSettlementStateHandler);
         }
         private void AddGameMenus(CampaignGameStarter campaignGameStarter)
@@ -170,12 +169,10 @@ namespace RFCustomSettlements
         }
         public static void TeleportCapturedPlayerToArena()
         {
-            if(arenaSettlement == null) GameMenu.SwitchToMenu("menu_captivity_end_no_more_enemies");
-            else
-            {
+            if (arenaSettlement == null)
+                GameMenu.SwitchToMenu("menu_captivity_end_no_more_enemies");
+            else 
                 GameMenu.SwitchToMenu("rf_taken_to_arena");
-            }
-
         }
     }
 }

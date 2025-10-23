@@ -3,7 +3,7 @@ using TaleWorlds.CampaignSystem.Party.PartyComponents;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Localization;
 
-namespace RealmsForgotten.RFCustomBandits
+namespace RealmsForgotten.CustomBandits
 {
     public class SlaversBanditPartyComponent : BanditPartyComponent
     {

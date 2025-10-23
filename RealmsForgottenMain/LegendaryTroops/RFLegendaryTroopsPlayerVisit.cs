@@ -1,10 +1,9 @@
 ﻿using Helpers;
 using System;
 using TaleWorlds.CampaignSystem.GameMenus;
-using TaleWorlds.CampaignSystem.Inventory;
 using TaleWorlds.CampaignSystem.Settlements;
 
-namespace RFLegendaryTroops
+namespace RealmsForgotten.LegendaryTroops
 {
     public class RFLegendaryTroopsPlayerVisit
     {
@@ -78,7 +77,7 @@ namespace RFLegendaryTroops
                 return;
             }
 
-            InventoryScreenHelper.OpenScreenAsTrade(Settlement.CurrentSettlement.ItemRoster, (SettlementComponent)Settlement.CurrentSettlement.Village);
+            InventoryScreenHelper.OpenScreenAsTrade(Settlement.CurrentSettlement.ItemRoster, Settlement.CurrentSettlement.Village);
         }
 
         [GameMenuEventHandler("village", "manage_production", GameMenuEventHandler.EventType.OnConsequence)]

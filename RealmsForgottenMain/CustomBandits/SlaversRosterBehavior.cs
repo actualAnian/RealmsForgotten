@@ -15,7 +15,7 @@ using TaleWorlds.LinQuick;
 using TaleWorlds.Localization;
 using TaleWorlds.ObjectSystem;
 
-namespace RealmsForgotten.RFCustomBandits
+namespace RealmsForgotten.CustomBandits
 {
     public class SlaversRosterBehavior : CampaignBehaviorBase
     {
@@ -40,13 +40,13 @@ namespace RealmsForgotten.RFCustomBandits
 
         private void AddDialogs(CampaignGameStarter campaignGameSystemStarter)
         {
-            campaignGameSystemStarter.AddDialogLine("enslavers_start_defender", "start", "enslavers_defender", "{=!}{ENSLAVERS_START_DIALOGUE}", new ConversationSentence.OnConditionDelegate(this.enslavers_defenders_condition), null, 100, null);
+            campaignGameSystemStarter.AddDialogLine("enslavers_start_defender", "start", "enslavers_defender", "{=!}{ENSLAVERS_START_DIALOGUE}", new ConversationSentence.OnConditionDelegate(enslavers_defenders_condition), null, 100, null);
             campaignGameSystemStarter.AddPlayerLine("enslavers_defender_1", "enslavers_defender", "enslavers_start_fight", "You will pay for that!", null, null, 100, null, null);
             campaignGameSystemStarter.AddDialogLine("enslavers_start_fight", "enslavers_start_fight", "close_window", "Bold, aren't you? That's exactly who we need...", null, null, 100, null);
-            campaignGameSystemStarter.AddDialogLine("enslavers_start_attacker", "start", "enslavers_attacker", "What do you want", new ConversationSentence.OnConditionDelegate(this.enslavers_attacker_on_condition), null, 100, null);
+            campaignGameSystemStarter.AddDialogLine("enslavers_start_attacker", "start", "enslavers_attacker", "What do you want", new ConversationSentence.OnConditionDelegate(enslavers_attacker_on_condition), null, 100, null);
             campaignGameSystemStarter.AddPlayerLine("enslavers_encounter_ultimatum", "enslavers_attacker", "enslavers_encounter_ultimatum_answer", "Have you ever thought of tasting slavery yourself? Now you have a chance", null, null, 100, null, null);
             campaignGameSystemStarter.AddPlayerLine("enslavers_encounter_fight", "enslavers_attacker", "bandit_attacker_leave", "{=3W3eEIIZ}Never mind. You can go.", null, null, 100, null, null);
-            campaignGameSystemStarter.AddDialogLine("enslavers_encounter_ultimatum_war", "enslavers_encounter_ultimatum_answer", "close_window", "You will never take us alive[if:idle_angry][ib:aggressive]", null, new ConversationSentence.OnConsequenceDelegate(this.conversation_bandit_set_hostile_on_consequence), 100, null);
+            campaignGameSystemStarter.AddDialogLine("enslavers_encounter_ultimatum_war", "enslavers_encounter_ultimatum_answer", "close_window", "You will never take us alive[if:idle_angry][ib:aggressive]", null, new ConversationSentence.OnConsequenceDelegate(conversation_bandit_set_hostile_on_consequence), 100, null);
         }
 
 #pragma warning disable IDE1006 // Naming Styles
@@ -108,24 +108,24 @@ namespace RealmsForgotten.RFCustomBandits
         }
         public void SpawnSlavers(PartyTemplateObject troopTemplate)
         {
-            IEnumerable<Hideout> infestedHideouts = Hideout.All.WhereQ((Hideout h) => h.IsInfested);
+            IEnumerable<Hideout> infestedHideouts = Hideout.All.WhereQ((h) => h.IsInfested);
             if (!infestedHideouts.Any()) return;
             Hideout randomHideout = infestedHideouts.ElementAt(MBRandom.RandomInt(0, infestedHideouts.Count()));
 
-            Clan enslaversClan = Clan.All.WhereQ((Clan c) => c.StringId == "athas_enslavers").Single();
+            Clan enslaversClan = Clan.All.WhereQ((c) => c.StringId == "athas_enslavers").Single();
             MobileParty enslaversParty = MobileParty.CreateParty("Slavers", new SlaversBanditPartyComponent(randomHideout, false, enslaversClan));
             if (randomHideout != null)
             {
                 CampaignVec2 spawnPositionAroundSettlement = GetSpawnPositionAroundSettlement(randomHideout.Settlement);
                 enslaversParty.InitializeMobilePartyAtPosition(troopTemplate, randomHideout.Settlement.GatePosition);
                 enslaversParty.Party.SetVisualAsDirty();
-                int initialGold = (int)(10f * (float)enslaversParty.Party.MemberRoster.TotalManCount * (0.5f + 1f * MBRandom.RandomFloat));
+                int initialGold = (int)(10f * enslaversParty.Party.MemberRoster.TotalManCount * (0.5f + 1f * MBRandom.RandomFloat));
                 enslaversParty.InitializePartyTrade(initialGold);
                 foreach (ItemObject itemObject in Items.All)
                 {
                     if (itemObject.IsFood)
                     {
-                        int num2 = MBRandom.RoundRandomized((float)enslaversParty.MemberRoster.TotalManCount * (1f / (float)itemObject.Value) * 8f * MBRandom.RandomFloat * MBRandom.RandomFloat * MBRandom.RandomFloat * MBRandom.RandomFloat);
+                        int num2 = MBRandom.RoundRandomized(enslaversParty.MemberRoster.TotalManCount * (1f / itemObject.Value) * 8f * MBRandom.RandomFloat * MBRandom.RandomFloat * MBRandom.RandomFloat * MBRandom.RandomFloat);
                         if (num2 > 0)
                         {
                             enslaversParty.ItemRoster.AddToCounts(itemObject, num2);
@@ -168,7 +168,7 @@ namespace RealmsForgotten.RFCustomBandits
         }
         public static int CountMounted(TroopRoster troopRoster)
         {
-            return troopRoster.GetTroopRoster().WhereQ((TroopRosterElement t) => !t.Character.FirstBattleEquipment[10].IsEmpty).SumQ((TroopRosterElement t) => t.Number);
+            return troopRoster.GetTroopRoster().WhereQ((t) => !t.Character.FirstBattleEquipment[10].IsEmpty).SumQ((t) => t.Number);
         }
         private string ChooseEnslaversDefenderText(CharacterObject player, int playerTroopNumber, int clanTier)
         {

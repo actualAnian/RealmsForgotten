@@ -73,6 +73,9 @@
 			<HintPath>%(Identity)</HintPath>
 			<Private>False</Private>
 		</Reference>
+		<Compile Remove="AiMade\Stealth\**" />
+		<EmbeddedResource Remove="AiMade\Stealth\**" />
+		<None Remove="AiMade\Stealth\**" />
 		<Reference Include="ServeAsSoldier">
 			<HintPath>_Module\bin\Win64_Shipping_Client\ServeAsSoldier.dll</HintPath>
 		</Reference>
@@ -94,7 +97,6 @@
     </ItemGroup>
     <ItemGroup>
         <Folder Include="AiMade\TroopUnlocker\" />
-        <Folder Include="AiMade\Stealth\" />
         <Folder Include="_Module\GUI\Prefabs\CharacterDeveloper\" />
     </ItemGroup>
 </Project>

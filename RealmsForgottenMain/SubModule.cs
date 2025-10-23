@@ -7,11 +7,14 @@ using RealmsForgotten.Career;
 using RealmsForgotten.Career.Ability;
 using RealmsForgotten.Career.Logic;
 using RealmsForgotten.CharacterCreation;
+using RealmsForgotten.CustomBandits;
 using RealmsForgotten.CustomSkills;
+using RealmsForgotten.LegendaryTroops;
 using RealmsForgotten.Managers;
 using RealmsForgotten.Models;
 using RealmsForgotten.Patches;
 using RealmsForgotten.Quest;
+using RealmsForgotten.RFCustomBandits;
 using RealmsForgotten.RFCustomHorses;
 using RealmsForgotten.RFEffects;
 using RealmsForgotten.UI;
@@ -79,7 +82,12 @@ namespace RealmsForgotten
                 
                 campaignGameStarter.AddBehavior(RFHorseSpawningCampaignBehavior.Instance);
                 campaignGameStarter.AddBehavior(new RFCareerCampaignBehavior());
-               
+
+                campaignGameStarter.AddBehavior(new SlaversRosterBehavior());
+                campaignGameStarter.AddBehavior(new AiSlaversPatrollingBehavior());
+                campaignGameStarter.AddBehavior(new RFLegendaryTroopsPlayerVisitTownCampaignBehavior());
+                campaignGameStarter.AddBehavior(new RFLegendaryTroopsNotableBehaviors());
+                campaignGameStarter.AddBehavior(new RFLegendaryTroopsAIRecruitment());
 
                 campaignGameStarter.AddModel(new RFAgentApplyDamageModel(campaignGameStarter.GetExistingModel<AgentApplyDamageModel>()));
                 campaignGameStarter.AddModel(new RFBuildingConstructionModel(campaignGameStarter.GetExistingModel<BuildingConstructionModel>()));

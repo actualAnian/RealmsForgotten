@@ -133,7 +133,6 @@ namespace RealmsForgotten.CharacterCreation
                             companion.CivilianEquipment.FillFrom(ChooseLadyCivillianEquipment(companion)[0].AllEquipments.GetRandomElement());
                         else
                             companion.CivilianEquipment.FillFrom(Campaign.Current.Models.EquipmentSelectionModel.GetEquipmentRostersForHeroComeOfAge(companion, true)[0].AllEquipments.GetRandomElement());
-
                     }
                     catch (Exception)
                     {

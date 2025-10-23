@@ -7,12 +7,10 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Party;
-using TaleWorlds.LinQuick;
-using RealmsForgotten.RFCustomSettlements;
-using RFCustomSettlements;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.LinQuick;
 
-namespace RealmsForgotten.RFCustomBandits.Patches
+namespace RealmsForgotten.CustomBandits.Patches
 {
 
     [HarmonyPatch(typeof(PartyBase), "PartySizeLimit", MethodType.Getter)]
@@ -25,14 +23,14 @@ namespace RealmsForgotten.RFCustomBandits.Patches
 
             var field_partyMemberSizeLastCheckVersion = AccessTools.Field("TaleWorlds.CampaignSystem.Party.PartyBase:_partyMemberSizeLastCheckVersion");
             var field_cachedPartyMemberSizeLimit = AccessTools.Field("TaleWorlds.CampaignSystem.Party.PartyBase:_cachedPartyMemberSizeLimit");
-            List<CodeInstruction> codes = instructions.ToListQ<CodeInstruction>();
+            List<CodeInstruction> codes = instructions.ToListQ();
 
             codes[0].labels.Add(jumpLabel);
             List<CodeInstruction> instructionsToAdd = new()
             {
                 new CodeInstruction(OpCodes.Ldarg_0, null),
                 new CodeInstruction(OpCodes.Ldarg_0, null),
-                new CodeInstruction(OpCodes.Call, AccessTools.Method("RealmsForgotten.RFCustomBandits.SlaversRosterBehavior:ChangeTotalSizeLimitIfSlavers")),
+                new CodeInstruction(OpCodes.Call, AccessTools.Method("RealmsForgotten.CustomBandits.SlaversRosterBehavior:ChangeTotalSizeLimitIfSlavers")),
                 new CodeInstruction(OpCodes.Stfld, field_cachedPartyMemberSizeLimit),
                 new CodeInstruction(OpCodes.Ldarg_0, null),
                 new CodeInstruction(OpCodes.Ldfld, field_cachedPartyMemberSizeLimit),
@@ -52,32 +50,7 @@ namespace RealmsForgotten.RFCustomBandits.Patches
                 }
             }
             codes.InsertRange(insertion, instructionsToAdd);
-            return codes.AsEnumerable<CodeInstruction>();
-        }
-    }
-    [HarmonyPatch(typeof(PlayerCaptivityCampaignBehavior), nameof(PlayerCaptivityCampaignBehavior.CheckCaptivityChange))]
-    internal class CheckCaptivityChangePatch
-    {
-        static float hoursNeeded = 24;
-        static float tickStart = new Random().Next(0, 12);
-        private static void Prefix(PlayerCaptivityCampaignBehavior __instance, float dt)
-        {
-            List<string> culturesCapturingSlaves = new() { "aserai", "athas_enslavers" };
-            if (culturesCapturingSlaves.Contains(PlayerCaptivity.CaptorParty.Culture.StringId))
-            {
-                if(tickStart < hoursNeeded)
-                {
-                    tickStart += dt;
-                }
-                else
-                {
-                    tickStart = new Random().Next(0,12);
-                    ArenaCampaignBehavior.TeleportCapturedPlayerToArena();
-                    //GameMenu.SwitchToMenu("menu_captivity_end_by_ally_party_saved");
-                    return;
-                }
-
-            }
+            return codes.AsEnumerable();
         }
     }
 }

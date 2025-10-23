@@ -15,7 +15,7 @@ namespace RealmsForgotten.Career.Ability
         public static void RegisterAll()
         {
             // Mercenary ability
-            AbilityData mercAbilityData = new(15, 15,
+            AbilityData mercAbilityData = new(15, 90,
                 baseActions: new()
                 {
                     [AbilityData.ActionTrigger.OnTroopPreHit] = new() {
@@ -33,7 +33,7 @@ namespace RealmsForgotten.Career.Ability
                 });
 
             // Knight ability
-            AbilityData knightAbilityData = new(15, 15,
+            AbilityData knightAbilityData = new(15, 90,
                 baseActions: new()
                 {
                     [AbilityData.ActionTrigger.OnAgentHit] = new() {
@@ -46,7 +46,7 @@ namespace RealmsForgotten.Career.Ability
             // Wizard ability
             AbilityData wizardAbilityData = new(
                 duration: 15,
-                cooldown: 15,
+                cooldown: 90,
                 baseActions: new()
                 {
                     // GATILHO 1: Ao ativar, aplica o efeito visual nas armas.

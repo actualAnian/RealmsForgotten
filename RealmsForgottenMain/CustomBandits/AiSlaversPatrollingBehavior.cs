@@ -1,4 +1,5 @@
 ﻿using Helpers;
+using RealmsForgotten.CustomBandits;
 using System;
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;

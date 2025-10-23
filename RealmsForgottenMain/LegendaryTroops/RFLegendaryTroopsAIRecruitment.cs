@@ -4,7 +4,7 @@ using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 
-namespace RFLegendaryTroops
+namespace RealmsForgotten.LegendaryTroops
 {
     public class RFLegendaryTroopsAIRecruitment : CampaignBehaviorBase
     {
@@ -43,7 +43,7 @@ namespace RFLegendaryTroops
         }
         private void RecruitVolunteersFromNotable(MobileParty mobileParty, Settlement settlement)
         {
-            if ((mobileParty.Party.NumberOfAllMembers + 0.5f) / (float)mobileParty.Party.PartySizeLimit <= 1f)
+            if ((mobileParty.Party.NumberOfAllMembers + 0.5f) / mobileParty.Party.PartySizeLimit <= 1f)
             {
                 foreach (Hero notable in settlement.Notables)
                 {
