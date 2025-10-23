@@ -19,6 +19,7 @@ namespace RealmsForgotten.Career.CareerPointsSystem
         private static readonly int pointsForPerk = 50;
         public override void OnMapEventEnded(MapEvent mapEvent)
         {
+            
             PartyBase attackerParty = mapEvent.AttackerSide.LeaderParty;
             PartyBase defenderParty = mapEvent.DefenderSide.LeaderParty;
             if (mapEvent.WinningSide != mapEvent.PlayerSide)
@@ -97,8 +98,7 @@ namespace RealmsForgotten.Career.CareerPointsSystem
 
         private void AwardDeedsPoints(int points)
         {
-            // CORREÇÃO: Removido o código de depuração excessivo.
-            if (pointsForPerk <= 0) return; // Prevent division by zero
+            if (pointsForPerk <= 0) return;
 
             deedsPoints += points;
             int perkPoints = deedsPoints / pointsForPerk;

@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using RealmsForgotten.Quest.MissionBehaviors;
+using RealmsForgotten.Quest.UI;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.AgentOrigins;
 using TaleWorlds.CampaignSystem.Conversation;
 using TaleWorlds.CampaignSystem.Encounters;
+using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Party.PartyComponents;
 using TaleWorlds.CampaignSystem.Roster;
@@ -16,10 +20,8 @@ using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
 using TaleWorlds.SaveSystem;
-using FaceGen = TaleWorlds.Core.FaceGen;
 using static RealmsForgotten.Quest.QuestLibrary;
-using RealmsForgotten.Quest.UI;
-using RealmsForgotten.Quest.MissionBehaviors;
+using FaceGen = TaleWorlds.Core.FaceGen;
 
 namespace RealmsForgotten.Quest
 {
@@ -77,6 +79,30 @@ namespace RealmsForgotten.Quest
                         SaveCurrentQuestCampaignBehavior.Instance.SaveQuestState("queen");
                 });
             RegisterQuestEvents(this);
+            CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, OnGameLoaded);
+        }
+
+        private void OnGameLoaded(CampaignGameStarter starter)
+        {
+            starter.AddGameMenuOption("hideout_place", "attack", "KILL THEM",
+                new GameMenuOption.OnConditionDelegate(this.game_menu_attack_hideout_parties_on_condition),
+                new GameMenuOption.OnConsequenceDelegate(this.game_menu_encounter_attack_on_consequence), false, -1, false, null);
+
+        }
+
+        private void game_menu_encounter_attack_on_consequence(MenuCallbackArgs args)
+        {
+            if (PlayerEncounter.Battle == null)
+            {
+                PlayerEncounter.StartBattle();
+                PlayerEncounter.Update();
+            }
+            CampaignMission.OpenHideoutBattleMission("forest_hideout_003", null);
+        }
+
+        private bool game_menu_attack_hideout_parties_on_condition(MenuCallbackArgs args)
+        {
+            return Settlement.CurrentSettlement != null && Settlement.CurrentSettlement.IsHideout;
         }
 
         private void OnSettlementEntered(MobileParty mobileParty, Settlement settlement, Hero hero)
@@ -150,7 +176,9 @@ namespace RealmsForgotten.Quest
                 }
             }
         }
-
+        protected void AddGameMenus(CampaignGameStarter campaignGameStarter)
+        {
+        }
         public override TextObject Title => GameTexts.FindText("rf_second_quest_title");
 
         public override bool IsRemainingTimeHidden => true;

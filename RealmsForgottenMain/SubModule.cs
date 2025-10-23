@@ -206,7 +206,6 @@ namespace RealmsForgotten
                 starter.AddBehavior(new RFCharacterCreationCampaignBehavior());
             }
         }
-
         protected override void OnBeforeInitialModuleScreenSetAsRoot() { }
         public override void OnGameInitializationFinished(Game game)
         {
@@ -232,6 +231,12 @@ namespace RealmsForgotten
             harmony.Patch(ammoMethod, prefix: new HarmonyMethod(typeof(RFSpellAmmo), nameof(RFSpellAmmo.OnWeaponAmmoReloadPatch)));
             harmony.Patch(damageInfo, prefix: new HarmonyMethod(typeof(DamagePatch), nameof(DamagePatch.PreHandleBlow)));
             QuestPatches.PatchAll();
+
+
+            var target = AccessTools.Method(typeof(BanditSpawnCampaignBehavior), "IsLooterFaction", new Type[] { typeof(IFaction) });
+            harmony.Patch(target, prefix: new HarmonyMethod(typeof(BanditSpawnPatch), nameof(BanditSpawnPatch.Prefix)));
+            var hideoutMenuInit = AccessTools.Method(typeof(HideoutCampaignBehavior), "game_menu_hideout_place_on_init");
+            harmony.Patch(hideoutMenuInit, postfix: new HarmonyMethod(typeof(GameMenuPatches), nameof(GameMenuPatches.Postfix)));
         }
 
         private void RemoveSandboxAndStoryOptions()

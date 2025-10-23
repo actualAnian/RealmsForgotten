@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -23,17 +24,6 @@ namespace RFCustomSettlements
             objectManager.RegisterType<RFCustomSettlement>("RFCustomSettlement", "Components", 100U, true, false);
         }
     }
-    //[HarmonyPatch(typeof(MBObjectManager), "GetMergedXmlForManaged")]
-    //public class SkipValidation { 
-    //    public static bool Prefix(string id, ref bool skipValidation)
-    //    {
-    //        if(id == "Settlements")
-    //        {
-    //            skipValidation = true;
-    //        }
-    //        return true;
-    //    }
-    //}
     [HarmonyPatch(typeof(DefaultEncounterGameMenuModel), "GetEncounterMenu")]
     public class RFEncounterMenu
     {
@@ -80,6 +70,11 @@ namespace RFCustomSettlements
             RFCustomSettlement? rfSettlement;
             if (!(settlementComponent == null) && (rfSettlement = settlementComponent as RFCustomSettlement) is not null)
             {
+                if (rfSettlement.IsVisible) 
+                {
+                    var field = AccessTools.FieldRefAccess<SettlementNameplateVM, string>("_bindName");
+                    field(__instance) = rfSettlement.Name.ToString();
+                }
                 __result = rfSettlement.IsVisible;
             }
         }
