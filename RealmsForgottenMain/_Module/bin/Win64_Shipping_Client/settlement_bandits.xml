@@ -1,51 +1,51 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <RFCustomScenes>
-<CustomScene>
-        <id>anorite_monastery</id>
-        <Npcs>
-            <Npc>
-                <NpcId>anorite_monastery_militia</NpcId>
-                <TagId>1</TagId>
-                <ActionSet>_hideout_bandit</ActionSet>
-            </Npc>
-            <Npc>
-                <NpcId>anorite_monastery_priest</NpcId>
-                <TagId>2</TagId>
-                <ActionSet>_hideout_bandit</ActionSet>
-            </Npc>
-            <Npc>
-                <NpcId>anorite_monastery_priest_b</NpcId>
-                <TagId>3</TagId>
-                <ActionSet>_hideout_bandit</ActionSet>
-            </Npc>
-            <Npc>
-                <NpcId>anorite_monastery_priest_servant</NpcId>
-                <TagId>4</TagId>
-                <ActionSet>_hideout_bandit</ActionSet>
-            </Npc>
-            <Npc>
-                <NpcId>anorite_monastery_priest_servant</NpcId>
-                <TagId>5</TagId>
-                <ActionSet>_hideout_bandit</ActionSet>
-            </Npc>
-        </Npcs>
-        <Bandits>
-            <CommonArea>
-                <areaIndex>1</areaIndex>
-                <Bandit>
-                    <id>anorite_monastery_militia_test</id>
-                    <amount>2</amount>
-                </Bandit>
-            </CommonArea>
-            <PatrolArea>
-                <areaIndex>3</areaIndex>
-                <Bandit>
-                    <id>fire_golem</id>
-                    <amount>1</amount>
-                </Bandit>
-            </PatrolArea>
-        </Bandits>
-    </CustomScene>
+	<CustomScene>
+		<id>anorite_monastery</id>
+		<Npcs>
+			<Npc>
+				<NpcId>anorite_monastery_militia</NpcId>
+				<TagId>1</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+			<Npc>
+				<NpcId>anorite_monastery_priest</NpcId>
+				<TagId>2</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+			<Npc>
+				<NpcId>anorite_monastery_priest_b</NpcId>
+				<TagId>3</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+			<Npc>
+				<NpcId>anorite_monastery_priest_servant</NpcId>
+				<TagId>4</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+			<Npc>
+				<NpcId>anorite_monastery_priest_servant</NpcId>
+				<TagId>5</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+		</Npcs>
+		<Bandits>
+			<CommonArea>
+				<areaIndex>1</areaIndex>
+				<Bandit>
+					<id>anorite_monastery_militia_test</id>
+					<amount>2</amount>
+				</Bandit>
+			</CommonArea>
+			<PatrolArea>
+				<areaIndex>3</areaIndex>
+				<Bandit>
+					<id>fire_golem</id>
+					<amount>1</amount>
+				</Bandit>
+			</PatrolArea>
+		</Bandits>
+	</CustomScene>
 	<CustomScene>
 		<id>beast_hunt_3</id>
 		<Bandits>
@@ -555,26 +555,19 @@
 	</CustomScene>
 	<CustomScene>
 		<id>minotaur_swamp</id>
-		<Npcs>
-			<Npc>
-			<NpcId>villager_empire</NpcId>
-				<TagId>1</TagId>
-				<ActionSet>_hideout_bandit</ActionSet>
-			</Npc>
-		</Npcs>
 		<Bandits>
 			<CommonArea>
 				<areaIndex>1</areaIndex>
 				<Bandit>
 					<id>urkrish_bandit</id>
-					<amount>2</amount>
+					<amount>1</amount>
 				</Bandit>
 			</CommonArea>
 			<CommonArea>
 				<areaIndex>2</areaIndex>
 				<Bandit>
 					<id>urkrish_bandit</id>
-					<amount>2</amount>
+					<amount>1</amount>
 				</Bandit>
 			</CommonArea>
 			<CommonArea>
@@ -584,13 +577,20 @@
 					<amount>2</amount>
 				</Bandit>
 			</CommonArea>
-			<PatrolArea>
+			<DynamicPatrolArea>
+				<areaIndex>-1</areaIndex>
+				<Bandit>
+					<id>urkrish_bandit</id>
+					<amount>1</amount>
+				</Bandit>
+			</DynamicPatrolArea>
+			<DynamicPatrolArea>
 				<areaIndex>4</areaIndex>
 				<Bandit>
 					<id>minotaur</id>
 					<amount>1</amount>
 				</Bandit>
-			</PatrolArea>
+			</DynamicPatrolArea>
 		</Bandits>
 	</CustomScene>
 
@@ -641,7 +641,7 @@
 			</PatrolArea>
 		</Bandits>
 	</CustomScene>
-		<CustomScene>
+	<CustomScene>
 		<id>old_king_ruins_dungeon_out</id>
 		<Npcs>
 			<Npc>
@@ -743,7 +743,7 @@
 	</CustomScene>
 	<CustomScene>
 		<id>mountain_city_inside</id>
-			<Npcs>
+		<Npcs>
 			<Npc>
 				<NpcId>village_woman_empire</NpcId>
 				<TagId>1</TagId>
@@ -841,7 +841,7 @@
 					<amount>1</amount>
 				</Bandit>
 			</PatrolArea>
-				<CommonArea>
+			<CommonArea>
 				<areaIndex>1</areaIndex>
 				<Bandit>
 					<id>vortiak_warrior</id>
@@ -1406,7 +1406,7 @@
 	<CustomScene>
 		<id>xilan_forest_temple</id>
 		<Bandits>
-		<CommonArea>
+			<CommonArea>
 				<areaIndex>1</areaIndex>
 				<Bandit>
 					<id>xilan_temple_demons</id>
@@ -1443,7 +1443,7 @@
 			</PatrolArea>
 		</Bandits>
 	</CustomScene>
-		<CustomScene>
+	<CustomScene>
 		<id>buried_king_tomb</id>
 		<Npcs>
 			<Npc>
@@ -1464,13 +1464,13 @@
 	</CustomScene>
 	<CustomScene>
 		<id>ambush_forest</id>
-		 <Npcs>
-            <Npc>
-                <NpcId>villager_ambush</NpcId>
-                <TagId>1</TagId>
-                <ActionSet>_hideout_bandit</ActionSet>
-           </Npc>
-         </Npcs>
+		<Npcs>
+			<Npc>
+				<NpcId>villager_ambush</NpcId>
+				<TagId>1</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+		</Npcs>
 		<Bandits>
 			<PatrolArea>
 				<areaIndex>5</areaIndex>
@@ -1479,7 +1479,7 @@
 					<amount>2</amount>
 				</Bandit>
 			</PatrolArea>
-            <PatrolArea>
+			<PatrolArea>
 				<areaIndex>2</areaIndex>
 				<Bandit>
 					<id>vagabond_archer</id>
@@ -1493,28 +1493,28 @@
 					<amount>6</amount>
 				</Bandit>
 			</CommonArea>
-            <CommonArea>
+			<CommonArea>
 				<areaIndex>2</areaIndex>
 				<Bandit>
 					<id>vagabond_archer</id>
 					<amount>6</amount>
 				</Bandit>
 			</CommonArea>
-             <CommonArea>
+			<CommonArea>
 				<areaIndex>3</areaIndex>
 				<Bandit>
 					<id>vagabond_infantry</id>
 					<amount>12</amount>
 				</Bandit>
 			</CommonArea>
-              <CommonArea>
+			<CommonArea>
 				<areaIndex>4</areaIndex>
 				<Bandit>
 					<id>vagabond_infantry</id>
 					<amount>5</amount>
 				</Bandit>
 			</CommonArea>
-              <CommonArea>
+			<CommonArea>
 				<areaIndex>5</areaIndex>
 				<Bandit>
 					<id>vagabond_infantry</id>
@@ -1532,13 +1532,13 @@
 	</CustomScene>
 	<CustomScene>
 		<id>quest_prison</id>
-		 <Npcs>
-            <Npc>
-                <NpcId>rf_quest_prisoner</NpcId>
-                <TagId>1</TagId>
-                <ActionSet>_hideout_bandit</ActionSet>
-           </Npc>
-         </Npcs>
+		<Npcs>
+			<Npc>
+				<NpcId>rf_quest_prisoner</NpcId>
+				<TagId>1</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+		</Npcs>
 		<Bandits>
 			<PatrolArea>
 				<areaIndex>1</areaIndex>
@@ -1547,14 +1547,14 @@
 					<amount>2</amount>
 				</Bandit>
 			</PatrolArea>
-          	<CommonArea>
+			<CommonArea>
 				<areaIndex>1</areaIndex>
 				<Bandit>
 					<id>vagabond_infantry</id>
 					<amount>2</amount>
 				</Bandit>
 			</CommonArea>
-        </Bandits>
+		</Bandits>
 	</CustomScene>
 	<CustomScene>
 		<id>zombie_village</id>
@@ -1617,131 +1617,131 @@
 			</PatrolArea>
 		</Bandits>
 	</CustomScene>
-	
-<CustomScene>
-	<id>bandit_village_mission</id>
-	<Bandits>
-		<CommonArea>
-			<areaIndex>1</areaIndex>
-			<Bandit>
-				<id>vagabond_infantry</id>
-				<amount>10</amount>
-			</Bandit>
-		</CommonArea>
-		<CommonArea>
-			<areaIndex>2</areaIndex>
-			<Bandit>
-				<id>vagabond_pikeman</id>
-				<amount>13</amount>
-			</Bandit>
-		</CommonArea>
-		<CommonArea>
-			<areaIndex>3</areaIndex>
-			<Bandit>
-				<id>elvean_druid_militia</id>
-				<amount>6</amount>
-			</Bandit>
-		</CommonArea>
-		<CommonArea>
-			<areaIndex>4</areaIndex>
-			<Bandit>
-				<id>vagabond_pikeman</id>
-				<amount>25</amount>
-			</Bandit>
-		</CommonArea>
-		<CommonArea>
-			<areaIndex>5</areaIndex>
-			<Bandit>
-				<id>vagabond_archer</id>
-				<amount>4</amount>
-			</Bandit>
-		</CommonArea>
+
+	<CustomScene>
+		<id>bandit_village_mission</id>
+		<Bandits>
 			<CommonArea>
-			<areaIndex>7</areaIndex>
-			<Bandit>
-				<id>vagabond_infantry</id>
-				<amount>4</amount>
-			</Bandit>
-		</CommonArea>
-		<PatrolArea>
-			<areaIndex>1</areaIndex>
-			<Bandit>
-				<id>vagabond_archer</id>
-				<amount>4</amount>
-			</Bandit>
-		</PatrolArea>
-		<PatrolArea>
-			<areaIndex>2</areaIndex>
-			<Bandit>
-				<id>vagabond_archer</id>
-				<amount>3</amount>
-			</Bandit>
-		</PatrolArea>
-		<PatrolArea>
-			<areaIndex>4</areaIndex>
-			<Bandit>
-				<id>vagabond_archer</id>
-				<amount>3</amount>
-			</Bandit>
-		</PatrolArea>
-		<PatrolArea>
-			<areaIndex>3</areaIndex>
-			<Bandit>
-				<id>vagabond_archer</id>
-				<amount>17</amount>
-			</Bandit>
-		</PatrolArea>
-		<PatrolArea>
-			<areaIndex>5</areaIndex>
-			<Bandit>
-				<id>vagabond_archer</id>
-				<amount>4</amount>
-			</Bandit>
-		</PatrolArea>
-		<PatrolArea>
-			<areaIndex>6</areaIndex>
-			<Bandit>
-				<id>vagabond_boss</id>
-				<amount>1</amount>
-			</Bandit>
-		</PatrolArea>
-		<PatrolArea>
-			<areaIndex>7</areaIndex>
-			<Bandit>
-				<id>vagabond_mounted_archer</id>
-				<amount>4</amount>
-			</Bandit>
-		</PatrolArea>
-	</Bandits>
-</CustomScene>
-<CustomScene>
-		<id>portal_athas</id>
-		 <Npcs>
-            <Npc>
-                <NpcId>catacomb_cultists</NpcId>
-                <TagId>1</TagId>
-                <ActionSet>_hideout_bandit</ActionSet>
-           </Npc>
-         </Npcs>
+				<areaIndex>1</areaIndex>
+				<Bandit>
+					<id>vagabond_infantry</id>
+					<amount>10</amount>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
+				<areaIndex>2</areaIndex>
+				<Bandit>
+					<id>vagabond_pikeman</id>
+					<amount>13</amount>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
+				<areaIndex>3</areaIndex>
+				<Bandit>
+					<id>elvean_druid_militia</id>
+					<amount>6</amount>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
+				<areaIndex>4</areaIndex>
+				<Bandit>
+					<id>vagabond_pikeman</id>
+					<amount>25</amount>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
+				<areaIndex>5</areaIndex>
+				<Bandit>
+					<id>vagabond_archer</id>
+					<amount>4</amount>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
+				<areaIndex>7</areaIndex>
+				<Bandit>
+					<id>vagabond_infantry</id>
+					<amount>4</amount>
+				</Bandit>
+			</CommonArea>
+			<PatrolArea>
+				<areaIndex>1</areaIndex>
+				<Bandit>
+					<id>vagabond_archer</id>
+					<amount>4</amount>
+				</Bandit>
+			</PatrolArea>
+			<PatrolArea>
+				<areaIndex>2</areaIndex>
+				<Bandit>
+					<id>vagabond_archer</id>
+					<amount>3</amount>
+				</Bandit>
+			</PatrolArea>
+			<PatrolArea>
+				<areaIndex>4</areaIndex>
+				<Bandit>
+					<id>vagabond_archer</id>
+					<amount>3</amount>
+				</Bandit>
+			</PatrolArea>
+			<PatrolArea>
+				<areaIndex>3</areaIndex>
+				<Bandit>
+					<id>vagabond_archer</id>
+					<amount>17</amount>
+				</Bandit>
+			</PatrolArea>
+			<PatrolArea>
+				<areaIndex>5</areaIndex>
+				<Bandit>
+					<id>vagabond_archer</id>
+					<amount>4</amount>
+				</Bandit>
+			</PatrolArea>
+			<PatrolArea>
+				<areaIndex>6</areaIndex>
+				<Bandit>
+					<id>vagabond_boss</id>
+					<amount>1</amount>
+				</Bandit>
+			</PatrolArea>
+			<PatrolArea>
+				<areaIndex>7</areaIndex>
+				<Bandit>
+					<id>vagabond_mounted_archer</id>
+					<amount>4</amount>
+				</Bandit>
+			</PatrolArea>
+		</Bandits>
 	</CustomScene>
-<CustomScene>
+	<CustomScene>
+		<id>portal_athas</id>
+		<Npcs>
+			<Npc>
+				<NpcId>catacomb_cultists</NpcId>
+				<TagId>1</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+		</Npcs>
+	</CustomScene>
+	<CustomScene>
 		<id>desert_oasis_battle</id>
-		 <Npcs>
-            <Npc>
-                <NpcId>the_astronomer</NpcId>
-                <TagId>1</TagId>
-                <ActionSet>_hideout_bandit</ActionSet>
-           </Npc>
-         </Npcs>
-	 <Bandits>
-		 <CommonArea>
-			<areaIndex>1</areaIndex>
-			<Bandit>
-				<id>fire_golem</id>
-				<amount>1</amount>
-			</Bandit>
-		</CommonArea>
-	</Bandits>
+		<Npcs>
+			<Npc>
+				<NpcId>the_astronomer</NpcId>
+				<TagId>1</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+		</Npcs>
+		<Bandits>
+			<CommonArea>
+				<areaIndex>1</areaIndex>
+				<Bandit>
+					<id>fire_golem</id>
+					<amount>1</amount>
+				</Bandit>
+			</CommonArea>
+		</Bandits>
 	</CustomScene>
 
 	<CustomScene>
@@ -1754,31 +1754,31 @@
 					<amount>2</amount>
 				</Bandit>
 			</CommonArea>
-		<PatrolArea>
-			<areaIndex>1</areaIndex>
-			<Bandit>
-				<id>urkrish_bandit</id>
-				<amount>1</amount>
-			</Bandit>
-		</PatrolArea>
-	    </Bandits>
+			<PatrolArea>
+				<areaIndex>1</areaIndex>
+				<Bandit>
+					<id>urkrish_bandit</id>
+					<amount>1</amount>
+				</Bandit>
+			</PatrolArea>
+		</Bandits>
 	</CustomScene>
 
-		<CustomScene>
+	<CustomScene>
 		<id>lost_fortress</id>
 		<Npcs>
 			<Npc>
-			<NpcId>armed_trader_empire</NpcId>
+				<NpcId>armed_trader_empire</NpcId>
 				<TagId>1</TagId>
 				<ActionSet>_hideout_bandit</ActionSet>
 			</Npc>
 			<Npc>
-			<NpcId>armed_trader_empire</NpcId>
+				<NpcId>armed_trader_empire</NpcId>
 				<TagId>2</TagId>
 				<ActionSet>_hideout_bandit</ActionSet>
 			</Npc>
 			<Npc>
-			<NpcId>caravan_master_empire</NpcId>
+				<NpcId>caravan_master_empire</NpcId>
 				<TagId>3</TagId>
 				<ActionSet>_hideout_bandit</ActionSet>
 			</Npc>
@@ -1824,11 +1824,11 @@
 	<CustomScene>
 		<id>shipwreck_scene_a</id>
 		<Npcs>
-  			<Npc>
- 			 <NpcId>pirate_prisoner</NpcId>
-   			 <TagId>1</TagId>
-   			 <ActionSet>_hideout_bandit</ActionSet>
- 			 </Npc>
+			<Npc>
+				<NpcId>pirate_prisoner</NpcId>
+				<TagId>1</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
 		</Npcs>
 		<Bandits>
 			<CommonArea>
@@ -1852,7 +1852,7 @@
 					<amount>10</amount>
 				</Bandit>
 			</CommonArea>
-				<CommonArea>
+			<CommonArea>
 				<areaIndex>3</areaIndex>
 				<Bandit>
 					<id>pirate_bandit</id>
@@ -1866,14 +1866,14 @@
 					<amount>6</amount>
 				</Bandit>
 			</CommonArea>
-				<CommonArea>
+			<CommonArea>
 				<areaIndex>5</areaIndex>
 				<Bandit>
 					<id>pirate_bandit</id>
 					<amount>5</amount>
 				</Bandit>
 			</CommonArea>
-				<CommonArea>
+			<CommonArea>
 				<areaIndex>6</areaIndex>
 				<Bandit>
 					<id>pirate_bandit</id>
@@ -1894,7 +1894,7 @@
 					<amount>3</amount>
 				</Bandit>
 			</CommonArea>
-				<CommonArea>
+			<CommonArea>
 				<areaIndex>9</areaIndex>
 				<Bandit>
 					<id>sea_raiders_pirates</id>
@@ -1942,17 +1942,17 @@
 		<id>tribal_island</id>
 		<Npcs>
 			<Npc>
-			<NpcId>island_prisoner</NpcId>
+				<NpcId>island_prisoner</NpcId>
 				<TagId>1</TagId>
 				<ActionSet>_hideout_bandit</ActionSet>
 			</Npc>
 			<Npc>
-			<NpcId>island_prisoner</NpcId>
+				<NpcId>island_prisoner</NpcId>
 				<TagId>2</TagId>
 				<ActionSet>_hideout_bandit</ActionSet>
 			</Npc>
 			<Npc>
-			<NpcId>island_prisoner</NpcId>
+				<NpcId>island_prisoner</NpcId>
 				<TagId>3</TagId>
 				<ActionSet>_hideout_bandit</ActionSet>
 			</Npc>
@@ -1961,7 +1961,7 @@
 				<TagId>4</TagId>
 				<ActionSet>_hideout_bandit</ActionSet>
 			</Npc>
-		    <Npc>
+			<Npc>
 				<NpcId>island_prisoner</NpcId>
 				<TagId>5</TagId>
 				<ActionSet>_hideout_bandit</ActionSet>
@@ -2027,7 +2027,7 @@
 					<amount>1</amount>
 				</Bandit>
 			</CommonArea>
-				<CommonArea>
+			<CommonArea>
 				<areaIndex>8</areaIndex>
 				<Bandit>
 					<id>island_canibals</id>
@@ -2048,7 +2048,7 @@
 					<amount>6</amount>
 				</Bandit>
 			</CommonArea>
-				<CommonArea>
+			<CommonArea>
 				<areaIndex>11</areaIndex>
 				<Bandit>
 					<id>island_canibals</id>
@@ -2211,32 +2211,32 @@
 			</CommonArea>
 		</Bandits>
 		<PatrolArea>
-				<areaIndex>1</areaIndex>
-				<Bandit>
-					<id>pirate_bandit</id>
-					<amount>3</amount>
-				</Bandit>
-			</PatrolArea>
-		<PatrolArea>
-				<areaIndex>4</areaIndex>
-				<Bandit>
-					<id>pirate_bandit_chief</id>
-					<amount>2</amount>
-				</Bandit>
+			<areaIndex>1</areaIndex>
+			<Bandit>
+				<id>pirate_bandit</id>
+				<amount>3</amount>
+			</Bandit>
 		</PatrolArea>
 		<PatrolArea>
-				<areaIndex>8</areaIndex>
-				<Bandit>
-					<id>pirate_bandit_chief</id>
-					<amount>1</amount>
-				</Bandit>
+			<areaIndex>4</areaIndex>
+			<Bandit>
+				<id>pirate_bandit_chief</id>
+				<amount>2</amount>
+			</Bandit>
 		</PatrolArea>
 		<PatrolArea>
-				<areaIndex>10</areaIndex>
-				<Bandit>
-					<id>pirate_bandit_chief</id>
-					<amount>2</amount>
-				</Bandit>
+			<areaIndex>8</areaIndex>
+			<Bandit>
+				<id>pirate_bandit_chief</id>
+				<amount>1</amount>
+			</Bandit>
+		</PatrolArea>
+		<PatrolArea>
+			<areaIndex>10</areaIndex>
+			<Bandit>
+				<id>pirate_bandit_chief</id>
+				<amount>2</amount>
+			</Bandit>
 		</PatrolArea>
 	</CustomScene>
 
@@ -2270,7 +2270,7 @@
 					<id>cs_undead_bandits_chief</id>
 					<amount>2</amount>
 				</Bandit>
-		</PatrolArea>
+			</PatrolArea>
 		</Bandits>
 	</CustomScene>
 	<CustomScene>
@@ -2285,11 +2285,11 @@
 			</CommonArea>
 		</Bandits>
 	</CustomScene>
-		<CustomScene>
+	<CustomScene>
 		<id>allkhuur_temple</id>
 		<Npcs>
 			<Npc>
-			<NpcId>villager_khuzait_custom_b</NpcId>
+				<NpcId>villager_khuzait_custom_b</NpcId>
 				<TagId>1</TagId>
 				<ActionSet>_hideout_bandit</ActionSet>
 			</Npc>
@@ -2299,7 +2299,7 @@
 		<id>allkhuur_temple_inside</id>
 		<Npcs>
 			<Npc>
-			<NpcId>villager_khuzait_custom</NpcId>
+				<NpcId>villager_khuzait_custom</NpcId>
 				<TagId>1</TagId>
 				<ActionSet>_hideout_bandit</ActionSet>
 			</Npc>
@@ -2315,42 +2315,42 @@
 					<amount>6</amount>
 				</Bandit>
 			</CommonArea>
-            <CommonArea>
+			<CommonArea>
 				<areaIndex>2</areaIndex>
 				<Bandit>
 					<id>vagabond_archer</id>
 					<amount>5</amount>
 				</Bandit>
 			</CommonArea>
-             <CommonArea>
+			<CommonArea>
 				<areaIndex>3</areaIndex>
 				<Bandit>
 					<id>vagabond_infantry</id>
 					<amount>3</amount>
 				</Bandit>
 			</CommonArea>
-              <CommonArea>
+			<CommonArea>
 				<areaIndex>4</areaIndex>
 				<Bandit>
 					<id>vagabond_infantry</id>
 					<amount>3</amount>
 				</Bandit>
 			</CommonArea>
-              <CommonArea>
+			<CommonArea>
 				<areaIndex>5</areaIndex>
 				<Bandit>
 					<id>vagabond_archer</id>
 					<amount>3</amount>
 				</Bandit>
 			</CommonArea>
-		     <CommonArea>
+			<CommonArea>
 				<areaIndex>6</areaIndex>
 				<Bandit>
 					<id>vagabond_infantry</id>
 					<amount>4</amount>
 				</Bandit>
 			</CommonArea>
-			 <CommonArea>
+			<CommonArea>
 				<areaIndex>7</areaIndex>
 				<Bandit>
 					<id>vagabond_infantry</id>
@@ -2387,17 +2387,17 @@
 			</PatrolArea>
 		</Bandits>
 	</CustomScene>
-<CustomScene>
+	<CustomScene>
 		<id>arcane_keep_interior</id>
 		<Npcs>
 			<Npc>
-			<NpcId>arcane_library_maester_b</NpcId>
+				<NpcId>arcane_library_maester_b</NpcId>
 				<TagId>1</TagId>
 				<ActionSet>_hideout_bandit</ActionSet>
 			</Npc>
 		</Npcs>
-</CustomScene>
-<CustomScene>
+	</CustomScene>
+	<CustomScene>
 		<id>dwarf_dungeon_a</id>
 		<Bandits>
 			<CommonArea>
@@ -2405,9 +2405,9 @@
 				<Bandit>
 					<id>urkrish_raider</id>
 					<amount>1</amount>
-		</Bandit>
+				</Bandit>
 			</CommonArea>
-		<CommonArea>
+			<CommonArea>
 				<areaIndex>2</areaIndex>
 				<Bandit>
 					<id>urkrish_raider</id>
@@ -2452,7 +2452,7 @@
 				<Bandit>
 					<id>cyclops_giant</id>
 					<amount>1</amount>
-					 <lootId>drop1</lootId>
+					<lootId>drop1</lootId>
 				</Bandit>
 			</CommonArea>
 		</Bandits>
@@ -2465,7 +2465,7 @@
 				<Bandit>
 					<id>vagabond_infantry</id>
 					<amount>1</amount>
-		</Bandit>
+				</Bandit>
 			</CommonArea>
 		</Bandits>
 	</CustomScene>
@@ -2477,7 +2477,7 @@
 				<Bandit>
 					<id>vagabond_mounted_archer</id>
 					<amount>1</amount>
-		</Bandit>
+				</Bandit>
 			</CommonArea>
 		</Bandits>
 	</CustomScene>
@@ -2489,7 +2489,7 @@
 				<Bandit>
 					<id>vagabond_mounted_archer</id>
 					<amount>1</amount>
-		</Bandit>
+				</Bandit>
 			</CommonArea>
 		</Bandits>
 	</CustomScene>
@@ -2501,7 +2501,7 @@
 				<Bandit>
 					<id>vagabond_mounted_archer</id>
 					<amount>1</amount>
-		</Bandit>
+				</Bandit>
 			</CommonArea>
 		</Bandits>
 	</CustomScene>
@@ -2513,7 +2513,7 @@
 				<Bandit>
 					<id>vagabond_mounted_archer</id>
 					<amount>1</amount>
-		</Bandit>
+				</Bandit>
 			</CommonArea>
 		</Bandits>
 	</CustomScene>
@@ -2525,44 +2525,44 @@
 				<Bandit>
 					<id>sea_raiders_bandit</id>
 					<amount>5</amount>
-		</Bandit>
+				</Bandit>
 			</CommonArea>
-		<CommonArea>
+			<CommonArea>
 				<areaIndex>2</areaIndex>
 				<Bandit>
 					<id>sea_raiders_raider</id>
 					<amount>8</amount>
-		</Bandit>
+				</Bandit>
 			</CommonArea>
-		<CommonArea>
+			<CommonArea>
 				<areaIndex>3</areaIndex>
 				<Bandit>
 					<id>hellbound_thief</id>
 					<amount>5</amount>
-		</Bandit>
+				</Bandit>
 			</CommonArea>
-		<CommonArea>
+			<CommonArea>
 				<areaIndex>4</areaIndex>
 				<Bandit>
 					<id>hellbound_chief</id>
 					<amount>6</amount>
-		</Bandit>
+				</Bandit>
 			</CommonArea>
 			<CommonArea>
 				<areaIndex>5</areaIndex>
 				<Bandit>
 					<id>hellbound_chief</id>
 					<amount>4</amount>
-		</Bandit>
+				</Bandit>
 			</CommonArea>
-	<PatrolArea>
+			<PatrolArea>
 				<areaIndex>2</areaIndex>
 				<Bandit>
 					<id>hellbound_bandit</id>
 					<amount>7</amount>
 				</Bandit>
-	</PatrolArea>
-	</Bandits>
+			</PatrolArea>
+		</Bandits>
 	</CustomScene>
 	<CustomScene>
 		<id>cave</id>
@@ -2574,115 +2574,115 @@
 					<amount>9</amount>
 				</Bandit>
 			</CommonArea>
-		<CommonArea>
+			<CommonArea>
 				<areaIndex>2</areaIndex>
 				<Bandit>
 					<id>urkrish_bandit</id>
 					<amount>1</amount>
 				</Bandit>
 			</CommonArea>
-		<CommonArea>
+			<CommonArea>
 				<areaIndex>3</areaIndex>
 				<Bandit>
 					<id>urkrish_bandit</id>
 					<amount>9</amount>
 				</Bandit>
-		</CommonArea>
-		<CommonArea>
+			</CommonArea>
+			<CommonArea>
 				<areaIndex>4</areaIndex>
 				<Bandit>
 					<id>urkrish_bandit</id>
 					<amount>8</amount>
-		</Bandit>
-		</CommonArea>
-		<CommonArea>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
 				<areaIndex>5</areaIndex>
 				<Bandit>
 					<id>urkrish_bandit</id>
 					<amount>9</amount>
-		</Bandit>
-		</CommonArea>
-		<CommonArea>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
 				<areaIndex>6</areaIndex>
 				<Bandit>
 					<id>urkrish_bandit</id>
 					<amount>8</amount>
-		</Bandit>
-		</CommonArea>
+				</Bandit>
+			</CommonArea>
 			<PatrolArea>
 				<areaIndex>1</areaIndex>
 				<Bandit>
 					<id>urkrish_raider</id>
 					<amount>1</amount>
 				</Bandit>
-	</PatrolArea>
-	<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>2</areaIndex>
 				<Bandit>
 					<id>urkrish_raider</id>
 					<amount>3</amount>
 				</Bandit>
-	</PatrolArea>
-	<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>3</areaIndex>
 				<Bandit>
 					<id>urkrish_raider</id>
 					<amount>1</amount>
 				</Bandit>
-	</PatrolArea>
-		<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>4</areaIndex>
 				<Bandit>
 					<id>urkrish_chief</id>
 					<amount>5</amount>
 				</Bandit>
-	</PatrolArea>
-		<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>5</areaIndex>
 				<Bandit>
 					<id>urkrish_chief</id>
 					<amount>4</amount>
 				</Bandit>
-	</PatrolArea>
-	<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>6</areaIndex>
 				<Bandit>
 					<id>urkrish_boss</id>
 					<amount>1</amount>
 				</Bandit>
-	</PatrolArea>
-	</Bandits>
+			</PatrolArea>
+		</Bandits>
 	</CustomScene>
 
 	<CustomScene>
 		<id>rat2</id>
-		  <Npcs>
-            <Npc>
-                <NpcId>guard_tavern_empire_a</NpcId>
-                <TagId>1</TagId>
-                <ActionSet>_hideout_bandit</ActionSet>
-            </Npc>
-            <Npc>
-                <NpcId>ratscene_villager_empire_b</NpcId>
-                <TagId>2</TagId>
-                <ActionSet>_hideout_bandit</ActionSet>
-            </Npc>
-            <Npc>
-                <NpcId>ratscene_villager_empire_c</NpcId>
-                <TagId>3</TagId>
-                <ActionSet>_hideout_bandit</ActionSet>
-            </Npc>
-            <Npc>
-                <NpcId>ratscene_villager_empire_e</NpcId>
-                <TagId>4</TagId>
-                <ActionSet>_hideout_bandit</ActionSet>
-            </Npc>
-            <Npc>
-                <NpcId>ratscene_merchant_notary_battania</NpcId>
-                <TagId>5</TagId>
-                <ActionSet>_hideout_bandit</ActionSet>
-            </Npc>
-        </Npcs>
+		<Npcs>
+			<Npc>
+				<NpcId>guard_tavern_empire_a</NpcId>
+				<TagId>1</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+			<Npc>
+				<NpcId>ratscene_villager_empire_b</NpcId>
+				<TagId>2</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+			<Npc>
+				<NpcId>ratscene_villager_empire_c</NpcId>
+				<TagId>3</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+			<Npc>
+				<NpcId>ratscene_villager_empire_e</NpcId>
+				<TagId>4</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+			<Npc>
+				<NpcId>ratscene_merchant_notary_battania</NpcId>
+				<TagId>5</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+		</Npcs>
 		<Bandits>
 			<CommonArea>
 				<areaIndex>1</areaIndex>
@@ -2691,41 +2691,41 @@
 					<amount>2</amount>
 				</Bandit>
 			</CommonArea>
-		<CommonArea>
+			<CommonArea>
 				<areaIndex>2</areaIndex>
 				<Bandit>
 					<id>orc_base_infantry</id>
 					<amount>2</amount>
 				</Bandit>
 			</CommonArea>
-		<CommonArea>
+			<CommonArea>
 				<areaIndex>3</areaIndex>
 				<Bandit>
 					<id>orc_base_infantry</id>
 					<amount>2</amount>
 				</Bandit>
-		</CommonArea>
-		<CommonArea>
+			</CommonArea>
+			<CommonArea>
 				<areaIndex>4</areaIndex>
 				<Bandit>
 					<id>orc_base_infantry</id>
 					<amount>2</amount>
-		</Bandit>
-		</CommonArea>
-		<CommonArea>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
 				<areaIndex>5</areaIndex>
 				<Bandit>
 					<id>orc_base_infantry</id>
 					<amount>2</amount>
-		</Bandit>
-		</CommonArea>
-		<CommonArea>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
 				<areaIndex>6</areaIndex>
 				<Bandit>
 					<id>orc_base_infantry</id>
 					<amount>2</amount>
-		</Bandit>
-		</CommonArea>
+				</Bandit>
+			</CommonArea>
 		</Bandits>
 	</CustomScene>
 	<CustomScene>
@@ -2750,168 +2750,168 @@
 					<amount>10</amount>
 				</Bandit>
 			</CommonArea>
-		<CommonArea>
+			<CommonArea>
 				<areaIndex>2</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>8</amount>
 				</Bandit>
 			</CommonArea>
-		<CommonArea>
+			<CommonArea>
 				<areaIndex>3</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>10</amount>
 				</Bandit>
-		</CommonArea>
-		<CommonArea>
+			</CommonArea>
+			<CommonArea>
 				<areaIndex>4</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>12</amount>
-		</Bandit>
-		</CommonArea>
-		<CommonArea>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
 				<areaIndex>5</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>10</amount>
-		</Bandit>
-		</CommonArea>
-		<CommonArea>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
 				<areaIndex>6</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>13</amount>
-		</Bandit>
-		</CommonArea>
+				</Bandit>
+			</CommonArea>
 			<CommonArea>
 				<areaIndex>7</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>12</amount>
-		</Bandit>
-		</CommonArea>
+				</Bandit>
+			</CommonArea>
 			<CommonArea>
 				<areaIndex>8</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>15</amount>
-		</Bandit>
-		</CommonArea>
+				</Bandit>
+			</CommonArea>
 			<CommonArea>
 				<areaIndex>9</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>18</amount>
-		</Bandit>
-		</CommonArea>
-		<CommonArea>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
 				<areaIndex>11</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>16</amount>
-		</Bandit>
-		</CommonArea>
-		<CommonArea>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
 				<areaIndex>12</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>8</amount>
-		</Bandit>
-		</CommonArea>
-		<CommonArea>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
 				<areaIndex>13</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>18</amount>
-		</Bandit>
-		</CommonArea>
-		<CommonArea>
-			<areaIndex>14</areaIndex>
-			<Bandit>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
+				<areaIndex>14</areaIndex>
+				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>26</amount>
-		</Bandit>
-		</CommonArea>
+				</Bandit>
+			</CommonArea>
 			<PatrolArea>
 				<areaIndex>1</areaIndex>
 				<Bandit>
 					<id>reptileman_warrior</id>
 					<amount>3</amount>
 				</Bandit>
-	</PatrolArea>
-	<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>2</areaIndex>
 				<Bandit>
 					<id>reptileman_warrior</id>
 					<amount>2</amount>
 				</Bandit>
-	</PatrolArea>
-	<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>3</areaIndex>
 				<Bandit>
 					<id>reptileman_warrior</id>
 					<amount>4</amount>
 				</Bandit>
-	</PatrolArea>
-	<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>4</areaIndex>
 				<Bandit>
 					<id>reptileman_warrior</id>
 					<amount>4</amount>
 				</Bandit>
-	</PatrolArea>
-		<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>6</areaIndex>
 				<Bandit>
 					<id>reptileman_chief</id>
 					<amount>2</amount>
 				</Bandit>
-	</PatrolArea>
-		<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>7</areaIndex>
 				<Bandit>
 					<id>reptileman_chief</id>
 					<amount>3</amount>
 				</Bandit>
-	</PatrolArea>
-	<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>8</areaIndex>
 				<Bandit>
 					<id>reptileman_boss</id>
 					<amount>2</amount>
 				</Bandit>
-	</PatrolArea>
-	<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>11</areaIndex>
 				<Bandit>
 					<id>reptileman_chief</id>
 					<amount>2</amount>
 				</Bandit>
-	</PatrolArea>
-	<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>12</areaIndex>
 				<Bandit>
 					<id>reptileman_chief</id>
 					<amount>2</amount>
 				</Bandit>
-	</PatrolArea>
-		<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>13</areaIndex>
 				<Bandit>
 					<id>reptileman_chief</id>
 					<amount>4</amount>
 				</Bandit>
-	</PatrolArea>
-		<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>14</areaIndex>
 				<Bandit>
 					<id>reptileman_chief</id>
 					<amount>13</amount>
 				</Bandit>
-	</PatrolArea>
-	</Bandits>
+			</PatrolArea>
+		</Bandits>
 	</CustomScene>
 	<CustomScene>
 		<id>hello2</id>
@@ -2923,168 +2923,168 @@
 					<amount>10</amount>
 				</Bandit>
 			</CommonArea>
-		<CommonArea>
+			<CommonArea>
 				<areaIndex>2</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>8</amount>
 				</Bandit>
 			</CommonArea>
-		<CommonArea>
+			<CommonArea>
 				<areaIndex>3</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>10</amount>
 				</Bandit>
-		</CommonArea>
-		<CommonArea>
+			</CommonArea>
+			<CommonArea>
 				<areaIndex>4</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>12</amount>
-		</Bandit>
-		</CommonArea>
-		<CommonArea>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
 				<areaIndex>5</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>10</amount>
-		</Bandit>
-		</CommonArea>
-		<CommonArea>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
 				<areaIndex>6</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>13</amount>
-		</Bandit>
-		</CommonArea>
+				</Bandit>
+			</CommonArea>
 			<CommonArea>
 				<areaIndex>7</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>12</amount>
-		</Bandit>
-		</CommonArea>
+				</Bandit>
+			</CommonArea>
 			<CommonArea>
 				<areaIndex>8</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>15</amount>
-		</Bandit>
-		</CommonArea>
+				</Bandit>
+			</CommonArea>
 			<CommonArea>
 				<areaIndex>9</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>18</amount>
-		</Bandit>
-		</CommonArea>
-		<CommonArea>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
 				<areaIndex>11</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>16</amount>
-		</Bandit>
-		</CommonArea>
-		<CommonArea>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
 				<areaIndex>12</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>8</amount>
-		</Bandit>
-		</CommonArea>
-		<CommonArea>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
 				<areaIndex>13</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>18</amount>
-		</Bandit>
-		</CommonArea>
-		<CommonArea>
-			<areaIndex>14</areaIndex>
-			<Bandit>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
+				<areaIndex>14</areaIndex>
+				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>26</amount>
-		</Bandit>
-		</CommonArea>
+				</Bandit>
+			</CommonArea>
 			<PatrolArea>
 				<areaIndex>1</areaIndex>
 				<Bandit>
 					<id>reptileman_warrior</id>
 					<amount>3</amount>
 				</Bandit>
-	</PatrolArea>
-	<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>2</areaIndex>
 				<Bandit>
 					<id>reptileman_warrior</id>
 					<amount>2</amount>
 				</Bandit>
-	</PatrolArea>
-	<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>3</areaIndex>
 				<Bandit>
 					<id>reptileman_warrior</id>
 					<amount>4</amount>
 				</Bandit>
-	</PatrolArea>
-	<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>4</areaIndex>
 				<Bandit>
 					<id>reptileman_warrior</id>
 					<amount>4</amount>
 				</Bandit>
-	</PatrolArea>
-		<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>6</areaIndex>
 				<Bandit>
 					<id>reptileman_chief</id>
 					<amount>2</amount>
 				</Bandit>
-	</PatrolArea>
-		<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>7</areaIndex>
 				<Bandit>
 					<id>reptileman_chief</id>
 					<amount>3</amount>
 				</Bandit>
-	</PatrolArea>
-	<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>8</areaIndex>
 				<Bandit>
 					<id>reptileman_boss</id>
 					<amount>2</amount>
 				</Bandit>
-	</PatrolArea>
-	<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>11</areaIndex>
 				<Bandit>
 					<id>reptileman_chief</id>
 					<amount>2</amount>
 				</Bandit>
-	</PatrolArea>
-	<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>12</areaIndex>
 				<Bandit>
 					<id>reptileman_chief</id>
 					<amount>2</amount>
 				</Bandit>
-	</PatrolArea>
-		<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>13</areaIndex>
 				<Bandit>
 					<id>reptileman_chief</id>
 					<amount>4</amount>
 				</Bandit>
-	</PatrolArea>
-		<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>14</areaIndex>
 				<Bandit>
 					<id>reptileman_chief</id>
 					<amount>13</amount>
 				</Bandit>
-	</PatrolArea>
-	</Bandits>
+			</PatrolArea>
+		</Bandits>
 	</CustomScene>
 	<CustomScene>
 		<id>hello3</id>
@@ -3096,168 +3096,168 @@
 					<amount>10</amount>
 				</Bandit>
 			</CommonArea>
-		<CommonArea>
+			<CommonArea>
 				<areaIndex>2</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>8</amount>
 				</Bandit>
 			</CommonArea>
-		<CommonArea>
+			<CommonArea>
 				<areaIndex>3</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>10</amount>
 				</Bandit>
-		</CommonArea>
-		<CommonArea>
+			</CommonArea>
+			<CommonArea>
 				<areaIndex>4</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>12</amount>
-		</Bandit>
-		</CommonArea>
-		<CommonArea>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
 				<areaIndex>5</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>10</amount>
-		</Bandit>
-		</CommonArea>
-		<CommonArea>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
 				<areaIndex>6</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>13</amount>
-		</Bandit>
-		</CommonArea>
+				</Bandit>
+			</CommonArea>
 			<CommonArea>
 				<areaIndex>7</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>12</amount>
-		</Bandit>
-		</CommonArea>
+				</Bandit>
+			</CommonArea>
 			<CommonArea>
 				<areaIndex>8</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>15</amount>
-		</Bandit>
-		</CommonArea>
+				</Bandit>
+			</CommonArea>
 			<CommonArea>
 				<areaIndex>9</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>18</amount>
-		</Bandit>
-		</CommonArea>
-		<CommonArea>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
 				<areaIndex>11</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>16</amount>
-		</Bandit>
-		</CommonArea>
-		<CommonArea>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
 				<areaIndex>12</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>8</amount>
-		</Bandit>
-		</CommonArea>
-		<CommonArea>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
 				<areaIndex>13</areaIndex>
 				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>18</amount>
-		</Bandit>
-		</CommonArea>
-		<CommonArea>
-			<areaIndex>14</areaIndex>
-			<Bandit>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
+				<areaIndex>14</areaIndex>
+				<Bandit>
 					<id>reptileman_infantry</id>
 					<amount>26</amount>
-		</Bandit>
-		</CommonArea>
+				</Bandit>
+			</CommonArea>
 			<PatrolArea>
 				<areaIndex>1</areaIndex>
 				<Bandit>
 					<id>reptileman_warrior</id>
 					<amount>3</amount>
 				</Bandit>
-	</PatrolArea>
-	<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>2</areaIndex>
 				<Bandit>
 					<id>reptileman_warrior</id>
 					<amount>2</amount>
 				</Bandit>
-	</PatrolArea>
-	<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>3</areaIndex>
 				<Bandit>
 					<id>reptileman_warrior</id>
 					<amount>4</amount>
 				</Bandit>
-	</PatrolArea>
-	<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>4</areaIndex>
 				<Bandit>
 					<id>reptileman_warrior</id>
 					<amount>4</amount>
 				</Bandit>
-	</PatrolArea>
-		<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>6</areaIndex>
 				<Bandit>
 					<id>reptileman_chief</id>
 					<amount>2</amount>
 				</Bandit>
-	</PatrolArea>
-		<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>7</areaIndex>
 				<Bandit>
 					<id>reptileman_chief</id>
 					<amount>3</amount>
 				</Bandit>
-	</PatrolArea>
-	<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>8</areaIndex>
 				<Bandit>
 					<id>reptileman_boss</id>
 					<amount>2</amount>
 				</Bandit>
-	</PatrolArea>
-	<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>11</areaIndex>
 				<Bandit>
 					<id>reptileman_chief</id>
 					<amount>2</amount>
 				</Bandit>
-	</PatrolArea>
-	<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>12</areaIndex>
 				<Bandit>
 					<id>reptileman_chief</id>
 					<amount>2</amount>
 				</Bandit>
-	</PatrolArea>
-		<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>13</areaIndex>
 				<Bandit>
 					<id>reptileman_chief</id>
 					<amount>4</amount>
 				</Bandit>
-	</PatrolArea>
-		<PatrolArea>
+			</PatrolArea>
+			<PatrolArea>
 				<areaIndex>14</areaIndex>
 				<Bandit>
 					<id>reptileman_chief</id>
 					<amount>13</amount>
 				</Bandit>
-	</PatrolArea>
-	</Bandits>
+			</PatrolArea>
+		</Bandits>
 	</CustomScene>
 	<CustomScene>
 		<id>lizard_man_temple</id>
@@ -3269,21 +3269,21 @@
 					<amount>2</amount>
 				</Bandit>
 			</CommonArea>
-				<CommonArea>
+			<CommonArea>
 				<areaIndex>2</areaIndex>
 				<Bandit>
 					<id>reptileman_chief</id>
 					<amount>2</amount>
 				</Bandit>
 			</CommonArea>
-				<CommonArea>
+			<CommonArea>
 				<areaIndex>3</areaIndex>
 				<Bandit>
 					<id>reptileman_chief</id>
 					<amount>2</amount>
 				</Bandit>
 			</CommonArea>
-				<CommonArea>
+			<CommonArea>
 				<areaIndex>4</areaIndex>
 				<Bandit>
 					<id>reptileman_chief</id>
@@ -3299,7 +3299,7 @@
 			</PatrolArea>
 		</Bandits>
 	</CustomScene>
-<CustomScene>
+	<CustomScene>
 		<id>lizard_bandits_quest</id>
 		<Npcs>
 			<Npc>
@@ -3399,7 +3399,7 @@
 					<amount>3</amount>
 				</Bandit>
 			</CommonArea>
-				<CommonArea>
+			<CommonArea>
 				<areaIndex>3</areaIndex>
 				<Bandit>
 					<id>cs_bark_raiders_raider</id>
@@ -3413,7 +3413,7 @@
 					<amount>7</amount>
 				</Bandit>
 			</CommonArea>
-				<CommonArea>
+			<CommonArea>
 				<areaIndex>5</areaIndex>
 				<Bandit>
 					<id>cs_nurh_raiders_raider</id>
@@ -3427,7 +3427,7 @@
 					<amount>7</amount>
 				</Bandit>
 			</CommonArea>
-				<CommonArea>
+			<CommonArea>
 				<areaIndex>7</areaIndex>
 				<Bandit>
 					<id>cs_daimo_raiders_raider</id>
@@ -3448,14 +3448,14 @@
 					<amount>9</amount>
 				</Bandit>
 			</CommonArea>
-				<CommonArea>
+			<CommonArea>
 				<areaIndex>11</areaIndex>
 				<Bandit>
 					<id>cs_sillok_raiders_raider</id>
 					<amount>5</amount>
 				</Bandit>
 			</CommonArea>
-				<CommonArea>
+			<CommonArea>
 				<areaIndex>12</areaIndex>
 				<Bandit>
 					<id>cs_sillok_raiders_raider</id>
@@ -3469,7 +3469,7 @@
 					<amount>6</amount>
 				</Bandit>
 			</CommonArea>
-				<CommonArea>
+			<CommonArea>
 				<areaIndex>14</areaIndex>
 				<Bandit>
 					<id>evil_witch</id>
@@ -3509,7 +3509,7 @@
 					<amount>7</amount>
 				</Bandit>
 			</CommonArea>
-				<CommonArea>
+			<CommonArea>
 				<areaIndex>3</areaIndex>
 				<Bandit>
 					<id>vortiak_warrior</id>
@@ -3579,7 +3579,7 @@
 					<amount>2</amount>
 				</Bandit>
 			</PatrolArea>
-				<PatrolArea>
+			<PatrolArea>
 				<areaIndex>6</areaIndex>
 				<Bandit>
 					<id>vortiak_crossbowman</id>
@@ -3593,6 +3593,76 @@
 					<amount>4</amount>
 				</Bandit>
 			</PatrolArea>
+		</Bandits>
+	</CustomScene>
+	<CustomScene>
+		<id>custom_mission_urkish_ruins</id>
+		<Bandits>
+			<CommonArea>
+				<areaIndex>1</areaIndex>
+				<Bandit>
+					<id>urkrish_bandit</id>
+					<amount>2</amount>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
+				<areaIndex>2</areaIndex>
+				<Bandit>
+					<id>urkrish_bandit</id>
+					<amount>4</amount>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
+				<areaIndex>3</areaIndex>
+				<Bandit>
+					<id>urkrish_bandit</id>
+					<amount>5</amount>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
+				<areaIndex>4</areaIndex>
+				<Bandit>
+					<id>urkrish_bandit</id>
+					<amount>2</amount>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
+				<areaIndex>5</areaIndex>
+				<Bandit>
+					<id>ghost_knight</id>
+					<amount>1</amount>
+				</Bandit>
+			</CommonArea>
+			<PatrolArea>
+				<areaIndex>1</areaIndex>
+				<Bandit>
+					<id>urkrish_bandit</id>
+					<amount>4</amount>
+				</Bandit>
+			</PatrolArea>
+			<PatrolArea>
+				<areaIndex>2</areaIndex>
+				<Bandit>
+					<id>urkrish_chief</id>
+					<amount>2</amount>
+				</Bandit>
+			</PatrolArea>
+			<PatrolArea>
+				<areaIndex>4</areaIndex>
+				<Bandit>
+					<id>urkrish_chief</id>
+					<amount>2</amount>
+				</Bandit>
+			</PatrolArea>
+
+			<DynamicPatrolArea>
+				<areaIndex>-1</areaIndex>
+				<Bandit>
+					<id>urkrish_chief</id>
+					<amount>2</amount>
+				</Bandit>
+			</DynamicPatrolArea>
+
 		</Bandits>
 	</CustomScene>
 </RFCustomScenes>

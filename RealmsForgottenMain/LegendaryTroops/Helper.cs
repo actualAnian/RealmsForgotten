@@ -30,7 +30,7 @@ namespace RealmsForgotten.LegendaryTroops
         {
             CharacterObject? legendaryTroop = null;
             if (legendaryTroops.ContainsKey(culture.StringId))
-                legendaryTroop = MBObjectManager.Instance.GetObject<CharacterObject>(legendaryTroops[culture.StringId]); ;
+                legendaryTroop = MBObjectManager.Instance.GetObject<CharacterObject>(legendaryTroops[culture.StringId]);
             return legendaryTroop ?? MBObjectManager.Instance.GetObject<CharacterObject>("mercenary_7");
         }
 
