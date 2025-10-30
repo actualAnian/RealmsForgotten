@@ -14,6 +14,7 @@ using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.ViewModelCollection;
+using TaleWorlds.MountAndBlade.ViewModelCollection.Missions.Interaction;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -118,7 +119,7 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             GameKey key = HotKeyManager.GetCategory("CombatHotKeyCategory").GetGameKey(13);
             string button = $@"<img src=""General\InputKeys\{key.ToString().ToLower()}"" extend=""24"">";
-            vm.PrimaryInteractionMessage = button + "Loot";
+            vm.PrimaryInteractionMessages.First().FocusTypeString = button + "Loot"; //@TODO test
             vm.IsActive = true;
         }
         public static RFUsableObjectType? ChooseObjectType(string objectName)

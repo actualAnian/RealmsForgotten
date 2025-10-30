@@ -112,11 +112,11 @@ namespace RealmsForgotten.CustomBandits
             if (!infestedHideouts.Any()) return;
             Hideout randomHideout = infestedHideouts.ElementAt(MBRandom.RandomInt(0, infestedHideouts.Count()));
 
+            CampaignVec2 spawnPositionAroundSettlement = GetSpawnPositionAroundSettlement(randomHideout.Settlement);
             Clan enslaversClan = Clan.All.WhereQ((c) => c.StringId == "athas_enslavers").Single();
-            MobileParty enslaversParty = MobileParty.CreateParty("Slavers", new SlaversBanditPartyComponent(randomHideout, false, enslaversClan));
+            MobileParty enslaversParty = MobileParty.CreateParty("Slavers", new SlaversBanditPartyComponent(randomHideout, false, enslaversClan, spawnPositionAroundSettlement));
             if (randomHideout != null)
             {
-                CampaignVec2 spawnPositionAroundSettlement = GetSpawnPositionAroundSettlement(randomHideout.Settlement);
                 enslaversParty.InitializeMobilePartyAtPosition(troopTemplate, randomHideout.Settlement.GatePosition);
                 enslaversParty.Party.SetVisualAsDirty();
                 int initialGold = (int)(10f * enslaversParty.Party.MemberRoster.TotalManCount * (0.5f + 1f * MBRandom.RandomFloat));

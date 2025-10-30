@@ -111,7 +111,9 @@ namespace RealmsForgotten.AiMade.Managers
                 if (banditClan == null || targetHideout == null)
                     return;
 
-                MobileParty banditParty = BanditPartyComponent.CreateBanditParty(banditClan.StringId, banditClan, targetHideout, true);
+                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+                MobileParty banditParty = BanditPartyComponent.CreateBanditParty(banditClan.StringId, banditClan, targetHideout, true, looterTemplate, targetHideout.Settlement.Position);
+
                 if (banditParty == null)
                 {
                     InformationManager.DisplayMessage(new InformationMessage("ERROR: Failed to create bandit party.", Colors.Red));
@@ -121,28 +123,28 @@ namespace RealmsForgotten.AiMade.Managers
                 TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
 
                 var banditTroops = new List<(string troopId, int count)>
-            {
-                ("looter", 30),   
-                ("sea_raider", 20), 
-                ("forest_bandits", 15),
-                ("cs_looters", 20),
-                ("mountain_bandits", 20),
-                ("desert_bandits", 20),
-                ("steppe_bandits", 20),
-                ("gorakthar_giants", 20),
-                ("orguz_raiders", 20),
-                ("trolls_raiders", 20),
-                ("urkrish", 20),
-                ("athas_enslavers", 20),
-                ("athas_enslavers_big", 20),
-                ("deserted_military", 20),
-                ("vagabonds_army", 20),
-                ("arena_warriors_army", 20),
-                ("deserted_military", 20),
-                ("cs_athascultists", 20),
-                ("cs_nasorian_deserters", 20),
-                ("cs_sea_outlaws", 20),
-            };
+                {
+                    ("looter", 30),   
+                    ("sea_raider", 20), 
+                    ("forest_bandits", 15),
+                    ("cs_looters", 20),
+                    ("mountain_bandits", 20),
+                    ("desert_bandits", 20),
+                    ("steppe_bandits", 20),
+                    ("gorakthar_giants", 20),
+                    ("orguz_raiders", 20),
+                    ("trolls_raiders", 20),
+                    ("urkrish", 20),
+                    ("athas_enslavers", 20),
+                    ("athas_enslavers_big", 20),
+                    ("deserted_military", 20),
+                    ("vagabonds_army", 20),
+                    ("arena_warriors_army", 20),
+                    ("deserted_military", 20),
+                    ("cs_athascultists", 20),
+                    ("cs_nasorian_deserters", 20),
+                    ("cs_sea_outlaws", 20),
+                };
 
                 foreach (var (troopId, count) in banditTroops)
                 {

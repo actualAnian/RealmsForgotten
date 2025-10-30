@@ -1,4 +1,5 @@
 ﻿using Helpers;
+using RealmsForgotten.Behaviors;
 using System;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
@@ -22,7 +23,14 @@ namespace RealmsForgotten.LegendaryTroops
             CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(OnNewGameCreated));
             CampaignEvents.OnNewGameCreatedPartialFollowUpEndEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(OnNewGameCreatedPartialFollowUpEnd));
             CampaignEvents.WeeklyTickEvent.AddNonSerializedListener(this, WeeklyTick);
+            CampaignEvents.CanHaveCampaignIssuesEvent.AddNonSerializedListener(this, CanHaveEvents);
         }
+
+        private void CanHaveEvents(Hero hero, ref bool result)
+        {
+            result = hero.CurrentSettlement == null || !hero.CurrentSettlement.IsCastle;
+        }
+
         private void DailyTickSettlement(Settlement settlement)
         {
             if (settlement.IsCastle)

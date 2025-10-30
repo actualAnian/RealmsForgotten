@@ -16,6 +16,6 @@ namespace RealmsForgotten.CustomBandits
                 return textObject;
             }
         }
-        protected internal SlaversBanditPartyComponent(Hideout hideout, bool isBossParty, Clan clan) : base(hideout, isBossParty, new(clan)) {}
+        protected internal SlaversBanditPartyComponent(Hideout hideout, bool isBossParty, Clan clan, CampaignVec2 pos) : base(hideout, isBossParty, new(clan, null, pos)) {}
     }
 }

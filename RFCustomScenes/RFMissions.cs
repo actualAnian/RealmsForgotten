@@ -53,7 +53,7 @@ namespace RFCustomSettlements
                 new MissionConversationCameraView(),
                 new MissionBoundaryWallView(),
                 new MissionCampaignView(),
-                new OrderTroopPlacer(),
+                new OrderTroopPlacer(null),
 
                 new CustomSettlementMissionLogic(currentBuildData, sceneName, onBattleEnd),
                 new RFConversationLogic(),        

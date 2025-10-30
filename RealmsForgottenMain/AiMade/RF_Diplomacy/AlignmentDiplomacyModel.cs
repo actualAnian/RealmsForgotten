@@ -116,7 +116,6 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
 
             return _baseModel.GetScoreOfDeclaringPeace(a, b);
         }
-        public override float GetScoreOfDeclaringWar(IFaction factionDeclaresWar, IFaction factionDeclaredWar, Clan evaluatingClan, out TextObject reason) => GetScoreOfDeclaringWar(factionDeclaresWar, factionDeclaredWar, evaluatingClan, out reason);
         public override float GetScoreOfClanToLeaveKingdom(Clan c, Kingdom k) => _baseModel.GetScoreOfClanToLeaveKingdom(c, k);
         public override float GetScoreOfKingdomToSackClan(Kingdom k, Clan c) => _baseModel.GetScoreOfKingdomToSackClan(k, c);
         public override float GetScoreOfKingdomToSackMercenary(Kingdom k, Clan c) => _baseModel.GetScoreOfKingdomToSackMercenary(k, c);
@@ -126,13 +125,31 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
         public override float GetStrengthThresholdForNonMutualWarsToBeIgnoredToJoinKingdom(Kingdom k) => _baseModel.GetStrengthThresholdForNonMutualWarsToBeIgnoredToJoinKingdom(k);
         public override float GetValueOfHeroForFaction(Hero h, IFaction f, bool marriage) => _baseModel.GetValueOfHeroForFaction(h, f, marriage);
         public override bool IsClanEligibleToBecomeRuler(Clan c) => _baseModel.IsClanEligibleToBecomeRuler(c);
-        public override float GetScoreOfDeclaringPeaceForClan(IFaction factionDeclaresPeace, IFaction factionDeclaredPeace, Clan evaluatingClan, out TextObject reason) => _baseModel.GetScoreOfDeclaringPeaceForClan(factionDeclaresPeace, factionDeclaredPeace, evaluatingClan, out reason);
         public override bool IsPeaceSuitable(IFaction factionDeclaresPeace, IFaction factionDeclaredPeace) => _baseModel.IsPeaceSuitable(factionDeclaresPeace, factionDeclaredPeace);
-        public override int GetDailyTributeToPay(Clan factionToPay, Clan factionToReceive) => _baseModel.GetDailyTributeToPay(factionToPay, factionToReceive);
         public override float GetValueOfSettlementsForFaction(IFaction faction) => _baseModel.GetValueOfSettlementsForFaction(faction);
         public override DiplomacyStance? GetShallowDiplomaticStance(IFaction faction1, IFaction faction2) => _baseModel.GetShallowDiplomaticStance(faction1 , faction2);
         public override DiplomacyStance GetDefaultDiplomaticStance(IFaction faction1, IFaction faction2) => _baseModel.GetDefaultDiplomaticStance(faction1, faction2);
         public override bool IsAtConstantWar(IFaction faction1, IFaction faction2) => _baseModel.IsAtConstantWar(faction1, faction2);
         public override float GetDecisionMakingThreshold(IFaction consideringFaction) => _baseModel.GetDecisionMakingThreshold(consideringFaction);
+
+        public override float GetScoreOfDeclaringPeaceForClan(IFaction factionDeclaresPeace, IFaction factionDeclaredPeace, Clan evaluatingClan, out TextObject reason, bool includeReason = false)
+        {
+            return _baseModel.GetScoreOfDeclaringPeaceForClan(factionDeclaresPeace, factionDeclaredPeace, evaluatingClan, out reason, includeReason);
+        }
+
+        public override float GetScoreOfDeclaringWar(IFaction factionDeclaresWar, IFaction factionDeclaredWar, Clan evaluatingClan, out TextObject reason, bool includeReason = false)
+        {
+            return _baseModel.GetScoreOfDeclaringWar(factionDeclaresWar, factionDeclaredWar, evaluatingClan, out reason, includeReason);
+        }
+
+        public override ExplainedNumber GetWarProgressScore(IFaction factionDeclaresWar, IFaction factionDeclaredWar)
+        {
+            return _baseModel.GetWarProgressScore(factionDeclaresWar, factionDeclaredWar);
+        }
+
+        public override int GetDailyTributeToPay(Clan factionToPay, Clan factionToReceive, out int tributeDurationInDays)
+        {
+            return _baseModel.GetDailyTributeToPay(factionToPay, factionToReceive, out tributeDurationInDays);
+        }
     }
 }

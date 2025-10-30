@@ -1,10 +1,15 @@
-﻿using RealmsForgotten.Quest.UI;
+﻿using RealmsForgotten.Quest.FourthUpdate;
+using RealmsForgotten.Quest.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.CampaignSystem.Conversation;
 using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.Party.PartyComponents;
+using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
@@ -13,10 +18,6 @@ using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.SaveSystem;
 using TaleWorlds.ScreenSystem;
-using TaleWorlds.CampaignSystem.Conversation;
-using TaleWorlds.CampaignSystem.Party.PartyComponents;
-using TaleWorlds.CampaignSystem.Roster;
-using RealmsForgotten.Quest.FourthUpdate;
 
 namespace RealmsForgotten.Quest.SecondUpdate
 {
@@ -218,7 +219,8 @@ namespace RealmsForgotten.Quest.SecondUpdate
             try
             {
                 Clan clan = Clan.FindFirst(x => x.StringId == clanId) ?? throw new Exception($"Clan with ID {clanId} not found.");
-                MobileParty party = BanditPartyComponent.CreateBanditParty(clanId, clan, null, true) ?? throw new Exception($"Failed to create party for demon lord {demonLordId}.");
+                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+                MobileParty party = BanditPartyComponent.CreateBanditParty(clanId, clan, null, false, looterTemplate, nearTown.Position) ?? throw new Exception($"Failed to create party for demon lord {demonLordId}.");
                 TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
                 Dictionary<CharacterObject, int> initialTroops = new Dictionary<CharacterObject, int>();
                 CharacterObject character = CharacterObject.Find(demonLordId) ?? throw new Exception($"lord with id {demonLordId} not found");

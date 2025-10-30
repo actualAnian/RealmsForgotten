@@ -837,7 +837,9 @@ namespace RealmsForgotten.Quest.FourthUpdate
             convoyRoster.AddToCounts(CharacterObject.Find("urkhai_warrior_infantry"), 50);
             TroopRoster prisonerRoster = TroopRoster.CreateDummyTroopRoster();
             prisonerRoster.AddToCounts(CharacterObject.Find("imperial_recruit"), 15);
-            _orcConvoyParty = BanditPartyComponent.CreateBanditParty(ORC_CONVOY_PARTY_ID, urkhaiClan, null, true);
+            PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+            MobileParty _orcConvoyParty = BanditPartyComponent.CreateBanditParty(ORC_CONVOY_PARTY_ID, urkhaiClan, null, true, looterTemplate, MobileParty.MainParty.Position); //@TODO test
+
             if (_orcConvoyParty == null) { InformationManager.DisplayMessage(new InformationMessage("Error: Failed to create convoy party.", Colors.Red)); return; }
             _orcConvoyParty.InitializeMobilePartyAroundPosition(convoyRoster, prisonerRoster, MobileParty.MainParty.Position, 10f, 5f);
             _orcConvoyParty.ChangePartyLeader(convoyLeader);
@@ -872,7 +874,9 @@ namespace RealmsForgotten.Quest.FourthUpdate
             if (spawnNear == null) { InformationManager.DisplayMessage(new InformationMessage("Error: Spawn location for horde not found.", Colors.Red)); return; }
             _hordeLeaderHero = HeroCreator.CreateSpecialHero(CharacterObject.Find("deformed_villager_boss"), null, deformedClan, null, 35);
             _hordeLeaderHero.SetName(new TextObject("Ghor'Lag the Unraveler"), new TextObject("The Blighted One"));
-            _deformedHordeParty = BanditPartyComponent.CreateBanditParty("deformed_horde_party", deformedClan, null, true);
+            PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+            MobileParty banditParty = BanditPartyComponent.CreateBanditParty("deformed_horde_party", deformedClan, null, true, looterTemplate, spawnNear.Position); //@TODO
+
             TroopRoster hordeRoster = TroopRoster.CreateDummyTroopRoster();
             hordeRoster.AddToCounts(CharacterObject.Find("deformed_villager_boss"), 5);
             hordeRoster.AddToCounts(CharacterObject.Find("deformed_villager_chief"), 20);

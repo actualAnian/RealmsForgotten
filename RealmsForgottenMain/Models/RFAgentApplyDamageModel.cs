@@ -141,6 +141,7 @@ namespace RealmsForgotten.Models
 
         private float CalculateRaceDamagesAmplifiers(AttackInformation attackInformation, float baseNumber)
         {
+            if (attackInformation.VictimAgent == null) return 0;
             MissionWeapon weapon = attackInformation.AttackerWeapon;
             BasicCharacterObject attackerCharacter = attackInformation.VictimAgent.Character;
             BasicCharacterObject victimCharacter = attackInformation.VictimAgent.Character;
@@ -289,5 +290,10 @@ namespace RealmsForgotten.Models
         public override float GetKnockBackPenetration(Agent attackerAgent, WeaponComponentData attackerWeapon, in Blow blow, in AttackCollisionData collisionData) => _baseModel.GetKnockBackPenetration(attackerAgent, attackerWeapon, in blow, collisionData);
         public override float GetKnockDownPenetration(Agent attackerAgent, WeaponComponentData attackerWeapon, in Blow blow, in AttackCollisionData collisionData) => _baseModel.GetKnockDownPenetration(attackerAgent, attackerWeapon, in blow, in collisionData);
         public override float GetHorseChargePenetration() => _baseModel.GetHorseChargePenetration();
+
+        public override float CalculateHullFireDamage(float baseFireDamage)
+        {
+            return _baseModel.CalculateHullFireDamage(baseFireDamage);
+        }
     }
 }

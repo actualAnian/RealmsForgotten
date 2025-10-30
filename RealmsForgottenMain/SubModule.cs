@@ -377,17 +377,17 @@ namespace RealmsForgotten
             }
         }
 
-        //Map border crash fix
-        [HarmonyPatch(typeof(DefaultMapWeatherModel), "GetWeatherEventInPosition")]
-        class ArrangeDestructedMeshesPatch
-        {
-            [HarmonyFinalizer]
-#pragma warning disable IDE0051 // Remove unused private members
-            static Exception Finalizer(Exception __exception, DefaultMapWeatherModel __instance)
-#pragma warning restore IDE0051 // Remove unused private members
-            {
-                return null;
-            }
-        }
+//        //Map border crash fix
+//        [HarmonyPatch(typeof(DefaultMapWeatherModel), "GetWeatherEventInPosition")]
+//        class ArrangeDestructedMeshesPatch
+//        {
+//            [HarmonyFinalizer]
+//#pragma warning disable IDE0051 // Remove unused private members
+//            static Exception Finalizer(Exception __exception, DefaultMapWeatherModel __instance)
+//#pragma warning restore IDE0051 // Remove unused private members
+//            {
+//                return null;
+//            }
+//        }
     }
 }

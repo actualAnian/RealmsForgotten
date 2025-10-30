@@ -139,7 +139,8 @@ namespace RealmsForgotten.Quest.SecondUpdate
                         troopRoster.AddToCounts(devilsBanditRaider, devilsAmount);
 
                         string partyId = "devils_" + hideout.Id + "_" + CampaignTime.Now.GetHashCode();
-                        MobileParty party = BanditPartyComponent.CreateBanditParty(partyId, devilsClan, hideout, true);
+                        PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+                        MobileParty party = BanditPartyComponent.CreateBanditParty(partyId, devilsClan, hideout, true, looterTemplate, hideout.Settlement.Position); //@TODO
 
                         if (party == null)
                         {
@@ -222,8 +223,9 @@ namespace RealmsForgotten.Quest.SecondUpdate
                             troopRoster.AddToCounts(troop, 1);
                         }
                     }
+                    PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+                    MobileParty party = BanditPartyComponent.CreateBanditParty("nelrogs", nelrogClan, null, false, looterTemplate, hideout.Settlement.Position); //@TODO
 
-                    MobileParty party = BanditPartyComponent.CreateBanditParty("nelrogs", nelrogClan, null, true);
                     if (party == null)
                     {
                         InformationManager.DisplayMessage(new InformationMessage("Failed to create nelrog party."));

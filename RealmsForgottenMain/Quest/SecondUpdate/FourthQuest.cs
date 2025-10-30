@@ -1,6 +1,7 @@
-﻿using System.Linq;
-using Helpers;
+﻿using Helpers;
 using RealmsForgotten.Quest.UI;
+using System.Linq;
+using System.Threading;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
@@ -120,7 +121,10 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 takeBossToLordLog?.UpdateCurrentProgress(1);
 
                 Clan hellboundClan = Clan.FindFirst(x => x.StringId == "cs_nelrog_raiders");
-                MobileParty hellboundParty = BanditPartyComponent.CreateBanditParty("quest_hellbound_party", hellboundClan, null, true);
+                CampaignVec2 spawnPos = MobileParty.MainParty.Position;
+                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+                MobileParty hellboundParty = BanditPartyComponent.CreateBanditParty("quest_hellbound_party", hellboundClan, null, true, looterTemplate, spawnPos); //@TODO
+
                 TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
                 string[] units = { "cs_nelrog_bandits_bandit", "cs_nelrog_bandits_raider", "cs_nelrog_bandits_chief" };
 
@@ -128,7 +132,6 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 for (int i = 0; i < 60; i++)
                     troopRoster.AddToCounts(CharacterObject.Find(units.GetRandomElement()), 1);
 
-                CampaignVec2 spawnPos = MobileParty.MainParty.Position;
                 hellboundParty.InitializeMobilePartyAtPosition(troopRoster, TroopRoster.CreateDummyTroopRoster(), spawnPos);
 
                 hellboundParty.SetMoveEngageParty(MobileParty.MainParty, MobileParty.NavigationType.Default);

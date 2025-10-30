@@ -403,8 +403,12 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 {
                     InformationManager.DisplayMessage(new InformationMessage($"Warning: Witch Lord Clan '{clanId}' is not hostile to the player.", Colors.Yellow));
                 }
+                Settlement fixedSpawnSettlement = Settlement.Find("town_S2");
+                CampaignVec2 spawnPosition = fixedSpawnSettlement?.Position ?? spawnSettlement.Position;
 
-                MobileParty party = BanditPartyComponent.CreateBanditParty($"vortiak_witch_party_{witchLordCharacterId}", clan, null, true);
+                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+                MobileParty party = BanditPartyComponent.CreateBanditParty($"vortiak_witch_party_{witchLordCharacterId}", clan, null, true, looterTemplate, spawnPosition); //@TODO
+
                 if (party == null)
                 {
                     InformationManager.DisplayMessage(new InformationMessage($"Error: Failed to create party for Witch Lord clan '{clanId}'.", Colors.Red));
@@ -436,9 +440,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 if (troopRoster.GetTroopCount(leaderCharacter) == 0)
                     troopRoster.AddToCounts(leaderCharacter, 1);
 
-                Settlement fixedSpawnSettlement = Settlement.Find("town_S2");
-                CampaignVec2 spawnPosition = fixedSpawnSettlement?.Position ?? spawnSettlement.Position;
-
+                
                 party.InitializeMobilePartyAroundPosition(
                     troopRoster,
                     TroopRoster.CreateDummyTroopRoster(),
@@ -623,7 +625,10 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
                 var enemyClan = Clan.All.FirstOrDefault(c => c.StringId == "vortiaks")
                                     ?? Clan.All.First();
-                var interceptorParty = BanditPartyComponent.CreateBanditParty(enemyClan.StringId, enemyClan, null, true);
+
+                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+                MobileParty interceptorParty = BanditPartyComponent.CreateBanditParty(enemyClan.StringId, enemyClan, null, true, looterTemplate,nearSettlement.Position); //@TODO
+
                 if (interceptorParty == null)
                     throw new Exception("Failed to create interceptor party.");
 

@@ -22,7 +22,8 @@ namespace RealmsForgotten.Quest
                 Clan clan = Clan.All.Find(x => x.StringId == "mountain_bandits");
                 for (int i = 0; i <= 2; i++)
                 {
-                    MobileParty bandits = BanditPartyComponent.CreateBanditParty("bandits_quest_" + i, clan, hideout, i == 2 ? true : false);
+                    PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+                    MobileParty bandits = BanditPartyComponent.CreateBanditParty("bandits_quest_\" + i", clan, hideout, i == 2, looterTemplate, hideout.Settlement.Position); //@TODO
                     bandits.InitializeMobilePartyAtPosition(clan.DefaultPartyTemplate, hideout.Settlement.Position);
                     bandits.SetMoveGoToSettlement(hideout.Settlement, MobileParty.NavigationType.All, false);
                     bandits.RecalculateShortTermBehavior();

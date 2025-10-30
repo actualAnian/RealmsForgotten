@@ -14,6 +14,7 @@ using TaleWorlds.Localization;
 using TaleWorlds.ObjectSystem;
 using TaleWorlds.SaveSystem;
 using RealmsForgotten.AiMade;
+using Helpers;
 
 namespace RealmsForgotten.AiMade.AIQuest
 {
@@ -191,7 +192,7 @@ namespace RealmsForgotten.AiMade.AIQuest
 
             CampaignVec2 spawnPos = MobileParty.MainParty?.Position + new Vec2(3f, 3f) ?? CampaignVec2.Zero;
 
-            MobileParty mercenaryParty = BanditPartyComponent.CreateLooterParty("mercenary_attack_party", looterClan, null, false);
+            MobileParty mercenaryParty = BanditPartyComponent.CreateLooterParty("mercenary_attack_party", looterClan, SettlementHelper.FindNearestSettlementToPoint(spawnPos), false, looterTemplate, spawnPos);
             mercenaryParty.InitializeMobilePartyAroundPosition(looterTemplate, spawnPos, 1f);
 
             mercenaryParty.MemberRoster.AddToCounts(looter, 25);

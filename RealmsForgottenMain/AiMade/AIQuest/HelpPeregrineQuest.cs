@@ -8,6 +8,7 @@ using TaleWorlds.SaveSystem;
 using TaleWorlds.Library;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Party.PartyComponents;
+using Helpers;
 
 namespace RealmsForgotten.AiMade
 {
@@ -129,8 +130,8 @@ namespace RealmsForgotten.AiMade
             }
 
             CampaignVec2 spawnPosition = MobileParty.MainParty.Position + new Vec2(MBRandom.RandomFloatRanged(2f, 4f), MBRandom.RandomFloatRanged(2f, 4f));
-
-            MobileParty banditParty = BanditPartyComponent.CreateLooterParty("peregrine_bandit_party", looterClan, null, false);
+            
+            MobileParty banditParty = BanditPartyComponent.CreateLooterParty("peregrine_bandit_party", looterClan, SettlementHelper.FindNearestSettlementToPoint(spawnPosition), false, looterTemplate, spawnPosition);
             banditParty.InitializeMobilePartyAroundPosition(looterTemplate, spawnPosition, 1f);
             banditParty.MemberRoster.AddToCounts(looter, 20);
             banditParty.Party.SetCustomName(new TextObject("Bandit Ambush"));

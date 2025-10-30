@@ -315,7 +315,9 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 }
 
                 string uniqueId = $"rf_deformed_ambush_{MBRandom.RandomInt(10000)}";
-                MobileParty ambushParty = BanditPartyComponent.CreateBanditParty(uniqueId, deformedClan, null, true);
+                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+                MobileParty ambushParty = BanditPartyComponent.CreateBanditParty(uniqueId, deformedClan, null, true, looterTemplate, MobileParty.MainParty.Position); //@TODO
+
                 if (ambushParty == null) return;
 
                 ambushParty.InitializeMobilePartyAroundPosition(troopRoster, TroopRoster.CreateDummyTroopRoster(), MobileParty.MainParty.Position, 0f, 0f);

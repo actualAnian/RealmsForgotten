@@ -14,6 +14,7 @@ using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.View.MissionViews;
 using TaleWorlds.MountAndBlade.View.Screens;
 using TaleWorlds.MountAndBlade.ViewModelCollection;
+using TaleWorlds.MountAndBlade.ViewModelCollection.Missions.Interaction;
 using TaleWorlds.ObjectSystem;
 using static RealmsForgotten.RFCustomSettlements.Helper;
 
@@ -80,13 +81,13 @@ namespace RFCustomSettlements.Patches
                         if (itemId == "gold")
                         {
                             int amount = GetGoldAmount(objectName);
-                            __instance.PrimaryInteractionMessage = button + GetNameOfGoldObject(amount);
+                            __instance.PrimaryInteractionMessages.First().FocusTypeString = button + GetNameOfGoldObject(amount); //@TODO test
                         }
                         else
                             try
                             {
                                 TextObject itemName = MBObjectManager.Instance.GetObject<ItemObject>(itemId).Name;
-                                __instance.PrimaryInteractionMessage = button + " " + itemName;
+                                __instance.PrimaryInteractionMessages.First().FocusTypeString = button + " " + itemName;
                             }
                             catch (NullReferenceException)
                             {
@@ -94,11 +95,11 @@ namespace RFCustomSettlements.Patches
                             }
                         break;
                     case RFUsableObjectType.Passage:
-                        __instance.PrimaryInteractionMessage = button + " Go Through";
+                        __instance.PrimaryInteractionMessages.First().FocusTypeString = button + " Go Through";
                         //__instance.IsFocusedOnExit = true; @TODO check
                         break;
                     case RFUsableObjectType.Healing:
-                        __instance.PrimaryInteractionMessage = button + "Heal";
+                        __instance.PrimaryInteractionMessages.First().FocusTypeString = button + "Heal";
                         break;
                 }
             }
