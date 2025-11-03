@@ -176,9 +176,9 @@ namespace RealmsForgotten.Models
         public float CalculateRaceDamageReduction(in AttackInformation attackInformation, float baseNumber)
         {
             MissionWeapon weapon = attackInformation.AttackerWeapon;
-            BasicCharacterObject attackerCharacter = attackInformation.VictimAgent.Character;
+            if (attackInformation.VictimAgent == null || attackInformation.VictimAgent.Character == null) return baseNumber;
             BasicCharacterObject victimCharacter = attackInformation.VictimAgent.Character;
-            if (attackerCharacter == null || victimCharacter == null) return baseNumber;
+            if (victimCharacter == null) return baseNumber;
             if (
                 weapon.Item != null && (
                 weapon.Item.ItemType == ItemObject.ItemTypeEnum.Polearm ||

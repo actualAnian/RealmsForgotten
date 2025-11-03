@@ -81,13 +81,13 @@ namespace RFCustomSettlements.Patches
                         if (itemId == "gold")
                         {
                             int amount = GetGoldAmount(objectName);
-                            __instance.PrimaryInteractionMessages.First().FocusTypeString = button + GetNameOfGoldObject(amount); //@TODO test
+                            __instance.PrimaryInteractionMessages.First().Message = button + GetNameOfGoldObject(amount); //@TODO test
                         }
                         else
                             try
                             {
                                 TextObject itemName = MBObjectManager.Instance.GetObject<ItemObject>(itemId).Name;
-                                __instance.PrimaryInteractionMessages.First().FocusTypeString = button + " " + itemName;
+                                __instance.PrimaryInteractionMessages.First().Message = button + " " + itemName;
                             }
                             catch (NullReferenceException)
                             {
@@ -95,11 +95,11 @@ namespace RFCustomSettlements.Patches
                             }
                         break;
                     case RFUsableObjectType.Passage:
-                        __instance.PrimaryInteractionMessages.First().FocusTypeString = button + " Go Through";
+                        __instance.PrimaryInteractionMessages.First().Message = button + " Go Through";
                         //__instance.IsFocusedOnExit = true; @TODO check
                         break;
                     case RFUsableObjectType.Healing:
-                        __instance.PrimaryInteractionMessages.First().FocusTypeString = button + "Heal";
+                        __instance.PrimaryInteractionMessages.First().Message = button + "Heal";
                         break;
                 }
             }

@@ -123,7 +123,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 Clan hellboundClan = Clan.FindFirst(x => x.StringId == "cs_nelrog_raiders");
                 CampaignVec2 spawnPos = MobileParty.MainParty.Position;
                 PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
-                MobileParty hellboundParty = BanditPartyComponent.CreateBanditParty("quest_hellbound_party", hellboundClan, null, true, looterTemplate, spawnPos); //@TODO
+                MobileParty hellboundParty = BanditPartyComponent.CreateBanditParty("quest_hellbound_party", hellboundClan, null, true, looterTemplate, spawnPos);
 
                 TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
                 string[] units = { "cs_nelrog_bandits_bandit", "cs_nelrog_bandits_raider", "cs_nelrog_bandits_chief" };

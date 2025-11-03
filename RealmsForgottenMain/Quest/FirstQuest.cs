@@ -143,18 +143,18 @@ namespace RealmsForgotten.Quest
                 InitializeQuestOnCreation();
                 _rescueUliahJournalLog = AddLog(GameTexts.FindText("rf_first_quest_objective_1"));
                 AddTrackedObject(questHideout.Settlement);
+                questHideout.IsSpotted = true;
+                questHideout.Settlement.IsVisible = true;
                 _deliveredToAlchemistsTime = CampaignTime.Zero;
-
-
             }
             public override bool IsSpecialQuest => true;
-
 
             public override TextObject Title => GameTexts.FindText("rf_first_quest_title");
 
 
             protected override void RegisterEvents()
             {
+                //CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, OnGameLoaded);
                 CampaignEvents.MapEventStarted.AddNonSerializedListener(this, OnMapEventStarted);
                 CampaignEvents.OnPartyRemovedEvent.AddNonSerializedListener(this, MakePartyEngage);
                 CampaignEvents.OnPartySizeChangedEvent.AddNonSerializedListener(this, (party) =>
@@ -166,6 +166,21 @@ namespace RealmsForgotten.Quest
                 });
                 CampaignEvents.OnPlayerBattleEndEvent.AddNonSerializedListener(this, BattleEnd);
                 RegisterQuestEvents(this);
+                //CampaignEvents.OnGameEarlyLoadedEvent.AddNonSerializedListener(this, OnGameLoaded);
+                CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, OnGameLoaded);
+            }
+
+            private void OnGameLoaded()
+            {
+                //var trrop = MBObjectManager.Instance.GetObject<CharacterObject>("sea_raiders_bandit");
+                //MobileParty.MainParty.PrisonRoster.AddToCounts(trrop, 5);
+                //if (_rescueUliahJournalLog?.CurrentProgress == 0)
+                //{
+                //    questHideout.IsSpotted = true;//.IsVisible = true;// AddTrackedObject(questHideout.Settlement);
+                //    questHideout.Settlement.IsVisible = true;
+                //}
+                //AddTrackedObject(questHideout.Settlement);
+                //int a = 5;
             }
 
             private void BattleEnd(MapEvent mapEvent)

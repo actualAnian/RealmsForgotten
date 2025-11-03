@@ -61,10 +61,9 @@ namespace RFCustomSettlements
         {
             var onFocusGained = AccessTools.Method("AgentInteractionInterfaceVM:OnFocusGained");
             var original = AccessTools.Method("MissionMainAgentInteractionComponent:FocusTick");
-            //harmony.Patch(original, transpiler: new HarmonyMethod(typeof(MissionMainAgentInteractionComponentFocusTickPatch), nameof(MissionMainAgentInteractionComponentFocusTickPatch.FocusTickPatch))); @TODO
+            //harmony.Patch(original, transpiler: new HarmonyMethod(typeof(MissionMainAgentInteractionComponentFocusTickPatch), nameof(MissionMainAgentInteractionComponentFocusTickPatch.FocusTickPatch)));// no longer needed after 1.3
             harmony.Patch(onFocusGained, transpiler: new HarmonyMethod(typeof(AgentInteractionInterfaceVMOnFocusGainedPatch), nameof(AgentInteractionInterfaceVMOnFocusGainedPatch.OnFocusGainedPatch)));
         }
-
         protected override void OnGameStart(Game game, IGameStarter starterObject)
         {
             if (starterObject is CampaignGameStarter starter)

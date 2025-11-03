@@ -316,7 +316,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
                 string uniqueId = $"rf_deformed_ambush_{MBRandom.RandomInt(10000)}";
                 PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
-                MobileParty ambushParty = BanditPartyComponent.CreateBanditParty(uniqueId, deformedClan, null, true, looterTemplate, MobileParty.MainParty.Position); //@TODO
+                MobileParty ambushParty = BanditPartyComponent.CreateBanditParty(uniqueId, deformedClan, null, true, looterTemplate, MobileParty.MainParty.Position);
 
                 if (ambushParty == null) return;
 

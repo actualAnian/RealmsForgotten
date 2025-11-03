@@ -124,7 +124,7 @@ namespace RFCustomSettlements
             if (arenaSettlement != null)
             {
                 PlayerCaptivity.EndCaptivity();
-                Hero.MainHero.PartyBelongedTo.SetPositionAfterMapChange(arenaSettlement.GatePosition); //@TODO check
+                Hero.MainHero.PartyBelongedTo.SetPositionAfterMapChange(arenaSettlement.GatePosition);
 
                 EnterSettlementAction.ApplyForParty(MobileParty.MainParty, arenaSettlement);
                 ArenaSettlementStateHandler.currentState = ArenaSettlementStateHandler.ArenaState.Captured;

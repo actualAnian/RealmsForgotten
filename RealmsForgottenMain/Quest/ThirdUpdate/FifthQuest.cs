@@ -140,7 +140,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
                         string partyId = "devils_" + hideout.Id + "_" + CampaignTime.Now.GetHashCode();
                         PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
-                        MobileParty party = BanditPartyComponent.CreateBanditParty(partyId, devilsClan, hideout, true, looterTemplate, hideout.Settlement.Position); //@TODO
+                        MobileParty party = BanditPartyComponent.CreateBanditParty(partyId, devilsClan, hideout, true, looterTemplate, hideout.Settlement.Position);
 
                         if (party == null)
                         {
@@ -224,7 +224,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                         }
                     }
                     PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
-                    MobileParty party = BanditPartyComponent.CreateBanditParty("nelrogs", nelrogClan, null, false, looterTemplate, hideout.Settlement.Position); //@TODO
+                    MobileParty party = BanditPartyComponent.CreateBanditParty("nelrogs", nelrogClan, null, false, looterTemplate, hideout.Settlement.Position);
 
                     if (party == null)
                     {
