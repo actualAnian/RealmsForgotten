@@ -802,8 +802,8 @@ namespace RealmsForgotten.CharacterCreation
 
         public static List<string> PlayerSelectableCultures = new()
         {
-            "aserai", "battania", "empire", "khuzait", "sturgia", "vlandia", // DO NOT REMOVE, in Bannelord 1.3 beta removing one of the default cultures causes a crash
-            "urkhai", "wulf"
+            "aserai", "battania", "empire", "khuzait", "sturgia", "vlandia", // DO NOT REMOVE, in Bannelord 1.3 beta removing one of the default cultures causes a crash    
+            "south_realm", "west_realm", "mage","aqarun","dwarf","urkhai", "wulf", "giant",
         };
     }
 }

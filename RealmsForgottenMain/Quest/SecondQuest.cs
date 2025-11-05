@@ -274,7 +274,6 @@ namespace RealmsForgotten.Quest
             MobileParty.MainParty.Army.AddPartyToMergedParties(MobileParty.MainParty);
 
             MobileParty.MainParty.Army.AiBehaviorObject = settlement;
-            //MobileParty.MainParty.Army.AIBehavior = Army.AIBehaviorFlags.GoToSettlement; @TODO test
             MobileParty.MainParty.Army.LeaderParty.SetMoveGoToSettlement(settlement, MobileParty.NavigationType.All, false);
 
             MobileParty.MainParty.Army.LeaderParty.Ai.SetDoNotMakeNewDecisions(true);

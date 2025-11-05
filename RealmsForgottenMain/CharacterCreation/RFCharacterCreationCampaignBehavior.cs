@@ -276,9 +276,15 @@ namespace RealmsForgotten.CharacterCreation
             List<NarrativeMenuCharacterArgs> list = new();
             string playerEquipmentId = GetPlayerEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedTitleType, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId, Hero.MainHero.IsFemale);
             list.Add(new NarrativeMenuCharacterArgs("player_rf_menu_character", characterCreationManager.CharacterCreationContent.StartingAge, playerEquipmentId, "act_childhood_schooled", "spawnpoint_player_1", "", "", null, true, CharacterObject.PlayerCharacter.IsFemale));
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(playerEquipmentId);
-            ItemObject item = @object.DefaultEquipment[EquipmentIndex.ArmorItemEndSlot].Item;
-            list.Add(new NarrativeMenuCharacterArgs("narrative_character_horse", -1, "", "act_horse_stand_1", "spawnpoint_mount_1", @object.DefaultEquipment[EquipmentIndex.ArmorItemEndSlot].Item.StringId, @object.DefaultEquipment[EquipmentIndex.HorseHarness].Item.StringId, MountCreationKey.GetRandomMountKey(item, CharacterObject.PlayerCharacter.GetMountKeySeed()), false, false));
+            MBEquipmentRoster equipment = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(playerEquipmentId);
+            if (equipment == null)
+            {
+                InformationManager.DisplayMessage(new InformationMessage($"ERROR, could not find {playerEquipmentId}!", new Color(1, 0, 0)));
+                equipment = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>("player_char_creation_empire_guard_m");
+            }
+
+            ItemObject item = equipment.DefaultEquipment[EquipmentIndex.ArmorItemEndSlot].Item;
+            list.Add(new NarrativeMenuCharacterArgs("narrative_character_horse", -1, "", "act_horse_stand_1", "spawnpoint_mount_1", equipment.DefaultEquipment[EquipmentIndex.ArmorItemEndSlot].Item.StringId, equipment.DefaultEquipment[EquipmentIndex.HorseHarness].Item.StringId, MountCreationKey.GetRandomMountKey(item, CharacterObject.PlayerCharacter.GetMountKeySeed()), false, false));
             return list;
         }
         private void RFStartMenuCommonerNarrativeOptionArgs(NarrativeMenuOptionArgs args) {}
@@ -507,7 +513,7 @@ namespace RealmsForgotten.CharacterCreation
             AddMageNarrativeMenuOptions(narrativeMenu);
             AddDwarfNarrativeMenuOptions(narrativeMenu);
             AddUrkhaiParentNarrativeMenuOptions(narrativeMenu);
-            AddWulfenNarrativeMenuOptions(narrativeMenu);
+            AddWulfenParentNarrativeMenuOptions(narrativeMenu);
             characterCreationManager.AddNewMenu(narrativeMenu);
         }
 
@@ -571,7 +577,8 @@ namespace RealmsForgotten.CharacterCreation
 
         private bool HumanNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
         {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "empire";
+            string culture = characterCreationManager.CharacterCreationContent.SelectedCulture.StringId;
+            return culture == "empire" || culture == "west_realm" || culture == "south_realm";
         }
 
         private void GetHumanDirectDescendantsNarrativeOptionArgs(NarrativeMenuOptionArgs args)
@@ -1917,7 +1924,7 @@ namespace RealmsForgotten.CharacterCreation
             AddChildhoodNarrativeMenuOptions(narrativeMenu);
             characterCreationManager.AddNewMenu(narrativeMenu);
         }
-        private void AddWulfenNarrativeMenuOptions(NarrativeMenu narrativeMenu)
+        private void AddWulfenParentNarrativeMenuOptions(NarrativeMenu narrativeMenu)
         {
             NarrativeMenuOption wulfenHighbornOption = new(
                 "wulfen_highborn",
@@ -2636,9 +2643,14 @@ namespace RealmsForgotten.CharacterCreation
             List<NarrativeMenuCharacterArgs> list = new List<NarrativeMenuCharacterArgs>();
             string playerEquipmentId = GetPlayerEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedTitleType, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId, Hero.MainHero.IsFemale);
             list.Add(new NarrativeMenuCharacterArgs("player_youth_character", 17, playerEquipmentId, "act_childhood_schooled", "spawnpoint_player_1", "", "", null, true, CharacterObject.PlayerCharacter.IsFemale));
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(playerEquipmentId);
-            ItemObject item = @object.DefaultEquipment[EquipmentIndex.ArmorItemEndSlot].Item;
-            list.Add(new NarrativeMenuCharacterArgs("narrative_character_horse", -1, "", "act_inventory_idle_start", "spawnpoint_mount_1", @object.DefaultEquipment[EquipmentIndex.ArmorItemEndSlot].Item.StringId, @object.DefaultEquipment[EquipmentIndex.HorseHarness].Item.StringId, MountCreationKey.GetRandomMountKey(item, CharacterObject.PlayerCharacter.GetMountKeySeed()), false, false));
+            MBEquipmentRoster equipment = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(playerEquipmentId);
+            if (equipment == null)
+            {
+                InformationManager.DisplayMessage(new InformationMessage($"ERROR, could not find {playerEquipmentId}!", new Color(1,0,0)));
+                equipment = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>("player_char_creation_empire_guard_m");
+            }
+            ItemObject item = equipment.DefaultEquipment[EquipmentIndex.ArmorItemEndSlot].Item;
+            list.Add(new NarrativeMenuCharacterArgs("narrative_character_horse", -1, "", "act_inventory_idle_start", "spawnpoint_mount_1", equipment.DefaultEquipment[EquipmentIndex.ArmorItemEndSlot].Item.StringId, equipment.DefaultEquipment[EquipmentIndex.HorseHarness].Item.StringId, MountCreationKey.GetRandomMountKey(item, CharacterObject.PlayerCharacter.GetMountKeySeed()), false, false));
             return list;
         }
 
@@ -2647,12 +2659,14 @@ namespace RealmsForgotten.CharacterCreation
             TextObject description = CharacterObject.PlayerCharacter.IsFemale ? new TextObject("{=5kbeAC7k}In wartorn Calradia, especially in frontier or tribal areas, some women as well as men learn to fight from an early age. You...", null) : new TextObject("{=F7OO5SAa}As a youngster growing up in Calradia, war was never too far away. You...", null);
             BodyProperties bodyProperties = CharacterObject.PlayerCharacter.GetBodyProperties(CharacterObject.PlayerCharacter.Equipment, -1);
             bodyProperties = TaleWorlds.Core.FaceGen.GetBodyPropertiesWithAge(ref bodyProperties, 17f);
-            NarrativeMenuCharacter item = new NarrativeMenuCharacter("player_youth_character", bodyProperties, CharacterObject.PlayerCharacter.Race, CharacterObject.PlayerCharacter.IsFemale);
-            NarrativeMenuCharacter item2 = new NarrativeMenuCharacter("narrative_character_horse");
-            List<NarrativeMenuCharacter> list = new List<NarrativeMenuCharacter>();
-            list.Add(item);
-            list.Add(item2);
-            NarrativeMenu narrativeMenu = new NarrativeMenu("narrative_youth_menu", "narrative_education_menu", "narrative_adulthood_menu", new TextObject("{=ok8lSW6M}Youth", null), description, list, new NarrativeMenu.GetNarrativeMenuCharacterArgsDelegate(GetYouthMenuNarrativeMenuCharacterArgs));
+            NarrativeMenuCharacter item = new("player_youth_character", bodyProperties, CharacterObject.PlayerCharacter.Race, CharacterObject.PlayerCharacter.IsFemale);
+            NarrativeMenuCharacter item2 = new("narrative_character_horse");
+            List<NarrativeMenuCharacter> list = new List<NarrativeMenuCharacter>
+            {
+                item,
+                item2
+            };
+            NarrativeMenu narrativeMenu = new("narrative_youth_menu", "narrative_education_menu", "narrative_adulthood_menu", new TextObject("{=ok8lSW6M}Youth", null), description, list, new NarrativeMenu.GetNarrativeMenuCharacterArgsDelegate(GetYouthMenuNarrativeMenuCharacterArgs));
             AddYouthMenuOptions(narrativeMenu);
             characterCreationManager.AddNewMenu(narrativeMenu);
         }
@@ -2697,6 +2711,428 @@ namespace RealmsForgotten.CharacterCreation
             narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption18);
             NarrativeMenuOption narrativeMenuOption19 = new NarrativeMenuOption("youth_envoys_guard_second_option", new TextObject("{=YmPlLGXb}served as an envoy's guard", null), new TextObject("{=VYU1nEHP}Your family arranged for you to accompany an envoy. You were not given major responsibilities but it did give you a chance to travel and socialise and see a bit of the world.", null), new GetNarrativeMenuOptionArgsDelegate(GetEnvoysGuardSecondOptionArgs), new NarrativeMenuOptionOnConditionDelegate(EnvoysGuardSecondOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(EnvoysGuardSecondOptionOnSelect), null);
             narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption19);
+
+
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "wulf_youth_noble_guard_option",
+                new TextObject("trained with the noble guard.", null),
+                new TextObject("{=wulf_noble_guard_desc}You served as part of a chieftain's noble guard. You learned mounted shock tactics and the discipline of heavy lances.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthCavalryOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuWulfOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthCavalryOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "wulf_youth_folks_guard_option",
+                new TextObject("joined the folks' guard", null),
+                new TextObject("{=wulf_folks_guard_desc}You served in the people's guard of your clanhold. You trained with spears and short swords and learned to hold the line.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthGuardGarrisonRegisterOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuWulfOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthGuardGarrisonRegisterOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "wulf_youth_scouts_option",
+                new TextObject("rode with the scouts.", null),
+                new TextObject("{=wulf_scouts_desc}You rode ahead of the host as a scout, learning to read terrain and strike quickly from cover.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthRiderHighRegisterOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuWulfOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthRiderHighRegisterOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "wulf_youth_fenhild_option",
+                new TextObject("trained with the Fenhild.", null),
+                new TextObject("{=wulf_fenhild_desc}Armed with massive two-handed swords, the Fenhild are the backbone of the Wulfen host, hailing from mist-shrouded marsh clans.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthInfantryOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuWulfOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthInfantryOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "wulf_youth_dunharth_wardens_option",
+                new TextObject("joined the Dunharth Wardens.", null),
+                new TextObject("{=wulf_wardens_desc}Raised in the shadow of the deepwood forts, the Dunharth Wardens patrol the ancient forest trails with bow and blade. Masters of terrain and ambush, they serve as the Wulfen’s eyes in the wild—unseen until the first arrow strikes.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthCampOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuWulfOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthCampOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "urkhai_youth_commander_army_option",
+                new TextObject("trained with the commander's army.", null),
+                new TextObject("{=urkhai_commander_desc}You served in the commander's host, drilling with heavy weapons and learning battlefield discipline. You rode with the heavy troop and learned to fight as part of a formed unit.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthCavalryOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuUrkhaiOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthCavalryOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "urkhai_youth_city_patrol_option",
+                new TextObject("patrolled the cities.", null),
+                new TextObject("{=urkhai_patrol_desc}You were assigned to patrol and defend the city walls and barracks. Most of your training focused on missile weapons and fortification upkeep.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthGuardHighRegisterOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuUrkhaiOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthGuardHighRegisterOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "urkhai_youth_scouts_option",
+                new TextObject("joined the scouts.", null),
+                new TextObject("{=urkhai_scouts_desc}You rode out ahead of the host as a scout, learning to read terrain, ride light mounts, and strike quickly from range.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthRiderHighRegisterOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuUrkhaiOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthRiderHighRegisterOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "urkhai_youth_infantry_option",
+                new TextObject("{=a8arFSra}trained with the infantry.", null),
+                new TextObject("{=urkhai_infantry_desc}You trained as a tribal spearman — drilled in shield and spear or short sword — serving the host as a reliable footman.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthInfantryOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuUrkhaiOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthInfantryOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "urkhai_youth_healers_option",
+                new TextObject("joined the healers.", null),
+                new TextObject("{=urkhai_healers_desc}You apprenticed with the healers and learned to mend wounds and tend the sick, combining practical medicine and traditional remedies.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthSkirmisherOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuUrkhaiOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthSkirmisherOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "urkhai_youth_free_people_option",
+                new TextObject("{=GFUggps8}marched with the free people.", null),
+                new TextObject("{=urkhai_free_desc}You avoided formal enlistment and instead marched with free bands — followers, foragers, and irregulars of the host — learning guerrilla skills and survival.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthCampOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuUrkhaiOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthCampOptionOnSelect),
+                null));
+
+            // -- Giant-specific narrative options (reuse existing args & selects) --
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "giant_youth_noble_guard_option",
+                new TextObject("trained with the noble guard.", null),
+                new TextObject("{=giant_noble_guard_desc}You served as part of the noble guard, learning mounted tactics and the discipline of heavy lances.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthCavalryOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuGiantOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthCavalryOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "giant_youth_folks_guard_option",
+                new TextObject("joined the folks guard", null),
+                new TextObject("{=giant_folks_guard_desc}You served in the people's guard and trained with missile and engineering skills useful for garrison duty.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthGuardHighRegisterOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuGiantOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthGuardHighRegisterOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "giant_youth_scouts_option",
+                new TextObject("rode with the scouts.", null),
+                new TextObject("{=giant_scouts_desc}You scouted ahead of the host learning to read terrain and report enemy positions.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthRiderHighRegisterOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuGiantOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthRiderHighRegisterOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "giant_youth_lanzalith_option",
+                new TextObject("trained with the Lanzalith.", null),
+                new TextObject("{=giant_lanzalith_desc}You drilled as part of spear-and-shield infantry, forming the backbone of the host.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthInfantryOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuGiantOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthInfantryOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "giant_youth_tzalquendlan_option",
+                new TextObject("joined the Tzalquendlan.", null),
+                new TextObject("{=giant_tzalquendlan_desc}You learned ambush, disguise and irregular warfare among the border scouts.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthCampOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuGiantOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthCampOptionOnSelect),
+                null));
+
+            // -- Aqarun-specific narrative options --
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "aqarun_youth_cavalry_option",
+                new TextObject("{=h2KnarLL}trained with the cavalry.", null),
+                new TextObject("{=aqarun_cavalry_desc}You trained with the cavalry, learning mounted shock tactics and lance-work.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthCavalryOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuAqarunOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthCavalryOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "aqarun_youth_city_patrol_option",
+                new TextObject("patrolled the cities.", null),
+                new TextObject("{=aqarun_patrol_desc}You served on city patrols learning crossbow and engineering tasks for garrison duty.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthGuardHighRegisterOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuAqarunOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthGuardHighRegisterOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "aqarun_youth_desert_scouts_option",
+                new TextObject("joined the desert scouts.", null),
+                new TextObject("{=aqarun_scouts_desc}You scouted desert wastes and learned to strike quickly from range.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthRiderHighRegisterOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuAqarunOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthRiderHighRegisterOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "aqarun_youth_infantry_option",
+                new TextObject("{=a8arFSra}trained with the infantry.", null),
+                new TextObject("{=aqarun_infantry_desc}You trained as foot infantry, mastering spear-and-shield drills.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthInfantryOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuAqarunOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthInfantryOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "aqarun_youth_skirmishers_option",
+                new TextObject("{=oMbOIPc9}joined the skirmishers.", null),
+                new TextObject("{=aqarun_skirmishers_desc}You joined the skirmishers, fighting with javelin and light arms.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthSkirmisherOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuAqarunOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthSkirmisherOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "aqarun_youth_free_people_option",
+                new TextObject("{=GFUggps8}marched with the free people.", null),
+                new TextObject("{=aqarun_free_desc}You marched with irregular bands, learning raiding and survival skills.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthCampOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuAqarunOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthCampOptionOnSelect),
+                null));
+
+            // -- South Realm-specific narrative options --
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "southrealm_youth_cavalry_option",
+                new TextObject("{=h2KnarLL}trained with the cavalry.", null),
+                new TextObject("{=southrealm_cavalry_desc}You trained with mounted troops, learning to fight as part of a mounted unit.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthCavalryOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuSouthRealmOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthCavalryOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "southrealm_youth_city_patrol_option",
+                new TextObject("patrolled the cities.", null),
+                new TextObject("{=southrealm_patrol_desc}You performed city patrol duties and garrison tasks.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthGuardHighRegisterOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuSouthRealmOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthGuardHighRegisterOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "southrealm_youth_scouts_option",
+                new TextObject("joined the scouts.", null),
+                new TextObject("{=southrealm_scouts_desc}You scouted for the host, mastering terrain and ranged harassment.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthRiderHighRegisterOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuSouthRealmOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthRiderHighRegisterOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "southrealm_youth_infantry_option",
+                new TextObject("{=a8arFSra}trained with the infantry.", null),
+                new TextObject("{=southrealm_infantry_desc}You trained as spearmen and foot troops in the host.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthInfantryOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuSouthRealmOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthInfantryOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "southrealm_youth_skirmishers_option",
+                new TextObject("{=oMbOIPc9}joined the skirmishers.", null),
+                new TextObject("{=southrealm_skirmishers_desc}You fought as a skirmisher, relying on speed and missiles.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthSkirmisherOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuSouthRealmOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthSkirmisherOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "southrealm_youth_free_people_option",
+                new TextObject("{=GFUggps8}marched with the free people.", null),
+                new TextObject("{=southrealm_free_desc}You marched with free bands and learned survival and raiding crafts.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthCampOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuSouthRealmOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthCampOptionOnSelect),
+                null));
+
+            // -- West Realm-specific narrative options --
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "westrealm_youth_cavalry_option",
+                new TextObject("{=h2KnarLL}trained with the cavalry.", null),
+                new TextObject("{=westrealm_cavalry_desc}You trained with mounted units, gaining lance and riding skill.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthCavalryOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuWestRealmOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthCavalryOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "westrealm_youth_city_patrol_option",
+                new TextObject("patrolled the cities.", null),
+                new TextObject("{=westrealm_patrol_desc}You patrolled towns, learning crossbow work and garrison duties.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthGuardHighRegisterOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuWestRealmOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthGuardHighRegisterOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "westrealm_youth_scouts_option",
+                new TextObject("joined the scouts.", null),
+                new TextObject("{=westrealm_scouts_desc}You scouted the borderlands and learned to strike from cover.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthRiderHighRegisterOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuWestRealmOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthRiderHighRegisterOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "westrealm_youth_infantry_option",
+                new TextObject("{=a8arFSra}trained with the infantry.", null),
+                new TextObject("{=westrealm_infantry_desc}You were drilled as reliable infantry for the host.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthInfantryOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuWestRealmOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthInfantryOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "westrealm_youth_skirmishers_option",
+                new TextObject("{=oMbOIPc9}joined the skirmishers.", null),
+                new TextObject("{=westrealm_skirmishers_desc}You fought as a light skirmisher trained to harass and evade.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthSkirmisherOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuWestRealmOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthSkirmisherOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "westrealm_youth_free_people_option",
+                new TextObject("{=GFUggps8}marched with the free people.", null),
+                new TextObject("{=westrealm_free_desc}You learned irregular warfare and survival by marching with free bands.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthCampOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuWestRealmOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthCampOptionOnSelect),
+                null));
+
+            // -- Mage-specific narrative options --
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "mage_youth_cavalry_option",
+                new TextObject("{=h2KnarLL}trained with the cavalry.", null),
+                new TextObject("{=mage_cavalry_desc}You trained with mounted troops and learned battlefield discipline.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthCavalryOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuMageOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthCavalryOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "mage_youth_patrol_option",
+                new TextObject("patrolled the cities.", null),
+                new TextObject("{=mage_patrol_desc}You performed city patrol and garrison duties.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthGuardHighRegisterOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuMageOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthGuardHighRegisterOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "mage_youth_scouts_option",
+                new TextObject("joined the scouts.", null),
+                new TextObject("{=mage_scouts_desc}You served as a scout, learning to ride and shoot.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthRiderHighRegisterOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuMageOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthRiderHighRegisterOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "mage_youth_infantry_option",
+                new TextObject("{=a8arFSra}trained with the infantry.", null),
+                new TextObject("{=mage_infantry_desc}You trained as infantry and learned drill and cohesion.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthInfantryOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuMageOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthInfantryOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "mage_youth_scholars_option",
+                new TextObject("{=oMbOIPc9}joined the scholars.", null),
+                new TextObject("{=mage_scholars_desc}You studied scrolls and arcane lore among the kingdom's scholars.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthSkirmisherOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuMageOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthSkirmisherOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "mage_youth_free_people_option",
+                new TextObject("{=GFUggps8}marched with the free people.", null),
+                new TextObject("{=mage_free_desc}You learned to survive and scavenge by marching with irregular bands.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthCampOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuMageOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthCampOptionOnSelect),
+                null));
+
+            // -- Dwarf-specific narrative options --
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "dwarf_youth_cavalry_option",
+                new TextObject("{=h2KnarLL}trained with the cavalry.", null),
+                new TextObject("{=dwarf_cavalry_desc}You trained with mounted troops and learned battlefield formation riding.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthCavalryOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuDwarfOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthCavalryOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "dwarf_youth_city_patrol_option",
+                new TextObject("patrolled the cities.", null),
+                new TextObject("{=dwarf_patrol_desc}You served garrison and city patrol duties, specializing in crossbow and engineering tasks.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthGuardHighRegisterOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuDwarfOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthGuardHighRegisterOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "dwarf_youth_scouts_option",
+                new TextObject("joined the scouts.", null),
+                new TextObject("{=dwarf_scouts_desc}You scouted from fortified positions and learned to strike from range.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthRiderHighRegisterOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuDwarfOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthRiderHighRegisterOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "dwarf_youth_infantry_option",
+                new TextObject("{=a8arFSra}trained with the infantry.", null),
+                new TextObject("{=dwarf_infantry_desc}You trained as spearmen and foot troops in the mountain host.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthInfantryOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuDwarfOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthInfantryOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "dwarf_youth_scholars_option",
+                new TextObject("{=oMbOIPc9}joined the scholars.", null),
+                new TextObject("{=dwarf_scholars_desc}You apprenticed to scholars and craftsmen learning lore and craft.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthSkirmisherOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuDwarfOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthSkirmisherOptionOnSelect),
+                null));
+
+            narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
+                "dwarf_youth_free_people_option",
+                new TextObject("{=GFUggps8}marched with the free people.", null),
+                new TextObject("{=dwarf_free_desc}You marched with free bands and learned practical survival and raiding skills.", null),
+                new GetNarrativeMenuOptionArgsDelegate(GetYouthCampOptionArgs),
+                new NarrativeMenuOptionOnConditionDelegate(YouthMenuDwarfOnCondition),
+                new NarrativeMenuOptionOnSelectDelegate(YouthCampOptionOnSelect),
+                null));
         }
 
         private void GetYouthStaffOptionArgs(NarrativeMenuOptionArgs args)
@@ -2820,7 +3256,9 @@ namespace RealmsForgotten.CharacterCreation
 
         private bool YouthCavalryOptionOnCondition(CharacterCreationManager characterCreationManager)
         {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "vlandia";
+            // previously only "vlandia" — also allow "wulf"
+            string id = characterCreationManager.CharacterCreationContent.SelectedCulture.StringId;
+            return id == "vlandia" || id == "wulf";
         }
 
         private void YouthCavalryOptionOnSelect(CharacterCreationManager characterCreationManager)
@@ -3012,7 +3450,8 @@ namespace RealmsForgotten.CharacterCreation
 
         private bool YouthRiderHighRegisterOptionOnCondition(CharacterCreationManager characterCreationManager)
         {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "empire" || characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "khuzait";
+            string id = characterCreationManager.CharacterCreationContent.SelectedCulture.StringId;
+            return id == "empire" || id == "khuzait" || id == "wulf";
         }
 
         private void YouthRiderHighRegisterOptionOnSelect(CharacterCreationManager characterCreationManager)
@@ -3076,7 +3515,8 @@ namespace RealmsForgotten.CharacterCreation
 
         private bool YouthInfantryOptionOnCondition(CharacterCreationManager characterCreationManager)
         {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "empire" || characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "vlandia" || characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "khuzait" || characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "aserai" || characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "battania" || characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "sturgia";
+            string id = characterCreationManager.CharacterCreationContent.SelectedCulture.StringId;
+            return id == "empire" || id == "vlandia" || id == "khuzait" || id == "aserai" || id == "battania" || id == "sturgia" || id == "wulf";
         }
 
         private void YouthInfantryOptionOnSelect(CharacterCreationManager characterCreationManager)
@@ -3172,7 +3612,8 @@ namespace RealmsForgotten.CharacterCreation
 
         private bool YouthCampOptionOnCondition(CharacterCreationManager characterCreationManager)
         {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "vlandia" || characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "sturgia";
+            string id = characterCreationManager.CharacterCreationContent.SelectedCulture.StringId;
+            return id == "vlandia" || id == "sturgia" || id == "wulf";
         }
 
         private void YouthCampOptionOnSelect(CharacterCreationManager characterCreationManager)
@@ -3258,9 +3699,14 @@ namespace RealmsForgotten.CharacterCreation
             List<NarrativeMenuCharacterArgs> list = new List<NarrativeMenuCharacterArgs>();
             string playerEquipmentId = GetPlayerEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedTitleType, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId, Hero.MainHero.IsFemale);
             list.Add(new NarrativeMenuCharacterArgs("player_adulthood_character", 20, playerEquipmentId, "act_childhood_schooled", "spawnpoint_player_1", "", "", null, true, CharacterObject.PlayerCharacter.IsFemale));
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(playerEquipmentId);
-            ItemObject item = @object.DefaultEquipment[EquipmentIndex.ArmorItemEndSlot].Item;
-            list.Add(new NarrativeMenuCharacterArgs("narrative_character_horse", -1, "", "act_horse_stand_1", "spawnpoint_mount_1", @object.DefaultEquipment[EquipmentIndex.ArmorItemEndSlot].Item.StringId, @object.DefaultEquipment[EquipmentIndex.HorseHarness].Item.StringId, MountCreationKey.GetRandomMountKey(item, CharacterObject.PlayerCharacter.GetMountKeySeed()), false, false));
+            MBEquipmentRoster equipment = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(playerEquipmentId);
+            if (equipment == null)
+            {
+                InformationManager.DisplayMessage(new InformationMessage($"ERROR, could not find {playerEquipmentId}!", new Color(1, 0, 0)));
+                equipment = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>("player_char_creation_empire_guard_m");
+            }
+            ItemObject item = equipment.DefaultEquipment[EquipmentIndex.ArmorItemEndSlot].Item;
+            list.Add(new NarrativeMenuCharacterArgs("narrative_character_horse", -1, "", "act_horse_stand_1", "spawnpoint_mount_1", equipment.DefaultEquipment[EquipmentIndex.ArmorItemEndSlot].Item.StringId, equipment.DefaultEquipment[EquipmentIndex.HorseHarness].Item.StringId, MountCreationKey.GetRandomMountKey(item, CharacterObject.PlayerCharacter.GetMountKeySeed()), false, false));
             return list;
         }
 
@@ -3268,13 +3714,15 @@ namespace RealmsForgotten.CharacterCreation
         {
             BodyProperties bodyProperties = CharacterObject.PlayerCharacter.GetBodyProperties(CharacterObject.PlayerCharacter.Equipment, -1);
             bodyProperties = TaleWorlds.Core.FaceGen.GetBodyPropertiesWithAge(ref bodyProperties, 20f);
-            NarrativeMenuCharacter item = new NarrativeMenuCharacter("player_adulthood_character", bodyProperties, CharacterObject.PlayerCharacter.Race, CharacterObject.PlayerCharacter.IsFemale);
-            NarrativeMenuCharacter item2 = new NarrativeMenuCharacter("narrative_character_horse");
-            List<NarrativeMenuCharacter> list = new List<NarrativeMenuCharacter>();
-            list.Add(item);
-            list.Add(item2);
+            NarrativeMenuCharacter item = new("player_adulthood_character", bodyProperties, CharacterObject.PlayerCharacter.Race, CharacterObject.PlayerCharacter.IsFemale);
+            NarrativeMenuCharacter item2 = new("narrative_character_horse");
+            List<NarrativeMenuCharacter> list = new()
+            {
+                item,
+                item2
+            };
             MBTextManager.SetTextVariable("EXP_VALUE", _skillLevelToAdd);
-            NarrativeMenu narrativeMenu = new NarrativeMenu("narrative_adulthood_menu", "narrative_youth_menu", "narrative_age_selection_menu", new TextObject("{=MafIe9yI}Young Adulthood", null), new TextObject("{=4WYY0X59}Before you set out for a life of adventure, your biggest achievement was...", null), list, new NarrativeMenu.GetNarrativeMenuCharacterArgsDelegate(GetAdultMenuNarrativeMenuCharacterArgs));
+            NarrativeMenu narrativeMenu = new("narrative_adulthood_menu", "narrative_youth_menu", "narrative_age_selection_menu", new TextObject("{=MafIe9yI}Young Adulthood", null), new TextObject("{=4WYY0X59}Before you set out for a life of adventure, your biggest achievement was...", null), list, new NarrativeMenu.GetNarrativeMenuCharacterArgsDelegate(GetAdultMenuNarrativeMenuCharacterArgs));
             AddAdulthoodMenuOptions(narrativeMenu);
             characterCreationManager.AddNewMenu(narrativeMenu);
         }
@@ -3740,9 +4188,15 @@ namespace RealmsForgotten.CharacterCreation
             List<NarrativeMenuCharacterArgs> list = new();
             string playerEquipmentId = GetPlayerEquipmentId(characterCreationManager, characterCreationManager.CharacterCreationContent.SelectedTitleType, characterCreationManager.CharacterCreationContent.SelectedCulture.StringId, Hero.MainHero.IsFemale);
             list.Add(new NarrativeMenuCharacterArgs("player_age_selection_character", characterCreationManager.CharacterCreationContent.StartingAge, playerEquipmentId, "act_childhood_schooled", "spawnpoint_player_1", "", "", null, true, CharacterObject.PlayerCharacter.IsFemale));
-            MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(playerEquipmentId);
-            ItemObject item = @object.DefaultEquipment[EquipmentIndex.ArmorItemEndSlot].Item;
-            list.Add(new NarrativeMenuCharacterArgs("narrative_character_horse", -1, "", "act_horse_stand_1", "spawnpoint_mount_1", @object.DefaultEquipment[EquipmentIndex.ArmorItemEndSlot].Item.StringId, @object.DefaultEquipment[EquipmentIndex.HorseHarness].Item.StringId, MountCreationKey.GetRandomMountKey(item, CharacterObject.PlayerCharacter.GetMountKeySeed()), false, false));
+            MBEquipmentRoster equipment = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(playerEquipmentId);
+            if (equipment == null)
+            {
+                InformationManager.DisplayMessage(new InformationMessage($"ERROR, could not find {playerEquipmentId}!", new Color(1, 0, 0)));
+                equipment = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>("player_char_creation_empire_guard_m");
+            }
+
+            ItemObject item = equipment.DefaultEquipment[EquipmentIndex.ArmorItemEndSlot].Item;
+            list.Add(new NarrativeMenuCharacterArgs("narrative_character_horse", -1, "", "act_horse_stand_1", "spawnpoint_mount_1", equipment.DefaultEquipment[EquipmentIndex.ArmorItemEndSlot].Item.StringId, equipment.DefaultEquipment[EquipmentIndex.HorseHarness].Item.StringId, MountCreationKey.GetRandomMountKey(item, CharacterObject.PlayerCharacter.GetMountKeySeed()), false, false));
             return list;
         }
 
@@ -3790,13 +4244,13 @@ namespace RealmsForgotten.CharacterCreation
                 {
                     narrativeMenuCharacter.SetAnimationId("act_childhood_focus");
                     narrativeMenuCharacter.ChangeAge(20f);
-                    MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(playerEquipmentId);
-                    if (@object == null)
+                    MBEquipmentRoster equipment = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(playerEquipmentId);
+                    if (equipment == null)
                     {
                         Debug.FailedAssert("character creation menu character equipment should not be null!", "C:\\BuildAgent\\work\\mb3\\Source\\Bannerlord\\TaleWorlds.CampaignSystem\\CampaignBehaviors\\CharacterCreationCampaignBehavior.cs", "AgeSelectionYoungAdultAgeOptionOnSelect", 4884);
-                        @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>("player_char_creation_default");
+                        equipment = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>("player_char_creation_default");
                     }
-                    narrativeMenuCharacter.SetEquipment(@object);
+                    narrativeMenuCharacter.SetEquipment(equipment);
                     break;
                 }
             }
@@ -3830,13 +4284,13 @@ namespace RealmsForgotten.CharacterCreation
                 {
                     narrativeMenuCharacter.SetAnimationId("act_childhood_athlete");
                     narrativeMenuCharacter.ChangeAge(30f);
-                    MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(playerEquipmentId);
-                    if (@object == null)
+                    MBEquipmentRoster equipment = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(playerEquipmentId);
+                    if (equipment == null)
                     {
                         Debug.FailedAssert("character creation menu character equipment should not be null!", "C:\\BuildAgent\\work\\mb3\\Source\\Bannerlord\\TaleWorlds.CampaignSystem\\CampaignBehaviors\\CharacterCreationCampaignBehavior.cs", "AgeSelectionAdultOptionOnSelect", 4934);
-                        @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>("player_char_creation_default");
+                        equipment = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>("player_char_creation_default");
                     }
-                    narrativeMenuCharacter.SetEquipment(@object);
+                    narrativeMenuCharacter.SetEquipment(equipment);
                     break;
                 }
             }
@@ -3870,13 +4324,13 @@ namespace RealmsForgotten.CharacterCreation
                 {
                     narrativeMenuCharacter.SetAnimationId("act_childhood_sharp");
                     narrativeMenuCharacter.ChangeAge(30f);
-                    MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(playerEquipmentId);
-                    if (@object == null)
+                    MBEquipmentRoster equipment = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(playerEquipmentId);
+                    if (equipment == null)
                     {
                         Debug.FailedAssert("character creation menu character equipment should not be null!", "C:\\BuildAgent\\work\\mb3\\Source\\Bannerlord\\TaleWorlds.CampaignSystem\\CampaignBehaviors\\CharacterCreationCampaignBehavior.cs", "AgeSelectionMiddleAgeOptionOnSelect", 4984);
-                        @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>("player_char_creation_default");
+                        equipment = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>("player_char_creation_default");
                     }
-                    narrativeMenuCharacter.SetEquipment(@object);
+                    narrativeMenuCharacter.SetEquipment(equipment);
                     break;
                 }
             }
@@ -3910,13 +4364,13 @@ namespace RealmsForgotten.CharacterCreation
                 {
                     narrativeMenuCharacter.SetAnimationId("act_childhood_tough");
                     narrativeMenuCharacter.ChangeAge(50f);
-                    MBEquipmentRoster @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(playerEquipmentId);
-                    if (@object == null)
+                    MBEquipmentRoster equipment = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>(playerEquipmentId);
+                    if (equipment == null)
                     {
                         Debug.FailedAssert("character creation menu character equipment should not be null!", "C:\\BuildAgent\\work\\mb3\\Source\\Bannerlord\\TaleWorlds.CampaignSystem\\CampaignBehaviors\\CharacterCreationCampaignBehavior.cs", "AgeSelectionElderOptionOnSelect", 5034);
-                        @object = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>("player_char_creation_default");
+                        equipment = Game.Current.ObjectManager.GetObject<MBEquipmentRoster>("player_char_creation_default");
                     }
-                    narrativeMenuCharacter.SetEquipment(@object);
+                    narrativeMenuCharacter.SetEquipment(equipment);
                     break;
                 }
             }
@@ -4055,6 +4509,43 @@ namespace RealmsForgotten.CharacterCreation
             }
         }
 
+        private bool YouthMenuWulfOnCondition(CharacterCreationManager characterCreationManager)
+        {
+            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "wulf";
+        }
+        private bool YouthMenuUrkhaiOnCondition(CharacterCreationManager characterCreationManager)
+        {
+            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "urkhai";
+        }
+        private bool YouthMenuGiantOnCondition(CharacterCreationManager characterCreationManager)
+        {
+            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "giant";
+        }
+
+        private bool YouthMenuAqarunOnCondition(CharacterCreationManager characterCreationManager)
+        {
+            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "aqarun";
+        }
+
+        private bool YouthMenuSouthRealmOnCondition(CharacterCreationManager characterCreationManager)
+        {
+            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "south_realm";
+        }
+
+        private bool YouthMenuWestRealmOnCondition(CharacterCreationManager characterCreationManager)
+        {
+            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "west_realm";
+        }
+
+        private bool YouthMenuMageOnCondition(CharacterCreationManager characterCreationManager)
+        {
+            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "mage";
+        }
+
+        private bool YouthMenuDwarfOnCondition(CharacterCreationManager characterCreationManager)
+        {
+            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "dwarf";
+        }
         private static class CharacterOccupationTypes
         {
             public static bool IsUrbanOccupation(string occupation)
