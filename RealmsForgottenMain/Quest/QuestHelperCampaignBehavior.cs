@@ -30,7 +30,8 @@ namespace RealmsForgotten.Quest
                 PlayerEncounter.StartBattle();
                 PlayerEncounter.Update();
             }
-            CampaignMission.OpenHideoutBattleMission("forest_hideout_003", null);
+            //CampaignMission.OpenHideoutBattleMission("forest_hideout_003", null);
+            CampaignMission.OpenHideoutBattleMission(Settlement.CurrentSettlement.LocationComplex.GetScene("hideout_center", 0), null); //hideoutTroops?.ToFlattenedRoster());
         }
 
         private bool game_menu_attack_hideout_parties_on_condition(MenuCallbackArgs args)
