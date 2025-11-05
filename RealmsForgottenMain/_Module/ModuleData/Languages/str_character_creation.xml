@@ -19,7 +19,7 @@
 
 		<string id="giant_noble_guard_desc" text="You served as part of the noble guard, learning mounted tactics and the discipline of heavy lances." />
 		<string id="giant_folks_guard_desc" text="You served in the people's guard and trained with missile and engineering skills useful for garrison duty." />
-		<string id="giant_scouts_desc" text="You scouted ahead of the host learning to read terrain and report enemy positions." />
+		<string id="giant_scouts_desc" text="You scouted ahead of the host learning to read terrain a	nd report enemy positions." />
 		<string id="giant_lanzalith_desc" text="You drilled as part of spear-and-shield infantry, forming the backbone of the host." />
 		<string id="giant_tzalquendlan_desc" text="You learned ambush, disguise and irregular warfare among the border scouts." />
 
