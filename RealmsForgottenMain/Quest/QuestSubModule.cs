@@ -12,21 +12,6 @@ namespace RealmsForgotten.Quest
 {
     public static class QuestSubModule
     {
-        public static void OnNewGameCreated(Game game, object initializerObject)
-        {
-            CampaignGameStarter gameStarter = (CampaignGameStarter)initializerObject;
-            gameStarter.AddBehavior(new RescueUliahBehavior(true));
-            gameStarter.AddBehavior(new EighthQuestBehavior(true));
-            gameStarter.AddBehavior(new DeformedSpawningBehavior());
-        }
-
-        public static void OnGameLoaded(Game game, object initializerObject)
-        {
-            CampaignGameStarter gameStarter = (CampaignGameStarter)initializerObject;
-            gameStarter.AddBehavior(new RescueUliahBehavior(false));
-            gameStarter.AddBehavior(new EighthQuestBehavior(false));
-            gameStarter.AddBehavior(new DeformedSpawningBehavior());
-        }
 
         public static void AddQuestBehaviors(CampaignGameStarter gameStarter)
         {
@@ -34,7 +19,11 @@ namespace RealmsForgotten.Quest
             {
                 gameStarter.AddBehavior(new SaveCurrentQuestCampaignBehavior());
                 gameStarter.AddBehavior(new SpawnNpcInLordsHallBecomeKnightBehavior());
-              
+                gameStarter.AddBehavior(new QuestHelperCampaignBehavior());
+
+                gameStarter.AddBehavior(new RescueUliahBehavior(false));
+                gameStarter.AddBehavior(new EighthQuestBehavior(false));
+                gameStarter.AddBehavior(new DeformedSpawningBehavior());
             }
         }
     }

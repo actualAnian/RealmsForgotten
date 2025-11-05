@@ -311,7 +311,6 @@ namespace RealmsForgotten
         public override void OnGameLoaded(Game game, object initializerObject)
         {
             base.OnGameLoaded(game, initializerObject);
-            QuestSubModule.OnGameLoaded(game, initializerObject);
 
             if (initializerObject is CampaignGameStarter campaignGameStarter)
             {
@@ -325,7 +324,6 @@ namespace RealmsForgotten
         public override void OnNewGameCreated(Game game, object initializerObject)
         {
             base.OnNewGameCreated(game, initializerObject);
-            QuestSubModule.OnNewGameCreated(game, initializerObject);
         }
 
         protected override void InitializeGameStarter(Game game, IGameStarter starterObject)
