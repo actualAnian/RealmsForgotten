@@ -258,7 +258,7 @@ namespace RealmsForgotten.CharacterCreation
             List<NarrativeMenuCharacter> list = new() { item };
             NarrativeMenu narrativeMenu = new("rf_start", "narrative_age_selection_menu", "rf_start_location", new TextObject("Who are you in Auerth", null), new TextObject("Who are you in Auerth", null), list, new NarrativeMenu.GetNarrativeMenuCharacterArgsDelegate(GetRFStartMenuNarrativeMenuCharacterArgs));
             
-            narrativeMenu.AddNarrativeMenuOption(new("rf_menu_commoner", new TextObject("{=CulturedStart09}A commoner (Default Start)", null), new TextObject("{=CulturedStart10}Setting off with your Father, Mother, Brother and your two younger siblings to a new town you'd heard was safer. But you did not make it.", null), new GetNarrativeMenuOptionArgsDelegate(RFStartMenuCommonerNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(m => { return true; }), new NarrativeMenuOptionOnSelectDelegate(m => { ChooseCharacterEquipment(m, StartType.Default); }), new NarrativeMenuOptionOnConsequenceDelegate(CommonerStartOnConsequence)));
+            narrativeMenu.AddNarrativeMenuOption(new("rf_menu_commoner", new TextObject("{=CulturedStart09}A commoner (Default Start)", null), new TextObject("{=CulturedStart10}Setting off with your Father, Mother, Brother and your two younger siblings to a new town you'd heard was safer. But you did not make it.", null), new GetNarrativeMenuOptionArgsDelegate(RFStartMenuCommonerNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(m => { return true; }), new NarrativeMenuOptionOnSelectDelegate(m => {ChooseCharacterEquipment(m, StartType.Default); }), new NarrativeMenuOptionOnConsequenceDelegate(CommonerStartOnConsequence)));
             narrativeMenu.AddNarrativeMenuOption(new("rf_menu_caravaneer", new TextObject("{=CulturedStart11}A budding caravaneer", null), new TextObject("{=CulturedStart12}With what savings you could muster you purchased some mules and mercenaries.", null), new GetNarrativeMenuOptionArgsDelegate(RFStartMenuCaravaneerNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(m => { return true; }), new NarrativeMenuOptionOnSelectDelegate(m => { ChooseCharacterEquipment(m, StartType.Merchant); }), new NarrativeMenuOptionOnConsequenceDelegate(MerchantStartOnConsequence)));
             narrativeMenu.AddNarrativeMenuOption(new("rf_menu_ranger", new TextObject("A ranger of {CULTURE} in exile", null), new TextObject("{=CulturedStart14}Forced into exile after your parents were executed for suspected treason. With only your family's bodyguard you set off. Should you return you'd be viewed as a criminal.", null), new GetNarrativeMenuOptionArgsDelegate(RFStartMenuRangerNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(m => { return true; }), new NarrativeMenuOptionOnSelectDelegate(m => { ChooseCharacterEquipment(m, StartType.Exiled); }), new NarrativeMenuOptionOnConsequenceDelegate(ExiledStartOnConsequence)));
             narrativeMenu.AddNarrativeMenuOption(new("rf_menu_mercenary", new TextObject("{=CulturedStart15}A leader of a failing mercenary company", null), new TextObject("{=CulturedStart16}With men deserting over lack of wages, your company leader was found dead, and you decided to take your chance and lead.", null), new GetNarrativeMenuOptionArgsDelegate(RFStartMenuMercenaryNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(m => { return true; }), new NarrativeMenuOptionOnSelectDelegate(m => { ChooseCharacterEquipment(m, StartType.Mercenary); }), new NarrativeMenuOptionOnConsequenceDelegate(MercenaryStartOnConsequence)));
@@ -1648,7 +1648,7 @@ namespace RealmsForgotten.CharacterCreation
         }
         private bool MageNarrativeOptionOnCondition(CharacterCreationManager characterCreationManager)
         {
-            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "aqarun";
+            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "mage";
         }
         private void GetMageDirectDescendantsNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
@@ -2712,11 +2712,9 @@ namespace RealmsForgotten.CharacterCreation
             NarrativeMenuOption narrativeMenuOption19 = new NarrativeMenuOption("youth_envoys_guard_second_option", new TextObject("{=YmPlLGXb}served as an envoy's guard", null), new TextObject("{=VYU1nEHP}Your family arranged for you to accompany an envoy. You were not given major responsibilities but it did give you a chance to travel and socialise and see a bit of the world.", null), new GetNarrativeMenuOptionArgsDelegate(GetEnvoysGuardSecondOptionArgs), new NarrativeMenuOptionOnConditionDelegate(EnvoysGuardSecondOptionOnCondition), new NarrativeMenuOptionOnSelectDelegate(EnvoysGuardSecondOptionOnSelect), null);
             narrativeMenu.AddNarrativeMenuOption(narrativeMenuOption19);
 
-
-
             narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
                 "wulf_youth_noble_guard_option",
-                new TextObject("trained with the noble guard.", null),
+                new TextObject("{rf_trained_with_noble_guard}trained with the noble guard.", null),
                 new TextObject("{=wulf_noble_guard_desc}You served as part of a chieftain's noble guard. You learned mounted shock tactics and the discipline of heavy lances.", null),
                 new GetNarrativeMenuOptionArgsDelegate(GetYouthCavalryOptionArgs),
                 new NarrativeMenuOptionOnConditionDelegate(YouthMenuWulfOnCondition),
@@ -2725,7 +2723,7 @@ namespace RealmsForgotten.CharacterCreation
 
             narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
                 "wulf_youth_folks_guard_option",
-                new TextObject("joined the folks' guard", null),
+                new TextObject("{rf_joined_folks_guard}joined the folks' guard", null),
                 new TextObject("{=wulf_folks_guard_desc}You served in the people's guard of your clanhold. You trained with spears and short swords and learned to hold the line.", null),
                 new GetNarrativeMenuOptionArgsDelegate(GetYouthGuardGarrisonRegisterOptionArgs),
                 new NarrativeMenuOptionOnConditionDelegate(YouthMenuWulfOnCondition),
@@ -2734,7 +2732,7 @@ namespace RealmsForgotten.CharacterCreation
 
             narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
                 "wulf_youth_scouts_option",
-                new TextObject("rode with the scouts.", null),
+                new TextObject("{rf_rode_with_the_scouts}rode with the scouts.", null),
                 new TextObject("{=wulf_scouts_desc}You rode ahead of the host as a scout, learning to read terrain and strike quickly from cover.", null),
                 new GetNarrativeMenuOptionArgsDelegate(GetYouthRiderHighRegisterOptionArgs),
                 new NarrativeMenuOptionOnConditionDelegate(YouthMenuWulfOnCondition),
@@ -2743,7 +2741,7 @@ namespace RealmsForgotten.CharacterCreation
 
             narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
                 "wulf_youth_fenhild_option",
-                new TextObject("trained with the Fenhild.", null),
+                new TextObject("{rf_trained_with_fenhild}trained with the Fenhild.", null),
                 new TextObject("{=wulf_fenhild_desc}Armed with massive two-handed swords, the Fenhild are the backbone of the Wulfen host, hailing from mist-shrouded marsh clans.", null),
                 new GetNarrativeMenuOptionArgsDelegate(GetYouthInfantryOptionArgs),
                 new NarrativeMenuOptionOnConditionDelegate(YouthMenuWulfOnCondition),
@@ -2752,16 +2750,17 @@ namespace RealmsForgotten.CharacterCreation
 
             narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
                 "wulf_youth_dunharth_wardens_option",
-                new TextObject("joined the Dunharth Wardens.", null),
+                new TextObject("{rf_joined_dunharth_wardens}joined the Dunharth Wardens.", null),
                 new TextObject("{=wulf_wardens_desc}Raised in the shadow of the deepwood forts, the Dunharth Wardens patrol the ancient forest trails with bow and blade. Masters of terrain and ambush, they serve as the Wulfen’s eyes in the wild—unseen until the first arrow strikes.", null),
                 new GetNarrativeMenuOptionArgsDelegate(GetYouthCampOptionArgs),
                 new NarrativeMenuOptionOnConditionDelegate(YouthMenuWulfOnCondition),
                 new NarrativeMenuOptionOnSelectDelegate(YouthCampOptionOnSelect),
                 null));
 
+            // Urkhai
             narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
                 "urkhai_youth_commander_army_option",
-                new TextObject("trained with the commander's army.", null),
+                new TextObject("{rf_trained_with_commanders_army}trained with the commander's army.", null),
                 new TextObject("{=urkhai_commander_desc}You served in the commander's host, drilling with heavy weapons and learning battlefield discipline. You rode with the heavy troop and learned to fight as part of a formed unit.", null),
                 new GetNarrativeMenuOptionArgsDelegate(GetYouthCavalryOptionArgs),
                 new NarrativeMenuOptionOnConditionDelegate(YouthMenuUrkhaiOnCondition),
@@ -2770,7 +2769,7 @@ namespace RealmsForgotten.CharacterCreation
 
             narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
                 "urkhai_youth_city_patrol_option",
-                new TextObject("patrolled the cities.", null),
+                new TextObject("{rf_patrolled_cities}patrolled the cities.", null),
                 new TextObject("{=urkhai_patrol_desc}You were assigned to patrol and defend the city walls and barracks. Most of your training focused on missile weapons and fortification upkeep.", null),
                 new GetNarrativeMenuOptionArgsDelegate(GetYouthGuardHighRegisterOptionArgs),
                 new NarrativeMenuOptionOnConditionDelegate(YouthMenuUrkhaiOnCondition),
@@ -2779,7 +2778,7 @@ namespace RealmsForgotten.CharacterCreation
 
             narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
                 "urkhai_youth_scouts_option",
-                new TextObject("joined the scouts.", null),
+                new TextObject("{rf_joined_scouts}joined the scouts.", null),
                 new TextObject("{=urkhai_scouts_desc}You rode out ahead of the host as a scout, learning to read terrain, ride light mounts, and strike quickly from range.", null),
                 new GetNarrativeMenuOptionArgsDelegate(GetYouthRiderHighRegisterOptionArgs),
                 new NarrativeMenuOptionOnConditionDelegate(YouthMenuUrkhaiOnCondition),
@@ -2797,7 +2796,7 @@ namespace RealmsForgotten.CharacterCreation
 
             narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
                 "urkhai_youth_healers_option",
-                new TextObject("joined the healers.", null),
+                new TextObject("{rf_joined_healers}joined the healers.", null),
                 new TextObject("{=urkhai_healers_desc}You apprenticed with the healers and learned to mend wounds and tend the sick, combining practical medicine and traditional remedies.", null),
                 new GetNarrativeMenuOptionArgsDelegate(GetYouthSkirmisherOptionArgs),
                 new NarrativeMenuOptionOnConditionDelegate(YouthMenuUrkhaiOnCondition),
@@ -2813,10 +2812,10 @@ namespace RealmsForgotten.CharacterCreation
                 new NarrativeMenuOptionOnSelectDelegate(YouthCampOptionOnSelect),
                 null));
 
-            // -- Giant-specific narrative options (reuse existing args & selects) --
+            // -- Giant-specific narrative options (localized short labels) --
             narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
                 "giant_youth_noble_guard_option",
-                new TextObject("trained with the noble guard.", null),
+                new TextObject("{rf_trained_with_noble_guard}trained with the noble guard.", null),
                 new TextObject("{=giant_noble_guard_desc}You served as part of the noble guard, learning mounted tactics and the discipline of heavy lances.", null),
                 new GetNarrativeMenuOptionArgsDelegate(GetYouthCavalryOptionArgs),
                 new NarrativeMenuOptionOnConditionDelegate(YouthMenuGiantOnCondition),
@@ -2825,7 +2824,7 @@ namespace RealmsForgotten.CharacterCreation
 
             narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
                 "giant_youth_folks_guard_option",
-                new TextObject("joined the folks guard", null),
+                new TextObject("{rf_joined_folks_guard}joined the folks guard", null),
                 new TextObject("{=giant_folks_guard_desc}You served in the people's guard and trained with missile and engineering skills useful for garrison duty.", null),
                 new GetNarrativeMenuOptionArgsDelegate(GetYouthGuardHighRegisterOptionArgs),
                 new NarrativeMenuOptionOnConditionDelegate(YouthMenuGiantOnCondition),
@@ -2834,7 +2833,7 @@ namespace RealmsForgotten.CharacterCreation
 
             narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
                 "giant_youth_scouts_option",
-                new TextObject("rode with the scouts.", null),
+                new TextObject("{rf_rode_with_the_scouts}rode with the scouts.", null),
                 new TextObject("{=giant_scouts_desc}You scouted ahead of the host learning to read terrain and report enemy positions.", null),
                 new GetNarrativeMenuOptionArgsDelegate(GetYouthRiderHighRegisterOptionArgs),
                 new NarrativeMenuOptionOnConditionDelegate(YouthMenuGiantOnCondition),
@@ -2843,7 +2842,7 @@ namespace RealmsForgotten.CharacterCreation
 
             narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
                 "giant_youth_lanzalith_option",
-                new TextObject("trained with the Lanzalith.", null),
+                new TextObject("{rf_trained_with_lanzalith}trained with the Lanzalith.", null),
                 new TextObject("{=giant_lanzalith_desc}You drilled as part of spear-and-shield infantry, forming the backbone of the host.", null),
                 new GetNarrativeMenuOptionArgsDelegate(GetYouthInfantryOptionArgs),
                 new NarrativeMenuOptionOnConditionDelegate(YouthMenuGiantOnCondition),
@@ -2852,14 +2851,14 @@ namespace RealmsForgotten.CharacterCreation
 
             narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
                 "giant_youth_tzalquendlan_option",
-                new TextObject("joined the Tzalquendlan.", null),
+                new TextObject("{rf_joined_tzalquendlan}joined the Tzalquendlan.", null),
                 new TextObject("{=giant_tzalquendlan_desc}You learned ambush, disguise and irregular warfare among the border scouts.", null),
                 new GetNarrativeMenuOptionArgsDelegate(GetYouthCampOptionArgs),
                 new NarrativeMenuOptionOnConditionDelegate(YouthMenuGiantOnCondition),
                 new NarrativeMenuOptionOnSelectDelegate(YouthCampOptionOnSelect),
                 null));
 
-            // -- Aqarun-specific narrative options --
+            // -- Aqarun-specific narrative options (city patrol label localized) --
             narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
                 "aqarun_youth_cavalry_option",
                 new TextObject("{=h2KnarLL}trained with the cavalry.", null),
@@ -2871,7 +2870,7 @@ namespace RealmsForgotten.CharacterCreation
 
             narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
                 "aqarun_youth_city_patrol_option",
-                new TextObject("patrolled the cities.", null),
+                new TextObject("{rf_patrolled_cities}patrolled the cities.", null),
                 new TextObject("{=aqarun_patrol_desc}You served on city patrols learning crossbow and engineering tasks for garrison duty.", null),
                 new GetNarrativeMenuOptionArgsDelegate(GetYouthGuardHighRegisterOptionArgs),
                 new NarrativeMenuOptionOnConditionDelegate(YouthMenuAqarunOnCondition),
@@ -2880,7 +2879,7 @@ namespace RealmsForgotten.CharacterCreation
 
             narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
                 "aqarun_youth_desert_scouts_option",
-                new TextObject("joined the desert scouts.", null),
+                new TextObject("{rf_joined_desert_scouts}joined the desert scouts.", null),
                 new TextObject("{=aqarun_scouts_desc}You scouted desert wastes and learned to strike quickly from range.", null),
                 new GetNarrativeMenuOptionArgsDelegate(GetYouthRiderHighRegisterOptionArgs),
                 new NarrativeMenuOptionOnConditionDelegate(YouthMenuAqarunOnCondition),
@@ -2926,7 +2925,7 @@ namespace RealmsForgotten.CharacterCreation
 
             narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
                 "southrealm_youth_city_patrol_option",
-                new TextObject("patrolled the cities.", null),
+                new TextObject("{rf_patrolled_cities}patrolled the cities.", null),
                 new TextObject("{=southrealm_patrol_desc}You performed city patrol duties and garrison tasks.", null),
                 new GetNarrativeMenuOptionArgsDelegate(GetYouthGuardHighRegisterOptionArgs),
                 new NarrativeMenuOptionOnConditionDelegate(YouthMenuSouthRealmOnCondition),
@@ -2935,7 +2934,7 @@ namespace RealmsForgotten.CharacterCreation
 
             narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
                 "southrealm_youth_scouts_option",
-                new TextObject("joined the scouts.", null),
+                new TextObject("{rf_joined_scouts}joined the scouts.", null),
                 new TextObject("{=southrealm_scouts_desc}You scouted for the host, mastering terrain and ranged harassment.", null),
                 new GetNarrativeMenuOptionArgsDelegate(GetYouthRiderHighRegisterOptionArgs),
                 new NarrativeMenuOptionOnConditionDelegate(YouthMenuSouthRealmOnCondition),
@@ -2981,7 +2980,7 @@ namespace RealmsForgotten.CharacterCreation
 
             narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
                 "westrealm_youth_city_patrol_option",
-                new TextObject("patrolled the cities.", null),
+                new TextObject("{rf_patrolled_cities}patrolled the cities.", null),
                 new TextObject("{=westrealm_patrol_desc}You patrolled towns, learning crossbow work and garrison duties.", null),
                 new GetNarrativeMenuOptionArgsDelegate(GetYouthGuardHighRegisterOptionArgs),
                 new NarrativeMenuOptionOnConditionDelegate(YouthMenuWestRealmOnCondition),
@@ -2990,7 +2989,7 @@ namespace RealmsForgotten.CharacterCreation
 
             narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
                 "westrealm_youth_scouts_option",
-                new TextObject("joined the scouts.", null),
+                new TextObject("{rf_joined_scouts}joined the scouts.", null),
                 new TextObject("{=westrealm_scouts_desc}You scouted the borderlands and learned to strike from cover.", null),
                 new GetNarrativeMenuOptionArgsDelegate(GetYouthRiderHighRegisterOptionArgs),
                 new NarrativeMenuOptionOnConditionDelegate(YouthMenuWestRealmOnCondition),
@@ -3036,7 +3035,7 @@ namespace RealmsForgotten.CharacterCreation
 
             narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
                 "mage_youth_patrol_option",
-                new TextObject("patrolled the cities.", null),
+                new TextObject("{rf_patrolled_cities}patrolled the cities.", null),
                 new TextObject("{=mage_patrol_desc}You performed city patrol and garrison duties.", null),
                 new GetNarrativeMenuOptionArgsDelegate(GetYouthGuardHighRegisterOptionArgs),
                 new NarrativeMenuOptionOnConditionDelegate(YouthMenuMageOnCondition),
@@ -3045,7 +3044,7 @@ namespace RealmsForgotten.CharacterCreation
 
             narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
                 "mage_youth_scouts_option",
-                new TextObject("joined the scouts.", null),
+                new TextObject("{rf_joined_scouts}joined the scouts.", null),
                 new TextObject("{=mage_scouts_desc}You served as a scout, learning to ride and shoot.", null),
                 new GetNarrativeMenuOptionArgsDelegate(GetYouthRiderHighRegisterOptionArgs),
                 new NarrativeMenuOptionOnConditionDelegate(YouthMenuMageOnCondition),
@@ -3091,7 +3090,7 @@ namespace RealmsForgotten.CharacterCreation
 
             narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
                 "dwarf_youth_city_patrol_option",
-                new TextObject("patrolled the cities.", null),
+                new TextObject("{rf_patrolled_cities}patrolled the cities.", null),
                 new TextObject("{=dwarf_patrol_desc}You served garrison and city patrol duties, specializing in crossbow and engineering tasks.", null),
                 new GetNarrativeMenuOptionArgsDelegate(GetYouthGuardHighRegisterOptionArgs),
                 new NarrativeMenuOptionOnConditionDelegate(YouthMenuDwarfOnCondition),
@@ -3100,7 +3099,7 @@ namespace RealmsForgotten.CharacterCreation
 
             narrativeMenu.AddNarrativeMenuOption(new NarrativeMenuOption(
                 "dwarf_youth_scouts_option",
-                new TextObject("joined the scouts.", null),
+                new TextObject("{rf_joined_scouts}joined the scouts.", null),
                 new TextObject("{=dwarf_scouts_desc}You scouted from fortified positions and learned to strike from range.", null),
                 new GetNarrativeMenuOptionArgsDelegate(GetYouthRiderHighRegisterOptionArgs),
                 new NarrativeMenuOptionOnConditionDelegate(YouthMenuDwarfOnCondition),
@@ -3256,9 +3255,7 @@ namespace RealmsForgotten.CharacterCreation
 
         private bool YouthCavalryOptionOnCondition(CharacterCreationManager characterCreationManager)
         {
-            // previously only "vlandia" — also allow "wulf"
-            string id = characterCreationManager.CharacterCreationContent.SelectedCulture.StringId;
-            return id == "vlandia" || id == "wulf";
+            return characterCreationManager.CharacterCreationContent.SelectedCulture.StringId == "vlandia";
         }
 
         private void YouthCavalryOptionOnSelect(CharacterCreationManager characterCreationManager)
@@ -3451,7 +3448,7 @@ namespace RealmsForgotten.CharacterCreation
         private bool YouthRiderHighRegisterOptionOnCondition(CharacterCreationManager characterCreationManager)
         {
             string id = characterCreationManager.CharacterCreationContent.SelectedCulture.StringId;
-            return id == "empire" || id == "khuzait" || id == "wulf";
+            return id == "empire" || id == "khuzait";
         }
 
         private void YouthRiderHighRegisterOptionOnSelect(CharacterCreationManager characterCreationManager)
@@ -3516,7 +3513,7 @@ namespace RealmsForgotten.CharacterCreation
         private bool YouthInfantryOptionOnCondition(CharacterCreationManager characterCreationManager)
         {
             string id = characterCreationManager.CharacterCreationContent.SelectedCulture.StringId;
-            return id == "empire" || id == "vlandia" || id == "khuzait" || id == "aserai" || id == "battania" || id == "sturgia" || id == "wulf";
+            return id == "empire" || id == "vlandia" || id == "khuzait" || id == "aserai" || id == "battania" || id == "sturgia";
         }
 
         private void YouthInfantryOptionOnSelect(CharacterCreationManager characterCreationManager)
@@ -3613,7 +3610,7 @@ namespace RealmsForgotten.CharacterCreation
         private bool YouthCampOptionOnCondition(CharacterCreationManager characterCreationManager)
         {
             string id = characterCreationManager.CharacterCreationContent.SelectedCulture.StringId;
-            return id == "vlandia" || id == "sturgia" || id == "wulf";
+            return id == "vlandia" || id == "sturgia";
         }
 
         private void YouthCampOptionOnSelect(CharacterCreationManager characterCreationManager)
@@ -4499,6 +4496,7 @@ namespace RealmsForgotten.CharacterCreation
                     CharacterObject.PlayerCharacter.Equipment.FillFrom(battleEquipment, true);
                     CharacterObject.PlayerCharacter.FirstCivilianEquipment.FillFrom(civillianEquipment, true);
                     CharacterObject.PlayerCharacter.FirstBattleEquipment.FillFrom(battleEquipment);
+                    characterCreationManager.CurrentMenu.Characters[0].SetEquipment(equipmentRoster);
                     //ChangePlayerMount(characterCreation, Hero.MainHero);
                 }
                 if (civillianEquipment != null) CharacterObject.PlayerCharacter.FirstCivilianEquipment.FillFrom(civillianEquipment);

@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="string">
+	<tags>
+		<tag language="English" />
+	</tags>
+	<strings>
+		<string id="wulf_noble_guard_desc" text="You served as part of a chieftain's noble guard. You learned mounted shock tactics and the discipline of heavy lances." />
+		<string id="wulf_folks_guard_desc" text="You served in the people's guard of your clanhold. You trained with spears and short swords and learned to hold the line." />
+		<string id="wulf_scouts_desc" text="You rode ahead of the host as a scout, learning to read terrain and strike quickly from cover." />
+		<string id="wulf_fenhild_desc" text="Armed with massive two-handed swords, the Fenhild are the backbone of the Wulfen host, hailing from mist-shrouded marsh clans." />
+		<string id="wulf_wardens_desc" text="Raised in the shadow of the deepwood forts, the Dunharth Wardens patrol the ancient forest trails with bow and blade. Masters of terrain and ambush, they serve as the Wulfen’s eyes in the wild—unseen until the first arrow strikes." />
+
+		<string id="urkhai_commander_desc" text="You served in the commander's host, drilling with heavy weapons and learning battlefield discipline. You rode with the heavy troop and learned to fight as part of a formed unit." />
+		<string id="urkhai_patrol_desc" text="You were assigned to patrol and defend the city walls and barracks. Most of your training focused on missile weapons and fortification upkeep." />
+		<string id="urkhai_scouts_desc" text="You rode out ahead of the host as a scout, learning to read terrain, ride light mounts, and strike quickly from range." />
+		<string id="urkhai_infantry_desc" text="You trained as a tribal spearman — drilled in shield and spear or short sword — serving the host as a reliable footman." />
+		<string id="urkhai_healers_desc" text="You apprenticed with the healers and learned to mend wounds and tend the sick, combining practical medicine and traditional remedies." />
+		<string id="urkhai_free_desc" text="You avoided formal enlistment and instead marched with free bands — followers, foragers, and irregulars of the host — learning guerrilla skills and survival." />
+
+		<string id="giant_noble_guard_desc" text="You served as part of the noble guard, learning mounted tactics and the discipline of heavy lances." />
+		<string id="giant_folks_guard_desc" text="You served in the people's guard and trained with missile and engineering skills useful for garrison duty." />
+		<string id="giant_scouts_desc" text="You scouted ahead of the host learning to read terrain and report enemy positions." />
+		<string id="giant_lanzalith_desc" text="You drilled as part of spear-and-shield infantry, forming the backbone of the host." />
+		<string id="giant_tzalquendlan_desc" text="You learned ambush, disguise and irregular warfare among the border scouts." />
+
+		<string id="aqarun_cavalry_desc" text="You trained with the cavalry, learning mounted shock tactics and lance-work." />
+		<string id="aqarun_patrol_desc" text="You served on city patrols learning crossbow and engineering tasks for garrison duty." />
+		<string id="aqarun_scouts_desc" text="You scouted desert wastes and learned to strike quickly from range." />
+		<string id="aqarun_infantry_desc" text="You trained as foot infantry, mastering spear-and-shield drills." />
+		<string id="aqarun_skirmishers_desc" text="You joined the skirmishers, fighting with javelin and light arms." />
+		<string id="aqarun_free_desc" text="You marched with irregular bands, learning raiding and survival skills." />
+
+		<string id="southrealm_cavalry_desc" text="You trained with mounted troops, learning to fight as part of a mounted unit." />
+		<string id="southrealm_patrol_desc" text="You performed city patrol duties and garrison tasks." />
+		<string id="southrealm_scouts_desc" text="You scouted for the host, mastering terrain and ranged harassment." />
+		<string id="southrealm_infantry_desc" text="You trained as spearmen and foot troops in the host." />
+		<string id="southrealm_skirmishers_desc" text="You fought as a skirmisher, relying on speed and missiles." />
+		<string id="southrealm_free_desc" text="You marched with free bands and learned survival and raiding crafts." />
+
+		<string id="westrealm_cavalry_desc" text="You trained with mounted units, gaining lance and riding skill." />
+		<string id="westrealm_patrol_desc" text="You patrolled towns, learning crossbow work and garrison duties." />
+		<string id="westrealm_scouts_desc" text="You scouted the borderlands and learned to strike from cover." />
+		<string id="westrealm_infantry_desc" text="You were drilled as reliable infantry for the host." />
+		<string id="westrealm_skirmishers_desc" text="You fought as a light skirmisher trained to harass and evade." />
+		<string id="westrealm_free_desc" text="You learned irregular warfare and survival by marching with free bands." />
+
+		<string id="mage_cavalry_desc" text="You trained with mounted troops and learned battlefield discipline." />
+		<string id="mage_patrol_desc" text="You performed city patrol and garrison duties." />
+		<string id="mage_scouts_desc" text="You served as a scout, learning to ride and shoot." />
+		<string id="mage_infantry_desc" text="You trained as infantry and learned drill and cohesion." />
+		<string id="mage_scholars_desc" text="You studied scrolls and arcane lore among the kingdom's scholars." />
+		<string id="mage_free_desc" text="You learned to survive and scavenge by marching with irregular bands." />
+
+		<string id="dwarf_cavalry_desc" text="You trained with mounted troops and learned battlefield formation riding." />
+		<string id="dwarf_patrol_desc" text="You served garrison and city patrol duties, specializing in crossbow and engineering tasks." />
+		<string id="dwarf_scouts_desc" text="You scouted from fortified positions and learned to strike from range." />
+		<string id="dwarf_infantry_desc" text="You trained as spearmen and foot troops in the mountain host." />
+		<string id="dwarf_scholars_desc" text="You apprenticed to scholars and craftsmen learning lore and craft." />
+		<string id="dwarf_free_desc" text="You marched with free bands and learned practical survival and raiding skills." />
+
+		<string id="rf_trained_with_noble_guard" text="trained with the noble guard." />
+		<string id="rf_joined_folks_guard" text="joined the folks' guard" />
+		<string id="rf_rode_with_the_scouts" text="rode with the scouts." />
+		<string id="rf_trained_with_fenhild" text="trained with the Fenhild." />
+		<string id="rf_joined_dunharth_wardens" text="joined the Dunharth Wardens." />
+		<string id="rf_trained_with_commanders_army" text="trained with the commander's army." />
+		<string id="rf_patrolled_cities" text="patrolled the cities." />
+		<string id="rf_joined_scouts" text="joined the scouts." />
+		<string id="rf_joined_healers" text="joined the healers." />
+		<string id="rf_trained_with_lanzalith" text="trained with the Lanzalith." />
+		<string id="rf_joined_tzalquendlan" text="joined the Tzalquendlan." />
+		<string id="rf_joined_desert_scouts" text="joined the desert scouts." />
+	</strings>
+</base>
