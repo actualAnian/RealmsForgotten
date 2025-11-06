@@ -189,7 +189,7 @@ namespace RealmsForgotten.AiMade.Patches
 
         public void LocationCharactersAreReadyToSpawn(Dictionary<string, int> unusedUsablePointCount)
         {
-            if (CampaignMission.Current.Location.StringId != "village_inn" || _isInnInitialized)
+            if (CampaignMission.Current.Location == null || CampaignMission.Current.Location.StringId != "village_inn" || _isInnInitialized)
             {
                 return;
             }

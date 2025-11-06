@@ -71,13 +71,6 @@ namespace RealmsForgotten.Quest
 
                     mission.AddMissionBehavior(new FindRelicsHideoutMissionBehavior(findMapJournalLog));
             });
-
-            CampaignEvents.OnSettlementLeftEvent.AddNonSerializedListener(this,
-                (mobileParty, settlement) =>
-                {
-                    if (mobileParty.LeaderHero == Hero.MainHero && settlement.StringId == "town_B4" && escapedPrison)
-                        SaveCurrentQuestCampaignBehavior.Instance.SaveQuestState("queen");
-                });
             RegisterQuestEvents(this);
         }
         private void OnSettlementEntered(MobileParty mobileParty, Settlement settlement, Hero hero)
@@ -90,13 +83,9 @@ namespace RealmsForgotten.Quest
                 ConversationCharacterData playerData = new(CharacterObject.PlayerCharacter, PartyBase.MainParty);
                 ConversationCharacterData anoritData = new(AnoritLord.CharacterObject, AnoritLord.PartyBelongedTo?.Party);
                 Campaign.Current.ConversationManager.OpenMapConversation(playerData, anoritData);
-
-
                 _isPlayerInOwlArmy = false;
                 MobileParty.MainParty.IgnoreByOtherPartiesTill(CampaignTime.Now);
                 QuestPatches.AvoidDisbanding = false;
-
-
             }
         }
 
@@ -216,7 +205,6 @@ namespace RealmsForgotten.Quest
 
         public static void OpenPrisonBreak()
         {
-
             Settlement settlement = Settlement.Find("town_B4");
             PlayerEncounter.Start();
             EnterSettlementAction.ApplyForParty(MobileParty.MainParty, settlement);
@@ -366,7 +354,7 @@ namespace RealmsForgotten.Quest
             {
                 escapedPrison = true;
 
-                QuestUIManager.ShowNotification(GameTexts.FindText("rf_kidnapped_text").ToString(), OpenPrisonBreak, true, "prisoner_image");
+                QuestUIManager.ShowNotification(GameTexts.FindText("rf_kidnapped_text").ToString(), () => { SaveCurrentQuestCampaignBehavior.Instance.SaveQuestState("queen"); }, true, "prisoner_image");
 
                 anoritLordConversationTime = CampaignTime.Never;
             }
