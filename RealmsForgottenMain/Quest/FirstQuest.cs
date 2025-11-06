@@ -167,20 +167,6 @@ namespace RealmsForgotten.Quest
                 CampaignEvents.OnPlayerBattleEndEvent.AddNonSerializedListener(this, BattleEnd);
                 RegisterQuestEvents(this);
                 //CampaignEvents.OnGameEarlyLoadedEvent.AddNonSerializedListener(this, OnGameLoaded);
-                CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, OnGameLoaded);
-            }
-
-            private void OnGameLoaded()
-            {
-                //var trrop = MBObjectManager.Instance.GetObject<CharacterObject>("sea_raiders_bandit");
-                //MobileParty.MainParty.PrisonRoster.AddToCounts(trrop, 5);
-                //if (_rescueUliahJournalLog?.CurrentProgress == 0)
-                //{
-                //    questHideout.IsSpotted = true;//.IsVisible = true;// AddTrackedObject(questHideout.Settlement);
-                //    questHideout.Settlement.IsVisible = true;
-                //}
-                //AddTrackedObject(questHideout.Settlement);
-                //int a = 5;
             }
 
             private void BattleEnd(MapEvent mapEvent)

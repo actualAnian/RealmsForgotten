@@ -67,7 +67,7 @@ namespace RealmsForgotten.Models
         {
             get
             {
-                return MathF.Floor(6f * (2f + Campaign.Current.PlayerProgress));
+                return 50;
             }
         }
 

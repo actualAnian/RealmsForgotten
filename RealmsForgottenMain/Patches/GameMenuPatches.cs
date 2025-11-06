@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using RealmsForgotten.Quest;
 using Steamworks;
 using System;
 using System.Collections.Generic;
@@ -17,9 +18,10 @@ namespace RealmsForgotten.Patches
         [HarmonyPatch(typeof(HideoutCampaignBehavior), "game_menu_hideout_place_on_init")]
         public static void Postfix(MenuCallbackArgs args)
         {
-            if (Settlement.CurrentSettlement == null) return;
+            if(Settlement.CurrentSettlement == null) return;
             if (MiscellaneousConfig.EnterHideoutGameMenuText.TryGetValue(Settlement.CurrentSettlement.Culture.StringId, out var text))
                 GameTexts.SetVariable("HIDEOUT_DESCRIPTION", text);
+            QuestHelperCampaignBehavior.TryAddQuest2HideoutText();
         }
     }
 }
