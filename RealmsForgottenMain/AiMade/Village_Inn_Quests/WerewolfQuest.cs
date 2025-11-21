@@ -79,13 +79,14 @@ namespace RealmsForgotten.AiMade.Village_Inn_Quests
                 return;
 
             PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
-            MobileParty werewolfParty = BanditPartyComponent.CreateBanditParty("rf_werewolf_party_" + village.StringId, Clan.BanditFactions.First(), null, false, looterTemplate, village.GatePosition); //@TODO
+            _werewolfParty = BanditPartyComponent.CreateBanditParty("rf_werewolf_party_" + village.StringId, Clan.BanditFactions.First(), null, false, looterTemplate, village.GatePosition); //@TODO
 
             _werewolfParty.InitializeMobilePartyAroundPosition(
                 new TroopRoster(_werewolfParty.Party),
                 new TroopRoster(_werewolfParty.Party),
                 village.GatePosition, 1f);
 
+            _werewolfParty.MemberRoster.Clear();
             _werewolfParty.MemberRoster.AddToCounts(werewolfChar, 5);
             _werewolfParty.Party.SetCustomName(new TextObject("Werewolf"));
             _werewolfParty.SetPartyUsedByQuest(true);

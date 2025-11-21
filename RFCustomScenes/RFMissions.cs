@@ -1,4 +1,5 @@
 ﻿using BehaviorTreeWrapper;
+using RealmsForgotten.MusicSounds;
 using RealmsForgotten.RFCustomSettlements;
 using SandBox;
 using SandBox.Missions.MissionLogics;
@@ -26,7 +27,7 @@ namespace RFCustomSettlements
     public static class RFMissions
     {
         [MissionMethod]
-        public static Mission StartExploreMission(string sceneName, CustomSettlementBuildData currentBuildData, Action? onBattleEnd = null)
+        public static Mission StartExploreMission(string sceneName, CustomSettlementBuildData currentBuildData, RFMusicType musicType = RFMusicType.StandardBattle, Action? onBattleEnd = null)
         {
             return MissionState.OpenNew(sceneName,
                 SandBoxMissions.CreateSandBoxMissionInitializerRecord(sceneName, "", false, DecalAtlasGroup.Battle),
@@ -55,7 +56,7 @@ namespace RFCustomSettlements
                 new MissionCampaignView(),
                 new OrderTroopPlacer(null),
 
-                new CustomSettlementMissionLogic(currentBuildData, sceneName, onBattleEnd),
+                new CustomSettlementMissionLogic(currentBuildData, sceneName, musicType, onBattleEnd),
                 new RFConversationLogic(),        
                 new BehaviorTreeMissionLogic(),
 

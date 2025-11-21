@@ -66,7 +66,7 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             if(currentState == ArenaState.Captured)
             {
-                RFMissions.StartExploreMission(currentSettlement.CustomScene, CurrentBuildData, new Action(OnArenaMasterTalkEnd));
+                RFMissions.StartExploreMission(currentSettlement.CustomScene, CurrentBuildData, default, new Action(OnArenaMasterTalkEnd));
             }
             else
             {

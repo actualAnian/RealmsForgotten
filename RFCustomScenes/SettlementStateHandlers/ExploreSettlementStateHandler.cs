@@ -102,7 +102,7 @@ namespace RealmsForgotten.RFCustomSettlements
         {
 
             NextSceneData.Instance.playerTroopRoster = roster;
-            RFMissions.StartExploreMission(currentSettlement.CustomScene, CurrentBuildData);
+            RFMissions.StartExploreMission(currentSettlement.CustomScene, CurrentBuildData, currentSettlement.MusicType);
         }
 
         private bool CanChangeStatusOfTroop(CharacterObject character)
@@ -127,7 +127,7 @@ namespace RealmsForgotten.RFCustomSettlements
                     try
                     {
                         CurrentBuildData = CustomSettlementBuildData.AllCustomSettlementBuildDatas[newSceneID];
-                        RFMissions.StartExploreMission(newSceneID, CurrentBuildData);
+                        RFMissions.StartExploreMission(newSceneID, CurrentBuildData, currentSettlement.MusicType);
                         return;
                     }
                     catch

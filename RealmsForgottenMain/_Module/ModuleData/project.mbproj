@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="solution">
+	<outputDirectory>../MBModule/MBModule/</outputDirectory>
+	<XMLDirectory>../WOTS/Modules/RealmsForgotten_1.3.0/</XMLDirectory>
+	<ModuleAssemblyDirectory>../WOTS/bin/</ModuleAssemblyDirectory>
+	<file id="soln_monsters" name="ModuleData/monsters.xml" type="monster" />
+	<file id="soln_soundtrack" name="Music/soundtrack.xml" type="soundtrack" />
+	</base>
+
