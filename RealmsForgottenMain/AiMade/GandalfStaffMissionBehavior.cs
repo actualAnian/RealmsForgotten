@@ -93,7 +93,7 @@ namespace RealmsForgotten.AiMade
                 MissionScreen? missionScreen = TaleWorlds.ScreenSystem.ScreenManager.TopScreen as MissionScreen;
                 healingTextObject.SetTextVariable("AMOUNT", maxUses);
                 _dataSource = new SpellStatusVM(healingTextObject.ToString(), agent.WieldedWeapon.Item?.StringId.Contains("rfmisc_gandalf_staff_a") == true, 20, 22);
-                _gauntletLayer = new GauntletLayer(-1);
+                _gauntletLayer = new GauntletLayer("GandalfStaff", -1);
                 missionScreen.AddLayer(_gauntletLayer);
                 _gauntletLayer.LoadMovie("SpellStatus", _dataSource);
 

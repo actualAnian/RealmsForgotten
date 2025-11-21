@@ -20,7 +20,7 @@ namespace RealmsForgotten.Career.Ability
         {
             base.OnBehaviorInitialize();
             _abilityHudVM = new AbilityHudVM();
-            _abilityLayer = new GauntletLayer(100);
+            _abilityLayer = new GauntletLayer("AbilityHUD", 100);
             _abilityLayer.LoadMovie("AbilityHUD", _abilityHudVM);
             MissionScreen.AddLayer(_abilityLayer);
             var career = PlayerCareerExtension.GetCareer();

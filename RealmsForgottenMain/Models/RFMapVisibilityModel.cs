@@ -46,5 +46,10 @@ namespace RealmsForgotten.Models
         }
 
         public override float GetPartySpottingRangeBase(MobileParty party) => _baseModel.GetPartySpottingRangeBase(party);
+
+        public override float MaximumSeeingRange()
+        {
+            return _baseModel.MaximumSeeingRange();
+        }
     }
 }

@@ -117,7 +117,7 @@ namespace RealmsForgotten.Behaviors
 
         private void OpenTempleDonation()
         {
-            _layer = new GauntletLayer(1000);
+            _layer = new GauntletLayer("TempleDonation", 1000);
             _dataSource = new FaithUIVM(40, () =>
             {
                 _layer.InputRestrictions.ResetInputRestrictions();

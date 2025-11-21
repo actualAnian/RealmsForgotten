@@ -51,7 +51,7 @@ namespace RealmsForgotten.Career.VievModels
         {
             base.OnActivate();
             _vm = new CareerScreenVM(CloseScreen);
-            _gauntletLayer = new GauntletLayer(1, "GauntletLayer", true);
+            _gauntletLayer = new GauntletLayer("GauntletLayer", 1, true);
             _gauntletLayer.InputRestrictions.SetInputRestrictions(true, InputUsageMask.All);
             _gauntletLayer.Input.RegisterHotKeyCategory(HotKeyManager.GetCategory("GenericCampaignPanelsGameKeyCategory"));
             _gauntletLayer.LoadMovie("CareerScreen", _vm);
