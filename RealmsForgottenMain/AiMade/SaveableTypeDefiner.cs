@@ -11,7 +11,6 @@ using RealmsForgotten.AiMade.Religions;
 using RealmsForgotten.AiMade.RF_Diplomacy;
 using RealmsForgotten.AiMade.TradePact;
 using RealmsForgotten.AiMade.Village_Inn_Quests;
-using RealmsForgotten.AiMade.Village_Inn_Quests.RealmsForgotten.AiMade.Village_Inn_Quests;
 using RealmsForgotten.Behaviors;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;

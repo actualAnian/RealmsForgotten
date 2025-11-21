@@ -6,7 +6,7 @@ using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-namespace RealmsForgotten.RFMissionLogic
+namespace RealmsForgotten.MusicSounds
 {
     public class RFSound
     {
@@ -42,7 +42,7 @@ namespace RealmsForgotten.RFMissionLogic
         public DateTime EndTime { get; private set; }
         public SoundEvent SoundEvent { get; set; }
     }
-    public class RFMissionSoundManager : TaleWorlds.MountAndBlade.MissionLogic
+    public class RFMissionSoundManager : MissionLogic
     {
         private List<RFSoundEvent> _activeSounds = new();
         private readonly object _activeSoundsLock = new();

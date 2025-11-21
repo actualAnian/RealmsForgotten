@@ -107,7 +107,6 @@ namespace RealmsForgotten.Models
         private void AddSkillEffectsForAgent(Agent agent, AgentDrivenProperties agentDrivenProperties)
         {
             var character = agent.Character as CharacterObject;
-            var captain = agent.Team.Leader;
             if (character != null && agent.WieldedWeapon.Item?.Type == ItemObject.ItemTypeEnum.Musket);
             {
                 int effectiveSkill = GetEffectiveSkill(agent, RFSkills.Arcane);

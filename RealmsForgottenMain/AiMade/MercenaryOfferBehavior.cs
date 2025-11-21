@@ -15,8 +15,9 @@ namespace RealmsForgotten.AiMade
 
         private Hero _lord3_1;
         private Kingdom _lordKingdom;
-        private bool _hasAcceptedOffer; // Flag to track if the offer has been accepted
-        private bool _wasAtPeace; // Flag to track if the kingdom was at peace after the last offer was declined
+        private bool _hasAcceptedOffer;
+        private bool _wasAtPeace;
+        private bool _offerDeclined; // ADICIONADO: Flag para rastrear se a oferta foi recusada.
 
         public override void RegisterEvents()
         {
@@ -31,6 +32,7 @@ namespace RealmsForgotten.AiMade
             dataStore.SyncData("_lordKingdom", ref _lordKingdom);
             dataStore.SyncData("_hasAcceptedOffer", ref _hasAcceptedOffer);
             dataStore.SyncData("_wasAtPeace", ref _wasAtPeace);
+            dataStore.SyncData("_offerDeclined", ref _offerDeclined); // ADICIONADO: Salva e carrega a nova flag.
         }
 
         private void OnNewGameCreated(CampaignGameStarter campaignGameStarter)
@@ -59,7 +61,8 @@ namespace RealmsForgotten.AiMade
 
         private void DailyTick()
         {
-            if (_lord3_1 == null || _lordKingdom == null || _hasAcceptedOffer)
+            // MODIFICADO: Adiciona a verificação _offerDeclined para não oferecer novamente.
+            if (_lord3_1 == null || _lordKingdom == null || _hasAcceptedOffer || _offerDeclined)
                 return;
 
             if (_wasAtPeace && IsKingdomAtWar(_lordKingdom))
@@ -72,6 +75,7 @@ namespace RealmsForgotten.AiMade
 
         private bool IsKingdomAtWar(Kingdom kingdom)
         {
+            // Mantido exatamente como o seu original.
             return kingdom.FactionsAtWarWith.Count > 0;
         }
 
@@ -98,6 +102,7 @@ namespace RealmsForgotten.AiMade
 
         private void OnDecline()
         {
+            _offerDeclined = true; // ADICIONADO: Marca a oferta como recusada.
             InformationManager.DisplayMessage(new InformationMessage("You have declined the offer to join the war."));
         }
     }

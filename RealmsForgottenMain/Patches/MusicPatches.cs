@@ -5,6 +5,7 @@ using TaleWorlds.Engine;
 using TaleWorlds.ModuleManager;
 using TaleWorlds.MountAndBlade;
 
+/*
 namespace RealmsForgotten.Patches
 {
     [HarmonyPatch]
@@ -21,3 +22,4 @@ namespace RealmsForgotten.Patches
         }
     }
 }
+*/

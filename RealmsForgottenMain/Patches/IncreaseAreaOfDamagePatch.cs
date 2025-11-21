@@ -161,7 +161,7 @@ namespace RealmsForgotten.Patches
                         attackCollisionData.SetCollisionBoneIndexForAreaDamage(collisionBoneIndexForAreaDamage);
 
                         Dictionary<int, Missile> ____missiles =
-                            (Dictionary<int, Missile>)AccessTools.Field(typeof(Mission), "_missiles").GetValue(__instance);
+                            (Dictionary<int, Missile>)AccessTools.Field(typeof(Mission), "_missilesDictionary").GetValue(__instance);
                         MissionWeapon attackerWeapon = ____missiles[attackCollisionData.AffectorWeaponSlotOrMissileIndex].Weapon;
 
 

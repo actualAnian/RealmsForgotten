@@ -1,13 +1,13 @@
-﻿using HarmonyLib;
-using HuntableHerds.Models;
+﻿using HuntableHerds.Models;
+using psai.net;
 using RealmsForgotten.HuntableHerds.AgentComponents;
 using RealmsForgotten.HuntableHerds.Extensions;
 using RealmsForgotten.HuntableHerds.Models;
+using RealmsForgotten.MusicSounds;
 using RFCustomSettlements;
 using RFCustomSettlements.Quests;
 using SandBox;
 using SandBox.Missions.AgentBehaviors;
-using SandBox.Missions.MissionLogics;
 using SandBox.Objects;
 using SandBox.Objects.AreaMarkers;
 using SandBox.Objects.Usables;
@@ -68,8 +68,10 @@ namespace RealmsForgotten.RFCustomSettlements
         int _pickableItemsRemaining = 0;
         bool _resetEndMissionTimer = false;
         private BasicMissionTimer? _endTimer;
+        float _timePassed = 0;
+        bool _secondPassed = false;
         public Dictionary<Agent, Vec3> LootableAgents { get; } = new();
-        public CustomSettlementMissionLogic(CustomSettlementBuildData buildData, string sceneName, Action? onBattleEnd = null)
+        public CustomSettlementMissionLogic(CustomSettlementBuildData buildData, string sceneName, RFMusicType musicTheme, Action? onBattleEnd = null)
         {
             defenderAgentObjects = new Dictionary<Agent, CustomSettlementMissionLogic.UsedObject>();
             patrolAreas = new();
@@ -87,9 +89,19 @@ namespace RealmsForgotten.RFCustomSettlements
             OnBattleEnd = onBattleEnd;
             _sceneName = sceneName;
             CustomSettlementQuest.SubscribeEligibleQuests(this);
+            RFMusicManager.Instance.AddRequest(musicTheme, 1);
+        }
+        private void AfterSecond()
+        {
+            RFMusicManager.Instance.PlayMusic();
         }
         public override void OnMissionTick(float dt)
         {
+            _timePassed += dt;
+            //PsaiCore.Instance.StopMusic(true);
+            //PsaiCore.Instance.TriggerMusicTheme(12, 0);
+            //PsaiCore.Instance.AddToCurrentIntensity(1);   
+            InformationManager.DisplayMessage(new(PsaiCore.Instance.GetVolume().ToString()));
             ResetLeaveMissionTimer();
             if (MissionEnded())
                 EndMissionByPlayerDeath();
@@ -103,6 +115,11 @@ namespace RealmsForgotten.RFCustomSettlements
                 isMissionInitialized = true;
                 Globals.IsMissionInitialized = true;
                 return;
+            }
+            if (!_secondPassed && _timePassed >= 1f)
+            {
+                _secondPassed = true;
+                AfterSecond();
             }
             HandleRFFocusedObject();
             HandleLeaveMission();
@@ -518,6 +535,7 @@ namespace RealmsForgotten.RFCustomSettlements
                 NextSceneData.Instance.currentState = NextSceneData.RFExploreState.Finished;
             if (OnBattleEnd != null) this.OnBattleEnd();
             base.OnEndMission();
+            RFMusicManager.Instance.StopMusicWithFadeout();
         }
         private void SimulateTick(Agent agent)
         {

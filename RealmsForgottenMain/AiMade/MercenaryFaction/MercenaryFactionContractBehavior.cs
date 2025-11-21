@@ -19,7 +19,7 @@ namespace RealmsForgotten.AiMade.MercenaryFaction
         private static readonly int[] CompanySizes = { 5, 10, 20 };
              
         private static readonly Dictionary<string, Dictionary<int, Dictionary<string, int>>> TownMercenaryRosterMap = new()
-    {
+        {
         { "town_KTG5", new Dictionary<int, Dictionary<string, int>>
             {
                 // Companhia de 5: 5 Batedores
@@ -48,8 +48,6 @@ namespace RealmsForgotten.AiMade.MercenaryFaction
         private string _captainHeroId;
         private MobileParty _activeMercParty;
 
-        // ... (O resto da classe permanece o mesmo até o método SpawnMercenaryParty) ...
-
         public override void RegisterEvents()
         {
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, OnSessionLaunched);
@@ -60,7 +58,6 @@ namespace RealmsForgotten.AiMade.MercenaryFaction
             });
             CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, OnGameLoaded);
         }
-
         public override void SyncData(IDataStore dataStore)
         {
             dataStore.SyncData("_lastHire", ref _lastHire);

@@ -131,7 +131,7 @@
 	<string id="rf_guard_option_2" text="{=rf_guard_option_2}The bed is a bit hard, and the toilet stinks, so I can't say I'm really enjoying it." />
 	<string id="rf_guard_option_3" text="{=rf_guard_option_3}Is that so ? What do I need to do to get a better room ?" />
 
-	<string id="rf_kidnapped_text" text="{=rf_kidnapped_text}Even the best of your guards slept on this night, the weight of the long march falling into his shoulders. You barelly noticed the hands that covered your mouth before something hit hard on the back of your head. You have been kidnapped, only to awaken in a unknown place on the next day." />
+	<string id="rf_kidnapped_text" text="{=rf_kidnapped_text}Even the best of your guards slept on this night, the weight of the long march falling into his shoulders. You barelly noticed the hands that covered your mouth before something hit hard on the back of your head. Your man found you on the morning, still unconciouss. As you came back to your wits, you received the news that the Owl decided to deliver the map parts himself, fearing for its safety." />
 
 	<string id="rf_anorit_quest_title" text="{=rf_anorit_quest_title}Deciphering the map." />
 	<string id="rf_anorit_objective_1" text="{=rf_anorit_objective_1}Wait for {ANORIT.LINK} and his scholars to decipher the map." />

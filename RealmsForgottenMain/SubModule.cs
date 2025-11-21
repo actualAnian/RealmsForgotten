@@ -119,7 +119,6 @@ namespace RealmsForgotten
                 new RFPerks().Initialize();
 
                 AiSubModule.AddCampaignBehaviors(campaignGameStarter);
-                QuestSubModule.AddQuestBehaviors((CampaignGameStarter)gameStarterObject);
 
                 ReadConfigFile();
             }
@@ -311,9 +310,10 @@ namespace RealmsForgotten
         public override void OnGameLoaded(Game game, object initializerObject)
         {
             base.OnGameLoaded(game, initializerObject);
-
+            QuestSubModule.OnGameLoaded(game, initializerObject);
             if (initializerObject is CampaignGameStarter campaignGameStarter)
             {
+                QuestSubModule.OnGameLoaded(campaignGameStarter);
                 RFAgentStatCalculateModel rfAgentStatCalculateModel = new RFAgentStatCalculateModel(campaignGameStarter.GetExistingModel<AgentStatCalculateModel>());
                 campaignGameStarter.AddModel(rfAgentStatCalculateModel);
                 
@@ -324,6 +324,7 @@ namespace RealmsForgotten
         public override void OnNewGameCreated(Game game, object initializerObject)
         {
             base.OnNewGameCreated(game, initializerObject);
+            QuestSubModule.OnNewGameCreated((CampaignGameStarter)initializerObject);
         }
 
         protected override void InitializeGameStarter(Game game, IGameStarter starterObject)

@@ -12,14 +12,20 @@ namespace RealmsForgotten.Quest
 {
     public static class QuestSubModule
     {
-
-        public static void AddQuestBehaviors(CampaignGameStarter gameStarter)
+        public static void OnNewGameCreated(CampaignGameStarter gameStarter)
+        {
+            AddQuestBehaviors(gameStarter, true);
+        }
+        public static void OnGameLoaded(CampaignGameStarter gameStarter)
+        {
+            AddQuestBehaviors(gameStarter, false);
+        }
+        private static void AddQuestBehaviors(CampaignGameStarter gameStarter, bool isNewGame)
         {
             if (gameStarter != null)
             {
                 gameStarter.AddBehavior(new SaveCurrentQuestCampaignBehavior());
                 gameStarter.AddBehavior(new SpawnNpcInLordsHallBecomeKnightBehavior());
-                gameStarter.AddBehavior(new QuestHelperCampaignBehavior());
 
                 gameStarter.AddBehavior(new RescueUliahBehavior(false));
                 gameStarter.AddBehavior(new EighthQuestBehavior(false));
@@ -27,13 +33,11 @@ namespace RealmsForgotten.Quest
             }
         }
     }
-
     public class QuestTypeDefiner : SaveableTypeDefiner
     {
         public QuestTypeDefiner() : base(585820)
         {
         }
-
         protected override void DefineClassTypes()
         {
             AddClassDefinition(typeof(RescueUliahBehavior.RescueUliahQuest), 1);
