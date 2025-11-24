@@ -142,14 +142,14 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
             return _baseModel.GetScoreOfDeclaringWar(factionDeclaresWar, factionDeclaredWar, evaluatingClan, out reason, includeReason);
         }
 
-        public override ExplainedNumber GetWarProgressScore(IFaction factionDeclaresWar, IFaction factionDeclaredWar)
-        {
-            return _baseModel.GetWarProgressScore(factionDeclaresWar, factionDeclaredWar);
-        }
-
         public override int GetDailyTributeToPay(Clan factionToPay, Clan factionToReceive, out int tributeDurationInDays)
         {
             return _baseModel.GetDailyTributeToPay(factionToPay, factionToReceive, out tributeDurationInDays);
+        }
+
+        public override ExplainedNumber GetWarProgressScore(IFaction factionDeclaresWar, IFaction factionDeclaredWar, bool includeDescriptions = false)
+        {
+            return _baseModel.GetWarProgressScore(factionDeclaresWar, factionDeclaredWar, includeDescriptions);
         }
     }
 }
