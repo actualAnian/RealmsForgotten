@@ -98,10 +98,6 @@ namespace RealmsForgotten.RFCustomSettlements
         public override void OnMissionTick(float dt)
         {
             _timePassed += dt;
-            //PsaiCore.Instance.StopMusic(true);
-            //PsaiCore.Instance.TriggerMusicTheme(12, 0);
-            //PsaiCore.Instance.AddToCurrentIntensity(1);   
-            InformationManager.DisplayMessage(new(PsaiCore.Instance.GetVolume().ToString()));
             ResetLeaveMissionTimer();
             if (MissionEnded())
                 EndMissionByPlayerDeath();

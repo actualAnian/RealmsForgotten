@@ -70,7 +70,7 @@ namespace RealmsForgotten.Behaviors
                             spellTextObject.SetTextVariable("AMOUNT", agent.Equipment[index].Amount);
                             MissionScreen? missionScreen = TaleWorlds.ScreenSystem.ScreenManager.TopScreen as MissionScreen;
                             _dataSource = new SpellStatusVM(spellTextObject.ToString(), agent.WieldedWeapon.Item?.StringId.Contains("staff") == true, 65, 120);
-                            _gauntletLayer = new GauntletLayer(-1);
+                            _gauntletLayer = new GauntletLayer("SpellAmmoView", -1);
                             missionScreen.AddLayer(_gauntletLayer);
                             _gauntletLayer.LoadMovie("SpellStatus", _dataSource);
 

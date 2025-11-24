@@ -310,7 +310,7 @@ namespace RealmsForgotten
         public override void OnGameLoaded(Game game, object initializerObject)
         {
             base.OnGameLoaded(game, initializerObject);
-            QuestSubModule.OnGameLoaded(game, initializerObject);
+
             if (initializerObject is CampaignGameStarter campaignGameStarter)
             {
                 QuestSubModule.OnGameLoaded(campaignGameStarter);

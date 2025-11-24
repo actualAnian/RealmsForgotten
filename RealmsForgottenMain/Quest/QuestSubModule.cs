@@ -26,9 +26,10 @@ namespace RealmsForgotten.Quest
             {
                 gameStarter.AddBehavior(new SaveCurrentQuestCampaignBehavior());
                 gameStarter.AddBehavior(new SpawnNpcInLordsHallBecomeKnightBehavior());
+                gameStarter.AddBehavior(new QuestHelperCampaignBehavior());
 
-                gameStarter.AddBehavior(new RescueUliahBehavior(false));
-                gameStarter.AddBehavior(new EighthQuestBehavior(false));
+                gameStarter.AddBehavior(new RescueUliahBehavior(isNewGame));
+                gameStarter.AddBehavior(new EighthQuestBehavior(isNewGame));
                 gameStarter.AddBehavior(new DeformedSpawningBehavior());
             }
         }

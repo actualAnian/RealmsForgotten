@@ -47,7 +47,7 @@
               <AudioData>
                 <_prebeatLengthInSamplesEnteredManually>1750</_prebeatLengthInSamplesEnteredManually>
                 <_postbeatLengthInSamplesEnteredManually>127834</_postbeatLengthInSamplesEnteredManually>
-                <Path>RFMusic/song.wav</Path>
+                <Path>song.wav</Path>
                 <Bpm>100</Bpm>
                 <PreBeats>1</PreBeats>
                 <PostBeats>4</PostBeats>
@@ -79,7 +79,5 @@
         </Group>
       </Groups>
     </Theme>
-
-
   </Themes>
 </PsaiProject>

@@ -471,7 +471,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
         {
             if (_gauntletLayer == null)
             {
-                _gauntletLayer = new GauntletLayer(1000, "GauntletLayer", false);
+                _gauntletLayer = new GauntletLayer("GauntletLayer", 1000, false);
             }
 
             if (_popupVM == null)

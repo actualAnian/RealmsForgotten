@@ -99,4 +99,7 @@
         <Folder Include="AiMade\TroopUnlocker\" />
         <Folder Include="_Module\GUI\Prefabs\CharacterDeveloper\" />
     </ItemGroup>
+    <ItemGroup>
+      <None Include="_Module\ModuleData\project.mbproj" />
+    </ItemGroup>
 </Project>

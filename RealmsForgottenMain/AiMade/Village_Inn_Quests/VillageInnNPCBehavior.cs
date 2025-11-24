@@ -1,11 +1,13 @@
 ﻿using System.Linq;
 using TaleWorlds.Library;
-using TaleWorlds.CampaignSystem;
-using TaleWorlds.Core;
-using TaleWorlds.Localization;
-using TaleWorlds.CampaignSystem.Party;
-using TaleWorlds.CampaignSystem.Settlements;
 
+namespace RealmsForgotten.AiMade.Village_Inn_Quests
+{
+    using TaleWorlds.CampaignSystem;
+    using TaleWorlds.Core;
+    using TaleWorlds.Localization;
+    using TaleWorlds.CampaignSystem.Party;
+    using TaleWorlds.CampaignSystem.Settlements;
 
     namespace RealmsForgotten.AiMade.Village_Inn_Quests
     {
@@ -83,5 +85,5 @@ using TaleWorlds.CampaignSystem.Settlements;
             public override void SyncData(IDataStore dataStore) { }
         }
     }
-
+}
 

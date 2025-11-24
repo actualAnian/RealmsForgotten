@@ -269,7 +269,6 @@ namespace RealmsForgotten.Models
         public override void DecideWeaponCollisionReaction(in Blow registeredBlow, in AttackCollisionData collisionData, Agent attacker, Agent defender, in MissionWeapon attackerWeapon, bool isFatalHit, bool isShruggedOff, float momentumRemaining, out MeleeCollisionReaction colReaction)
             => _baseModel.DecideWeaponCollisionReaction(in registeredBlow, in collisionData, attacker, defender, attackerWeapon, isFatalHit, isShruggedOff, momentumRemaining, out colReaction);
         public override float CalculateShieldDamage(in AttackInformation attackInformation, float baseDamage) => _baseModel.CalculateShieldDamage(in attackInformation, baseDamage);
-        public override float CalculateSailFireDamage(Agent attackerAgent, float baseDamage, bool damageFromShipMachine) => _baseModel.CalculateSailFireDamage(attackerAgent, baseDamage, damageFromShipMachine);
         public override float GetDamageMultiplierForBodyPart(BoneBodyPartType bodyPart, DamageTypes type, bool isHuman, bool isMissile) => _baseModel.GetDamageMultiplierForBodyPart(bodyPart, type, isHuman, isMissile);
         public override bool CanWeaponIgnoreFriendlyFireChecks(WeaponComponentData weapon) => _baseModel.CanWeaponIgnoreFriendlyFireChecks(weapon);
         public override bool CanWeaponDealSneakAttack(in AttackInformation attackInformation, WeaponComponentData weapon) => _baseModel.CanWeaponDealSneakAttack(in attackInformation, weapon);
@@ -291,9 +290,14 @@ namespace RealmsForgotten.Models
         public override float GetKnockDownPenetration(Agent attackerAgent, WeaponComponentData attackerWeapon, in Blow blow, in AttackCollisionData collisionData) => _baseModel.GetKnockDownPenetration(attackerAgent, attackerWeapon, in blow, in collisionData);
         public override float GetHorseChargePenetration() => _baseModel.GetHorseChargePenetration();
 
-        public override float CalculateHullFireDamage(float baseFireDamage)
+        public override float CalculateSailFireDamage(Agent attackerAgent, IShipOrigin shipOrigin, float baseDamage, bool damageFromShipMachine)
         {
-            return _baseModel.CalculateHullFireDamage(baseFireDamage);
+            return _baseModel.CalculateSailFireDamage(attackerAgent, shipOrigin, baseDamage, damageFromShipMachine);
+        }
+
+        public override float CalculateHullFireDamage(float baseFireDamage, IShipOrigin shipOrigin)
+        {
+            return _baseModel.CalculateHullFireDamage(baseFireDamage, shipOrigin);
         }
     }
 }

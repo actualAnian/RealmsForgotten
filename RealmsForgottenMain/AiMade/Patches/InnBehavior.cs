@@ -508,13 +508,13 @@ namespace RealmsForgotten.AiMade.Patches
         {
             return cultureId switch
             {
-                "empire" => "empire_interior_tavern_a",
+                "empire" => "empire_house_c_tavern_a",
                 "sturgia" => "sturgia_house_b_interior_tavern",
                 "aserai" => "aserai_tavern_interior",
-                "vlandia" => "vlandia_tavern_interior_a",
+                "vlandia" => "vlandia_city_house_a_interior_tavern",
                 "khuzait" => "khuzait_tavern_a",
                 "battania" => "battania_town_house_a_interior_a_tavern",
-                _ => "vlandia_tavern_interior_a"
+                _ => "empire_house_c_tavern_a"
             };
         }
     }

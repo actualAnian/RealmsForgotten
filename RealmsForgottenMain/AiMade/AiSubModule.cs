@@ -17,6 +17,7 @@ using Bannerlord.UIExtenderEx;
 using RealmsForgotten.AiMade.TradePact;
 using RealmsForgotten.AiMade.CustomOrderofBattle;
 using RealmsForgotten.AiMade.Village_Inn_Quests;
+using RealmsForgotten.AiMade.Village_Inn_Quests.RealmsForgotten.AiMade.Village_Inn_Quests;
 using SandBox.Missions.MissionLogics;
 using RealmsForgotten.Chamberlain;
 

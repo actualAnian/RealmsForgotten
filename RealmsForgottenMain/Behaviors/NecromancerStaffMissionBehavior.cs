@@ -140,7 +140,7 @@ namespace RealmsForgotten.Behaviors
                 MissionScreen? missionScreen = TaleWorlds.ScreenSystem.ScreenManager.TopScreen as MissionScreen;
                 necromancyTextObject.SetTextVariable("AMOUNT", maxUses);
                 _dataSource = new SpellStatusVM(necromancyTextObject.ToString(),agent.WieldedWeapon.Item?.StringId.Contains("necromancer_staff") == true, 20, 22);
-                _gauntletLayer = new GauntletLayer(-1);
+                _gauntletLayer = new GauntletLayer("NecromancerStaff", -1);
                 missionScreen.AddLayer(_gauntletLayer);
                 _gauntletLayer.LoadMovie("SpellStatus", _dataSource);
                 
