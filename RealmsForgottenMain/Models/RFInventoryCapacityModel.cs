@@ -76,6 +76,9 @@ namespace RealmsForgotten.Models
 
         public override ExplainedNumber CalculateTotalWeightCarried(MobileParty mobileParty, bool isCurrentlyAtSea, bool includeDescriptions = false) => _baseModel.CalculateTotalWeightCarried(mobileParty, isCurrentlyAtSea, includeDescriptions);
         public override int GetItemAverageWeight() => _baseModel.GetItemAverageWeight();
-        public override float GetItemEffectiveWeight(EquipmentElement equipmentElement, MobileParty mobileParty, out TextObject description) => _baseModel.GetItemEffectiveWeight(equipmentElement, mobileParty, out description);
+        public override float GetItemEffectiveWeight(EquipmentElement equipmentElement, MobileParty mobileParty, bool isCurrentlyAtSea, out TextObject description)
+        {
+            return _baseModel.GetItemEffectiveWeight(equipmentElement, mobileParty, isCurrentlyAtSea, out description);
+        }
     }
 }
