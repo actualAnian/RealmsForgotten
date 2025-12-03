@@ -3665,4 +3665,73 @@
 
 		</Bandits>
 	</CustomScene>
+
+	<CustomScene>
+		<id>marsh_fortress_quest</id>
+		<Npcs>
+			<Npc>
+				<NpcId>wounded_soldier_npc</NpcId>
+				<TagId>1</TagId>
+				<ActionSet>_hideout_bandit</ActionSet>
+			</Npc>
+		</Npcs>
+		<Bandits>
+			<CommonArea>
+				<areaIndex>1</areaIndex>
+				<Bandit>
+					<id>mountain_bandits_raider</id>
+					<amount>2</amount>
+				</Bandit>
+			</CommonArea>
+
+			<CommonArea>
+				<areaIndex>2</areaIndex>
+				<Bandit>
+					<id>mountain_bandits_raider</id>
+					<amount>1</amount>
+				</Bandit>
+			</CommonArea>
+
+			<CommonArea>
+				<areaIndex>3</areaIndex>
+				<Bandit>
+					<id>mountain_bandits_raider</id>
+					<amount>17</amount>
+				</Bandit>
+			</CommonArea>
+
+			<PatrolArea>
+				<areaIndex>3</areaIndex>
+				<Bandit>
+					<id>mountain_bandits_chief</id>
+					<amount>2</amount>
+				</Bandit>
+			</PatrolArea>
+
+			<DynamicPatrolArea>
+				<areaIndex>1</areaIndex>
+				<Bandit>
+					<id>mountain_bandits_chief</id>
+					<amount>2</amount>
+				</Bandit>
+			</DynamicPatrolArea>
+
+			<DynamicPatrolArea>
+				<areaIndex>2</areaIndex>
+				<Bandit>
+					<id>mountain_bandits_chief</id>
+					<amount>2</amount>
+				</Bandit>
+			</DynamicPatrolArea>
+
+			<DynamicPatrolArea>
+				<areaIndex>3</areaIndex>
+				<Bandit>
+					<id>mountain_bandits_chief</id>
+					<amount>7</amount>
+				</Bandit>
+			</DynamicPatrolArea>
+
+		</Bandits>
+	</CustomScene>
 </RFCustomScenes>

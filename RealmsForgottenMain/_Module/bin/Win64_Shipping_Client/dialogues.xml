@@ -377,6 +377,106 @@
 		<isPlayerLine>true</isPlayerLine>
 	</Dialogue>
 
+	<!-- Wounded Soldier / Swamp Fort Quest -->
+
+<!-- 1. State 1: Quest is Active (Reminder) -->
+<Dialogue condition="npcId IS wounded_soldier_npc AND STATE swamp_quest_state IS 1">
+    <inputId>start</inputId>
+    <goToId>close_window</goToId>
+    <text>*Cough*... Don't let them rest. That fort belongs to the Lord, not those filth.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<!-- 2. State 2: Quest is Already Completed (Post-Quest) -->
+<Dialogue condition="npcId IS wounded_soldier_npc AND STATE swamp_quest_state IS 2">
+    <inputId>start</inputId>
+    <goToId>close_window</goToId>
+    <text>My wounds are healing. Once I can walk, I will report your bravery to my Lord.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<!-- 3. State 0: Initial Interaction (The Hook) -->
+<Dialogue condition="npcId IS wounded_soldier_npc">
+    <inputId>start</inputId>
+    <goToId>swamp_player_ask_1</goToId>
+    <text>*The soldier clutches a bloody rag to his side, leaning heavily against the wall.* Ugh... damn them... damn them all to the seven hells.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>swamp_player_ask_1</inputId>
+    <goToId>swamp_npc_explain_1</goToId>
+    <text>You look like you've been through a meat grinder. What happened here?</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>swamp_npc_explain_1</inputId>
+    <goToId>swamp_player_ask_2</goToId>
+    <text>My Lord sent us... a full platoon. We were ordered to clear the old fort in the swamp. But the bandits... they knew the terrain. They were waiting in the muck.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>swamp_player_ask_2</inputId>
+    <goToId>swamp_npc_explain_2</goToId>
+    <text>And the rest of your men?</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>swamp_npc_explain_2</inputId>
+    <goToId>swamp_player_offer</goToId>
+    <text>Dead. Or dying. I am the only one who crawled out. I failed my Lord, but worse, those bastards are still feasting in our fort. I cannot hold a sword like this...</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>swamp_player_offer</inputId>
+    <goToId>swamp_npc_accept</goToId>
+    <text>Stay here and tend to your wounds. I will clear the fort for you.</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>swamp_npc_accept</inputId>
+    <goToId>swamp_player_start_quest</goToId>
+    <text>You would do that? Be careful, the swamp is treacherous. If you survive, whatever gold we carried is yours.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<!-- 4. START QUEST Logic -->
+<Dialogue condition="npcId IS wounded_soldier_npc AND STATE swamp_quest_state IS 0" consequence="START quest_swamp_fort AND STATE swamp_quest_state INCREMENT">
+    <inputId>swamp_player_start_quest</inputId>
+    <goToId>close_window</goToId>
+    <text>I'll be back when the deed is done.</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<!-- 5. TURN IN Logic (Player has killed the bandits) -->
+<!-- This appears when the player talks to NPC again and the quest requirements are met -->
+<Dialogue condition="npcId IS wounded_soldier_npc AND EVALUATE quest_swamp_fort">
+    <inputId>start</inputId>
+    <goToId>swamp_player_turn_in</goToId>
+    <text>The fort is silent. The bandits won't trouble anyone anymore.</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>swamp_player_turn_in</inputId>
+    <goToId>swamp_npc_complete</goToId>
+    <text>Justice... *cough*... justice is served then. My brothers can rest. Take this pouch, I have no need for coin where I am going if I don't recover.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<!-- 6. COMPLETE QUEST Logic -->
+<Dialogue condition="npcId IS wounded_soldier_npc" consequence="COMPLETE quest_swamp_fort AND STATE swamp_quest_state INCREMENT">
+    <inputId>swamp_npc_complete</inputId>
+    <goToId>close_window</goToId>
+    <text>Thank you, stranger.</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
 <!-- this is a test dialogue, every dialogue should have it's own comment to differenciate-->
 	<Dialogue condition="npcId IS anorite_monastery_militia AND STATE epic_quest_state CREATE" consequence="START quest_1 AND STATE epic_quest_state INCREMENT">
 		<inputId>start</inputId>
