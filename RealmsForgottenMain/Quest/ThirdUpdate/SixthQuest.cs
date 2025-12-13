@@ -41,7 +41,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
         public SixthQuest(string questId, Hero questGiver, CampaignTime duration, int rewardGold) : base(questId, questGiver, duration, rewardGold) { }
 
         public override TextObject Title => GameTexts.FindText("rf_sixth_quest_title");
-        public override bool IsSpecialQuest => true;
+        public override string SpecialQuestType => "RfMainQuest";
         public override bool IsRemainingTimeHidden => true;
         //public static SixthQuest Instance { get; private set; }
         static Dictionary<string, DemonLord>? _demonLords;

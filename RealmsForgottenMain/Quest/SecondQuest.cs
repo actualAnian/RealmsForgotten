@@ -146,7 +146,7 @@ namespace RealmsForgotten.Quest
         public override TextObject Title => GameTexts.FindText("rf_second_quest_title");
 
         public override bool IsRemainingTimeHidden => true;
-        public override bool IsSpecialQuest => true;
+        public override string SpecialQuestType => "RfMainQuest";
 
         protected override void InitializeQuestOnGameLoad()
         {

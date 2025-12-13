@@ -66,7 +66,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
         public override TextObject Title => GameTexts.FindText("rf_quest_title_part_five");
         public override bool IsRemainingTimeHidden => true;
-        public override bool IsSpecialQuest => true;
+        public override string SpecialQuestType => "RfMainQuest";
         public static FifthQuest Instance { get; private set; }
         public FifthQuest(string questId, Hero questGiver, CampaignTime duration, int rewardGold) : base(questId, questGiver, duration, rewardGold)
         {

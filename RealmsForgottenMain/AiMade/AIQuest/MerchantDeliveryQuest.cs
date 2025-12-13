@@ -219,7 +219,6 @@ namespace RealmsForgotten.AiMade.AIQuest
         }
 
         public override TextObject Title => new TextObject("{=MerchantDeliveryQuestTitle}Merchant Delivery Quest");
-        public override bool IsSpecialQuest => false;
         public override bool IsRemainingTimeHidden => false;
 
         protected override void SetDialogs() { }

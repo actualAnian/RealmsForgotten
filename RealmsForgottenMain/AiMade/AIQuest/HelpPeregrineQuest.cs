@@ -153,7 +153,6 @@ namespace RealmsForgotten.AiMade
         }
 
         public override TextObject Title => new TextObject("{=HelpPeregrineQuestTitle}Help the Peregrine Monk");
-        public override bool IsSpecialQuest => false;
         public override bool IsRemainingTimeHidden => false;
         protected override void SetDialogs() { }
         protected override void InitializeQuestOnGameLoad() { }

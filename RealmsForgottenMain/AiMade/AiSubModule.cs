@@ -15,7 +15,6 @@ using RealmsForgotten.AiMade.RF_Diplomacy;
 using RealmsForgotten.AiMade.MercenaryFaction;
 using Bannerlord.UIExtenderEx;
 using RealmsForgotten.AiMade.TradePact;
-using RealmsForgotten.AiMade.CustomOrderofBattle;
 using RealmsForgotten.AiMade.Village_Inn_Quests;
 using RealmsForgotten.AiMade.Village_Inn_Quests.RealmsForgotten.AiMade.Village_Inn_Quests;
 using SandBox.Missions.MissionLogics;
@@ -152,20 +151,8 @@ namespace RealmsForgotten.AiMade
             {
                 mission.AddMissionBehavior(new ADODReinforcementsRunner());
             }
-
-            if (mission.Scene != null
-                 && mission.CombatType == Mission.MissionCombatType.Combat
-                 && Mission.Current?.HasMissionBehavior<CampaignMissionComponent>() == true)
-            {
-                mission.AddMissionBehavior(new AutoOOBConfigMissionBehavior()); // optional but nice for OOB cards
-                mission.AddMissionBehavior(new InfantrySpearSorterOnSpawn());   // the actual splitter using SpawnEquipment
-            }
-
             // Add Find Magic Items behavior to all missions
             mission.AddMissionBehavior(new FindMagicItemsMissionBehavior());
-            
-
         }
     }
-
 }

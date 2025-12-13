@@ -38,7 +38,7 @@ namespace RealmsForgotten.AiMade.Village_Inn_Quests
             : base(questId, questGiver, duration, rewardGold) { }
 
         public override TextObject Title => new TextObject("{=rf_ruins_title}The Lost Relic of the Ruins");
-        public override bool IsSpecialQuest => true;
+        public override string SpecialQuestType => "RfRuins";
         public override bool IsRemainingTimeHidden => false;
 
         private void InitializeLogs()

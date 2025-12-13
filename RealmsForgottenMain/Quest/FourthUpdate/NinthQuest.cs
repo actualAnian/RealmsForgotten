@@ -81,7 +81,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
         public static NinthQuest ActiveNinthQuestInstance { get; private set; }
 
         public override TextObject Title => new TextObject("Ninth Quest: The Orc Trail");
-        public override bool IsSpecialQuest => true;
+        public override string SpecialQuestType => "RfMainQuest";
         public override bool IsRemainingTimeHidden => true;
 
         private static readonly string[] SACRED_WATER_IDS = { "sacredwater" }; // deixe os 2 se tiver dúvida no XML

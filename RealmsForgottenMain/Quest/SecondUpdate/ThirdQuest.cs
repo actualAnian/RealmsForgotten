@@ -137,7 +137,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             OnSessionLaunched(SandBoxManager.Instance.GameStarter);
         }
         Settlement Ityr => Settlement.Find("town_A1");
-        public override bool IsSpecialQuest => true;
+        public override string SpecialQuestType => "RfMainQuest";
 
         public override TextObject Title => GameTexts.FindText("rf_quest_title_part_three");
         protected override void RegisterEvents()

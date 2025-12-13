@@ -122,7 +122,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
         }
 
         public override TextObject Title => new TextObject("Eighth Quest: Call of the First Tree");
-        public override bool IsSpecialQuest => true;
+        public override string SpecialQuestType => "RfMainQuest";
 
         // ✅ CORRIGIDO: A propriedade obrigatória foi adicionada novamente.
         public override bool IsRemainingTimeHidden => true;
