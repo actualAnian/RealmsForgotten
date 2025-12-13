@@ -193,7 +193,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
             ActiveSeventhQuestInstance = this;
         }
         public override TextObject Title => GameTexts.FindText("rf_seventh_quest_title");
-        public override bool IsSpecialQuest => true;
+        public override string SpecialQuestType => "RfMainQuest";
         public override bool IsRemainingTimeHidden => true;
 
         protected override void InitializeQuestOnGameLoad()

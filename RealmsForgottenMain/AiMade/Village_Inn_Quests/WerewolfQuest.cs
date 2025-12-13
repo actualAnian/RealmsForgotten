@@ -43,7 +43,7 @@ namespace RealmsForgotten.AiMade.Village_Inn_Quests
             : base(questId, questGiver, duration, rewardGold) { }
 
         public override TextObject Title => new TextObject("{=rf_werewolf_title}The Werewolf in the Village");
-        public override bool IsSpecialQuest => true;
+        public override string SpecialQuestType => "RfWerewolf";
         public override bool IsRemainingTimeHidden => false;
 
         private void InitializeLogs()

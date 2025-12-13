@@ -147,7 +147,7 @@ namespace RealmsForgotten.Quest
                 questHideout.Settlement.IsVisible = true;
                 _deliveredToAlchemistsTime = CampaignTime.Zero;
             }
-            public override bool IsSpecialQuest => true;
+            public override string SpecialQuestType => "RfMainQuest";
 
             public override TextObject Title => GameTexts.FindText("rf_first_quest_title");
 

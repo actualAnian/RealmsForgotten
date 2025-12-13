@@ -55,7 +55,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
         public override TextObject Title => GameTexts.FindText("rf_quest_title_part_four");
 
         public override bool IsRemainingTimeHidden => true;
-        public override bool IsSpecialQuest => true;
+        public override string SpecialQuestType => "RfMainQuest";
 
 
         protected override void RegisterEvents()

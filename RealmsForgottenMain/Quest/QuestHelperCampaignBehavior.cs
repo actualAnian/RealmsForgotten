@@ -1,11 +1,7 @@
 ﻿using Helpers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Party;
@@ -102,7 +98,7 @@ namespace RealmsForgotten.Quest
                 else
                     currentBandits += party.MemberRoster.TotalHealthyCount;
             }
-            CampaignMission.OpenHideoutBattleMission(Settlement.CurrentSettlement.LocationComplex.GetScene("hideout_center", 0), roster.ToFlattenedRoster());
+            CampaignMission.OpenHideoutBattleMission(Settlement.CurrentSettlement.LocationComplex.GetScene("hideout_center", 0), roster.ToFlattenedRoster(), false);
         }
         private bool CanChangeStatusOfTroop(CharacterObject character)
         {

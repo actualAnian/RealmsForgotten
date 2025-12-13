@@ -103,7 +103,7 @@ namespace RealmsForgotten.Quest.AI_Quest
 
             public override bool IsRemainingTimeHidden => true;
 
-            public override bool IsSpecialQuest => true;
+            public override string SpecialQuestType => "RfMainQuest";
 
             protected override void RegisterEvents()
             {
