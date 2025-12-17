@@ -403,7 +403,7 @@ namespace RealmsForgotten.RFCustomSettlements
                     {
                         MatrixFrame globalFrame = dynamicPatrolArea.GameEntity.GetGlobalFrame();
                         GameEntity gameEntity = GameEntity.CreateFromWeakEntity(dynamicPatrolArea.GameEntity);
-                        RFAgentOrigin troopToSpawn = PrepareAgentToSpawn("looter");
+                        RFAgentOrigin troopToSpawn = PrepareAgentToSpawn(currentBanditData.Id);
                         Agent agent = Mission.Current.SpawnTroop(troopToSpawn, false, false, false, false, 0, 0, false, false, false, new Vec3?(globalFrame.origin), new Vec2?(globalFrame.rotation.f.AsVec2.Normalized()), "_hideout_bandit", null, FormationClass.NumberOfAllFormations, false);
                         agent.SetAgentFlags(agent.GetAgentFlags() | AgentFlag.CanGetAlarmed);
                         AgentNavigator nav = agent.GetComponent<CampaignAgentComponent>().CreateAgentNavigator();
@@ -590,7 +590,7 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         public override void OnAgentAlarmedStateChanged(Agent agent, Agent.AIStateFlag flag)
         {
-            if (agent.Team == Agent.Main.Team) return;
+            if (Agent.Main == null || agent.Team == Agent.Main.Team) return;
             bool flag2 = (flag & Agent.AIStateFlag.Alarmed) == Agent.AIStateFlag.Alarmed;
             if (flag2 || flag == Agent.AIStateFlag.Cautious)
             {
@@ -613,9 +613,12 @@ namespace RealmsForgotten.RFCustomSettlements
             }
             else if (flag == Agent.AIStateFlag.None)
             {
-                defenderAgentObjects[agent].IsMachineAITicked = true;
+                if (defenderAgentObjects.TryGetValue(agent, out var obj))
+                {
+                    obj.IsMachineAITicked = true;
+                    ((IDetachment)obj.Machine).AddAgent(agent, -1);
+                }
                 agent.TryToSheathWeaponInHand(Agent.HandIndex.MainHand, Agent.WeaponWieldActionType.WithAnimation);
-                ((IDetachment)defenderAgentObjects[agent].Machine).AddAgent(agent, -1);
             }
             if (flag2)
             {
