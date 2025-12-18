@@ -59,4 +59,25 @@
 			</AddRenown>
 		</Reward>
 	</Quest>
+	<Quest>
+	<QuestId>quest_4</QuestId>
+	<QuestGiverId>wounded_soldier_npc</QuestGiverId>
+	<Text>The wounded soldier requested you to hunt down the Bandits and retrieve the stolen gift of his lord.</Text>
+	<CompletedWhen>
+		<HasKilled>
+			<TroopId>mountain_bandits_raider</TroopId>
+			<Amount>20</Amount>
+		</HasKilled>
+
+	</CompletedWhen>
+	<Reward>
+		<AddToInventory>
+			<ItemId>gold</ItemId>
+			<Amount>10000</Amount>
+		</AddToInventory>
+		<AddRenown>
+			<Amount>50</Amount>
+		</AddRenown>
+	</Reward>
+	</Quest>
 </AllQuests>

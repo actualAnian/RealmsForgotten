@@ -8,7 +8,9 @@ namespace RealmsForgotten.MusicSounds
 {
     public enum RFMusicTheme
     {
-        WitchFight = 41
+        WitchFight = 41,
+        stealth = 42,
+        action = 43
     }
     public static class RFMusicData
     {
@@ -19,12 +21,16 @@ namespace RealmsForgotten.MusicSounds
                 (int)MusicTheme.BattleMedium, 
                 (int)MusicTheme.BattleSmall, 
                 (int)MusicTheme.BattlePaganA,
-                (int)MusicTheme.BattlePaganB
+                (int)MusicTheme.BattlePaganB,
+                (int)RFMusicTheme.action
             },
             [RFMusicType.Stealth] = new() 
             {
                 //(int)RFMusicTheme.WitchFight
-                (int)MusicTheme.StealthA
+                (int)MusicTheme.StealthA,
+                (int)RFMusicTheme.stealth
+               
+
             }
         };
     }
