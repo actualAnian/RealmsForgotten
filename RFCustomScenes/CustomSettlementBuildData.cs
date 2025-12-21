@@ -1,6 +1,7 @@
 ﻿using HuntableHerds.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -10,6 +11,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using static RealmsForgotten.RFCustomSettlements.CustomSettlementBuildData.BehaviorTreeData;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -28,25 +30,67 @@ namespace RealmsForgotten.RFCustomSettlements
             }
 
         }
+        public class BehaviorTreeData
+        {
+            public class Param
+            {
+                public string Typename { get; private set; }
+                public string Val { get; private set; }
+                public Param(string typename, string val)
+                {
+                    Typename = typename;
+                    Val = val;
+                }
+            }
+            public BehaviorTreeData(string name, List<Param> pparams)
+            {
+                Name = name;
+                _params = pparams;
+            }
+
+            public string Name { get; private set; }
+            private readonly List<Param> _params;
+
+            private static object ConvertParam(Param param)
+            {
+                return param.Typename switch
+                {
+                    "int" => int.Parse(param.Val, CultureInfo.InvariantCulture),
+                    "float" => float.Parse(param.Val, CultureInfo.InvariantCulture),
+                    "double" => double.Parse(param.Val, CultureInfo.InvariantCulture),
+                    "bool" => bool.Parse(param.Val),
+                    "string" => param.Val,
+                    _ => throw new InvalidOperationException(
+                        $"Unsupported param type '{param.Typename}'"
+                    )
+                };
+            }
+            public object[] Params
+            {
+                get
+                {
+                    if (_params == null || _params.Count == 0)
+                        return Array.Empty<object>();
+                    var result = new object[_params.Count];
+                    for (int i = 0; i < _params.Count; i++)
+                        result[i] = ConvertParam(_params[i]);
+                    return result;
+                }
+            }
+        }
 
         public class RFBanditData
         {
             private readonly int _amount;
             private readonly string _id;
             private readonly string? _dropDataId;
-            //private readonly string _dropDataId2;
-
-            public RFBanditData(string id, string value2, string? dropDataId = null)
+            private BehaviorTreeData? _btData;
+            public RFBanditData(string id, string amount, string? dropDataId = null, BehaviorTreeData? treeData = null)
             {
                 _dropDataId = dropDataId;
                 _id = id;
-                _amount = int.Parse(value2);
-            }
-            public RFBanditData(string id, string value2)
-            {
-                _dropDataId = null;
-                _id = id;
-                _amount = int.Parse(value2);
+                _amount = int.Parse(amount);
+                _btData = treeData;
             }
 
             public string Id { get => _id; }
@@ -59,6 +103,7 @@ namespace RealmsForgotten.RFCustomSettlements
                     return AllItemDropsData[_dropDataId];
                 }
             }
+            public BehaviorTreeData? TreeData { get => _btData; }
         }
         public static readonly Dictionary<string, CustomSettlementBuildData> AllCustomSettlementBuildDatas = new();
         public Dictionary<int, List<RFBanditData>> StationaryAreasBandits { get; private set; }
@@ -119,10 +164,22 @@ namespace RealmsForgotten.RFCustomSettlements
                 AllItemDropsData.Add(dropsId, itemDropsData);
             }
         }
+        private static BehaviorTreeData? TryParseBehaviorTreeData(XElement banditElement)
+        {
+            var btElement = banditElement.Element("BehaviorTree");
+            if (btElement == null) return null;
+            string name = btElement.Attribute("name")!.Value;
+            var treeParams = btElement.Elements("Param")
+                .Select(p => new Param(
+                    p.Attribute("type")?.Value ?? "string",
+                    p.Attribute("value")!.Value
+                ))
+                .ToList();
+            return new BehaviorTreeData(name, treeParams);
+        }
         public static void BuildAll()
         {
             XElement SettlementBandits = XElement.Load(_banditsXmlFileName);
-
             foreach (XElement element in SettlementBandits.Descendants("CustomScene"))
             {
                 Dictionary<int, List<RFBanditData>> buildStationaryAreasBandits = new();
@@ -137,7 +194,7 @@ namespace RealmsForgotten.RFCustomSettlements
                     {
                         XElement dropId = xElement2.Element("lootId");
                         string? lootId = dropId?.Value;
-                        RFBanditData bd = new(xElement2.Element("id").Value, xElement2.Element("amount").Value, lootId);
+                        RFBanditData bd = new(xElement2.Element("id").Value, xElement2.Element("amount").Value, lootId, treeData: TryParseBehaviorTreeData(xElement2));
                         int areaIndex = int.Parse(xElement.Element("areaIndex").Value);
                         if (buildStationaryAreasBandits.ContainsKey(areaIndex))
                             buildStationaryAreasBandits[areaIndex].Add(bd);
@@ -149,14 +206,14 @@ namespace RealmsForgotten.RFCustomSettlements
                 {
                     XElement dropId = xElement.Element("Bandit").Element("lootId");
                     string? lootId = dropId?.Value;
-                    RFBanditData bd = new(xElement.Element("Bandit").Element("id").Value, xElement.Element("Bandit").Element("amount").Value, lootId);
+                    RFBanditData bd = new(xElement.Element("Bandit").Element("id").Value, xElement.Element("Bandit").Element("amount").Value, lootId, treeData: TryParseBehaviorTreeData(xElement));
                     buildPatrolAreasBandits.Add(int.Parse(xElement.Element("areaIndex").Value), bd);
                 }
                 foreach (XElement xElement in element.Descendants("Bandits").Descendants("DynamicPatrolArea"))
                 {
                     XElement dropId = xElement.Element("Bandit").Element("lootId");
                     string? lootId = dropId?.Value;
-                    RFBanditData bd = new(xElement.Element("Bandit").Element("id").Value, xElement.Element("Bandit").Element("amount").Value, lootId);
+                    RFBanditData bd = new(xElement.Element("Bandit").Element("id").Value, xElement.Element("Bandit").Element("amount").Value, lootId, treeData: TryParseBehaviorTreeData(xElement));
                     buildDynamicPatrolAreasBandits.Add(int.Parse(xElement.Element("areaIndex").Value), bd);
                 }
 

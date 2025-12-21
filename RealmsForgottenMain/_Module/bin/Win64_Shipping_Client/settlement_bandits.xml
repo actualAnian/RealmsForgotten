@@ -858,6 +858,10 @@
 				<Bandit>
 					<id>armed_trader_aserai</id>
 					<amount>2</amount>
+					<BehaviorTree name="HornBlowerBehaviorTree">
+						<Param type="float" value="50" /> <!-- distance from which enemies will hear the horn sound-->
+						<Param type="string" value="alarm_horn" /> <!-- horn model id-->
+					</BehaviorTree>
 				</Bandit>
 			</CommonArea>
 			<CommonArea>
