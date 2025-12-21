@@ -5,5 +5,7 @@
 	<ModuleAssemblyDirectory>../WOTS/bin/</ModuleAssemblyDirectory>
 	<file id="soln_monsters" name="ModuleData/monsters.xml" type="monster" />
 	<file id="soln_soundtrack" name="Music/soundtrack.xml" type="soundtrack" />
-	</base>
-
+	<file id="soln_module_sound" name="ModuleData/module_sounds.xml" type="module_sound" />
+	<file id="soln_action_sets" name="ModuleData/action_sets.xml" type="action_set"/>
+	<file id="soln_action_types" name="ModuleData/action_types.xml" type="action_type"/>
+</base>

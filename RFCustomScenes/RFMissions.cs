@@ -57,8 +57,9 @@ namespace RFCustomSettlements
                 new OrderTroopPlacer(null),
 
                 new CustomSettlementMissionLogic(currentBuildData, sceneName, musicType, onBattleEnd),
-                new RFConversationLogic(),        
+                new RFConversationLogic(),
                 new BehaviorTreeMissionLogic(),
+                new RFMissionSoundManager(),
 
                 ViewCreator.CreateMissionLeaveView(),
                 ViewCreator.CreateMissionBoundaryCrossingView(),

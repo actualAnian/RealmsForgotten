@@ -1,10 +1,13 @@
-﻿using HuntableHerds.Models;
+﻿using BehaviorTrees;
+using BehaviorTreeWrapper;
+using HuntableHerds.Models;
 using psai.net;
 using RealmsForgotten.HuntableHerds.AgentComponents;
 using RealmsForgotten.HuntableHerds.Extensions;
 using RealmsForgotten.HuntableHerds.Models;
 using RealmsForgotten.MusicSounds;
 using RFCustomSettlements;
+using RFCustomSettlements.CustomSettlementsBehaviorTrees.HornBlowerTree;
 using RFCustomSettlements.Quests;
 using SandBox;
 using SandBox.Missions.AgentBehaviors;
@@ -95,8 +98,13 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             RFMusicManager.Instance.PlayMusic();
         }
+        public override void EarlyStart()
+        {
+            RegisterCustomSettlementsBehaviorTrees();
+        }
         public override void OnMissionTick(float dt)
         {
+            //Mission.Current.Agents[5].Components[3].OnTick(dt);
             _timePassed += dt;
             ResetLeaveMissionTimer();
             if (MissionEnded())
@@ -123,8 +131,11 @@ namespace RealmsForgotten.RFCustomSettlements
         private void HandleRFFocusedObject()
         {
             if (_focusedRFObject == null) return;
-            Helper.IsCloseEnough(Agent.Main, _focusedRFObject);
-            
+            Helper.IsCloseEnough(Agent.Main, _focusedRFObject);   
+        }
+        private void RegisterCustomSettlementsBehaviorTrees()
+        {
+            BTRegister.RegisterClass("HornBlowerBehaviorTree", objects => HornBlowerBehaviorTree.BuildTree(objects));
         }
         private async Task AddBodyToLootableList(Agent agent)
         {
@@ -365,11 +376,10 @@ namespace RealmsForgotten.RFCustomSettlements
                     try
                     {
                         RFBanditData currentBanditData = ChooseBanditToSpawn(banditsInArea);
-                        RFAgentOrigin agentToSpawn = PrepareAgentToSpawn(currentBanditData.Id);
                         standingPoint = usableMachinesQueue.Dequeue();
                         globalFrame = standingPoint.GameEntity.GetGlobalFrame();
                         globalFrame.rotation.OrthonormalizeAccordingToForwardAndKeepUpAsZAxis();
-                        Agent agent = Mission.Current.SpawnTroop(agentToSpawn, false, false, false, false, 0, 0, false, false, false, new Vec3?(globalFrame.origin), new Vec2?(globalFrame.rotation.f.AsVec2.Normalized()), "_hideout_bandit", null, FormationClass.NumberOfAllFormations, false);
+                        Agent agent = SpawnBandit(currentBanditData, globalFrame);
                         if (currentBanditData.ItemDropsData != null)
                             AddLootableComponent(currentBanditData.ItemDropsData, agent);
                         InitializeBanditAgent(agent, standingPoint, false, defenderAgentObjects);
@@ -385,7 +395,6 @@ namespace RealmsForgotten.RFCustomSettlements
                 }
             }
         }
-
         private void SpawnDynamicPatrollingTroops()
         {
             List<DynamicPatrolAreaParent> dynamicPatrolAreas = new();
@@ -403,8 +412,7 @@ namespace RealmsForgotten.RFCustomSettlements
                     {
                         MatrixFrame globalFrame = dynamicPatrolArea.GameEntity.GetGlobalFrame();
                         GameEntity gameEntity = GameEntity.CreateFromWeakEntity(dynamicPatrolArea.GameEntity);
-                        RFAgentOrigin troopToSpawn = PrepareAgentToSpawn(currentBanditData.Id);
-                        Agent agent = Mission.Current.SpawnTroop(troopToSpawn, false, false, false, false, 0, 0, false, false, false, new Vec3?(globalFrame.origin), new Vec2?(globalFrame.rotation.f.AsVec2.Normalized()), "_hideout_bandit", null, FormationClass.NumberOfAllFormations, false);
+                        Agent agent = SpawnBandit(currentBanditData, globalFrame);
                         agent.SetAgentFlags(agent.GetAgentFlags() | AgentFlag.CanGetAlarmed);
                         AgentNavigator nav = agent.GetComponent<CampaignAgentComponent>().CreateAgentNavigator();
                         nav.AddBehaviorGroup<AlarmedBehaviorGroup>();
@@ -435,8 +443,7 @@ namespace RealmsForgotten.RFCustomSettlements
 
                     MatrixFrame globalFrame = area.GameEntity.GetGlobalFrame();
                     globalFrame.rotation.OrthonormalizeAccordingToForwardAndKeepUpAsZAxis();
-                    RFAgentOrigin troopToSpawn = PrepareAgentToSpawn(currentBanditData.Id);
-                    Agent agent = Mission.Current.SpawnTroop(troopToSpawn, false, false, false, false, 0, 0, false, false, false, new Vec3?(globalFrame.origin), new Vec2?(globalFrame.rotation.f.AsVec2.Normalized()), "_hideout_bandit", null, FormationClass.NumberOfAllFormations, false);
+                    Agent agent = SpawnBandit(currentBanditData, globalFrame);
                     if (currentBanditData.ItemDropsData != null)
                         AddLootableComponent(currentBanditData.ItemDropsData, agent);
                     InitializeBanditAgent(agent, area.StandingPoints[0], false, defenderAgentObjects);
@@ -447,6 +454,18 @@ namespace RealmsForgotten.RFCustomSettlements
                 }
             }
         }
+        private Agent SpawnBandit(RFBanditData currentBanditData, MatrixFrame globalFrame)
+        {
+            RFAgentOrigin agentToSpawn = PrepareAgentToSpawn(currentBanditData.Id);
+            Agent bandit = Mission.Current.SpawnTroop(agentToSpawn, false, false, false, false, 0, 0, false, false, false, new Vec3?(globalFrame.origin), new Vec2?(globalFrame.rotation.f.AsVec2.Normalized()), "_hideout_bandit", null, FormationClass.NumberOfAllFormations, false);
+            if (currentBanditData.TreeData != null)
+            {
+                object[] data = new object[] { bandit, currentBanditData.TreeData.Params };
+                bandit.AddComponent(new BehaviorTreeAgentComponent(bandit, currentBanditData.TreeData.Name, currentBanditData.TreeData.Params));
+            }
+            return bandit;
+        }
+
         private void AddLootableComponent(ItemDropsData data, Agent agent)
         {
             agent.AddComponent(new LootableAgentComponent(agent, data));

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using TaleWorlds.Engine;
@@ -25,6 +26,7 @@ namespace RealmsForgotten.MusicSounds
             new("witch_voice_demon_defeated", 3.474f),
             new("witch_voice_defeated", 8.281f),
             new("teleport_sound", 2.491f),
+            new("medieval_alarm_horn", 1.64f),
         };
     }
     public class RFSoundEvent
@@ -70,6 +72,10 @@ namespace RealmsForgotten.MusicSounds
             if (sound == null) return false;
 
             int eventId = SoundEvent.GetEventIdFromString(name);
+            var path = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\RealmsForgotten\\ModuleSounds\\medieval_alarm_horn.ogg";
+            //byte[] soundData = File.ReadAllBytes(path);
+            //var sEvent = SoundEvent.CreateEventFromSoundBuffer("test", soundData, Mission.Current.Scene, false, false);
+            //var sEvent = SoundEvent.CreateEventFromExternalFile("test", path, Mission.Current.Scene, false, false);
             SoundEvent sEvent = SoundEvent.CreateEvent(eventId, Mission.Current.Scene);
             if (sEvent.GetSoundId() == -1) return false;
 

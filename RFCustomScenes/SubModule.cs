@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using RealmsForgotten._1_3_beta_patches;
 using RealmsForgotten.Career;
 using RealmsForgotten.RFCustomSettlements;
 using RFCustomSettlements.Dialogues;
@@ -24,13 +25,6 @@ namespace RFCustomSettlements
             CustomSettlementBuildData.BuildItemDrops();
             QuestDataLoader.LoadQuestData();
             DialogueParser.Deserialize();
-        }
-        protected override void OnSubModuleUnloaded()
-        {
-            base.OnSubModuleUnloaded();
-        }
-        protected override void OnBeforeInitialModuleScreenSetAsRoot()
-        {
         }
         public override void BeginGameStart(Game game)
         {
@@ -72,6 +66,10 @@ namespace RFCustomSettlements
                 starter.AddBehavior(new ArenaCampaignBehavior());
                 starter.AddBehavior(new CustomSettlementQuestSync());
             }
+        }
+        public override void OnMissionBehaviorInitialize(Mission mission)
+        {
+            mission.AddMissionBehavior(new TestMissionLogic());
         }
     }
 }
