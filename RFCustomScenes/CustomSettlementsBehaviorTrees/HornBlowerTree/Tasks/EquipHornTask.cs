@@ -5,7 +5,7 @@ using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
 
-namespace RFCustomSettlements.CustomSettlementsBehaviorTrees.HornBlowerTree
+namespace RFCustomSettlements.CustomSettlementsBehaviorTrees.HornBlowerTree.Tasks
 {
     internal class EquipHornTask : BTTask, IBTBannerlordBase
     {
