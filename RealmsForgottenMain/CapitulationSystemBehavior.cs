@@ -17,6 +17,9 @@ namespace RealmsForgotten
     {
         private Dictionary<Kingdom, CampaignTime> _lastCapitulation = new Dictionary<Kingdom, CampaignTime>();
 
+        // --- CONFIG ---
+        private const float GraceDays = 25f; // No capitulations during first X days
+
         public override void RegisterEvents()
         {
             CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, CheckCapitulations);
@@ -29,6 +32,10 @@ namespace RealmsForgotten
 
         private void CheckCapitulations()
         {
+            // --- EARLY GAME GRACE PERIOD ---
+            if (IsInGracePeriod())
+                return;
+
             foreach (var weak in Kingdom.All.ToList())
             {
                 if (weak == null || weak.IsEliminated || weak.Leader == null)
@@ -37,11 +44,15 @@ namespace RealmsForgotten
                 if (!CanCapitulate(weak))
                     continue;
 
-                IEnumerable<Kingdom> enemies = weak.FactionsAtWarWith.Where(f => f.IsKingdomFaction).Cast<Kingdom>().OrderByDescending(k => k.CurrentTotalStrength);
+                IEnumerable<Kingdom> enemies = weak.FactionsAtWarWith
+                    .Where(f => f.IsKingdomFaction)
+                    .Cast<Kingdom>()
+                    .OrderByDescending(k => k.CurrentTotalStrength);
 
                 foreach (var strong in enemies)
                 {
-                    if (strong == null || strong.IsEliminated) continue;
+                    if (strong == null || strong.IsEliminated)
+                        continue;
 
                     if (!ShouldCapitulate(weak, strong))
                         continue;
@@ -65,11 +76,16 @@ namespace RealmsForgotten
             }
         }
 
+        private bool IsInGracePeriod()
+        {
+            return CampaignTime.Now.ToDays < GraceDays;
+        }
+
         private bool CanCapitulate(Kingdom weak)
         {
             if (_lastCapitulation.TryGetValue(weak, out var last))
             {
-                return (CampaignTime.Now - last).ToDays > 15;
+                return (CampaignTime.Now - last).ToDays > 15f;
             }
             return true;
         }
@@ -77,22 +93,27 @@ namespace RealmsForgotten
         private bool ShouldCapitulate(Kingdom weak, Kingdom strong)
         {
             int weakFiefs = weak.Fiefs.Count();
-            float strengthRatio = strong.CurrentTotalStrength / (weak.CurrentTotalStrength + 1);
+            float strengthRatio = strong.CurrentTotalStrength / (weak.CurrentTotalStrength + 1f);
+
             return weakFiefs <= 2 && strengthRatio >= 3.0f;
         }
 
         private void ShowPlayerSurrenderInquiry(Kingdom playerKingdom, Kingdom victor)
         {
-            // --- TEXT TRANSLATED TO ENGLISH ---
             TextObject title = new TextObject("Demand for Surrender");
-            TextObject text = new TextObject("{VICTOR_LEADER} of {VICTOR_KINGDOM} demands your unconditional surrender. Your kingdom is on the brink of collapse. You can accept to become a vassal under their rule, or refuse and face the consequences.");
+            TextObject text = new TextObject(
+                "{VICTOR_LEADER} of {VICTOR_KINGDOM} demands your unconditional surrender. " +
+                "Your kingdom is on the brink of collapse. You can accept to become a vassal " +
+                "under their rule, or refuse and face the consequences.");
+
             text.SetTextVariable("VICTOR_LEADER", victor.Leader.Name);
             text.SetTextVariable("VICTOR_KINGDOM", victor.Name);
 
             InformationManager.ShowInquiry(new InquiryData(
                 title.ToString(),
                 text.ToString(),
-                true, true,
+                true,
+                true,
                 "Accept Vassalage",
                 "Refuse and Fight!",
                 () => ApplyPlayerVassalage(playerKingdom, victor),
@@ -102,12 +123,13 @@ namespace RealmsForgotten
 
         private void ShowAIDemandInquiry(Kingdom weak, Kingdom strong)
         {
-            // --- TEXT TRANSLATED TO ENGLISH ---
             InformationManager.ShowInquiry(new InquiryData(
                 $"{weak.Name} Offers Capitulation",
                 $"{weak.Leader.Name} seeks to surrender. Do you accept their unconditional surrender?",
-                true, true,
-                "Accept", "Decline",
+                true,
+                true,
+                "Accept",
+                "Decline",
                 () => ApplyCapitulation(weak, strong),
                 null
             ));
@@ -115,8 +137,9 @@ namespace RealmsForgotten
 
         private void ApplyPlayerVassalage(Kingdom playerKingdom, Kingdom victor)
         {
-            // --- TEXT TRANSLATED TO ENGLISH ---
-            InformationManager.DisplayMessage(new InformationMessage($"You have bent the knee. Your kingdom has been dissolved, and Clan {Clan.PlayerClan.Name} now serves {victor.Name}.", Colors.Yellow));
+            InformationManager.DisplayMessage(new InformationMessage(
+                $"You have bent the knee. Your kingdom has been dissolved, and Clan {Clan.PlayerClan.Name} now serves {victor.Name}.",
+                Colors.Yellow));
 
             foreach (var clan in playerKingdom.Clans.ToList())
             {
@@ -128,8 +151,9 @@ namespace RealmsForgotten
 
         private void ApplyPlayerConcessions(Kingdom playerKingdom, Kingdom victor)
         {
-            // --- TEXT TRANSLATED TO ENGLISH ---
-            InformationManager.DisplayMessage(new InformationMessage($"You refused to surrender, but at a great cost. Your vassals have abandoned you for the cause of {victor.Name}!", Colors.Red));
+            InformationManager.DisplayMessage(new InformationMessage(
+                $"You refused to surrender, but at a great cost. Your vassals have abandoned you for the cause of {victor.Name}!",
+                Colors.Red));
 
             foreach (var clan in playerKingdom.Clans.ToList())
             {
@@ -145,14 +169,17 @@ namespace RealmsForgotten
         private void ApplyCapitulation(Kingdom weak, Kingdom strong)
         {
             int tribute = MBRandom.RandomInt(3000, 8000);
-            // --- TEXT TRANSLATED TO ENGLISH ---
-            InformationManager.DisplayMessage(new InformationMessage($"{weak.Name} has capitulated to {strong.Name}! Tribute paid: {tribute} gold."));
+
+            InformationManager.DisplayMessage(new InformationMessage(
+                $"{weak.Name} has capitulated to {strong.Name}! Tribute paid: {tribute} gold."));
+
             GiveGoldAction.ApplyBetweenCharacters(weak.Leader, strong.Leader, tribute, false);
 
             foreach (var clan in weak.Clans.ToList())
             {
                 if (clan.IsUnderMercenaryService)
                     continue;
+
                 ChangeKingdomAction.ApplyByJoinToKingdom(clan, strong, showNotification: false);
             }
 

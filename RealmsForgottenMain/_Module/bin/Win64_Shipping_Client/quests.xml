@@ -60,7 +60,7 @@
 		</Reward>
 	</Quest>
 	<Quest>
-	<QuestId>quest_4</QuestId>
+	<QuestId>quest_swamp_fort</QuestId>
 	<QuestGiverId>wounded_soldier_npc</QuestGiverId>
 	<Text>The wounded soldier requested you to hunt down the Bandits and retrieve the stolen gift of his lord.</Text>
 	<CompletedWhen>
