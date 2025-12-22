@@ -22,7 +22,6 @@ namespace RealmsForgotten.Quest
             _findMapJournalLog = findMapJournalLog;
             relicSpawned = false;
             pickedMap = false;
-
         }
         public override void AfterStart()
         {
@@ -34,7 +33,6 @@ namespace RealmsForgotten.Quest
                 Vec3 rot = Vec3.Invalid;
                 switch (Settlement.CurrentSettlement.Hideout.StringId)
                 {
-
                     case "hideout_seaside_13":
                         if (_findMapJournalLog.CurrentProgress == 0)
                         {
@@ -84,8 +82,6 @@ namespace RealmsForgotten.Quest
                             textObject.SetTextVariable("CURRENT_COUNT", 1);
                             MBInformationManager.AddQuickInformation(textObject);
                         }));
-
-
                         break;
                     case "hideout_seaside_14":
                         _findMapJournalLog.UpdateCurrentProgress(2);
