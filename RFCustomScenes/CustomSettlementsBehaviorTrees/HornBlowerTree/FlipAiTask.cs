@@ -4,7 +4,7 @@ using BehaviorTreeWrapper.BlackBoardClasses;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
-namespace RFCustomSettlements.CustomSettlementsBehaviorTrees.HornBlowerTree.Tasks
+namespace RFCustomSettlements.CustomSettlementsBehaviorTrees.HornBlowerTree
 {
     internal class FlipAiTask : BTTask, IBTBannerlordBase, IHornBlowerTree
     {
