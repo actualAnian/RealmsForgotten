@@ -8,7 +8,6 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
-using Helpers;
 
 namespace RealmsForgotten.AiMade
 {
@@ -104,9 +103,9 @@ namespace RealmsForgotten.AiMade
                 InformationManager.DisplayMessage(new InformationMessage("ERROR: BANDIT CLAN NOT FOUND.", Colors.Red));
                 return null;
             }
-            
+
             PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
-            MobileParty banditParty = BanditPartyComponent.CreateBanditParty(banditClan.StringId, banditClan, SettlementHelper.FindNearestHideoutToSettlement(settlement, MobileParty.NavigationType.Default), true, looterTemplate, settlement.Position);
+            MobileParty banditParty = BanditPartyComponent.CreateBanditParty(banditClan.StringId, banditClan, settlement.Hideout, true, looterTemplate, settlement.Position);
             if (banditParty == null)
             {
                 InformationManager.DisplayMessage(new InformationMessage("ERROR: Failed to create bandit party.", Colors.Red));
