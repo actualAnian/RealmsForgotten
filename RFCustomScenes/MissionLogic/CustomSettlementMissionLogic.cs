@@ -200,11 +200,30 @@ namespace RealmsForgotten.RFCustomSettlements
             SpawnHuntableHerdsAnimals();
             SpawnNpcs();
             SpawnPlayerTroops();
-            RemovePickedItems();
+            RemovePreviouslyPickedItems();
             _pickableItemsRemaining = Mission.Current.ActiveMissionObjects.Where(o => o.GameEntity.Name.Contains("rf_pickable")).Count();
             Mission.Current.IsFriendlyMission = false;
+            SpawnWeaponsOnTheGround();
         }
-
+        private void SpawnWeaponsOnTheGround()
+        {
+            var keyword = "rf_weapon_";
+            IEnumerable<MissionObject> spawnableWeapons = Mission.Current.ActiveMissionObjects.Where(o => o.GameEntity.Name.Contains(keyword));
+            //possibleObjects.First().GameEntity.frame
+            foreach (var weapon in spawnableWeapons)
+            {
+                var itemName = weapon.GameEntity.Name.Substring(keyword.Length);
+                try
+                {
+                    var item = MBObjectManager.Instance.GetObject<ItemObject>(itemName);
+                    var entity = Mission.SpawnWeaponWithNewEntityAux(new MissionWeapon(item, null, null), Mission.WeaponSpawnFlags.WithPhysics, weapon.GameEntity.GetGlobalFrame(), 0, null, false);
+                }
+                catch
+                {
+                    InformationManager.DisplayMessage(new($"Error spawning an item with id {itemName}"));
+                }
+            }
+        }
         private void ResetLeaveMissionTimer()
         {
             if (!_resetEndMissionTimer) return;
@@ -232,7 +251,7 @@ namespace RealmsForgotten.RFCustomSettlements
             return false;
         }
 
-        private void RemovePickedItems()
+        private void RemovePreviouslyPickedItems()
         {
             List<Vec3> pickedItemPos = _campaignBehavior.GetPickedObjectsFromScene(_sceneName);
             IEnumerable<MissionObject> possibleObjects = Mission.Current.ActiveMissionObjects.Where(o => o.GameEntity.Name.Contains("rf_pickable"));
@@ -545,7 +564,7 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             if (NextSceneData.Instance.shouldSwitchScenes == false)
                 NextSceneData.Instance.currentState = NextSceneData.RFExploreState.Finished;
-            if (OnBattleEnd != null) this.OnBattleEnd();
+            OnBattleEnd?.Invoke();
             base.OnEndMission();
             RFMusicManager.Instance.StopMusicWithFadeout();
         }
@@ -560,13 +579,7 @@ namespace RealmsForgotten.RFCustomSettlements
                 }
             }
         }
-        public override MissionBehaviorType BehaviorType
-        {
-            get
-            {
-                return MissionBehaviorType.Other;
-            }
-        }
+        public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;
         public override void AfterStart()
         {
             SpawnPlayer();
@@ -744,13 +757,26 @@ namespace RealmsForgotten.RFCustomSettlements
                 {
                     Hero.MainHero.ChangeHeroGold(amount);
                     soundEventId = "event:/ui/notification/coins_positive";
-                    HuntableHerds.SubModule.PrintDebugMessage("You found " + amount + "<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">");
+                    TextObject text = new("{rf_gold_found}{ITEM_AMOUNT} gold added to the inventory");
+                    text.SetTextVariable("ITEM_AMOUNT", amount);
+                    InformationManager.DisplayMessage(new(text.ToString()));
                 }
                 else
                 {
                     ItemObject item = MBObjectManager.Instance.GetObject<ItemObject>(itemId);
+                    if (item.WeaponComponent != null)
+                    {
+                        var weapon = new MissionWeapon(item, null, null);
+                        EquipNewItem(Agent.Main, weapon);
+                    }
                     MobileParty.MainParty.ItemRoster.AddToCounts(item, amount);
-                    HuntableHerds.SubModule.PrintDebugMessage("You found " + item.Name + "!");
+                    TextObject text = new("{rf_item_found}{ITEM_AMOUNT} {ITEM_NAME} added to the inventory");
+                    text.SetTextVariable("ITEM_NAME", item.Name);
+                    if (amount > 1)
+                        text.SetTextVariable("ITEM_AMOUNT", amount);
+                    else
+                        text.SetTextVariable("ITEM_AMOUNT", "");
+                    InformationManager.DisplayMessage(new(text.ToString()));
                     soundEventId = "event:/mission/combat/pickup_arrows";
                 }
                 Mission.MakeSoundOnlyOnRelatedPeer(SoundEvent.GetEventIdFromString(soundEventId), usablePlace.GameEntity.GlobalPosition, Mission.MainAgent.Index);
@@ -768,6 +794,27 @@ namespace RealmsForgotten.RFCustomSettlements
             {
                 string str = "Error in game entity name " + usablePlace.GameEntity.Name;
                 HuntableHerds.SubModule.PrintDebugMessage(str, 255, 0, 0);
+            }
+        }
+        private void EquipNewItem(Agent agent, MissionWeapon weapon)
+        {
+            bool equippedNewItem = false;
+            for (EquipmentIndex equipmentIndex = EquipmentIndex.WeaponItemBeginSlot; equipmentIndex < EquipmentIndex.ExtraWeaponSlot; equipmentIndex++)
+            {
+                if (agent.Equipment[equipmentIndex].IsEmpty)
+                {
+                    agent.EquipWeaponWithNewEntity(equipmentIndex, ref weapon);
+                    agent.TryToWieldWeaponInSlot(equipmentIndex, Agent.WeaponWieldActionType.WithAnimation, false);
+                    equippedNewItem = true;
+                    break;
+                }
+            }
+            if (!equippedNewItem)
+            {
+                var eqIndex = Agent.Main.GetPrimaryWieldedItemIndex();
+                agent.DropItem(eqIndex, WeaponClass.Undefined);
+                agent.EquipWeaponWithNewEntity(eqIndex, ref weapon);
+                agent.TryToWieldWeaponInSlot(eqIndex, Agent.WeaponWieldActionType.WithAnimation, false);
             }
         }
         private void StartNewMission(UsablePlace usablePlace)
