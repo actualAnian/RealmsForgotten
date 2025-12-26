@@ -89,7 +89,7 @@ namespace RealmsForgotten.Quest.KnightQuest
             AgentBuildData agentBuildData = new AgentBuildData(character).Team(team).ClothingColor1(team.Color).ClothingColor2(team.Color2).InitialPosition(frame.origin);
             Vec2 vec = frame.rotation.f.AsVec2;
             vec = vec.Normalized();
-            Agent agent = mission.SpawnAgent(agentBuildData.InitialDirection(vec).NoHorses(!duelOnHorse).Equipment(equipment).TroopOrigin(new SimpleAgentOrigin(character, -1, null, default(UniqueTroopDescriptor))).Controller((character == CharacterObject.PlayerCharacter) ? Agent.ControllerType.Player : Agent.ControllerType.AI), false);
+            Agent agent = mission.SpawnAgent(agentBuildData.InitialDirection(vec).NoHorses(!duelOnHorse).Equipment(equipment).TroopOrigin(new SimpleAgentOrigin(character, -1, null, default(UniqueTroopDescriptor))).Controller((character == CharacterObject.PlayerCharacter) ? AgentControllerType.Player: AgentControllerType.AI), false);
             if (agent.IsAIControlled)
             {
                 agent.SetWatchState(Agent.WatchState.Alarmed);

@@ -9,23 +9,16 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
-using SandBox.GameComponents;
 using static RealmsForgotten.AiMade.ADODReinforcementsSystem;
 using System.Linq;
 using RealmsForgotten.AiMade.RF_Diplomacy;
-using RealmsForgotten.AiMade.Utility;
-using System.Reflection;
-using System.Collections.Generic;
-using RealmsForgotten.AiMade.Encounters.Behaviors;
-using RealmsForgotten.AiMade.Adventurer;
 using RealmsForgotten.AiMade.MercenaryFaction;
 using Bannerlord.UIExtenderEx;
 using RealmsForgotten.AiMade.TradePact;
-using RealmsForgotten.AiMade.CustomOrderofBattle;
-using SandBox.Missions.MissionLogics;
 using RealmsForgotten.AiMade.Village_Inn_Quests;
 using RealmsForgotten.AiMade.Village_Inn_Quests.RealmsForgotten.AiMade.Village_Inn_Quests;
-using RealmsForgotten.AiMade.Infect;
+using SandBox.Missions.MissionLogics;
+using RealmsForgotten.Chamberlain;
 
 
 namespace RealmsForgotten.AiMade
@@ -69,8 +62,6 @@ namespace RealmsForgotten.AiMade
             var customItemCategories = new RealmsForgotten.Behaviors.CustomItemCategories();
             customItemCategories.Initialize();
 
-            // Add quest behaviors
-
             // Add other behaviors
             campaignGameStarter.AddBehavior(new MercenaryOfferBehavior());
             campaignGameStarter.AddBehavior(new HouseTroopsTownsBehavior());
@@ -96,9 +87,8 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new BanditIncrease());
             campaignGameStarter.AddBehavior(new BanditPartyManager());
             campaignGameStarter.AddBehavior(new DocksMenuBehavior());
-            campaignGameStarter.AddBehavior(new KingsguardSaveDataBehavior());
             campaignGameStarter.AddBehavior(new RaceCraftingStaminaBehavior());
-            campaignGameStarter.AddBehavior(new ADODChamberlainsBehavior());
+            campaignGameStarter.AddBehavior(new RFChamberlainsBehavior());
             campaignGameStarter.AddBehavior(new SlaveBehavior());
             campaignGameStarter.AddBehavior(new ADODCustomLocationsBehavior());
             campaignGameStarter.AddBehavior(new NasorianHordeInvasion());
@@ -106,7 +96,6 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new AggressiveDwarfUrkhaiBehavior());
             campaignGameStarter.AddBehavior(new MineBehavior());
             campaignGameStarter.AddBehavior(new SturgiaCultureChangerBehavior());
-            campaignGameStarter.AddBehavior(new RacialMixingBehavior());
             campaignGameStarter.AddBehavior(new AlignmentWarBehavior());
             campaignGameStarter.AddBehavior(new AlignmentMomentumBehavior());
             //campaignGameStarter.AddBehavior(new TickProfilerBehavior());
@@ -133,7 +122,6 @@ namespace RealmsForgotten.AiMade
         private void AddCustomModels(CampaignGameStarter campaignGameStarter)
         {
             // Register the custom inventory capacity model
-            campaignGameStarter.AddModel(new CustomInventoryCapacityModel());
             campaignGameStarter.AddModel(new UrkhaiPartySizeModel());
             campaignGameStarter.AddModel(new AlignmentDiplomacyModel(Campaign.Current.Models.DiplomacyModel));
             campaignGameStarter.AddModel(new CustomTradeItemPriceFactorModel());
@@ -154,7 +142,6 @@ namespace RealmsForgotten.AiMade
 
                 //mission.AddMissionBehavior(new ForceWinterMissionBehavior());
                 mission.AddMissionBehavior(new ADODFireArrowsMissionBehavior());
-                mission.AddMissionBehavior(new AttachWallSegmentDebugBehavior());              
             }
 
             if (mission.Mode == MissionMode.Battle
@@ -171,20 +158,8 @@ namespace RealmsForgotten.AiMade
             {
                 mission.AddMissionBehavior(new ADODReinforcementsRunner());
             }
-
-            if (mission.Scene != null
-                 && mission.CombatType == Mission.MissionCombatType.Combat
-                 && Mission.Current?.HasMissionBehavior<CampaignMissionComponent>() == true)
-            {
-                mission.AddMissionBehavior(new AutoOOBConfigMissionBehavior()); // optional but nice for OOB cards
-                mission.AddMissionBehavior(new InfantrySpearSorterOnSpawn());   // the actual splitter using SpawnEquipment
-            }
-
             // Add Find Magic Items behavior to all missions
             mission.AddMissionBehavior(new FindMagicItemsMissionBehavior());
-            
-
         }
     }
-
 }

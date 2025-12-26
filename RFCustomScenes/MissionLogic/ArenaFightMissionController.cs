@@ -25,13 +25,13 @@ namespace RFCustomSettlements
             spawnPoints = new();
             aliveTeams = new();
             foreach (ArenaTeam team in stageData.ArenaTeams)
-                aliveTeams.Add(((ArenaTeam)team.Clone()));
+                aliveTeams.Add((ArenaTeam)team.Clone());
             OnBattleEnd = onbattleend;
             playerEquipment = stageData.PlayerEquipment;
         }
         public void StartArenaBattle()
         {
-            base.Mission.SetMissionMode(MissionMode.Battle, true);
+            Mission.SetMissionMode(MissionMode.Battle, true);
             List<GameEntity>.Enumerator spawnPointEnum = spawnPoints.GetEnumerator();
             GameEntity? spawnPoint;
 
@@ -107,7 +107,7 @@ namespace RFCustomSettlements
             frame.Strafe(MBRandom.RandomInt(-2, 2) * 1f);
             frame.Advance(MBRandom.RandomInt(0, 2) * 1f);
             AgentBuildData agentBuildData = new AgentBuildData(new SimpleAgentOrigin(troop, -1, null, default)).Team(team).InitialPosition(frame.origin);
-            AgentBuildData agentBuildData2 = agentBuildData.InitialDirection(frame.rotation.f.AsVec2.Normalized()).ClothingColor1(team.Color).Banner(team.Banner).Controller(troop.IsPlayerCharacter ? Agent.ControllerType.Player : Agent.ControllerType.AI);
+            AgentBuildData agentBuildData2 = agentBuildData.InitialDirection(frame.rotation.f.AsVec2.Normalized()).ClothingColor1(team.Color).Banner(team.Banner).Controller(troop.IsPlayerCharacter ? AgentControllerType.Player: AgentControllerType.AI);
             if (troop.IsPlayerCharacter) agentBuildData2 = agentBuildData2.Equipment(playerEquipment);
             Agent agent = Mission.SpawnAgent(agentBuildData2, false);
             if(agent.IsPlayerControlled)
@@ -131,7 +131,6 @@ namespace RFCustomSettlements
                 }
             }
         }
-        // public override InquiryData OnEndMissionRequest(out bool canPlayerLeave) { canPlayerLeave = false; }
         public override void OnMissionTick(float dt)
         {
             if (MatchEnded())
@@ -154,8 +153,8 @@ namespace RFCustomSettlements
             {
                 isPlayerWinner = aliveTeams[0].IsPlayerTeam;
                 endTimer = new BasicMissionTimer();
-                if(isPlayerWinner) MBInformationManager.AddQuickInformation(new TextObject("Your team has won, glory and fame to you!", null), 0, null, "");
-                else MBInformationManager.AddQuickInformation(new TextObject("Your team lost, you are a disgrace, and at mercy of your opponent", null), 0, null, "");
+                if(isPlayerWinner) MBInformationManager.AddQuickInformation(new TextObject("Your team has won, glory and fame to you!", null));
+                else MBInformationManager.AddQuickInformation(new TextObject("Your team lost, you are a disgrace, and at mercy of your opponent", null));
             }
             return false;
         }

@@ -1,23 +1,26 @@
 ﻿using HarmonyLib;
-using System.Collections.Generic;
-using System.Linq;
-using static RealmsForgotten.RFCustomSettlements.Helper;
-using TaleWorlds.Core;
-using TaleWorlds.InputSystem;
-using TaleWorlds.MountAndBlade.ViewModelCollection;
-using TaleWorlds.MountAndBlade;
-using TaleWorlds.ObjectSystem;
-using System.Reflection.Emit;
-using TaleWorlds.MountAndBlade.View.MissionViews;
 using RealmsForgotten.RFCustomSettlements;
 using SandBox.Objects.Usables;
-using System.Reflection;
-using TaleWorlds.MountAndBlade.View.Screens;
-using TaleWorlds.Localization;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Reflection.PortableExecutable;
+using TaleWorlds.Core;
+using TaleWorlds.InputSystem;
+using TaleWorlds.Localization;
+using TaleWorlds.MountAndBlade;
+using TaleWorlds.MountAndBlade.View.MissionViews;
+using TaleWorlds.MountAndBlade.View.Screens;
+using TaleWorlds.MountAndBlade.ViewModelCollection;
+using TaleWorlds.MountAndBlade.ViewModelCollection.Missions.Interaction;
+using TaleWorlds.ObjectSystem;
+using static RealmsForgotten.RFCustomSettlements.Helper;
 
 namespace RFCustomSettlements.Patches
 {
+
 #pragma warning disable IDE0051 // Remove unused private members
     [HarmonyPatch(typeof(MissionMainAgentInteractionComponent), "FocusStateCheckTick")]
     public class FocusStateCheckTickPatch
@@ -58,11 +61,13 @@ namespace RFCustomSettlements.Patches
             return true;
         }
     }
-    [HarmonyPatch(typeof(AgentInteractionInterfaceVM), "SetUsableMachine")]
+    [HarmonyPatch(typeof(AgentInteractionInterfaceVM), "Tick")]
     public class AgentInteractionInterfaceVMSetUsableMachinePatch
     {
-        static void Postfix(UsableMachine machine, AgentInteractionInterfaceVM __instance)
+        static void Postfix(AgentInteractionInterfaceVM __instance, IFocusable ____currentFocusedObject)
         {
+            if (____currentFocusedObject == null || !Helper.IsRFObject(____currentFocusedObject)) return;
+            if (____currentFocusedObject is not UsablePlace machine) return;
             if (machine.GameEntity.Name.StartsWith("rf"))
             {
                 GameKey key = HotKeyManager.GetCategory("CombatHotKeyCategory").GetGameKey(13);
@@ -76,13 +81,13 @@ namespace RFCustomSettlements.Patches
                         if (itemId == "gold")
                         {
                             int amount = GetGoldAmount(objectName);
-                            __instance.PrimaryInteractionMessage = button + GetNameOfGoldObject(amount);
+                            __instance.PrimaryInteractionMessages.First().Message = button + GetNameOfGoldObject(amount); //@TODO test
                         }
                         else
                             try
                             {
                                 TextObject itemName = MBObjectManager.Instance.GetObject<ItemObject>(itemId).Name;
-                                __instance.PrimaryInteractionMessage = button + " " + itemName;
+                                __instance.PrimaryInteractionMessages.First().Message = button + " " + itemName;
                             }
                             catch (NullReferenceException)
                             {
@@ -90,11 +95,11 @@ namespace RFCustomSettlements.Patches
                             }
                         break;
                     case RFUsableObjectType.Passage:
-                        __instance.PrimaryInteractionMessage = button + " Go Through";
-                        __instance.IsFocusedOnExit = true;
+                        __instance.PrimaryInteractionMessages.First().Message = button + " Go Through";
+                        //__instance.IsFocusedOnExit = true; @TODO check
                         break;
                     case RFUsableObjectType.Healing:
-                        __instance.PrimaryInteractionMessage = button + "Heal";
+                        __instance.PrimaryInteractionMessages.First().Message = button + "Heal";
                         break;
                 }
             }
@@ -160,13 +165,13 @@ namespace RFCustomSettlements.Patches
                     && codes[index + 3].opcode == OpCodes.Ldloc_S)
                     codes[index].labels.Add(startVanillaRecruitjumpLabel);
 
-
                 if (codes[index].opcode == OpCodes.Ldloc_S // checks if agent is used by RFCustomSettlements
                     && codes[index + 1].opcode == OpCodes.Brfalse_S
                     && codes[index + 2].opcode == OpCodes.Ldloc_S
                     && codes[index + 3].opcode == OpCodes.Callvirt
                     && codes[index + 4].opcode == OpCodes.Brfalse_S)
                     insertionAgentCheck = index;
+
                 if (codes[index].opcode == OpCodes.Ldloc_S // jump to if interactable agent
                     && codes[index + 1].opcode == OpCodes.Stloc_S
                     && codes[index + 2].opcode == OpCodes.Ldloc_S
@@ -195,7 +200,6 @@ namespace RFCustomSettlements.Patches
             codes.InsertRange(insertionAgentCheck, check_interactable_agent_instr_list);
             return codes.AsEnumerable();
         }
-
     }
 #pragma warning restore IDE0051 // Remove unused private members
 }

@@ -1,55 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using HarmonyLib;
 using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
-using TaleWorlds.GauntletUI;
 using TaleWorlds.InputSystem;
-using TaleWorlds.Library;
-using TaleWorlds.LinQuick;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.View.Screens;
-using static TaleWorlds.CampaignSystem.CampaignBehaviors.LordConversationsCampaignBehavior;
 
 namespace RealmsForgotten.Behaviors
 {
-    [HarmonyPatch(typeof(Agent), "OnWeaponAmmoReload")]
-    public static class OnWeaponAmmoReloadPatch
+    public static class RFSpellAmmo
     {
-        
-        public static void Prefix(EquipmentIndex slotIndex, ref EquipmentIndex ammoSlotIndex, ref short totalAmmo, Agent __instance)
+        public static void OnWeaponAmmoReloadPatch(EquipmentIndex slotIndex, ref EquipmentIndex ammoSlotIndex, ref short totalAmmo, Agent __instance)
         {
             if (__instance.IsMainAgent && __instance.Equipment[slotIndex].Item?.Type == ItemObject.ItemTypeEnum.Musket)
             {
                 SpellAmmoMissionBehavior.Instance?.SetUiVisible(true);
-                    if (__instance.Equipment[SpellAmmoMissionBehavior.CurrentAmmo].Amount >= 1)
+                if (__instance.Equipment[SpellAmmoMissionBehavior.CurrentAmmo].Amount >= 1)
+                {
+                    if (ammoSlotIndex != SpellAmmoMissionBehavior.CurrentAmmo)
                     {
-                        if (ammoSlotIndex != SpellAmmoMissionBehavior.CurrentAmmo)
-                        {
-
-                            __instance.SetWeaponAmountInSlot(SpellAmmoMissionBehavior.CurrentAmmo, (short)(__instance.Equipment[SpellAmmoMissionBehavior.CurrentAmmo].Amount - 1), true);
-                            __instance.SetWeaponAmountInSlot(ammoSlotIndex, (short)(__instance.Equipment[ammoSlotIndex].Amount + 1), true);
-
-
-                            totalAmmo = 0;
-
-                            ammoSlotIndex = SpellAmmoMissionBehavior.CurrentAmmo;
-                        }
+                        __instance.SetWeaponAmountInSlot(SpellAmmoMissionBehavior.CurrentAmmo, (short)(__instance.Equipment[SpellAmmoMissionBehavior.CurrentAmmo].Amount - 1), true);
+                        __instance.SetWeaponAmountInSlot(ammoSlotIndex, (short)(__instance.Equipment[ammoSlotIndex].Amount + 1), true);
+                        totalAmmo = 0;
+                        ammoSlotIndex = SpellAmmoMissionBehavior.CurrentAmmo;
                     }
-                    else
-                    {
-                        SpellAmmoMissionBehavior.CurrentAmmo = ammoSlotIndex;
-                        if (__instance.Equipment[ammoSlotIndex].Amount <= 0)
-                        {
-                            SpellAmmoMissionBehavior.Instance?.SetUiVisible(false);
-                        }
-                    }
-                    SpellAmmoMissionBehavior.Instance?.ChangeUiSpellName(__instance.Equipment[ammoSlotIndex]);
+                }
+                else
+                {
+                    SpellAmmoMissionBehavior.CurrentAmmo = ammoSlotIndex;
+                    if (__instance.Equipment[ammoSlotIndex].Amount <= 0)
+                        SpellAmmoMissionBehavior.Instance?.SetUiVisible(false);
+                }
+                SpellAmmoMissionBehavior.Instance?.ChangeUiSpellName(__instance.Equipment[ammoSlotIndex]);
             }
         }
     }
@@ -87,7 +70,7 @@ namespace RealmsForgotten.Behaviors
                             spellTextObject.SetTextVariable("AMOUNT", agent.Equipment[index].Amount);
                             MissionScreen? missionScreen = TaleWorlds.ScreenSystem.ScreenManager.TopScreen as MissionScreen;
                             _dataSource = new SpellStatusVM(spellTextObject.ToString(), agent.WieldedWeapon.Item?.StringId.Contains("staff") == true, 65, 120);
-                            _gauntletLayer = new GauntletLayer(-1);
+                            _gauntletLayer = new GauntletLayer("SpellAmmoView", -1);
                             missionScreen.AddLayer(_gauntletLayer);
                             _gauntletLayer.LoadMovie("SpellStatus", _dataSource);
 
@@ -115,7 +98,7 @@ namespace RealmsForgotten.Behaviors
         public override void OnMissionTick(float dt)
         {
             base.OnMissionTick(dt);
-            if (Input.IsKeyReleased(SubModule.Instance.KeysConfig[nameof(CustomSettings.ChangeSpellKey)]) && Agent.Main?.WieldedWeapon.Item?.Type == ItemObject.ItemTypeEnum.Musket)
+            if (Input.IsKeyReleased(SubModule.Instance.KeysConfig[nameof(RFSettings.Instance.ChangeSpellKey)]) && Agent.Main?.WieldedWeapon.Item?.Type == ItemObject.ItemTypeEnum.Musket)
             {
                 SetNextAmmoSlot();
             }
@@ -131,9 +114,9 @@ namespace RealmsForgotten.Behaviors
         }
         private void SetNextAmmoSlot()
         {
-            Agent main = Agent.Main;;
+            Agent main = Agent.Main;
 
-            List<EquipmentIndex> excludedIndexes = new() { main.GetWieldedItemIndex(Agent.HandIndex.MainHand) , CurrentAmmo };
+            List<EquipmentIndex> excludedIndexes = new() { main.GetPrimaryWieldedItemIndex() , CurrentAmmo };
 
             int min = 0;
             int current = (int)excludedIndexes[1];

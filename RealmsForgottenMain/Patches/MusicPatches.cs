@@ -1,9 +1,11 @@
 ﻿using HarmonyLib;
 using psai.net;
+using System.Collections.Generic;
 using TaleWorlds.Engine;
 using TaleWorlds.ModuleManager;
 using TaleWorlds.MountAndBlade;
 
+/*
 namespace RealmsForgotten.Patches
 {
     [HarmonyPatch]
@@ -15,13 +17,9 @@ namespace RealmsForgotten.Patches
         {
             if (!NativeConfig.DisableSound)
             {
-                string path = ModuleHelper.GetModuleFullPath("realmsforgotten") + "music/soundtrack.xml";
-                //if (IsPlatformSteamWorkshop())
-                //{
-                //    path = fullPath + "music/soundtrack_steam.xml";
-                //}
-                PsaiCore.Instance.LoadSoundtrackFromProjectFile(path);
+                PsaiCore.Instance.LoadSoundtrackFromProjectFile(new List<string>() { "realmsforgotten" });
             }
         }
     }
 }
+*/

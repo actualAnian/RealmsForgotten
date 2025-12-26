@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using RealmsForgotten.Career.CareerPointsSystem;
+using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
@@ -8,9 +8,6 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.SaveSystem;
-using RealmsForgotten.Career.CareerPointsSystem;
-using TaleWorlds.CampaignSystem.Encounters;
-using TaleWorlds.CampaignSystem.GameMenus;
 
 namespace RealmsForgotten.Career
 {
@@ -36,17 +33,17 @@ namespace RealmsForgotten.Career
         {
             CampaignEvents.RaidCompletedEvent.AddNonSerializedListener(this, new Action<BattleSideEnum, RaidEventComponent>(this.OnRaidCompleted));
             CampaignEvents.ItemsLooted.AddNonSerializedListener(this, OnItemLooted);
-            CampaignEvents.DistributeLootToPartyEvent.AddNonSerializedListener(this, new Action<MapEvent, PartyBase, Dictionary<PartyBase, ItemRoster>>(this.OnLootCaravanParties));
+            //CampaignEvents.DistributeLootToPartyEvent.AddNonSerializedListener(this, new Action<MapEvent, PartyBase, Dictionary<PartyBase, ItemRoster>>(this.OnLootCaravanParties));
+            CampaignEvents.OnCollectLootsItemsEvent.AddNonSerializedListener(this, OnLoot);
             CampaignEvents.HeroLevelledUp.AddNonSerializedListener(this, new Action<Hero, bool>(OnLevelUp));
             CampaignEvents.OnClanInfluenceChangedEvent.AddNonSerializedListener(this, new Action<Clan, float>(OnClanInfluenceChanged));
             CampaignEvents.RenownGained.AddNonSerializedListener(this, new Action<Hero, int, bool>(OnRenownGained));
             CampaignEvents.OnQuestCompletedEvent.AddNonSerializedListener(this, new Action<QuestBase, QuestBase.QuestCompleteDetails>(OnQuestompletedEvent));
             CampaignEvents.MapEventEnded.AddNonSerializedListener(this, new Action<MapEvent>(OnMapEventEnded));
-            CampaignEvents.MapEventEnded.AddNonSerializedListener(this, new Action<MapEvent>(OnMapEventEnded_AdjustRetreatCasualties)); // <— ensure this one is registered
+            CampaignEvents.MapEventEnded.AddNonSerializedListener(this, new Action<MapEvent>(OnMapEventEnded_AdjustRetreatCasualties));
             CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnMapEventEnded_WizardPostBattleHealing);
 
         }
-
         private void OnMapEventEnded(MapEvent mapEvent)
         {
             PointsSystem?.OnMapEventEnded(mapEvent);
@@ -81,29 +78,47 @@ namespace RealmsForgotten.Career
         {
             pointsSystem?.OnLevelUp(hero, arg2);
         }
-
-        private void OnLootCaravanParties(MapEvent mapEvent, PartyBase party, Dictionary<PartyBase, ItemRoster> dictionary)
+        private void OnLoot(PartyBase party, ItemRoster roster)
         {
             if (party != PartyBase.MainParty || !PlayerCareerExtension.HasAnyCareer()) return;
             if (!PlayerCareerExtension.GetAllCareerChoices().Contains("MercenaryLordPassive2_3")) return;
 
-            foreach (KeyValuePair<PartyBase, ItemRoster> tuple in dictionary)
+            foreach (ItemRosterElement item in roster)
             {
-                if (!Globals.IsCaravanParty(tuple.Key)) continue;
-                for (int i = 0; i < tuple.Value.Count; i++)
+                ItemRosterElement newItem = new(item.EquipmentElement, (int)(item.Amount * 0.2));
+                if (newItem.Amount > 0)
                 {
-                    ItemRosterElement item = tuple.Value[i];
-                    item.Amount = (int)(item.Amount * 0.2);
-                    if (item.Amount > 0)
-                    {
-                        MobileParty.MainParty.ItemRoster.Add(item);
-                        MBTextManager.SetTextVariable("NUMBER_OF", item.Amount);
-                        MBTextManager.SetTextVariable("PRODUCTS", item.EquipmentElement.Item.Name, false);
-                        InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=rf_caravan_plunder}You plundered additional {NUMBER_OF} {PRODUCTS}.", null).ToString()));
-                    }
+                    MobileParty.MainParty.ItemRoster.Add(newItem);
+                    MBTextManager.SetTextVariable("NUMBER_OF", newItem.Amount);
+                    MBTextManager.SetTextVariable("PRODUCTS", newItem.EquipmentElement.Item.Name, false);
+                    InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=rf_caravan_plunder}You plundered additional {NUMBER_OF} {PRODUCTS}.", null).ToString()));
                 }
             }
         }
+
+
+        //private void OnLootCaravanParties(MapEvent mapEvent, PartyBase party, Dictionary<PartyBase, ItemRoster> dictionary)
+        //{
+        //    if (party != PartyBase.MainParty || !PlayerCareerExtension.HasAnyCareer()) return;
+        //    if (!PlayerCareerExtension.GetAllCareerChoices().Contains("MercenaryLordPassive2_3")) return;
+
+        //    foreach (KeyValuePair<PartyBase, ItemRoster> tuple in dictionary)
+        //    {
+        //        if (!Globals.IsCaravanParty(tuple.Key)) continue;
+        //        for (int i = 0; i < tuple.Value.Count; i++)
+        //        {
+        //            ItemRosterElement item = tuple.Value[i];
+        //            item.Amount = (int)(item.Amount * 0.2);
+        //            if (item.Amount > 0)
+        //            {
+        //                MobileParty.MainParty.ItemRoster.Add(item);
+        //                MBTextManager.SetTextVariable("NUMBER_OF", item.Amount);
+        //                MBTextManager.SetTextVariable("PRODUCTS", item.EquipmentElement.Item.Name, false);
+        //                InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=rf_caravan_plunder}You plundered additional {NUMBER_OF} {PRODUCTS}.", null).ToString()));
+        //            }
+        //        }
+        //    }
+        //}
 
         private void OnItemLooted(MobileParty mobileParty, ItemRoster roster)
         {
@@ -284,8 +299,6 @@ namespace RealmsForgotten.Career
                 InformationManager.DisplayMessage(new InformationMessage("[Wizard Healing] " + ex.Message));
             }
         }
-
-
         public override void SyncData(IDataStore dataStore)
         {
             dataStore.SyncData("playerClassInfo", ref playerClassInfo);

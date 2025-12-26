@@ -66,7 +66,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
         public override TextObject Title => GameTexts.FindText("rf_quest_title_part_five");
         public override bool IsRemainingTimeHidden => true;
-        public override bool IsSpecialQuest => true;
+        public override string SpecialQuestType => "RfMainQuest";
         public static FifthQuest Instance { get; private set; }
         public FifthQuest(string questId, Hero questGiver, CampaignTime duration, int rewardGold) : base(questId, questGiver, duration, rewardGold)
         {
@@ -139,7 +139,8 @@ namespace RealmsForgotten.Quest.SecondUpdate
                         troopRoster.AddToCounts(devilsBanditRaider, devilsAmount);
 
                         string partyId = "devils_" + hideout.Id + "_" + CampaignTime.Now.GetHashCode();
-                        MobileParty party = BanditPartyComponent.CreateBanditParty(partyId, devilsClan, hideout, true);
+                        PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+                        MobileParty party = BanditPartyComponent.CreateBanditParty(partyId, devilsClan, hideout, true, looterTemplate, hideout.Settlement.Position);
 
                         if (party == null)
                         {
@@ -147,12 +148,12 @@ namespace RealmsForgotten.Quest.SecondUpdate
                             continue;
                         }
 
-                        party.SetCustomName(new TextObject("Devils Party"));
+                        party.Party.SetCustomName(new TextObject("Devils Party"));
 
                         party.InitializeMobilePartyAroundPosition(
                             troopRoster,
                             TroopRoster.CreateDummyTroopRoster(),
-                            hideout.Settlement.Position2D,
+                            hideout.Settlement.Position,
                             200f, 10f);
 
                         party.Aggressiveness = 100f;
@@ -167,13 +168,11 @@ namespace RealmsForgotten.Quest.SecondUpdate
                                 party.MapFaction != null &&
                                 p.MapFaction.IsAtWarWith(party.MapFaction)
                             )
-                            .OrderBy(p => party.Position2D.DistanceSquared(p.Position2D))
+                            .OrderBy(p => party.Position.DistanceSquared(p.Position))
                             .FirstOrDefault();
 
                         if (closestTarget != null)
-                        {
-                            party.Ai.SetMoveEngageParty(closestTarget);
-                        }
+                            party.SetMoveEngageParty(closestTarget, MobileParty.NavigationType.Default);
 
                         InformationManager.DisplayMessage(new InformationMessage($"Devils spawned at {hideout.Settlement.Name} with {devilsAmount} raiders."));
                     }
@@ -224,8 +223,9 @@ namespace RealmsForgotten.Quest.SecondUpdate
                             troopRoster.AddToCounts(troop, 1);
                         }
                     }
+                    PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+                    MobileParty party = BanditPartyComponent.CreateBanditParty("nelrogs", nelrogClan, null, false, looterTemplate, hideout.Settlement.Position);
 
-                    MobileParty party = BanditPartyComponent.CreateBanditParty("nelrogs", nelrogClan, null, true);
                     if (party == null)
                     {
                         InformationManager.DisplayMessage(new InformationMessage("Failed to create nelrog party."));
@@ -235,15 +235,13 @@ namespace RealmsForgotten.Quest.SecondUpdate
                     party.InitializeMobilePartyAroundPosition(
                         troopRoster,
                         TroopRoster.CreateDummyTroopRoster(),
-                        hideout.Settlement.Position2D,
+                        hideout.Settlement.Position,
                         100f, 10f);
 
                     party.Aggressiveness = 100f;
 
                     if (MobileParty.MainParty != null)
-                    {
-                        party.Ai.SetMoveEngageParty(MobileParty.MainParty);
-                    }
+                        party.SetMoveEngageParty(MobileParty.MainParty, MobileParty.NavigationType.Default);
                 }
 
                 InformationManager.DisplayMessage(new InformationMessage($"Nelrog parties spawned at {seaRaiderHideouts.Count} sea raider hideouts."));
@@ -899,7 +897,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                         // Removed the notification here
                         CharacterObject characterObject = CharacterObject.Find(TreasureFightCharacter);
                         Monster monsterWithSuffix = FaceGen.GetMonsterWithSuffix(characterObject.Race, FaceGen.MonsterSuffixSettlement);
-                        Equipment randomEquipmentElements = Equipment.GetRandomEquipmentElements(characterObject, true);
+                        Equipment randomEquipmentElements = Equipment.GetRandomEquipmentElements(characterObject, true, Equipment.EquipmentType.Battle);
 
                         AgentBuildData agentBuildData = new AgentBuildData(new SimpleAgentOrigin(characterObject)).Equipment(randomEquipmentElements)
                             .Monster(monsterWithSuffix);

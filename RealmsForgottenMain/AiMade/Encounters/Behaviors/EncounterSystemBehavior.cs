@@ -1,24 +1,18 @@
 ﻿using RealmsForgotten.AiMade.Encounters.Managers;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem;
-using RealmsForgotten.AiMade.Encounters.Interfaces;
-using RealmsForgotten.AiMade.Encounters.Scenario;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.MountAndBlade;
 using SandBox.Missions.MissionLogics;
-using SandBox.View.Missions;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade.Source.Missions;
 using TaleWorlds.MountAndBlade.View.MissionViews;
 using TaleWorlds.MountAndBlade.View;
 using TaleWorlds.CampaignSystem.Map;
+using SandBox.View.Missions;
 
 namespace RealmsForgotten.AiMade.Encounters.Behaviors
 {
@@ -73,8 +67,8 @@ namespace RealmsForgotten.AiMade.Encounters.Behaviors
             {
                 // CORRECTED: Get MapPatchData first, then pass it to the method
                 IMapScene mapSceneWrapper = Campaign.Current.MapSceneWrapper;
-                MapPatchData mapPatchAtPosition = mapSceneWrapper.GetMapPatchAtPosition(MobileParty.MainParty.Position2D);
-                scene = PlayerEncounter.GetBattleSceneForMapPatch(mapPatchAtPosition);
+                MapPatchData mapPatchAtPosition = mapSceneWrapper.GetMapPatchAtPosition(MobileParty.MainParty.Position);
+                scene = Campaign.Current.Models.SceneModel.GetBattleSceneForMapPatch(mapPatchAtPosition, MobileParty.MainParty.IsCurrentlyAtSea);
             }
 
             if (forbiddenScenes.Contains(scene))
@@ -88,10 +82,11 @@ namespace RealmsForgotten.AiMade.Encounters.Behaviors
         public static MissionInitializerRecord CreateDuelMissionInitializerRecord(string sceneName)
         {
             var initializerRecord = new MissionInitializerRecord(sceneName);
-            initializerRecord.DamageToPlayerMultiplier = Campaign.Current.Models.DifficultyModel.GetDamageToPlayerMultiplier();
+            initializerRecord.DamageToFriendsMultiplier = Campaign.Current.Models.DifficultyModel.GetPlayerTroopsReceivedDamageMultiplier();
+		    initializerRecord.DamageFromPlayerToFriendsMultiplier = Campaign.Current.Models.DifficultyModel.GetPlayerTroopsReceivedDamageMultiplier();
             initializerRecord.DamageToFriendsMultiplier = Campaign.Current.Models.DifficultyModel.GetPlayerTroopsReceivedDamageMultiplier();
             initializerRecord.PlayingInCampaignMode = Campaign.Current.GameMode == CampaignGameMode.Campaign;
-            initializerRecord.AtmosphereOnCampaign = Campaign.Current.Models.MapWeatherModel.GetAtmosphereModel(MobileParty.MainParty.GetLogicalPosition());
+            initializerRecord.AtmosphereOnCampaign = Campaign.Current.Models.MapWeatherModel.GetAtmosphereModel(MobileParty.MainParty.Position);
             initializerRecord.SceneLevels = "";
             initializerRecord.DoNotUseLoadingScreen = false;
             return initializerRecord;

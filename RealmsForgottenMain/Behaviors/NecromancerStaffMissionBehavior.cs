@@ -46,7 +46,7 @@ namespace RealmsForgotten.Behaviors
                 Agent main = Agent.Main;
                 if (isSpawning)
                 {
-                    if (main.GetCurrentAction(0).Name.Contains("act_cheer") && main.GetCurrentActionProgress(0) >= 0.8)
+                    if (main.GetCurrentAction(0).GetName().Contains("act_cheer") && main.GetCurrentActionProgress(0) >= 0.8)
                     {
                         main.SetActionChannel(0, ActionIndexCache.act_none, true);
                         isSpawning = false;
@@ -140,7 +140,7 @@ namespace RealmsForgotten.Behaviors
                 MissionScreen? missionScreen = TaleWorlds.ScreenSystem.ScreenManager.TopScreen as MissionScreen;
                 necromancyTextObject.SetTextVariable("AMOUNT", maxUses);
                 _dataSource = new SpellStatusVM(necromancyTextObject.ToString(),agent.WieldedWeapon.Item?.StringId.Contains("necromancer_staff") == true, 20, 22);
-                _gauntletLayer = new GauntletLayer(-1);
+                _gauntletLayer = new GauntletLayer("NecromancerStaff", -1);
                 missionScreen.AddLayer(_gauntletLayer);
                 _gauntletLayer.LoadMovie("SpellStatus", _dataSource);
                 

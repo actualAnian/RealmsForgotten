@@ -23,10 +23,10 @@ namespace RealmsForgotten.Career.Logic
                     switch (missionWeapon.Item.Type)
                     {
                         case ItemObject.ItemTypeEnum.Arrows or ItemObject.ItemTypeEnum.Bolts:
-                            CareerHelper.ApplyBasicCareerPassives(ref ammoCount, PassiveEffectType.Ammo, false);
+                            CareerHelper.ApplyBasicCareerPassives(ref ammoCount, PassiveEffectType.Ammo);
                             break;
                         case ItemObject.ItemTypeEnum.Bullets:
-                            CareerHelper.ApplyBasicCareerPassives(ref ammoCount, PassiveEffectType.SpellAmmo, false);
+                            CareerHelper.ApplyBasicCareerPassives(ref ammoCount, PassiveEffectType.SpellAmmo);
                             break;
                         default:
                             break;

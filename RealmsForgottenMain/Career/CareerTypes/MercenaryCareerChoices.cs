@@ -104,38 +104,38 @@ namespace RealmsForgotten.Career.CareerTypes
             _wandering_blade_2_passive5.Initialize(CareerID, "{=rf_career_merc_no_extra_wage}Mercenary troops cost no extra wage", "WanderingBlade2", new CareerChoiceObject.PassiveEffect(1f, PassiveEffectType.Special));
 
             //tier 2
-            _warlord_of_coin_1_passive1.Initialize(CareerID, "{=rf_career_troop_ranged_attack_15}Increases ranged damage of your troops by 15%", "WarlordOfCoin1", new CareerChoiceObject.PassiveEffect(10, PassiveEffectType.Ammo));
+            _warlord_of_coin_1_passive1.Initialize(CareerID, "{=rf_career_troop_ranged_attack_15}Increases ranged damage of your troops by 15%", "WarlordOfCoin1", new CareerChoiceObject.PassiveEffect(15, PassiveEffectType.Ammo));
             _warlord_of_coin_1_passive2.Initialize(CareerID, "{=rf_career_merc_contract_income_20}Increases income from mercenary contract by 20%", "WarlordOfCoin1", new CareerChoiceObject.PassiveEffect(0.2f, PassiveEffectType.MercContractIncome));
-            _warlord_of_coin_1_passive3.Initialize(CareerID, "{=rf_career_spotting_MoFo_20}+20% spotting range in mountains and forests", "WarlordOfCoin1", new CareerChoiceObject.PassiveEffect(20, PassiveEffectType.SpottingRange,
+            _warlord_of_coin_1_passive3.Initialize(CareerID, "{=rf_career_spotting_MoFo_20}+20% spotting range in mountains and forests", "WarlordOfCoin1", new CareerChoiceObject.PassiveEffect(0.2f, PassiveEffectType.SpottingRange,
                 (characterObject) => {
                 if (characterObject.HeroObject != Hero.MainHero) return false;
                 var party = characterObject.HeroObject.PartyBelongedTo;
                 TerrainType faceTerrainType = Campaign.Current.MapSceneWrapper.GetFaceTerrainType(party.CurrentNavigationFace);
                 return faceTerrainType == TerrainType.Forest || faceTerrainType == TerrainType.Mountain;
-            }, true));
+            }, OperationType.Multiply));
             _warlord_of_coin_1_passive4.Initialize(CareerID, "{=rf_career_player_ranged_defence_15}Increases ranged damage resistance by 15%", "WarlordOfCoin1", new CareerChoiceObject.PassiveEffect(PassiveEffectType.Resistance, new DamageProportionTuple(DamageType.PhysicalRanged, 15)));
             _warlord_of_coin_1_passive5.Initialize(CareerID, "{=}Gain a magical artifact", "WarlordOfCoin1", new CareerChoiceObject.ActiveEffect(() => { MobileParty.MainParty.ItemRoster.AddToCounts(MBObjectManager.Instance.GetObject<ItemObject>("poisoned_knife"), 1); }));
 
             _warlord_of_coin_2_passive1.Initialize(CareerID, "{=rf_career_troop_melee_15}Increases melee damage your troops by 15%", "WarlordOfCoin2", new CareerChoiceObject.PassiveEffect(10, PassiveEffectType.HealthRegeneration));
             _warlord_of_coin_2_passive2.Initialize(CareerID, "{=rf_career_workshop_income_20}Increases income from workshops by 20%", "WarlordOfCoin2", new CareerChoiceObject.PassiveEffect(0.2f, PassiveEffectType.MercContractIncome));
-            _warlord_of_coin_2_passive3.Initialize(CareerID, "{=rf_career_spotting_DeSt}+20% spotting range in deserts and steppes", "WarlordOfCoin2", new CareerChoiceObject.PassiveEffect(20, PassiveEffectType.SpottingRange,
+            _warlord_of_coin_2_passive3.Initialize(CareerID, "{=rf_career_spotting_DeSt}+20% spotting range in deserts and steppes", "WarlordOfCoin2", new CareerChoiceObject.PassiveEffect(0.2f, PassiveEffectType.SpottingRange,
                 (characterObject) => {
                     if (characterObject.HeroObject != Hero.MainHero) return false;
                     var party = characterObject.HeroObject.PartyBelongedTo;
                     TerrainType faceTerrainType = Campaign.Current.MapSceneWrapper.GetFaceTerrainType(party.CurrentNavigationFace);
                     return faceTerrainType == TerrainType.Desert || faceTerrainType == TerrainType.Steppe;
-                }, true));
+                }, OperationType.Multiply));
             _warlord_of_coin_2_passive4.Initialize(CareerID, "{=rf_career_player_melee_defence_15}Increases melee damage resistance by 15%", "WarlordOfCoin2", new CareerChoiceObject.PassiveEffect(PassiveEffectType.Resistance, new DamageProportionTuple(DamageType.PhysicalMelee, 15)));
             _warlord_of_coin_2_passive5.Initialize(CareerID, "{=}Gain a special armor set", "WarlordOfCoin2", new CareerChoiceObject.ActiveEffect(() => { MobileParty.MainParty.ItemRoster.AddToCounts(MBObjectManager.Instance.GetObject<ItemObject>("blackheart_sword_rfonehanded50"), 1); }));
 
             //tier 3
-            _mercenary_lord_1_passive1.Initialize(CareerID, "{=rf_career_party_speed_FoMoSw_20}+20% party movement speed in forest, mountain and swamp terrain", "MercenaryLord1", new CareerChoiceObject.PassiveEffect(20, PassiveEffectType.PartyMovementSpeed,
+            _mercenary_lord_1_passive1.Initialize(CareerID, "{=rf_career_party_speed_FoMoSw_20}+20% party movement speed in forest, mountain and swamp terrain", "MercenaryLord1", new CareerChoiceObject.PassiveEffect(0.2f, PassiveEffectType.PartyMovementSpeed,
             (characterObject) => {
                 if (characterObject.HeroObject != Hero.MainHero) return false;
                 var party = characterObject.HeroObject.PartyBelongedTo;
                 TerrainType faceTerrainType = Campaign.Current.MapSceneWrapper.GetFaceTerrainType(party.CurrentNavigationFace);
                 return faceTerrainType == TerrainType.Forest || faceTerrainType == TerrainType.Mountain || faceTerrainType == TerrainType.Swamp;
-            }, true));
+            }, OperationType.Multiply));
             _mercenary_lord_1_passive2.Initialize(CareerID, "{=rf_career_troop_ranged_attack_15}Increases the damage of all ranged troops by 15%", "MercenaryLord1", new CareerChoiceObject.PassiveEffect(PassiveEffectType.TroopDamage, new DamageProportionTuple(DamageType.PhysicalRanged, 15),
                 (attacker, victim) => attacker.BelongsToMainParty() && !attacker.IsMainAgent));
             _mercenary_lord_1_passive3.Initialize(CareerID, "{=rf_career_raid_more_items}After raiding, get additional 20% of items valued less than 60", "MercenaryLord1", new CareerChoiceObject.PassiveEffect(0.2f, PassiveEffectType.Special));
@@ -146,13 +146,13 @@ namespace RealmsForgotten.Career.CareerTypes
             }));
             _mercenary_lord_1_passive5.Initialize(CareerID, "{=rf_career_player_melee_attack_15}Increase damage of all melee weapons by 15%", "MercenaryLord1", new CareerChoiceObject.PassiveEffect(PassiveEffectType.Damage, new DamageProportionTuple(DamageType.PhysicalMelee, 15)));
 
-            _mercenary_lord_2_passive1.Initialize(CareerID, "{=rf_career_party_speed_SnSt_10}+10% party movement speed in snow, and steppe terrain", "MercenaryLord2", new CareerChoiceObject.PassiveEffect(10, PassiveEffectType.PartyMovementSpeed,
+            _mercenary_lord_2_passive1.Initialize(CareerID, "{=rf_career_party_speed_SnSt_10}+10% party movement speed in snow, and steppe terrain", "MercenaryLord2", new CareerChoiceObject.PassiveEffect(0.1f, PassiveEffectType.PartyMovementSpeed,
             (characterObject) => {
                 if (characterObject.HeroObject != Hero.MainHero) return false;
                 var party = characterObject.HeroObject.PartyBelongedTo;
                 TerrainType faceTerrainType = Campaign.Current.MapSceneWrapper.GetFaceTerrainType(party.CurrentNavigationFace);
                 return faceTerrainType == TerrainType.Snow || faceTerrainType == TerrainType.Steppe;
-            }, true));
+            }, OperationType.Multiply));
             _mercenary_lord_2_passive2.Initialize(CareerID, "{=rf_career_troop_melee_attack_15}Increases the damage of all melee troops by 15%", "MercenaryLord2", new CareerChoiceObject.PassiveEffect(PassiveEffectType.TroopDamage, new DamageProportionTuple(DamageType.PhysicalMelee, 15),
                 (attacker, victim) => attacker.BelongsToMainParty() && !attacker.IsMainAgent));
             _mercenary_lord_2_passive3.Initialize(CareerID, "{=rf_career_caravan_dest_more_items}After destroying a caravan, get additional 20% of items valued less than 60", "MercenaryLord2", new CareerChoiceObject.PassiveEffect(0.2f, PassiveEffectType.Special));

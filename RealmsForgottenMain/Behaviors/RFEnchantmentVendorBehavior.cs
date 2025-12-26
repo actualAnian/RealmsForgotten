@@ -27,6 +27,7 @@ using System.Collections.ObjectModel;
 using TaleWorlds.CampaignSystem.Actions;
 using RealmsForgotten.Utility;
 using RealmsForgotten.Quest.SecondUpdate;
+using System.Linq.Expressions;
 
 namespace RealmsForgotten.Behaviors
 {
@@ -58,8 +59,16 @@ namespace RealmsForgotten.Behaviors
                 Location? location = CampaignMission.Current?.Location;
                 if (location != null && location.StringId == "tavern")
                 {
-                    LocationCharacter locationCharacter = CreateEnhancedVendor(settlement.Culture, LocationCharacter.CharacterRelations.Neutral);
-                    location.AddCharacter(locationCharacter);
+                    try
+                    {
+                        LocationCharacter locationCharacter = CreateEnhancedVendor(settlement.Culture, LocationCharacter.CharacterRelations.Neutral);
+                        location.AddCharacter(locationCharacter);
+                    }
+                    catch (Exception ex)
+                    {
+                        InformationManager.DisplayMessage(new InformationMessage($"Error spawning enchanted vendor in RFEnchantmentVendorBehavior.LocationCharactersAreReadyToSpawn: {ex.Message}"));
+                    }
+
                 }
             }
         }
@@ -95,7 +104,7 @@ namespace RealmsForgotten.Behaviors
                     if (Mission.Current != null && currentSettlement != null)
                     {
                         vendorItemRoster = CreateItemRoster();
-                        InventoryManager.OpenScreenAsTrade(vendorItemRoster, currentSettlement.SettlementComponent, InventoryManager.InventoryCategoryType.All, () => { });
+                        InventoryScreenHelper.OpenScreenAsTrade(vendorItemRoster, currentSettlement.SettlementComponent, InventoryScreenHelper.InventoryCategoryType.All, () => { });
                     }
                 }).GotoDialogState("start").PlayerOption("{=leave}Leave.").CloseDialog().EndPlayerOptions();
 
@@ -105,8 +114,8 @@ namespace RealmsForgotten.Behaviors
                     Settlement currentSettlement = Settlement.CurrentSettlement;
                     if (Mission.Current != null && currentSettlement != null)
                     {
-                        
-                        InventoryManager.OpenScreenAsTrade(vendorItemRoster, currentSettlement.SettlementComponent, InventoryManager.InventoryCategoryType.All, () => 
+
+                        InventoryScreenHelper.OpenScreenAsTrade(vendorItemRoster, currentSettlement.SettlementComponent, InventoryScreenHelper.InventoryCategoryType.All, () => 
                         {
 
                         });

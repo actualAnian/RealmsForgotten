@@ -94,10 +94,9 @@ namespace RealmsForgotten.HuntableHerds.AgentComponents
             sbyte mainHandItemBoneIndex = Agent.Monster.MainHandItemBoneIndex;
             AttackCollisionData attackCollisionDataForDebugPurpose = AttackCollisionData.GetAttackCollisionDataForDebugPurpose(isBlocked, false, false, true, false, false, false, false, false, false, false, false, isBlocked ? CombatCollisionResult.Blocked : CombatCollisionResult.StrikeAgent, -1, 0, 2, blow.BoneIndex, BoneBodyPartType.Head, mainHandItemBoneIndex, Agent.UsageDirection.AttackLeft, -1, CombatHitResultFlags.NormalHit, 0.5f, 1f, 0f, 0f, 0f, 0f, 0f, 0f, Vec3.Up, blow.Direction, blow.GlobalPosition, Vec3.Zero, Vec3.Zero, otherAgent.Velocity, Vec3.Up);
 
-            if (Agent.Monster.StringId == "rat" && !Agent.GetCurrentAction(0).Name.Contains("attack"))
+            if (Agent.Monster.StringId == "rat" && !Agent.GetCurrentAction(0).GetName().Contains("attack"))
             {
                 Agent.SetActionChannel(0, plagueRatAttack[MBRandom.RandomInt(plagueRatAttack.Length)], true);
-
             }
 
             otherAgent.RegisterBlow(blow, attackCollisionDataForDebugPurpose);

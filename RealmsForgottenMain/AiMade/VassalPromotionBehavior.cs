@@ -11,6 +11,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
+using TaleWorlds.Core.ImageIdentifiers;
 
 namespace RealmsForgotten.AiMade
 {
@@ -111,10 +112,10 @@ namespace RealmsForgotten.AiMade
                 // FIX: The definitive way to get the image.
                 // We get the Town's Settlement, then its Party, then the Party's Owner (a Hero),
                 // and finally the Owner's CharacterObject.
-                ImageIdentifier image = null;
+                CharacterImageIdentifier image = null;
                 if (fief.Settlement.Party?.Owner?.CharacterObject != null)
                 {
-                    image = new ImageIdentifier(CharacterCode.CreateFrom(fief.Settlement.Party.Owner.CharacterObject));
+                    image = new CharacterImageIdentifier(CharacterCode.CreateFrom(fief.Settlement.Party.Owner.CharacterObject));
                 }
 
                 inquiryElements.Add(new InquiryElement(
@@ -152,13 +153,13 @@ namespace RealmsForgotten.AiMade
             newClanName.SetTextVariable("COMPANION_NAME", companion.Name);
 
             Clan newClan = Clan.CreateClan(newClanName.ToString());
-            newClan.InitializeClan(newClan.Name, newClan.Name, companion.Culture, Banner.CreateRandomClanBanner(companion.StringId.GetDeterministicHashCode()));
-
+            newClan.Culture = companion.Culture;
+            newClan.Banner = Banner.CreateRandomClanBanner(companion.StringId.GetDeterministicHashCode());
             newClan.SetLeader(companion);
 
             ChangeOwnerOfSettlementAction.ApplyByGift(fief, companion);
 
-            newClan.UpdateHomeSettlement(fief);
+            newClan.SetInitialHomeSettlement(fief);
 
             // FIX: A clan's tier is based on renown. We add enough renown to reach tier 2.
             float renownForTier2 = Campaign.Current.Models.ClanTierModel.GetRequiredRenownForTier(2);

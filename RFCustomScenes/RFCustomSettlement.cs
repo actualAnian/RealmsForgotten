@@ -1,5 +1,7 @@
-﻿using RFCustomSettlements;
+﻿using RealmsForgotten.MusicSounds;
+using System.Linq;
 using System.Xml;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.ObjectSystem;
@@ -49,6 +51,12 @@ namespace RealmsForgotten.RFCustomSettlements
             {
                 StateHandler = new ArenaSettlementStateHandler(this);
             }
+            MusicType = (node.Attributes["music_theme"]?.Value) switch
+            {
+                "standard_battle" => RFMusicType.StandardBattle,
+                "stealth" => RFMusicType.Stealth,
+                _ => RFMusicType.StandardBattle,
+            };
         }
         [SaveableProperty(500)]
         public bool IsVisible { get; set; }
@@ -57,7 +65,15 @@ namespace RealmsForgotten.RFCustomSettlements
         public bool CanEnterAnytime { get; private set; }
         public int EnterStart { get; private set; }
         public int EnterEnd { get; private set; }
-        internal ISettlementStateHandler StateHandler { get; private set; }   
-
+        public RFMusicType MusicType { get; private set; } = RFMusicType.StandardBattle;
+        internal ISettlementStateHandler StateHandler { get; private set; }
+        public override IFaction MapFaction
+        {
+            get
+            {
+                return Campaign.Current.Factions.First(f => f.Culture.StringId == "empire");
+            }
+        }
+        //public override IFaction MapFaction => Campaign.Current.Factions.First(f => f.Culture.StringId == "empire"); //@TODO check
     }
 }

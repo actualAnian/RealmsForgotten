@@ -14,6 +14,7 @@ using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.ViewModelCollection;
+using TaleWorlds.MountAndBlade.ViewModelCollection.Missions.Interaction;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
@@ -96,8 +97,8 @@ namespace RealmsForgotten.RFCustomSettlements
             Vec3 position2 = Agent.Main.Position;
             float num2 = new Vec3(position.x, position.y, 0f, -1f).Distance(new Vec3(position2.x, position2.y, 0f, -1f));
             Vec3 vec2 = position * (1f - num2) + (position + direction) * num2;
-            _ = Mission.Current.Scene.RayCastForClosestEntityOrTerrainMT(vec2, vec2 + vec * num, out float distance, out Vec3 closesPoint, 0.01f, BodyFlags.None);
-
+            _ = Mission.Current.Scene.RayCastForClosestEntityOrTerrain(vec2, vec2 + vec * num, out float distance, out Vec3 closesPoint, out WeakGameEntity entity, 0.01f, BodyFlags.None);
+                
             foreach (KeyValuePair<Agent, Vec3> lootableAgent in logic.LootableAgents)
             {
 
@@ -114,12 +115,11 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             return !agent.IsActive() && agent.Components.Any(c => c is LootableAgentComponent);
         }
-
         public static void SetVMLook(AgentInteractionInterfaceVM vm)
         {
             GameKey key = HotKeyManager.GetCategory("CombatHotKeyCategory").GetGameKey(13);
             string button = $@"<img src=""General\InputKeys\{key.ToString().ToLower()}"" extend=""24"">";
-            vm.PrimaryInteractionMessage = button + "Loot";
+            vm.PrimaryInteractionMessages.First().FocusTypeString = button + "Loot"; //@TODO test
             vm.IsActive = true;
         }
         public static RFUsableObjectType? ChooseObjectType(string objectName)

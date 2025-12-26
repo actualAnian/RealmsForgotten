@@ -81,7 +81,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
         public static NinthQuest ActiveNinthQuestInstance { get; private set; }
 
         public override TextObject Title => new TextObject("Ninth Quest: The Orc Trail");
-        public override bool IsSpecialQuest => true;
+        public override string SpecialQuestType => "RfMainQuest";
         public override bool IsRemainingTimeHidden => true;
 
         private static readonly string[] SACRED_WATER_IDS = { "sacredwater" }; // deixe os 2 se tiver dúvida no XML
@@ -289,7 +289,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
         {
             if (FirstTreeSettlement == null) return;
 
-            float distance = MobileParty.MainParty.Position2D.Distance(FirstTreeSettlement.GatePosition);
+            float distance = MobileParty.MainParty.Position.Distance(FirstTreeSettlement.GatePosition);
 
             if (distance > 50f) return; // only trigger when close
 
@@ -373,7 +373,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
                         if (mapEvent.PlayerSide == mapEvent.WinningSide)
                         {
                             Hero.MainHero.Clan.Renown += 250;
-                            GiveGoldAction.ApplyForQuestBetweenCharacters(null, Hero.MainHero, 50000);
+                            GiveGoldAction.ApplyBetweenCharacters(null, Hero.MainHero, 50000, false);
                             InformationManager.ShowInquiry(new InquiryData("A Threat Averted", "You have personally defeated the Deformed Horde and its champion, Ghor'Lag. Your heroic deed will be sung across the realms! You have been rewarded for your valor.", true, false, "Excellent!", null, null, null));
                         }
                     }
@@ -504,7 +504,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
         {
             if (!_convoySpawned && TriggerSettlement != null && _travelToUrkhaiLog?.CurrentProgress == 0)
             {
-                if (MobileParty.MainParty.Position2D.Distance(TriggerSettlement.GatePosition) <= 70f)
+                if (MobileParty.MainParty.Position.Distance(TriggerSettlement.GatePosition) <= 70f)
                 {
                     // ✅ CORREÇÃO: Completa o log anterior
                     _travelToUrkhaiLog.UpdateCurrentProgress(1);
@@ -651,7 +651,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 AddLog(new TextObject("With the Witch finally cast down, a fragile peace settles once more over Aeurth. Many were blind to the shadow she wove, yet you and the Owl carry the scars of a tale that few will ever truly grasp. The world itself has changed, for now it knows of the hidden powers that stir in the dark. And though their whispers may rise again, today their voices are silenced… and your victory will echo through the ages."));
                 CompleteQuestWithSuccess();
                 Hero.MainHero.Clan.Renown += 1500;
-                GiveGoldAction.ApplyForQuestBetweenCharacters(null, Hero.MainHero, 100000);
+                GiveGoldAction.ApplyBetweenCharacters(null, Hero.MainHero, 100000);
                 GainKingdomInfluenceAction.ApplyForDefault(Hero.MainHero, 500); 
 
                 
@@ -660,7 +660,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 {
                     foreach (Clan clan in battania.Clans)
                     {
-                        foreach (Hero lord in clan.Lords)
+                        foreach (Hero lord in clan.AliveLords)
                         {
                             if (lord != null && lord != Hero.MainHero && lord.IsAlive)
                             {
@@ -837,13 +837,15 @@ namespace RealmsForgotten.Quest.FourthUpdate
             convoyRoster.AddToCounts(CharacterObject.Find("urkhai_warrior_infantry"), 50);
             TroopRoster prisonerRoster = TroopRoster.CreateDummyTroopRoster();
             prisonerRoster.AddToCounts(CharacterObject.Find("imperial_recruit"), 15);
-            _orcConvoyParty = BanditPartyComponent.CreateBanditParty(ORC_CONVOY_PARTY_ID, urkhaiClan, null, true);
+            PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+            MobileParty _orcConvoyParty = BanditPartyComponent.CreateBanditParty(ORC_CONVOY_PARTY_ID, urkhaiClan, null, true, looterTemplate, MobileParty.MainParty.Position); //@TODO test
+
             if (_orcConvoyParty == null) { InformationManager.DisplayMessage(new InformationMessage("Error: Failed to create convoy party.", Colors.Red)); return; }
-            _orcConvoyParty.InitializeMobilePartyAroundPosition(convoyRoster, prisonerRoster, MobileParty.MainParty.Position2D, 10f, 5f);
+            _orcConvoyParty.InitializeMobilePartyAroundPosition(convoyRoster, prisonerRoster, MobileParty.MainParty.Position, 10f, 5f);
             _orcConvoyParty.ChangePartyLeader(convoyLeader);
-            _orcConvoyParty.SetCustomName(new TextObject("Convoy of {LEADER_NAME}").SetTextVariable("LEADER_NAME", convoyLeader.Name));
+            _orcConvoyParty.Party.SetCustomName(new TextObject("Convoy of {LEADER_NAME}").SetTextVariable("LEADER_NAME", convoyLeader.Name));
             Settlement destination = Settlement.Find("town_Urk2");
-            _orcConvoyParty.Ai.SetMoveGoToSettlement(destination);
+            _orcConvoyParty.SetMoveGoToSettlement(destination, MobileParty.NavigationType.All, false);
             _orcConvoyParty.Aggressiveness = 0.5f;
             _interceptConvoyLog = AddDiscreteLog(
       new TextObject("Intercept the Convoy"),
@@ -867,77 +869,30 @@ namespace RealmsForgotten.Quest.FourthUpdate
         private void SpawnDeformedHorde()
         {
             Clan deformedClan = Clan.FindFirst(c => c.StringId == "deformed_villagers");
-            if (deformedClan == null)
-            {
-                InformationManager.DisplayMessage(new InformationMessage("Error: Deformed clan not found.", Colors.Red));
-                return;
-            }
+            if (deformedClan == null) { InformationManager.DisplayMessage(new InformationMessage("Error: Deformed clan not found.", Colors.Red)); return; }
+            Settlement spawnNear = Settlement.Find("town_S2");
+            if (spawnNear == null) { InformationManager.DisplayMessage(new InformationMessage("Error: Spawn location for horde not found.", Colors.Red)); return; }
+            _hordeLeaderHero = HeroCreator.CreateSpecialHero(CharacterObject.Find("deformed_villager_boss"), null, deformedClan, null, 35);
+            _hordeLeaderHero.SetName(new TextObject("Ghor'Lag the Unraveler"), new TextObject("The Blighted One"));
+            PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+            MobileParty banditParty = BanditPartyComponent.CreateBanditParty("deformed_horde_party", deformedClan, null, true, looterTemplate, spawnNear.Position); //@TODO
 
-            // culturas permitidas para spawn
-            string[] allowedCultures = { "battania", "empire", "khuzait", "wulf" };
-
-            // pega todas as vilas dessas culturas
-            var candidateVillages = Settlement.All
-                .Where(s => s.IsVillage
-                            && s.Culture != null
-                            && allowedCultures.Contains(s.Culture.StringId))
-                .ToList();
-
-            if (candidateVillages.Count < 4)
-            {
-                InformationManager.DisplayMessage(new InformationMessage("Error: Not enough candidate villages for 4 hordes.", Colors.Red));
-                return;
-            }
-
-            // escolhe 4 vilas aleatórias distintas
-            var spawnVillages = candidateVillages
-                .OrderBy(s => MBRandom.RandomFloat)
-                .Take(4)
-                .ToList();
-
-            for (int i = 0; i < spawnVillages.Count; i++)
-            {
-                Settlement spawnNear = spawnVillages[i];
-
-                Hero hordeLeader = HeroCreator.CreateSpecialHero(
-                    CharacterObject.Find("ghorlag_the_unraveler"),
-                    null, deformedClan, null, 35);
-
-                hordeLeader.SetName(
-                    new TextObject($"Ghor'Lag the Unraveler #{i + 1}"),
-                    new TextObject("The Blighted One"));
-
-                MobileParty hordeParty = BanditPartyComponent.CreateBanditParty($"deformed_horde_party_{i + 1}", deformedClan, null, true);
-
-                TroopRoster hordeRoster = TroopRoster.CreateDummyTroopRoster();
-                hordeRoster.AddToCounts(CharacterObject.Find("deformed_villager_boss"),35);
-                hordeRoster.AddToCounts(CharacterObject.Find("deformed_villager_chief"), 120);
-                hordeRoster.AddToCounts(CharacterObject.Find("deformed_villager_raider"), 250);
-
-                hordeParty.InitializeMobilePartyAroundPosition(
-                    hordeRoster,
-                    TroopRoster.CreateDummyTroopRoster(),
-                    spawnNear.Position2D,
-                    100f,
-                    20f);
-
-                hordeParty.ChangePartyLeader(hordeLeader);
-                hordeParty.SetCustomName(new TextObject("{=rf_horde_name}Deformed Horde of {LEADER_NAME}")
-                    .SetTextVariable("LEADER_NAME", hordeLeader.Name));
-                hordeParty.Aggressiveness = 10f;
-                hordeParty.Ai.SetMovePatrolAroundSettlement(spawnNear);
-
-                // log individual
-                TextObject logText = new TextObject("A Deformed Horde, led by {LEADER}, has appeared near {LOCATION}!");
-                logText.SetTextVariable("LEADER", hordeLeader.Name);
-                logText.SetTextVariable("LOCATION", spawnNear.Name);
-                AddLog(logText);
-                AddTrackedObject(hordeParty);
-
-                // mensagem global
-                InformationManager.DisplayMessage(new InformationMessage(
-                    $"The Deformed Horde #{i + 1} has spawned near {spawnNear.Name} ({spawnNear.Culture.Name}).", Colors.Red));
-            }
+            TroopRoster hordeRoster = TroopRoster.CreateDummyTroopRoster();
+            hordeRoster.AddToCounts(CharacterObject.Find("deformed_villager_boss"), 5);
+            hordeRoster.AddToCounts(CharacterObject.Find("deformed_villager_chief"), 20);
+            hordeRoster.AddToCounts(CharacterObject.Find("deformed_villager_raider"), 50);
+            _deformedHordeParty.InitializeMobilePartyAroundPosition(hordeRoster, TroopRoster.CreateDummyTroopRoster(), spawnNear.Position, 100f, 20f);
+            _deformedHordeParty.ChangePartyLeader(_hordeLeaderHero);
+            _deformedHordeParty.Party.SetCustomName(new TextObject("{=rf_horde_name}Deformed Horde of {LEADER_NAME}").SetTextVariable("LEADER_NAME", _hordeLeaderHero.Name));
+            _deformedHordeParty.Aggressiveness = 10f;
+            _deformedHordeParty.SetMovePatrolAroundSettlement(spawnNear, MobileParty.NavigationType.All, false);
+            TextObject logText = new TextObject("A massive Deformed Horde, led by Ghor'Lag the Unraveler, has appeared near {LOCATION}. It grows stronger with each victory. This threat must be eliminated.");
+            logText.SetTextVariable("LOCATION", spawnNear.Name);
+            _defeatHordeLog = AddLog(logText);
+            AddTrackedObject(_deformedHordeParty);
+            TextObject messageText = new TextObject("The Deformed Horde has spawned, menacing the lands around {LOCATION}!");
+            messageText.SetTextVariable("LOCATION", spawnNear.Name);
+            InformationManager.DisplayMessage(new InformationMessage(messageText.ToString(), Colors.Red));
         }
 
         protected override void OnFinalize()

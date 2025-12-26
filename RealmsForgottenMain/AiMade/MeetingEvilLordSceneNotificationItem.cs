@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.SceneInformationPopupTypes;
 using TaleWorlds.Core;
@@ -25,7 +26,7 @@ namespace RealmsForgotten.AiMade
             }
         }
 
-        public override IEnumerable<SceneNotificationCharacter> GetSceneNotificationCharacters()
+        public override SceneNotificationData.SceneNotificationCharacter[] GetSceneNotificationCharacters()
         {
             List<SceneNotificationCharacter> list = new List<SceneNotificationCharacter>();
             Equipment overriddenEquipment1 = Character.Equipment.Clone(false);
@@ -36,7 +37,7 @@ namespace RealmsForgotten.AiMade
             CampaignSceneNotificationHelper.RemoveWeaponsFromEquipment(ref overriddenEquipment2, false, false);
             list.Add(new SceneNotificationData.SceneNotificationCharacter(SecondCharacter, overriddenEquipment2, default(BodyProperties), false, uint.MaxValue, uint.MaxValue, false));
 
-            return list;
+            return list.ToArray();
         }
 
         public MeetingEvilLordSceneNotificationItem(CharacterObject character, CharacterObject secondCharacter)

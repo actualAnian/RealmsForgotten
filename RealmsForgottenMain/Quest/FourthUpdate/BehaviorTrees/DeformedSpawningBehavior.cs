@@ -126,16 +126,15 @@ namespace RealmsForgotten.Quest.FourthUpdate
             try
             {
                 string partyId = $"deformed_party_{hideout.Settlement.StringId}_{MBRandom.RandomInt(10000, 99999)}";
-                MobileParty party = BanditPartyComponent.CreateBanditParty(partyId, clan, hideout, true);
-
+                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+                MobileParty party = BanditPartyComponent.CreateBanditParty(partyId, clan, hideout, true, looterTemplate, hideout.Settlement.Position);
                 if (party == null) return;
-
                 TroopRoster roster = TroopRoster.CreateDummyTroopRoster();
                 roster.AddToCounts(CharacterObject.Find("deformed_villager_boss"), 1);
                 roster.AddToCounts(CharacterObject.Find("deformed_villager_bandit"), 80);
 
-                party.InitializeMobilePartyAroundPosition(roster, TroopRoster.CreateDummyTroopRoster(), hideout.Settlement.Position2D, 100f, 10f);
-                party.SetCustomName(new TextObject("Deformed Villagers"));
+                party.InitializeMobilePartyAroundPosition(roster, TroopRoster.CreateDummyTroopRoster(), hideout.Settlement.Position, 100f, 10f);
+                party.Party.SetCustomName(new TextObject("Deformed Villagers"));
                 party.Aggressiveness = 100f;
                 party.SetPartyObjective(MobileParty.PartyObjective.Aggressive);
             }

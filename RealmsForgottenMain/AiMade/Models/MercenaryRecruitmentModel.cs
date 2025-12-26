@@ -9,7 +9,7 @@ namespace RealmsForgotten.AiMade.Career
 
         public static void MaximumIndexHeroCanRecruitFromHero(Hero buyerHero, Hero sellerHero, ref int baseValue)
         {
-            if (CustomSettings.Instance?.InfluenceCostForDifferentCultures == true)
+            if (RFSettings.Instance?.InfluenceCostForDifferentCultures == true)
             {
                 IFaction buyerKingdom = buyerHero.MapFaction;
                 if (buyerKingdom == null || IsMinorOrMercenaryClan(buyerHero) || sellerHero.HomeSettlement.Owner == buyerHero)

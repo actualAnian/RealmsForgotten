@@ -43,7 +43,7 @@ namespace RealmsForgotten.AiMade.Village_Inn_Quests
             : base(questId, questGiver, duration, rewardGold) { }
 
         public override TextObject Title => new TextObject("{=rf_werewolf_title}The Werewolf in the Village");
-        public override bool IsSpecialQuest => true;
+        public override string SpecialQuestType => "RfWerewolf";
         public override bool IsRemainingTimeHidden => false;
 
         private void InitializeLogs()
@@ -78,18 +78,17 @@ namespace RealmsForgotten.AiMade.Village_Inn_Quests
             if (werewolfChar == null)
                 return;
 
-            _werewolfParty = BanditPartyComponent.CreateBanditParty(
-                "rf_werewolf_party_" + village.StringId,
-                Clan.BanditFactions.FirstOrDefault(),
-                null, false);
+            PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+            _werewolfParty = BanditPartyComponent.CreateBanditParty("rf_werewolf_party_" + village.StringId, Clan.BanditFactions.First(), null, false, looterTemplate, village.GatePosition); //@TODO
 
             _werewolfParty.InitializeMobilePartyAroundPosition(
                 new TroopRoster(_werewolfParty.Party),
                 new TroopRoster(_werewolfParty.Party),
                 village.GatePosition, 1f);
 
+            _werewolfParty.MemberRoster.Clear();
             _werewolfParty.MemberRoster.AddToCounts(werewolfChar, 5);
-            _werewolfParty.SetCustomName(new TextObject("Werewolf"));
+            _werewolfParty.Party.SetCustomName(new TextObject("Werewolf"));
             _werewolfParty.SetPartyUsedByQuest(true);
             _werewolfParty.Ai.DisableAi();
 
@@ -137,7 +136,7 @@ namespace RealmsForgotten.AiMade.Village_Inn_Quests
                 else
                     OnWerewolfDefeated();
 
-                _werewolfParty.RemoveParty();
+                DestroyPartyAction.Apply(null, _werewolfParty);
                 _werewolfParty = null;
             }
         }

@@ -13,36 +13,43 @@ using TaleWorlds.CampaignSystem.Party;
 
 namespace RealmsForgotten.Models
 {
-    internal class RFMapVisibilityModel : MapVisibilityModel
+    public class RFMapVisibilityModel : MapVisibilityModel
     {
-        private MapVisibilityModel baseModel;
+        private MapVisibilityModel _baseModel;
 
         public RFMapVisibilityModel(MapVisibilityModel defaultModel)
         {
-            baseModel = defaultModel;
+            _baseModel = defaultModel;
         }
 
         public override float GetHideoutSpottingDistance()
         {
-            return baseModel.GetHideoutSpottingDistance();
+            return _baseModel.GetHideoutSpottingDistance();
         }
 
         public override float GetPartyRelativeInspectionRange(IMapPoint party)
         {
-            return baseModel.GetPartyRelativeInspectionRange(party);
+            return _baseModel.GetPartyRelativeInspectionRange(party);
         }
 
         public override float GetPartySpottingDifficulty(MobileParty spotterParty, MobileParty party)
         {
-            return baseModel.GetPartySpottingDifficulty(spotterParty, party);
+            return _baseModel.GetPartySpottingDifficulty(spotterParty, party);
         }
 
         public override ExplainedNumber GetPartySpottingRange(MobileParty party, bool includeDescriptions = false)
         {
-            ExplainedNumber value = baseModel.GetPartySpottingRange(party, includeDescriptions);
+            ExplainedNumber value = _baseModel.GetPartySpottingRange(party, includeDescriptions);
             if (party != MobileParty.MainParty || !PlayerCareerExtension.HasAnyCareer() || Hero.MainHero.PartyBelongedTo == null) return value;
-            CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.SpottingRange, true);
+            CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.SpottingRange);
             return value;
+        }
+
+        public override float GetPartySpottingRangeBase(MobileParty party) => _baseModel.GetPartySpottingRangeBase(party);
+
+        public override float MaximumSeeingRange()
+        {
+            return _baseModel.MaximumSeeingRange();
         }
     }
 }

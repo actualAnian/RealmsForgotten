@@ -23,7 +23,7 @@ namespace RealmsForgotten.Patches
         [HarmonyPostfix]
         static void Postfix(MobileParty side1Party, CharacterObject subject, Hero individual, int bitCode)
         {
-            if (CustomSettings.Instance?.InfluenceCostForDifferentCultures == true)
+            if (RFSettings.Instance?.InfluenceCostForDifferentCultures == true)
             {
                 if (subject.Culture != side1Party.LeaderHero.Culture && !side1Party.ActualClan.IsMinorFaction && !side1Party.ActualClan.IsClanTypeMercenary)
                 {
@@ -59,7 +59,7 @@ namespace RealmsForgotten.Patches
         [HarmonyPrefix]
         public static bool Prefix(MBBindingList<RecruitVolunteerTroopVM> ____troopsInCart, RecruitmentVM __instance)
         {
-            if (CustomSettings.Instance?.InfluenceCostForDifferentCultures == true)
+            if (RFSettings.Instance?.InfluenceCostForDifferentCultures == true)
             {
                 if (originalMethodCount >= 2)
                 {
@@ -105,7 +105,7 @@ namespace RealmsForgotten.Patches
         [HarmonyPostfix]
         static void Postfix(ref MenuCallbackArgs args)
         {
-            if (CustomSettings.Instance?.InfluenceCostForDifferentCultures == true && Settlement.CurrentSettlement.Owner != Hero.MainHero)
+            if (RFSettings.Instance?.InfluenceCostForDifferentCultures == true && Settlement.CurrentSettlement.Owner != Hero.MainHero)
             {
                 if (Settlement.CurrentSettlement.MapFaction.IsAtWarWith(Hero.MainHero.MapFaction) && Settlement.CurrentSettlement.Culture != Hero.MainHero.Culture)
                 {
@@ -122,14 +122,14 @@ namespace RealmsForgotten.Patches
         }
     }
 
-    [HarmonyPatch(typeof(AiVisitSettlementBehavior), "ApproximateNumberOfVolunteersCanBeRecruitedFromSettlement")]
-    static class ApproximateNumberOfVolunteersCanBeRecruitedFromSettlementPatch
+    [HarmonyPatch(typeof(AiVisitSettlementBehavior), "GetApproximateVolunteersCanBeRecruitedDataFromSettlement")]
+    static class GetApproximateVolunteersCanBeRecruitedDataFromSettlementPatch
     {
         [HarmonyPostfix]
-        static void Postfix(Hero hero, Settlement settlement, ref int __result)
+        static void Postfix(Hero hero, Settlement settlement, ref ValueTuple<int, float> __result)
         {
-            if (CustomSettings.Instance?.InfluenceCostForDifferentCultures == true && ((hero.Clan != null && !hero.Clan.IsClanTypeMercenary && !hero.Clan.IsMinorFaction && settlement.MapFaction.IsAtWarWith(hero.MapFaction)) || hero.Clan.Influence <= 0))
-                __result = 0;
+            if (RFSettings.Instance?.InfluenceCostForDifferentCultures == true && ((hero.Clan != null && !hero.Clan.IsClanTypeMercenary && !hero.Clan.IsMinorFaction && settlement.MapFaction.IsAtWarWith(hero.MapFaction)) || hero.Clan.Influence <= 0))
+                __result = new(0, 0);
         }
     }
 }

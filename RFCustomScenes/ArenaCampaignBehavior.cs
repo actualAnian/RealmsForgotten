@@ -3,17 +3,14 @@ using System.Linq;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Conversation;
 using RealmsForgotten.RFCustomSettlements;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.CampaignSystem.GameMenus;
-using TaleWorlds.CampaignSystem.Overlay;
 using TaleWorlds.CampaignSystem.Actions;
 using RealmsForgotten;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.Core;
 using TaleWorlds.ObjectSystem;
-using System.Collections.Generic;
 using TaleWorlds.Library;
 
 namespace RFCustomSettlements
@@ -49,19 +46,18 @@ namespace RFCustomSettlements
         }
         public void OnSessionLaunched(CampaignGameStarter campaignGameStarter)
         {
-            //this.AddDialogs(campaignGameStarter); 
-            this.AddGameMenus(campaignGameStarter); 
+            AddGameMenus(campaignGameStarter);
             arenaSettlement = Settlement.All.FirstOrDefault(s => s.SettlementComponent is RFCustomSettlement settlement && settlement.StateHandler is ArenaSettlementStateHandler);
         }
         private void AddGameMenus(CampaignGameStarter campaignGameStarter)
         {
             campaignGameStarter.AddGameMenu("rf_taken_to_arena", "The camp of your captors stirs, as the captives are rounded and you hear rumours - you are to be taken to the infamous colossum, where slaves fight for the enjoyment of the masses!", delegate(MenuCallbackArgs args) { args.MenuContext.SetBackgroundMeshName(Hero.MainHero.IsFemale? "arena_captured_female" : "arena_male_captured_b"); },
-                GameOverlays.MenuOverlayType.None, GameMenu.MenuFlags.None, null);
+                GameMenu.MenuOverlayType.None, GameMenu.MenuFlags.None, null);
             campaignGameStarter.AddGameMenuOption("rf_taken_to_arena", "rf_taken_to_arena_continue", "I will need all my strength to survive what's to come...", delegate(MenuCallbackArgs args) { return true; },
                 new GameMenuOption.OnConsequenceDelegate(this.game_menu_taken_to_arena_on_consequence), false, -1, false, null);
-            campaignGameStarter.AddGameMenu("rf_arena_finish", "You are victorious yet again! As a clear audience favourite, the arena master returns your freedom, amidst a grand ceremony. There are more ways to keep the public engaged than just through bloodshed, eh?", new OnInitDelegate(rf_arena_finish_init), GameOverlays.MenuOverlayType.None, GameMenu.MenuFlags.None, null);
+            campaignGameStarter.AddGameMenu("rf_arena_finish", "You are victorious yet again! As a clear audience favourite, the arena master returns your freedom, amidst a grand ceremony. There are more ways to keep the public engaged than just through bloodshed, eh?", new OnInitDelegate(rf_arena_finish_init), GameMenu.MenuOverlayType.None, GameMenu.MenuFlags.None, null);
             campaignGameStarter.AddGameMenuOption("rf_arena_finish", "rf_start_battle_continue", "Now I know the value of freedom.", null, new GameMenuOption.OnConsequenceDelegate(rf_arena_finish_consequence));
-            campaignGameStarter.AddGameMenu("rf_arena_player_lost", "{=!}{RF_ARENA_LOSE_TEXT}", new OnInitDelegate(rf_arena_lost_on_init), GameOverlays.MenuOverlayType.None, GameMenu.MenuFlags.None, null);
+            campaignGameStarter.AddGameMenu("rf_arena_player_lost", "{=!}{RF_ARENA_LOSE_TEXT}", new OnInitDelegate(rf_arena_lost_on_init), GameMenu.MenuOverlayType.None, GameMenu.MenuFlags.None, null);
             campaignGameStarter.AddGameMenuOption("rf_arena_player_lost", "rf_arena_player_lost_continue", "{=!}{RF_ARENA_LOSE_CONTINUE_TEXT}", null, new GameMenuOption.OnConsequenceDelegate(rf_arena_player_lost_consequence));
         }
 
@@ -128,7 +124,7 @@ namespace RFCustomSettlements
             if (arenaSettlement != null)
             {
                 PlayerCaptivity.EndCaptivity();
-                Hero.MainHero.PartyBelongedTo.Position2D = arenaSettlement.GatePosition;
+                Hero.MainHero.PartyBelongedTo.SetPositionAfterMapChange(arenaSettlement.GatePosition);
 
                 EnterSettlementAction.ApplyForParty(MobileParty.MainParty, arenaSettlement);
                 ArenaSettlementStateHandler.currentState = ArenaSettlementStateHandler.ArenaState.Captured;
@@ -173,12 +169,10 @@ namespace RFCustomSettlements
         }
         public static void TeleportCapturedPlayerToArena()
         {
-            if(arenaSettlement == null) GameMenu.SwitchToMenu("menu_captivity_end_no_more_enemies");
-            else
-            {
+            if (arenaSettlement == null)
+                GameMenu.SwitchToMenu("menu_captivity_end_no_more_enemies");
+            else 
                 GameMenu.SwitchToMenu("rf_taken_to_arena");
-            }
-
         }
     }
 }

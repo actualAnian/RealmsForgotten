@@ -130,7 +130,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
         }
 
         public override TextObject Title => new TextObject("Eighth Quest: Call of the First Tree");
-        public override bool IsSpecialQuest => true;
+        public override string SpecialQuestType => "RfMainQuest";
 
         // ✅ CORRIGIDO: A propriedade obrigatória foi adicionada novamente.
         public override bool IsRemainingTimeHidden => true;
@@ -283,7 +283,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 _meetPriestessLog == null || _meetPriestessLog.CurrentProgress != 1)
                 return;
 
-            float distance = MobileParty.MainParty.Position2D.Distance(FirstTreeSettlement.GatePosition);
+            float distance = MobileParty.MainParty.Position.Distance(FirstTreeSettlement.GatePosition);
             if (distance <= 50f)
             {
                 var priestess = CharacterObject.Find(PRIESTESS_CHAR_ID);
@@ -323,13 +323,15 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 }
 
                 string uniqueId = $"rf_deformed_ambush_{MBRandom.RandomInt(10000)}";
-                MobileParty ambushParty = BanditPartyComponent.CreateBanditParty(uniqueId, deformedClan, null, true);
+                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+                MobileParty ambushParty = BanditPartyComponent.CreateBanditParty(uniqueId, deformedClan, null, true, looterTemplate, MobileParty.MainParty.Position);
+
                 if (ambushParty == null) return;
 
-                ambushParty.InitializeMobilePartyAroundPosition(troopRoster, TroopRoster.CreateDummyTroopRoster(), MobileParty.MainParty.Position2D, 0f, 0f);
+                ambushParty.InitializeMobilePartyAroundPosition(troopRoster, TroopRoster.CreateDummyTroopRoster(), MobileParty.MainParty.Position, 0f, 0f);
                 ambushParty.Aggressiveness = 100f;
-                ambushParty.Ai.SetMoveEngageParty(MobileParty.MainParty);
-                ambushParty.SetCustomName(new TextObject("Deformed Ambushers"));
+                ambushParty.SetMoveEngageParty(MobileParty.MainParty, MobileParty.NavigationType.Default);
+                ambushParty.Party.SetCustomName(new TextObject("Deformed Ambushers"));
             }
             catch (Exception ex)
             {
@@ -342,7 +344,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
             if (_investigateMagesLog == null || _mageInquiryTriggered || MageInvestigationSpot == null)
                 return;
 
-            float distance = MobileParty.MainParty.Position2D.Distance(MageInvestigationSpot.GatePosition);
+            float distance = MobileParty.MainParty.Position.Distance(MageInvestigationSpot.GatePosition);
             if (distance <= 50f)
             {
                 _mageInquiryTriggered = true;

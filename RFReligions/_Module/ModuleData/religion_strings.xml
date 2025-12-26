@@ -1,0 +1,86 @@
+﻿<strings>
+    
+    <string id="RFR2uCoyB" text="The traditional religion of Sturgia is the worship of Ratvoz, the Many-Handed God who sends spirits into the world and safeguards the spirits of ancestors. Each of his hands is a god in their own right and they are also worshipped separately; the three greatest of these gods are Xakhun of the Sun, Simbog of the Earth and Matisty of the Waters" /> 
+    <string id="RFRTlmiDH" text="Jawwal believe in spirits they call Jinn, which Imperial citizens garble as “genies”. Both good and evil Jinn inhabit many aspects of nature. The evil ones must be warded off with accurate knowledge of magical binding rituals, which the sorcerers of the Na’as have dedicated their lives to studying." />
+    <string id="RFRkIKSjR" text="The people of Pharun Aegis, also known as the Nordlands, hold the raven in high regard, believing it to possess a hidden wisdom which it will impart to humans if they simply feed it a battlefield full of flesh, and partake in the drinking of strong spirits afterwards. Those who claim to have witnessed the raven’s revelations then go on to practice future-telling." />
+    <string id="RFRaiHGCf" text="Once devout adherents of the Anorites religion, the Beni Tengralor Orkhai split off after a failed attempt to establish a unified high priesthood over all Ayuhazists that provoked widespread rebellion. They insist that the mainstream Anoritesists have corrupted religious law and falsified the sacred texts. The Tengralor Orkhai preach that true salvation under Ayuhaz can only be achieved through knowledge of holy secrets that they alone hold. Their rites are shrouded in mystery." />
+    <string id="RFRY1YWE4" text="Xochxintism centers around the deity Xochxinti and incorporates elements of animism, totemism and ancestor-worship. They believe Xochxinti, the Golden Eagle, created the universe out of the Endless Sky and gave life to humanity with his wife Gergi, the goddess of earth and home. Subordinate to Xochxinti are a number of lesser deities: including Tumai, the divine wind who breathes life into every creature, Erlik god of the underworld, and many others. Iltengrists believe prosperity and well-being of the individual and the nation depend on maintaining reverence and respect for these deities, in harmony with the universe." />
+    <string id="RFRPZgSSM" text="Anoritesists are not animistic fire-worshippers, as some Imperials wrongly believe. Their religion is, in fact, the ancient monotheistic worship of Ayuhaz the All-Father - whose rules over the world from his golden palace, the Sun. Most Aserai scholars believe that Ayuhaz and the Calric Creator god are one in the same, but that the truth of the Ayuhaz religion was corrupted and warped in Aeurth by the influence of the Imperial state." />
+    <string id="RFR3uBlHr" text="Kharaz Drathar is an age-old religion with two main gods - Mother Cràiurach of the earth and Father Tarbnaofach of the lake, who rule as Queen and King over a multitude of minor gods in the Otherworld but often meddle in the affairs of mortals." />
+    <string id="RFRaSG29N" text="Faelora is a 1,000-year-old belief system revolving around one god, called 'The Creator’, and is named after Faelora, their martyred prophet. Calric monks teach that Faelora the Wise was a holy man and peacemaker in the Warring Families Period of the Lycaran Republic who was burned at the stake by enemies of peace." />
+    <string id="RFRBkSTan" text="Sacellum is the temple of Faelora. The word is a diminutive from sacer (belonging to the One). The numerous sacella of Empire included both shrines maintained on private properties by families, and public shrines. A sacellum might be square or round." />
+    <string id="RFRiuCYDv" text="Fiery Cavern is the worshipping location for Anorites Religion. It represents the importance of Sun. Followers can choose whether they wish to pray and how, but communal worship is usually centred around seasonal festivals. Other opportunities for worshipers to gather include the Jaqu'l, the initiation ceremony where a child is accepted into the Anorites fellowship." />
+    <string id="RFRR0xJoc" text="Stone Circles are the temple of Ca fal. Stone circles are usually grouped in terms of the shape and size of the stones, the span of their radius, and their population within the local area. This temple usually serves a location for ceremony or ritual for the followers of this religion." />
+    <string id="RFRvm1ntw" text="Sacred Oak Grove is the temple of Aeterna Fide. This sacred grove or sacred woods are oak grove of trees that are of special religious importance to this religion, symbolizing Simbog, Ruler God of Earth." />
+    <string id="RFRfh0egR" text="Yurt is the worship location for belivers of Xochxinti. Yurt is a portable, round tent covered with skins or felt and used as a dwelling by several distinct nomadic groups in the steppes of Aeurth. The structure consists of an angled assembly or latticework of wood or bamboo for walls, a door frame, ribs (poles, rafters), and a wheel (crown, compression ring) possibly steam-bent." />
+    <string id="RFRIvhZGv" text="Go to the temple district" />
+    <string id="RFRcDRduC" text="You are inside the temple district. You are seeing people from different beliefs on the street.." />
+    <string id="RFRgHOZTS" text="Enter the Sacellum" />
+    <string id="RFRcVAXGX" text="Enter the Fiery Cavern" />
+    <string id="RFRBPijwQ" text="Enter the Sacred Oak Grove" />
+    <string id="RFRFCZtIn" text="Enter the Yurt" />
+    <string id="RFRjHkWuQ" text="Enter the Standing Stone Circle" />
+    <string id="RFR6LDN8i" text="Make Donation({DONATION}{GOLD_ICON})" />
+    <string id="RFR86PaBs" text="You are believing in {PLAYER_RELIGION}({DEVOTION}). Majority of your bloodline always believed in {ANC_BELIEF}.{newline}{RELIGION_SPECIFIC_REQIREMENTS} " />
+    <string id="RFR43uirM" text="Convert to Another Religion" />
+    <string id="RFRK4p76r" text="People in the town and nobles you met previously with the same belief liked your generous donation" />
+    <string id="RFRHr5haI" text="Your worship noticed by people in the townfolk" />
+    <string id="RFRQy4KCS" text="Feast of the Martyrs " />
+    <string id="RFRogRNxY" text="Celebrational Fire"  />
+	<string id="RFRJIXZFV" text="Iron Sacrifice " />
+    <string id="RFRyf8adE" text="Celebrational Forging " />
+    <string id="RFRUWpP4y" text="Fairy Ring offering " />
+    <string id="RFReBIqAx" text="Feast of the Martyrs " />
+	<string id="RFRtKkVfk" text="Religious people in the town liked this behavior" />
+    <string id="RFRPnIr3c" text="You gained morale based on your troop type with this action" />
+    <string id="RFR1yirTa" text="Temple district is closed at night." />
+    <string id="RFRGhjVkq" text="Release " />
+	<string id="RFRryDfNh" text="Sacrifice Animal " />
+	<string id="RFRK7QMgB" text="Select Religion" />
+    <string id="RFR51usdh" text="Selecting a new religion will reset any existing religion devotion. And might direct relationship impact with other believers around the Aeurth" />
+    <string id="RFRAJQJbd" text="({PRIMARY_COUNT} {PRIMARY_NAME} and {SECONDARY_COUNT} {SECONDARY_NAME})" />
+    <string id="RFRxjxR1z" text=" Religion" />
+	<string id="RFRYKBtm0" text="Devotion:" />
+	<string id="RFRQZpjaP" text="None" />
+    <string id="RFRDZoX88" text="Fanatic / {VALUE}" />
+    <string id="RFRwvhCGA" text="Faithful / {VALUE}" />
+    <string id="RFRmlFcWU" text="Believer / {VALUE}" />
+	<string id="RFRmJQL1W" text="I am {HERO}, but names are unimportant, as long as you are enlighted with Anorites. Who are you, stranger?" />
+    <string id="RFRJ2sQmB" text="I am {HERO}, a servant to Tarbnaofach. Who are you?" />
+    <string id="RFRJL9DFy" text="I'm {HERO}. May the light of The Creator be with you." />
+    <string id="RFRSXf5jC" text="I'm {HERO}, follower of the Endless Sky. Who are you?" />
+	<string id="RFRmVFuaP" text="Kveðja! I'm {HERO}, a loyal warrior of Ratvoz. Who are you?" />
+    <string id="RFRZSJNWb" text="I'm {HERO}. May the light of The Creator be with you." />
+	
+	
+	<string id="str_religion" text="Religions" />
+    <string id="str_religion_faelora" text="Religion Faelora" />
+	<string id="str_religion_anorites" text="Religion Anorites" />
+	<string id="str_religion_aeternafide" text="Religion Aeterna Fide" />
+    <string id="str_religion_kharazdrathar" text="Religion Kharaz Drathar" />
+	<string id="str_religion_xochxinti" text="Religion Xochxinti" />
+	<string id="str_religion_pharunaegis" text="Religion Pharun Aegis" />
+    <string id="str_religion_tengralororkhai" text="Religion Tengralor Orkhai" />
+	<string id="str_religion_vyralethamara" text="Religion Vyraleth Amara" />
+	
+	<string id="str_title_religion_faelora" text="Faelora" />
+	<string id="str_title_religion_anorites" text="Anorites" />
+	<string id="str_title_religion_aeternafide" text="Aeterna Fide" />
+    <string id="str_title_religion_kharazdrathar" text="Kharaz Drathar" />
+	<string id="str_title_religion_xochxinti" text="Xochxinti" />
+	<string id="str_title_religion_pharunaegis" text="Pharun Aegis" />
+    <string id="str_title_religion_tengralororkhai" text="Tengralor Orkhai" />
+	<string id="str_title_religion_vyralethamara" text="Vyraleth Amara" />
+	
+	<string id="str_religion_desc" text="Religions are a daily element of Calradic life. Each soldier you command, each trader you trade with will have some type of belief. You can lead your soldiers by showing your devotion to that religion. You can show your faith in your dialogues. However, religion can also effect your daily life in a negative way too. " />
+    <string id="str_religion_faelora_desc" text="Faelora is a 1,000-year-old belief system revolving around one god, called 'The Creator’, and is named after Faelora, their martyred prophet. Calric monks teach that Faelora the Wise was a holy man and peacemaker in the Warring Families Period of the Lycaran Republic who was burned at the stake by enemies of peace. They teach that this murder so angered the Creator that he sent a dragon to torment the Families; after which they ceased fighting, formed the Senate and elected the first Emperor. They believe the constrained violence of the Arena is a sanctified alternative to the horrors of war and that loyalty to the Creator’s chosen Emperor - a true son of Aeurth - is the only true path to peace.{newline}Temple: Sacellum.{newline}Priest: Episcopos.{newline}Tolerated Religion: Ayuhaz" />
+	
+	<string id="str_religion_anorites_desc" text="Anoritesists are not animistic fire-worshippers, as some Imperials wrongly believe. Their religion is, in fact, the ancient monotheistic worship of Ayuhaz the All-Father - whose rules over the world from his golden palace, the Sun. Most Aserai scholars believe that Ayuhaz and the Calric Creator god are one in the same, but that the truth of the Ayuhaz religion was corrupted and warped in Aeurth by the influence of the Imperial state. Anorites worship is not prescriptive and their religious law is based on largely-voluntary submission to the opinions of priest-scholars with no central hierarchy. Anoritesists place less emphasis on ritual worship, instead focusing on the central ethics of “Good Words, Good Thoughts and Good Deeds”; they value mercy, wisdom and practical good works. While faithful Ayuhazists are permitted to take and keep slaves, they believe there is no greater act of mercy than granting freedom to slaves.Followers can choose whether they wish to pray and how, but communal worship is usually centred around seasonal festivals. Ither opportunities for worshipers to gather include the Jaqu'l, the initiation ceremony where a child is accepted into the Anorites fellowship.{newline}Temple: Fiery Cavern.{newline}Priest: Sahab.{newline}Tolerated Religion: Faelora" />
+
+	<string id="str_religion_aeternafide_desc" text="The traditional religion of Sturgia is the worship of Ratvoz, the Many-Handed God who sends spirits into the world and safeguards the spirits of ancestors. Each of his hands is a god in their own right and they are also worshipped separately; the three greatest of these gods are Xakhun of the Sun, Simbog of the Earth and Matisty of the Waters. The knowledge of arcane rituals to correctly sacrifice to these gods and invoke their favor is known as Aeterna Fide. Offerings of grain are given to each of the lesser gods, but Sturgians believe that Ratvoz himself manifests as a sacred oak tree, so he is honored with ritual purification of timber boughs. The arch-enemy of Ratvoz is Kagiv of the Void, by whom spirits will be taken unless Ratvoz is offered weapons to fight him with - these offerings traditionally take place in peat bogs.{newline}Temple: Sacred Oak Grove.{newline}Priest: Magus.{newline}Tolerated Religions: Faelora, Kharaz Drathar" />
+    <string id="str_religion_kharazdrathar_desc" text="Kharaz Drathar is an age-old religion with two main gods - Mother Cràiurach of the earth and Father Tarbnaofach of the lake, who rule as Queen and King over a multitude of minor gods in the Otherworld but often meddle in the affairs of mortals. One can please Tarbnaofa by sacrificing hogs to fuel his insatiable virility which fertilizes the fields; but Cràiurach may only be appeased with human sacrifice, which she considers just repayment for giving life to all beings. Lesser spirits such as fairies and elves may grant good fortune in exchange for offerings of cheese at fairy rings. Most Kharaz Drathar religious symbols are represented in the form of wood carvings, rings and bracelets. Being an age-old decentralized religion, Kharaz Drathar has split into several different variations and, as such, practitioners are generally tolerant of other polytheistic faiths.{newline}Temple: Standing stone Circle.{newline}Priest: Druid.Tolerated Religions: Ratvozdh, Xochxinti" />
+	<string id="str_religion_xochxinti_desc" text="Xochxintism centers around the deity Xochxinti and incorporates elements of animism, totemism and ancestor-worship. They believe Xochxinti, the Golden Eagle, created the universe out of the Endless Sky and gave life to humanity with his wife Gergi, the goddess of earth and home. Subordinate to Xochxinti are a number of lesser deities: including Tumai, the divine wind who breathes life into every creature, Erlik god of the underworld, and many others. Iltengrists believe prosperity and well-being of the individual and the nation depend on maintaining reverence and respect for these deities, in harmony with the universe. They also believe that the gods forged the land by hammering life into a barren mountain, which worshippers pay tribute to through the act of celebrational forging. To pay tribute to great heroes of the past who united the tribes and overcame adversity, Iltengrists also engage in ritual seclusion and fasting in the wild.Temple: Yurt.{newline}Priest: Gokhri.{newline}Tolerated Religions: All " />
+	<string id="str_religion_pharunaegis_desc" text="he people of Pharun Aegis, also known as the Nordlands, hold the raven in high regard, believing it to possess a hidden wisdom which it will impart to humans if they simply feed it a battlefield full of flesh, and partake in the drinking of strong spirits afterwards. Those who claim to have witnessed the raven’s revelations then go on to practice future-telling. " />
+    <string id="str_religion_tengralororkhai_desc" text="Once devout adherents of the Anorites religion, the Beni Tengralor Orkhai split off after a failed attempt to establish a unified high priesthood over all Ayuhazists that provoked widespread rebellion. They insist that the mainstream Anoritesists have corrupted religious law and falsified the sacred texts. The Tengralor Orkhai preach that true salvation under Ayuhaz can only be achieved through knowledge of holy secrets that they alone hold. Their rites are shrouded in mystery " />
+	<string id="str_religion_vyralethamara_desc" text="Jawwal believe in spirits they call Jinn, which Imperial citizens garble as “genies”. Both good and evil Jinn inhabit many aspects of nature. The evil ones must be warded off with accurate knowledge of magical binding rituals, which the sorcerers of the Na’as have dedicated their lives to studying. " />
+</strings>

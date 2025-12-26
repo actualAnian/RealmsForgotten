@@ -6,10 +6,9 @@ using System.Linq;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
-using RealmsForgotten.RFEffects;
-using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Engine;
+using RealmsForgotten.RFEffects;
 
 namespace RealmsForgotten.Career.Ability
 {
@@ -109,7 +108,7 @@ namespace RealmsForgotten.Career.Ability
             {
                 try
                 {
-                    EquipmentIndex wieldedItemIndex = agent.GetWieldedItemIndex(Agent.HandIndex.MainHand);
+                    EquipmentIndex wieldedItemIndex = agent.GetPrimaryWieldedItemIndex();
                     if (wieldedItemIndex == EquipmentIndex.None) continue;
 
                     MissionWeapon weapon = agent.WieldedWeapon;

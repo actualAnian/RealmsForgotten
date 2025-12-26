@@ -173,6 +173,11 @@ namespace RealmsForgotten.AiMade.Models
 
         public override bool CanHaveRecruits(Hero hero) => hero.IsNotable;
 
+        public override int MaximumIndexGarrisonCanRecruitFromHero(Settlement settlement, Hero sellerHero)
+        {
+            return 6;
+        }
+
         // Defines the max recruit tier, aligned with the original code's constant
         public override int MaxVolunteerTier => RecruitMaxUpgradeTier;
     }

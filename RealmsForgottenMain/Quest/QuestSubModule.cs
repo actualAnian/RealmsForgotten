@@ -12,39 +12,33 @@ namespace RealmsForgotten.Quest
 {
     public static class QuestSubModule
     {
-        public static void OnNewGameCreated(Game game, object initializerObject)
+        public static void OnNewGameCreated(CampaignGameStarter gameStarter)
         {
-            CampaignGameStarter gameStarter = (CampaignGameStarter)initializerObject;
-            gameStarter.AddBehavior(new RescueUliahBehavior(true));
-            gameStarter.AddBehavior(new EighthQuestBehavior(true));
-            gameStarter.AddBehavior(new DeformedSpawningBehavior());
+            AddQuestBehaviors(gameStarter, true);
         }
-
-        public static void OnGameLoaded(Game game, object initializerObject)
+        public static void OnGameLoaded(CampaignGameStarter gameStarter)
         {
-            CampaignGameStarter gameStarter = (CampaignGameStarter)initializerObject;
-            gameStarter.AddBehavior(new RescueUliahBehavior(false));
-            gameStarter.AddBehavior(new EighthQuestBehavior(false));
-            gameStarter.AddBehavior(new DeformedSpawningBehavior());
+            AddQuestBehaviors(gameStarter, false);
         }
-
-        public static void AddQuestBehaviors(CampaignGameStarter gameStarter)
+        private static void AddQuestBehaviors(CampaignGameStarter gameStarter, bool isNewGame)
         {
             if (gameStarter != null)
             {
                 gameStarter.AddBehavior(new SaveCurrentQuestCampaignBehavior());
                 gameStarter.AddBehavior(new SpawnNpcInLordsHallBecomeKnightBehavior());
-              
+                gameStarter.AddBehavior(new QuestHelperCampaignBehavior());
+
+                gameStarter.AddBehavior(new RescueUliahBehavior(isNewGame));
+                gameStarter.AddBehavior(new EighthQuestBehavior(isNewGame));
+                gameStarter.AddBehavior(new DeformedSpawningBehavior());
             }
         }
     }
-
     public class QuestTypeDefiner : SaveableTypeDefiner
     {
         public QuestTypeDefiner() : base(585820)
         {
         }
-
         protected override void DefineClassTypes()
         {
             AddClassDefinition(typeof(RescueUliahBehavior.RescueUliahQuest), 1);

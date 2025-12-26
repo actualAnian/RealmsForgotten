@@ -6,6 +6,7 @@ using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
+using TaleWorlds.Core.ImageIdentifiers;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.ObjectSystem;
@@ -79,7 +80,7 @@ namespace RealmsForgotten.AiMade
                 List<string> troopIds = cultureTroopMap[cultureId];
                 List<CharacterObject> troops = troopIds.Select(MBObjectManager.Instance.GetObject<CharacterObject>).ToList();
                 string title = new TextObject("Hire Mercenaries", null).ToString();
-                List<InquiryElement> options = troops.Select(troop => new InquiryElement(troop, troop.Name.ToString(), new ImageIdentifier(CharacterCode.CreateFrom(troop)))).ToList();
+                List<InquiryElement> options = troops.Select(troop => new InquiryElement(troop, troop.Name.ToString(), new CharacterImageIdentifier(CharacterCode.CreateFrom(troop)))).ToList();
                 MBInformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(title, string.Empty, options, true, 1, 1, GameTexts.FindText("str_done", null).ToString(), GameTexts.FindText("str_cancel", null).ToString(), elements => OnMercenaryTypeSelected(elements), null, "", false), false, false);
             }
             else

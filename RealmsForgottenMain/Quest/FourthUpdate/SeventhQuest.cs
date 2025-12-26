@@ -1,6 +1,6 @@
 ﻿using RealmsForgotten.AiMade.RF_Diplomacy;
+using RealmsForgotten.MusicSounds;
 using RealmsForgotten.Quest.UI;
-using RealmsForgotten.RFMissionLogic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,6 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Conversation;
 using TaleWorlds.CampaignSystem.Encounters;
-using TaleWorlds.CampaignSystem.GameState;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Party.PartyComponents;
@@ -103,7 +102,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
         private static readonly string witchCharacterId = "evil_witch";
 
-        private Vec2 _lastPlayerPosition = Vec2.Invalid;
+        private CampaignVec2 _lastPlayerPosition = CampaignVec2.Invalid;
 
         private bool _dialogEventsRegistered = false;
         public int DruidInteractionStage => druidInteractionLog?.CurrentProgress ?? -1;
@@ -194,7 +193,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
             ActiveSeventhQuestInstance = this;
         }
         public override TextObject Title => GameTexts.FindText("rf_seventh_quest_title");
-        public override bool IsSpecialQuest => true;
+        public override string SpecialQuestType => "RfMainQuest";
         public override bool IsRemainingTimeHidden => true;
 
         protected override void InitializeQuestOnGameLoad()
@@ -261,7 +260,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
             {
                 if (!_druidConversationTriggered && FirstTreeSettlement != null)
                 {
-                    float distance = MobileParty.MainParty.Position2D.Distance(FirstTreeSettlement.GatePosition);
+                    float distance = MobileParty.MainParty.Position.Distance(FirstTreeSettlement.GatePosition);
                     if (distance <= 50f)
                     {
                         _druidConversationTriggered = true;
@@ -283,16 +282,16 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
             if (_shouldTriggerOwlDialogue)
             {
-                if (_lastPlayerPosition.IsValid)
+                if (_lastPlayerPosition.IsValid())
                 {
-                    float movedDistance = MobileParty.MainParty.Position2D.Distance(_lastPlayerPosition);
+                    float movedDistance = MobileParty.MainParty.Position.Distance(_lastPlayerPosition);
                     if (movedDistance > 20f)
                     {
                         _shouldTriggerOwlDialogue = false;
                         return;
                     }
                 }
-                _lastPlayerPosition = MobileParty.MainParty.Position2D;
+                _lastPlayerPosition = MobileParty.MainParty.Position;
             }
         }
 
@@ -403,8 +402,12 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 {
                     InformationManager.DisplayMessage(new InformationMessage($"Warning: Witch Lord Clan '{clanId}' is not hostile to the player.", Colors.Yellow));
                 }
+                Settlement fixedSpawnSettlement = Settlement.Find("town_S2");
+                CampaignVec2 spawnPosition = fixedSpawnSettlement?.Position ?? spawnSettlement.Position;
 
-                MobileParty party = BanditPartyComponent.CreateBanditParty($"vortiak_witch_party_{witchLordCharacterId}", clan, null, true);
+                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+                MobileParty party = BanditPartyComponent.CreateBanditParty($"vortiak_witch_party_{witchLordCharacterId}", clan, null, true, looterTemplate, spawnPosition); //@TODO
+
                 if (party == null)
                 {
                     InformationManager.DisplayMessage(new InformationMessage($"Error: Failed to create party for Witch Lord clan '{clanId}'.", Colors.Red));
@@ -416,7 +419,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 if (leaderCharacter == null)
                 {
                     InformationManager.DisplayMessage(new InformationMessage($"Error: Character '{witchLordCharacterId}' not found for Witch Lord.", Colors.Red));
-                    party.RemoveParty();
+                    DestroyPartyAction.Apply(null, party);
                     return null;
                 }
 
@@ -436,9 +439,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 if (troopRoster.GetTroopCount(leaderCharacter) == 0)
                     troopRoster.AddToCounts(leaderCharacter, 1);
 
-                Settlement fixedSpawnSettlement = Settlement.Find("town_S2");
-                Vec2 spawnPosition = fixedSpawnSettlement?.Position2D ?? spawnSettlement.Position2D;
-
+                
                 party.InitializeMobilePartyAroundPosition(
                     troopRoster,
                     TroopRoster.CreateDummyTroopRoster(),
@@ -455,21 +456,21 @@ namespace RealmsForgotten.Quest.FourthUpdate
                     p.MapFaction != null &&
                     FactionManager.IsAtWarAgainstFaction(party.MapFaction, p.MapFaction)
                 )
-                 .OrderBy(p => p.Position2D.DistanceSquared(party.Position2D))
+                 .OrderBy(p => p.Position.DistanceSquared(party.Position))
                    .FirstOrDefault();
 
                 if (target != null)
                 {
-                    party.Ai.SetMoveEngageParty(target);
+                    party.SetMoveEngageParty(target, MobileParty.NavigationType.All);
                     InformationManager.DisplayMessage(new InformationMessage($"Witch Lord party is attacking {target.Name}."));
                 }
                 else
                 {
-                    party.Ai.SetMovePatrolAroundPoint(spawnSettlement.Position2D); // fallback
+                    party.SetMovePatrolAroundPoint(spawnSettlement.Position, MobileParty.NavigationType.All); // fallback
                 }
 
                 party.ActualClan = clan;
-                party.SetCustomName(new TextObject($"Vortiak Coven ({leaderCharacter.Name})"));
+                party.Party.SetCustomName(new TextObject($"Vortiak Coven ({leaderCharacter.Name})"));
                 party.Aggressiveness = 10f;
                 party.Party.SetVisualAsDirty();
 
@@ -594,7 +595,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
             var sacredGrove = Settlement.FindFirst(s => s.StringId == "vortiak_ruined_temple");
             if (sacredGrove != null)
             {
-                float distance = MobileParty.MainParty.Position2D.Distance(sacredGrove.Position2D);
+                float distance = MobileParty.MainParty.Position.Distance(sacredGrove.Position);
                 float proximityThreshold = 50f;
                 if (distance <= proximityThreshold)
                 {
@@ -623,11 +624,14 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
                 var enemyClan = Clan.All.FirstOrDefault(c => c.StringId == "vortiaks")
                                     ?? Clan.All.First();
-                var interceptorParty = BanditPartyComponent.CreateBanditParty(enemyClan.StringId, enemyClan, null, true);
+
+                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+                MobileParty interceptorParty = BanditPartyComponent.CreateBanditParty(enemyClan.StringId, enemyClan, null, true, looterTemplate,nearSettlement.Position); //@TODO
+
                 if (interceptorParty == null)
                     throw new Exception("Failed to create interceptor party.");
 
-                interceptorParty.SetCustomName(new TextObject("Vortiak Army"));
+                interceptorParty.Party.SetCustomName(new TextObject("Vortiak Army"));
 
                 _interceptorParty = interceptorParty;
                 var troopRoster = TroopRoster.CreateDummyTroopRoster();
@@ -648,12 +652,12 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 interceptorParty.InitializeMobilePartyAroundPosition(
                     troopRoster,
                     TroopRoster.CreateDummyTroopRoster(),
-                    nearSettlement.Position2D,
+                    nearSettlement.Position,
                     10f,
                     10f
                 );
                 interceptorParty.Aggressiveness = 15f;
-                interceptorParty.Ai.SetMoveEngageParty(MobileParty.MainParty);
+                interceptorParty.SetMoveEngageParty(MobileParty.MainParty, MobileParty.NavigationType.All);
 
                 InformationManager.DisplayMessage(
                     new InformationMessage("An enemy interceptor army has ambushed you near the temple!"));
@@ -1182,9 +1186,9 @@ namespace RealmsForgotten.Quest.FourthUpdate
             Banner banner = new Banner(bannerKey, primaryColor, secondaryColor);
 
             Clan newClan = MBObjectManager.Instance.CreateObject<Clan>("clan_newvortiaks");
-            TextObject clanName = new TextObject("Clan of the Vortiaks");
-            newClan.InitializeClan(clanName, clanName, sturgiaCulture, banner, new Vec2(0, 0), false);
-
+            TextObject clanName = new("Clan of the Vortiaks");
+            newClan.Culture = sturgiaCulture;
+            newClan.Banner = banner;
             newClan.SetLeader(theOwl);
             newClan.Heroes.Add(theOwl);
             theOwl.Clan = newClan;
@@ -1227,17 +1231,12 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 string customBannerKey = "35.116.100.1140.1445.779.774.1.0.-91.434.121.116.240.240.920.955.1.0.0.407.121.116.248.248.630.578.1.0.0";
                 uint primaryColor = 0xff332c4d;
                 uint secondaryColor = 0xffFDE217;
-                Banner customBanner = new Banner(customBannerKey, primaryColor, secondaryColor);
+                Banner customBanner = new(customBannerKey, primaryColor, secondaryColor);
 
-                Clan darkElveanClan = MBObjectManager.Instance.CreateObject<Clan>("clan_dark_elveans");
-                darkElveanClan.InitializeClan(
-                    new TextObject("Dark Elveans"),
-                    new TextObject("Dark Elveans"),
-                    darkElveanHero.Culture,
-                    customBanner,
-                    new Vec2(0, 0),
-                    false
-                );
+                Clan darkElveanClan = Clan.CreateClan("clan_dark_elveans");
+                darkElveanClan.ChangeClanName(new TextObject("Dark Elveans"), new TextObject("Dark Elveans"));
+                darkElveanClan.Culture = darkElveanHero.Culture;
+                darkElveanClan.Banner = customBanner;
                 darkElveanClan.SetLeader(darkElveanHero);
                 darkElveanHero.Clan = darkElveanClan;
 

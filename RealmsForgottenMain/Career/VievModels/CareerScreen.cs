@@ -31,7 +31,7 @@ namespace RealmsForgotten.Career.VievModels
             //load inventory ui category
             var spriteData = UIResourceManager.SpriteData;
             var resourceContext = UIResourceManager.ResourceContext;
-            var resourceDepot = UIResourceManager.UIResourceDepot;
+            var resourceDepot = UIResourceManager.ResourceDepot;
 
             _inventoryCategory = spriteData.SpriteCategories["ui_inventory"];
             _clanCategory = spriteData.SpriteCategories["ui_clan"];
@@ -43,17 +43,15 @@ namespace RealmsForgotten.Career.VievModels
         {
             base.OnFrameTick(dt);
             LoadingWindow.DisableGlobalLoadingWindow();
-            if (_gauntletLayer == null || _gauntletLayer.Input.IsHotKeyDownAndReleased("Exit") || _gauntletLayer.Input.IsGameKeyDownAndReleased(41))
-            {
+            if (_gauntletLayer == null || _gauntletLayer.Input.IsHotKeyReleased("Exit") ||  _gauntletLayer.Input.IsKeyReleased(InputKey.Escape))
                 CloseScreen();
-            }
         }
 
         void IGameStateListener.OnActivate()
         {
             base.OnActivate();
             _vm = new CareerScreenVM(CloseScreen);
-            _gauntletLayer = new GauntletLayer(1, "GauntletLayer", true);
+            _gauntletLayer = new GauntletLayer("GauntletLayer", 1, true);
             _gauntletLayer.InputRestrictions.SetInputRestrictions(true, InputUsageMask.All);
             _gauntletLayer.Input.RegisterHotKeyCategory(HotKeyManager.GetCategory("GenericCampaignPanelsGameKeyCategory"));
             _gauntletLayer.LoadMovie("CareerScreen", _vm);

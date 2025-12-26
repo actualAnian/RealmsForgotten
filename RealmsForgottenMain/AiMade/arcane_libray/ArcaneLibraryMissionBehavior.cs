@@ -1,10 +1,8 @@
-﻿using SandBox.Conversation.MissionLogics;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.AgentOrigins;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
@@ -39,7 +37,7 @@ namespace RealmsForgotten.AiMade.ArcaneLibrary
                 AgentBuildData playerBuildData = new AgentBuildData(Hero.MainHero.CharacterObject)
                     .InitialPosition(spawnPosition)
                     .InitialDirection(spawnDirection)
-                    .Controller(Agent.ControllerType.Player)  // Ensure player control
+                    .Controller(AgentControllerType.Player)  // Ensure player control
                     .NoHorses(true);  // No horses for the player in this mission
 
                 _playerAgent = Mission.Current.SpawnAgent(playerBuildData);

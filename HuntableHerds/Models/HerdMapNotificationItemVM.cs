@@ -25,7 +25,7 @@ namespace RealmsForgotten.HuntableHerds.Models {
         }
 
         private void OpenHuntingMessageBox() {
-            string sceneName = PlayerEncounter.GetBattleSceneForMapPatch(Campaign.Current.MapSceneWrapper.GetMapPatchAtPosition(MobileParty.MainParty.Position2D));
+            string sceneName = Campaign.Current.Models.SceneModel.GetBattleSceneForMapPatch(Campaign.Current.MapSceneWrapper.GetMapPatchAtPosition(MobileParty.MainParty.Position), false);
             bool isRandomScene = true;
             int numScenes = HerdBuildData.CurrentHerdBuildData.SceneIds.Count;
             if (numScenes > 0) {

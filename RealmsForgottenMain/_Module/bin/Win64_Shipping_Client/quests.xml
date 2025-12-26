@@ -1,0 +1,83 @@
+<AllQuests>
+	<Quest>
+		<QuestId>quest_1</QuestId>
+		<QuestGiverId>kingruins_npc</QuestGiverId>
+		<Text>The Ranger requested you to defeat bandits hidding in the castle ruins.</Text>
+		<CompletedWhen>
+			<HasKilled>
+				<TroopId>urkrish_bandit</TroopId>
+				<Amount>7</Amount>
+			</HasKilled>
+		</CompletedWhen>
+		<Reward>
+			<AddToInventory>
+				<ItemId>gold</ItemId>
+				<Amount>250</Amount>
+			</AddToInventory>
+			<AddRenown>
+				<Amount>5</Amount>
+			</AddRenown>
+		</Reward>
+	</Quest>
+	<Quest>
+		<QuestId>quest_2</QuestId>
+		<QuestGiverId>ratscene_merchant_notary_battania</QuestGiverId>
+		<Text>The Merchant requested you to free the region of the monster hiding in the ruins.</Text>
+		<CompletedWhen>
+			<HasKilled>
+				<TroopId>orc_base_infantry</TroopId>
+				<Amount>5</Amount>
+			</HasKilled>
+		</CompletedWhen>
+		<Reward>
+			<AddToInventory>
+				<ItemId>gold</ItemId>
+				<Amount>350</Amount>
+			</AddToInventory>
+			<AddRenown>
+				<Amount>15</Amount>
+			</AddRenown>
+		</Reward>
+	</Quest>
+	<Quest>
+		<QuestId>quest_3</QuestId>
+		<QuestGiverId>lizard_quest_knight</QuestGiverId>
+		<Text>The Nasorian Sargeant requested you to hunt down the Bandits and kill their leader.</Text>
+		<CompletedWhen>
+			<HasKilled>
+				<TroopId>reptileman_boss</TroopId>
+				<Amount>1</Amount>
+			</HasKilled>
+		</CompletedWhen>
+		<Reward>
+			<AddToInventory>
+				<ItemId>gold</ItemId>
+				<Amount>10000</Amount>
+			</AddToInventory>
+			<AddRenown>
+				<Amount>50</Amount>
+			</AddRenown>
+		</Reward>
+	</Quest>
+	<Quest>
+		<QuestId>quest_swamp_fort</QuestId>
+		<QuestGiverId>wounded_soldier_npc</QuestGiverId>
+		<Text>The wounded soldier requested you to hunt down the Bandits and retrieve the stolen gift of his lord.</Text>
+		<CompletedWhen>
+			<HasKilled>
+				<TroopId>mountain_bandits_raider</TroopId>
+				<Amount>20</Amount>
+			</HasKilled>
+
+		</CompletedWhen>
+		<Reward>
+			<AddToInventory>
+				<ItemId>gold</ItemId>
+				<Amount>10000</Amount>
+			</AddToInventory>
+			<AddRenown>
+				<Amount>50</Amount>
+			</AddRenown>
+		</Reward>
+	</Quest>
+</AllQuests>

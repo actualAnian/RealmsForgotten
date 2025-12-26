@@ -89,7 +89,7 @@ namespace RealmsForgotten.Managers
                 case GameManagerLoadingSteps.PostInitializeFourthState:
                     {
                         bool submodulesLoaded = true;
-                        foreach (MBSubModuleBase mbsubModuleBase in TaleWorlds.MountAndBlade.Module.CurrentModule.SubModules)
+                        foreach (MBSubModuleBase mbsubModuleBase in TaleWorlds.MountAndBlade.Module.CurrentModule.CollectSubModules())
                         {
                             submodulesLoaded = submodulesLoaded && mbsubModuleBase.DoLoading(Game.Current);
                         }
@@ -146,8 +146,8 @@ namespace RealmsForgotten.Managers
 
         private void LaunchSandboxCharacterCreation()
         {
-            CharacterCreationState gameState = Game.Current.GameStateManager.CreateState<CharacterCreationState>(new RFCharacterCreationContent());
-            Game.Current.GameStateManager.CleanAndPushState(gameState);
+            CharacterCreationState gameState = Game.Current.GameStateManager.CreateState<CharacterCreationState>();
+            Game.Current.GameStateManager.CleanAndPushState(gameState, 0);
         }
 
         public override void OnAfterCampaignStart(Game game)

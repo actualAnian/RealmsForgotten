@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameMenus;
-using TaleWorlds.CampaignSystem.Overlay;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements.Locations;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -36,6 +33,8 @@ namespace RealmsForgotten.AiMade.Patches
         public override void RegisterEvents()
         {
             CampaignEvents.LocationCharactersAreReadyToSpawnEvent.AddNonSerializedListener(this, LocationCharactersAreReadyToSpawn);
+            // @TODO fix crashes when loading tavern mission
+            // fix location not being loaded when opening a saved game when already inside a village
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, AddGameMenus);
             CampaignEvents.SettlementEntered.AddNonSerializedListener(this, OnSettlementEnter);
             CampaignEvents.OnSettlementLeftEvent.AddNonSerializedListener(this, OnSettlementLeft);
@@ -86,10 +85,7 @@ namespace RealmsForgotten.AiMade.Patches
             AddWanderersToInn(settlement); // Add wanderers to the inn
 
             dictionary.Add("village_inn", _inn);
-            if (field != null)
-            {
-                field.SetValue(LocationComplex.Current, dictionary);
-            }
+            field?.SetValue(LocationComplex.Current, dictionary);
         }
 
         private void OnSettlementLeft(MobileParty party, Settlement settlement)
@@ -112,7 +108,7 @@ namespace RealmsForgotten.AiMade.Patches
                 IsInInn = true;
             }, false, 1, false);
 
-            campaignGameStarter.AddGameMenu("village_inn", "{=ADOD_Inn_GameMenu_InInn}You are in the village inn", VillageInnOnInit, GameOverlays.MenuOverlayType.SettlementWithCharacters, GameMenu.MenuFlags.None, null);
+            campaignGameStarter.AddGameMenu("village_inn", "{=ADOD_Inn_GameMenu_InInn}You are in the village inn", VillageInnOnInit, GameMenu.MenuOverlayType.SettlementWithCharacters, GameMenu.MenuFlags.None, null);
 
             campaignGameStarter.AddGameMenuOption("village_inn", "village_inn_visit", "{=ADOD_Inn_GameMenu_VisitTheInn}Visit the inn", VisitInnOnCondition, VisitInnOnConsequence, false, 0, false);
 
@@ -192,7 +188,7 @@ namespace RealmsForgotten.AiMade.Patches
 
         public void LocationCharactersAreReadyToSpawn(Dictionary<string, int> unusedUsablePointCount)
         {
-            if (CampaignMission.Current.Location.StringId != "village_inn" || _isInnInitialized)
+            if (CampaignMission.Current.Location == null || CampaignMission.Current.Location.StringId != "village_inn" || _isInnInitialized)
             {
                 return;
             }
@@ -512,13 +508,13 @@ namespace RealmsForgotten.AiMade.Patches
         {
             return cultureId switch
             {
-                "empire" => "empire_house_c_interior_tavern",
-                "sturgia" => "sturgia_house_d_interior_tavern",
-                "aserai" => "arabian_house_new_c_interior_c_tavern",
+                "empire" => "empire_house_c_tavern_a",
+                "sturgia" => "sturgia_house_b_interior_tavern",
+                "aserai" => "aserai_tavern_interior",
                 "vlandia" => "vlandia_city_house_a_interior_tavern",
-                "khuzait" => "khuzait_house_e_interior_b_tavern",
-                "battania" => "battania_town_house_b_interior_b_tavern",
-                _ => "empire_house_c_interior_tavern"
+                "khuzait" => "khuzait_tavern_a",
+                "battania" => "battania_town_house_a_interior_a_tavern",
+                _ => "empire_house_c_tavern_a"
             };
         }
     }

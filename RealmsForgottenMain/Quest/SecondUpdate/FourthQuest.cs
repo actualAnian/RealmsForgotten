@@ -1,6 +1,7 @@
-﻿using System.Linq;
-using Helpers;
+﻿using Helpers;
 using RealmsForgotten.Quest.UI;
+using System.Linq;
+using System.Threading;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
@@ -54,7 +55,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
         public override TextObject Title => GameTexts.FindText("rf_quest_title_part_four");
 
         public override bool IsRemainingTimeHidden => true;
-        public override bool IsSpecialQuest => true;
+        public override string SpecialQuestType => "RfMainQuest";
 
 
         protected override void RegisterEvents()
@@ -120,7 +121,10 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 takeBossToLordLog?.UpdateCurrentProgress(1);
 
                 Clan hellboundClan = Clan.FindFirst(x => x.StringId == "cs_nelrog_raiders");
-                MobileParty hellboundParty = BanditPartyComponent.CreateBanditParty("quest_hellbound_party", hellboundClan, null, true);
+                CampaignVec2 spawnPos = MobileParty.MainParty.Position;
+                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+                MobileParty hellboundParty = BanditPartyComponent.CreateBanditParty("quest_hellbound_party", hellboundClan, null, true, looterTemplate, spawnPos);
+
                 TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
                 string[] units = { "cs_nelrog_bandits_bandit", "cs_nelrog_bandits_raider", "cs_nelrog_bandits_chief" };
 
@@ -128,12 +132,11 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 for (int i = 0; i < 60; i++)
                     troopRoster.AddToCounts(CharacterObject.Find(units.GetRandomElement()), 1);
 
-                Vec2 spawnPos = MobileParty.MainParty.Position2D;
                 hellboundParty.InitializeMobilePartyAtPosition(troopRoster, TroopRoster.CreateDummyTroopRoster(), spawnPos);
 
-                hellboundParty.Ai.SetMoveEngageParty(MobileParty.MainParty);
+                hellboundParty.SetMoveEngageParty(MobileParty.MainParty, MobileParty.NavigationType.Default);
                 hellboundParty.IgnoreForHours(0.2f);
-                hellboundParty.SetCustomName(new TextObject("{=rf_hellbound_party}Hellbound Raiders"));
+                hellboundParty.Party.SetCustomName(new TextObject("{=rf_hellbound_party}Hellbound Raiders"));
                 hellboundParty.Aggressiveness = 100f;
 
                 // Force battle
@@ -151,11 +154,8 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter), new ConversationCharacterData(TheOwl.CharacterObject));
             }
         }
-
-        private float GetDistanceFromQuestGiver() => MobileParty.MainParty.Position2D.DistanceSquared(QuestGiver.PartyBelongedTo != null ? QuestGiver.PartyBelongedTo.Position2D : QuestGiver.CurrentSettlement.GatePosition);
-        private float GetDistanceFromMonastery() => MobileParty.MainParty.Position2D.DistanceSquared(QuestMonastery.GatePosition);
-
-
+        private float GetDistanceFromQuestGiver() => MobileParty.MainParty.GetPosition2D.DistanceSquared(QuestGiver.PartyBelongedTo != null ? QuestGiver.PartyBelongedTo.GetPosition2D : QuestGiver.CurrentSettlement.GetPosition2D);
+        private float GetDistanceFromMonastery() => MobileParty.MainParty.GetPosition2D.DistanceSquared(QuestMonastery.GetPosition2D);
         protected override void OnStartQuest()
         {
             SetDialogs();
@@ -163,7 +163,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             textObject.SetCharacterProperties("LORD", QuestGiver.CharacterObject);
             takeBossToLordLog = AddLog(textObject);
 
-            initialDistanceFromQuestGiver = MobileParty.MainParty.Position2D.DistanceSquared(QuestGiver.PartyBelongedTo != null ? QuestGiver.PartyBelongedTo.Position2D : QuestGiver.CurrentSettlement.GatePosition);
+            initialDistanceFromQuestGiver = MobileParty.MainParty.GetPosition2D.DistanceSquared(QuestGiver.PartyBelongedTo != null ? QuestGiver.PartyBelongedTo.GetPosition2D : QuestGiver.CurrentSettlement.GetPosition2D);
         }
 
         protected override void InitializeQuestOnGameLoad()
@@ -191,7 +191,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             goToMonasteryLog = AddLog(GameTexts.FindText("rf_fourth_quest_second_log"));
             QuestMonastery.IsVisible = true;
             QuestMonastery.IsInspected = true;
-            initialDistanceToMonastery = MobileParty.MainParty.Position2D.DistanceSquared(QuestMonastery.GetPosition2D);
+            initialDistanceToMonastery = MobileParty.MainParty.GetPosition2D.DistanceSquared(QuestMonastery.GetPosition2D);
         }
 
         private void ShowWaitScreen()

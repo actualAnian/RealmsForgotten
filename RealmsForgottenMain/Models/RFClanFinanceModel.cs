@@ -45,7 +45,7 @@ namespace RealmsForgotten.Models
 
             int mercenaryAward = MathF.Ceiling(clan.Influence * (1f / Campaign.Current.Models.ClanFinanceModel.RevenueSmoothenFraction())) * clan.MercenaryAwardMultiplier;
             ExplainedNumber bonusGain = new(mercenaryAward);
-            CareerHelper.ApplyBasicCareerPassives(ref bonusGain, PassiveEffectType.MercContractIncome, true);
+            CareerHelper.ApplyBasicCareerPassives(ref bonusGain, PassiveEffectType.MercContractIncome);
             float NumberToAdd = bonusGain.ResultNumber - mercenaryAward;
             num.Add(NumberToAdd, new TaleWorlds.Localization.TextObject("Contract class bonus", null), null);
         }
@@ -64,7 +64,7 @@ namespace RealmsForgotten.Models
         {
             int value = baseModel.CalculateOwnerIncomeFromCaravan(caravan);
             if (caravan.Owner != null && caravan.Owner == Hero.MainHero)
-                CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.CaravanIncome, true);
+                CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.CaravanIncome);
             return value;
         }
 
@@ -72,7 +72,7 @@ namespace RealmsForgotten.Models
         {
             int value = baseModel.CalculateOwnerIncomeFromWorkshop(workshop);
             if (workshop.Owner != null && workshop.Owner == Hero.MainHero)
-                CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.WorkshopIncome, true);
+                CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.WorkshopIncome);
             return value;
         }
 
@@ -85,7 +85,7 @@ namespace RealmsForgotten.Models
         {
             ExplainedNumber value = baseModel.CalculateTownIncomeFromTariffs(clan, town, applyWithdrawals);
             if (clan == Clan.PlayerClan)
-                CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.TownIncome, true);
+                CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.TownIncome);
             return value;
         }
 
@@ -94,7 +94,7 @@ namespace RealmsForgotten.Models
 
             int value = baseModel.CalculateVillageIncome(clan, village, applyWithdrawals);
             if (clan == Clan.PlayerClan)
-                CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.VillageIncome, true);
+                CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.VillageIncome);
             return value;
         }
 

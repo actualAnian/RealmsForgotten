@@ -24,17 +24,15 @@ namespace RealmsForgotten.AiMade
             string kingdomID = "custom_kingdom_" + leaderHero.StringId;
 
             // Create Clan (Fixed Parameters)
-            Clan newClan = Clan.CreateClan(
-                clanID,
-                leaderHero.HomeSettlement ?? Settlement.All.FirstOrDefault(s => s.IsTown),
-                leaderHero,
-                null,
-                culture,
-                new TextObject(clanName),
-                10000,  // Initial Gold
-                500     // Initial Renown
-            );
+            Clan newClan = Clan.CreateClan(clanID);
 
+            newClan.SetInitialHomeSettlement(leaderHero.HomeSettlement ?? Settlement.All.FirstOrDefault(s => s.IsTown));
+            newClan.SetLeader(leaderHero);
+            newClan.Culture = culture;
+            newClan.ChangeClanName(new TextObject(clanName), new TextObject(clanName));
+            newClan.Leader.Gold += 10000;
+            newClan.Renown = 500;
+            
             // Create Empty Kingdom First
             Kingdom newKingdom = Kingdom.CreateKingdom(kingdomID);
 
@@ -63,7 +61,7 @@ namespace RealmsForgotten.AiMade
             }
 
             // Set the hero as ruler of the kingdom
-            ChangeKingdomAction.ApplyByJoinToKingdom(newClan, newKingdom, true);
+            ChangeKingdomAction.ApplyByJoinToKingdom(newClan, newKingdom, default, true);
 
             // Ensure hero is leading their own faction
             if (leaderHero.Clan.Leader != leaderHero)

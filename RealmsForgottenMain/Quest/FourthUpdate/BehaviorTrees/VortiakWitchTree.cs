@@ -3,9 +3,9 @@ using BehaviorTreeWrapper;
 using BehaviorTreeWrapper.BlackBoardClasses;
 using BehaviorTreeWrapper.Decorators;
 using BehaviorTreeWrapper.Tasks;
+using RealmsForgotten.MusicSounds;
 using RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.Decorators;
 using RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.Tasks;
-using RealmsForgotten.RFMissionLogic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,13 +77,13 @@ namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees
                             .AddTask(new TeleportTask(platformB))
                             .AddTask(new SetHealthTask(300))
                             .AddTask(new PlaySoundEffectFollowingPlayerTask("witch_voice_laugh"))
-                            .AddTask(new SetAiStateFlag(TaleWorlds.MountAndBlade.Agent.AIStateFlag.Guard))
+                            .AddTask(new SetAiStateFlag(TaleWorlds.MountAndBlade.Agent.AIStateFlag.Cautious))
                             .AddTask(new SetStageTask(2))
                             .Up()
                         .AddSequence("playerLeavesPosition", new PlayerNearPointDecorator(playerPositionToTeleportToPlatformB, 1))
                             .AddTask(new TeleportTask(platformB))
                             .AddTask(new SetHealthTask(300))
-                            .AddTask(new SetAiStateFlag(TaleWorlds.MountAndBlade.Agent.AIStateFlag.Guard))
+                            .AddTask(new SetAiStateFlag(TaleWorlds.MountAndBlade.Agent.AIStateFlag.Cautious))
                             .AddTask(new SetStageTask(2))
                             .Up()
                         .Up()
@@ -92,12 +92,12 @@ namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees
                             .AddTask(new TeleportTask(platformC))
                             .AddTask(new SetHealthTask(100))
                             .AddTask(new PlaySoundEffectFollowingPlayerTask("witch_voice_laugh"))
-                            .AddTask(new SetAiStateFlag(TaleWorlds.MountAndBlade.Agent.AIStateFlag.Guard))
+                            .AddTask(new SetAiStateFlag(TaleWorlds.MountAndBlade.Agent.AIStateFlag.Cautious))
                             .AddTask(new SetStageTask(3))
                             .Up()
                         .AddSequence("playerLeavesPosition", new PlayerNearPointDecorator(playerPositionToTeleportToPlatformC), 1)
                             .AddTask(new TeleportTask(platformC))
-                            .AddTask(new SetAiStateFlag(TaleWorlds.MountAndBlade.Agent.AIStateFlag.Guard))
+                            .AddTask(new SetAiStateFlag(TaleWorlds.MountAndBlade.Agent.AIStateFlag.Cautious))
                             .AddTask(new SetHealthTask(100))
                             .AddTask(new SetStageTask(3))
                             .Up()

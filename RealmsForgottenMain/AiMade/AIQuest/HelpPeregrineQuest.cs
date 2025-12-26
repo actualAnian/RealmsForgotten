@@ -8,6 +8,7 @@ using TaleWorlds.SaveSystem;
 using TaleWorlds.Library;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Party.PartyComponents;
+using Helpers;
 
 namespace RealmsForgotten.AiMade
 {
@@ -89,7 +90,7 @@ namespace RealmsForgotten.AiMade
                 return;
             }
 
-            float distanceToDestination = MobileParty.MainParty.Position2D.Distance(_destination.Position2D);
+            float distanceToDestination = MobileParty.MainParty.Position.Distance(_destination.Position);
 
             if (!_banditAttackSpawned && distanceToDestination < 10f)
             {
@@ -128,17 +129,17 @@ namespace RealmsForgotten.AiMade
                 return;
             }
 
-            Vec2 spawnPosition = MobileParty.MainParty.Position2D + new Vec2(MBRandom.RandomFloatRanged(2f, 4f), MBRandom.RandomFloatRanged(2f, 4f));
-
-            MobileParty banditParty = BanditPartyComponent.CreateLooterParty("peregrine_bandit_party", looterClan, null, false);
+            CampaignVec2 spawnPosition = MobileParty.MainParty.Position + new Vec2(MBRandom.RandomFloatRanged(2f, 4f), MBRandom.RandomFloatRanged(2f, 4f));
+            
+            MobileParty banditParty = BanditPartyComponent.CreateLooterParty("peregrine_bandit_party", looterClan, SettlementHelper.FindNearestSettlementToPoint(spawnPosition), false, looterTemplate, spawnPosition);
             banditParty.InitializeMobilePartyAroundPosition(looterTemplate, spawnPosition, 1f);
             banditParty.MemberRoster.AddToCounts(looter, 20);
-            banditParty.SetCustomName(new TextObject("Bandit Ambush"));
+            banditParty.Party.SetCustomName(new TextObject("Bandit Ambush"));
             banditParty.IsVisible = true;
 
             if (banditParty.Ai != null)
             {
-                banditParty.Ai.SetMoveEngageParty(MobileParty.MainParty);
+                banditParty.SetMoveEngageParty(MobileParty.MainParty, MobileParty.NavigationType.All);
                 banditParty.Ai.SetDoNotMakeNewDecisions(true);
             }
 
@@ -152,7 +153,6 @@ namespace RealmsForgotten.AiMade
         }
 
         public override TextObject Title => new TextObject("{=HelpPeregrineQuestTitle}Help the Peregrine Monk");
-        public override bool IsSpecialQuest => false;
         public override bool IsRemainingTimeHidden => false;
         protected override void SetDialogs() { }
         protected override void InitializeQuestOnGameLoad() { }

@@ -68,7 +68,7 @@ namespace RealmsForgotten.Models
         {
             ExplainedNumber value = base.CalculateFinalSpeed(mobileParty, finalSpeed);
             if (mobileParty == MobileParty.MainParty && mobileParty.LeaderHero != null && mobileParty.LeaderHero == Hero.MainHero)
-                CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.PartyMovementSpeed, false);
+                CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.PartyMovementSpeed);
             return value;
         }
     }

@@ -15,15 +15,6 @@ namespace RealmsForgotten.Models
         {
             _previousModel = previousModel;
         }
-
-        public override int NumberOfMaximumLooterParties
-        {
-            get
-            {
-                return 200;
-            }
-        }
-
         public override int NumberOfMinimumBanditPartiesInAHideoutToInfestIt
         {
             get
@@ -76,7 +67,7 @@ namespace RealmsForgotten.Models
         {
             get
             {
-                return MathF.Floor(6f * (2f + Campaign.Current.PlayerProgress));
+                return 50;
             }
         }
 
@@ -96,14 +87,21 @@ namespace RealmsForgotten.Models
             }
         }
 
-        public override int GetPlayerMaximumTroopCountForHideoutMission(MobileParty party)
+        public override int GetMaximumTroopCountForHideoutMission(MobileParty party, bool isAssault)
         {
-            float num = 10f;
+            if (isAssault) return _previousModel.GetMaximumTroopCountForHideoutMission(party, isAssault);
+            float num = 25f;
             if (party.HasPerk(DefaultPerks.Tactics.SmallUnitTactics, false))
             {
                 num += DefaultPerks.Tactics.SmallUnitTactics.PrimaryBonus;
             }
             return MathF.Round(num);
         }
+
+        public override int GetMaxSupportedNumberOfLootersForClan(Clan clan) => _previousModel.GetMaxSupportedNumberOfLootersForClan(clan);
+
+        public override int GetMinimumTroopCountForHideoutMission(MobileParty party, bool isAssault) => _previousModel.GetMinimumTroopCountForHideoutMission(party, isAssault);
+
+        public override bool IsPositionInsideNavalSafeZone(CampaignVec2 position) => _previousModel.IsPositionInsideNavalSafeZone(position);
     }
 }

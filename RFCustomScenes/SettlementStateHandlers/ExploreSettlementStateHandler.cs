@@ -1,5 +1,4 @@
-﻿using RealmsForgotten.RFCustomSettlements;
-using System;
+﻿using System;
 using TaleWorlds.CampaignSystem.Inventory;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Library;
@@ -100,10 +99,10 @@ namespace RealmsForgotten.RFCustomSettlements
             }
         }
         private void OnTroopRosterManageDone(TroopRoster roster)
-          {
+        {
 
             NextSceneData.Instance.playerTroopRoster = roster;
-            RFMissions.StartExploreMission(currentSettlement.CustomScene, CurrentBuildData);
+            RFMissions.StartExploreMission(currentSettlement.CustomScene, CurrentBuildData, currentSettlement.MusicType);
         }
 
         private bool CanChangeStatusOfTroop(CharacterObject character)
@@ -127,8 +126,8 @@ namespace RealmsForgotten.RFCustomSettlements
                     newSceneID = NextSceneData.Instance.newSceneId;
                     try
                     {
-                        CurrentBuildData = CustomSettlementBuildData.allCustomSettlementBuildDatas[newSceneID];
-                        RFMissions.StartExploreMission(newSceneID, CurrentBuildData);
+                        CurrentBuildData = CustomSettlementBuildData.AllCustomSettlementBuildDatas[newSceneID];
+                        RFMissions.StartExploreMission(newSceneID, CurrentBuildData, currentSettlement.MusicType);
                         return;
                     }
                     catch

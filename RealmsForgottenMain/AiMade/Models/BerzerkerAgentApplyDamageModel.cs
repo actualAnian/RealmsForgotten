@@ -14,16 +14,15 @@ namespace RealmsForgotten.AiMade.Models
 {
     public class CustomBerserkerApplyDamageModel : SandboxAgentApplyDamageModel
     {
-        private readonly AgentApplyDamageModel _previousModel;
+        private readonly AgentApplyDamageModel _baseModel;
         private readonly CustomBerserkerBehavior _berserkerBehavior;
 
         public CustomBerserkerApplyDamageModel(AgentApplyDamageModel previousModel, CustomBerserkerBehavior berserkerBehavior)
         {
-            _previousModel = previousModel;
+            _baseModel = previousModel;
             _berserkerBehavior = berserkerBehavior;
         }
-
-        public override float CalculateDamage(in AttackInformation attackInformation, in AttackCollisionData collisionData, in MissionWeapon weapon, float baseDamage)
+        public override bool IsDamageIgnored(in AttackInformation attackInformation, in AttackCollisionData collisionData)
         {
             var victim = attackInformation.VictimAgent;
 
@@ -31,10 +30,10 @@ namespace RealmsForgotten.AiMade.Models
             if (_berserkerBehavior.berserkerModeActive && IsCustomTroop(victim))
             {
                 InformationManager.DisplayMessage(new InformationMessage("Berserker took no damage from hit!", Colors.Cyan));
-                return 0f; // Nullify damage
+                return true;
             }
 
-            return _previousModel.CalculateDamage(in attackInformation, in collisionData, in weapon, baseDamage);
+            return _baseModel.IsDamageIgnored(in attackInformation, in collisionData);
         }
 
         private bool IsCustomTroop(Agent agent)

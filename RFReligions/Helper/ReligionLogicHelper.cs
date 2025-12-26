@@ -330,7 +330,7 @@ public static class ReligionLogicHelper
         {
             var itemObject = Items.All.FirstOrDefault(item => item.StringId.Contains("wood"));
             var itemObject2 = Items.All.FirstOrDefault(item => item.StringId.Contains("charcoal"));
-            if (itemObject2 == null || itemObject2 == null) return TextObject.Empty;
+            if (itemObject2 == null || itemObject2 == null) return new TextObject("");
             return new TextObject(primSecond, null).SetTextVariable("PRIMARY_COUNT", 5)
                 .SetTextVariable("PRIMARY_NAME", itemObject.Name).SetTextVariable("SECONDARY_COUNT", 3)
                 .SetTextVariable("SECONDARY_NAME", itemObject2.Name);
@@ -343,26 +343,26 @@ public static class ReligionLogicHelper
                 return new TextObject(primSecond, null).SetTextVariable("PRIMARY_COUNT", 5)
                     .SetTextVariable("PRIMARY_NAME", itemObject3.Name).SetTextVariable("SECONDARY_COUNT", 3)
                     .SetTextVariable("SECONDARY_NAME", itemObject4.Name);
-            return TextObject.Empty;
+            return new TextObject("");
         }
         else if (rel != Core.RFReligions.Xochxinti)
         {
             if (rel != Core.RFReligions.AeternaFide)
             {
-                if (rel != Core.RFReligions.Faelora) return TextObject.Empty;
+                if (rel != Core.RFReligions.Faelora) return new TextObject("");
                 var itemObject5 = Items.All.FirstOrDefault(item => item.StringId.Contains("wine"));
                 var itemObject6 = Items.All.FirstOrDefault(item => item.StringId.Contains("cheese"));
                 if (itemObject6 != null && itemObject6 != null)
                     return new TextObject(primSecond, null).SetTextVariable("PRIMARY_COUNT", 5)
                         .SetTextVariable("PRIMARY_NAME", itemObject5.Name).SetTextVariable("SECONDARY_COUNT", 3)
                         .SetTextVariable("SECONDARY_NAME", itemObject6.Name);
-                return TextObject.Empty;
+                return new TextObject("");
             }
             else
             {
                 var itemObject7 = Items.All.FirstOrDefault(item => item.StringId.Contains("wood"));
                 var itemObject8 = Items.All.FirstOrDefault(item => item.StringId.Contains("iron"));
-                if (itemObject8 == null || itemObject8 == null) return TextObject.Empty;
+                if (itemObject8 == null || itemObject8 == null) return new TextObject("");
                 return new TextObject(primSecond, null).SetTextVariable("PRIMARY_COUNT", 5)
                     .SetTextVariable("PRIMARY_NAME", itemObject7.Name).SetTextVariable("SECONDARY_COUNT", 3)
                     .SetTextVariable("SECONDARY_NAME", itemObject8.Name);
@@ -376,7 +376,7 @@ public static class ReligionLogicHelper
                 return new TextObject(primSecond, null).SetTextVariable("PRIMARY_COUNT", 5)
                     .SetTextVariable("PRIMARY_NAME", itemObject9.Name).SetTextVariable("SECONDARY_COUNT", 3)
                     .SetTextVariable("SECONDARY_NAME", itemObject10.Name);
-            return TextObject.Empty;
+            return new TextObject("");
         }
     }
 
@@ -417,7 +417,7 @@ public static class ReligionLogicHelper
                 .SetTextVariable("ANIMAL", itemObject3.Name);
         }
 
-        return TextObject.Empty;
+        return new TextObject("");
     }
 
 

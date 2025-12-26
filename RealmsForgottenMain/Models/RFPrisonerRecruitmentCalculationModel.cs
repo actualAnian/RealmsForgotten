@@ -30,13 +30,6 @@ namespace RealmsForgotten.Models
         }
         public override int GetPrisonerRecruitmentMoraleEffect(PartyBase party, CharacterObject character, int num)
         {
-            if (DebugMode)
-            {
-                InformationManager.DisplayMessage(
-                    new InformationMessage("[DEBUG] CareerID = " + PlayerCareerExtension.PlayerCareerInfo?.CareerID)
-                );
-            }
-
             int baseNumber = _previousModel.GetPrisonerRecruitmentMoraleEffect(party, character, num);
 
             if (character.Occupation == Occupation.Bandit && character.Culture.StringId == "sea_raiders" &&
@@ -51,12 +44,6 @@ namespace RealmsForgotten.Models
                 && PlayerCareerExtension.PlayerCareerInfo != null
                 && PlayerCareerExtension.PlayerCareerInfo.CareerID == "mercenary")
             {
-                if (DebugMode)
-                {
-                    InformationManager.DisplayMessage(
-                        new InformationMessage("[DEBUG] Mercenary detected → morale penalty removed")
-                    );
-                }
                 return 0;
             }
 

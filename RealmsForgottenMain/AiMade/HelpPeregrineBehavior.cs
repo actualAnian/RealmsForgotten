@@ -74,10 +74,7 @@ namespace RealmsForgotten.AiMade
             newMonk.Clan = Clan.PlayerClan;
 
             // Clean up party AI if needed
-            if (newMonk.PartyBelongedTo != null)
-            {
-                newMonk.PartyBelongedTo.Ai.SetMoveGoToSettlement(Settlement.CurrentSettlement);
-            }
+            newMonk.PartyBelongedTo?.SetMoveGoToSettlement(Settlement.CurrentSettlement, TaleWorlds.CampaignSystem.Party.MobileParty.NavigationType.Default, false);
 
             return newMonk;
         }

@@ -20,14 +20,14 @@ namespace RealmsForgotten.Quest
 
         public static void PatchAll()
         {
-            SubModule.harmony.Patch(AccessTools.Method(typeof(Hero), "CanHaveQuestsOrIssues"), postfix: new HarmonyMethod(typeof(HeroPatches), nameof(HeroPatches.CanHaveQuestsOrIssuesPostfix)));
+            SubModule.harmony.Patch(AccessTools.Method(typeof(Hero), "CanHaveCampaignIssues"), postfix: new HarmonyMethod(typeof(HeroPatches), nameof(HeroPatches.CanHaveCampaignIssuesPostfix)));
             SubModule.harmony.Patch(AccessTools.Method(typeof(PrisonerReleaseCampaignBehavior), "DailyHeroTick"), prefix: new HarmonyMethod(typeof(PrisonerReleaseCampaignBehaviorPatches), nameof(PrisonerReleaseCampaignBehaviorPatches.Prefix)));
             SubModule.harmony.Patch(AccessTools.Method(typeof(DisbandArmyAction), "ApplyInternal"), prefix: new HarmonyMethod(typeof(AvoidArmyDispersePatch), nameof(AvoidArmyDispersePatch.Prefix)));
             SubModule.harmony.Patch(AccessTools.Method(typeof(PlayerArmyWaitBehavior), "wait_menu_army_leave_on_condition"), postfix: new HarmonyMethod(typeof(PlayerArmyWaitBehaviorPatches), nameof(PlayerArmyWaitBehaviorPatches.Postfix)));
             SubModule.harmony.Patch(AccessTools.Method(typeof(EncounterGameMenuBehavior), "game_menu_encounter_order_attack_on_condition"), postfix: new HarmonyMethod(typeof(AvoidPlayerDontFightingPatch), nameof(AvoidPlayerDontFightingPatch.game_menu_encounter_order_attack_on_condition_postfix)));
             SubModule.harmony.Patch(AccessTools.Method(typeof(EncounterGameMenuBehavior), "game_menu_encounter_leave_your_soldiers_behind_on_condition"), postfix: new HarmonyMethod(typeof(AvoidPlayerDontFightingPatch), nameof(AvoidPlayerDontFightingPatch.game_menu_encounter_leave_your_soldiers_behind_on_condition_postfix)));
             SubModule.harmony.Patch(AccessTools.Method(typeof(EncounterGameMenuBehavior), "game_menu_encounter_surrender_on_condition"), postfix: new HarmonyMethod(typeof(AvoidPlayerDontFightingPatch), nameof(AvoidPlayerDontFightingPatch.game_menu_encounter_surrender_on_condition_postfix)));
-            SubModule.harmony.Patch(AccessTools.Method(typeof(BanditsCampaignBehavior), "bandit_start_barter_condition"), postfix: new HarmonyMethod(typeof(AvoidBarterPatch), nameof(AvoidBarterPatch.Postfix)));
+            SubModule.harmony.Patch(AccessTools.Method(typeof(BanditInteractionsCampaignBehavior), "bandit_start_barter_condition"), postfix: new HarmonyMethod(typeof(AvoidBarterPatch), nameof(AvoidBarterPatch.Postfix)));
         }
 
         public static class AvoidPlayerDontFightingPatch
@@ -70,7 +70,7 @@ namespace RealmsForgotten.Quest
         // Make this class public so it can be accessed in the PatchAll method
         public static class HeroPatches
         {
-            public static void CanHaveQuestsOrIssuesPostfix(ref bool __result, Hero __instance)
+            public static void CanHaveCampaignIssuesPostfix(ref bool __result, Hero __instance)
             {
                 var empireKingdom = Kingdom.All?.FirstOrDefault(x => x?.StringId == "empire");
 

@@ -92,7 +92,7 @@ namespace RealmsForgotten.AiMade
 
         private int CalculateTravelCost(Settlement currentTown, Settlement destinationTown)
         {
-            float distance = currentTown.Position2D.Distance(destinationTown.Position2D);
+            float distance = currentTown.Position.Distance(destinationTown.Position);
             int cost = BaseTravelCost + (int)(distance * CostPerDistanceUnit);
             return cost;
         }
@@ -117,7 +117,7 @@ namespace RealmsForgotten.AiMade
         {
             if (destinationTown != null && destinationTown.IsTown)
             {
-                MobileParty.MainParty.Position2D = destinationTown.GatePosition;
+                MobileParty.MainParty.Position = destinationTown.GatePosition;
                 EnterSettlementAction.ApplyForParty(MobileParty.MainParty, destinationTown);
                 InformationManager.DisplayMessage(new InformationMessage($"You have arrived at {destinationTown.Name}.", Colors.Green));
             }

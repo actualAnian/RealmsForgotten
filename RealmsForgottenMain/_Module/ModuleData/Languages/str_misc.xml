@@ -52,9 +52,9 @@
     <string id="donate_faith_text" text="+{AMOUNT} Faith XP" />
     <string id="donate_description" text="Donating to the temple will allow the priests to teach you the theology of the local religion, in addition to increasing your own faith" />
     <string id="donate" text="Donate" />
-	  <string id="priest_morale_bonus" text="Priests Morale Bonus" />
-	  <string id="increased_melee" text="A weapon you're carrying has enhanced your skill in combat, increasing your melee skills." />
-	  <string id="increased_ranged" text="A weapon you're carrying has enhanced your skill in combat, increasing your ranged skills." />
+	<string id="priest_morale_bonus" text="Priests Morale Bonus" />
+	<string id="increased_melee" text="A weapon you're carrying has enhanced your skill in combat, increasing your melee skills." />
+	<string id="increased_ranged" text="A weapon you're carrying has enhanced your skill in combat, increasing your ranged skills." />
 	  
 	<string id="rf_legendary_recruitment" text="You need to be a king, and your faction needs to own this castle to recruit legendary troops." />
   </strings>

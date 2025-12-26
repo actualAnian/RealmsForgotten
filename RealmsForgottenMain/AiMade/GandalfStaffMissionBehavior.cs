@@ -35,7 +35,7 @@ namespace RealmsForgotten.AiMade
                 Agent main = Agent.Main;
                 if (isCasting)
                 {
-                    if (main.GetCurrentAction(0).Name.Contains("act_cheer") && main.GetCurrentActionProgress(0) >= 0.8)
+                    if (main.GetCurrentAction(0).GetName().Contains("act_cheer") && main.GetCurrentActionProgress(0) >= 0.8)
                     {
                         main.SetActionChannel(0, ActionIndexCache.act_none, true);
                         isCasting = false;
@@ -93,7 +93,7 @@ namespace RealmsForgotten.AiMade
                 MissionScreen? missionScreen = TaleWorlds.ScreenSystem.ScreenManager.TopScreen as MissionScreen;
                 healingTextObject.SetTextVariable("AMOUNT", maxUses);
                 _dataSource = new SpellStatusVM(healingTextObject.ToString(), agent.WieldedWeapon.Item?.StringId.Contains("rfmisc_gandalf_staff_a") == true, 20, 22);
-                _gauntletLayer = new GauntletLayer(-1);
+                _gauntletLayer = new GauntletLayer("GandalfStaff", -1);
                 missionScreen.AddLayer(_gauntletLayer);
                 _gauntletLayer.LoadMovie("SpellStatus", _dataSource);
 

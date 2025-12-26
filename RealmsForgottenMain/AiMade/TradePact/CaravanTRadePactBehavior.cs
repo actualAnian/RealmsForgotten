@@ -37,7 +37,7 @@ namespace RealmsForgotten.AiMade.TradePact
 
             if (candidate != null && candidate.Settlement != party.TargetSettlement)
             {
-                party.Ai.SetMoveGoToSettlement(candidate.Settlement);
+                party.SetMoveGoToSettlement(candidate.Settlement, MobileParty.NavigationType.Default, party.TargetSettlement.HasPort);
             }
         }
     }

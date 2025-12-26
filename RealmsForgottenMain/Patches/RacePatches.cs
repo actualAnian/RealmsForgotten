@@ -27,36 +27,10 @@ namespace RealmsForgotten.Patches
             if (victimAgent.Character != null && (victimAgent.Character.IsGiant() || victimAgent.Character.IsBalrog()))
             {
                 __result = true;
-            };
+            }
+            ;
         }
     }
-    [HarmonyPatch(typeof(TroopRoster), "TotalManCount", MethodType.Getter)]
-    static class TotalManCountGetPatch
-    {
-        public static void Postfix(TroopRoster __instance, ref int __result)
-        {
-            try
-            {
-                __result = 0;
-                foreach (TroopRosterElement rosterElement in __instance.GetTroopRoster())
-                {
-                    var character = rosterElement.Character;
-                    if (character == null)
-                        continue;
-
-                    if (((BasicCharacterObject)character).IsGiant())
-                        __result += rosterElement.Number * Globals.GiantCountsAs;
-                    else
-                        __result += rosterElement.Number;
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.Print($"[RealmsForgotten] ERROR in TotalManCount patch: {ex.Message}");
-            }
-        }
-    }
-
     internal class PartyVMPatch
     {
         private static TextObject SetTextVariable(MBBindingList<PartyCharacterVM> partyList)
@@ -65,9 +39,9 @@ namespace RealmsForgotten.Patches
             int giantNumber = 0;
             foreach (PartyCharacterVM p in partyList)
             {
-                
+
                 troopNumber += MathF.Max(0, p.Number - p.WoundedCount);
-                if(p.Character != null && p.Character.IsGiant()) giantNumber += p.Number;
+                if (p.Character != null && p.Character.IsGiant()) giantNumber += p.Number;
             }
             int a = partyList.Sum((PartyCharacterVM item) => MathF.Max(0, item.Number - item.WoundedCount));
             string str;
@@ -85,7 +59,7 @@ namespace RealmsForgotten.Patches
             List<CodeInstruction> codes = instructions.ToListQ<CodeInstruction>();
             for (int index = 0; index < codes.Count; index++)
             {
-                if (codes[index].opcode == OpCodes.Ldloc_0 && codes[index + 1].opcode == OpCodes.Call && codes[index + 2].opcode == OpCodes.Ldstr && codes[index + 3].opcode == OpCodes.Ldloc_1 && codes[index -1].opcode == OpCodes.Ldstr)
+                if (codes[index].opcode == OpCodes.Ldloc_0 && codes[index + 1].opcode == OpCodes.Call && codes[index + 2].opcode == OpCodes.Ldstr && codes[index + 3].opcode == OpCodes.Ldloc_1 && codes[index - 1].opcode == OpCodes.Ldstr)
                 {
                     if (isRepeatingCodeInsertion)
                     {
@@ -95,7 +69,7 @@ namespace RealmsForgotten.Patches
                     insertion = index;
                 }
 
-                if (codes[index].opcode == OpCodes.Call  && codes[index+1].opcode == OpCodes.Ldstr && codes[index + 2].opcode == OpCodes.Ldloc_1 && codes[index + 3].opcode == OpCodes.Call && codes[index + 4].opcode == OpCodes.Ldarg_1)
+                if (codes[index].opcode == OpCodes.Call && codes[index + 1].opcode == OpCodes.Ldstr && codes[index + 2].opcode == OpCodes.Ldloc_1 && codes[index + 3].opcode == OpCodes.Call && codes[index + 4].opcode == OpCodes.Ldarg_1)
                 {
                     if (isRepeatingLabelAdd)
                     {
@@ -106,13 +80,13 @@ namespace RealmsForgotten.Patches
                 }
             }
             List<CodeInstruction> stack = new()
-            {
-                new CodeInstruction(OpCodes.Ldarg_0, null),
-                new CodeInstruction(OpCodes.Call, AccessTools.Method("RealmsForgotten.Patches.PartyVMPatch:SetTextVariable")),
-                new CodeInstruction(OpCodes.Ldc_I4_0, null),
-                new CodeInstruction(OpCodes.Call, AccessTools.Method("TaleWorlds.Localization.MBTextManager:SetTextVariable", new Type[] { typeof(string), typeof(TextObject), typeof(bool)})),
-                new CodeInstruction(OpCodes.Br, jumpLabel)
-            };
+                {
+                    new CodeInstruction(OpCodes.Ldarg_0, null),
+                    new CodeInstruction(OpCodes.Call, AccessTools.Method("RealmsForgotten.Patches.PartyVMPatch:SetTextVariable")),
+                    new CodeInstruction(OpCodes.Ldc_I4_0, null),
+                    new CodeInstruction(OpCodes.Call, AccessTools.Method("TaleWorlds.Localization.MBTextManager:SetTextVariable", new Type[] { typeof(string), typeof(TextObject), typeof(bool)})),
+                    new CodeInstruction(OpCodes.Br, jumpLabel)
+                };
             codes.InsertRange(insertion, stack);
             return codes.AsEnumerable<CodeInstruction>();
         }
@@ -124,40 +98,42 @@ namespace RealmsForgotten.Patches
         public static void Postfix(RecruitmentVM __instance, ref int __result)
         {
             int noGiants = 0;
-            foreach(RecruitVolunteerTroopVM troop in __instance.TroopsInCart)
+            foreach (RecruitVolunteerTroopVM troop in __instance.TroopsInCart)
             {
-                if(troop.Character.IsGiant()) noGiants++;
+                if (troop.Character.IsGiant()) noGiants++;
             }
-            __result += noGiants * (Globals.GiantCountsAs -1);
+            __result += noGiants * (Globals.GiantCountsAs - 1);
         }
     }
+
     //[HarmonyPatch(typeof(RecruitVolunteerTroopVM), "RefreshValues")]
     //static class w    
     //{
     //    // adds the "costs 2 to the viewmodel while adding a troop"
     //    public static void Postfix(RecruitVolunteerTroopVM __instance)
     //    {
-//            if(__instance.Character != null)
-//            {
-//                if(__instance.Character.IsGiant())
-//                {
-//                    __instance.Wage = __instance.Wage * Globals.GiantsCostMult;
-//                }
-//                //__instance.Wage = 10000;
-//                //__instance.NameText += "aaaaaaaaaaaa";
-//                __instance.NameText += "\n lololo";
-//                //__instance.Level += "\n lololo";
-//            }
-            //int noGiants = 0;
-            //foreach (RecruitVolunteerTroopVM troop in __instance.TroopsInCart)
-            //{
-            //    if (troop.Character.IsGiant()) noGiants++;
-            //}
-            //__result += noGiants * (Globals.GiantCountsAs - 1);
+    //            if(__instance.Character != null)
+    //            {
+    //                if(__instance.Character.IsGiant())
+    //                {
+    //                    __instance.Wage = __instance.Wage * Globals.GiantsCostMult;
+    //                }
+    //                //__instance.Wage = 10000;
+    //                //__instance.NameText += "aaaaaaaaaaaa";
+    //                __instance.NameText += "\n lololo";
+    //                //__instance.Level += "\n lololo";
+    //            }
+    //int noGiants = 0;
+    //foreach (RecruitVolunteerTroopVM troop in __instance.TroopsInCart)
+    //{
+    //    if (troop.Character.IsGiant()) noGiants++;
+    //}
+    //__result += noGiants * (Globals.GiantCountsAs - 1);
     //    }
     //}
-        // adds the "costs 2 to the viewmodel while adding a troop"
-        //used for information screen when hovering over a troop
+
+    // adds the "costs 2 to the viewmodel while adding a troop"
+    //used for information screen when hovering over a troop
     [HarmonyPatch(typeof(TooltipRefresherCollection), "RefreshCharacterTooltip")]
     internal class UpdateTooltipPatch
     {
@@ -165,10 +141,10 @@ namespace RealmsForgotten.Patches
         {
             CharacterObject? characterObject = args[0] as CharacterObject;
 
-            if (characterObject !=null && characterObject.TroopWage > 0)
+            if (characterObject != null && characterObject.TroopWage > 0)
             {
                 //                GameTexts.SetVariable("STR2", "{=!}<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">");
-                propertyBasedTooltipVM.AddProperty("1111", $"Troop Limit: {(characterObject.IsGiant()? Globals.GiantCountsAs : 1)}", 0, TooltipProperty.TooltipPropertyFlags.MultiLine);
+                propertyBasedTooltipVM.AddProperty("1111", $"Troop Limit: {(characterObject.IsGiant() ? Globals.GiantCountsAs : 1)}", 0, TooltipProperty.TooltipPropertyFlags.MultiLine);
             }
         }
     }

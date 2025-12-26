@@ -1,0 +1,392 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+  <NPCCharacter id="rf_house_troop_recruit" default_group="Infantry" name="House Troop Recruit" race="human" level="6" is_basic_troop="true" occupation="Soldier" culture="Culture.empire" is_female="false">
+    <face>
+      <face_key_template value="BodyProperty.fighter_sturgia" />
+    </face>
+    <skills>
+      <skill id="OneHanded" value="20" />
+      <skill id="TwoHanded" value="10" />
+      <skill id="Polearm" value="20" />
+      <skill id="Throwing" value="10" />
+      <skill id="Athletics" value="20" />
+    </skills>
+    <upgrade_targets>
+      <upgrade_target id="NPCCharacter.rf_house_troop_infantry" />
+      <upgrade_target id="NPCCharacter.rf_house_troop_archer" />
+    </upgrade_targets>
+    <Equipments>
+      <EquipmentRoster civilian="false" />
+      <EquipmentRoster civilian="true" />
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="rf_house_troop_infantry" default_group="Infantry" level="11" name="House Troop Infantry" race="human" occupation="Soldier" culture="Culture.empire" is_female="false">
+    <face>
+      <face_key_template value="BodyProperty.fighter_sturgia" />
+    </face>
+    <skills>
+      <skill id="OneHanded" value="40" />
+      <skill id="TwoHanded" value="20" />
+      <skill id="Polearm" value="40" />
+      <skill id="Throwing" value="20" />
+      <skill id="Riding" value="10" />
+      <skill id="Athletics" value="40" />
+    </skills>
+    <upgrade_targets>
+      <upgrade_target id="NPCCharacter.rf_house_troop_trained_infantry" />
+      <upgrade_target id="NPCCharacter.rf_house_troop_spearman" />
+      <upgrade_target id="NPCCharacter.rf_house_troop_squire" />
+    </upgrade_targets>
+    <Equipments>
+      <EquipmentRoster civilian="false" />
+      <EquipmentRoster civilian="true" />
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="rf_house_troop_archer" default_group="Ranged" level="11" name="House Troop Archer" race="human" occupation="Soldier" culture="Culture.empire" is_female="false">
+    <face>
+      <face_key_template value="BodyProperty.fighter_sturgia" />
+    </face>
+    <skills>
+      <skill id="OneHanded" value="40" />
+      <skill id="TwoHanded" value="15" />
+      <skill id="Polearm" value="20" />
+      <skill id="Bow" value="40" />
+      <skill id="Crossbow" value="20" />
+      <skill id="Athletics" value="40" />
+    </skills>
+    <upgrade_targets>
+      <upgrade_target id="NPCCharacter.rf_house_troop_bowman" />
+      <upgrade_target id="NPCCharacter.rf_house_troop_crossbowman" />
+    </upgrade_targets>
+    <Equipments>
+      <EquipmentRoster civilian="false" />
+      <EquipmentRoster civilian="true" />
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="rf_house_troop_trained_infantry" default_group="Infantry" level="16" name="House Troop Trained Infantry" race="human" occupation="Soldier" culture="Culture.empire" is_female="false">
+    <face>
+      <face_key_template value="BodyProperty.fighter_sturgia" />
+    </face>
+    <skills>
+      <skill id="OneHanded" value="80" />
+      <skill id="TwoHanded" value="40" />
+      <skill id="Polearm" value="80" />
+      <skill id="Throwing" value="40" />
+      <skill id="Riding" value="20" />
+      <skill id="Athletics" value="80" />
+    </skills>
+    <upgrade_targets>
+      <upgrade_target id="NPCCharacter.rf_house_troop_veteran_infantry" />
+    </upgrade_targets>
+    <Equipments>
+      <EquipmentRoster civilian="false" />
+      <EquipmentRoster civilian="true" />
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="rf_house_troop_veteran_infantry" default_group="Infantry" level="21" name="House Troop Veteran Infantry" race="human" occupation="Soldier" culture="Culture.empire" is_female="false">
+    <face>
+      <face_key_template value="BodyProperty.fighter_sturgia" />
+    </face>
+    <skills>
+      <skill id="OneHanded" value="100" />
+      <skill id="TwoHanded" value="60" />
+      <skill id="Polearm" value="100" />
+      <skill id="Throwing" value="60" />
+      <skill id="Riding" value="20" />
+      <skill id="Athletics" value="100" />
+    </skills>
+    <upgrade_targets>
+      <upgrade_target id="NPCCharacter.rf_house_troop_heavy_infantry" />
+      <upgrade_target id="NPCCharacter.rf_house_troop_banner_bearer" />
+    </upgrade_targets>
+    <Equipments>
+      <EquipmentRoster civilian="false" />
+      <EquipmentRoster civilian="true" />
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="rf_house_troop_heavy_infantry" default_group="Infantry" level="26" name="House Troop Heavy Infantry" race="human" occupation="Soldier" culture="Culture.empire" is_female="false">
+    <face>
+      <face_key_template value="BodyProperty.fighter_sturgia" />
+    </face>
+    <skills>
+      <skill id="OneHanded" value="140" />
+      <skill id="TwoHanded" value="80" />
+      <skill id="Polearm" value="140" />
+      <skill id="Throwing" value="80" />
+      <skill id="Riding" value="20" />
+      <skill id="Athletics" value="140" />
+    </skills>
+    <upgrade_targets />
+    <Equipments>
+      <EquipmentRoster civilian="false" />
+      <EquipmentRoster civilian="true" />
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="rf_house_troop_banner_bearer" default_group="Infantry" level="26" name="House Troop Banner Carrier" race="human" occupation="Soldier" culture="Culture.empire" is_female="false">
+    <face>
+      <face_key_template value="BodyProperty.fighter_sturgia" />
+    </face>
+    <skills>
+      <skill id="OneHanded" value="140" />
+      <skill id="TwoHanded" value="80" />
+      <skill id="Polearm" value="140" />
+      <skill id="Throwing" value="80" />
+      <skill id="Riding" value="20" />
+      <skill id="Athletics" value="140" />
+    </skills>
+    <upgrade_targets />
+    <Equipments>
+      <EquipmentRoster civilian="false">
+        <equipment slot="Item1" id="Item.rf_banner" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Item1" id="Item.rf_banner" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="rf_house_troop_spearman" default_group="Infantry" level="16" name="House Troop Spearman" race="human" occupation="Soldier" culture="Culture.empire" is_female="false">
+    <face>
+      <face_key_template value="BodyProperty.fighter_sturgia" />
+    </face>
+    <skills>
+      <skill id="OneHanded" value="40" />
+      <skill id="TwoHanded" value="60" />
+      <skill id="Polearm" value="100" />
+      <skill id="Throwing" value="20" />
+      <skill id="Riding" value="20" />
+      <skill id="Athletics" value="80" />
+    </skills>
+    <upgrade_targets>
+      <upgrade_target id="NPCCharacter.rf_house_troop_long_spearman" />
+    </upgrade_targets>
+    <Equipments>
+      <EquipmentRoster civilian="false" />
+      <EquipmentRoster civilian="true" />
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="rf_house_troop_long_spearman" default_group="Infantry" level="21" name="House Troop Long Spearman" race="human" occupation="Soldier" culture="Culture.empire" is_female="false">
+    <face>
+      <face_key_template value="BodyProperty.fighter_sturgia" />
+    </face>
+    <skills>
+      <skill id="OneHanded" value="60" />
+      <skill id="TwoHanded" value="80" />
+      <skill id="Polearm" value="140" />
+      <skill id="Throwing" value="20" />
+      <skill id="Riding" value="20" />
+      <skill id="Athletics" value="100" />
+    </skills>
+    <upgrade_targets>
+      <upgrade_target id="NPCCharacter.rf_house_troop_pikeman" />
+    </upgrade_targets>
+    <Equipments>
+      <EquipmentRoster civilian="false" />
+      <EquipmentRoster civilian="true" />
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="rf_house_troop_pikeman" default_group="Infantry" level="26" name="House Troop Pikeman" race="human" occupation="Soldier" culture="Culture.empire" is_female="false">
+    <face>
+      <face_key_template value="BodyProperty.fighter_sturgia" />
+    </face>
+    <skills>
+      <skill id="OneHanded" value="80" />
+      <skill id="TwoHanded" value="100" />
+      <skill id="Polearm" value="180" />
+      <skill id="Throwing" value="20" />
+      <skill id="Riding" value="20" />
+      <skill id="Athletics" value="120" />
+    </skills>
+    <upgrade_targets />
+    <Equipments>
+      <EquipmentRoster civilian="false" />
+      <EquipmentRoster civilian="true" />
+    </Equipments>
+  </NPCCharacter>
+    <NPCCharacter id="rf_house_troop_squire" default_group="Cavalry" level="16" name="House Troop Squire" race="human" occupation="Soldier" culture="Culture.empire" is_female="false">
+    <face>
+      <face_key_template value="BodyProperty.fighter_sturgia" />
+    </face>
+    <skills>
+      <skill id="OneHanded" value="40" />
+      <skill id="TwoHanded" value="60" />
+      <skill id="Polearm" value="80" />
+      <skill id="Throwing" value="20" />
+      <skill id="Riding" value="60" />
+    </skills>
+    <upgrade_targets>
+      <upgrade_target id="NPCCharacter.rf_house_troop_cavalry" />
+    </upgrade_targets>
+    <Equipments>
+      <EquipmentRoster civilian="false" />
+      <EquipmentRoster civilian="true" />
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="rf_house_troop_cavalry" default_group="Cavalry" level="21" name="House Troop Cavalry" race="human" occupation="Soldier" culture="Culture.empire" is_female="false">
+    <face>
+      <face_key_template value="BodyProperty.fighter_sturgia" />
+    </face>
+    <skills>
+      <skill id="OneHanded" value="60" />
+      <skill id="TwoHanded" value="60" />
+      <skill id="Polearm" value="100" />
+      <skill id="Throwing" value="40" />
+      <skill id="Riding" value="100" />
+      <skill id="Athletics" value="80" />
+    </skills>
+    <upgrade_targets>
+      <upgrade_target id="NPCCharacter.rf_house_troop_heavy_cavalry" />
+      <upgrade_target id="NPCCharacter.rf_house_troop_horse_archer" />
+    </upgrade_targets>
+    <Equipments>
+      <EquipmentRoster civilian="false" />
+      <EquipmentRoster civilian="true" />
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="rf_house_troop_heavy_cavalry" default_group="Cavalry" level="26" name="House Troop Heavy Cavalry" race="human" occupation="Soldier" culture="Culture.empire" is_female="false">
+    <face>
+      <face_key_template value="BodyProperty.fighter_sturgia" />
+    </face>
+    <skills>
+      <skill id="OneHanded" value="100" />
+      <skill id="TwoHanded" value="100" />
+      <skill id="Polearm" value="120" />
+      <skill id="Throwing" value="60" />
+      <skill id="Riding" value="130" />
+      <skill id="Athletics" value="80" />
+    </skills>
+    <upgrade_targets />
+    <Equipments>
+      <EquipmentRoster civilian="false" />
+      <EquipmentRoster civilian="true" />
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="rf_house_troop_horse_archer" default_group="HorseArcher" level="26" name="House Troop Horse Archer" race="human" occupation="Soldier" culture="Culture.empire" is_female="false">
+    <face>
+      <face_key_template value="BodyProperty.fighter_sturgia" />
+    </face>
+    <skills>
+      <skill id="OneHanded" value="60" />
+      <skill id="TwoHanded" value="80" />
+      <skill id="Polearm" value="100" />
+      <skill id="Bow" value="120" />
+      <skill id="Throwing" value="40" />
+      <skill id="Riding" value="140" />
+      <skill id="Athletics" value="80" />
+    </skills>
+    <upgrade_targets />
+    <Equipments>
+      <EquipmentRoster civilian="false" />
+      <EquipmentRoster civilian="true" />
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="rf_house_troop_bowman" default_group="Ranged" level="16" name="House Troop Bowman" race="human" occupation="Soldier" culture="Culture.empire" is_female="false">
+    <face>
+      <face_key_template value="BodyProperty.fighter_sturgia" />
+    </face>
+    <skills>
+      <skill id="OneHanded" value="40" />
+      <skill id="TwoHanded" value="40" />
+      <skill id="Polearm" value="40" />
+      <skill id="Bow" value="80" />
+      <skill id="Athletics" value="80" />
+    </skills>
+    <upgrade_targets>
+      <upgrade_target id="NPCCharacter.rf_house_troop_heavy_bowman" />
+    </upgrade_targets>
+    <Equipments>
+      <EquipmentRoster civilian="false" />
+      <EquipmentRoster civilian="true" />
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="rf_house_troop_heavy_bowman" default_group="Ranged" level="21" name="House Troop Heavy Bowman" race="human" occupation="Soldier" culture="Culture.empire" is_female="false">
+    <face>
+      <face_key_template value="BodyProperty.fighter_sturgia" />
+    </face>
+    <skills>
+      <skill id="OneHanded" value="80" />
+      <skill id="TwoHanded" value="80" />
+      <skill id="Polearm" value="40" />
+      <skill id="Bow" value="120" />
+      <skill id="Athletics" value="100" />
+    </skills>
+    <upgrade_targets>
+      <upgrade_target id="NPCCharacter.rf_house_troop_marksman" />
+    </upgrade_targets>
+    <Equipments>
+      <EquipmentRoster civilian="false" />
+      <EquipmentRoster civilian="true" />
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="rf_house_troop_marksman" default_group="Ranged" level="26" name="House Troop Marksman" race="human" occupation="Soldier" culture="Culture.empire" is_female="false">
+    <face>
+      <face_key_template value="BodyProperty.fighter_sturgia" />
+    </face>
+    <skills>
+      <skill id="OneHanded" value="100" />
+      <skill id="TwoHanded" value="80" />
+      <skill id="Polearm" value="40" />
+      <skill id="Bow" value="160" />
+      <skill id="Athletics" value="120" />
+    </skills>
+    <upgrade_targets />
+    <Equipments>
+      <EquipmentRoster civilian="false" />
+      <EquipmentRoster civilian="true" />
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="rf_house_troop_crossbowman" default_group="Ranged" level="16" name="House Troop Crossbowman" race="human" occupation="Soldier" culture="Culture.empire" is_female="false">
+    <face>
+      <face_key_template value="BodyProperty.fighter_sturgia" />
+    </face>
+    <skills>
+      <skill id="OneHanded" value="40" />
+      <skill id="TwoHanded" value="60" />
+      <skill id="Polearm" value="40" />
+      <skill id="Crossbow" value="100" />
+      <skill id="Athletics" value="60" />
+    </skills>
+    <upgrade_targets>
+      <upgrade_target id="NPCCharacter.rf_house_troop_heavy_crossbowman" />
+    </upgrade_targets>
+    <Equipments>
+      <EquipmentRoster civilian="false" />
+      <EquipmentRoster civilian="true" />
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="rf_house_troop_heavy_crossbowman" default_group="Ranged" level="21" name="House Troop Heavy Crossbowman" race="human" occupation="Soldier" culture="Culture.empire" is_female="false">
+    <face>
+      <face_key_template value="BodyProperty.fighter_sturgia" />
+    </face>
+    <skills>
+      <skill id="OneHanded" value="80" />
+      <skill id="TwoHanded" value="80" />
+      <skill id="Polearm" value="60" />
+      <skill id="Crossbow" value="140" />
+      <skill id="Athletics" value="80" />
+    </skills>
+    <upgrade_targets>
+      <upgrade_target id="NPCCharacter.rf_house_troop_sharpshooter" />
+    </upgrade_targets>
+    <Equipments>
+      <EquipmentRoster civilian="false" />
+      <EquipmentRoster civilian="true" />
+    </Equipments>
+  </NPCCharacter>
+  <NPCCharacter id="rf_house_troop_sharpshooter" default_group="Ranged" level="26" name="House Troop Sharpshooter" race="human" occupation="Soldier" culture="Culture.empire" is_female="false">
+    <face>
+      <face_key_template value="BodyProperty.fighter_sturgia" />
+    </face>
+    <skills>
+      <skill id="OneHanded" value="100" />
+      <skill id="TwoHanded" value="100" />
+      <skill id="Polearm" value="60" />
+      <skill id="Crossbow" value="180" />
+      <skill id="Athletics" value="100" />
+    </skills>
+    <upgrade_targets />
+    <Equipments>
+      <EquipmentRoster civilian="false" />
+      <EquipmentRoster civilian="true" />
+    </Equipments>
+  </NPCCharacter>
+</NPCCharacters>

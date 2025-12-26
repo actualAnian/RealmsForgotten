@@ -1,17 +1,10 @@
-﻿using RealmsForgotten.AiMade.Models;
-using RealmsForgotten.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
-using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
-using TaleWorlds.MountAndBlade.ComponentInterfaces;
 
 namespace RealmsForgotten.AiMade
 {
@@ -56,7 +49,7 @@ namespace RealmsForgotten.AiMade
 
             agent.HealthLimit += 20;
             agent.Health = Math.Min(agent.Health + 10, agent.HealthLimit);
-            agent.SetMaximumSpeedLimit(agent.MaximumForwardUnlimitedSpeed * 1.2f, true);
+            agent.SetMaximumSpeedLimit(agent.GetMaximumForwardUnlimitedSpeed() * 1.2f, true);
 
             InformationManager.DisplayMessage(new InformationMessage($"{agent.Name} enters Berserker mode!", Colors.Red));
         }
@@ -67,7 +60,7 @@ namespace RealmsForgotten.AiMade
             agentTimers.Remove(agent);
 
             agent.HealthLimit -= 20;
-            agent.SetMaximumSpeedLimit(agent.MaximumForwardUnlimitedSpeed / 1.2f, true);
+            agent.SetMaximumSpeedLimit(agent.GetMaximumForwardUnlimitedSpeed() / 1.2f, true);
 
             InformationManager.DisplayMessage(new InformationMessage($"{agent.Name} exits Berserker mode!", Colors.Red));
         }
