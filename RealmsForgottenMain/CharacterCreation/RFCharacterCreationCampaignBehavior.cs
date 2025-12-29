@@ -323,6 +323,7 @@ namespace RealmsForgotten.CharacterCreation
             args.SetFocusToSkills(_focusToAdd);
             args.SetLevelToSkills(30);
             args.SetLevelToAttribute(DefaultCharacterAttributes.Intelligence, _attributeLevelToAdd);
+            //args.PositiveEffectText = new TextObject("{=CulturedStart46}Your subjects begrudgingly accept your rule.", null);
         }
         private void RFStartMenuOutlawNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {

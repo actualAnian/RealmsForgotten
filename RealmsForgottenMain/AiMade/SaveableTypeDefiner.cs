@@ -124,7 +124,7 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(RuinsQuest), 91);
             AddClassDefinition(typeof(WerewolfVillageMenuBehavior), 92);
             AddClassDefinition(typeof(RuinsQuestBehavior), 93);
-            AddClassDefinition(typeof(InfectionMissionBehavior), 94);
+            //AddClassDefinition(typeof(InfectionMissionBehavior), 94);
         }
     }
 }

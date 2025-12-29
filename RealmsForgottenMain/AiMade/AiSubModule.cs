@@ -144,12 +144,12 @@ namespace RealmsForgotten.AiMade
                 mission.AddMissionBehavior(new ADODFireArrowsMissionBehavior());
             }
 
-            if (mission.Mode == MissionMode.Battle
-       || mission.Mode == MissionMode.Stealth
-       || mission.Mode == MissionMode.Duel)
-            {
-                mission.AddMissionBehavior(new InfectionMissionBehavior());
-            }
+       //     if (mission.Mode == MissionMode.Battle
+       //|| mission.Mode == MissionMode.Stealth
+       //|| mission.Mode == MissionMode.Duel)
+       //     {
+       //         mission.AddMissionBehavior(new InfectionMissionBehavior());
+       //     }
 
             // Add Reinforcements Runner if DeploymentMissionController is present
             if (mission.MissionLogics.OfType<DeploymentMissionController>().Any()

@@ -555,25 +555,19 @@
 	</CustomScene>
 	<CustomScene>
 		<id>minotaur_swamp</id>
-		<Npcs>
-			<Npc>
-			<NpcId>villager_empire</NpcId>
-				<TagId>1</TagId>
-				<ActionSet>_hideout_bandit</ActionSet>
-			</Npc>
-		</Npcs>
 		<Bandits>
 			<CommonArea>
 				<areaIndex>1</areaIndex>
 				<Bandit>
 					<id>urkrish_bandit</id>
-					<amount>2</amount>
+					<amount>1</amount>
 				</Bandit>
 			</CommonArea>
 			<CommonArea>
 				<areaIndex>2</areaIndex>
 				<Bandit>
 					<id>urkrish_bandit</id>
+					<amount>1</amount>
 				</Bandit>
 			</CommonArea>
 			<CommonArea>
@@ -865,8 +859,10 @@
 					<id>armed_trader_aserai</id>
 					<amount>2</amount>
 					<BehaviorTree name="HornBlowerBehaviorTree">
-						<Param type="float" value="50" /> <!-- distance from which enemies will hear the horn sound-->
-						<Param type="string" value="alarm_horn" /> <!-- horn model id-->
+						<Param type="float" value="50" />
+						<!-- distance from which enemies will hear the horn sound-->
+						<Param type="string" value="alarm_horn" />
+						<!-- horn model id-->
 					</BehaviorTree>
 				</Bandit>
 			</CommonArea>
