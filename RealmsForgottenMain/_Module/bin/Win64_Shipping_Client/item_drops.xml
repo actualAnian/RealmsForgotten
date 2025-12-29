@@ -1,0 +1,30 @@
+<AllItemDrops>
+    <ItemDropsData>
+        <DropsId>drop1</DropsId>
+        <ItemDrops>
+            <ItemDrop>
+                <ItemId>cyclops_eye</ItemId>
+                <AmountMin>1</AmountMin>
+                <AmountMax>1</AmountMax>
+                <DropChance>1</DropChance> <!--drop chance has to be between 0 and 1 -->
+            </ItemDrop>
+            <ItemDrop>
+                <ItemId>gold</ItemId>
+                <AmountMin>1</AmountMin>
+                <AmountMax>2</AmountMax>
+                <DropChance>1</DropChance>
+            </ItemDrop>
+        </ItemDrops>
+    </ItemDropsData>
+    <ItemDropsData>
+        <DropsId>drop2</DropsId>
+        <ItemDrops>
+            <ItemDrop>
+                <ItemId>gold</ItemId>
+                <AmountMin>1</AmountMin>
+                <AmountMax>5</AmountMax>
+                <DropChance>0.3</DropChance>
+            </ItemDrop>
+        </ItemDrops>
+    </ItemDropsData>
+</AllItemDrops>
