@@ -164,28 +164,27 @@ namespace RealmsForgotten.Quest
                         _smallPlayerArmyJournalLog.UpdateCurrentProgress(party.NumberOfAllMembers);
                     }
                 });
-                CampaignEvents.OnPlayerBattleEndEvent.AddNonSerializedListener(this, BattleEnd);
+                CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnMapEventEnded);
                 RegisterQuestEvents(this);
                 //CampaignEvents.OnGameEarlyLoadedEvent.AddNonSerializedListener(this, OnGameLoaded);
             }
 
-            private void BattleEnd(MapEvent mapEvent)
+            private void OnMapEventEnded(MapEvent campaignEvent)
             {
-                if (_rescueUliahJournalLog?.CurrentProgress == 0 && Settlement.CurrentSettlement == questHideout.Settlement)
+                if (campaignEvent.EventType == MapEvent.BattleTypes.Hideout 
+                    && campaignEvent.MapEventSettlement == questHideout.Settlement
+                    && _rescueUliahJournalLog?.CurrentProgress == 0)
                 {
-                    if (mapEvent.DefeatedSide == mapEvent.DefenderSide.MissionSide)
-                    {
-                        ConversationCharacterData playerData = new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty);
-                        Uliah.MakeWounded();
-                        ConversationCharacterData manData = new ConversationCharacterData(Uliah.CharacterObject);
-                        CampaignMapConversation.OpenConversation(playerData, manData);
-                        AddHeroToPartyAction.Apply(Uliah, MobileParty.MainParty, true);
-                        _rescueUliahJournalLog.UpdateCurrentProgress(1);
-                    }
-                    else
-                    {
-                        InitializeHideoutIfNeeded(questHideout);
-                    }
+                    ConversationCharacterData playerData = new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty);
+                    Uliah.MakeWounded();
+                    ConversationCharacterData manData = new ConversationCharacterData(Uliah.CharacterObject);
+                    CampaignMapConversation.OpenConversation(playerData, manData);
+                    AddHeroToPartyAction.Apply(Uliah, MobileParty.MainParty, true);
+                    _rescueUliahJournalLog.UpdateCurrentProgress(1);
+                }
+                else
+                {
+                    InitializeHideoutIfNeeded(questHideout);
                 }
             }
             private void MakePartyEngage(PartyBase party)
