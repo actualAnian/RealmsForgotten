@@ -13,6 +13,16 @@
         <GameFolder>$(BANNERLORD_GAME_DIR)</GameFolder>
         <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      <Optimize>True</Optimize>
+      <DebugType>embedded</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      <Optimize>False</Optimize>
+      <DebugType>embedded</DebugType>
+    </PropertyGroup>
     <ItemGroup>
         <Reference Include="$(GameFolder)\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCMv5.dll">
 	        <HintPath>%(Identity)</HintPath>

@@ -21,9 +21,7 @@ namespace RFCustomSettlements.CustomSettlementsBehaviorTrees.HornBlowerTree
         {
             if (Agent.GetValue().WieldedOffhandWeapon.Item != null)
                 Agent.GetValue().TryToSheathWeaponInHand(TaleWorlds.MountAndBlade.Agent.HandIndex.OffHand, TaleWorlds.MountAndBlade.Agent.WeaponWieldActionType.Instant);
-            var horn = MBObjectManager.Instance.GetObject<ItemObject>(hornItemId);
-            MissionWeapon weapon = new(horn, null, null);
-            Agent.GetValue().EquipWeaponToExtraSlotAndWield(ref weapon);
+            Agent.GetValue().TryToWieldWeaponInSlot(EquipmentIndex.ExtraWeaponSlot, TaleWorlds.MountAndBlade.Agent.WeaponWieldActionType.Instant, false);
             return BTTaskStatus.FinishedWithTrue;
         }
     }

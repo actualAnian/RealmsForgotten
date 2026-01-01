@@ -65,11 +65,11 @@ namespace RealmsForgotten.AiMade
         private void DailyTick()
         {
             // Hard gate: don’t even evaluate before day 30
-            if (CampaignTime.Now.ToDays < OfferEarliestDay)
+            if (CampaignTime.Now.ToDays < Campaign.Current.Models.CampaignTimeModel.CampaignStartTime.ToDays + OfferEarliestDay)
                 return;
 
             // If anything is missing, or offer is already resolved (accepted/declined), never show again
-            if (_lord3_1 == null || _lordKingdom == null || _hasAcceptedOffer || _hasDeclinedOffer)
+            if (_lord3_1 == null || _lordKingdom.IsEliminated || _hasAcceptedOffer || _hasDeclinedOffer)
                 return;
 
             bool isAtWar = IsKingdomAtWar(_lordKingdom);

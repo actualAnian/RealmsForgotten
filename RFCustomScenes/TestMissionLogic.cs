@@ -23,57 +23,57 @@ namespace RealmsForgotten._1_3_beta_patches
                 return;
             if (Input.IsKeyPressed(InputKey.H))
             {
-                //        //// closest
-                //        Agent? closest = null;
-                //        float closestDistance = float.MaxValue;
+                    //        //// closest
+                    //        Agent? closest = null;
+                    //        float closestDistance = float.MaxValue;
 
-                //        foreach (Agent a in Mission.Current.Agents)
-                //        {
-                //            if (a == null || a == Agent.Main)
-                //                continue;
+                    //        foreach (Agent a in Mission.Current.Agents)
+                    //        {
+                    //            if (a == null || a == Agent.Main)
+                    //                continue;
 
-                //            float d = a.GetDistanceTo(Agent.Main);
-                //            if (d < closestDistance)
-                //            {
-                //                closestDistance = d;
-                //                closest = a;
-                //            }
-                //        }
+                    //            float d = a.GetDistanceTo(Agent.Main);
+                    //            if (d < closestDistance)
+                    //            {
+                    //                closestDistance = d;
+                    //                closest = a;
+                    //            }
+                    //        }
 
-                //        //var nav = closest.GetComponent<CampaignAgentComponent>();
-                //        //closest.AIStateFlags |= Agent.AIStateFlag.Cautious;
-                //        //WorldPosition lastSuspiciousPosition = Agent.Main.GetWorldPosition();
-                //        //closest.SetAILastSuspiciousPosition(lastSuspiciousPosition, checkNavMeshForCorrection: false);
-                //        var obj = MBObjectManager.Instance.GetObject<ItemObject>("balrog_axe");
-                //        //MissionWeapon weapon = new(obj, null, null);
-                //        //var pos = new Vec3(5, 0, 0) + Agent.Main.Position;
-                //        //var rot = new Vec3(0, 0, 0);
-                //        //this.Mission.SpawnWeaponWithNewEntityAux(weapon, Mission.WeaponSpawnFlags.WithPhysics, new MatrixFrame(Mat3.CreateMat3WithForward(rot), pos), 0, null, false);
+                    //        //var nav = closest.GetComponent<CampaignAgentComponent>();
+                    //        //closest.AIStateFlags |= Agent.AIStateFlag.Cautious;
+                    //        //WorldPosition lastSuspiciousPosition = Agent.Main.GetWorldPosition();
+                    //        //closest.SetAILastSuspiciousPosition(lastSuspiciousPosition, checkNavMeshForCorrection: false);
+                    //        var obj = MBObjectManager.Instance.GetObject<ItemObject>("balrog_axe");
+                    //        //MissionWeapon weapon = new(obj, null, null);
+                    //        //var pos = new Vec3(5, 0, 0) + Agent.Main.Position;
+                    //        //var rot = new Vec3(0, 0, 0);
+                    //        //this.Mission.SpawnWeaponWithNewEntityAux(weapon, Mission.WeaponSpawnFlags.WithPhysics, new MatrixFrame(Mat3.CreateMat3WithForward(rot), pos), 0, null, false);
 
-                //        //Agent.Main.EquipWeaponToExtraSlotAndWield(ref weapon);
-                //        //var ab = weapon.GetWeaponData(false).WeaponFrame;
-                //        //closest.EquipWeaponToExtraSlotAndWield(ref weapon);
-                //        //closest.SetTargetPosition(closest.Position.AsVec2);
+                    //        //Agent.Main.EquipWeaponToExtraSlotAndWield(ref weapon);
+                    //        //var ab = weapon.GetWeaponData(false).WeaponFrame;
+                    //        //closest.EquipWeaponToExtraSlotAndWield(ref weapon);
+                    //        //closest.SetTargetPosition(closest.Position.AsVec2);
 
-                //        //closest.DisableScriptedMovement();
-                //        //closest.SetAgentFlags(AgentFlag.IsHumanoid);
-                //        //closest.SetIsAIPaused(true);
-                //        //closest.TryToWieldWeaponInSlot(EquipmentIndex.ExtraWeaponSlot, Agent.WeaponWieldActionType.WithAnimationUninterruptible, false);
+                    //        //closest.DisableScriptedMovement();
+                    //        //closest.SetAgentFlags(AgentFlag.IsHumanoid);
+                    //        //closest.SetIsAIPaused(true);
+                    //        //closest.TryToWieldWeaponInSlot(EquipmentIndex.ExtraWeaponSlot, Agent.WeaponWieldActionType.WithAnimationUninterruptible, false);
 
-                //        //var foesThatCanHearHorn = Mission.Current.Agents.Where(agent => agent.IsEnemyOf(TaleWorlds.MountAndBlade.Agent.Main)
-                //        //&& agent.GetDistanceTo(closest) < 50
-                //        //&& agent != closest);
-                //        //foreach (var agent in foesThatCanHearHorn)
-                //        //{
-                //        //    var alarmedBehavior = agent.GetComponent<CampaignAgentComponent>().AgentNavigator.GetBehaviorGroup<AlarmedBehaviorGroup>();
-                //        //    agent.SetAlarmState(TaleWorlds.MountAndBlade.Agent.AIStateFlag.Cautious);
-                //        //    MethodInfo setterMethod = AccessTools.PropertySetter(typeof(AlarmedBehaviorGroup), "AlarmFactor");
-                //        //    setterMethod.Invoke(alarmedBehavior, new object[] { 1f});
-                //        //    WorldPosition lastSuspiciousPosition = closest.GetWorldPosition();
-                //        //    agent.SetAILastSuspiciousPosition(lastSuspiciousPosition, checkNavMeshForCorrection: false);
-                //        //}
-                Agent.Main.SetActionChannel(0, ActionIndexCache.Create("act_human_blow_horn"), true);
-                InformationManager.DisplayMessage(new InformationMessage("TestMissionLogic: H key pressed"));
+                    //        //var foesThatCanHearHorn = Mission.Current.Agents.Where(agent => agent.IsEnemyOf(TaleWorlds.MountAndBlade.Agent.Main)
+                    //        //&& agent.GetDistanceTo(closest) < 50
+                    //        //&& agent != closest);
+                    //        //foreach (var agent in foesThatCanHearHorn)
+                    //        //{
+                    //        //    var alarmedBehavior = agent.GetComponent<CampaignAgentComponent>().AgentNavigator.GetBehaviorGroup<AlarmedBehaviorGroup>();
+                    //        //    agent.SetAlarmState(TaleWorlds.MountAndBlade.Agent.AIStateFlag.Cautious);
+                    //        //    MethodInfo setterMethod = AccessTools.PropertySetter(typeof(AlarmedBehaviorGroup), "AlarmFactor");
+                    //        //    setterMethod.Invoke(alarmedBehavior, new object[] { 1f});
+                    //        //    WorldPosition lastSuspiciousPosition = closest.GetWorldPosition();
+                    //        //    agent.SetAILastSuspiciousPosition(lastSuspiciousPosition, checkNavMeshForCorrection: false);
+                    //        //}
+                //    Agent.Main.SetActionChannel(0, ActionIndexCache.Create("act_human_blow_horn"), true);
+                //InformationManager.DisplayMessage(new InformationMessage("TestMissionLogic: H key pressed"));
             }
         }
     }

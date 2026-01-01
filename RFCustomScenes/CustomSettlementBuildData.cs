@@ -204,17 +204,24 @@ namespace RealmsForgotten.RFCustomSettlements
                 }
                 foreach (XElement xElement in element.Descendants("Bandits").Descendants("PatrolArea"))
                 {
-                    XElement dropId = xElement.Element("Bandit").Element("lootId");
-                    string? lootId = dropId?.Value;
-                    RFBanditData bd = new(xElement.Element("Bandit").Element("id").Value, xElement.Element("Bandit").Element("amount").Value, lootId, treeData: TryParseBehaviorTreeData(xElement));
-                    buildPatrolAreasBandits.Add(int.Parse(xElement.Element("areaIndex").Value), bd);
+                    foreach (XElement banditElement in xElement.Descendants("Bandit"))
+                    {
+                        XElement dropId = banditElement.Element("lootId");
+                        string? lootId = dropId?.Value;
+                        RFBanditData bd = new(banditElement.Element("id").Value, banditElement.Element("amount").Value, lootId, treeData: TryParseBehaviorTreeData(banditElement));
+                        buildPatrolAreasBandits.Add(int.Parse(xElement.Element("areaIndex").Value), bd);
+
+                    }
                 }
                 foreach (XElement xElement in element.Descendants("Bandits").Descendants("DynamicPatrolArea"))
                 {
-                    XElement dropId = xElement.Element("Bandit").Element("lootId");
-                    string? lootId = dropId?.Value;
-                    RFBanditData bd = new(xElement.Element("Bandit").Element("id").Value, xElement.Element("Bandit").Element("amount").Value, lootId, treeData: TryParseBehaviorTreeData(xElement));
-                    buildDynamicPatrolAreasBandits.Add(int.Parse(xElement.Element("areaIndex").Value), bd);
+                    foreach (XElement banditElement in xElement.Descendants("Bandit"))
+                    {
+                        XElement dropId = banditElement.Element("lootId");
+                        string? lootId = dropId?.Value;
+                        RFBanditData bd = new(banditElement.Element("id").Value, banditElement.Element("amount").Value, lootId, treeData: TryParseBehaviorTreeData(banditElement));
+                        buildDynamicPatrolAreasBandits.Add(int.Parse(xElement.Element("areaIndex").Value), bd);
+                    }
                 }
 
                 XElement NpcElement = element.Descendants("Npcs").FirstOrDefault();

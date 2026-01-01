@@ -8,6 +8,7 @@ using RFCustomSettlements.CustomSettlementsBehaviorTrees.HornBlowerTree.Tasks;
 using System;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
+using TaleWorlds.ObjectSystem;
 
 namespace RFCustomSettlements.CustomSettlementsBehaviorTrees.HornBlowerTree
 {
@@ -27,6 +28,7 @@ namespace RFCustomSettlements.CustomSettlementsBehaviorTrees.HornBlowerTree
             if (objects[0] is not Agent agent) return null;
             if (objects[1] is not float alertDistance) return null;
             if (objects[2] is not string hornItemId) return null;
+
             HornBlowerBehaviorTree? tree = StartBuildingTree(new HornBlowerBehaviorTree(agent))
                 .AddSelector("main")
                     .AddSequence("alerted", new AlarmedDecorator(SubscriptionPossibilities.OnSelfAlarmedStateChanged))
@@ -41,7 +43,14 @@ namespace RFCustomSettlements.CustomSettlementsBehaviorTrees.HornBlowerTree
                     .Up()
                 .Up()
                 .Finish();
+            EquipHornItem(agent, hornItemId);
             return tree;
+        }
+        private static void EquipHornItem(Agent agent, string hornItemId)
+        {
+            var horn = MBObjectManager.Instance.GetObject<ItemObject>(hornItemId);
+            MissionWeapon weapon = new(horn, null, null);
+            agent.EquipWeaponWithNewEntity(EquipmentIndex.ExtraWeaponSlot, ref weapon);
         }
     }
 }

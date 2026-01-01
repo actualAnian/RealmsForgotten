@@ -16,7 +16,16 @@ namespace RealmsForgotten
     public class CapitulationSystemBehavior : CampaignBehaviorBase
     {
         private Dictionary<Kingdom, CampaignTime> _lastCapitulation = new Dictionary<Kingdom, CampaignTime>();
+        private readonly List<string> NonCapitulatingNations = new()
+        {
+            "aserai",
+            "aserai_a",
+            "aserai_b",
+            "aserai_c",
+            "aserai_d",
+            "aserai_e",
 
+        };
         // --- CONFIG ---
         private const float GraceDays = 25f; // No capitulations during first X days
 
@@ -32,10 +41,6 @@ namespace RealmsForgotten
 
         private void CheckCapitulations()
         {
-            // --- EARLY GAME GRACE PERIOD ---
-            if (IsInGracePeriod())
-                return;
-
             foreach (var weak in Kingdom.All.ToList())
             {
                 if (weak == null || weak.IsEliminated || weak.Leader == null)
@@ -75,14 +80,10 @@ namespace RealmsForgotten
                 }
             }
         }
-
-        private bool IsInGracePeriod()
-        {
-            return CampaignTime.Now.ToDays < GraceDays;
-        }
-
         private bool CanCapitulate(Kingdom weak)
         {
+            if (NonCapitulatingNations.Contains(weak.StringId))
+                return false;
             if (_lastCapitulation.TryGetValue(weak, out var last))
             {
                 return (CampaignTime.Now - last).ToDays > 15f;
