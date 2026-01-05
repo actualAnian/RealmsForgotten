@@ -243,7 +243,13 @@ namespace RealmsForgotten
             var target = AccessTools.Method(typeof(BanditSpawnCampaignBehavior), "IsLooterFaction", new Type[] { typeof(IFaction) });
             harmony.Patch(target, prefix: new HarmonyMethod(typeof(BanditSpawnPatch), nameof(BanditSpawnPatch.Prefix)));
             var hideoutMenuInit = AccessTools.Method(typeof(HideoutCampaignBehavior), "game_menu_hideout_place_on_init");
-            harmony.Patch(hideoutMenuInit, postfix: new HarmonyMethod(typeof(GameMenuPatches), nameof(GameMenuPatches.Postfix)));
+            var hideoutSendTroops = AccessTools.Method(typeof(HideoutCampaignBehavior), "game_menu_send_troops_hideout_on_condition");
+            var hideoutSneakIn = AccessTools.Method(typeof(HideoutCampaignBehavior), "game_menu_hideout_sneak_in_on_condition");
+            var hideoutAssault = AccessTools.Method(typeof(HideoutCampaignBehavior), "game_menu_assault_hideout_parties_on_condition");
+            harmony.Patch(hideoutMenuInit, postfix: new HarmonyMethod(typeof(GameMenuPatches), nameof(GameMenuPatches.HideoutInitPostfix)));
+            harmony.Patch(hideoutSendTroops, postfix: new HarmonyMethod(typeof(GameMenuPatches), nameof(GameMenuPatches.SendTroopsPostfix)));
+            harmony.Patch(hideoutSneakIn, postfix: new HarmonyMethod(typeof(GameMenuPatches), nameof(GameMenuPatches.SneakInPostfix)));
+            harmony.Patch(hideoutAssault, postfix: new HarmonyMethod(typeof(GameMenuPatches), nameof(GameMenuPatches.AssaultHideoutPostfix)));
         }
 
         private void RemoveSandboxAndStoryOptions()

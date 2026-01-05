@@ -178,6 +178,7 @@ internal class CulturesCampaignBehavior : CampaignBehaviorBase
         {
             foreach (FlattenedTroopRosterElement troopRosterElement in settlement.Party.PrisonRoster.ToFlattenedRoster())
             {
+                if (troopRosterElement.Troop.IsHero) return;
                 if (MBRandom.RandomFloat < 0.15f)
                 {
                     settlement.Party.PrisonRoster.RemoveTroop(troopRosterElement.Troop);

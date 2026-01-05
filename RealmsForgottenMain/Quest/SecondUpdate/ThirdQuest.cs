@@ -403,7 +403,6 @@ namespace RealmsForgotten.Quest.SecondUpdate
             if (_willGoAsCaravan && persuadeAthasScholarLog is { CurrentProgress: 0 } && MobileParty.MainParty.CurrentSettlement == null && !madeCaravanQuest)
             {
                 MakeCaravanForQuest();
-                persuadeAthasScholarLog.UpdateCurrentProgress(1);
             }
 
             if (waitAthasScholarLog != null && captureAthasScholarLog == null)
@@ -458,6 +457,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             SetCaravanObjective(caravanParty);
 
             madeCaravanQuest = true;
+            persuadeAthasScholarLog.UpdateCurrentProgress(1);
         }
 
         private void SetCaravanObjective(MobileParty caravanParty)

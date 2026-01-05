@@ -22,6 +22,7 @@ namespace RealmsForgotten.Behaviors
 
         private void OnHourlyTick()
         {
+
             foreach (var settlement in Settlement.All.Where(s => s.IsCastle && s.OwnerClan != null && s.OwnerClan.Leader != Hero.MainHero))
             {
                 ManagePatrolsForCastle(settlement);

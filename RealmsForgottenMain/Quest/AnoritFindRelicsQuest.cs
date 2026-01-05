@@ -29,7 +29,7 @@ namespace RealmsForgotten.Quest
         {
             TextObject questObjectiveText = GameTexts.FindText("rf_anorit_objective_1");
             questObjectiveText.SetCharacterProperties("ANORIT", QuestGiver.CharacterObject, false);
-            this.AddLog(questObjectiveText);
+            AddLog(questObjectiveText);
             escapedPrison = false;
             anoritLordConversationTime = CampaignTime.Now;
         }
@@ -51,10 +51,9 @@ namespace RealmsForgotten.Quest
         {
             if (!escapedPrison && anoritLordConversationTime != CampaignTime.Never && anoritLordConversationTime.ElapsedHoursUntilNow >= 40 && !PlayerEncounter.InsideSettlement && CampaignTime.Now.IsNightTime)
             {
-                QuestUIManager.ShowNotification(GameTexts.FindText("rf_kidnapped_text").ToString(), SecondQuest.OpenPrisonBreak, true, "prisoner_image");
+                QuestUIManager.ShowNotification(GameTexts.FindText("rf_kidnapped_text").ToString(), () => { SaveCurrentQuestCampaignBehavior.Instance.SaveQuestState("anorit"); }, true, "prisoner_image");
                 anoritLordConversationTime = CampaignTime.Never;
                 escapedPrison = true;
-
             }
         }
 

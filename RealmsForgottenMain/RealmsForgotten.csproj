@@ -15,13 +15,13 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      <Optimize>True</Optimize>
-      <DebugType>embedded</DebugType>
+      <Optimize>False</Optimize>
+      <DebugType>portable</DebugType>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       <Optimize>False</Optimize>
-      <DebugType>embedded</DebugType>
+      <DebugType>portable</DebugType>
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="$(GameFolder)\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCMv5.dll">

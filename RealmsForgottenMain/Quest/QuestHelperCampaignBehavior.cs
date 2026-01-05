@@ -32,9 +32,9 @@ namespace RealmsForgotten.Quest
         public static void TryAddQuest2HideoutText()
         {
             if (IsInHideoutForQuest2())
-                GameTexts.SetVariable("HIDEOUT_TEXT", "You have reached the site indicated by The Owl. The bandits occupying this area are believed to possess a fragment of the map you were tasked to obtain.");
+                GameTexts.SetVariable("HIDEOUT_TEXT", "{=rf_quest_reached_hideout}You have reached the site indicated by The Owl. The bandits occupying this area are believed to possess a fragment of the map you were tasked to obtain.");
         }
-        private static bool IsInHideoutForQuest2()
+        public static bool IsInHideoutForQuest2()
         {
             if (Settlement.CurrentSettlement == null) return false;
             foreach (var quest in Campaign.Current.QuestManager.Quests)
@@ -118,7 +118,7 @@ namespace RealmsForgotten.Quest
         }
         private bool game_menu_send_troops_hideout_on_condition(MenuCallbackArgs args)
         {
-            if (! IsInHideoutForQuest2()) return false;
+            if (!IsInHideoutForQuest2()) return false;
             args.IsEnabled = false;
             args.Tooltip = new TextObject("send troop option is unavailable for this hideout", null);
             args.optionLeaveType = GameMenuOption.LeaveType.OrderTroopsToAttack;

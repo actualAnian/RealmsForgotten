@@ -171,9 +171,10 @@ namespace RealmsForgotten.Quest
 
             private void OnMapEventEnded(MapEvent campaignEvent)
             {
+                if (_rescueUliahJournalLog?.CurrentProgress == 1) return;
                 if (campaignEvent.EventType == MapEvent.BattleTypes.Hideout 
-                    && campaignEvent.MapEventSettlement == questHideout.Settlement
-                    && _rescueUliahJournalLog?.CurrentProgress == 0)
+                && campaignEvent.MapEventSettlement == questHideout.Settlement
+                && _rescueUliahJournalLog?.CurrentProgress == 0)
                 {
                     ConversationCharacterData playerData = new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty);
                     Uliah.MakeWounded();
@@ -195,7 +196,7 @@ namespace RealmsForgotten.Quest
                     AddLog(GameTexts.FindText("rf_first_quest_objective_4"));
                     Clan clan = Clan.FindFirst(x => x.StringId == "hidden_hand");
                     Hero hero = clan.Heroes.GetRandomElement();
-                    MobileParty hiddenHandParty = MobileParty.AllLordParties.First(x => x.ActualClan == clan) ?? LordPartyComponent.CreateLordParty("attacker_party_quest", hero, MobileParty.MainParty.Position, 1f, QuestQueen.HomeSettlement, hero);
+                    MobileParty hiddenHandParty = MobileParty.AllLordParties.FirstOrDefault(x => x.ActualClan == clan) ?? LordPartyComponent.CreateLordParty("attacker_party_quest", hero, MobileParty.MainParty.Position, 1f, QuestQueen.HomeSettlement, hero);
                     hiddenHandParty.StringId = "attacker_party_quest";
                     hiddenHandParty.InitializeMobilePartyAroundPosition(clan.DefaultPartyTemplate, MobileParty.MainParty.Position, 40);
                     SetPartyAiAction.GetActionForEngagingParty(hiddenHandParty, MobileParty.MainParty, MobileParty.NavigationType.Default, false);
