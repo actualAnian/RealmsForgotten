@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RealmsForgotten.Quest;
+using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
@@ -67,7 +68,9 @@ namespace RealmsForgotten.Models
         {
             get
             {
-                return 50;
+                if (QuestHelperCampaignBehavior.IsInHideoutForQuest2())
+                    return 50;
+                else return _previousModel.NumberOfMaximumTroopCountForFirstFightInHideout;
             }
         }
 

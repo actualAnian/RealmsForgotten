@@ -6,9 +6,11 @@ using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.AgentOrigins;
+using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.Conversation;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameMenus;
+using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Party.PartyComponents;
 using TaleWorlds.CampaignSystem.Roster;
@@ -86,6 +88,14 @@ namespace RealmsForgotten.Quest
                 _isPlayerInOwlArmy = false;
                 MobileParty.MainParty.IgnoreByOtherPartiesTill(CampaignTime.Now);
                 QuestPatches.AvoidDisbanding = false;
+            }
+            if (mobileParty == MobileParty.MainParty && QuestHelperCampaignBehavior.IsInHideoutForQuest2())
+            {
+                while (settlement.Hideout.GetDefenderParties(MapEvent.BattleTypes.Hideout).Sum(p => p.MemberRoster.TotalManCount) < 60)
+                {
+                    var behavior = Campaign.Current.GetCampaignBehavior<BanditSpawnCampaignBehavior>();
+                    behavior.AddBanditToHideout(settlement.Hideout);
+                }
             }
         }
 
