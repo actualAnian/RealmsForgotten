@@ -3687,6 +3687,12 @@
 				<Bandit>
 					<id>mountain_bandits_raider</id>
 					<amount>2</amount>
+					<BehaviorTree name="HornBlowerBehaviorTree">
+						<Param type="float" value="50" />
+						<!-- distance from which enemies will hear the horn sound-->
+						<Param type="string" value="alarm_horn" />
+						<!-- horn model id-->
+					</BehaviorTree>
 				</Bandit>
 			</CommonArea>
 
@@ -3695,6 +3701,12 @@
 				<Bandit>
 					<id>mountain_bandits_raider</id>
 					<amount>1</amount>
+					<BehaviorTree name="HornBlowerBehaviorTree">
+						<Param type="float" value="50" />
+						<!-- distance from which enemies will hear the horn sound-->
+						<Param type="string" value="alarm_horn" />
+						<!-- horn model id-->
+					</BehaviorTree>
 				</Bandit>
 			</CommonArea>
 
@@ -3705,6 +3717,14 @@
 					<amount>17</amount>
 				</Bandit>
 			</CommonArea>
+
+			<PatrolArea>
+				<areaIndex>2</areaIndex>
+				<Bandit>
+					<id>mountain_bandits_boss</id>
+					<amount>1</amount>
+				</Bandit>
+			</PatrolArea>
 
 			<PatrolArea>
 				<areaIndex>3</areaIndex>
@@ -3719,6 +3739,12 @@
 				<Bandit>
 					<id>mountain_bandits_chief</id>
 					<amount>2</amount>
+					<BehaviorTree name="HornBlowerBehaviorTree">
+						<Param type="float" value="50" />
+						<!-- distance from which enemies will hear the horn sound-->
+						<Param type="string" value="alarm_horn" />
+						<!-- horn model id-->
+					</BehaviorTree>
 				</Bandit>
 			</DynamicPatrolArea>
 
@@ -3727,6 +3753,12 @@
 				<Bandit>
 					<id>mountain_bandits_chief</id>
 					<amount>2</amount>
+					<BehaviorTree name="HornBlowerBehaviorTree">
+						<Param type="float" value="50" />
+						<!-- distance from which enemies will hear the horn sound-->
+						<Param type="string" value="alarm_horn" />
+						<!-- horn model id-->
+					</BehaviorTree>
 				</Bandit>
 			</DynamicPatrolArea>
 
@@ -3740,4 +3772,101 @@
 
 		</Bandits>
 	</CustomScene>
+
+	<CustomScene>
+		<id>deformed_ambush_hideout</id>
+		<Bandits>
+			<CommonArea>
+				<areaIndex>1</areaIndex>
+				<Bandit>
+					<id>deformed_villager_raider</id>
+					<amount>9</amount>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
+				<areaIndex>2</areaIndex>
+				<Bandit>
+					<id>deformed_villager_chief</id>
+					<amount>11</amount>
+				</Bandit>
+			</CommonArea>
+
+			<PatrolArea>
+				<areaIndex>1</areaIndex>
+				<Bandit>
+					<id>deformed_villager_chief</id>
+					<amount>2</amount>
+					<BehaviorTree name="HornBlowerBehaviorTree">
+						<Param type="float" value="50" />
+						<!-- distance from which enemies will hear the horn sound-->
+						<Param type="string" value="alarm_horn" />
+						<!-- horn model id-->
+					</BehaviorTree>
+				</Bandit>
+			</PatrolArea>
+
+			<PatrolArea>
+				<areaIndex>2</areaIndex>
+				<Bandit>
+					<id>deformed_villager_boss</id>
+					<amount>1</amount>
+				</Bandit>
+			</PatrolArea>
+
+
+		</Bandits>
+	</CustomScene>
+
+	<CustomScene>
+		<id>witch_lair_canyon</id>
+		<Bandits>
+			<CommonArea>
+				<areaIndex>1</areaIndex>
+				<Bandit>
+					<id>deformed_villager_raider</id>
+					<amount>10</amount>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
+				<areaIndex>2</areaIndex>
+				<Bandit>
+					<id>deformed_villager_chief</id>
+					<amount>9</amount>
+				</Bandit>
+			</CommonArea>
+
+			<CommonArea>
+				<areaIndex>3</areaIndex>
+				<Bandit>
+					<id>deformed_villager_chief</id>
+					<amount>3</amount>
+					<BehaviorTree name="HornBlowerBehaviorTree">
+						<Param type="float" value="100" />
+						<!-- distance from which enemies will hear the horn sound-->
+						<Param type="string" value="alarm_horn" />
+						<!-- horn model id-->
+					</BehaviorTree>
+				</Bandit>
+			</CommonArea>
+
+			<PatrolArea>
+				<areaIndex>1</areaIndex>
+				<Bandit>
+					<id>deformed_villager_raider</id>
+					<amount>2</amount>
+				</Bandit>
+			</PatrolArea>
+
+			<PatrolArea>
+				<areaIndex>2</areaIndex>
+				<Bandit>
+					<id>zombie_abomination</id>
+					<amount>2</amount>
+				</Bandit>
+			</PatrolArea>
+
+
+		</Bandits>
+	</CustomScene>
+	
 </RFCustomScenes>
