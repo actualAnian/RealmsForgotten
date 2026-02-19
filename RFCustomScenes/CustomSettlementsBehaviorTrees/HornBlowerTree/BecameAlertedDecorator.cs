@@ -6,23 +6,15 @@ using TaleWorlds.MountAndBlade;
 
 namespace RFCustomSettlements.CustomSettlementsBehaviorTrees.HornBlowerTree
 {
-    public class BecameAlertedDecorator : BannerlordEventDecorator, IBTBannerlordBase
+    public class BecameAlertedDecorator : BannerlordEventDecorator
     {
-        public BecameAlertedDecorator() : base(SubscriptionPossibilities.OnSelfAlarmedStateChanged) { }
-
-        BTBlackboardValue<Agent> _agent;
-        public BTBlackboardValue<Agent> Agent { get => _agent; set => _agent = value; }
-
+        BTBlackboardBannerlordBase _bbBase;
+        public BecameAlertedDecorator(BTBlackboardBannerlordBase bbBase) : base(SubscriptionPossibilities.OnSelfAlarmedStateChanged) { _bbBase = bbBase; }
         public override bool Evaluate()
         {
-            var test = Agent.GetValue().AIStateFlags.HasFlag(TaleWorlds.MountAndBlade.Agent.AIStateFlag.Alarmed);
-            if ( test)
-            {
-                int a = 5;
-            }
+            var test = _bbBase.Agent.AIStateFlags.HasFlag(Agent.AIStateFlag.Alarmed);
             return test;
         }
-
         public override void Notify(object[] data) { }
     }
 }

@@ -3,21 +3,19 @@ using BehaviorTrees.Nodes;
 
 namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.Tasks
 {
-    public class SetStageTask : BTTask, IWitchTree
+    public class SetStageTask : BTTask
     {
-        private int stageToSet;
+        private int _stageToSet;
+        WitchTreeBlackBoard _witchBB;
 
-        public SetStageTask(int stage)
+        public SetStageTask(int stage, WitchTreeBlackBoard witchBB)
         {
-            stageToSet = stage;
+            _stageToSet = stage;
+            _witchBB = witchBB;
         }
-
-        BTBlackboardValue<int> _stage;
-        public BTBlackboardValue<int> Stage { get => _stage; set => _stage = value; }
-
         public override BTTaskStatus Execute()
         {
-            Stage.SetValue(stageToSet);
+            _witchBB.Stage = _stageToSet;
             return BTTaskStatus.FinishedWithTrue;
         }
     }

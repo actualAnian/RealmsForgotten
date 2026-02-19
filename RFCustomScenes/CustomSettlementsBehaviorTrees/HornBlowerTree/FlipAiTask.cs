@@ -6,26 +6,26 @@ using TaleWorlds.MountAndBlade;
 
 namespace RFCustomSettlements.CustomSettlementsBehaviorTrees.HornBlowerTree
 {
-    internal class FlipAiTask : BTTask, IBTBannerlordBase, IHornBlowerTree
+    internal class FlipAiTask : BTTask
     {
-        BTBlackboardValue<Agent> _agent;
-        public BTBlackboardValue<Agent> Agent { get => _agent; set => _agent = value; }
-        BTBlackboardValue<AgentFlag> _flags;
-        public BTBlackboardValue<AgentFlag> SavedFlags { get => _flags; set => _flags = value; }
+        BTBlackboardBannerlordBase _bbBase;
+        HornBlowerBlackBoard _bbHornBlower;
         private bool _disable;
 
-        public FlipAiTask(bool disable)
+        public FlipAiTask(bool disable, BTBlackboardBannerlordBase bbBase, HornBlowerBlackBoard bbHornBlover)
         {
             _disable = disable;
+            _bbBase = bbBase;
+            _bbHornBlower = bbHornBlover;
         }
 
         public override BTTaskStatus Execute()
         {
-            var agent = Agent.GetValue();
+            var agent = _bbBase.Agent;
             if (_disable)
             {
                 agent.SetTargetPosition(agent.Position.AsVec2);
-                SavedFlags.SetValue(agent.GetAgentFlags());
+                _bbHornBlower.SavedFlags = agent.GetAgentFlags();
                 agent.DisableScriptedMovement();
                 agent.SetAgentFlags(AgentFlag.IsHumanoid);
                 agent.SetIsAIPaused(true);
@@ -33,12 +33,11 @@ namespace RFCustomSettlements.CustomSettlementsBehaviorTrees.HornBlowerTree
             else
             {
                 agent.ClearTargetFrame();
-                agent.SetAgentFlags(SavedFlags.GetValue());
-                agent.AIStateFlags |= TaleWorlds.MountAndBlade.Agent.AIStateFlag.Alarmed;
+                agent.SetAgentFlags(_bbHornBlower.SavedFlags);
+                agent.AIStateFlags |= Agent.AIStateFlag.Alarmed;
                 agent.SetIsAIPaused(false);
             }
             return BTTaskStatus.FinishedWithTrue;
-            //closest.TryToSheathWeaponInHand(Agent.HandIndex.MainHand, Agent.WeaponWieldActionType.Instant);w
         }
     }
 }
