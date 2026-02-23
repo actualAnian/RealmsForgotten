@@ -621,7 +621,7 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             if (Agent.Main == null || agent.Team == Agent.Main.Team) return;
             bool flag2 = (flag & Agent.AIStateFlag.Alarmed) == Agent.AIStateFlag.Alarmed;
-            if (flag2 || flag == Agent.AIStateFlag.Cautious)
+            if (flag2 || (flag & Agent.AIStateFlag.Alarmed) == Agent.AIStateFlag.Cautious)
             {
                 if (agent.IsUsingGameObject)
                 {
@@ -640,14 +640,11 @@ namespace RealmsForgotten.RFCustomSettlements
                 if (defenderAgentObjects.TryGetValue(agent, out var obj)) 
                     obj.IsMachineAITicked = false;
             }
-            else if (flag == Agent.AIStateFlag.None)
+            else if ((flag & Agent.AIStateFlag.Alarmed) == Agent.AIStateFlag.None)
             {
-                if (defenderAgentObjects.TryGetValue(agent, out var obj))
-                {
-                    obj.IsMachineAITicked = true;
-                    ((IDetachment)obj.Machine).AddAgent(agent, -1);
-                }
+                defenderAgentObjects[agent].IsMachineAITicked = true;
                 agent.TryToSheathWeaponInHand(Agent.HandIndex.MainHand, Agent.WeaponWieldActionType.WithAnimation);
+                ((IDetachment)defenderAgentObjects[agent].Machine).AddAgent(agent, -1, Agent.AIScriptedFrameFlags.None);
             }
             if (flag2)
                 agent.SetWantsToYell();
