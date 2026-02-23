@@ -5,20 +5,19 @@ using TaleWorlds.MountAndBlade;
 
 namespace RFCustomSettlements.CustomSettlementsBehaviorTrees.BaseTasks
 {
-    internal class PlayAnimationTask : BTTask, IBTBannerlordBase
+    internal class PlayAnimationTask : BTTask
     {
-        readonly string animationName;
+        readonly string _animationName;
+        BTBlackboardBannerlordBase _bbBase;
 
-        public PlayAnimationTask(string animationName)
+        public PlayAnimationTask(string animationName, BTBlackboardBannerlordBase bbBase)
         {
-            this.animationName = animationName;
+            _animationName = animationName;
+            _bbBase = bbBase;
         }
-
-        BTBlackboardValue<Agent> _agent;
-        public BTBlackboardValue<Agent> Agent { get => _agent; set => _agent = value; }
         public override BTTaskStatus Execute()
         {
-            Agent.GetValue().SetActionChannel(0, ActionIndexCache.Create(animationName), true);
+            _bbBase.Agent.SetActionChannel(0, ActionIndexCache.Create(_animationName), true);
             return BTTaskStatus.FinishedWithTrue;
         }
     }

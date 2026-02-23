@@ -6,15 +6,15 @@ using TaleWorlds.MountAndBlade;
 
 namespace RFCustomSettlements.CustomSettlementsBehaviorTrees.BaseTasks
 {
-    internal class PlaySoundTask : BTTask, IBTBannerlordBase
+    internal class PlaySoundTask : BTTask
     {
         readonly string _soundStringId;
-        public PlaySoundTask(string soundStringId)
+        BTBlackboardBannerlordBase _bbBase;
+        public PlaySoundTask(string soundStringId, BTBlackboardBannerlordBase bbBase)
         {
             _soundStringId = soundStringId;
+            _bbBase = bbBase;
         }
-        BTBlackboardValue<Agent> _agent;
-        public BTBlackboardValue<Agent> Agent { get => _agent; set => _agent = value; }
         public override BTTaskStatus Execute()
         {
             RFMissionSoundManager? soundManager = Mission.Current.GetMissionBehavior<RFMissionSoundManager>();

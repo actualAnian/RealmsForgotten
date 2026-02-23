@@ -11,30 +11,30 @@ using TaleWorlds.MountAndBlade;
 
 namespace RFCustomSettlements.CustomSettlementsBehaviorTrees.HornBlowerTree.Tasks
 {
-    public class AlertNearbyFoesTask : BTTask, IBTBannerlordBase
+    public class AlertNearbyFoesTask : BTTask
     {
-        BTBlackboardValue<Agent> _agent;
-        public BTBlackboardValue<Agent> Agent { get => _agent; set => _agent = value; }
+        BTBlackboardBannerlordBase _bbBase;
 
         readonly float _alertDistance;
-        public AlertNearbyFoesTask(float alertDistance)
+        public AlertNearbyFoesTask(float alertDistance, BTBlackboardBannerlordBase bbBase)
         {
             _alertDistance = alertDistance;
+            _bbBase = bbBase;
         }
         public override BTTaskStatus Execute()
         {
-            if (TaleWorlds.MountAndBlade.Agent.Main == null)
+            if (Agent.Main == null)
                 return BTTaskStatus.FinishedWithFalse;
             Mission.Current.Agents
-                .Where(agent => agent.IsEnemyOf(TaleWorlds.MountAndBlade.Agent.Main)
-                && agent.GetDistanceTo(Agent.GetValue()) < _alertDistance 
-                && agent != Agent.GetValue()
-                && (agent.AIStateFlags & TaleWorlds.MountAndBlade.Agent.AIStateFlag.Alarmed) != TaleWorlds.MountAndBlade.Agent.AIStateFlag.Alarmed)
+                .Where(agent => agent.IsEnemyOf(Agent.Main)
+                && agent.GetDistanceTo(_bbBase.Agent) < _alertDistance 
+                && agent != _bbBase.Agent
+                && (agent.AIStateFlags & Agent.AIStateFlag.Alarmed) != Agent.AIStateFlag.Alarmed)
                 .ToList()
                 .ForEach(agent =>
                 {
-                    agent.SetAlarmState(TaleWorlds.MountAndBlade.Agent.AIStateFlag.Cautious);
-                    WorldPosition lastSuspiciousPosition = Agent.GetValue().GetWorldPosition();
+                    agent.SetAlarmState(Agent.AIStateFlag.Cautious);
+                    WorldPosition lastSuspiciousPosition = _bbBase.Agent.GetWorldPosition();
                     agent.SetAILastSuspiciousPosition(lastSuspiciousPosition, checkNavMeshForCorrection: false);
                     AlarmedBehaviorGroup? alarmedBehavior = agent.GetComponent<CampaignAgentComponent>()?.AgentNavigator.GetBehaviorGroup<AlarmedBehaviorGroup>();
                     if (alarmedBehavior != null)

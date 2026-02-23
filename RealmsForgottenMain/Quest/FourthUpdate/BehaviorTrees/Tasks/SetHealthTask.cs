@@ -5,17 +5,21 @@ using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.Tasks
 {
-    public class SetHealthTask : BTTask, IBTBannerlordBase
+    public class SetHealthTask : BTTask
     {
-        BTBlackboardValue<Agent> _agent;
-        public BTBlackboardValue<Agent> Agent { get => _agent; set => _agent = value; }
-        float number;
-        public SetHealthTask(float number) : base() { this.number = number; }
+
+        BTBlackboardBannerlordBase _bbBase;
+        float _number;
+        public SetHealthTask(float number, BTBlackboardBannerlordBase bbBase) : base() 
+        {
+            _number = number;
+            _bbBase = bbBase;
+        }
 
         public override BTTaskStatus Execute()
         {
-            Agent agent = Agent.GetValue();
-            agent.Health = number;
+            Agent agent = _bbBase.Agent;
+            agent.Health = _number;
             return BTTaskStatus.FinishedWithTrue;
         }
     }

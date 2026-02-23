@@ -14,7 +14,7 @@ using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees
 {
-    public class VortiakWitchTree : BehaviorTree, IBTBannerlordBase, IWitchTree
+    public class VortiakWitchTree : BehaviorTree
     {
         public static int witchFinalFightHealth = 500; // at 50% health the witch will teleport away and the fight is over
         public static Vec3 entrance = new(787.9024f, 680.45f, 155.4046f);
@@ -34,24 +34,21 @@ namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees
              new(595.8301f, 593.8116f, 275.2361f),
              new(572.5754f, 576.1677f, 275.307f)
         };
-
         public static string demonSummonStringId = "balrog";
 
-        public VortiakWitchTree(Agent agent) : base(2000)
+
+        readonly BTBlackboardBannerlordBase _bbBase;
+        readonly WitchTreeBlackBoard _witchBb;
+        public VortiakWitchTree(Agent agent, BTBlackboardBannerlordBase bbBase, WitchTreeBlackBoard witchBb) : base(2000)
         {
-            Agent = new BTBlackboardValue<Agent>(agent);
-            Stage = new BTBlackboardValue<int>(0);
+            _bbBase = bbBase;
+            _witchBb = witchBb;
         }
-
-        BTBlackboardValue<Agent> _agent;
-        public BTBlackboardValue<Agent> Agent { get => _agent; set => _agent = value; }
-        public BTBlackboardValue<int> _stage;
-        public BTBlackboardValue<int> Stage { get => _stage; set => _stage = value; }
-
         public static new BehaviorTree? BuildTree(object[] objects)
         {
             if (objects[0] is not Agent agent) return null;
-
+            BTBlackboardBannerlordBase bbBase = new(agent);
+            WitchTreeBlackBoard witchBB = new();
             RFSound demonCommand = RFSound.All.Where(s => s.Id == "witch_voice_demon_command").FirstOrDefault();
             if (demonCommand == null)
             {
@@ -64,70 +61,70 @@ namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees
                 InformationManager.DisplayMessage(new InformationMessage("Error creating the VortiakWitchTree: Sound 'witch_voice_demon_defeated' not found in RFSound.All. Please ensure it is registered correctly.", new Color(1, 0, 0)));
                 return null;
             }
-            VortiakWitchTree? tree = StartBuildingTree(new VortiakWitchTree(agent))
+            VortiakWitchTree? tree = StartBuildingTree(new VortiakWitchTree(agent, bbBase, witchBB))
                 .AddSelector("main")
-                    .AddSelector("entrance", new WitchStageDecorator(0)) 
+                    .AddSelector("entrance", new WitchStageDecorator(0, witchBB)) 
                         .AddSequence("playerLeavesPosition", new PlayerNearPointDecorator(entrance, 1))
                             .AddTask(new PlaySoundEffectFollowingPlayerTask("witch_voice_entrance"))
-                            .AddTask(new SetStageTask(1))
+                            .AddTask(new SetStageTask(1, witchBB))
                             .Up()
                         .Up()
-                    .AddSelector("first platform", new WitchStageDecorator(1))
+                    .AddSelector("first platform", new WitchStageDecorator(1, witchBB))
                         .AddSequence("hit", new HitDecorator(SubscriptionPossibilities.OnSelfIsHit))
-                            .AddTask(new TeleportTask(platformB))
-                            .AddTask(new SetHealthTask(300))
+                            .AddTask(new TeleportTask(platformB, bbBase))
+                            .AddTask(new SetHealthTask(300, bbBase))
                             .AddTask(new PlaySoundEffectFollowingPlayerTask("witch_voice_laugh"))
-                            .AddTask(new SetAiStateFlag(TaleWorlds.MountAndBlade.Agent.AIStateFlag.Cautious))
-                            .AddTask(new SetStageTask(2))
+                            .AddTask(new SetAiStateFlag(Agent.AIStateFlag.Cautious, bbBase))
+                            .AddTask(new SetStageTask(2, witchBB))
                             .Up()
                         .AddSequence("playerLeavesPosition", new PlayerNearPointDecorator(playerPositionToTeleportToPlatformB, 1))
-                            .AddTask(new TeleportTask(platformB))
-                            .AddTask(new SetHealthTask(300))
-                            .AddTask(new SetAiStateFlag(TaleWorlds.MountAndBlade.Agent.AIStateFlag.Cautious))
-                            .AddTask(new SetStageTask(2))
+                            .AddTask(new TeleportTask(platformB, bbBase))
+                            .AddTask(new SetHealthTask(300, bbBase))
+                            .AddTask(new SetAiStateFlag(Agent.AIStateFlag.Cautious, bbBase))
+                            .AddTask(new SetStageTask(2, witchBB))
                             .Up()
                         .Up()
-                     .AddSelector("second platform", new WitchStageDecorator(2))
+                     .AddSelector("second platform", new WitchStageDecorator(2, witchBB))
                         .AddSequence("hit", new HitDecorator(SubscriptionPossibilities.OnSelfIsHit))
-                            .AddTask(new TeleportTask(platformC))
-                            .AddTask(new SetHealthTask(100))
+                            .AddTask(new TeleportTask(platformC, bbBase))
+                            .AddTask(new SetHealthTask(100, bbBase))
                             .AddTask(new PlaySoundEffectFollowingPlayerTask("witch_voice_laugh"))
-                            .AddTask(new SetAiStateFlag(TaleWorlds.MountAndBlade.Agent.AIStateFlag.Cautious))
-                            .AddTask(new SetStageTask(3))
+                            .AddTask(new SetAiStateFlag(Agent.AIStateFlag.Cautious, bbBase))
+                            .AddTask(new SetStageTask(3, witchBB))
                             .Up()
                         .AddSequence("playerLeavesPosition", new PlayerNearPointDecorator(playerPositionToTeleportToPlatformC), 1)
-                            .AddTask(new TeleportTask(platformC))
-                            .AddTask(new SetAiStateFlag(TaleWorlds.MountAndBlade.Agent.AIStateFlag.Cautious))
-                            .AddTask(new SetHealthTask(100))
-                            .AddTask(new SetStageTask(3))
+                            .AddTask(new TeleportTask(platformC, bbBase))
+                            .AddTask(new SetAiStateFlag(Agent.AIStateFlag.Cautious, bbBase))
+                            .AddTask(new SetHealthTask(100, bbBase))
+                            .AddTask(new SetStageTask(3, witchBB))
                             .Up()
                         .Up()
-                    .AddSelector("demon summon", new WitchStageDecorator(3))
+                    .AddSelector("demon summon", new WitchStageDecorator(3, witchBB))
                         .AddSequence("playerLeavesPosition", new PlayerNearPointDecorator(playerPositionToStartStage3), 1)
                             .AddTask(new PlaySoundEffectFollowingPlayerTask("witch_voice_demon_command"))
                             .AddTask(new SleepTask(TimeSpan.FromSeconds(demonCommand.Length)))
                             .AddTask(new PrepareAndTeleportNPCTask(demonSummonStringId, possibleTeleportLocations[0]))
-                            .AddTask(new SetStageTask(4))
+                            .AddTask(new SetStageTask(4, witchBB))
                             .Up()
                         .Up()
-                    .AddSelector("demon defeated", new WitchStageDecorator(4))
+                    .AddSelector("demon defeated", new WitchStageDecorator(4, witchBB))
                         .AddSequence("demon killed", new NPCKilledDecorator(demonSummonStringId, SubscriptionPossibilities.OnAgentRemoved), 1)
                             .AddTask(new PlaySoundEffectFollowingPlayerTask("witch_voice_demon_defeated"))
                             .AddTask(new SleepTask(TimeSpan.FromSeconds(demonDefeated.Length)))
-                            .AddTask(new TeleportTask(possibleTeleportLocations[0]))
-                            .AddTask(new SetHealthTask(witchFinalFightHealth))
-                            .AddTask(new SetHealthLimitTask(witchFinalFightHealth))
-                            .AddTask(new SetStageTask(5))
+                            .AddTask(new TeleportTask(possibleTeleportLocations[0], bbBase))
+                            .AddTask(new SetHealthTask(witchFinalFightHealth, bbBase))
+                            .AddTask(new SetHealthLimitTask(witchFinalFightHealth, bbBase))
+                            .AddTask(new SetStageTask(5, witchBB))
                             .Up()
                         .Up()
-                    .AddSelector("witch fight", new WitchStageDecorator(5))
-                        .AddSequence("witch defeated", new BelowPercentageAfterHitDecorator(0.5f, SubscriptionPossibilities.OnSelfIsHit), 1)
-                            .AddTask(new TeleportTask(platformC))
+                    .AddSelector("witch fight", new WitchStageDecorator(5, witchBB))
+                        .AddSequence("witch defeated", new BelowPercentageAfterHitDecorator(0.5f, SubscriptionPossibilities.OnSelfIsHit, bbBase), 1)
+                            .AddTask(new TeleportTask(platformC, bbBase))
                             .AddTask(new PlaySoundEffectFollowingPlayerTask("witch_voice_defeated"))
                             .AddTask(new CompleteWitchQuestTask())
                             .Up()
                         .AddSequence("witch hit", new HitDecorator(SubscriptionPossibilities.OnSelfIsHit))
-                            .AddTask(new TeleportToFurthestLocationFromPlayerTask(possibleTeleportLocations))
+                            .AddTask(new TeleportToFurthestLocationFromPlayerTask(possibleTeleportLocations, bbBase))
                             .Up()
                         .Up()
                 .Finish();

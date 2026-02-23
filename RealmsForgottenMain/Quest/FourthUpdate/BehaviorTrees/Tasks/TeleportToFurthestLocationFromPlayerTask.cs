@@ -8,29 +8,28 @@ using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.Tasks
 {
-    public class TeleportToFurthestLocationFromPlayerTask : BTTask, IBTBannerlordBase
+    public class TeleportToFurthestLocationFromPlayerTask : BTTask
     {
-        private List<Vec3> possiblePosition;
-
-        BTBlackboardValue<Agent> _agent;
-        public BTBlackboardValue<Agent> Agent { get => _agent; set => _agent = value; }
-        public TeleportToFurthestLocationFromPlayerTask(List<Vec3> possiblePosition)
+        private List<Vec3> _possiblePosition;
+        BTBlackboardBannerlordBase _bbBase;
+        public TeleportToFurthestLocationFromPlayerTask(List<Vec3> possiblePosition, BTBlackboardBannerlordBase bbBase)
         {
-            this.possiblePosition = possiblePosition;
+            _possiblePosition = possiblePosition;
+            _bbBase = bbBase;
         }
         public override BTTaskStatus Execute()
         {
-            Agent agent = Agent.GetValue();
-            Vec3 furthestPosition = possiblePosition[0];
-            if (TaleWorlds.MountAndBlade.Agent.Main == null)
+            Agent agent = _bbBase.Agent;
+            Vec3 furthestPosition = _possiblePosition[0];
+            if (Agent.Main == null)
             {
                 Teleport.TeleportToPosition(agent, furthestPosition);
                 return BTTaskStatus.FinishedWithTrue;
             }
             float bestPosition = 0;
-            foreach (Vec3 position in possiblePosition)
+            foreach (Vec3 position in _possiblePosition)
             {
-                float nextPosition = TaleWorlds.MountAndBlade.Agent.Main!.Position.DistanceSquared(position);
+                float nextPosition = Agent.Main!.Position.DistanceSquared(position);
                 if (nextPosition > bestPosition)
                 {
                     furthestPosition = position;

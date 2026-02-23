@@ -2,20 +2,19 @@
 
 namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.Decorators
 {
-    public class WitchStageDecorator : BTReturnFalseDecorator, IWitchTree
+    public class WitchStageDecorator : BTReturnFalseDecorator
     {
         private int stageLookingFor;
-        public BTBlackboardValue<int> _stage;
-        public BTBlackboardValue<int> Stage { get => _stage; set => _stage = value; }
-
-        public WitchStageDecorator(int stage)
+        WitchTreeBlackBoard _witchBB;
+        public WitchStageDecorator(int stage, WitchTreeBlackBoard witchBB)
         {
             stageLookingFor = stage;
+            _witchBB = witchBB;
         }
 
         public override bool Evaluate()
         {
-            return stageLookingFor == Stage.GetValue();
+            return stageLookingFor == _witchBB.Stage;
         }
     }
 }

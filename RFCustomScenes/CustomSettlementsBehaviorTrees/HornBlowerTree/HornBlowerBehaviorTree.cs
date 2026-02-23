@@ -12,34 +12,35 @@ using TaleWorlds.ObjectSystem;
 
 namespace RFCustomSettlements.CustomSettlementsBehaviorTrees.HornBlowerTree
 {
-    public class HornBlowerBehaviorTree : BehaviorTree, IBTBannerlordBase, IHornBlowerTree
+    public class HornBlowerBehaviorTree : BehaviorTree
     {
-        public HornBlowerBehaviorTree(Agent agent) : base(1000)
+        BTBlackboardBannerlordBase _bbBase;
+        HornBlowerBlackBoard _blackBoardHornBlover;
+        public HornBlowerBehaviorTree(Agent agent, BTBlackboardBannerlordBase bbBase, HornBlowerBlackBoard blackBoardHornBlover) : base(1000)
         {
-            Agent = new BTBlackboardValue<Agent>(agent);
-            SavedFlags = new BTBlackboardValue<AgentFlag>(Agent.GetValue().GetAgentFlags());
+            _bbBase = bbBase;
+            _blackBoardHornBlover = blackBoardHornBlover;
         }
-        BTBlackboardValue<Agent> _agent;
-        public BTBlackboardValue<Agent> Agent { get => _agent; set => _agent = value; }
-        BTBlackboardValue<AgentFlag> _flags;
-        public BTBlackboardValue<AgentFlag> SavedFlags { get => _flags; set => _flags = value; }
         public static new BehaviorTree? BuildTree(object[] objects)
         {
             if (objects[0] is not Agent agent) return null;
             if (objects[1] is not float alertDistance) return null;
             if (objects[2] is not string hornItemId) return null;
 
-            HornBlowerBehaviorTree? tree = StartBuildingTree(new HornBlowerBehaviorTree(agent))
+            BTBlackboardBannerlordBase bbBase = new(agent);
+            HornBlowerBlackBoard bbHornBlover = new(agent.GetAgentFlags());
+            HornBlowerBehaviorTree? tree = StartBuildingTree(new HornBlowerBehaviorTree(agent, bbBase, bbHornBlover))
                 .AddSelector("main")
-                    .AddSequence("alerted", new AlarmedDecorator(SubscriptionPossibilities.OnSelfAlarmedStateChanged))
-                        .AddTask(new FlipAiTask(true))
-                        .AddTask(new EquipHornTask(hornItemId))
-                        .AddTask(new BaseTasks.PlayAnimationTask("act_human_blow_horn"))
+                    .AddSequence("alerted", new AlarmedDecorator(SubscriptionPossibilities.OnSelfAlarmedStateChanged, bbBase))
+                        .AddTask(new FlipAiTask(true, bbBase, bbHornBlover))
+                        //.AddTask(new SleepTask(TimeSpan.FromSeconds(0.5)))
+                         //.AddTask(new EquipHornTask(hornItemId))
+                        .AddTask(new BaseTasks.PlayAnimationTask("act_human_blow_horn", bbBase))
                         .AddTask(new SleepTask(TimeSpan.FromSeconds(1)))
-                        .AddTask(new PlaySoundTask("medieval_alarm_horn"))
-                        .AddTask(new AlertNearbyFoesTask(alertDistance))
+                        .AddTask(new PlaySoundTask("medieval_alarm_horn", bbBase))
+                        .AddTask(new AlertNearbyFoesTask(alertDistance, bbBase))
                         .AddTask(new SleepTask(TimeSpan.FromSeconds(0.5)))
-                        .AddTask(new FlipAiTask(false))
+                        .AddTask(new FlipAiTask(false, bbBase, bbHornBlover))
                     .Up()
                 .Up()
                 .Finish();
@@ -51,6 +52,7 @@ namespace RFCustomSettlements.CustomSettlementsBehaviorTrees.HornBlowerTree
             var horn = MBObjectManager.Instance.GetObject<ItemObject>(hornItemId);
             MissionWeapon weapon = new(horn, null, null);
             agent.EquipWeaponWithNewEntity(EquipmentIndex.ExtraWeaponSlot, ref weapon);
+            agent.TryToWieldWeaponInSlot(EquipmentIndex.ExtraWeaponSlot, TaleWorlds.MountAndBlade.Agent.WeaponWieldActionType.Instant, false);
         }
     }
 }

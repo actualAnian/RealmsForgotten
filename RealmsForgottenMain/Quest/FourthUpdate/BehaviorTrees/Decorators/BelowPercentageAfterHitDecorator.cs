@@ -6,15 +6,16 @@ using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.Decorators
 {
-    public class BelowPercentageAfterHitDecorator : BannerlordEventDecorator, IBTBannerlordBase
+    public class BelowPercentageAfterHitDecorator : BannerlordEventDecorator
     {
         private bool hasBeenHit = false;
         float percentage;
-        public BelowPercentageAfterHitDecorator(float percentage, SubscriptionPossibilities SubscribesTo) : base(SubscribesTo) { this.percentage = percentage; }
-
-        BTBlackboardValue<Agent> _agent;
-        public BTBlackboardValue<Agent> Agent { get => _agent; set => _agent = value; }
-
+        BTBlackboardBannerlordBase _bbBase;
+        public BelowPercentageAfterHitDecorator(float percentage, SubscriptionPossibilities SubscribesTo, BTBlackboardBannerlordBase bbBase) : base(SubscribesTo)
+        {
+            this.percentage = percentage;
+            _bbBase = bbBase;
+        }
         public override bool Evaluate()
         {
             if (!hasBeenHit) return false;
@@ -24,7 +25,7 @@ namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.Decorators
         public override void Notify(object[] data)
         {
             if (hasBeenHit) return;
-            Agent agent = Agent.GetValue();
+            Agent agent = _bbBase.Agent;
             if (agent.Health / agent.HealthLimit < percentage)
                 hasBeenHit = true;
         }

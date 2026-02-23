@@ -363,7 +363,6 @@ namespace RealmsForgotten.CharacterCreation
             args.SetFocusToSkills(_focusToAdd);
             args.SetLevelToSkills(20);
             args.SetLevelToAttribute(DefaultCharacterAttributes.Social, _attributeLevelToAdd);
-
         }
         private void RFStartMenuUsurperNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
