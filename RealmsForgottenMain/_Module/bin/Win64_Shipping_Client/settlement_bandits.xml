@@ -3864,6 +3864,56 @@
 					<amount>2</amount>
 				</Bandit>
 			</PatrolArea>
+		</Bandits>
+	</CustomScene>
+
+	<CustomScene>
+		<id>witch_lair_inside_final</id>
+		<Bandits>
+			<CommonArea>
+				<areaIndex>1</areaIndex>
+				<Bandit>
+					<id>hellbound_chief</id>
+					<amount>10</amount>
+				</Bandit>
+			</CommonArea>
+			<CommonArea>
+				<areaIndex>2</areaIndex>
+				<Bandit>
+					<id>zombie_abomination</id>
+					<amount>3</amount>
+				</Bandit>
+			</CommonArea>
+
+			<CommonArea>
+				<areaIndex>3</areaIndex>
+				<Bandit>
+					<id>hellbound_chief</id>
+					<amount>6</amount>
+					<BehaviorTree name="HornBlowerBehaviorTree">
+						<Param type="float" value="100" />
+						<!-- distance from which enemies will hear the horn sound-->
+						<Param type="string" value="alarm_horn" />
+						<!-- horn model id-->
+					</BehaviorTree>
+				</Bandit>
+			</CommonArea>
+
+			<PatrolArea>
+				<areaIndex>1</areaIndex>
+				<Bandit>
+					<id>evil_witch</id>
+					<amount>1</amount>
+				</Bandit>
+			</PatrolArea>
+
+			<PatrolArea>
+				<areaIndex>2</areaIndex>
+				<Bandit>
+					<id>deformed_villager_raider</id>
+					<amount>3</amount>
+				</Bandit>
+			</PatrolArea>
 
 
 		</Bandits>

@@ -66,7 +66,7 @@ namespace RealmsForgotten.AiMade
 
         private void SpawnBanditParties()
         {
-            cumulativeGrowth += GrowthFactor; // Increase the growth factor by 10% each time
+            cumulativeGrowth += GrowthFactor;
 
             if (towns == null || !towns.Any())
             {
@@ -74,9 +74,16 @@ namespace RealmsForgotten.AiMade
                 return;
             }
 
-            // Randomly select a town for bandit spawning
+            // Select a random town
             Random rnd = new Random();
             Settlement settlement = towns[rnd.Next(towns.Count)];
+
+            // Now you can safely check the hideout
+            if (settlement.Hideout == null)
+            {
+                InformationManager.DisplayMessage(new InformationMessage($"No hideout near {settlement.Name}. Cannot spawn horde here.", Colors.Yellow));
+                return;
+            }
 
             if (settlement != null)
             {
@@ -88,7 +95,6 @@ namespace RealmsForgotten.AiMade
                     {
                         EngageNearbyEnemies(banditParty);
                     }
-                    // Print a message that the bandit party has been spawned
                     InformationManager.DisplayMessage(new InformationMessage($"A Nomadic Horde party has been seen near {settlement.Name}."));
                 }
             }

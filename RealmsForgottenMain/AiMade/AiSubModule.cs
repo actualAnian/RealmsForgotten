@@ -19,6 +19,7 @@ using RealmsForgotten.AiMade.Village_Inn_Quests;
 using RealmsForgotten.AiMade.Village_Inn_Quests.RealmsForgotten.AiMade.Village_Inn_Quests;
 using RealmsForgotten.Chamberlain;
 using RealmsForgotten.AiMade.Infect;
+using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
 
 namespace RealmsForgotten.AiMade
@@ -29,18 +30,21 @@ namespace RealmsForgotten.AiMade
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
-          
+            RFLogger.Log("[RF] SubModule loaded -> calling probe PatchOnce");
+            RealmsForgotten.AiMade.RFSiegeTransitionProbe.PatchOnce();
             try
             {
                 var harmony = new Harmony("com.realmsforgotten.aimade");
                 harmony.PatchAll();
+                int patched = AgentVisualsDataMonsterFix.TryPatch(harmony);
                 InformationManager.DisplayMessage(new InformationMessage("RealmsForgotten: Harmony patches applied successfully."));
             }
             catch (Exception ex)
             {
                 InformationManager.DisplayMessage(new InformationMessage($"RealmsForgotten: Failed to apply Harmony patches. {ex.Message}"));
             }
-           
+            
+
         }
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
@@ -51,9 +55,11 @@ namespace RealmsForgotten.AiMade
                 var campaignStarter = (CampaignGameStarter)gameStarterObject;
                 AddCampaignBehaviors(campaignStarter);
                 AddCustomModels(campaignStarter);
-              
+                ApplyDelayedJoinEncounterPatch();
 
             }
+            RealmsForgotten.AiMade.RFSiegeTransitionProbe.PatchOnce();
+            RealmsForgotten.AiMade.RFLogger.Log("[Probe] PatchOnce called from OnGameStart");
         }
             
         public static void AddCampaignBehaviors(CampaignGameStarter campaignGameStarter)
@@ -118,6 +124,8 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new PeregrinQuestBehavior());
             campaignGameStarter.AddBehavior(new WerewolfVillageMenuBehavior());
             campaignGameStarter.AddBehavior(new RuinsQuestBehavior());
+            campaignGameStarter.AddBehavior(new RFJoinRaidEncounterBehavior());
+            //campaignGameStarter.AddBehavior(new CommanderDefenseBehavior());
         }
         private void AddCustomModels(CampaignGameStarter campaignGameStarter)
         {
@@ -157,9 +165,71 @@ namespace RealmsForgotten.AiMade
                 && !mission.MissionLogics.OfType<SiegeDeploymentMissionController>().Any())
             {
                 mission.AddMissionBehavior(new ADODReinforcementsRunner());
+                mission.AddMissionBehavior(new RealmsForgotten.AiMade.CommanderSwapMissionBehavior());
             }
             // Add Find Magic Items behavior to all missions
             mission.AddMissionBehavior(new FindMagicItemsMissionBehavior());
+            mission.AddMissionBehavior(new RealmsForgotten.AiMade.RFMissionHeartbeat());
+            // No final do OnMissionBehaviorInitialize, depois de AddMissionBehavior(...)
+            try
+            {
+                RFMissionBehaviorTickProbe.PatchMissionBehaviorsFor(mission);
+                RFLogger.Log("[TickProbe] PatchMissionBehaviorsFor called for mission.");
+            }
+            catch (Exception e)
+            {
+                RFLogger.Log("[TickProbe] Exception: " + (e.InnerException?.Message ?? e.Message));
+            }
+
+        }
+
+        private static bool _menuPatchApplied = false;
+
+        private void ApplyDelayedJoinEncounterPatch()
+        {
+            if (_menuPatchApplied)
+                return;
+
+            try
+            {
+                var harmony = new Harmony("com.realmsforgotten.aimade.delayed.joinencounter");
+
+                harmony.Patch(
+                    AccessTools.Method(
+                        typeof(EncounterGameMenuBehavior),
+                        "game_menu_join_encounter_help_attackers_on_condition"
+                    ),
+                    prefix: new HarmonyMethod(
+                        typeof(RealmsForgotten.AiMade.Patches.RFHideVanillaJoinEncounterHelpOptionsPatch),
+                        nameof(RealmsForgotten.AiMade.Patches.RFHideVanillaJoinEncounterHelpOptionsPatch
+                            .HideVanillaHelpAttackersInVillageRaid)
+                    )
+                );
+
+                harmony.Patch(
+                    AccessTools.Method(
+                        typeof(EncounterGameMenuBehavior),
+                        "game_menu_join_encounter_help_defenders_on_condition"
+                    ),
+                    prefix: new HarmonyMethod(
+                        typeof(RealmsForgotten.AiMade.Patches.RFHideVanillaJoinEncounterHelpOptionsPatch),
+                        nameof(RealmsForgotten.AiMade.Patches.RFHideVanillaJoinEncounterHelpOptionsPatch
+                            .HideVanillaHelpDefendersInVillageRaid)
+                    )
+                );
+
+                _menuPatchApplied = true;
+
+                InformationManager.DisplayMessage(
+                    new InformationMessage("RF: Join Encounter menu patch applied safely.")
+                );
+            }
+            catch (Exception ex)
+            {
+                InformationManager.DisplayMessage(
+                    new InformationMessage($"RF ERROR applying menu patch: {ex.Message}", Colors.Red)
+                );
+            }
         }
     }
 }

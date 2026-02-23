@@ -217,6 +217,9 @@ namespace RealmsForgotten
         public override void OnGameInitializationFinished(Game game)
         {
             base.OnGameInitializationFinished(game);
+
+            harmony.PatchAll(); // <-- Add this line
+
             //Globals.SetRacesIds();
             if (!manualPatchesHaveFired)
             {
@@ -266,7 +269,7 @@ namespace RealmsForgotten
         {
             base.OnSubModuleLoad();
             ViewModelExtensionManager.Initialize(); //has to happen before harmony PatchAll
-            harmony.PatchAll();
+           
 
             TextObject coreContentDisabledReason = new("Disabled during installation.", null);
             UIConfig.DoNotUseGeneratedPrefabs = true;

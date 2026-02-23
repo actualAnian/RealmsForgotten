@@ -51,6 +51,12 @@ namespace RealmsForgotten.Quest.SecondUpdate
         private JournalLog deliverLordToAlKhuurLog;
         [SaveableField(10)]
         private JournalLog defeatDevilPartiesLog;
+        [SaveableField(11)]
+        private bool _pendingCompleteAfterDevils;
+
+        [SaveableField(12)]
+        private bool _devilsCompletionDone;
+
 
         private bool isObjectiveCompleted => defeatDevilPartiesLog?.CurrentProgress >= devilPartiesToDefeatTarget;
 
@@ -301,9 +307,37 @@ namespace RealmsForgotten.Quest.SecondUpdate
                                            (talkToElveanKingLog?.CurrentProgress == 0 && elveanKingPersuasionFailed);
         private void OnTick(float dt)
         {
+            // Don't do anything while leaving battle/results flow
+            if (Mission.Current != null)
+                return;
+
+            if (PlayerEncounter.Current != null)
+                return;
+
+            // deferred devils completion (safe execution)
+            if (_pendingCompleteAfterDevils && !_devilsCompletionDone)
+            {
+                bool encounterClosed = PlayerEncounter.Current == null;
+                bool missionClosed = Mission.Current == null;
+
+                if (encounterClosed && missionClosed)
+                {
+                    _pendingCompleteAfterDevils = false;
+                    _devilsCompletionDone = true;
+
+                    new SixthQuest("rf_sixth_quest", QuestGiver, CampaignTime.Never, 50000).StartQuest();
+                    CompleteQuestWithSuccess();
+                    return;
+                }
+            }
+
+            // your existing logic
             if (talkToMonkLog == null || talkToHumanKingLog?.CurrentProgress == 1 || TalkedToElveanKing || deliverNelrogToNasorianLog?.CurrentProgress == 1)
             {
-                CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter), new ConversationCharacterData(TheOwl.CharacterObject));
+                CampaignMapConversation.OpenConversation(
+                    new ConversationCharacterData(CharacterObject.PlayerCharacter),
+                    new ConversationCharacterData(TheOwl.CharacterObject));
+
                 if (TalkedToElveanKing)
                 {
                     talkToElveanKingLog.UpdateCurrentProgress(2);
@@ -333,34 +367,34 @@ namespace RealmsForgotten.Quest.SecondUpdate
         private void OnMobilePartyDestroyed(MobileParty mobileParty, PartyBase destroyer)
         {
             if (mobileParty == null || destroyer == null)
-            {
                 return;
-            }
 
-            if (destroyer.LeaderHero != null && destroyer.LeaderHero == Hero.MainHero)
+            if (destroyer.LeaderHero == Hero.MainHero)
             {
-                if (mobileParty.IsBandit && !string.IsNullOrEmpty(mobileParty.StringId) && mobileParty.StringId.Contains("devils") && defeatDevilPartiesLog?.CurrentProgress > -1)
+                if (mobileParty.IsBandit
+                    && !string.IsNullOrEmpty(mobileParty.StringId)
+                    && mobileParty.StringId.Contains("devils")
+                    && defeatDevilPartiesLog != null
+                    && defeatDevilPartiesLog.CurrentProgress > -1)
                 {
                     defeatDevilPartiesLog.UpdateCurrentProgress(defeatDevilPartiesLog.CurrentProgress + 1);
                     CheckDevilPartyDefeatObjective();
                 }
             }
-
         }
-
-
-
 
         private void CheckDevilPartyDefeatObjective()
         {
-            //deliverLordToAlKhuurLog.UpdateCurrentProgress(1);
+            if (!isObjectiveCompleted)
+                return;
 
-            if (isObjectiveCompleted) // Ensure this is only called once
-            {
-                new SixthQuest("rf_sixth_quest", QuestGiver, CampaignTime.Never, 50000).StartQuest();
-                CompleteQuestWithSuccess();
-            }
+            if (_devilsCompletionDone || _pendingCompleteAfterDevils)
+                return;
+
+            _pendingCompleteAfterDevils = true;
         }
+
+
 
         private void GivePlayerTroops(string troopId, int troopCount)
         {
@@ -889,7 +923,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                         FifthQuest.Instance?.takeMysticalWeaponLog?.UpdateCurrentProgress(1);
                         MBInformationManager.ShowSceneNotification(new MagicItemFoundSceneNotification(
                             spawnedItemEntity.WeaponCopy.Item.Name.ToString(),
-                            "scn_mage_staff",
+                            "scn_elvean_polearm",
                             () => PartyBase.MainParty.ItemRoster.AddToCounts(MBObjectManager.Instance.GetObject<ItemObject>(MysticWeaponId), 1)));
                     }
                     if (FifthQuest.Instance?.requireTreasureLog?.CurrentProgress == 0 && spawnedItemEntity.WeaponCopy.Item?.StringId == ShieldTreasureId)
