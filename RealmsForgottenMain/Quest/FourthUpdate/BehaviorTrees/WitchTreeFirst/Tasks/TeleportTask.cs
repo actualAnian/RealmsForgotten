@@ -6,7 +6,7 @@ using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.Tasks
+namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WitchTreeFirst.Tasks
 {
     public class TeleportTask : BTTask
     {

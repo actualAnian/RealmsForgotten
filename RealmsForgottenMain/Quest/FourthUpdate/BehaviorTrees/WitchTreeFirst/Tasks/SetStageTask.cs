@@ -1,7 +1,8 @@
 ﻿using BehaviorTrees;
 using BehaviorTrees.Nodes;
+using RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WitchTreeFirst;
 
-namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.Tasks
+namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WitchTreeFirst.Tasks
 {
     public class SetStageTask : BTTask
     {

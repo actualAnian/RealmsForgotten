@@ -4,15 +4,15 @@ using BehaviorTreeWrapper.BlackBoardClasses;
 using BehaviorTreeWrapper.Decorators;
 using BehaviorTreeWrapper.Tasks;
 using RealmsForgotten.MusicSounds;
-using RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.Decorators;
-using RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.Tasks;
+using RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WitchTreeFirst.Decorators;
+using RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WitchTreeFirst.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees
+namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WitchTreeFirst
 {
     public class VortiakWitchTree : BehaviorTree
     {

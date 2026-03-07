@@ -1,6 +1,7 @@
 ﻿using BehaviorTrees;
+using RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WitchTreeFirst;
 
-namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.Decorators
+namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WitchTreeFirst.Decorators
 {
     public class WitchStageDecorator : BTReturnFalseDecorator
     {

@@ -2,7 +2,7 @@
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.Decorators
+namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WitchTreeFirst.Decorators
 {
     public class PlayerNearPointDecorator : BannerlordTickTimedDecorator
     {

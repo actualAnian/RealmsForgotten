@@ -1,4 +1,4 @@
-﻿namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees
+﻿namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WitchTreeFirst
 {
     public class WitchTreeBlackBoard
     {

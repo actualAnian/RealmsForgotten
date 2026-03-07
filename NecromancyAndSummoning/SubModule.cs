@@ -30,7 +30,7 @@ namespace RealmsForgotten.NecromancyAndSummoning
 		}
 		protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
 		{
-			harmony.Patch(AccessTools.Method(typeof(Mission), "MissileHitCallback"), null, new HarmonyMethod(typeof(SummoningAndRaiseCorpsePatch), "Postfix"));
+			//harmony.Patch(AccessTools.Method(typeof(Mission), "MissileHitCallback"), null, new HarmonyMethod(typeof(SummoningAndRaiseCorpsePatch), "Postfix"));
 
 			bool flag = game.GameType is Campaign;
 			if (flag)

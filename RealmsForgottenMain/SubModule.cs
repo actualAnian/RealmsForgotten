@@ -14,9 +14,11 @@ using RealmsForgotten.Managers;
 using RealmsForgotten.Models;
 using RealmsForgotten.Patches;
 using RealmsForgotten.Quest;
+using RealmsForgotten.Quest.FourthUpdate;
 using RealmsForgotten.RFCustomBandits;
 using RealmsForgotten.RFCustomHorses;
 using RealmsForgotten.RFEffects;
+using RealmsForgotten.RFMissionLogic;
 using RealmsForgotten.UI;
 using System;
 using System.Collections.Generic;
@@ -167,6 +169,11 @@ namespace RealmsForgotten
         {
             if (mission != null)
             {
+                //temp
+                if (mission.SceneName == "witch_lair_inside_final")
+                    mission.AddMissionBehavior(new WingedWitchFinalMissionLogic());
+                //
+                mission.AddMissionBehavior(new SpawnAgentMissionLogic());
                 mission.AddMissionBehavior(new AbilityManagerMissionLogic());
                 mission.AddMissionBehavior(new AbilityHUDMissionView());
                 if ((mission.Mode == MissionMode.Battle || mission.Mode == MissionMode.StartUp) && mission.CombatType != Mission.MissionCombatType.ArenaCombat)

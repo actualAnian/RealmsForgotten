@@ -4,7 +4,7 @@ using BehaviorTreeWrapper.AbstractDecoratorsListeners;
 using BehaviorTreeWrapper.BlackBoardClasses;
 using TaleWorlds.MountAndBlade;
 
-namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.Decorators
+namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WitchTreeFirst.Decorators
 {
     public class BelowPercentageAfterHitDecorator : BannerlordEventDecorator
     {

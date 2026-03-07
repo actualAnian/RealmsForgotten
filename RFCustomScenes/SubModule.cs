@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using RealmsForgotten._1_3_beta_patches;
 using RealmsForgotten.Career;
 using RealmsForgotten.RFCustomSettlements;
 using RFCustomSettlements.Dialogues;

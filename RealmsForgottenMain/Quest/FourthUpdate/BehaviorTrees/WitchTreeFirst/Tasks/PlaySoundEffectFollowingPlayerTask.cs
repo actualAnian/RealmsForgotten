@@ -3,7 +3,7 @@ using BehaviorTrees.Nodes;
 using RealmsForgotten.MusicSounds;
 using TaleWorlds.MountAndBlade;
 
-namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.Tasks
+namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WitchTreeFirst.Tasks
 {
     public class PlaySoundEffectFollowingPlayerTask : BTTask
     {

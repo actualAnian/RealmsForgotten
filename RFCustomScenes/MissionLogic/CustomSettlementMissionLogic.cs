@@ -640,11 +640,11 @@ namespace RealmsForgotten.RFCustomSettlements
                 if (defenderAgentObjects.TryGetValue(agent, out var obj)) 
                     obj.IsMachineAITicked = false;
             }
-            else if ((flag & Agent.AIStateFlag.Alarmed) == Agent.AIStateFlag.None)
+            else if ((flag & Agent.AIStateFlag.Alarmed) == Agent.AIStateFlag.None && defenderAgentObjects.TryGetValue(agent, out var value))
             {
-                defenderAgentObjects[agent].IsMachineAITicked = true;
+                value.IsMachineAITicked = true;
                 agent.TryToSheathWeaponInHand(Agent.HandIndex.MainHand, Agent.WeaponWieldActionType.WithAnimation);
-                ((IDetachment)defenderAgentObjects[agent].Machine).AddAgent(agent, -1, Agent.AIScriptedFrameFlags.None);
+                ((IDetachment)value.Machine).AddAgent(agent, -1, Agent.AIScriptedFrameFlags.None);
             }
             if (flag2)
                 agent.SetWantsToYell();

@@ -3,23 +3,23 @@ using BehaviorTrees.Nodes;
 using BehaviorTreeWrapper.BlackBoardClasses;
 using TaleWorlds.MountAndBlade;
 
-namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.Tasks
+namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WitchTreeFirst.Tasks
 {
-    public class SetHealthLimitTask : BTTask
+    public class SetHealthTask : BTTask
     {
 
         BTBlackboardBannerlordBase _bbBase;
         float _number;
-        public SetHealthLimitTask(float number, BTBlackboardBannerlordBase bbBase) : base() 
+        public SetHealthTask(float number, BTBlackboardBannerlordBase bbBase) : base() 
         {
-            _number = number; 
+            _number = number;
             _bbBase = bbBase;
         }
 
         public override BTTaskStatus Execute()
         {
             Agent agent = _bbBase.Agent;
-            agent.HealthLimit = _number;
+            agent.Health = _number;
             return BTTaskStatus.FinishedWithTrue;
         }
     }

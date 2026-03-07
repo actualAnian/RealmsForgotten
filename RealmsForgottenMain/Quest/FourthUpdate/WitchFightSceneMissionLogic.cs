@@ -1,7 +1,7 @@
 ﻿using BehaviorTrees;
 using BehaviorTreeWrapper;
 using psai.net;
-using RealmsForgotten.Quest.FourthUpdate.BehaviorTrees;
+using RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WitchTreeFirst;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;

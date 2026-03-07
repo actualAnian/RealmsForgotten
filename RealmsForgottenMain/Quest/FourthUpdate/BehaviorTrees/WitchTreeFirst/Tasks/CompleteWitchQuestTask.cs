@@ -1,7 +1,7 @@
 ﻿using BehaviorTrees;
 using BehaviorTrees.Nodes;
 
-namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.Tasks
+namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WitchTreeFirst.Tasks
 {
     public class CompleteWitchQuestTask : BTTask
     {
