@@ -29,8 +29,6 @@ namespace RealmsForgotten.MusicSounds
                 //(int)RFMusicTheme.WitchFight
                 (int)MusicTheme.StealthA,
                 (int)RFMusicTheme.stealth
-               
-
             }
         };
     }

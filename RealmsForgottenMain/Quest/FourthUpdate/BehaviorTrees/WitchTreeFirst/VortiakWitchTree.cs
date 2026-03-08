@@ -38,8 +38,8 @@ namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WitchTreeFirst
 
 
         readonly BTBlackboardBannerlordBase _bbBase;
-        readonly WitchTreeBlackBoard _witchBb;
-        public VortiakWitchTree(Agent agent, BTBlackboardBannerlordBase bbBase, WitchTreeBlackBoard witchBb) : base(2000)
+        readonly StageBlackBoard _witchBb;
+        public VortiakWitchTree(Agent agent, BTBlackboardBannerlordBase bbBase, StageBlackBoard witchBb) : base(2000)
         {
             _bbBase = bbBase;
             _witchBb = witchBb;
@@ -48,19 +48,9 @@ namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WitchTreeFirst
         {
             if (objects[0] is not Agent agent) return null;
             BTBlackboardBannerlordBase bbBase = new(agent);
-            WitchTreeBlackBoard witchBB = new();
-            RFSound demonCommand = RFSound.All.Where(s => s.Id == "witch_voice_demon_command").FirstOrDefault();
-            if (demonCommand == null)
-            {
-                InformationManager.DisplayMessage(new InformationMessage("Error creating the VortiakWitchTree: Sound 'witch_voice_demon_command' not found in RFSound.All. Please ensure it is registered correctly.", new Color(1, 0, 0)));
-                return null;
-            }
-            RFSound demonDefeated = RFSound.All.Where(s => s.Id == "witch_voice_demon_defeated").FirstOrDefault();
-            if (demonDefeated == null)
-            {
-                InformationManager.DisplayMessage(new InformationMessage("Error creating the VortiakWitchTree: Sound 'witch_voice_demon_defeated' not found in RFSound.All. Please ensure it is registered correctly.", new Color(1, 0, 0)));
-                return null;
-            }
+            StageBlackBoard witchBB = new();
+            var demonCommand = OggUtils.GetSoundLength("witch_voice_demon_command");
+            var demonDefeated = OggUtils.GetSoundLength("witch_voice_demon_defeated");
             VortiakWitchTree? tree = StartBuildingTree(new VortiakWitchTree(agent, bbBase, witchBB))
                 .AddSelector("main")
                     .AddSelector("entrance", new WitchStageDecorator(0, witchBB)) 
@@ -102,7 +92,7 @@ namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WitchTreeFirst
                     .AddSelector("demon summon", new WitchStageDecorator(3, witchBB))
                         .AddSequence("playerLeavesPosition", new PlayerNearPointDecorator(playerPositionToStartStage3), 1)
                             .AddTask(new PlaySoundEffectFollowingPlayerTask("witch_voice_demon_command"))
-                            .AddTask(new SleepTask(TimeSpan.FromSeconds(demonCommand.Length)))
+                            .AddTask(new SleepTask(TimeSpan.FromSeconds(demonCommand)))
                             .AddTask(new PrepareAndTeleportNPCTask(demonSummonStringId, possibleTeleportLocations[0]))
                             .AddTask(new SetStageTask(4, witchBB))
                             .Up()
@@ -110,7 +100,7 @@ namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WitchTreeFirst
                     .AddSelector("demon defeated", new WitchStageDecorator(4, witchBB))
                         .AddSequence("demon killed", new NPCKilledDecorator(demonSummonStringId, SubscriptionPossibilities.OnAgentRemoved), 1)
                             .AddTask(new PlaySoundEffectFollowingPlayerTask("witch_voice_demon_defeated"))
-                            .AddTask(new SleepTask(TimeSpan.FromSeconds(demonDefeated.Length)))
+                            .AddTask(new SleepTask(TimeSpan.FromSeconds(demonDefeated)))
                             .AddTask(new TeleportTask(possibleTeleportLocations[0], bbBase))
                             .AddTask(new SetHealthTask(witchFinalFightHealth, bbBase))
                             .AddTask(new SetHealthLimitTask(witchFinalFightHealth, bbBase))

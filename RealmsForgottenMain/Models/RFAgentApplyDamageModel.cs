@@ -261,7 +261,11 @@ namespace RealmsForgotten.Models
         public override void DecideMissileWeaponFlags(Agent attackerAgent, in MissionWeapon missileWeapon, ref WeaponFlags missileWeaponFlags) => _baseModel.DecideMissileWeaponFlags(attackerAgent, in missileWeapon, ref missileWeaponFlags);
         public override void CalculateDefendedBlowStunMultipliers(Agent attackerAgent, Agent defenderAgent, CombatCollisionResult collisionResult, WeaponComponentData attackerWeapon, WeaponComponentData defenderWeapon, ref float attackerStunPeriod, ref float defenderStunPeriod)
             => _baseModel.CalculateDefendedBlowStunMultipliers(attackerAgent, defenderAgent, collisionResult, attackerWeapon, defenderWeapon, ref attackerStunPeriod, ref defenderStunPeriod);
-        public override float CalculateStaggerThresholdDamage(Agent defenderAgent, in Blow blow) => _baseModel.CalculateStaggerThresholdDamage(defenderAgent, in blow);
+        public override float CalculateStaggerThresholdDamage(Agent defenderAgent, in Blow blow) 
+        {
+            if (defenderAgent?.Character?.StringId == "evil_witch") return 100f;
+            return _baseModel.CalculateStaggerThresholdDamage(defenderAgent, in blow);
+        }
         public override float CalculateAlternativeAttackDamage(in AttackInformation attackInformation, in AttackCollisionData collisionData, WeaponComponentData weapon)
             => _baseModel.CalculateAlternativeAttackDamage(in attackInformation, in collisionData, weapon);
         public override float CalculatePassiveAttackDamage(BasicCharacterObject attackerCharacter, in AttackCollisionData collisionData, float baseDamage) => _baseModel.CalculatePassiveAttackDamage(attackerCharacter, in collisionData, baseDamage);

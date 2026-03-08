@@ -172,6 +172,8 @@ namespace RealmsForgotten
                 //temp
                 if (mission.SceneName == "witch_lair_inside_final")
                     mission.AddMissionBehavior(new WingedWitchFinalMissionLogic());
+                if (mission.SceneName == "witch_lair_canyon")
+                    mission.AddMissionBehavior(new WitchCanyonMissionLogic());
                 //
                 mission.AddMissionBehavior(new SpawnAgentMissionLogic());
                 mission.AddMissionBehavior(new AbilityManagerMissionLogic());

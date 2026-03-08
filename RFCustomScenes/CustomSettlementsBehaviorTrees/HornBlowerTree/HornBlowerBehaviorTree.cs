@@ -44,7 +44,7 @@ namespace RFCustomSettlements.CustomSettlementsBehaviorTrees.HornBlowerTree
                     .Up()
                 .Up()
                 .Finish();
-            EquipHornItem(agent, hornItemId);
+            //EquipHornItem(agent, hornItemId);
             return tree;
         }
         private static void EquipHornItem(Agent agent, string hornItemId)

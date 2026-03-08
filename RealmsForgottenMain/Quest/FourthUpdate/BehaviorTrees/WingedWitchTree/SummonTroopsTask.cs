@@ -3,7 +3,6 @@ using BehaviorTrees.Nodes;
 using RealmsForgotten.RFMissionLogic;
 using System.Collections.Generic;
 using TaleWorlds.Library;
-using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WingedWitchTree
 {
@@ -20,7 +19,7 @@ namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WingedWitchTree
         public override BTTaskStatus Execute()
         {
             foreach (var location in spawnTroopsLocations)
-                SpawnAgentMissionLogic.AddAgentToSpawn(new(troopStringId, Mission.Current.PlayerEnemyTeam, location, true));
+                SpawnAgentMissionLogic.AddAgentToSpawn(new(troopStringId, false, location, true, false, true));
             return BTTaskStatus.FinishedWithTrue;
         }
     }

@@ -1,6 +1,6 @@
 ﻿namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WitchTreeFirst
 {
-    public class WitchTreeBlackBoard
+    public class StageBlackBoard
     {
         public int Stage { get; set; }
     }

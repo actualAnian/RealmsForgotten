@@ -1,34 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading;
 using TaleWorlds.Engine;
-using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.MusicSounds
 {
-    public class RFSound
-    {
-        public string Id { get; set; }
-        public float Length { get; set; }
-        public RFSound(string id, float length)
-        {
-            Id = id;
-            Length = length;
-        }
-        public static List<RFSound> All = new()
-        {
-            new("witch_voice_entrance", 14.445714f),
-            new("witch_voice_laugh", 2.508f),
-            new("witch_voice_demon_command", 4.519f),
-            new("witch_voice_demon_defeated", 3.474f),
-            new("witch_voice_defeated", 8.281f),
-            new("teleport_sound", 2.491f),
-            new("medieval_alarm_horn", 1.64f),
-        };
-    }
     public class RFSoundEvent
     {
         public RFSoundEvent(SoundEvent soundEvent, int soundId, float totalLength, bool followPlayer)
@@ -63,23 +40,35 @@ namespace RealmsForgotten.MusicSounds
 
         protected override void OnEndMission()
         {
+            StopAllSounds();
             _shouldStop = true;
             _soundThread.Join();
         }
+        void StopAllSounds()
+        {
+
+            lock (_activeSoundsLock)
+            {
+                for (int i = _activeSounds.Count - 1; i >= 0; i--)
+                {
+                    RFSoundEvent sound = _activeSounds[i];
+                    sound.SoundEvent.Stop();
+                    sound.SoundEvent.Release();
+                    _activeSounds.Remove(sound);
+                }
+            }
+        }
+        // to register an event, remember to add the sounds to module_sounds.xml
         public bool AddSoundEvent(string name, bool followPlayer)
         {
-            RFSound? sound = RFSound.All.FirstOrDefault(s => s.Id == name);
-            if (sound == null) return false;
-
+            var soundLength = OggUtils.GetSoundLength(name);
+            if (soundLength == 0)
+                return false;
             int eventId = SoundEvent.GetEventIdFromString(name);
-            var path = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\RealmsForgotten\\ModuleSounds\\medieval_alarm_horn.ogg";
-            //byte[] soundData = File.ReadAllBytes(path);
-            //var sEvent = SoundEvent.CreateEventFromSoundBuffer("test", soundData, Mission.Current.Scene, false, false);
-            //var sEvent = SoundEvent.CreateEventFromExternalFile("test", path, Mission.Current.Scene, false, false);
             SoundEvent sEvent = SoundEvent.CreateEvent(eventId, Mission.Current.Scene);
             if (sEvent.GetSoundId() == -1) return false;
 
-            RFSoundEvent rfSoundEvent = new(sEvent, eventId, sound.Length, followPlayer);
+            RFSoundEvent rfSoundEvent = new(sEvent, eventId, soundLength, followPlayer);
             lock (_activeSoundsLock)
             {
                 if (_activeSounds.Contains(rfSoundEvent)) return false;
@@ -121,7 +110,6 @@ namespace RealmsForgotten.MusicSounds
                         if (_activeSounds.Count == 0) _hasActiveSounds = false;
                     }
                 }
-
                 var elapsed = DateTime.Now - now;
                 var sleepTime = tickInterval - elapsed;
                 if (sleepTime > TimeSpan.Zero)

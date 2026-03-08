@@ -76,9 +76,7 @@ namespace RealmsForgotten.Models
         {
             _previousModel.InitializeMissionEquipment(agent);
 
-            CharacterObject agentCharacterObject = agent?.Character as CharacterObject;
-            ;
-            if (agent?.IsMount == true || agent?.Equipment == null || agentCharacterObject == null)
+            if (agent?.IsMount == true || agent?.Equipment == null || agent?.Character is not CharacterObject agentCharacterObject)
                 return;
 
             foreach (var equipmentIndex in equipmentIndices)
@@ -87,10 +85,10 @@ namespace RealmsForgotten.Models
                     continue;
                 if (agent.Equipment[equipmentIndex].Item.PrimaryWeapon.WeaponClass == WeaponClass.Cartridge)
                 {
-                    ExplainedNumber number = new ExplainedNumber(agent.Equipment[equipmentIndex].Amount);
+                    var number = new ExplainedNumber(agent.Equipment[equipmentIndex].Amount);
+                    if (agent.Character?.StringId == "evil_witch")
+                        number.Add(1000);
                     SkillHelper.AddSkillBonusForCharacter(RFSkillEffects.MagicStaffPower, agentCharacterObject, ref number);
-
-
                     agent.SetWeaponAmountInSlot(equipmentIndex, (short)number.ResultNumber, true);
                 }
                 else if (agent.Equipment[equipmentIndex].Item.StringId.Contains("anorit_fire"))
@@ -106,8 +104,7 @@ namespace RealmsForgotten.Models
         }
         private void AddSkillEffectsForAgent(Agent agent, AgentDrivenProperties agentDrivenProperties)
         {
-            var character = agent.Character as CharacterObject;
-            if (character != null && agent.WieldedWeapon.Item?.Type == ItemObject.ItemTypeEnum.Musket);
+            if (agent.Character is CharacterObject character && agent.WieldedWeapon.Item?.Type == ItemObject.ItemTypeEnum.Musket)
             {
                 int effectiveSkill = GetEffectiveSkill(agent, RFSkills.Arcane);
                 ExplainedNumber reloadSpeed = new ExplainedNumber(agentDrivenProperties.ReloadSpeed);

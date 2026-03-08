@@ -27,7 +27,6 @@ namespace RealmsForgotten.RFEffects
                 return MissionBehaviorType.Other;
             }
         }
-
         private bool IsInBattle()
         {
             return Mission.Mode == MissionMode.Battle || Mission.Mode == MissionMode.Duel || Mission.Mode == MissionMode.Stealth || Mission.Mode == MissionMode.Tournament;
@@ -35,10 +34,10 @@ namespace RealmsForgotten.RFEffects
 
         public override void OnAgentDeleted(Agent agent)
         {
-            if (!IsInBattle())
-            {
-                return;
-            }
+            //if (!IsInBattle())
+            //{
+            //    return;
+            //}
             AgentsUnderEffect.RemoveAll(x => x.Agent == agent);
         }
 
@@ -66,7 +65,6 @@ namespace RealmsForgotten.RFEffects
         }
         private void FireTick(AgentEffectData agentEffect)
         {
-
             if (BurningEffectStopwatch.TryGetValue(agentEffect.Agent.Index, out Timer timer) && timer.Check(Time.ApplicationTime))
             {
                 Agent victim = agentEffect.Agent;
@@ -109,7 +107,6 @@ namespace RealmsForgotten.RFEffects
                 agentEffect.Agent.UpdateCustomDrivenProperties();
 
                 AgentsUnderEffect.Remove(agentEffect);
-
             }
         }
 
@@ -134,7 +131,7 @@ namespace RealmsForgotten.RFEffects
         }
         public override void OnMissionTick(float dt)
         {
-            if (!IsInBattle() || AgentsUnderEffect.Count == 0)
+            if (AgentsUnderEffect.Count == 0)
             {
                 return;
             }

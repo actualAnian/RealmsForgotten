@@ -13,7 +13,6 @@ namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WitchTreeFirst.Decora
         {
             if (Agent.Main?.Position.DistanceSquared(position) < 40f)
                 isTrue = true;
-
             return isTrue;
         }
 

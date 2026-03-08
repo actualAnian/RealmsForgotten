@@ -44,7 +44,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
             float xValue = ChooseCoordinateOfNextProjectile(XYTeleportingProjectilesBox.Item1, XYTeleportingProjectilesBox.Item2, _lastProjectilePosition.X);
             float yValue = ChooseCoordinateOfNextProjectile(XYTeleportingProjectilesBox.Item3, XYTeleportingProjectilesBox.Item4, _lastProjectilePosition.Y);
             var newPos = new Vec3(xValue, yValue, ZValueOfTeleportingProjectile);
-            newPos = Agent.Main.Position + new Vec3(0, 0, 5f);
+            //newPos = Agent.Main.Position + new Vec3(0, 0, 5f);
             WingedWitchSpellsLogic.FireMeteor(_witch, newPos, TeleportingProjectile);
         }
         private float ChooseCoordinateOfNextProjectile(float minValue, float maxValue, float lastPosition)
@@ -78,7 +78,6 @@ namespace RealmsForgotten.Quest.FourthUpdate
             if (timer < 1) return;
             if (!isInitialized)
             {
-                //PsaiCore.Instance.TriggerMusicTheme(41, 0);
                 _witch = Mission.Agents.FirstOrDefault(agent => agent.Character?.StringId == "evil_witch");
                 isInitialized = true;
                 InitializeWitch(_witch);
@@ -117,7 +116,6 @@ namespace RealmsForgotten.Quest.FourthUpdate
         }
         public void InitializeWitch(Agent witch)
         {
-            witch.Health = witch.HealthLimit * 3;
             BTRegister.RegisterClass("FinalWitchTree", objects => FinalWitchFightTree.BuildTree(objects));
             witch.AddComponent(new BehaviorTreeAgentComponent(witch, "FinalWitchTree"));
         }

@@ -1,36 +1,41 @@
 ﻿using BehaviorTreeWrapper.AbstractDecoratorsListeners;
-using BehaviorTreeWrapper.BlackBoardClasses;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WingedWitchTree
 {
-    public class CrossedTheLineDecorator : BannerlordTickTimedDecorator
+    public class AgentCrossedLineDecorator : BannerlordTickTimedDecorator
     {
         private Vec3 _a;
         private Vec3 _b;
         readonly float _lineA;
         readonly float _lineB;
         readonly bool _shouldStayBelowLine;
-        private readonly BTBlackboardBannerlordBase _bbBase;
+        private readonly Agent _agent;
+        bool _eventFired = false;
+        bool _checkOnce;
 
-        public CrossedTheLineDecorator(Vec3 a, Vec3 b, bool shouldStayBelowLine, BTBlackboardBannerlordBase bbBase): base(1.0)
+        public AgentCrossedLineDecorator(Vec3 a, Vec3 b, bool shouldStayBelowLine, Agent agent, bool checkOnce = true, double secondsTillEvent = 1.0f) : base(secondsTillEvent)
         {
             _a = a;
             _b = b;
             _shouldStayBelowLine = shouldStayBelowLine;
-            _bbBase = bbBase;
+            _agent = agent;
+            _checkOnce = checkOnce;
             _lineA = (_b.y - _a.y) / (_b.x - _a.x);
             _lineB = _a.y - _lineA * _a.x;
         }
         public override bool Evaluate()
         {
+            if (_checkOnce && _eventFired) return false;
             var a = Agent.Main.Position;
-            var y = _lineA * _bbBase.Agent.Position.x + _lineB;
-            if (_shouldStayBelowLine && y > _bbBase.Agent.Position.y)
+            var y = _lineA * _agent.Position.x + _lineB;
+            if (_shouldStayBelowLine && y > _agent.Position.y
+                || !_shouldStayBelowLine && y < _agent.Position.y)
+            {
+                _eventFired = true;
                 return true;
-            else if (!_shouldStayBelowLine && y < _bbBase.Agent.Position.y)
-                return true;
+            }
             return false;
         }
         public override void Notify(object[] data) { }

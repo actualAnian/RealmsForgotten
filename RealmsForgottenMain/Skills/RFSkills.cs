@@ -55,19 +55,10 @@ namespace RealmsForgotten.CustomSkills
             _bombStackMultiplier = Game.Current.ObjectManager.RegisterPresumedObject(new SkillEffect("BombStackMultiplier"));
             _magicStaffPower = Game.Current.ObjectManager.RegisterPresumedObject(new SkillEffect("MagicStaffPower"));
 
-            _wandReloadSpeed.Initialize(new TextObject("{=arcane_skilleff_1}Wand reload speed: +{a0} %", null), RFSkills.Arcane, PartyRole.Personal, 0.4f, EffectIncrementType.AddFactor);
-
-
-            _wandAccuracy.Initialize(new TextObject("{=arcane_skilleff_2}Wand accuracy: +{a0} %", null), RFSkills.Arcane, PartyRole.Personal, 0.4f, EffectIncrementType.AddFactor);
-
-
+            _wandReloadSpeed.Initialize(new TextObject("{=arcane_skilleff_1}Wand reload speed: +{a0} %", null), RFSkills.Arcane, PartyRole.Personal, 0.2f, EffectIncrementType.AddFactor);
+            _wandAccuracy.Initialize(new TextObject("{=arcane_skilleff_2}Wand accuracy: +{a0} %", null), RFSkills.Arcane, PartyRole.Personal, 0.2f, EffectIncrementType.AddFactor);
             _magicStaffPower.Initialize(new TextObject("{=arcane_skilleff_3}Magic staff power: +{a0} %", null), RFSkills.Arcane, PartyRole.Personal, 0.4f, EffectIncrementType.AddFactor);
-
-
-
             _faithPerkMultiplier.Initialize(new TextObject("{=faith_skilleff_1}Perk effect multiplier: +{a0} %", null), RFSkills.Faith, PartyRole.Personal, 0.4f, EffectIncrementType.AddFactor);
-
-
             _bombStackMultiplier.Initialize(new TextObject("{=alchemy_skilleff_1}Bomb stack multiplier: +{a0} %", null), RFSkills.Alchemy, PartyRole.Personal, 0.4f, EffectIncrementType.AddFactor);
         }
         public RFSkillEffects()

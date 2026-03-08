@@ -7,9 +7,9 @@ namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WitchTreeFirst.Tasks
     public class SetStageTask : BTTask
     {
         private int _stageToSet;
-        WitchTreeBlackBoard _witchBB;
+        StageBlackBoard _witchBB;
 
-        public SetStageTask(int stage, WitchTreeBlackBoard witchBB)
+        public SetStageTask(int stage, StageBlackBoard witchBB)
         {
             _stageToSet = stage;
             _witchBB = witchBB;

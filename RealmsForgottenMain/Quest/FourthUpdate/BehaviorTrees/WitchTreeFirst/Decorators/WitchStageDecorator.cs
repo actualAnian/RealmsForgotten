@@ -6,8 +6,8 @@ namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WitchTreeFirst.Decora
     public class WitchStageDecorator : BTReturnFalseDecorator
     {
         private int stageLookingFor;
-        WitchTreeBlackBoard _witchBB;
-        public WitchStageDecorator(int stage, WitchTreeBlackBoard witchBB)
+        StageBlackBoard _witchBB;
+        public WitchStageDecorator(int stage, StageBlackBoard witchBB)
         {
             stageLookingFor = stage;
             _witchBB = witchBB;
