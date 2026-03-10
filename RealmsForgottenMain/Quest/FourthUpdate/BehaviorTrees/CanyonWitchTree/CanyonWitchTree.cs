@@ -35,8 +35,8 @@ namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.CanyonWitchTree
 
         static readonly Vec3 lineToCrossForVoiceLineAPointA = new(289.0656f, 58.84806f, 30.44381f);
         static readonly Vec3 lineToCrossForVoiceLineAPointB = new(254.5997f, 63.73717f, 31.31858f);
-        static readonly Vec3 lineToCrossBridgePointA = new(240.6108f, 207.2331f, 31.0447f);
-        static readonly Vec3 lineToCrossBridgePointB = new(238.2474f, 216.6655f, 32.2084f);
+        static readonly Vec3 lineToCrossBridgePointA = new(238.2366f, 195.9973f, 30.7439f);
+        static readonly Vec3 lineToCrossBridgePointB = new(235.9295f, 221.0938f, 30.7565f);
         static readonly Vec3 lineToCrossTeleportToTowerPointA = new(242.00f, 241.99f, 37.96f);
         static readonly Vec3 lineToCrossTeleportToTowerPointB = new(254.92f, 243.45f, 38.82f);
         static readonly Vec3 lineToCrossForVoiceLineCavePointA = new(213.86f, 275.05f, 45.49f);
@@ -64,7 +64,7 @@ namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.CanyonWitchTree
                         .Up()
                     .Up()
                     .AddSelector("ambush", new WitchStageDecorator(1, stageBB))
-                        .AddSequence("spawn enemies", new AgentCrossedLineDecorator(lineToCrossBridgePointA, lineToCrossBridgePointB, false, Agent.Main))
+                        .AddSequence("spawn enemies", new AgentCrossedLineDecorator(lineToCrossBridgePointA, lineToCrossBridgePointB, false, Agent.Main, true, true))
                             .AddTask(new PlaySoundEffectFollowingPlayerTask("old_witch_canyon_line_b"))
                             .AddTask(new SleepTask(TimeSpan.FromSeconds(voicelineBLen)))
                             .AddTask(new TeleportTask(witchFirstSpot, bbBase))
@@ -75,7 +75,7 @@ namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.CanyonWitchTree
                         .AddSequence("hit by player", new HitDecorator(BehaviorTreeWrapper.SubscriptionPossibilities.OnSelfIsHit))
                             .AddTask(new SetStageTask(2, stageBB))
                         .Up()
-                        .AddSequence("crossed to tower", new AgentCrossedLineDecorator(lineToCrossTeleportToTowerPointA, lineToCrossTeleportToTowerPointB, false, Agent.Main, true, 0.5))
+                        .AddSequence("crossed to tower", new AgentCrossedLineDecorator(lineToCrossTeleportToTowerPointA, lineToCrossTeleportToTowerPointB, false, Agent.Main, true, false, 0.5))
                             .AddTask(new SetStageTask(2, stageBB))
                         .Up()
                     .Up()

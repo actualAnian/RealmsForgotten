@@ -12,7 +12,6 @@ namespace RFCustomSettlements
     {
         public override void OnMissionTick(float dt)
         {
-            Agent.Main.Health = 1000;
             //float num = _bbBase.Agent.HealthLimit * _healthPercentageThreshold / 100f;
             //return _bbBase.Agent.Health < num;
             base.OnMissionTick(dt);

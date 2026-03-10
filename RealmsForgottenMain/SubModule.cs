@@ -114,7 +114,6 @@ namespace RealmsForgotten
                 campaignGameStarter.AddModel(new RFStrikeMagnitudeModel());
                 campaignGameStarter.AddModel(new RFSettlementValueModel(campaignGameStarter.GetExistingModel<SettlementValueModel>()));
 
-
                 new RFAttributes().Initialize();
                 new RFSkills().Initialize();
                 new RFSkillEffects().InitializeAll();
