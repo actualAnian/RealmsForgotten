@@ -4,9 +4,9 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-namespace RealmsForgotten.Quest.FourthUpdate
+namespace RealmsForgotten.RFEffects
 {
-    public static class WingedWitchSpellsLogic
+    public static class MeteorLogic
     {
         public static void FireMeteor(Agent caster, Vec3 targetPoint, ItemObject meteorProjectile)
         {
@@ -17,15 +17,8 @@ namespace RealmsForgotten.Quest.FourthUpdate
             var missileWeapon = new MissionWeapon(meteorProjectile, null, null);
             missileWeapon.GetWeaponData(true);
             Mat3 identity = Mat3.Identity;
-            //identity.f = vec;
-            //identity.u = new Vec3(0f, 1f, 0f, -1f);
-            //identity.s = Vec3.CrossProduct(identity.u, identity.f);
             float speed = meteorProjectile.PrimaryWeapon.MissileSpeed;
-            Mission.Current.AddCustomMissile(caster, missileWeapon, targetPoint, direction, identity, speed, speed, true, null);
-        }
-        public static void OnTeleportingMissleHit(Agent victim, IEnumerable<Vec3> teleportLocations)
-        {
-            Teleport.TeleportToPosition(victim, teleportLocations.GetRandomElementInefficiently());
+            Mission.Current.AddCustomMissile(caster, missileWeapon, position, direction, identity, speed, speed, true, null);
         }
     }
 }

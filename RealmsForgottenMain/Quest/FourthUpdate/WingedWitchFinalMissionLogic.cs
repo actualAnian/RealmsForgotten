@@ -1,6 +1,7 @@
 ﻿using BehaviorTrees;
 using BehaviorTreeWrapper;
 using RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.WingedWitchTree;
+using RealmsForgotten.RFEffects;
 using RealmsForgotten.Utility;
 using RealmsForgotten.Utility.Magic;
 using System;
@@ -45,7 +46,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
             float yValue = ChooseCoordinateOfNextProjectile(XYTeleportingProjectilesBox.Item3, XYTeleportingProjectilesBox.Item4, _lastProjectilePosition.Y);
             var newPos = new Vec3(xValue, yValue, ZValueOfTeleportingProjectile);
             //newPos = Agent.Main.Position + new Vec3(0, 0, 5f);
-            WingedWitchSpellsLogic.FireMeteor(_witch, newPos, TeleportingProjectile);
+            MeteorLogic.FireMeteor(_witch, newPos, TeleportingProjectile);
         }
         private float ChooseCoordinateOfNextProjectile(float minValue, float maxValue, float lastPosition)
         {

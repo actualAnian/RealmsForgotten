@@ -202,6 +202,7 @@ namespace RealmsForgotten
             }
             mission.AddMissionBehavior(new MagicEffectsBehavior());
             mission.AddMissionBehavior(new WeaponParticlesBehavior());
+            mission.AddMissionBehavior(new MeteorMissionLogic());
         }
         public override void BeginGameStart(Game game)
         {
