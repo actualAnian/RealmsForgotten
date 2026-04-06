@@ -84,13 +84,17 @@ namespace RealmsForgotten.RFEffects
 
 
                 victim.RegisterBlow(blow, attackCollisionData);
-                timer.Reset(Time.ApplicationTime);
+                //timer.Reset(Time.ApplicationTime);
 
                 if (agentEffect.Timer.Check(Time.ApplicationTime))
                 {
                     agentEffect.RemoveEffect();
                     AgentsUnderEffect.Remove(agentEffect);
-                    BurningEffectStopwatch.Remove(agentEffect.Agent.Index);
+                    AgentEffectData effect = AgentsUnderEffect.FirstOrDefault(a => a.Agent == victim);
+                    if (effect.Agent !=  null)
+                        BurningEffectStopwatch[agentEffect.Agent.Index] = effect.Timer;
+                    else
+                        BurningEffectStopwatch.Remove(agentEffect.Agent.Index);
                 }
             }
         }

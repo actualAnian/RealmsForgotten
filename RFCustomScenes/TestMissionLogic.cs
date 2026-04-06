@@ -1,5 +1,6 @@
 ﻿using RealmsForgotten.MusicSounds;
 using RealmsForgotten.Quest.FourthUpdate;
+using System.Linq;
 using TaleWorlds.Core;
 using TaleWorlds.InputSystem;
 using TaleWorlds.MountAndBlade;
@@ -12,6 +13,7 @@ namespace RFCustomSettlements
     {
         public override void OnMissionTick(float dt)
         {
+            //var lolol = Mission.Current.Agents.First(a => a.Character.StringId.Contains("witch"));
             //float num = _bbBase.Agent.HealthLimit * _healthPercentageThreshold / 100f;
             //return _bbBase.Agent.Health < num;
             base.OnMissionTick(dt);
@@ -20,12 +22,12 @@ namespace RFCustomSettlements
                 return;
             if (Input.IsKeyPressed(InputKey.H))
             {
-                foreach(var agent in Mission.Current.AllAgents)
-                {
-                    Blow b = new(); 
-                    if (agent.GetDistanceTo(Agent.Main) < 10 && agent.Team != Agent.Main.Team)
-                        agent.Die(b);
-                }
+                //foreach(var agent in Mission.Current.AllAgents)
+                //{
+                //    Blow b = new(); 
+                //    if (agent.GetDistanceTo(Agent.Main) < 10 && agent.Team != Agent.Main.Team)
+                //        agent.Die(b);
+                //}
                 //RFMissionSoundManager? soundManager = Mission.Current.GetMissionBehavior<RFMissionSoundManager>();
                 //if (soundManager == null || !soundManager.AddSoundEvent("medieval_alarm_horn", true));
 

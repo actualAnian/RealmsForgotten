@@ -1,21 +1,11 @@
-﻿using HarmonyLib;
-using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.CampaignBehaviors;
-using TaleWorlds.CampaignSystem.Encounters;
+﻿using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Settlements;
-using TaleWorlds.Core;
 using TaleWorlds.Localization;
 
 namespace RealmsForgotten.AiMade.Patches
 {
-    /// <summary>
-    /// Ajusta o texto do "Don't get involved." em join_encounter:
-    /// - Se for raid de vila e não houver mais inimigos saudáveis,
-    ///   troca o texto para algo como "The raid is already over. Leave the area."
-    /// </summary>
-    [HarmonyPatch(typeof(EncounterGameMenuBehavior))]
     public static class RFJoinEncounterLeaveTextPatch
     {
         private static bool IsVillageRaidAlreadyOver(out MapEvent raidEvent)
@@ -38,10 +28,7 @@ namespace RealmsForgotten.AiMade.Patches
 
             return false;
         }
-
-        [HarmonyPatch("game_menu_join_encounter_leave_no_army_on_condition")]
-        [HarmonyPrefix]
-        private static bool JoinEncounterLeaveConditionPrefix(MenuCallbackArgs args, ref bool __result)
+        public static bool JoinEncounterLeaveConditionPrefix(MenuCallbackArgs args, ref bool __result)
         {
             // Caso especial: raid de vila que já acabou
             if (IsVillageRaidAlreadyOver(out MapEvent raidEvent))
