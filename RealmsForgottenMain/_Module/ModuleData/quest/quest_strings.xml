@@ -217,7 +217,7 @@
 		<string id="rf_fourth_quest_second_log" text="{=rf_fourth_quest_second_log}Go to the monastery and talk to the monks. It should be near the city of Ural." />
 		<string id="rf_fourth_quest_third_log" text="{=rf_fourth_quest_third_log}Capture a hellbound outlaw to extract information." />
 
-		<string id="rf_fourth_quest_first_dialog_1" text="{=rf_fourth_quest_first_dialog_1}What was that?! Not only are these lands plagued by the rising undead, but now demons threaten the world of the living! We are damned..." />
+		<string id="rf_fourth_quest_first_dialog_1" text="{=rf_fourth_quest_first_dialog_1}What was that?! Not only are these lands plagued by the rising undead, but now demons! We are damned..." />
 		<string id="rf_fourth_quest_first_dialog_2" text="{=rf_fourth_quest_first_dialog_2}We've survived this attack by sheer luck, or perhaps some force watches over us. We must find a way to confront this evil... but who are they?" />
 		<string id="rf_fourth_quest_first_dialog_3" text="{=rf_fourth_quest_first_dialog_3}Hmm... As I told you when we first met, I tracked those black-robed cultists to the places where you retrieved the texts. The sigil they bear on their robes does not relate to any faction I know." />
 		<string id="rf_fourth_quest_first_dialog_4" text="{=rf_fourth_quest_first_dialog_4}Their leader spoke of avenging themselves... Could that be a clue?" />
