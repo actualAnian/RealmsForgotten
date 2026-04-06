@@ -31,7 +31,7 @@ namespace RealmsForgotten.AiMade
         {
             base.OnSubModuleLoad();
             RFLogger.Log("[RF] SubModule loaded -> calling probe PatchOnce");
-            RealmsForgotten.AiMade.RFSiegeTransitionProbe.PatchOnce();
+            RFSiegeTransitionProbe.PatchOnce();
             try
             {
                 var harmony = new Harmony("com.realmsforgotten.aimade");
@@ -55,17 +55,17 @@ namespace RealmsForgotten.AiMade
                 var campaignStarter = (CampaignGameStarter)gameStarterObject;
                 AddCampaignBehaviors(campaignStarter);
                 AddCustomModels(campaignStarter);
-                ApplyDelayedJoinEncounterPatch();
+                //ApplyDelayedJoinEncounterPatch();
 
             }
-            RealmsForgotten.AiMade.RFSiegeTransitionProbe.PatchOnce();
-            RealmsForgotten.AiMade.RFLogger.Log("[Probe] PatchOnce called from OnGameStart");
+            RFSiegeTransitionProbe.PatchOnce();
+            RFLogger.Log("[Probe] PatchOnce called from OnGameStart");
         }
             
         public static void AddCampaignBehaviors(CampaignGameStarter campaignGameStarter)
         {
             // Initialize quest behaviors
-            var customItemCategories = new RealmsForgotten.Behaviors.CustomItemCategories();
+            var customItemCategories = new CustomItemCategories();
             customItemCategories.Initialize();
 
             // Add other behaviors
@@ -165,11 +165,11 @@ namespace RealmsForgotten.AiMade
                 && !mission.MissionLogics.OfType<SiegeDeploymentMissionController>().Any())
             {
                 mission.AddMissionBehavior(new ADODReinforcementsRunner());
-                mission.AddMissionBehavior(new RealmsForgotten.AiMade.CommanderSwapMissionBehavior());
+                mission.AddMissionBehavior(new CommanderSwapMissionBehavior());
             }
             // Add Find Magic Items behavior to all missions
             mission.AddMissionBehavior(new FindMagicItemsMissionBehavior());
-            mission.AddMissionBehavior(new RealmsForgotten.AiMade.RFMissionHeartbeat());
+            mission.AddMissionBehavior(new RFMissionHeartbeat());
             // No final do OnMissionBehaviorInitialize, depois de AddMissionBehavior(...)
             try
             {
@@ -200,8 +200,8 @@ namespace RealmsForgotten.AiMade
                         "game_menu_join_encounter_help_attackers_on_condition"
                     ),
                     prefix: new HarmonyMethod(
-                        typeof(RealmsForgotten.AiMade.Patches.RFHideVanillaJoinEncounterHelpOptionsPatch),
-                        nameof(RealmsForgotten.AiMade.Patches.RFHideVanillaJoinEncounterHelpOptionsPatch
+                        typeof(RFHideVanillaJoinEncounterHelpOptionsPatch),
+                        nameof(RFHideVanillaJoinEncounterHelpOptionsPatch
                             .HideVanillaHelpAttackersInVillageRaid)
                     )
                 );
@@ -212,9 +212,20 @@ namespace RealmsForgotten.AiMade
                         "game_menu_join_encounter_help_defenders_on_condition"
                     ),
                     prefix: new HarmonyMethod(
-                        typeof(RealmsForgotten.AiMade.Patches.RFHideVanillaJoinEncounterHelpOptionsPatch),
-                        nameof(RealmsForgotten.AiMade.Patches.RFHideVanillaJoinEncounterHelpOptionsPatch
+                        typeof(RFHideVanillaJoinEncounterHelpOptionsPatch),
+                        nameof(RFHideVanillaJoinEncounterHelpOptionsPatch
                             .HideVanillaHelpDefendersInVillageRaid)
+                    )
+                );
+                harmony.Patch(
+                    AccessTools.Method(
+                        typeof(EncounterGameMenuBehavior),
+                        "game_menu_join_encounter_leave_no_army_on_condition"
+                    ),
+                    prefix: new HarmonyMethod(
+                        typeof(RFJoinEncounterLeaveTextPatch),
+                        nameof(RFJoinEncounterLeaveTextPatch
+                            .JoinEncounterLeaveConditionPrefix)
                     )
                 );
 

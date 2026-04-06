@@ -25,6 +25,7 @@ namespace RealmsForgotten.UI
         internal void RegisterExtension(IViewModelExtension extension, ViewModel vm)
         {
             if (vm != null && extension != null && extension.GetType().GetCustomAttribute<ViewModelExtensionAttribute>() != null)
+                //&& _extensionInstances.Values.Any(ex => ex.GetType() == extension.GetType()))
             {
                 // Use indexer to handle both add and update cases
                 _extensionInstances[vm] = extension;
