@@ -86,32 +86,51 @@ namespace RealmsForgotten.Quest.FourthUpdate
         {
             try
             {
-                Clan deformedClan = Clan.FindFirst(c => c.StringId == "deformed_villagers");
+                // Tenta encontrar o clã específico, senão usa fallbacks
+                Clan deformedClan = Clan.FindFirst(c => c.StringId == "deformed_villagers")
+                                 ?? Clan.FindFirst(c => c.StringId == "cs_devils_bandits")
+                                 ?? Clan.FindFirst(c => c.StringId == "cs_nelrog_bandits")
+                                 ?? Clan.FindFirst(c => c.StringId == "vortiaks")
+                                 ?? Clan.All.FirstOrDefault(c => c.IsBanditFaction);
+
                 if (deformedClan == null)
                 {
-                    InformationManager.DisplayMessage(new InformationMessage("❌ Deformed clan not found for spawning."));
+                    InformationManager.DisplayMessage(new InformationMessage("❌ Deformed clan not found for spawning. No bandit clans available.", Colors.Red));
                     return;
                 }
+
+                InformationManager.DisplayMessage(new InformationMessage($"🔧 [Deformed Spawning] Using clan: {deformedClan.Name} (ID: {deformedClan.StringId})", Colors.Cyan));
 
                 var hideouts = Hideout.All
                     .Where(h => h.IsInfested && h.Settlement != null)
                     .OrderBy(_ => MBRandom.RandomInt())
                     .Take(10);
 
+                int successfulSpawns = 0;
                 foreach (var hideout in hideouts)
                 {
-                    SpawnDeformedParty(hideout, deformedClan);
+                    if (SpawnDeformedParty(hideout, deformedClan))
+                    {
+                        successfulSpawns++;
+                    }
                 }
 
-                _spawnCount++; // Incrementa o contador AQUI
+                if (successfulSpawns > 0)
+                {
+                    _spawnCount++; // Incrementa o contador apenas se pelo menos 1 party foi spawned
 
-                InformationManager.ShowInquiry(new InquiryData(
-                    "Reports of attacks are growing!",
-                    "Twisted hosts have been spotted attacking villagers and caravans.",
-                    true, false, "Close", null, null, null
-                ));
+                    InformationManager.ShowInquiry(new InquiryData(
+                        "Reports of attacks are growing!",
+                        "Twisted hosts have been spotted attacking villagers and caravans.",
+                        true, false, "Close", null, null, null
+                    ));
 
-                InformationManager.DisplayMessage(new InformationMessage($"✅ Deformed Villager parties wave {_spawnCount}/3 spawned."));
+                    InformationManager.DisplayMessage(new InformationMessage($"✅ Deformed Villager parties wave {_spawnCount}/3 spawned ({successfulSpawns} parties created).", Colors.Green));
+                }
+                else
+                {
+                    InformationManager.DisplayMessage(new InformationMessage("⚠️ No deformed parties were spawned this wave. Retrying next cycle.", Colors.Yellow));
+                }
             }
             catch (Exception ex)
             {
@@ -119,28 +138,71 @@ namespace RealmsForgotten.Quest.FourthUpdate
             }
         }
 
-        // MÉTODO MOVIDO DA SEVENTHQUEST
-        private void SpawnDeformedParty(Hideout hideout, Clan clan)
+        private bool SpawnDeformedParty(Hideout hideout, Clan clan)
         {
-            // (Este método é o mesmo que você já tinha na SeventhQuest, apenas copiado para cá)
             try
             {
                 string partyId = $"deformed_party_{hideout.Settlement.StringId}_{MBRandom.RandomInt(10000, 99999)}";
                 PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+
+                if (looterTemplate == null)
+                {
+                    InformationManager.DisplayMessage(new InformationMessage("⚠️ Looter template not found.", Colors.Yellow));
+                    return false;
+                }
+
                 MobileParty party = BanditPartyComponent.CreateBanditParty(partyId, clan, hideout, true, looterTemplate, hideout.Settlement.Position);
-                if (party == null) return;
+
+                if (party == null)
+                {
+                    InformationManager.DisplayMessage(new InformationMessage($"⚠️ Failed to create party at {hideout.Settlement.Name}.", Colors.Yellow));
+                    return false;
+                }
+
                 TroopRoster roster = TroopRoster.CreateDummyTroopRoster();
-                roster.AddToCounts(CharacterObject.Find("deformed_villager_boss"), 1);
-                roster.AddToCounts(CharacterObject.Find("deformed_villager_bandit"), 80);
+
+                // Tenta adicionar tropas deformed
+                CharacterObject boss = CharacterObject.Find("deformed_villager_boss");
+                CharacterObject bandit = CharacterObject.Find("deformed_villager_bandit");
+
+                if (boss != null)
+                {
+                    roster.AddToCounts(boss, 1);
+                }
+
+                if (bandit != null)
+                {
+                    roster.AddToCounts(bandit, 80);
+                }
+
+                // Se nenhuma tropa deformed foi encontrada, usa tropas do clã
+                if (roster.TotalManCount == 0)
+                {
+                    InformationManager.DisplayMessage(new InformationMessage("⚠️ Deformed troops not found. Using clan's default troops.", Colors.Yellow));
+
+                    CharacterObject clanTroop = clan.Culture?.BasicTroop;
+                    if (clanTroop != null)
+                    {
+                        roster.AddToCounts(clanTroop, 50);
+                    }
+                    else
+                    {
+                        InformationManager.DisplayMessage(new InformationMessage($"⚠️ No valid troops for party at {hideout.Settlement.Name}.", Colors.Yellow));
+                        return false;
+                    }
+                }
 
                 party.InitializeMobilePartyAroundPosition(roster, TroopRoster.CreateDummyTroopRoster(), hideout.Settlement.Position, 100f, 10f);
                 party.Party.SetCustomName(new TextObject("Deformed Villagers"));
                 party.Aggressiveness = 100f;
                 party.SetPartyObjective(MobileParty.PartyObjective.Aggressive);
+
+                return true;
             }
             catch (Exception ex)
             {
-                InformationManager.DisplayMessage(new InformationMessage($"❌ Error spawning individual Deformed party: {ex.Message}"));
+                InformationManager.DisplayMessage(new InformationMessage($"❌ Error spawning individual Deformed party: {ex.Message}", Colors.Red));
+                return false;
             }
         }
 

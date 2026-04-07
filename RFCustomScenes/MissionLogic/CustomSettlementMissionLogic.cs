@@ -297,6 +297,16 @@ namespace RealmsForgotten.RFCustomSettlements
 
                     agent.GetComponent<CampaignAgentComponent>().CreateAgentNavigator();
                     StandingPoint animationPoint = NpcSpawnPoint.GetFirstScriptOfType<StandingPoint>();
+
+                    // Get the UsableMachine parent of the standing point
+                    UsableMachine usableMachine = animationPoint.GameEntity.Parent.GetScriptComponents<UsableMachine>().FirstOrDefault<UsableMachine>();
+
+                    // Add NPC to tracking dictionary before using the game object
+                    if (usableMachine != null)
+                    {
+                        defenderAgentObjects.Add(agent, new UsedObject(usableMachine, false));
+                    }
+
                     agent.UseGameObject(animationPoint);
                     SimulateTick(agent);
                 }
@@ -625,7 +635,11 @@ namespace RealmsForgotten.RFCustomSettlements
             {
                 if (agent.IsUsingGameObject)
                 {
-                    agent.StopUsingGameObject(true, Agent.StopUsingGameObjectFlags.AutoAttachAfterStoppingUsingGameObject);
+                    // Only stop using game object if agent is tracked (to avoid issues with NPCs)
+                    if (defenderAgentObjects.ContainsKey(agent))
+                    {
+                        agent.StopUsingGameObject(true, Agent.StopUsingGameObjectFlags.AutoAttachAfterStoppingUsingGameObject);
+                    }
                 }
                 else
                 {

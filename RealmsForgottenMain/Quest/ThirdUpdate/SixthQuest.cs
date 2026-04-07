@@ -263,7 +263,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             try
             {
                 Clan clan = Clan.FindFirst(x => x.StringId == clanId) ?? throw new Exception($"Clan with ID {clanId} not found.");
-                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("cs_devils_raiders_boss_party_template");
 
                 // Use settlement's gate position directly (it's already a CampaignVec2)
                 CampaignVec2 safeSpawnPosition = nearTown.GatePosition;

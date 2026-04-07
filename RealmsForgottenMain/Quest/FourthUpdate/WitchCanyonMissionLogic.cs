@@ -19,7 +19,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
             if (!_isInitialized)
             {
                 BTRegister.RegisterClass("CanyonWitchTree", objects => CanyonWitchTree.BuildTree(objects));
-                SpawnAgentMissionLogic.AddAgentToSpawn(new("evil_witch", false, WitchSpawnPosition, false, false, false, default, "CanyonWitchTree"));
+                SpawnAgentMissionLogic.AddAgentToSpawn(new("winged_witch_boss", false, WitchSpawnPosition, false, false, false, default, "CanyonWitchTree"));
                 _isInitialized = true;
             }
         }

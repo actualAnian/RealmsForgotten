@@ -96,6 +96,9 @@ namespace RealmsForgotten.Quest.FourthUpdate
         [SaveableField(25)]
         private bool _owlDialogueAttempted;
 
+        [SaveableField(26)]
+        private bool _shouldShowWitchDefeatedNotification = false;
+
         private const int travelObjectiveTarget = 1;
         private bool IsTravelObjectiveCompleted => travelObjectiveLog?.CurrentProgress >= travelObjectiveTarget;
 
@@ -256,6 +259,12 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
         protected override void HourlyTick()
         {
+            if (_shouldShowWitchDefeatedNotification && PlayerEncounter.Current == null)
+            {
+                _shouldShowWitchDefeatedNotification = false;
+                ShowWitchDefeatedNotification();
+            }
+
             if (_shouldTriggerOwlDialogueNextTick)
             {
                 _shouldTriggerOwlDialogueNextTick = false;
@@ -388,7 +397,6 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
         public MobileParty? CreateWitchLordParty(string witchLordCharacterId, string clanId, Settlement spawnSettlement, List<TroopDetail> troopDetails)
         {
-            // ... (Este método permanece inalterado)
             if (spawnSettlement == null)
             {
                 InformationManager.DisplayMessage(new InformationMessage($"❌ Spawn settlement is null for Witch Lord '{witchLordCharacterId}'.", Colors.Red));
@@ -411,8 +419,8 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 Settlement fixedSpawnSettlement = Settlement.Find("town_S2");
                 CampaignVec2 spawnPosition = fixedSpawnSettlement?.Position ?? spawnSettlement.Position;
 
-                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
-                MobileParty party = BanditPartyComponent.CreateBanditParty($"vortiak_witch_party_{witchLordCharacterId}", clan, null, true, looterTemplate, spawnPosition); //@TODO
+                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("vortiak_witch_raiders_template");
+                MobileParty party = BanditPartyComponent.CreateBanditParty($"vortiak_witch_party_{witchLordCharacterId}", clan, null, true, looterTemplate, spawnPosition);
 
                 if (party == null)
                 {
@@ -445,7 +453,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 if (troopRoster.GetTroopCount(leaderCharacter) == 0)
                     troopRoster.AddToCounts(leaderCharacter, 1);
 
-                
+
                 party.InitializeMobilePartyAroundPosition(
                     troopRoster,
                     TroopRoster.CreateDummyTroopRoster(),
@@ -454,26 +462,8 @@ namespace RealmsForgotten.Quest.FourthUpdate
                     10f
                 );
 
-                MobileParty? target = MobileParty.All
-                .Where(p =>
-                    p != party &&
-                    p.IsActive &&
-                    (p.IsLordParty || p.IsCaravan || p.IsBandit || p.IsMilitia || p.IsVillager) &&
-                    p.MapFaction != null &&
-                    FactionManager.IsAtWarAgainstFaction(party.MapFaction, p.MapFaction)
-                )
-                 .OrderBy(p => p.Position.DistanceSquared(party.Position))
-                   .FirstOrDefault();
-
-                if (target != null)
-                {
-                    party.SetMoveEngageParty(target, MobileParty.NavigationType.All);
-                    InformationManager.DisplayMessage(new InformationMessage($"Witch Lord party is attacking {target.Name}."));
-                }
-                else
-                {
-                    party.SetMovePatrolAroundPoint(spawnSettlement.Position, MobileParty.NavigationType.All); // fallback
-                }
+                // Set the party to engage the player directly
+                party.SetMoveEngageParty(MobileParty.MainParty, MobileParty.NavigationType.All);
 
                 party.ActualClan = clan;
                 party.Party.SetCustomName(new TextObject($"Vortiak Coven ({leaderCharacter.Name})"));
@@ -481,6 +471,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 party.Party.SetVisualAsDirty();
 
                 InformationManager.DisplayMessage(new InformationMessage($"A Vortiak Witch Lord coven led by {leaderCharacter.Name} has been sighted near {spawnSettlement.Name}.", Colors.Red));
+                InformationManager.DisplayMessage(new InformationMessage($"The Vortiak Witch is hunting you down!", Colors.Magenta));
                 return party;
             }
             catch (Exception ex)
@@ -707,7 +698,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 var enemyClan = Clan.All.FirstOrDefault(c => c.StringId == "vortiaks")
                                     ?? Clan.All.First();
 
-                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("vortiak_boss_party_template");
                 MobileParty interceptorParty = BanditPartyComponent.CreateBanditParty(enemyClan.StringId, enemyClan, null, true, looterTemplate,nearSettlement.Position); //@TODO
 
                 if (interceptorParty == null)
@@ -802,11 +793,14 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
             if (_witchFinalArmy != null && party == _witchFinalArmy)
             {
-                ShowWitchDefeatedNotification();
                 if (priestessArmyLog != null && priestessArmyLog.CurrentProgress == 0)
                 {
                     priestessArmyLog.UpdateCurrentProgress(1);
                 }
+
+                // Don't show notification immediately - it will freeze during battle-to-map transition
+                // Schedule it for the next tick after we're safely back on the campaign map
+                _shouldShowWitchDefeatedNotification = true;
             }
         }
 
@@ -928,15 +922,18 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
         private DialogFlow PostBattleWitchDialog => DialogFlow.CreateDialogFlow("start", 125)
          .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_1"))
-         .Condition(() => bossBattleLog?.CurrentProgress == 2 && CharacterObject.OneToOneConversationCharacter?.StringId == "evil_witch")
+         .Condition(() => bossBattleLog?.CurrentProgress == 1 && CharacterObject.OneToOneConversationCharacter?.StringId == "evil_witch")
          .PlayerLine(GameTexts.FindText("rf_seventh_quest_witch_final_2"))
          .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_3"))
          .PlayerLine(GameTexts.FindText("rf_seventh_quest_witch_final_4"))
          .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_5"))
          .Consequence(() =>
          {
-             bossBattleLog.UpdateCurrentProgress(2);
-             StartFinalWitchArmySequence();
+             if (bossBattleLog != null)
+             {
+                 bossBattleLog.UpdateCurrentProgress(2);
+                 StartFinalWitchArmySequence();
+             }
          })
          .CloseDialog();
 

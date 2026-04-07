@@ -48,7 +48,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
         // ======================= IDs E REFERÊNCIAS =======================
         private const string RF_MAGE_SITE = "mage_hideout";
-        private const string RF_MAGE_BOSS_AGENT = "rf_mage_boss_agent";
+        private const string RF_MAGE_BOSS_AGENT = "grand_mage";
         private const string RF_MAGE_SURVIVOR_HERO = "rf_mage_survivor";
         private const string FIRST_TREE_TOWN = "town_FirstTree";
         private const string OWL_HERO_ID = "rf_the_owl";
@@ -58,7 +58,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
         private Hero TheOwl => Hero.FindFirst(h => h.StringId == OWL_HERO_ID);
         private Settlement QuestHideoutSettlement => Settlement.Find("hideout_mountain_13");
         private static Settlement FirstTreeSettlement => Settlement.Find(FIRST_TREE_TOWN);
-        private static Settlement MageInvestigationSpot => Settlement.Find("castle_EN3");
+        private static Settlement MageInvestigationSpot => Settlement.Find("castle_EM5");
         private static Settlement MageSite => Settlement.Find(RF_MAGE_SITE);
 
         public EighthQuest(string questId, Hero questGiver, CampaignTime duration, int rewardGold)
@@ -302,40 +302,103 @@ namespace RealmsForgotten.Quest.FourthUpdate
         {
             try
             {
-                Clan deformedClan = Clan.FindFirst(c => c.StringId == "deformed_villagers");
+                // Tenta encontrar o clã específico, senão usa fallbacks
+                Clan deformedClan = Clan.FindFirst(c => c.StringId == "deformed_villagers")
+                                 ?? Clan.FindFirst(c => c.StringId == "cs_devils_bandits") // Seu clã de devils
+                                 ?? Clan.FindFirst(c => c.StringId == "cs_nelrog_bandits") // Seu clã de nelrog
+                                 ?? Clan.FindFirst(c => c.StringId == "vortiaks") // Clã dos vortiaks
+                                 ?? Clan.All.FirstOrDefault(c => c.IsBanditFaction); // Qualquer clã de bandidos
+
                 if (deformedClan == null)
                 {
-                    InformationManager.DisplayMessage(new InformationMessage("❌ Deformed clan not found."));
+                    InformationManager.DisplayMessage(new InformationMessage("❌ Deformed clan not found for spawning. No bandit clans available.", Colors.Red));
                     return;
                 }
 
+                InformationManager.DisplayMessage(new InformationMessage($"🔧 Using clan: {deformedClan.Name} (ID: {deformedClan.StringId})", Colors.Cyan));
+
                 var troopPool = new Dictionary<string, int>
-                {
-                    { "deformed_villager_bandit", 30 }, { "deformed_villager_raider", 15 },
-                    { "deformed_villager_chief", 5 }, { "deformed_villager_boss", 1 }
-                };
+        {
+            { "deformed_villager_bandit", 30 },
+            { "deformed_villager_raider", 15 },
+            { "deformed_villager_chief", 5 },
+            { "deformed_villager_boss", 1 }
+        };
 
                 TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
                 foreach (var kv in troopPool)
                 {
                     var character = CharacterObject.Find(kv.Key);
-                    if (character != null) troopRoster.AddToCounts(character, kv.Value);
+                    if (character != null)
+                    {
+                        troopRoster.AddToCounts(character, kv.Value);
+                    }
+                    else
+                    {
+                        InformationManager.DisplayMessage(new InformationMessage($"⚠️ Troop '{kv.Key}' not found, skipping.", Colors.Yellow));
+                    }
+                }
+
+                // Se nenhuma tropa "deformed" foi encontrada, usar tropas do clã escolhido como fallback
+                if (troopRoster.TotalManCount == 0)
+                {
+                    InformationManager.DisplayMessage(new InformationMessage("⚠️ No deformed troops found. Using clan's default troops.", Colors.Yellow));
+
+                    // Usar as tropas do clã escolhido
+                    var clanTroops = deformedClan.Culture?.BasicTroop;
+                    if (clanTroops != null)
+                    {
+                        troopRoster.AddToCounts(clanTroops, 50); // 50 tropas básicas como fallback
+                    }
+                    else
+                    {
+                        InformationManager.DisplayMessage(new InformationMessage("❌ No valid troops found for ambush party.", Colors.Red));
+                        return;
+                    }
                 }
 
                 string uniqueId = $"rf_deformed_ambush_{MBRandom.RandomInt(10000)}";
-                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
-                MobileParty ambushParty = BanditPartyComponent.CreateBanditParty(uniqueId, deformedClan, null, true, looterTemplate, MobileParty.MainParty.Position);
+                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("deformed_villagers_template");
 
-                if (ambushParty == null) return;
+                if (looterTemplate == null)
+                {
+                    InformationManager.DisplayMessage(new InformationMessage("❌ Looter template not found.", Colors.Red));
+                    return;
+                }
 
-                ambushParty.InitializeMobilePartyAroundPosition(troopRoster, TroopRoster.CreateDummyTroopRoster(), MobileParty.MainParty.Position, 0f, 0f);
+                MobileParty ambushParty = BanditPartyComponent.CreateBanditParty(
+                    uniqueId,
+                    deformedClan,
+                    null,
+                    true,
+                    looterTemplate,
+                    MobileParty.MainParty.Position
+                );
+
+                if (ambushParty == null)
+                {
+                    InformationManager.DisplayMessage(new InformationMessage("❌ Failed to create ambush party.", Colors.Red));
+                    return;
+                }
+
+                ambushParty.InitializeMobilePartyAroundPosition(
+                    troopRoster,
+                    TroopRoster.CreateDummyTroopRoster(),
+                    MobileParty.MainParty.Position,
+                    0f,
+                    0f
+                );
+
                 ambushParty.Aggressiveness = 100f;
                 ambushParty.SetMoveEngageParty(MobileParty.MainParty, MobileParty.NavigationType.Default);
                 ambushParty.Party.SetCustomName(new TextObject("Deformed Ambushers"));
+
+                InformationManager.DisplayMessage(new InformationMessage("⚠️ You are ambushed by deformed creatures!", Colors.Red));
             }
             catch (Exception ex)
             {
-                InformationManager.DisplayMessage(new InformationMessage($"❌ Ambush spawn error: {ex.Message}"));
+                InformationManager.DisplayMessage(new InformationMessage($"❌ Ambush spawn error: {ex.Message}", Colors.Red));
+                InformationManager.DisplayMessage(new InformationMessage($"Stack trace: {ex.StackTrace}", Colors.Red));
             }
         }
 

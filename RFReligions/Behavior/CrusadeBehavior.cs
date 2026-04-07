@@ -151,7 +151,7 @@ namespace RFReligions.Behavior
                 }
             }
 
-            foreach (var kingdom in Kingdom.All.Where(k => k != _crusadeLeader && k != _crusadeTarget && !k.IsMinorFaction))
+            foreach (var kingdom in Kingdom.All.Where(k => k != _crusadeLeader && k != _crusadeTarget && !k.IsMinorFaction && k.Leader != null))
             {
                 if (ReligionBehavior.Instance._heroes.TryGetValue(kingdom.Leader, out var kingReligion) && kingReligion.Religion == _crusadeReligion)
                 {

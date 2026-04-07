@@ -79,11 +79,23 @@ namespace RealmsForgotten.Quest.FourthUpdate
             if (timer < 1) return;
             if (!isInitialized)
             {
-                _witch = Mission.Agents.FirstOrDefault(agent => agent.Character?.StringId == "evil_witch");
+                _witch = Mission.Agents.FirstOrDefault(agent => agent.Character?.StringId == "winged_witch_boss");
                 isInitialized = true;
-                InitializeWitch(_witch);
+                if (_witch != null)
+                {
+                    InformationManager.DisplayMessage(new InformationMessage(
+                        $"✅ Witch agent FOUND: {_witch.Character.StringId}", 
+                        Colors.Green));
+                    InitializeWitch(_witch);
+                }
+                else
+                {
+                    InformationManager.DisplayMessage(new InformationMessage(
+                        "❌ DEBUG: Witch agent not found in mission!", 
+                        Colors.Red));
+                }
             }
-            _witch = Mission.Current.PlayerEnemyTeam.ActiveAgents.FirstOrDefault(a => a.Character.StringId == "evil_witch");
+            _witch = Mission.Current.PlayerEnemyTeam.ActiveAgents.FirstOrDefault(a => a.Character?.StringId == "winged_witch_boss");
             HandleSpawningTeleportingProjectiles(dt);
             base.OnMissionTick(dt);
             if (_isPlayerDead)
@@ -103,16 +115,25 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 _isPlayerDead = true;
             }
 
+            // 🔍 DIAGNOSTIC: Log all agent removals to see what's happening
+            if (affectedAgent?.Character != null)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"🔍 Agent removed: {affectedAgent.Character.StringId}, State: {agentState}, IsKilled: {agentState == AgentState.Killed}", 
+                    Colors.Yellow));
+            }
+
             if (!_questNotified &&
-                affectedAgent?.Character?.StringId == "winged_evil_witch" &&
+                affectedAgent?.Character?.StringId == "winged_witch_boss" &&
                 agentState == AgentState.Killed)
             {
                 InformationManager.DisplayMessage(new InformationMessage(
-                    "DEBUG: Winged Witch defeated inside mission!", Colors.Green));
+                    "✅ DEBUG: Winged Witch defeated inside mission!", Colors.Green));
 
                 NinthQuest.OnWitchDefeatedInNinthQuest();
                 _questNotified = true;
             }
+            
             base.OnAgentRemoved(affectedAgent, affectorAgent, agentState, blow);
         }
         public void InitializeWitch(Agent witch)
