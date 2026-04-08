@@ -174,17 +174,41 @@ namespace RFReligions.Behavior
 
             InformationManager.ShowInquiry(new InquiryData(title.ToString(), message.ToString(), true, true, "Join the Crusade", "Decline",
                 () => { JoinCrusade(Hero.MainHero.MapFaction as Kingdom); },
-                // NOVO: Ação adicionada para quando o jogador recusa o chamado.
                 () => {
-                    InformationManager.DisplayMessage(new InformationMessage("You have declined the call to war. Your faith wavers.", Colors.Yellow));
+                    // ✅ Enhanced decline penalties
+                    InformationManager.DisplayMessage(new InformationMessage("You have declined the call to war. Your faith and honor are questioned.", Colors.Yellow));
 
-                    // Penalidade de relação com o líder da cruzada.
+                    // Primary penalty: Crusade leader
                     ChangeRelationAction.ApplyPlayerRelation(_crusadeLeader.Leader, -10, true, true);
 
-                    // Penalidade de devoção.
+                    // Penalty with all same-religion kingdoms
+                    foreach (var kingdom in Kingdom.All.Where(k => k.Leader != null && k != Hero.MainHero.MapFaction))
+                    {
+                        if (ReligionBehavior.Instance._heroes.TryGetValue(kingdom.Leader, out var kingReligion)
+                            && kingReligion.Religion == _crusadeReligion)
+                        {
+                            ChangeRelationAction.ApplyPlayerRelation(kingdom.Leader, -5, true, true);
+                        }
+                    }
+
+                    // Small bonus with target kingdom (they appreciate you not attacking)
+                    if (_crusadeTarget?.Leader != null)
+                    {
+                        ChangeRelationAction.ApplyPlayerRelation(_crusadeTarget.Leader, 5, true, true);
+                    }
+
+                    // Devotion penalty (increases with Honor trait)
                     if (ReligionBehavior.Instance._heroes.TryGetValue(Hero.MainHero, out var playerReligionModel))
                     {
-                        playerReligionModel.AddDevotion(-5f, Hero.MainHero);
+                        int honorLevel = Hero.MainHero.GetTraitLevel(DefaultTraits.Honor);
+                        float devotionPenalty = -5f - (honorLevel * 2f); // -5 base, -2 per honor level
+                        playerReligionModel.AddDevotion(devotionPenalty, Hero.MainHero);
+
+                        if (honorLevel > 0)
+                        {
+                            InformationManager.DisplayMessage(
+                                new InformationMessage($"Your honor suffers for refusing the sacred call (Devotion -{Math.Abs(devotionPenalty)}).", Colors.Red));
+                        }
                     }
                 }), true);
         }
