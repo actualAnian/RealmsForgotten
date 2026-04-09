@@ -102,8 +102,7 @@ namespace RealmsForgotten.AiMade
                 InformationManager.DisplayMessage(new InformationMessage("ERROR: BANDIT CLAN NOT FOUND.", Colors.Red));
                 return null;
             }
-            PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
-            MobileParty banditParty = BanditPartyComponent.CreateBanditParty(banditClan.StringId, banditClan, settlement.Hideout, true, looterTemplate, settlement.Position);
+            MobileParty banditParty = BanditPartyComponent.CreateBanditParty(banditClan.StringId, banditClan, settlement.Hideout, true, null, settlement.Position);
             if (banditParty == null)
             {
                 InformationManager.DisplayMessage(new InformationMessage("ERROR: Failed to create bandit party.", Colors.Red));

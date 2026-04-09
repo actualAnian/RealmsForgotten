@@ -147,8 +147,7 @@ public class ProcessionEscortQuestBehavior : CampaignBehaviorBase
             Clan banditClan = Clan.BanditFactions.FirstOrDefault(clan => clan.StringId == "looters");
             if (banditClan != null)
             {
-                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
-                MobileParty banditParty = BanditPartyComponent.CreateBanditParty("procession_bandits", banditClan, banditHideout, true, looterTemplate, banditHideout.Settlement.Position); //@TODO
+                MobileParty banditParty = BanditPartyComponent.CreateBanditParty("procession_bandits", banditClan, banditHideout, true, null, banditHideout.Settlement.Position); //@TODO
                 banditParty.Party.SetCustomName(new TextObject("{=ProcessionBandits}Procession Bandits"));
                 banditParty.Ai.SetDoNotMakeNewDecisions(false);
 

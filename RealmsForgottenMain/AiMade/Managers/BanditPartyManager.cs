@@ -111,8 +111,7 @@ namespace RealmsForgotten.AiMade.Managers
                 if (banditClan == null || targetHideout == null)
                     return;
 
-                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
-                MobileParty banditParty = BanditPartyComponent.CreateBanditParty(banditClan.StringId, banditClan, targetHideout, true, looterTemplate, targetHideout.Settlement.Position);
+                MobileParty banditParty = BanditPartyComponent.CreateBanditParty(banditClan.StringId, banditClan, targetHideout, true, null, targetHideout.Settlement.Position);
 
                 if (banditParty == null)
                 {

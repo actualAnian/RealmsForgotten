@@ -20,8 +20,7 @@ namespace RealmsForgotten.AiMade.Village_Inn_Quests
                 return null;
 
             // cria uma party bandida hostil na vila
-            PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
-            MobileParty werewolfParty = BanditPartyComponent.CreateBanditParty("werewolf_party_" + village.StringId, Clan.BanditFactions.First(), null, false, looterTemplate, village.GatePosition); //@TODO
+            MobileParty werewolfParty = CreateBanditParty("werewolf_party_" + village.StringId, Clan.BanditFactions.First(), null, false, null, village.GatePosition); //@TODO
 
             werewolfParty.InitializeMobilePartyAroundPosition(
                 new TroopRoster(werewolfParty.Party),

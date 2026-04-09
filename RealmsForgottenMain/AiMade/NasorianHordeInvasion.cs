@@ -105,9 +105,8 @@ namespace RealmsForgotten.AiMade
                 return null;
             }
 
-            PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
             var hideout = SettlementHelper.FindNearestHideoutToSettlement(settlement, MobileParty.NavigationType.All);
-            MobileParty banditParty = BanditPartyComponent.CreateBanditParty(banditClan.StringId, banditClan, hideout, true, looterTemplate, settlement.Position);
+            MobileParty banditParty = BanditPartyComponent.CreateBanditParty(banditClan.StringId, banditClan, hideout, true, null, settlement.Position);
             if (banditParty == null)
             {
                 InformationManager.DisplayMessage(new InformationMessage("ERROR: Failed to create bandit party.", Colors.Red));
