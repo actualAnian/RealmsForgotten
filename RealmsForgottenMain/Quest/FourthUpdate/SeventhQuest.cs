@@ -76,6 +76,9 @@ namespace RealmsForgotten.Quest.FourthUpdate
         [SaveableField(16)]
         private JournalLog? vortiakLairLog;
 
+        [SaveableField(17)]
+        private bool _shouldTriggerOwlDialogueNextTick = false;
+
         // ======================= CAMPOS REMOVIDOS =======================
         // [SaveableField(17)] private bool deformedSpawningEnabled -> MOVIDO PARA O BEHAVIOR
         // [SaveableField(18)] private CampaignTime _nextDeformedSpawnTime -> MOVIDO PARA O BEHAVIOR
@@ -92,6 +95,9 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
         [SaveableField(25)]
         private bool _owlDialogueAttempted;
+
+        [SaveableField(26)]
+        private bool _shouldShowWitchDefeatedNotification = false;
 
         private const int travelObjectiveTarget = 1;
         private bool IsTravelObjectiveCompleted => travelObjectiveLog?.CurrentProgress >= travelObjectiveTarget;
@@ -253,8 +259,17 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
         protected override void HourlyTick()
         {
-            // A lógica de interação com a Sacerdotisa para a OITAVA quest foi removida
-            // pois o DeformedSpawningBehavior cuidará disso.
+            if (_shouldShowWitchDefeatedNotification && PlayerEncounter.Current == null)
+            {
+                _shouldShowWitchDefeatedNotification = false;
+                ShowWitchDefeatedNotification();
+            }
+
+            if (_shouldTriggerOwlDialogueNextTick)
+            {
+                _shouldTriggerOwlDialogueNextTick = false;
+                OpenOwlRebelionDialogue();
+            }
 
             if (druidInteractionLog != null && druidInteractionLog.CurrentProgress == 0)
             {
@@ -363,7 +378,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
             if (bossBattleLog?.CurrentProgress == 1 && settlement == witchHideout)
             {
                 PlayerEncounter.Finish(true);
-                bossBattleLog.UpdateCurrentProgress(2);
+                
                 CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty), new ConversationCharacterData(CharacterObject.Find(witchCharacterId)));
             }
         }
@@ -382,7 +397,6 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
         public MobileParty? CreateWitchLordParty(string witchLordCharacterId, string clanId, Settlement spawnSettlement, List<TroopDetail> troopDetails)
         {
-            // ... (Este método permanece inalterado)
             if (spawnSettlement == null)
             {
                 InformationManager.DisplayMessage(new InformationMessage($"❌ Spawn settlement is null for Witch Lord '{witchLordCharacterId}'.", Colors.Red));
@@ -405,8 +419,8 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 Settlement fixedSpawnSettlement = Settlement.Find("town_S2");
                 CampaignVec2 spawnPosition = fixedSpawnSettlement?.Position ?? spawnSettlement.Position;
 
-                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
-                MobileParty party = BanditPartyComponent.CreateBanditParty($"vortiak_witch_party_{witchLordCharacterId}", clan, null, true, looterTemplate, spawnPosition); //@TODO
+                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("vortiak_witch_raiders_template");
+                MobileParty party = BanditPartyComponent.CreateBanditParty($"vortiak_witch_party_{witchLordCharacterId}", clan, null, true, looterTemplate, spawnPosition);
 
                 if (party == null)
                 {
@@ -439,7 +453,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 if (troopRoster.GetTroopCount(leaderCharacter) == 0)
                     troopRoster.AddToCounts(leaderCharacter, 1);
 
-                
+
                 party.InitializeMobilePartyAroundPosition(
                     troopRoster,
                     TroopRoster.CreateDummyTroopRoster(),
@@ -448,26 +462,8 @@ namespace RealmsForgotten.Quest.FourthUpdate
                     10f
                 );
 
-                MobileParty? target = MobileParty.All
-                .Where(p =>
-                    p != party &&
-                    p.IsActive &&
-                    (p.IsLordParty || p.IsCaravan || p.IsBandit || p.IsMilitia || p.IsVillager) &&
-                    p.MapFaction != null &&
-                    FactionManager.IsAtWarAgainstFaction(party.MapFaction, p.MapFaction)
-                )
-                 .OrderBy(p => p.Position.DistanceSquared(party.Position))
-                   .FirstOrDefault();
-
-                if (target != null)
-                {
-                    party.SetMoveEngageParty(target, MobileParty.NavigationType.All);
-                    InformationManager.DisplayMessage(new InformationMessage($"Witch Lord party is attacking {target.Name}."));
-                }
-                else
-                {
-                    party.SetMovePatrolAroundPoint(spawnSettlement.Position, MobileParty.NavigationType.All); // fallback
-                }
+                // Set the party to engage the player directly
+                party.SetMoveEngageParty(MobileParty.MainParty, MobileParty.NavigationType.All);
 
                 party.ActualClan = clan;
                 party.Party.SetCustomName(new TextObject($"Vortiak Coven ({leaderCharacter.Name})"));
@@ -475,6 +471,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 party.Party.SetVisualAsDirty();
 
                 InformationManager.DisplayMessage(new InformationMessage($"A Vortiak Witch Lord coven led by {leaderCharacter.Name} has been sighted near {spawnSettlement.Name}.", Colors.Red));
+                InformationManager.DisplayMessage(new InformationMessage($"The Vortiak Witch is hunting you down!", Colors.Magenta));
                 return party;
             }
             catch (Exception ex)
@@ -486,17 +483,17 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
         private DialogFlow DruidInteractionDialog => DialogFlow.CreateDialogFlow("start", 125)
             // ... (Este método permanece inalterado)
-            .PlayerLine(GameTexts.FindText("rf_seventh_quest_druid_dialog_1"))
+            .NpcLine(GameTexts.FindText("rf_seventh_quest_druid_dialog_1"))
             .Condition(() =>
                 druidInteractionLog != null
                 && druidInteractionLog.CurrentProgress == 0
                 && CharacterObject.OneToOneConversationCharacter?.StringId == "elvean_first_tree_druid_quest"
             )
-            .NpcLine(GameTexts.FindText("rf_seventh_quest_druid_dialog_2"))
-            .PlayerLine(GameTexts.FindText("rf_seventh_quest_druid_dialog_3"))
-            .NpcLine(GameTexts.FindText("rf_seventh_quest_druid_dialog_4"))
-            .PlayerLine(GameTexts.FindText("rf_seventh_quest_druid_dialog_5"))
-            .NpcLine(GameTexts.FindText("rf_seventh_quest_druid_dialog_6"))
+            .PlayerLine(GameTexts.FindText("rf_seventh_quest_druid_dialog_2"))
+            .NpcLine(GameTexts.FindText("rf_seventh_quest_druid_dialog_3"))
+            .PlayerLine(GameTexts.FindText("rf_seventh_quest_druid_dialog_4"))
+            .NpcLine(GameTexts.FindText("rf_seventh_quest_druid_dialog_5"))
+            .PlayerLine(GameTexts.FindText("rf_seventh_quest_druid_dialog_6"))
             .Consequence(() =>
             {
                 druidInteractionLog.UpdateCurrentProgress(1);
@@ -514,13 +511,17 @@ namespace RealmsForgotten.Quest.FourthUpdate
             .NpcLine(new TextObject(
                 "So you've come seeking our aid? We, the Dugrast folk, have long prepared for these dark times."
             ))
-            .Condition(() =>
-                dwarfKingLog != null &&
-                dwarfKingLog.CurrentProgress == 0 &&
-                Hero.OneToOneConversationHero?.StringId == "lord_dwarf_faction_1"
-            )
+           .Condition(() =>
+           {
+               // Debug logging
+               bool logExists = dwarfKingLog != null;
+               bool progressCorrect = dwarfKingLog?.CurrentProgress == 0;
+               bool heroMatch = Hero.OneToOneConversationHero?.StringId == "lord_dugrast_faction_1";
+               
+               return logExists && progressCorrect && heroMatch;
+           })
             .PlayerLine(new TextObject(
-                "I have been told your people hold the oldest memories. My path has led me into dark times indeed. I came here after counseling with teh Pristess of the First Tree, from the High Kingdom of the Elveans."
+                "I have been told your people hold the oldest memories. My path has led me into dark times indeed. I came here after counseling with the Pristess of the First Tree, from the High Kingdom of the Elveans."
             ))
             .NpcLine(new TextObject(
                 "Very well. She has been at the side of life and have helped my people in the past. We own her loyalty."
@@ -529,19 +530,19 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 "What can you tell us about the Vortiaks? ?"
             ))
             .NpcLine(new TextObject(
-                "They were once a noble people, and rulers of the greatest empire in Aeurth, the Vortiak Empire.They ended up in war with the elvean ancestors, the elvish kin that arrived from beyond the sea of mists. They settled themselves on a territory sacred to the Vortiaks and asked for ownership of it. Of course the Vortiaks did not accepted, and demanded their leave.  The rest was war, a conflict that last for one hundred years. The Vortiaks have been defeated and those who survived came into our doors asking for shelter."
+                "They were once a noble people, and rulers of the greatest empire in Aeurth, known as the Vortiak Empire.They ended up in war with the elvean ancestors, a race known as the elvish kin that arrived from beyond the Sea of Mists. They settled themselves on a territory sacred to the Vortiaks and asked for ownership of it. Of course the Vortiaks did not accepted, and demanded their leave.  The rest was war, a conflict that last for one hundred years. The Vortiaks have been defeated and those who survived came into our doors asking for shelter."
             ))
             .PlayerLine(new TextObject(
                 "What a history... So they indeed survived the war."
             ))
             .NpcLine(new TextObject(
-                "Some of them yes, enough to keep their bloodline alive. For years we shared our bread and roof we learned much from each other. But they turned to the deep forces of the mountain, and against our advice led themselves fall for it. There was no choice them to expell them, to not bring harm to our kin. And to the wild lands of winter they went, to find a new lair among the cold mountains of the east."
+                "Some of them yes, enough to keep their bloodline alive. During the years we shared our bread and roof we learned much from each other. But they turned to the deep forces of the mountain, and against our advice led themselves fall for it. There was no choice them to expell them, to not bring harm to our kin. And to the wild lands of winter they went, to find a new lair among the cold mountains of the east."
             ))
             .PlayerLine(new TextObject(
                 "And where would that be?"
             ))
               .NpcLine(new TextObject(
-                "You have to travel beyond the territory of the Urkhai, into the east. At the north of the Dradrealms you will find the Black Mountains, a territory no living being dare to step in. There laid much of the Vortiak sacred sites in the ancient times."
+                "You have to travel beyond the territory of the Urkhai, into the east. Follow the line of the Black Mountains. At the north of the Urkhai last Town, at the base of the mountain, there lay much of the Vortiak sacred sites in the ancient times."
             ))
             .PlayerLine(new TextObject(
                 "Thank you my king, that is of a great help. You honour us with your knowledge."
@@ -568,6 +569,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
                     GameTexts.FindText("rf_seventh_quest_travel_task"),
                     0, travelObjectiveTarget
                 );
+                StartFindVortiakLairObjective();
                 QuestUIManager.ShowNotification(
                     "You have received dwarven armor and learned the temple’s location. Head to the Vortiak Lair!",
                     null,
@@ -576,6 +578,77 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 );
             })
             .CloseDialog();
+
+        private DialogFlow DwarfKingManualOption => DialogFlow.CreateDialogFlow("hero_main_options", 125)
+     .PlayerLine(new TextObject("[Quest] I need your help regarding the Vortiaks."))
+     .Condition(() =>
+         dwarfKingLog != null &&
+         dwarfKingLog.CurrentProgress == 0 &&
+         Hero.OneToOneConversationHero?.StringId == "lord_dugrast_faction_1")
+     .NpcLine(new TextObject(
+         "So you've come seeking our aid? We, the Dugrast folk, have long prepared for these dark times."
+     ))
+     .PlayerLine(new TextObject(
+         "I have been told your people hold the oldest memories. My path has led me into dark times indeed. I came here after counseling with the Priestess of the First Tree, from the High Kingdom of the Elveans."
+     ))
+     .NpcLine(new TextObject(
+         "Very well. She has been at the side of life and have helped my people in the past. We owe her loyalty."
+     ))
+     .PlayerLine(new TextObject(
+         "What can you tell us about the Vortiaks?"
+     ))
+     .NpcLine(new TextObject(
+         "They were once a noble people, and rulers of the greatest empire in Aeurth, the Vortiak Empire. They ended up in war with the elvean ancestors, the elvish kin that arrived from beyond the sea of mists. They settled themselves on a territory sacred to the Vortiaks and asked for ownership of it. Of course the Vortiaks did not accepted, and demanded their leave. The rest was war, a conflict that lasted for one hundred years. The Vortiaks have been defeated and those who survived came into our doors asking for shelter."
+     ))
+     .PlayerLine(new TextObject(
+         "What a history... So they indeed survived the war."
+     ))
+     .NpcLine(new TextObject(
+         "Some of them yes, enough to keep their bloodline alive. For years we shared our bread and roof and learned much from each other. But they turned to the deep forces of the mountain, and against our advice led themselves to fall for it. There was no choice but to expel them, to not bring harm to our kin. And to the wild lands of winter they went, to find a new lair among the cold mountains of the east."
+     ))
+     .PlayerLine(new TextObject(
+         "And where would that be?"
+     ))
+     .NpcLine(new TextObject(
+         "You have to travel beyond the territory of the Urkhai, into the east. At the north of the Dradrealms you will find the Black Mountains, a territory no living being dare to step in. There laid much of the Vortiak sacred sites in the ancient times."
+     ))
+     .PlayerLine(new TextObject(
+         "Thank you my king, that is of great help. You honour us with your knowledge."
+     ))
+     .NpcLine(new TextObject(
+         "I will not let any of our people to get involved in that. We lived for ages under the earth and we can always go back if needed. But I will grant you with equipment forged from our best smiths. May this help you on your cause."
+     ))
+     .PlayerLine(new TextObject(
+         "That's a great gift milord, thank you very much."
+     ))
+     .Consequence(() =>
+     {
+         dwarfKingLog.UpdateCurrentProgress(1);
+         GivePlayerArmorSet(new List<string>
+         {
+            "sk_dwarf_erebor_helmet_plate_elite_a",
+            "sk_dwarf_erebor_chest_plate_elite_a",
+            "sk_dwarf_erebor_bracers_elite_a",
+            "sk_dwarf_erebor_boots_med_b",
+            "sk_dwarf_erebor_pauldron_plate_elite_a"
+         });
+         travelObjectiveLog = AddDiscreteLog(
+             GameTexts.FindText("rf_seventh_quest_travel_log"),
+             GameTexts.FindText("rf_seventh_quest_travel_task"),
+             0, travelObjectiveTarget
+         );
+
+         StartFindVortiakLairObjective();
+
+         QuestUIManager.ShowNotification(
+             "You have received dwarven armor and learned the temple's location. Head to the Vortiak Lair!",
+             null,
+             true,
+             "huntthewitch"
+         );
+     })
+     .CloseDialog();
+
 
         private void StartFindVortiakLairObjective()
         {
@@ -625,7 +698,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
                 var enemyClan = Clan.All.FirstOrDefault(c => c.StringId == "vortiaks")
                                     ?? Clan.All.First();
 
-                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("vortiak_boss_party_template");
                 MobileParty interceptorParty = BanditPartyComponent.CreateBanditParty(enemyClan.StringId, enemyClan, null, true, looterTemplate,nearSettlement.Position); //@TODO
 
                 if (interceptorParty == null)
@@ -672,8 +745,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
         private void AddVortiakTroopsToPlayer()
         {
-            // ... (Este método permanece inalterado)
-            if (!VortiakArmies.TryGetValue("rf_vortiak_army", out var vortiakTroops))
+           if (!VortiakArmies.TryGetValue("rf_vortiak_army", out var vortiakTroops))
             {
                 InformationManager.DisplayMessage(new InformationMessage("Vortiak army configuration not found.", Colors.Red));
                 return;
@@ -714,17 +786,21 @@ namespace RealmsForgotten.Quest.FourthUpdate
                         Clan.PlayerClan.Renown += 75;
                         InformationManager.DisplayMessage(new InformationMessage("Your deeds are becoming known across the land. (+75 Renown)", Colors.Green));
                     }
+                    AddVortiakTroopsToPlayer();
                 }
-                OpenOwlRebelionDialogue();
+                
             }
 
             if (_witchFinalArmy != null && party == _witchFinalArmy)
             {
-                ShowWitchDefeatedNotification();
                 if (priestessArmyLog != null && priestessArmyLog.CurrentProgress == 0)
                 {
                     priestessArmyLog.UpdateCurrentProgress(1);
                 }
+
+                // Don't show notification immediately - it will freeze during battle-to-map transition
+                // Schedule it for the next tick after we're safely back on the campaign map
+                _shouldShowWitchDefeatedNotification = true;
             }
         }
 
@@ -774,6 +850,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
             {
                 interceptorDefeatLog?.UpdateCurrentProgress(1);
                 InformationManager.DisplayMessage(new InformationMessage("Fight the Vortiaks!"));
+                _shouldTriggerOwlDialogueNextTick = true;
             })
             .CloseDialog();
 
@@ -845,14 +922,18 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
         private DialogFlow PostBattleWitchDialog => DialogFlow.CreateDialogFlow("start", 125)
          .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_1"))
-         .Condition(() => bossBattleLog?.CurrentProgress == 2 && CharacterObject.OneToOneConversationCharacter?.StringId == "evil_witch")
+         .Condition(() => bossBattleLog?.CurrentProgress == 1 && CharacterObject.OneToOneConversationCharacter?.StringId == "evil_witch")
          .PlayerLine(GameTexts.FindText("rf_seventh_quest_witch_final_2"))
          .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_3"))
          .PlayerLine(GameTexts.FindText("rf_seventh_quest_witch_final_4"))
          .NpcLine(GameTexts.FindText("rf_seventh_quest_witch_final_5"))
          .Consequence(() =>
          {
-             StartFinalWitchArmySequence();
+             if (bossBattleLog != null)
+             {
+                 bossBattleLog.UpdateCurrentProgress(2);
+                 StartFinalWitchArmySequence();
+             }
          })
          .CloseDialog();
 
@@ -1305,6 +1386,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
             Campaign.Current.ConversationManager.AddDialogFlow(PostBattleWitchDialog, this);
             Campaign.Current.ConversationManager.AddDialogFlow(InterceptorEncounterDialogue, this);
             Campaign.Current.ConversationManager.AddDialogFlow(WitchFinalEncounterDialogue, this);
+            Campaign.Current.ConversationManager.AddDialogFlow(DwarfKingManualOption, this);
 
             // ✅ REMOVIDO: O PriestessEighthQuestDialog não pertence mais a esta quest.
             // Campaign.Current.ConversationManager.AddDialogFlow(PriestessEighthQuestDialog, this);

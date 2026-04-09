@@ -60,6 +60,7 @@ namespace RealmsForgotten.RFEffects
             var missle = Mission.Current.MissilesList.FirstOrDefault(m => m.Index == collisionData.AffectorWeaponSlotOrMissileIndex);
             if (missle == null) return;
             var spell = missle.Weapon.Item;
+            if (meteorSpell == null || spell == null) return; // Add null check
             if (spell.StringId == meteorSpell.StringId)
                 _currentMeteors.Add(new MeteorData(TimeBetweenProjectiles, ChooseVectors(collisionData.CollisionGlobalPosition, attacker), attacker));
         }

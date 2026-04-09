@@ -6,6 +6,7 @@ using TaleWorlds.CampaignSystem.Party;
 using RealmsForgotten.Career;
 using RealmsForgotten.Career.Logic;
 using TaleWorlds.CampaignSystem.Roster;
+using TaleWorlds.Localization; // Add this line
 
 namespace RealmsForgotten.Models
 {
@@ -32,6 +33,18 @@ namespace RealmsForgotten.Models
         }
         public override ExplainedNumber GetTotalWage(MobileParty mobileParty, TroopRoster troopRoster, bool includeDescriptions = false)
         {
+            // Add null/initialization checks
+            if (mobileParty == null || troopRoster == null)
+                return new ExplainedNumber(0f, includeDescriptions);
+            
+            // Workaround for garrison parties with null ActualClan - use alternative wage calculation
+            if (mobileParty.ActualClan == null)
+            {
+                // Return a basic wage calculation without calling base
+                // You could implement custom logic here or return zero
+                return new ExplainedNumber(0f, includeDescriptions);
+            }
+            
             ExplainedNumber value = base.GetTotalWage(mobileParty, troopRoster, includeDescriptions);
             if (mobileParty != MobileParty.MainParty) return value;
             var career = PlayerCareerExtension.GetCareer();
@@ -43,9 +56,9 @@ namespace RealmsForgotten.Models
                 var choice = career.AllChoices.First(c => c.StringId == "KnightErrant1_5");
                 float totalReduction = 0;
                 foreach (TroopRosterElement troop in mobileParty.MemberRoster.GetTroopRoster())
-                    if (troop.Character.IsMounted)
-                        totalReduction += troop.Number * troop.Character.TroopWage;// * choice.Passive!.EffectMagnitude;
-                if (totalReduction > 0) value.Add(-1 * totalReduction, new("{=knight_cav_wage_reduction}Class knight cavalry wage reduction"));
+                    if (troop.Character != null && troop.Character.IsMounted) // Add null check
+                        totalReduction += troop.Number * troop.Character.TroopWage;
+                if (totalReduction > 0) value.Add(-1 * totalReduction, new TextObject("{=knight_cav_wage_reduction}Class knight cavalry wage reduction"));
             }
 
             if (PlayerCareerExtension.HasCareerChoice("WanderingBlade2_5"))
@@ -53,10 +66,10 @@ namespace RealmsForgotten.Models
                 int totalReduction = 0;
                 foreach (TroopRosterElement troop in mobileParty.MemberRoster.GetTroopRoster())
                 {
-                    if (troop.Character.Occupation == Occupation.Mercenary)
+                    if (troop.Character != null && troop.Character.Occupation == Occupation.Mercenary) // Add null check
                         totalReduction += troop.Number * troop.Character.TroopWage / 3;
                 }
-                if (totalReduction > 0) value.Add(-1 * totalReduction, new("{=merc_merc_wage_reduction}Class mercenary wage reduction"));
+                if (totalReduction > 0) value.Add(-1 * totalReduction, new TextObject("{=merc_merc_wage_reduction}Class mercenary wage reduction"));
             }
             return value;
         }

@@ -31,6 +31,8 @@ namespace RealmsForgotten.Quest.FourthUpdate.BehaviorTrees.CanyonWitchTree
             new(197.1086f, 244.6261f, 39.98999f),
             new(197.1481f, 242.8306f, 39.98999f),
             new(197.1171f, 240.5379f, 39.59999f),
+            new(197.1173f, 241.5379f, 39.79999f),
+            new(197.1183f, 244.5379f, 39.89999f),
         };
 
         static readonly Vec3 lineToCrossForVoiceLineAPointA = new(289.0656f, 58.84806f, 30.44381f);

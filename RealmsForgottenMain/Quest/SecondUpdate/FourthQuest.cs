@@ -122,7 +122,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
                 Clan hellboundClan = Clan.FindFirst(x => x.StringId == "cs_nelrog_raiders");
                 CampaignVec2 spawnPos = MobileParty.MainParty.Position;
-                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("hellbound_outlaw_template");
                 MobileParty hellboundParty = BanditPartyComponent.CreateBanditParty("quest_hellbound_party", hellboundClan, null, true, looterTemplate, spawnPos);
 
                 TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
@@ -145,7 +145,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                     PlayerEncounter.RestartPlayerEncounter(hellboundParty.Party, MobileParty.MainParty.Party, true);
                     PlayerEncounter.StartBattle();
                 }
-            }
+            }           
 
             // 👇 this block must be OUTSIDE of the one above
             if (GetDistanceFromMonastery() <= initialDistanceToMonastery * 0.7 && takeBossToLordLog?.CurrentProgress == 3)
@@ -205,10 +205,67 @@ namespace RealmsForgotten.Quest.SecondUpdate
             PartyBase.MainParty.ItemRoster.AddToCounts(new EquipmentElement(MBObjectManager.Instance.GetObject<ItemObject>("rfmisc_anorit_fire_stone_t3_rfthrowing50")), 10);
 
             captureHellboundLog = AddLog(GameTexts.FindText("rf_fourth_quest_third_log"));
-
+            SpawnHellboundQuestPartiesNearSeaHideouts();
             goToMonasteryLog.UpdateCurrentProgress(1);
         }
 
+        private void SpawnHellboundQuestPartiesNearSeaHideouts()
+        {
+            SpawnHellboundAtHideout("hideout_seaside_22");
+            SpawnHellboundAtHideout("hideout_seaside_8");
+            SpawnHellboundAtHideout("hideout_seaside_15");
+        }
+
+        private void SpawnHellboundAtHideout(string hideoutId)
+        {
+            Settlement hideout = Settlement.Find(hideoutId);
+            if (hideout == null)
+                return;
+
+            Clan hellboundClan = Clan.FindFirst(x => x.StringId == "hellbound_outlaw");
+            PartyTemplateObject template = Campaign.Current.ObjectManager
+                .GetObject<PartyTemplateObject>("hellbound_outlaw_template");
+
+            if (hellboundClan == null || template == null)
+                return;
+
+            CampaignVec2 spawnPos = hideout.GatePosition;
+
+            // Create party with BanditPartyComponent to properly flag it as a bandit party
+            MobileParty party = BanditPartyComponent.CreateBanditParty(
+                "quest_hellbound_" + hideoutId,
+                hellboundClan,
+                hideout.Hideout, // Must be a Hideout, not Settlement
+                false, // isBossParty parameter
+                template, // PartyTemplateObject parameter
+                spawnPos); // spawn position
+
+            // Build additional troops if needed (the template already spawns basic troops)
+            string[] units =
+            {
+        "hellbound_thief",
+        "hellbound_bandit",
+        "hellbound_chief"
+    };
+
+            CharacterObject boss = CharacterObject.Find("hellbound_boss");
+            if (boss != null)
+                party.MemberRoster.AddToCounts(boss, 1);
+
+            for (int i = 0; i < 35; i++)
+            {
+                CharacterObject troop = CharacterObject.Find(units.GetRandomElement());
+                if (troop != null)
+                    party.MemberRoster.AddToCounts(troop, 1);
+            }
+
+            // Set party properties
+            party.Party.SetCustomName(new TextObject("{=rf_hellbound_party}Hellbound Raiders"));
+            party.Aggressiveness = 100f;
+            // IsBandit is now automatically true because we used BanditPartyComponent.CreateBanditParty
+            party.SetPartyUsedByQuest(true); // Mark as quest party to prevent despawn
+            party.SetMoveEngageParty(MobileParty.MainParty, MobileParty.NavigationType.Default);
+        }
         private TextObject LineWithPlayerLink()
         {
             TextObject text = GameTexts.FindText("rf_fourth_quest_monk_dialog_11");

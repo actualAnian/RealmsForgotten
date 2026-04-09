@@ -17,23 +17,32 @@ namespace RealmsForgotten.Quest.FourthUpdate
         bool isInitialized = false;
         bool _isPlayerDead = false;
         float _playerDeadTimer = 0f;
+
         public override void OnMissionTick(float dt)
         {
-            string demonId = VortiakWitchTree.demonSummonStringId;
-            Agent balrog = Mission.Agents.FirstOrDefault(agent => agent.Character?.StringId == demonId);
             timer += dt;
             if (timer < 1) return;
             base.OnMissionTick(dt);
+
             // Check if the mission is over
             if (!isInitialized)
             {
                 PsaiCore.Instance.TriggerMusicTheme(41, 0);
                 Agent witch = Mission.Agents.FirstOrDefault(agent => agent.Character?.StringId == "evil_witch");
-                witch.TeleportToPosition(VortiakWitchTree.platformA);
-                balrog.Health = _balrogHealth;
-                balrog.TeleportToPosition(VortiakWitchTree.platformC);
+                if (witch != null)
+                {
+                    witch.TeleportToPosition(VortiakWitchTree.platformA);
+                    InitializeWitch(witch);
+                }
                 isInitialized = true;
-                InitializeWitch(witch);
+            }
+
+            // Set balrog health when it spawns
+            string demonId = VortiakWitchTree.demonSummonStringId;
+            Agent balrog = Mission.Agents.FirstOrDefault(agent => agent.Character?.StringId == demonId);
+            if (balrog != null && balrog.Health > _balrogHealth)
+            {
+                balrog.Health = _balrogHealth;
             }
 
             if (_isPlayerDead) //kill the player
@@ -45,25 +54,8 @@ namespace RealmsForgotten.Quest.FourthUpdate
                     KillCharacterAction.ApplyByWounds(Hero.MainHero, true);
                 }
             }
-            //if (Input.IsKeyPressed(InputKey.G))
-            //{
-            //    Agent.Main.TeleportToPosition(VortiakWitchTree.entrance);
-            //}
-            //if (Input.IsKeyPressed(InputKey.H))
-            //{
-            //    Agent.Main.TeleportToPosition(VortiakWitchTree.platformA);
-            //}
-            //if (Input.IsKeyPressed(InputKey.J))
-            //{
-            //    Agent.Main.TeleportToPosition(VortiakWitchTree.platformB);
-            //}
-            //if (Input.IsKeyPressed(InputKey.K))
-            //{
-            //    Agent.Main.TeleportToPosition(VortiakWitchTree.playerPositionToStartStage3);
-            //    //MBMusicManager.Current.StartThemeWithConstantIntensity(MusicTheme.MainTheme);
-            //    //PsaiProject.LoadProjectFromXmlFile()
-            //}
         }
+
         public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
         {
             if (affectedAgent.IsHero && affectedAgent.Character.StringId == Hero.MainHero.CharacterObject.StringId)
@@ -72,6 +64,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
             }
             base.OnAgentRemoved(affectedAgent, affectorAgent, agentState, blow);
         }
+
         public void InitializeWitch(Agent witch)
         {
             witch.Health = witch.HealthLimit * 3;

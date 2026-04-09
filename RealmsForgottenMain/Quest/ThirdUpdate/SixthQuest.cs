@@ -103,6 +103,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             CampaignEvents.MobilePartyDestroyed.AddNonSerializedListener(this, OnMobilePartyDestroyed);
             CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, HourlyTick);
             CampaignEvents.TickEvent.AddNonSerializedListener(this, OnTick);
+            CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, DailyTick);
         }
 
         private void OnTick(float obj)
@@ -113,6 +114,49 @@ namespace RealmsForgotten.Quest.SecondUpdate
                     new ConversationCharacterData(CharacterObject.PlayerCharacter),
                     new ConversationCharacterData(TheOwl.CharacterObject)
                 );
+            }
+        }
+
+        private void DailyTick()
+        {
+            // Only print locations if the demon lords have been spawned (after the third objective is active)
+            if (defeatDemonLordPartiesLog == null)
+            {
+                return;
+            }
+
+            // Find all demon lord parties
+            List<MobileParty> demonLordParties = MobileParty.All
+                .Where(party => party.IsActive && DemonLords.ContainsKey(party.StringId))
+                .ToList();
+
+            if (demonLordParties.Count == 0)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    "No demon lord parties are currently active on the map.",
+                    Colors.Yellow));
+                return;
+            }
+
+            InformationManager.DisplayMessage(new InformationMessage(
+                $"===== Demon Lord Locations Report (Day {(int)CampaignTime.Now.ToDays}) =====",
+                Colors.Red));
+
+            foreach (MobileParty demonParty in demonLordParties)
+            {
+                Settlement nearestSettlement = SettlementHelper.FindNearestSettlement(demonParty.GetPosition2D);
+                string nearestSettlementName = nearestSettlement?.Name?.ToString() ?? "unknown location";
+                float distance = nearestSettlement != null
+                    ? demonParty.GetPosition2D.Distance(nearestSettlement.GetPosition2D)
+                    : 0f;
+
+                string partyLeaderName = demonParty.LeaderHero?.Name?.ToString() ?? demonParty.Name?.ToString() ?? "Unknown Demon Lord";
+                int troopCount = demonParty.MemberRoster.TotalManCount;
+
+                string message = $"[Demon Lord] {partyLeaderName} - {troopCount} troops - " +
+                               $"Near {nearestSettlementName} (Distance: {distance:F1})";
+
+                InformationManager.DisplayMessage(new InformationMessage(message, Colors.Red));
             }
         }
 
@@ -214,18 +258,26 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 CreateDemonLordParty(lord.CharacterId, lord.ClanId, lord.SpawnSettlement, lord.TroopDetails);
         }
 
-        private void CreateDemonLordParty(string demonLordId, string clanId, Settlement nearTown, List<TroopDetail> troopDetails)
+       private void CreateDemonLordParty(string demonLordId, string clanId, Settlement nearTown, List<TroopDetail> troopDetails)
         {
             try
             {
                 Clan clan = Clan.FindFirst(x => x.StringId == clanId) ?? throw new Exception($"Clan with ID {clanId} not found.");
-                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
-                MobileParty party = BanditPartyComponent.CreateBanditParty(clanId, clan, null, false, looterTemplate, nearTown.Position) ?? throw new Exception($"Failed to create party for demon lord {demonLordId}.");
+                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("cs_devils_raiders_boss_party_template");
+
+                // Use settlement's gate position directly (it's already a CampaignVec2)
+                CampaignVec2 safeSpawnPosition = nearTown.GatePosition;
+                
+                MobileParty party = BanditPartyComponent.CreateBanditParty(clanId, clan, null, true, looterTemplate, safeSpawnPosition);
+                
+                if (party == null)
+                {
+                    throw new Exception($"Failed to create party for demon lord {demonLordId}.");
+                }
+                
                 TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
-                Dictionary<CharacterObject, int> initialTroops = new Dictionary<CharacterObject, int>();
                 CharacterObject character = CharacterObject.Find(demonLordId) ?? throw new Exception($"lord with id {demonLordId} not found");
                 troopRoster.AddToCounts(character, 1);
-                initialTroops[character] = 1;
 
                 foreach (var troopDetail in troopDetails)
                 {
@@ -236,18 +288,31 @@ namespace RealmsForgotten.Quest.SecondUpdate
                         continue;
                     }
                     troopRoster.AddToCounts(troop, troopDetail.Quantity);
-                    initialTroops[troop] = troopDetail.Quantity;
                 }
-                party.InitializeMobilePartyAroundPosition(troopRoster, TroopRoster.CreateDummyTroopRoster(), nearTown.Position, 50f, 10f);
+
+                // Initialize party at the safe position
+                party.InitializeMobilePartyAroundPosition(
+                    troopRoster,
+                    TroopRoster.CreateDummyTroopRoster(),
+                    safeSpawnPosition,
+                    10f,
+                    10f
+                );
+
                 party.Party.SetCustomName(new TextObject($"Demon Lord {character.Name} Party"));
                 party.Aggressiveness = 10f;
-                party.SetMovePatrolAroundPoint(nearTown.Position, MobileParty.NavigationType.All);
+
+                // Set patrol around the settlement gate position (guaranteed safe area)
+                party.SetMovePatrolAroundPoint(safeSpawnPosition, MobileParty.NavigationType.All);
+
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"Demon Lord {character.Name} has emerged near {nearTown.Name}!",
+                    Colors.Red));
 
                 CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, () =>
                 {
                     if (party != null && party.IsActive)
                     {
-                        //EngageNearbyEnemies(party);
                         Settlement nearestSettlement = SettlementHelper.FindNearestSettlement(party.GetPosition2D);
                         string nearestSettlementName = nearestSettlement != null ? nearestSettlement.Name.ToString() : "unknown settlement";
                         InformationManager.DisplayMessage(new InformationMessage($"You hear of an army from hell, laying ruin on the lands near the settlement of {nearestSettlementName}."));

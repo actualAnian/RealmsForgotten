@@ -56,19 +56,19 @@ namespace RealmsForgotten.Quest.FourthUpdate
         [SaveableField(17)] private bool _hordeHasSpawned;
         [SaveableField(18)] private JournalLog _defeatHordeLog;
         [SaveableField(28)] private bool _pendingFinalizeAfterVideo;
-
+        [SaveableField(29)] private bool _pendingPlayCutscene = false;
 
 
         // ================== IDs e Constantes ==================
         private const string URKHAI_TRIGGER_SETTLEMENT_ID = "town_Urk1";
         private const string ORC_CONVOY_PARTY_ID = "rf_orc_convoy_party";
         private const string ORC_PRISONER_CHARACTER_ID = "urkhai_veteran_infantry";
-        private const string AMBUSH_SITE_SETTLEMENT_ID = "deformed_bandits_ambush";
+        private const string AMBUSH_SITE_SETTLEMENT_ID = "deformed_ambush_hideout";
         private const string FIRST_TREE_SETTLEMENT_ID = "town_FirstTree";
         private const string PRIESTESS_ID = "elvean_first_tree_druid_quest";
-        private const string SACRED_WATER_ITEM_ID = "sacredwater";
+        private const string SACRED_WATER_ITEM_ID = "spring_water";
         private const string SACRED_WATER_SITE_ID = "beast_hunt_1";
-        private const string WITCH_LAIR_SETTLEMENT_ID = "winged_witch_final_scene";
+        private const string WITCH_LAIR_SETTLEMENT_ID = "witch_canyon_lair";
 
         // ================== Propriedades ==================
         private Settlement TriggerSettlement => Settlement.Find(URKHAI_TRIGGER_SETTLEMENT_ID);
@@ -84,7 +84,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
         public override string SpecialQuestType => "RfMainQuest";
         public override bool IsRemainingTimeHidden => true;
 
-        private static readonly string[] SACRED_WATER_IDS = { "sacredwater" }; // deixe os 2 se tiver dúvida no XML
+        private static readonly string[] SACRED_WATER_IDS = { "spring_water" }; // deixe os 2 se tiver dúvida no XML
 
         private int CountItemInMainPartyById(params string[] ids)
         {
@@ -267,8 +267,8 @@ namespace RealmsForgotten.Quest.FourthUpdate
             if (settlement == WitchLair && _witchDefeatedInMission)
             {
                 _witchDefeatedInMission = false; // evita repetir
-                InformationManager.DisplayMessage(new InformationMessage("DEBUG: Left Witch Lair after defeating Witch → trigger cutscene.", Colors.Green));
-                PlayFinalCutscene();
+                
+                _pendingPlayCutscene = true;
             }
 
             // Ambush Site
@@ -304,9 +304,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
             // Case 1: Delivering Urkhai Lord
             if (_deliverUrkhaiLordLog != null && _deliverUrkhaiLordLog.CurrentProgress == 0)
             {
-                InformationManager.DisplayMessage(new InformationMessage(
-                    "DEBUG: Near Priestess → opening Lord delivery dialog.", Colors.Green));
-
+                
                 CampaignMapConversation.OpenConversation(
                     new ConversationCharacterData(CharacterObject.PlayerCharacter),
                     new ConversationCharacterData(priestess)
@@ -316,9 +314,6 @@ namespace RealmsForgotten.Quest.FourthUpdate
             // Case 2: Delivering Sacred Water
             if (_returnSacredWaterLog != null && _returnSacredWaterLog.CurrentProgress == 0 && PlayerHasSacredWater())
             {
-                InformationManager.DisplayMessage(new InformationMessage(
-                    "DEBUG: Near Priestess → opening Sacred Water dialog.", Colors.Green));
-
                 CampaignMapConversation.OpenConversation(
                     new ConversationCharacterData(CharacterObject.PlayerCharacter),
                     new ConversationCharacterData(priestess)
@@ -401,29 +396,30 @@ namespace RealmsForgotten.Quest.FourthUpdate
         {
             if (imission is Mission mission)
             {
-                // Witch Lair (seu código original)
+                // 🔍 DIAGNOSTIC: Check the condition
+                if (Settlement.CurrentSettlement == WitchLair)
+                {
+                   
+                }
+
+                // Witch Lair
                 if (Settlement.CurrentSettlement == WitchLair && _returnSacredWaterLog?.CurrentProgress == 1)
                 {
-                    InformationManager.DisplayMessage(new InformationMessage(
-                "DEBUG: Entered Witch Lair → adding WingedWitchFinalMissionLogic.", Colors.Yellow));
-
+                   
                     mission.AddMissionBehavior(new WingedWitchFinalMissionLogic());
                 }
+        
                 if (Settlement.CurrentSettlement == AmbushSite && _goToAmbushSiteLog?.CurrentProgress == 0)
                 {
                     _goToAmbushSiteLog.UpdateCurrentProgress(1);
                 }
 
-                // (Opcional) se quiser fechar pelo BOSS derrotado, mantemos o hook:
                 if (Settlement.CurrentSettlement == AmbushSite && _goToAmbushSiteLog?.CurrentProgress == 1)
                 {
-                    InformationManager.DisplayMessage(new InformationMessage(
-                        "DEBUG: Added RecordDamageMissionLogic for ambush boss.", Colors.Yellow));
+                   
 
                     mission.AddMissionBehavior(new RecordDamageMissionLogic((victim, attacker, damage) =>
                     {
-                       
-
                         if (victim?.Character != null &&
                             victim.Character.StringId == AMBUSH_BOSS_ID &&
                             damage >= victim.Health)
@@ -436,15 +432,13 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
                             RemoveTrackedObject(AmbushSite);
                             AddLog(new TextObject("The ambush was a trap! Speak to the Owl to decide your next move."));
-
-                            InformationManager.DisplayMessage(new InformationMessage(
-                                "DEBUG: Ambush boss defeated → log set to 2, flags set.", Colors.Green));
+                                                       
                         }
                     }));
                 }
-  
-            }
-        }
+    }
+}
+
 
 
 
@@ -453,53 +447,11 @@ namespace RealmsForgotten.Quest.FourthUpdate
             if (ActiveNinthQuestInstance != null)
             {
                 ActiveNinthQuestInstance._witchDefeatedInMission = true;
-
-                InformationManager.DisplayMessage(new InformationMessage(
-                    "DEBUG: Winged Witch defeated → flag set. Quest will complete after leaving the Witch Lair.",
-                    Colors.Green));
+                               
             }
         }
 
-        private void PlayFinalCutscene()
-        {
-            try
-            {
-                var gsm = Game.Current.GameStateManager;
-                var video = gsm.CreateState<VideoPlaybackState>();
-
-                string modPath = ModuleHelper.GetModuleFullPath("RealmsForgotten");
-                string basePath = System.IO.Path.Combine(modPath, "Videos/Quest_Cutscene");
-                string baseName = "rf_final_cutscene"; // seus arquivos .ivf/.ogg/.srt
-
-                string videoPath = System.IO.Path.Combine(basePath, baseName + ".ivf");
-                string audioPath = System.IO.Path.Combine(basePath, baseName + ".ogg");
-                string subsBase = System.IO.Path.Combine(basePath, baseName);
-
-                video.SetStartingParameters(videoPath, audioPath, subsBase);
-
-                // Delegate chamado quando termina ou pula
-                video.SetOnVideoFinisedDelegate(() =>
-                {
-                    try
-                    {
-                        gsm.PopState(); // fecha o vídeo, volta pro MapState
-                    }
-                    catch { }
-
-                    _pendingFinalizeAfterVideo = true; // marca para finalizar quest no Tick
-                });
-
-                // ✅ Usa PushState (não CleanAndPush) → mantém MapState abaixo
-                gsm.PushState(video);
-            }
-            catch (Exception ex)
-            {
-                InformationManager.DisplayMessage(
-                    new InformationMessage($"DEBUG: Could not play cutscene: {ex.Message}", Colors.Red));
-
-                _pendingFinalizeAfterVideo = true; // fallback
-            }
-        }
+        
         protected override void HourlyTick()
         {
             if (!_convoySpawned && TriggerSettlement != null && _travelToUrkhaiLog?.CurrentProgress == 0)
@@ -567,7 +519,23 @@ namespace RealmsForgotten.Quest.FourthUpdate
 
         private void OnTick(float dt)
         {
-           
+            if (_pendingPlayCutscene)
+            {
+                var currentState = Game.Current?.GameStateManager?.ActiveState;
+
+                // ✅ Wait for BOTH conditions:
+                if (currentState is MapState &&           // Engine is in map state
+                    Settlement.CurrentSettlement == null)  // Settlement cleanup complete
+                {
+                    _pendingPlayCutscene = false;
+                    PlayFinalCutscene(); // Now it's safe - RGL is ready
+                }
+                else
+                {
+                   
+                    return;
+                }
+            }
             if (_pendingOrcPrisonerDialogue)
             {
                 _pendingOrcPrisonerDialogue = false;
@@ -610,8 +578,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
             {
                 _pendingPostAmbushOwlDialogue = false;
 
-                InformationManager.DisplayMessage(new InformationMessage(
-                    "DEBUG: Trying to open Owl post-ambush conversation.", Colors.Yellow));
+              
 
                 Hero owl = Hero.FindFirst(h => h.StringId == "rf_the_owl");
                 if (owl != null)
@@ -620,8 +587,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
                         new ConversationCharacterData(CharacterObject.PlayerCharacter),
                         new ConversationCharacterData(owl.CharacterObject, PartyBase.MainParty));
 
-                    InformationManager.DisplayMessage(new InformationMessage(
-                        "DEBUG: Owl found, conversation opened.", Colors.Green));
+                   
                 }
                 else
                 {
@@ -679,7 +645,46 @@ namespace RealmsForgotten.Quest.FourthUpdate
         }
 
 
+        private void PlayFinalCutscene()
+        {
+            try
+            {
+                var gsm = Game.Current.GameStateManager;
+                var video = gsm.CreateState<VideoPlaybackState>();
 
+                string modPath = ModuleHelper.GetModuleFullPath("RealmsForgotten");
+                string basePath = System.IO.Path.Combine(modPath, "Videos/Quest_Cutscene");
+                string baseName = "rf_final_cutscene"; // seus arquivos .ivf/.ogg/.srt
+
+                string videoPath = System.IO.Path.Combine(basePath, baseName + ".ivf");
+                string audioPath = System.IO.Path.Combine(basePath, baseName + ".ogg");
+                string subsBase = System.IO.Path.Combine(basePath, baseName);
+
+                video.SetStartingParameters(videoPath, audioPath, subsBase);
+
+                // Delegate chamado quando termina ou pula
+                video.SetOnVideoFinisedDelegate(() =>
+                {
+                    try
+                    {
+                        gsm.PopState(); // fecha o vídeo, volta pro MapState
+                    }
+                    catch { }
+
+                    _pendingFinalizeAfterVideo = true; // marca para finalizar quest no Tick
+                });
+
+                // ✅ Usa PushState (não CleanAndPush) → mantém MapState abaixo
+                gsm.PushState(video);
+            }
+            catch (Exception ex)
+            {
+                InformationManager.DisplayMessage(
+                    new InformationMessage($"DEBUG: Could not play cutscene: {ex.Message}", Colors.Red));
+
+                _pendingFinalizeAfterVideo = true; // fallback
+            }
+        }
 
         protected override void SetDialogs()
         {
@@ -703,10 +708,8 @@ namespace RealmsForgotten.Quest.FourthUpdate
      .Consequence(() => { _owlDialogueTriggered = true; })
      .CloseDialog();
 
-
-
-        // ✅ DIÁLOGO ATUALIZADO PARA O PADRÃO DA FOURTHQUEST
-        private DialogFlow OwlFollowUpDialog() => DialogFlow.CreateDialogFlow("start", 125)
+      
+        private DialogFlow OwlFollowUpDialog() => DialogFlow.CreateDialogFlow("start", 130)
             .NpcLine(new TextObject("The 'Dark Queen'... It must be the Witch. It seems she has found powerful allies in the Urkhai."))
             .Condition(() => Hero.OneToOneConversationHero?.StringId == "rf_the_owl" && _interceptConvoyLog?.CurrentProgress == 1 && _captureOrcLordLog == null)
             .PlayerLine(new TextObject("This complicates things. A common soldier won't betray her. We need someone higher up."))
@@ -837,7 +840,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
             convoyRoster.AddToCounts(CharacterObject.Find("urkhai_warrior_infantry"), 50);
             TroopRoster prisonerRoster = TroopRoster.CreateDummyTroopRoster();
             prisonerRoster.AddToCounts(CharacterObject.Find("imperial_recruit"), 15);
-            PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+            PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("patrol_party_urkhai_template_level_3");
             MobileParty _orcConvoyParty = BanditPartyComponent.CreateBanditParty(ORC_CONVOY_PARTY_ID, urkhaiClan, null, true, looterTemplate, MobileParty.MainParty.Position); //@TODO test
 
             if (_orcConvoyParty == null) { InformationManager.DisplayMessage(new InformationMessage("Error: Failed to create convoy party.", Colors.Red)); return; }
@@ -854,12 +857,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
   );
             AddTrackedObject(_orcConvoyParty);
             InformationManager.DisplayMessage(new InformationMessage("The Urkhai convoy led by Murgash the Chain-Keeper has been spotted nearby!", Colors.Yellow));
-        }     
-
-        private void SpawnDeformedAmbushParty()
-        {
-            // Este método foi movido para dentro de HourlyTick para simplificar
-        }
+        }            
 
         private void ShowPriestessWarningInquiry()
         {
@@ -874,7 +872,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
             if (spawnNear == null) { InformationManager.DisplayMessage(new InformationMessage("Error: Spawn location for horde not found.", Colors.Red)); return; }
             _hordeLeaderHero = HeroCreator.CreateSpecialHero(CharacterObject.Find("deformed_villager_boss"), null, deformedClan, null, 35);
             _hordeLeaderHero.SetName(new TextObject("Ghor'Lag the Unraveler"), new TextObject("The Blighted One"));
-            PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+            PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("deformed_villagers_template");
             MobileParty banditParty = BanditPartyComponent.CreateBanditParty("deformed_horde_party", deformedClan, null, true, looterTemplate, spawnNear.Position); //@TODO
 
             TroopRoster hordeRoster = TroopRoster.CreateDummyTroopRoster();
@@ -913,5 +911,6 @@ namespace RealmsForgotten.Quest.FourthUpdate
             InformationManager.DisplayMessage(new InformationMessage(
                 "DEBUG: NinthQuest listeners removed after quest completion.", Colors.Yellow));
         }
+       
     }
 }
