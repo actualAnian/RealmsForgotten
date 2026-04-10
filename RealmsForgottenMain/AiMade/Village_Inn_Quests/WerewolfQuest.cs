@@ -14,6 +14,8 @@ using TaleWorlds.SaveSystem;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.MountAndBlade;
 using System;
+using Helpers;
+using TaleWorlds.ObjectSystem;
 
 namespace RealmsForgotten.AiMade.Village_Inn_Quests
 {
@@ -68,7 +70,7 @@ namespace RealmsForgotten.AiMade.Village_Inn_Quests
                 _playerJustAcceptedQuest = false;
         }
 
-        // === Batalha estilo Poachers mas forçando só o player ===
+        TroopRoster _backupRoster;
         public void StartQuestBattle(Settlement village)
         {
             if (village == null || village.Village != _targetVillage)
@@ -77,8 +79,8 @@ namespace RealmsForgotten.AiMade.Village_Inn_Quests
             var werewolfChar = CharacterObject.All.FirstOrDefault(c => c.StringId == "werewolf");
             if (werewolfChar == null)
                 return;
-
-            _werewolfParty = BanditPartyComponent.CreateBanditParty("rf_werewolf_party_" + village.StringId, Clan.BanditFactions.First(), null, false, null, village.GatePosition); //@TODO
+            var closestHideout = SettlementHelper.FindNearestHideoutToSettlement(village, MobileParty.NavigationType.All);
+            _werewolfParty = BanditPartyComponent.CreateBanditParty("rf_werewolf_party_" + village.StringId, Clan.BanditFactions.First(), closestHideout, false, null, village.GatePosition); //@TODO
             _werewolfParty.InitializeMobilePartyAroundPosition(
                 new TroopRoster(_werewolfParty.Party),
                 new TroopRoster(_werewolfParty.Party),
@@ -90,7 +92,7 @@ namespace RealmsForgotten.AiMade.Village_Inn_Quests
             _werewolfParty.SetPartyUsedByQuest(true);
             _werewolfParty.Ai.DisableAi();
 
-            var backupRoster = MobileParty.MainParty.MemberRoster.CloneRosterData();
+            _backupRoster = MobileParty.MainParty.MemberRoster.CloneRosterData();
 
             try
             {
@@ -98,20 +100,15 @@ namespace RealmsForgotten.AiMade.Village_Inn_Quests
                 MobileParty.MainParty.MemberRoster.AddToCounts(Hero.MainHero.CharacterObject, 1, true);
 
                 PlayerEncounter.RestartPlayerEncounter(MobileParty.MainParty.Party, _werewolfParty.Party, false);
-                PlayerEncounter.StartBattle();
+
                 PlayerEncounter.Update();
-
+                PlayerEncounter.StartBattle();
                 CampaignMission.OpenBattleMission(village.LocationComplex.GetScene("village_center", 1), false);
-
                 CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnMapEventEnded);
 
                 AddLog(new TextObject("{=rf_werewolf_started}The duel against the werewolf has begun."));
             }
-            finally
-            {
-                MobileParty.MainParty.MemberRoster.Clear();
-                MobileParty.MainParty.MemberRoster.Add(backupRoster);
-            }
+            catch { }
         }
 
         private void OnMapEventEnded(MapEvent mapEvent)
@@ -119,6 +116,8 @@ namespace RealmsForgotten.AiMade.Village_Inn_Quests
             if (_werewolfParty == null || mapEvent == null)
                 return;
 
+            MobileParty.MainParty.MemberRoster.Clear();
+            MobileParty.MainParty.MemberRoster.Add(_backupRoster);
             bool wasAttacker = mapEvent.AttackerSide.Parties.Any(p => p.Party == _werewolfParty.Party);
             bool wasDefender = mapEvent.DefenderSide.Parties.Any(p => p.Party == _werewolfParty.Party);
 
