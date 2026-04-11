@@ -27,14 +27,9 @@ namespace RealmsForgotten.Models
             return _baseModel.GetHideoutSpottingDistance();
         }
 
-        public override float GetPartyRelativeInspectionRange(IMapPoint party)
+        public override float GetPartySeeingRangeBase(MobileParty party)
         {
-            return _baseModel.GetPartyRelativeInspectionRange(party);
-        }
-
-        public override float GetPartySpottingDifficulty(MobileParty spotterParty, MobileParty party)
-        {
-            return _baseModel.GetPartySpottingDifficulty(spotterParty, party);
+            return _baseModel.GetPartySeeingRangeBase(party);
         }
 
         public override ExplainedNumber GetPartySpottingRange(MobileParty party, bool includeDescriptions = false)
@@ -44,8 +39,10 @@ namespace RealmsForgotten.Models
             CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.SpottingRange);
             return value;
         }
-
-        public override float GetPartySpottingRangeBase(MobileParty party) => _baseModel.GetPartySpottingRangeBase(party);
+        public override float GetPartySpottingRatioForMainPartySeeingRange(MobileParty party)
+        {
+            return _baseModel.GetPartySpottingRatioForMainPartySeeingRange(party);
+        }
 
         public override float MaximumSeeingRange()
         {

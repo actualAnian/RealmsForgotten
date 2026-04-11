@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Remoting.Messaging;
 using Helpers;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
@@ -19,14 +20,12 @@ namespace RFCustomSettlements
             _isUnderPlayerCommand = isUnderPlayersCommand;
             _rank = rank; 
             AgentOriginUtilities.GetDefaultTroopTraits(this.Troop, out this._hasThrownWeapon, out this._hasSpear, out this._hasShield, out this._hasHeavyArmor);
-
         }
         public PartyBase Party
         {
             get
             {
                 return _party;
-                //                return this._supplier.GetParty(this._descriptor);
             }
         }
         public IBattleCombatant BattleCombatant
@@ -59,8 +58,6 @@ namespace RFCustomSettlements
             get
             {
                 return characterObject;
-//                return MBObjectManager.Instance.GetObject<CharacterObject>("looter");
-//                return this._supplier.GetTroop(this._descriptor);
             }
         }
         BasicCharacterObject IAgentOriginBase.Troop
@@ -82,7 +79,6 @@ namespace RFCustomSettlements
             get
             {
                 return _isUnderPlayerCommand;
-              //  return this.Troop == Hero.MainHero.CharacterObject || RFAgentOrigin.IsPartyUnderPlayerCommand(this.Party);
             }
         }
         public uint FactionColor
@@ -114,11 +110,11 @@ namespace RFCustomSettlements
                 return _rank;
             }
         }
-
         public bool HasThrownWeapon => _hasThrownWeapon;
         public bool HasHeavyArmor => _hasHeavyArmor;
         public bool HasShield => _hasShield;
         public bool HasSpear => _hasSpear;
+        public bool IsInSameArmyAsPlayer => _isUnderPlayerCommand;
 
         public void SetWounded()
         {
@@ -129,7 +125,6 @@ namespace RFCustomSettlements
                     Party.MemberRoster.AddToCounts(Troop, 0, false, 1, 0, true, -1);
                     NextSceneData.Instance.OnTroopWounded(Troop);
                 }
-                //               this._supplier.OnTroopWounded(this._descriptor);
                 _isRemoved = true;
             }
         }
@@ -158,7 +153,6 @@ namespace RFCustomSettlements
         }
         void IAgentOriginBase.OnScoreHit(BasicCharacterObject victim, BasicCharacterObject captain, int damage, bool isFatal, bool isTeamKill, WeaponComponentData attackerWeapon)
         {
-//            this._supplier.OnTroopScoreHit(this._descriptor, victim, damage, isFatal, isTeamKill, attackerWeapon);
         }
         public void SetBanner(Banner banner)
         {
@@ -178,15 +172,14 @@ namespace RFCustomSettlements
         {
             if (!_isRemoved)
             {
-                //               this._supplier.OnTroopRouted(this._descriptor);
                 _isRemoved = true;
             }
         }
 
-        private bool _hasThrownWeapon;
-        private bool _hasHeavyArmor;
-        private bool _hasShield;
-        private bool _hasSpear;
+        private readonly bool _hasThrownWeapon;
+        private readonly bool _hasHeavyArmor;
+        private readonly bool _hasShield;
+        private readonly bool _hasSpear;
 
         private readonly UniqueTroopDescriptor _descriptor;
         private readonly bool _isUnderPlayerCommand;

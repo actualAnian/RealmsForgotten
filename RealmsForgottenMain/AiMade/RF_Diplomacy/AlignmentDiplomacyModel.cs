@@ -61,10 +61,7 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
         public override int MinimumRelationWithConversationCharacterToJoinKingdom => _baseModel.MinimumRelationWithConversationCharacterToJoinKingdom;
         public override int GiftingTownRelationshipBonus => _baseModel.GiftingTownRelationshipBonus;
         public override int GiftingCastleRelationshipBonus => _baseModel.GiftingCastleRelationshipBonus;
-
-        public override float WarDeclarationScorePenaltyAgainstAllies => _baseModel.WarDeclarationScorePenaltyAgainstAllies;
-
-        public override float WarDeclarationScoreBonusAgainstEnemiesOfAllies => _baseModel.WarDeclarationScoreBonusAgainstEnemiesOfAllies;
+        public override float WarDeclarationScorePenaltyAgainstTradePartners => _baseModel.WarDeclarationScorePenaltyAgainstTradePartners;
 
         public override bool CanSettlementBeGifted(Settlement settlement) => _baseModel.CanSettlementBeGifted(settlement);
         public override float DenarsToInfluence() => _baseModel.DenarsToInfluence();
