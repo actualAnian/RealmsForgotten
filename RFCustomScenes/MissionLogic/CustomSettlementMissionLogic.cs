@@ -175,6 +175,7 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         private void InitializeMission()
         {
+            Mission.IsFriendlyMission = false;
             areaMarkers.AddRange(from area in Mission.ActiveMissionObjects.FindAllWithType<CommonAreaMarker>()
                                  orderby area.AreaIndex
                                  select area);
