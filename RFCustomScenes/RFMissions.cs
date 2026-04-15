@@ -6,10 +6,7 @@ using SandBox.Missions.MissionLogics;
 using SandBox.Missions.MissionLogics.Arena;
 using SandBox.View;
 using SandBox.View.Missions;
-using SandBox.ViewModelCollection;
 using System;
-using System.Collections.Generic;
-using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
@@ -18,8 +15,6 @@ using TaleWorlds.MountAndBlade.Source.Missions.Handlers;
 using TaleWorlds.MountAndBlade.View;
 using TaleWorlds.MountAndBlade.View.MissionViews;
 using TaleWorlds.MountAndBlade.View.MissionViews.Order;
-using TaleWorlds.MountAndBlade.View.MissionViews.Singleplayer;
-using TaleWorlds.MountAndBlade.View.MissionViews.Sound;
 using static RFCustomSettlements.ArenaBuildData;
 
 namespace RFCustomSettlements
@@ -79,6 +74,9 @@ namespace RFCustomSettlements
                 // to check
                 // new StealthAreaMissionLogic()
                 // VisualTrackerMissionBehavior
+
+                new FloatingTextMissionView()
+
             }, true, true);
         }
         [MissionMethod]
