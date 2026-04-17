@@ -31,6 +31,7 @@ using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.InputSystem;
@@ -247,6 +248,16 @@ namespace RealmsForgotten
             MethodInfo damageInfo = AccessTools.Method("Agent:HandleBlow");
             harmony.Patch(ammoMethod, prefix: new HarmonyMethod(typeof(RFSpellAmmo), nameof(RFSpellAmmo.OnWeaponAmmoReloadPatch)));
             harmony.Patch(damageInfo, prefix: new HarmonyMethod(typeof(DamagePatch), nameof(DamagePatch.PreHandleBlow)));
+
+            var targetMethod = NavalDLCMapDistanceModelGetDistancePatch.TargetMethod();
+            var prefix = new HarmonyMethod(
+                typeof(NavalDLCMapDistanceModelGetDistancePatch)
+                    .GetMethod("Prefix", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+            );
+
+            // Apply patch
+            harmony.Patch(targetMethod, prefix: prefix);
+
             QuestPatches.PatchAll();
 
 
@@ -340,6 +351,15 @@ namespace RealmsForgotten
 
         public override void OnNewGameCreated(Game game, object initializerObject)
         {
+            //var a = Settlement.All;
+            //int b = 4;
+            //List<string> withBrokenFaces = new();
+            //foreach (Settlement settlement in a)
+            //{
+            //    if (!settlement.GatePosition.Face.IsValid())
+            //        withBrokenFaces.Add(settlement.StringId);
+
+            //}
             base.OnNewGameCreated(game, initializerObject);
             QuestSubModule.OnNewGameCreated((CampaignGameStarter)initializerObject);
         }
