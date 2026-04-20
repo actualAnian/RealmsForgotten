@@ -249,15 +249,6 @@ namespace RealmsForgotten
             harmony.Patch(ammoMethod, prefix: new HarmonyMethod(typeof(RFSpellAmmo), nameof(RFSpellAmmo.OnWeaponAmmoReloadPatch)));
             harmony.Patch(damageInfo, prefix: new HarmonyMethod(typeof(DamagePatch), nameof(DamagePatch.PreHandleBlow)));
 
-            var targetMethod = NavalDLCMapDistanceModelGetDistancePatch.TargetMethod();
-            var prefix = new HarmonyMethod(
-                typeof(NavalDLCMapDistanceModelGetDistancePatch)
-                    .GetMethod("Prefix", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
-            );
-
-            // Apply patch
-            harmony.Patch(targetMethod, prefix: prefix);
-
             QuestPatches.PatchAll();
 
 
@@ -334,9 +325,9 @@ namespace RealmsForgotten
                 Console.WriteLine("Error in undead_respawn_config.json");
             }
         }
-
         public override void OnGameLoaded(Game game, object initializerObject)
         {
+
             base.OnGameLoaded(game, initializerObject);
 
             if (initializerObject is CampaignGameStarter campaignGameStarter)
@@ -358,7 +349,6 @@ namespace RealmsForgotten
             //{
             //    if (!settlement.GatePosition.Face.IsValid())
             //        withBrokenFaces.Add(settlement.StringId);
-
             //}
             base.OnNewGameCreated(game, initializerObject);
             QuestSubModule.OnNewGameCreated((CampaignGameStarter)initializerObject);
