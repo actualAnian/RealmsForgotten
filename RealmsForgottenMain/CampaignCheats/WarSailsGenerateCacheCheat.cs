@@ -8,37 +8,48 @@ namespace RealmsForgotten.CampaignCheats
 {
     public class SDCGenerator
     {
-        public static void GenerateNavalCaches()
+        const string modPath = "..\\..\\Modules\\RF_Map\\ModuleData\\DistanceCaches\\";
+        readonly static string navalPath = modPath + "settlements_distance_cache_Naval_new.bin";
+        readonly static string allPath = modPath + "settlements_distance_cache_All_new.bin";
+        readonly static string defaultPath = modPath + "settlements_distance_cache_Default_new.bin";
+
+        public static void GenerateNavalCaches(MobileParty.NavigationType navTypeChosen)
         {
-            string modPath = "..\\..\\Modules\\RF_Map\\ModuleData\\DistanceCaches\\";
+            var cache = new SandBoxNavigationCache(navTypeChosen);
+            cache.GenerateCacheData();
+            string path = "";
+            switch (navTypeChosen)
+            {
+                case MobileParty.NavigationType.Naval:
+                    path = navalPath;
+                    break;
+                case MobileParty.NavigationType.All:
+                    path = allPath;
+                    break;
+                case MobileParty.NavigationType.Default:
+                    path = defaultPath;
+                    break;
+                default:
+                    break;
+            }
+            cache.Serialize(path);
 
-            // DEFAULT CACHE CREATION SEEMS TO BE UNECESSAY
-
-            // Generate Default (new) cache
-            //SandBoxNavigationCache defaultCache = new SandBoxNavigationCache(MobileParty.NavigationType.Default);
-            //defaultCache.GenerateCacheData();
-            //string defaultPath = modPath + "settlements_distance_cache_Default_new.bin";
-            //defaultCache.Serialize(defaultPath);
-
-            // Generate Naval cache
-            SandBoxNavigationCache navalCache = new SandBoxNavigationCache(MobileParty.NavigationType.Naval);
-            navalCache.GenerateCacheData();
-            string navalPath = modPath + "settlements_distance_cache_Naval_new.bin";
-            navalCache.Serialize(navalPath);
-
-            // Generate All cache
-            SandBoxNavigationCache allCache = new SandBoxNavigationCache(MobileParty.NavigationType.All);
-            allCache.GenerateCacheData();
-            string allPath = modPath + "settlements_distance_cache_All_new.bin";
-            allCache.Serialize(allPath);
         }
-        // console command to generate SDC
+
         [CommandLineFunctionality.CommandLineArgumentFunction("generate_sdc", "lt")]
         public static string GenerateNavalCaches(List<string> args)
         {
+            if (args.Count == 0)
+                return "Possible options: all, naval, default";
+            if (!Enum.TryParse<MobileParty.NavigationType>(
+                    args[0],
+                    ignoreCase: true,
+                    out var optionChosen))
+                return "Invalid option. Possible options: all, naval, default";
+
             try
             {
-                GenerateNavalCaches();
+                GenerateNavalCaches(optionChosen);
                 return "SDC generated successfully!";
             }
             catch (Exception ex)
