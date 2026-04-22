@@ -176,9 +176,10 @@ namespace RealmsForgotten
                     mission.AddMissionBehavior(new WitchCanyonMissionLogic());
                 //
                 mission.AddMissionBehavior(new SpawnAgentMissionLogic());
+                mission.AddMissionBehavior(new DeferredMissionDamageBehavior());
                 mission.AddMissionBehavior(new AbilityManagerMissionLogic());
                 mission.AddMissionBehavior(new AbilityHUDMissionView());
-                if ((mission.Mode == MissionMode.Battle || mission.Mode == MissionMode.StartUp) && mission.CombatType != Mission.MissionCombatType.ArenaCombat)
+                if (mission.Mode == MissionMode.Battle && mission.CombatType != Mission.MissionCombatType.ArenaCombat)
                 {
                     mission.AddMissionBehavior(new RFEnchantedWeaponsMissionBehavior());
                     mission.AddMissionBehavior(new NecromancerStaffMissionBehavior());

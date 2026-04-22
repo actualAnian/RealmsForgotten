@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using RealmsForgotten.NecromancyAndSummoning.CustomClass;
 using Newtonsoft.Json;
+using NecromancyAndSummoning.CustomClass;
 
-namespace RealmsForgotten.NecromancyAndSummoning.Config
+namespace NecromancyAndSummoning.Config
 {
 	// Token: 0x0200000B RID: 11
 	internal class ItemUnitConfig

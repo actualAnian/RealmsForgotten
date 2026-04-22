@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace RealmsForgotten.NecromancyAndSummoning
+namespace NecromancyAndSummoning
 {
 	// Token: 0x02000007 RID: 7
 	internal class Util
