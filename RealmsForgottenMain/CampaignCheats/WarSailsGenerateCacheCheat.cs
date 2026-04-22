@@ -33,7 +33,6 @@ namespace RealmsForgotten.CampaignCheats
                     break;
             }
             cache.Serialize(path);
-
         }
 
         [CommandLineFunctionality.CommandLineArgumentFunction("generate_sdc", "lt")]
