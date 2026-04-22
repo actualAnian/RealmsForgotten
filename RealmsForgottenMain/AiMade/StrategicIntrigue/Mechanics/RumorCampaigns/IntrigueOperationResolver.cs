@@ -35,6 +35,7 @@ public static class IntrigueOperationResolver
                     ApplyRumorCampaignAction.Apply(state, operation.TargetRulerClan, operation.Power);
                     break;
                 case IntrigueOperationType.PrepareBreakaway:
+                    Kingdom originKingdom = operation.TargetClan.Kingdom;
                     IntrigueBreakOutcome breakOutcome = ApplyInciteBreakAction.Apply(states, kingdomStates, pacts, operation.TargetClan);
                     if (breakOutcome == IntrigueBreakOutcome.None)
                     {
@@ -48,6 +49,7 @@ public static class IntrigueOperationResolver
                         operation.InstigatorClan,
                         operation.TargetClan,
                         operation.TargetRulerClan,
+                        originKingdom,
                         false,
                         false,
                         false,
@@ -87,6 +89,7 @@ public static class IntrigueOperationResolver
                 operation.InstigatorClan,
                 operation.TargetClan,
                 operation.TargetRulerClan,
+                operation.TargetClan.Kingdom,
                 operation.Status == IntrigueOperationStatus.Exposed,
                 !wasConspirable && state.IsConspirable,
                 !wasBreakawayReady && state.IsBreakawayReady,
@@ -105,6 +108,7 @@ public sealed class IntrigueOperationResolution
         Clan instigatorClan,
         Clan targetClan,
         Clan targetRulerClan,
+        Kingdom originKingdom,
         bool wasExposed,
         bool becameConspirable,
         bool becameBreakawayReady,
@@ -114,6 +118,7 @@ public sealed class IntrigueOperationResolution
         InstigatorClan = instigatorClan;
         TargetClan = targetClan;
         TargetRulerClan = targetRulerClan;
+        OriginKingdom = originKingdom;
         WasExposed = wasExposed;
         BecameConspirable = becameConspirable;
         BecameBreakawayReady = becameBreakawayReady;
@@ -127,6 +132,8 @@ public sealed class IntrigueOperationResolution
     public Clan TargetClan { get; }
 
     public Clan TargetRulerClan { get; }
+
+    public Kingdom OriginKingdom { get; }
 
     public bool WasExposed { get; }
 

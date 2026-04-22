@@ -25,6 +25,8 @@ public sealed class StrategicIntrigueConversationBehavior : CampaignBehaviorBase
     private TextObject _lastPactStatusResponse = TextObject.GetEmpty();
     private TextObject _lastAllianceStatusResponse = TextObject.GetEmpty();
     private TextObject _lastRumorStatusResponse = TextObject.GetEmpty();
+    private TextObject _lastObjectiveResponse = TextObject.GetEmpty();
+    private TextObject _lastObjectiveSupportResponse = TextObject.GetEmpty();
     private TextObject _lastForeignIntroResponse = TextObject.GetEmpty();
     private TextObject _lastForeignAllianceResponse = TextObject.GetEmpty();
     private TextObject _lastForeignAllianceStatusResponse = TextObject.GetEmpty();
@@ -69,6 +71,35 @@ public sealed class StrategicIntrigueConversationBehavior : CampaignBehaviorBase
             "rf_si_menu_options",
             "{=rf_si_probe_alignment_npc}{SI_ALIGNMENT_TEXT}",
             SetAlignmentLine,
+            null);
+
+        starter.AddPlayerLine(
+            "rf_si_objective_player",
+            "rf_si_menu_options",
+            "rf_si_objective_response",
+            "{=rf_si_objective_player}What greater design drives this realm?",
+            CanDiscussKingdomObjective,
+            PrepareObjectiveLine);
+        starter.AddDialogLine(
+            "rf_si_objective_npc",
+            "rf_si_objective_response",
+            "rf_si_menu_options",
+            "{=rf_si_objective_npc}{SI_OBJECTIVE_TEXT}",
+            SetObjectiveLine,
+            null);
+        starter.AddPlayerLine(
+            "rf_si_objective_support_player",
+            "rf_si_menu_options",
+            "rf_si_objective_support_response",
+            "{=rf_si_objective_support_player}Then I will put my strength behind that design.",
+            CanSupportKingdomObjective,
+            SupportKingdomObjective);
+        starter.AddDialogLine(
+            "rf_si_objective_support_npc",
+            "rf_si_objective_support_response",
+            "rf_si_menu_options",
+            "{=rf_si_objective_support_npc}{SI_OBJECTIVE_SUPPORT_TEXT}",
+            SetObjectiveSupportLine,
             null);
 
         starter.AddPlayerLine(
@@ -243,7 +274,7 @@ public sealed class StrategicIntrigueConversationBehavior : CampaignBehaviorBase
     private bool CanDiscussIntrigue()
     {
         Hero hero = Hero.OneToOneConversationHero;
-        return IsIntrigueLord(hero);
+        return IsPoliticalLord(hero);
     }
 
     private void PrepareAlignmentLine()
@@ -259,6 +290,76 @@ public sealed class StrategicIntrigueConversationBehavior : CampaignBehaviorBase
     private bool SetAlignmentLine()
     {
         MBTextManager.SetTextVariable("SI_ALIGNMENT_TEXT", _lastAlignmentResponse.ToString());
+        return true;
+    }
+
+    private bool CanDiscussKingdomObjective()
+    {
+        Hero hero = Hero.OneToOneConversationHero;
+        if (!IsPoliticalLord(hero))
+        {
+            return false;
+        }
+
+        StrategicIntrigueCampaignBehavior behavior = global::TaleWorlds.CampaignSystem.Campaign.Current?.GetCampaignBehavior<StrategicIntrigueCampaignBehavior>();
+        return behavior?.HasKingdomObjective(hero.Clan?.Kingdom) == true;
+    }
+
+    private void PrepareObjectiveLine()
+    {
+        Hero hero = Hero.OneToOneConversationHero;
+        StrategicIntrigueCampaignBehavior behavior = global::TaleWorlds.CampaignSystem.Campaign.Current?.GetCampaignBehavior<StrategicIntrigueCampaignBehavior>();
+        _lastObjectiveResponse = behavior?.GetKingdomObjectiveBriefing(hero?.Clan?.Kingdom)
+            ?? new TextObject("{=rf_ko_briefing_missing}There is no settled grand design here to speak of.");
+    }
+
+    private bool SetObjectiveLine()
+    {
+        MBTextManager.SetTextVariable("SI_OBJECTIVE_TEXT", _lastObjectiveResponse.ToString());
+        return true;
+    }
+
+    private bool CanSupportKingdomObjective()
+    {
+        Hero hero = Hero.OneToOneConversationHero;
+        if (!IsPoliticalLord(hero) || hero?.Clan?.Kingdom == null)
+        {
+            return false;
+        }
+
+        StrategicIntrigueCampaignBehavior behavior = global::TaleWorlds.CampaignSystem.Campaign.Current?.GetCampaignBehavior<StrategicIntrigueCampaignBehavior>();
+        return Hero.MainHero?.Clan?.Kingdom == hero.Clan.Kingdom
+            && hero.Clan == hero.Clan.Kingdom.RulingClan
+            && behavior?.HasKingdomObjective(hero.Clan.Kingdom) == true
+            && behavior.IsPlayerSupportingObjective(hero.Clan.Kingdom) == false;
+    }
+
+    private void SupportKingdomObjective()
+    {
+        Hero hero = Hero.OneToOneConversationHero;
+        StrategicIntrigueCampaignBehavior behavior = global::TaleWorlds.CampaignSystem.Campaign.Current?.GetCampaignBehavior<StrategicIntrigueCampaignBehavior>();
+        _lastObjectiveSupportResponse = new TextObject("{=rf_ko_support_default}Words are cheap. We will see if your banner truly follows our design.");
+        if (behavior == null || hero?.Clan?.Kingdom == null)
+        {
+            return;
+        }
+
+        if (behavior.TrySupportKingdomObjective(hero.Clan.Kingdom, out TextObject response))
+        {
+            _lastObjectiveSupportResponse = response;
+            TextObject supportMessage = new TextObject("{=rf_ko_support_started_msg}Your clan is now backing the grand design of {KINGDOM}.");
+            supportMessage.SetTextVariable("KINGDOM", hero.Clan.Kingdom.Name);
+            ShowIntrigueMessage(supportMessage);
+        }
+        else
+        {
+            _lastObjectiveSupportResponse = response;
+        }
+    }
+
+    private bool SetObjectiveSupportLine()
+    {
+        MBTextManager.SetTextVariable("SI_OBJECTIVE_SUPPORT_TEXT", _lastObjectiveSupportResponse.ToString());
         return true;
     }
 
@@ -702,6 +803,13 @@ public sealed class StrategicIntrigueConversationBehavior : CampaignBehaviorBase
             && hero.IsLord
             && hero.Clan.Kingdom != null
             && hero.Clan != hero.Clan.Kingdom.RulingClan;
+    }
+
+    private static bool IsPoliticalLord(Hero hero)
+    {
+        return hero?.Clan != null
+            && hero.IsLord
+            && hero.Clan.Kingdom != null;
     }
 
     private static bool IsForeignAllianceLord(Hero hero)

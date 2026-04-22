@@ -1,3 +1,4 @@
+using System;
 using RealmsForgotten.AiMade.StrategicIntrigue.Core;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Library;
@@ -39,6 +40,39 @@ public sealed class KingdomIntrigueState
 
     [SaveableField(11)]
     private CampaignTime _lastOrganicPactAt;
+
+    [SaveableField(12)]
+    private KingdomObjectiveType _objectiveType;
+
+    [SaveableField(13)]
+    private float _objectiveProgress;
+
+    [SaveableField(14)]
+    private float _objectiveMomentum;
+
+    [SaveableField(15)]
+    private float _objectivePressure;
+
+    [SaveableField(16)]
+    private int _objectiveMilestone;
+
+    [SaveableField(17)]
+    private bool _playerSupportsObjective;
+
+    [SaveableField(18)]
+    private float _objectiveWarScore;
+
+    [SaveableField(19)]
+    private CampaignTime _lastObjectiveRewardAt;
+
+    [SaveableField(20)]
+    private CampaignTime _lastObjectiveDirectiveAt;
+
+    [SaveableField(21)]
+    private bool _playerSupportsRivalAgenda;
+
+    [SaveableField(22)]
+    private float _rivalAgendaStrength;
 
     public Kingdom Kingdom => _kingdom;
 
@@ -102,6 +136,72 @@ public sealed class KingdomIntrigueState
         set => _lastOrganicPactAt = value;
     }
 
+    public KingdomObjectiveType ObjectiveType
+    {
+        get => _objectiveType;
+        set => _objectiveType = value;
+    }
+
+    public float ObjectiveProgress
+    {
+        get => _objectiveProgress;
+        set => _objectiveProgress = value;
+    }
+
+    public float ObjectiveMomentum
+    {
+        get => _objectiveMomentum;
+        set => _objectiveMomentum = value;
+    }
+
+    public float ObjectivePressure
+    {
+        get => _objectivePressure;
+        set => _objectivePressure = value;
+    }
+
+    public int ObjectiveMilestone
+    {
+        get => _objectiveMilestone;
+        set => _objectiveMilestone = value;
+    }
+
+    public bool PlayerSupportsObjective
+    {
+        get => _playerSupportsObjective;
+        set => _playerSupportsObjective = value;
+    }
+
+    public float ObjectiveWarScore
+    {
+        get => _objectiveWarScore;
+        set => _objectiveWarScore = value;
+    }
+
+    public CampaignTime LastObjectiveRewardAt
+    {
+        get => _lastObjectiveRewardAt;
+        set => _lastObjectiveRewardAt = value;
+    }
+
+    public CampaignTime LastObjectiveDirectiveAt
+    {
+        get => _lastObjectiveDirectiveAt;
+        set => _lastObjectiveDirectiveAt = value;
+    }
+
+    public bool PlayerSupportsRivalAgenda
+    {
+        get => _playerSupportsRivalAgenda;
+        set => _playerSupportsRivalAgenda = value;
+    }
+
+    public float RivalAgendaStrength
+    {
+        get => _rivalAgendaStrength;
+        set => _rivalAgendaStrength = value;
+    }
+
     private KingdomIntrigueState()
     {
     }
@@ -114,6 +214,8 @@ public sealed class KingdomIntrigueState
         _lastCountermoveAt = CampaignTime.Now;
         _lastOrganicRumorAt = CampaignTime.Now;
         _lastOrganicPactAt = CampaignTime.Now;
+        _lastObjectiveRewardAt = CampaignTime.Now;
+        _lastObjectiveDirectiveAt = CampaignTime.Zero;
     }
 
     public void ClampValues()
@@ -124,5 +226,11 @@ public sealed class KingdomIntrigueState
         RebellionPressure = MBMath.ClampFloat(RebellionPressure, StrategicIntrigueConstants.MinIntrigueValue, StrategicIntrigueConstants.MaxIntrigueValue);
         CourtFragmentation = MBMath.ClampFloat(CourtFragmentation, StrategicIntrigueConstants.MinIntrigueValue, StrategicIntrigueConstants.MaxIntrigueValue);
         ClaimantPressure = MBMath.ClampFloat(ClaimantPressure, StrategicIntrigueConstants.MinIntrigueValue, StrategicIntrigueConstants.MaxIntrigueValue);
+        ObjectiveProgress = MBMath.ClampFloat(ObjectiveProgress, StrategicIntrigueConstants.MinIntrigueValue, StrategicIntrigueConstants.MaxIntrigueValue);
+        ObjectivePressure = MBMath.ClampFloat(ObjectivePressure, StrategicIntrigueConstants.MinIntrigueValue, StrategicIntrigueConstants.MaxIntrigueValue);
+        ObjectiveWarScore = MBMath.ClampFloat(ObjectiveWarScore, StrategicIntrigueConstants.MinIntrigueValue, StrategicIntrigueConstants.MaxIntrigueValue);
+        RivalAgendaStrength = MBMath.ClampFloat(RivalAgendaStrength, StrategicIntrigueConstants.MinIntrigueValue, StrategicIntrigueConstants.MaxIntrigueValue);
+        ObjectiveMomentum = MBMath.ClampFloat(ObjectiveMomentum, -25f, 25f);
+        ObjectiveMilestone = MathF.Min(4, MathF.Max(0, ObjectiveMilestone));
     }
 }

@@ -35,3 +35,19 @@ public enum IntrigueAllianceRewardType
     None = 0,
     PromisedSettlement = 1
 }
+
+public enum KingdomObjectiveType
+{
+    None = 0,
+    CrushBattanianResistance = 1,
+    NobleWealthSupremacy = 2,
+    PreserveBattanianHomelands = 3,
+    UniteAseraiRealms = 4,
+    ClaimImperialLegitimacy = 5,
+    ForgeBorderEmpire = 6,
+    ArcaneFrontier = 7,
+    SecureMountainHolds = 8,
+    DefileMountainHolds = 9,
+    MartialGlory = 10,
+    UnbreakableRealm = 11
+}

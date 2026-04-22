@@ -129,6 +129,8 @@ public static class ApplyInciteBreakAction
 
                 clanState.ClampValues();
             }
+
+            HandleDeposedRulerAfterClaimantCoup(kingdomStates, originKingdom, oldRulingClan, targetClan);
         }
         else
         {
@@ -150,6 +152,121 @@ public static class ApplyInciteBreakAction
         pact.IsExposed = true;
         state.ClampValues();
         return outcome;
+    }
+
+    private static void HandleDeposedRulerAfterClaimantCoup(
+        Dictionary<Kingdom, KingdomIntrigueState> kingdomStates,
+        Kingdom originKingdom,
+        Clan oldRulingClan,
+        Clan newRulingClan)
+    {
+        if (originKingdom == null
+            || oldRulingClan == null
+            || newRulingClan == null
+            || oldRulingClan == newRulingClan
+            || oldRulingClan.Kingdom != originKingdom)
+        {
+            return;
+        }
+
+        int deposedFiefCount = oldRulingClan.Fiefs.Count();
+        int totalKingdomFiefCount = originKingdom.Fiefs.Count();
+        bool shouldRaiseIndependentWar = deposedFiefCount >= StrategicIntrigueConstants.DeposedRulerIndependentWarFiefThreshold
+            || (totalKingdomFiefCount > 0
+                && ((float)deposedFiefCount / totalKingdomFiefCount) >= StrategicIntrigueConstants.DeposedRulerIndependentWarFiefShareThreshold);
+
+        if (shouldRaiseIndependentWar && deposedFiefCount > 0)
+        {
+            ChangeKingdomAction.ApplyByLeaveWithRebellionAgainstKingdom(oldRulingClan, true);
+            return;
+        }
+
+        Kingdom asylumKingdom = FindRestorationAsylum(originKingdom, oldRulingClan, newRulingClan);
+        if (asylumKingdom == null)
+        {
+            if (deposedFiefCount > 0)
+            {
+                ChangeKingdomAction.ApplyByLeaveWithRebellionAgainstKingdom(oldRulingClan, true);
+            }
+
+            return;
+        }
+
+        ChangeKingdomAction.ApplyByJoinToKingdomByDefection(
+            oldRulingClan,
+            originKingdom,
+            asylumKingdom,
+            CampaignTime.DaysFromNow(StrategicIntrigueConstants.DeposedRulerAsylumWarDurationDays),
+            true);
+
+        if (!asylumKingdom.IsAtWarWith(originKingdom))
+        {
+            DeclareWarAction.ApplyByKingdomDecision(asylumKingdom, originKingdom);
+        }
+
+        if (kingdomStates.TryGetValue(asylumKingdom, out KingdomIntrigueState asylumState))
+        {
+            asylumState.RulerLegitimacy += 4f;
+            asylumState.CourtFragmentation += 2f;
+            asylumState.ClampValues();
+        }
+
+        if (kingdomStates.TryGetValue(originKingdom, out KingdomIntrigueState originState))
+        {
+            originState.RulerLegitimacy -= 6f;
+            originState.CourtFragmentation += 8f;
+            originState.RebellionPressure += 6f;
+            originState.ClampValues();
+        }
+    }
+
+    private static Kingdom FindRestorationAsylum(Kingdom originKingdom, Clan oldRulingClan, Clan newRulingClan)
+    {
+        Hero formerRuler = oldRulingClan.Leader;
+        Hero newRuler = newRulingClan.Leader;
+        if (formerRuler == null)
+        {
+            return null;
+        }
+
+        Kingdom bestKingdom = null;
+        float bestScore = float.MinValue;
+        foreach (Kingdom kingdom in Kingdom.All)
+        {
+            if (kingdom == null
+                || kingdom == originKingdom
+                || kingdom.IsEliminated
+                || kingdom.RulingClan?.Leader == null)
+            {
+                continue;
+            }
+
+            Hero sponsorLeader = kingdom.RulingClan.Leader;
+            float score = 0f;
+            if (kingdom.IsAtWarWith(originKingdom))
+            {
+                score += 30f;
+            }
+
+            if (kingdom.Culture == oldRulingClan.Culture)
+            {
+                score += 12f;
+            }
+
+            int relationToFormerRuler = formerRuler.GetRelation(sponsorLeader);
+            int relationToNewRuler = newRuler == null ? 0 : sponsorLeader.GetRelation(newRuler);
+            score += relationToFormerRuler * 0.85f;
+            score += MathF.Max(0f, (float)(-relationToNewRuler)) * 0.65f;
+            score += kingdom.Fiefs.Count() * 1.5f;
+
+            if (score > bestScore)
+            {
+                bestScore = score;
+                bestKingdom = kingdom;
+            }
+        }
+
+        return bestScore >= 12f ? bestKingdom : null;
     }
 
     private static bool HasSufficientCommitment(ClanIntrigueState state, SecretPact pact, Clan targetClan)

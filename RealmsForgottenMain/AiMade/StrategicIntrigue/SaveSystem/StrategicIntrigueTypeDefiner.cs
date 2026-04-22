@@ -28,6 +28,7 @@ public sealed class StrategicIntrigueTypeDefiner : SaveableTypeDefiner
         AddEnumDefinition(typeof(IntrigueOperationStatus), 13);
         AddEnumDefinition(typeof(IntrigueAllianceObjective), 14);
         AddEnumDefinition(typeof(IntrigueAllianceRewardType), 15);
+        AddEnumDefinition(typeof(KingdomObjectiveType), 16);
     }
 
     protected override void DefineContainerDefinitions()
