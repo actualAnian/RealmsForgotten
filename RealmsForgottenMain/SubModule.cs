@@ -31,6 +31,7 @@ using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.InputSystem;
@@ -175,9 +176,10 @@ namespace RealmsForgotten
                     mission.AddMissionBehavior(new WitchCanyonMissionLogic());
                 //
                 mission.AddMissionBehavior(new SpawnAgentMissionLogic());
+                mission.AddMissionBehavior(new DeferredMissionDamageBehavior());
                 mission.AddMissionBehavior(new AbilityManagerMissionLogic());
                 mission.AddMissionBehavior(new AbilityHUDMissionView());
-                if ((mission.Mode == MissionMode.Battle || mission.Mode == MissionMode.StartUp) && mission.CombatType != Mission.MissionCombatType.ArenaCombat)
+                if (mission.Mode == MissionMode.Battle && mission.CombatType != Mission.MissionCombatType.ArenaCombat)
                 {
                     mission.AddMissionBehavior(new RFEnchantedWeaponsMissionBehavior());
                     mission.AddMissionBehavior(new NecromancerStaffMissionBehavior());
@@ -247,6 +249,7 @@ namespace RealmsForgotten
             MethodInfo damageInfo = AccessTools.Method("Agent:HandleBlow");
             harmony.Patch(ammoMethod, prefix: new HarmonyMethod(typeof(RFSpellAmmo), nameof(RFSpellAmmo.OnWeaponAmmoReloadPatch)));
             harmony.Patch(damageInfo, prefix: new HarmonyMethod(typeof(DamagePatch), nameof(DamagePatch.PreHandleBlow)));
+
             QuestPatches.PatchAll();
 
 
@@ -323,9 +326,9 @@ namespace RealmsForgotten
                 Console.WriteLine("Error in undead_respawn_config.json");
             }
         }
-
         public override void OnGameLoaded(Game game, object initializerObject)
         {
+
             base.OnGameLoaded(game, initializerObject);
 
             if (initializerObject is CampaignGameStarter campaignGameStarter)
@@ -340,6 +343,14 @@ namespace RealmsForgotten
 
         public override void OnNewGameCreated(Game game, object initializerObject)
         {
+            //var a = Settlement.All;
+            //int b = 4;
+            //List<string> withBrokenFaces = new();
+            //foreach (Settlement settlement in a)
+            //{
+            //    if (!settlement.GatePosition.Face.IsValid())
+            //        withBrokenFaces.Add(settlement.StringId);
+            //}
             base.OnNewGameCreated(game, initializerObject);
             QuestSubModule.OnNewGameCreated((CampaignGameStarter)initializerObject);
         }

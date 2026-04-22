@@ -487,7 +487,7 @@ namespace RealmsForgotten.RFCustomSettlements
         private Agent SpawnBandit(RFBanditData currentBanditData, MatrixFrame globalFrame)
         {
             RFAgentOrigin agentToSpawn = PrepareAgentToSpawn(currentBanditData.Id);
-            Agent bandit = Mission.Current.SpawnTroop(agentToSpawn, false, false, false, false, 0, 0, false, false, false, new Vec3?(globalFrame.origin), new Vec2?(globalFrame.rotation.f.AsVec2.Normalized()), "_hideout_bandit", null, FormationClass.NumberOfAllFormations, false);
+            Agent bandit = Mission.Current.SpawnTroop(agentToSpawn, false, false, false, false, 0, 0, false, false, new Vec3?(globalFrame.origin), new Vec2?(globalFrame.rotation.f.AsVec2.Normalized()), "_hideout_bandit", null, FormationClass.NumberOfAllFormations, false);
             if (currentBanditData.TreeData != null)
                 bandit.AddComponent(new BehaviorTreeAgentComponent(bandit, currentBanditData.TreeData.Name, currentBanditData.TreeData.Params));
             return bandit;
@@ -510,7 +510,7 @@ namespace RealmsForgotten.RFCustomSettlements
                 {
                     UniqueTroopDescriptor descriptor = flattenedTR.FindIndexOfCharacter(character);
                     RFAgentOrigin troopToSpawn = new(Hero.MainHero.PartyBelongedTo.Party, descriptor, character.Tier, character, true);
-                    _ = Mission.Current.SpawnTroop(troopToSpawn, true, true, false, false, 0, 0, true, true, true, null, null, null, null, FormationClass.NumberOfAllFormations, false);
+                    _ = Mission.Current.SpawnTroop(troopToSpawn, true, true, false, false, 0, 0, true, true, null, null, null, null, FormationClass.NumberOfAllFormations, false);
                 }
             }
             foreach (Formation formation in Mission.Current.AttackerTeam.FormationsIncludingEmpty)

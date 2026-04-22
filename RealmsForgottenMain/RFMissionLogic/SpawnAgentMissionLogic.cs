@@ -57,7 +57,6 @@ namespace RealmsForgotten.RFMissionLogic
                 formationTroopIndex: 0,
                 isAlarmed: isAlarmed,
                 wieldInitialWeapons: true,
-                forceDismounted: false,
                 initialPosition: agentPosition,
                 initialDirection: spawnDirection,
                 specialActionSetSuffix: null,

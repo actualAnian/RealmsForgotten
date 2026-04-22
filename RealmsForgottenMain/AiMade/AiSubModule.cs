@@ -3,6 +3,7 @@ using RealmsForgotten.AiMade.Career;
 using RealmsForgotten.AiMade.Managers.RealmsForgotten.AiMade.Managers;
 using RealmsForgotten.AiMade.Models;
 using RealmsForgotten.AiMade.Patches;
+using RealmsForgotten.AiMade.StrategicIntrigue.Campaign;
 using RealmsForgotten.Behaviors;
 using System;
 using TaleWorlds.CampaignSystem;
@@ -69,6 +70,8 @@ namespace RealmsForgotten.AiMade
             customItemCategories.Initialize();
 
             // Add other behaviors
+            campaignGameStarter.AddBehavior(new StrategicIntrigueCampaignBehavior());
+            campaignGameStarter.AddBehavior(new StrategicIntrigueConversationBehavior());
             campaignGameStarter.AddBehavior(new MercenaryOfferBehavior());
             campaignGameStarter.AddBehavior(new HouseTroopsTownsBehavior());
             campaignGameStarter.AddBehavior(new CultureAppropriateTroopsBehavior());

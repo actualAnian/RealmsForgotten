@@ -37,7 +37,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Bannerlord.UIExtenderEx" Version="2.8.0" IncludeAssets="compile" />
+        <PackageReference Include="Bannerlord.UIExtenderEx" Version="2.13.2" IncludeAssets="compile" />
         <PackageReference Include="Bannerlord.ButterLib" Version="2.8.11" IncludeAssets="compile" />
         <PackageReference Include="Bannerlord.MCM" Version="5.9.1" IncludeAssets="compile" />
     </ItemGroup>

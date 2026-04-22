@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RealmsForgotten.NecromancyAndSummoning.CustomClass
+namespace NecromancyAndSummoning.CustomClass
 {
 	// Token: 0x02000013 RID: 19
 	internal class ItemSummonUnit

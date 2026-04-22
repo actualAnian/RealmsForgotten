@@ -1,18 +1,17 @@
 ﻿using System.IO;
 using System.Reflection;
 using HarmonyLib;
-using RealmsForgotten.NecromancyAndSummoning.Config;
-using RealmsForgotten.NecromancyAndSummoning.Patch;
 using Newtonsoft.Json;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
+using NecromancyAndSummoning.Config;
 
-namespace RealmsForgotten.NecromancyAndSummoning
+namespace NecromancyAndSummoning
 {
 	internal class SubModule : MBSubModuleBase
 	{
-		public static Config.Config Config { get; private set; }
+        public static Config.Config Config { get; private set; }
 		public static ItemUnitConfig ItemUnitConfig { get; private set; }
 		public static UnitUnitConfig UnitUnitConfig { get; private set; }
 		public static UnitBuildFromPartConfig UnitBuildFromPartConfig { get; private set; }
@@ -20,12 +19,12 @@ namespace RealmsForgotten.NecromancyAndSummoning
         protected override void OnSubModuleLoad()
 		{
 			base.OnSubModuleLoad();
-			SubModule.LoadConfig();
+            LoadConfig();
 			harmony.PatchAll();
         }
         public override void OnBeforeMissionBehaviorInitialize(Mission mission)
 		{
-			if(mission.IsSiegeBattle || mission.IsSallyOutBattle || mission.IsFieldBattle)
+			//if(mission.IsSiegeBattle || mission.IsSallyOutBattle || mission.IsFieldBattle)
 				mission.AddMissionBehavior(new NecromancyAndSummoningLogic());
 		}
 		protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
@@ -41,14 +40,14 @@ namespace RealmsForgotten.NecromancyAndSummoning
 		}
 		private static void LoadConfig()
 		{
-            SubModule.Config = JsonConvert.DeserializeObject<Config.Config>(
-                File.ReadAllText(SubModule.ConfigFilePath)) ?? throw new InvalidDataException("Config.json is invalid or empty.");
-            SubModule.ItemUnitConfig = JsonConvert.DeserializeObject<ItemUnitConfig>(
-                File.ReadAllText(SubModule.ItemUnitConfigFilePath)) ?? throw new InvalidDataException("ItemUnitConfig.json is invalid or empty.");
-            SubModule.UnitUnitConfig = JsonConvert.DeserializeObject<UnitUnitConfig>(
-                File.ReadAllText(SubModule.UnitUnitConfigFilePath)) ?? throw new InvalidDataException("UnitUnitConfig.json is invalid or empty.");
-            SubModule.UnitBuildFromPartConfig = JsonConvert.DeserializeObject<UnitBuildFromPartConfig>(
-                File.ReadAllText(SubModule.UnitBuildFromPartConfigFilePath)) ?? throw new InvalidDataException("UnitBuildFromPartConfig.json is invalid or empty.");
+            Config = JsonConvert.DeserializeObject<Config.Config>(
+                File.ReadAllText(ConfigFilePath)) ?? throw new InvalidDataException("Config.json is invalid or empty.");
+            ItemUnitConfig = JsonConvert.DeserializeObject<ItemUnitConfig>(
+                File.ReadAllText(ItemUnitConfigFilePath)) ?? throw new InvalidDataException("ItemUnitConfig.json is invalid or empty.");
+            UnitUnitConfig = JsonConvert.DeserializeObject<UnitUnitConfig>(
+                File.ReadAllText(UnitUnitConfigFilePath)) ?? throw new InvalidDataException("UnitUnitConfig.json is invalid or empty.");
+            UnitBuildFromPartConfig = JsonConvert.DeserializeObject<UnitBuildFromPartConfig>(
+                File.ReadAllText(UnitBuildFromPartConfigFilePath)) ?? throw new InvalidDataException("UnitBuildFromPartConfig.json is invalid or empty.");
         }
         private static readonly string ConfigFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "config.json");
 		private static readonly string ItemUnitConfigFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "item_unit_config.json");
