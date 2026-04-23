@@ -130,7 +130,7 @@ namespace RealmsForgotten.AiMade
                 banditParty.MemberRoster.AddToCounts(troop, adjustedNumber);
             }
 
-            // Remove the InitializeMobilePartyAroundPosition call
+            banditParty.InitializeMobilePartyAroundPosition(banditParty.MemberRoster, banditParty.PrisonRoster, settlement.Position, 1f);
             banditParty.Party.SetCustomName(new TextObject("Nasorian Horde"));
             banditParty.Aggressiveness = 10f;
 
