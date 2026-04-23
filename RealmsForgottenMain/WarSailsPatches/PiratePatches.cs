@@ -10,8 +10,13 @@ public static class InitializePirateSpawnPointsPatch
     // Your custom data source
     public static List<(string clanStringId, Vec2 position, float radius)> CustomSpawnPoints = new()
     {
-        ("northern_pirates", new Vec2(293, 695), 30f),
-        ("southern_pirates", new Vec2(503, 761), 30f),
+       ("northern_pirates", new Vec2(994, 1108), 10f),
+        ("northern_pirates", new Vec2(305, 736), 10f),
+        ("northern_pirates", new Vec2(683, 713), 10f),
+        ("northern_pirates", new Vec2(400, 1138), 10f),
+        ("southern_pirates", new Vec2(418, 444), 10f),
+        ("southern_pirates", new Vec2(946, 827), 10f),
+        ("southern_pirates", new Vec2(624, 501), 10f),
     };
 
     static bool Prefix(object __instance)

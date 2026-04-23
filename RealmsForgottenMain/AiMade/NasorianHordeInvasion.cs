@@ -106,6 +106,8 @@ namespace RealmsForgotten.AiMade
             }
 
             var hideout = SettlementHelper.FindNearestHideoutToSettlement(settlement, MobileParty.NavigationType.All);
+            
+            // CreateBanditParty already initializes and positions the party
             MobileParty banditParty = BanditPartyComponent.CreateBanditParty(banditClan.StringId, banditClan, hideout, true, null, settlement.Position);
             if (banditParty == null)
             {
@@ -113,9 +115,8 @@ namespace RealmsForgotten.AiMade
                 return null;
             }
 
-            TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
+            // Add troops directly to the party's MemberRoster instead of creating a separate one
             var banditTroops = GetBanditTroops();
-
             foreach (var banditTroop in banditTroops)
             {
                 CharacterObject troop = CharacterObject.Find(banditTroop.Character.StringId);
@@ -126,10 +127,10 @@ namespace RealmsForgotten.AiMade
                 }
 
                 int adjustedNumber = (int)(banditTroop.Number * cumulativeGrowth);
-                troopRoster.AddToCounts(troop, adjustedNumber);
+                banditParty.MemberRoster.AddToCounts(troop, adjustedNumber);
             }
 
-            banditParty.InitializeMobilePartyAroundPosition(troopRoster, TroopRoster.CreateDummyTroopRoster(), settlement.Position, 50f, 10f);
+            // Remove the InitializeMobilePartyAroundPosition call
             banditParty.Party.SetCustomName(new TextObject("Nasorian Horde"));
             banditParty.Aggressiveness = 10f;
 
