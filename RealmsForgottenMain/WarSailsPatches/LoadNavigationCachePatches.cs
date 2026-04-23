@@ -25,7 +25,13 @@ namespace RealmsForgotten.WarSailsPatches
 
             if (useNavalNavigation)
             {
-                Campaign.Current.Models.MapDistanceModel.RegisterDistanceCache(MobileParty.NavigationType.All, cacheToRegister);
+                if (File.Exists(path + "\\settlements_distance_cache_All.bin"))
+                {
+                    var allCache = (SandBoxNavigationCache)met.Invoke(__instance, new object[] { MobileParty.NavigationType.All });
+                    Campaign.Current.Models.MapDistanceModel.RegisterDistanceCache(MobileParty.NavigationType.All, allCache);
+                }
+                else
+                    Campaign.Current.Models.MapDistanceModel.RegisterDistanceCache(MobileParty.NavigationType.All, cacheToRegister);
 
                 if (File.Exists(path + "\\settlements_distance_cache_Naval.bin"))
                 {
