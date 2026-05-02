@@ -146,6 +146,12 @@ namespace RF_AIDialog
             sb.AppendLine("                     Use when the player offers to pay with goods instead of gold.");
             sb.AppendLine("                     NEVER use take_gold as a substitute for take_item.");
             sb.AppendLine();
+            sb.AppendLine("CRITICAL TRADE RULE: All exchanges are IMMEDIATE and ATOMIC.");
+            sb.AppendLine("If you agree to trade item A for item B, you MUST fire BOTH actions at once.");
+            sb.AppendLine("NEVER say 'deliver it and I will give you X later' — the game has no future delivery system.");
+            sb.AppendLine("Example of a correct barter (grain for wine):");
+            sb.AppendLine("  \"actions\": [{{\"type\":\"take_item\",\"item_id\":\"grain\",\"value\":10}},{{\"type\":\"give_item\",\"item_id\":\"wine\",\"value\":5}}]");
+            sb.AppendLine();
             sb.AppendLine("Actions example (DO NOT copy blindly — only include what fits the moment):");
             sb.AppendLine("  \"actions\": [{\"type\": \"relation_change\", \"value\": 2}]");
             sb.AppendLine("  \"actions\": [{\"type\": \"give_gold\", \"value\": 100}]");
