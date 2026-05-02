@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Party;
@@ -36,6 +37,24 @@ namespace RF_AIDialog
         public static void Execute(List<AIAction>? actions, Hero npc)
         {
             if (actions == null || actions.Count == 0) return;
+
+            // Guard: take_item must always be paired with give_item or give_gold.
+            // If the LLM fires take_item alone it means it treated the item as a
+            // "deposit to inspect later" — reject the whole batch so the player
+            // keeps their goods and can re-negotiate.
+            bool hasTakeItem = actions.Any(a =>
+                string.Equals(a.Type, "take_item", StringComparison.OrdinalIgnoreCase));
+            bool hasReturn = actions.Any(a =>
+                string.Equals(a.Type, "give_item", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(a.Type, "give_gold", StringComparison.OrdinalIgnoreCase));
+
+            if (hasTakeItem && !hasReturn)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"[AI] {npc.Name} has not agreed to give anything in return — no trade executed. Try offering again with clearer terms.",
+                    Color.FromUint(0xFF_FF_A0_00u)));  // orange
+                return;
+            }
 
             // Debug — remove once actions are confirmed working
             InformationManager.DisplayMessage(new InformationMessage(
