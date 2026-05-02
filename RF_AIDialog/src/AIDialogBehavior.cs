@@ -33,10 +33,10 @@ namespace RF_AIDialog
         /// </summary>
         public volatile bool ResponseJustArrived = false;
 
-        private Hero?      _currentNpc      = null;
-        private string     _npcNameText     = "";
-        private string     _lastPlayerMsg   = "";   // saved for conversation history
-        private NPCContext? _currentContext = null;
+        private Hero?       _currentNpc      = null;
+        private string      _npcNameText     = "";
+        private string      _lastPlayerMsg   = "";
+        private NPCContext? _currentContext  = null;
 
         /// <summary>Current NPC name — read by the SubModule for HUD notification.</summary>
         public string CurrentNpcName => _npcNameText;
@@ -106,24 +106,17 @@ namespace RF_AIDialog
         private bool ConditionIsStillWaiting()
             => _isWaiting || _rawResponse == null;
 
-        /// <summary>
-        /// Updates the wait button text and always returns true.
-        /// "..."                      while waiting
-        /// "(Response ready — click here)"  when done
-        /// </summary>
         private bool ConditionUpdateWaitText()
         {
             string waitText = (_isWaiting || _rawResponse == null)
                 ? "..."
                 : "(Response ready — click here)";
-
             MBTextManager.SetTextVariable("RF_AI_WAIT_TEXT", new TextObject("{=!}" + waitText));
             return true;
         }
 
         private bool ConditionShowResponse()
         {
-            // Only fires when a response exists — prevents overriding ConditionIsStillWaiting
             if (_isWaiting || _rawResponse == null) return false;
 
             if (_parsed == null)
@@ -132,7 +125,6 @@ namespace RF_AIDialog
             string text;
             if (!string.IsNullOrWhiteSpace(_parsed?.Response))
             {
-                // Happy path — well-formed JSON with a response field
                 text = _parsed!.Response;
             }
             else if (_parsed == null
@@ -140,12 +132,10 @@ namespace RF_AIDialog
                      && !_rawResponse.TrimStart().StartsWith("{")
                      && !_rawResponse.TrimStart().StartsWith("`"))
             {
-                // Model returned plain text (ignored JSON instruction) — show as-is
                 text = _rawResponse;
             }
             else
             {
-                // Malformed / truncated JSON — never expose raw JSON in the dialogue box
                 text = "Hmm... the words escape me for the moment.";
             }
 
@@ -182,13 +172,14 @@ namespace RF_AIDialog
                 return;
             }
 
-            _isWaiting      = true;
-            _rawResponse    = null;
-            _parsed         = null;
-            _lastPlayerMsg  = playerText;
+            _isWaiting     = true;
+            _rawResponse   = null;
+            _parsed        = null;
+            _lastPlayerMsg = playerText;
 
-            Hero?      npc     = _currentNpc;
-            NPCContext? ctx    = _currentContext;
+            Hero?       npc = _currentNpc;
+            NPCContext? ctx = _currentContext;
+
             string systemPrompt;
             try   { systemPrompt = PromptBuilder.Build(npc!, ctx); }
             catch { systemPrompt = FallbackPrompt(); }
@@ -197,10 +188,11 @@ namespace RF_AIDialog
             {
                 try
                 {
-                    bool isFirst = _currentContext == null || _currentContext.IsFirstConversation;
+                    bool isFirst = ctx == null || ctx.IsFirstConversation;
                     int maxTok   = isFirst
                         ? AIConfig.MaxTokensFirstConversation
                         : AIConfig.MaxTokensSubsequent;
+
                     _rawResponse = await AIClient.AskAsync(
                         AIConfig.ModelName,
                         systemPrompt,
@@ -234,14 +226,12 @@ namespace RF_AIDialog
             // ── Save exchange to NPCContext ────────────────────────────────
             if (_currentContext != null && _parsed != null)
             {
-                // Save personality on first contact
                 if (_currentContext.IsFirstConversation &&
                     !string.IsNullOrWhiteSpace(_parsed.PersonalitySummary))
                 {
                     _currentContext.GeneratedPersonality = _parsed.PersonalitySummary!;
                 }
 
-                // Record this exchange in history
                 string npcSaid = string.IsNullOrWhiteSpace(_parsed.Response)
                     ? "..."
                     : _parsed.Response;
@@ -287,8 +277,8 @@ namespace RF_AIDialog
                 .Replace("{",    "(")
                 .Replace("}",    ")")
                 .Replace("|",    "/")
-                .Replace("[",    "(")   // Bannerlord strips [tone markers] from dialog text
-                .Replace("]",    ")");  // replacing avoids blank/invisible responses
+                .Replace("[",    "(")
+                .Replace("]",    ")");
 
             if (text.Length > 400)
                 text = text.Substring(0, 400) + "...";
@@ -297,4 +287,8 @@ namespace RF_AIDialog
         }
 
         private string FallbackPrompt() =>
-            "You are a me
+            "You are a medieval lord in Calradia. " +
+            "Respond ONLY with JSON: " +
+            "{\"internal_thoughts\":\"...\",\"response\":\"your spoken words\",\"tone\":\"neutral\",\"actions\":[]}";
+    }
+}
