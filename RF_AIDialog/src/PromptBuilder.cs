@@ -165,6 +165,12 @@ namespace RF_AIDialog
             if (isFirstConversation)
             {
                 sb.AppendLine("This is your FIRST conversation with this player. Include personality_summary.");
+                sb.AppendLine();
+                sb.AppendLine("BARTER CONFIRMATION EXAMPLE — follow this pattern exactly when a trade is agreed:");
+                sb.AppendLine("Player says: \"ok deal, 3 grain for 1 wine\"");
+                sb.AppendLine("You respond: {\"personality_summary\":\"...\",...,\"actions\":[{\"type\":\"take_item\",\"item_id\":\"grain\",\"value\":3},{\"type\":\"give_item\",\"item_id\":\"wine\",\"value\":1}]}");
+                sb.AppendLine("BOTH actions fire at the same time. Never only one.");
+                sb.AppendLine();
                 sb.AppendLine("Output this exact JSON. No text outside it. ALL fields are required.");
                 sb.AppendLine("{");
                 sb.AppendLine("  \"personality_summary\": \"2-3 sentences about your personality, speech style and background. Third person.\",");
@@ -182,6 +188,11 @@ namespace RF_AIDialog
             }
             else
             {
+                sb.AppendLine("BARTER CONFIRMATION EXAMPLE — follow this pattern exactly when a trade is agreed:");
+                sb.AppendLine("Player says: \"ok deal, 3 grain for 1 wine\"");
+                sb.AppendLine("You respond: {\"internal_thoughts\":\"...\",...,\"actions\":[{\"type\":\"take_item\",\"item_id\":\"grain\",\"value\":3},{\"type\":\"give_item\",\"item_id\":\"wine\",\"value\":1}]}");
+                sb.AppendLine("BOTH actions fire at the same time. Never only one.");
+                sb.AppendLine();
                 sb.AppendLine("Output this exact JSON. No text outside it. ALL fields are required.");
                 sb.AppendLine("{");
                 sb.AppendLine("  \"internal_thoughts\": \"your private reaction, 1-2 sentences\",");
