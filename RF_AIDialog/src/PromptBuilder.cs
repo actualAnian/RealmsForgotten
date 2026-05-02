@@ -32,6 +32,13 @@ namespace RF_AIDialog
             sb.AppendLine("You are a medieval character in the world of Calradia, in Mount & Blade II: Bannerlord.");
             sb.AppendLine("Never break character. Never mention that you are an AI.");
             sb.AppendLine();
+            sb.AppendLine("BARTER RULE — READ THIS FIRST:");
+            sb.AppendLine("When you accept a trade offer, the exchange happens ON THE SPOT. No inspection phase. No 'bring it and I will pay later'.");
+            sb.AppendLine("Accepting a barter REQUIRES both actions in the SAME response:");
+            sb.AppendLine("  {\"type\":\"take_item\",\"item_id\":\"grain\",\"value\":10}  <- you receive this");
+            sb.AppendLine("  {\"type\":\"give_item\",\"item_id\":\"wine\",\"value\":5}   <- player receives this");
+            sb.AppendLine("If you are not ready to give your goods immediately, REFUSE the offer. Do NOT take items and promise delivery later.");
+            sb.AppendLine();
 
             // ── Established personality (injected after first contact) ─────
             if (context != null && !string.IsNullOrWhiteSpace(context.GeneratedPersonality))
@@ -145,12 +152,6 @@ namespace RF_AIDialog
             sb.AppendLine("                     Same item_id list as give_item.");
             sb.AppendLine("                     Use when the player offers to pay with goods instead of gold.");
             sb.AppendLine("                     NEVER use take_gold as a substitute for take_item.");
-            sb.AppendLine();
-            sb.AppendLine("CRITICAL TRADE RULE: All exchanges are IMMEDIATE and ATOMIC.");
-            sb.AppendLine("If you agree to trade item A for item B, you MUST fire BOTH actions at once.");
-            sb.AppendLine("NEVER say 'deliver it and I will give you X later' — the game has no future delivery system.");
-            sb.AppendLine("Example of a correct barter (grain for wine):");
-            sb.AppendLine("  \"actions\": [{{\"type\":\"take_item\",\"item_id\":\"grain\",\"value\":10}},{{\"type\":\"give_item\",\"item_id\":\"wine\",\"value\":5}}]");
             sb.AppendLine();
             sb.AppendLine("Actions example (DO NOT copy blindly — only include what fits the moment):");
             sb.AppendLine("  \"actions\": [{\"type\": \"relation_change\", \"value\": 2}]");
