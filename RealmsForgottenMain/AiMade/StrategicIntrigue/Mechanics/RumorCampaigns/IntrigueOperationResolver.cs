@@ -56,7 +56,7 @@ public static class IntrigueOperationResolver
                         breakOutcome));
                     operation.Status = IntrigueOperationStatus.Resolved;
                     operations.RemoveAt(i);
-                    break;
+                    continue;
             }
 
             if (operation.Type == IntrigueOperationType.PrepareBreakaway)
