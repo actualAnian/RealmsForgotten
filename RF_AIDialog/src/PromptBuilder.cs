@@ -172,7 +172,6 @@ namespace RF_AIDialog
                 sb.AppendLine("  {\"type\":\"relation_change\",\"value\":2} — relation improves by 2");
                 sb.AppendLine("  {\"type\":\"give_item\",\"item_id\":\"wine\",\"value\":1} — you give player 1 wine");
                 sb.AppendLine("  {\"type\":\"take_item\",\"item_id\":\"grain\",\"value\":10} — player gives you 10 grain");
-                sb.AppendLine("  {\"type\":\"take_item\",\"item_id\":\"grain\",\"value\":10} — player gives you 10 grain");
             }
             else
             {
@@ -188,7 +187,6 @@ namespace RF_AIDialog
                 sb.AppendLine("  {\"type\":\"give_gold\",\"value\":100} — you give player 100 gold");
                 sb.AppendLine("  {\"type\":\"relation_change\",\"value\":2} — relation improves by 2");
                 sb.AppendLine("  {\"type\":\"give_item\",\"item_id\":\"wine\",\"value\":1} — you give player 1 wine");
-                sb.AppendLine("  {\"type\":\"take_item\",\"item_id\":\"grain\",\"value\":10} — player gives you 10 grain");
                 sb.AppendLine("  {\"type\":\"take_item\",\"item_id\":\"grain\",\"value\":10} — player gives you 10 grain");
             }
 
@@ -210,4 +208,45 @@ namespace RF_AIDialog
                 case Occupation.Merchant:
                     sb.AppendLine("You are a merchant — profit, trade routes, and city politics occupy your mind.");
                     break;
-          
+                case Occupation.Artisan:
+                    sb.AppendLine("You are an artisan — proud of your craft, grounded in the rhythms of your workshop.");
+                    break;
+                case Occupation.GangLeader:
+                    sb.AppendLine("You are a gang leader — you rule through fear and favors in the city's shadows.");
+                    break;
+                case Occupation.RuralNotable:
+                    sb.AppendLine("You are a rural notable — respected in your village, wary of outsiders and lords alike.");
+                    break;
+                case Occupation.Headman:
+                    sb.AppendLine("You are a village headman — the voice of common folk, burdened by their needs.");
+                    break;
+            }
+        }
+
+        // ── Helpers ───────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Extracts the epithet from a wanderer's name.
+        /// "Ira the Scholar" → "the Scholar"
+        /// Returns empty string if no epithet found.
+        /// </summary>
+        private static string ExtractEpithet(Hero npc)
+        {
+            if (npc.Occupation != Occupation.Wanderer) return "";
+
+            string name = npc.Name?.ToString() ?? "";
+            int idx = name.IndexOf(" the ", StringComparison.OrdinalIgnoreCase);
+            if (idx >= 0)
+                return name.Substring(idx + 1); // "the Scholar"
+
+            return "";
+        }
+
+        private static void AppendTrait(StringBuilder sb, Hero npc, TraitObject trait, string positive, string negative)
+        {
+            int level = npc.GetTraitLevel(trait);
+            if (level > 0) sb.Append($"{positive}, ");
+            else if (level < 0) sb.Append($"{negative}, ");
+        }
+    }
+}
