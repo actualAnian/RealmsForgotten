@@ -73,7 +73,8 @@ namespace RF_AIDialog
         public static async Task<string> AskAsync(
             string model,
             string systemPrompt,
-            string userMessage)
+            string userMessage,
+            int maxTokens = 300)
         {
             var request = new OllamaRequest
             {
@@ -86,7 +87,7 @@ namespace RF_AIDialog
                 },
                 Options = new OllamaOptions
                 {
-                    NumPredict  = AIConfig.MaxTokens,
+                    NumPredict  = maxTokens,
                     Temperature = AIConfig.Temperature,
                     NumCtx      = AIConfig.ContextSize
                 }

@@ -197,10 +197,15 @@ namespace RF_AIDialog
             {
                 try
                 {
+                    bool isFirst = _currentContext == null || _currentContext.IsFirstConversation;
+                    int maxTok   = isFirst
+                        ? AIConfig.MaxTokensFirstConversation
+                        : AIConfig.MaxTokensSubsequent;
                     _rawResponse = await AIClient.AskAsync(
                         AIConfig.ModelName,
                         systemPrompt,
-                        playerText).ConfigureAwait(false);
+                        playerText,
+                        maxTok).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {

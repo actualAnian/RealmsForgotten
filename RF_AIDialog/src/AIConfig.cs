@@ -17,23 +17,27 @@ namespace RF_AIDialog
         public const string OllamaEndpoint = "http://localhost:11434/api/chat";
 
         /// <summary>
-        /// Timeout em segundos para a chamada ao LLM.
-        /// Modelos maiores podem precisar de mais tempo.
+        /// Timeout in seconds for LLM calls.
+        /// Larger context windows (4096) make Ollama reload the model on first use —
+        /// 120s gives enough room for cold starts without feeling frozen.
         /// </summary>
-        public const int TimeoutSeconds = 60;
+        public const int TimeoutSeconds = 120;
 
         /// <summary>
-        /// Max tokens in the response.
-        /// Regular conversation: ~150 tokens. First contact (with personality_summary): ~400.
-        /// 500 covers both cases safely without excessive VRAM use.
+        /// Max tokens for the FIRST conversation with an NPC.
+        /// Needs extra room for personality_summary (2-3 sentences) + full JSON.
         /// </summary>
-        public const int MaxTokens = 800;
+        public const int MaxTokensFirstConversation = 500;
+
+        /// <summary>
+        /// Max tokens for subsequent conversations (no personality_summary).
+        /// A typical response JSON is 100-150 tokens; 300 gives 2x headroom.
+        /// Keeping this low is the main lever for reducing response latency.
+        /// </summary>
+        public const int MaxTokensSubsequent = 300;
 
         /// <summary>
         /// Maximum gold that can be transferred in a single AI action (give_gold / take_gold).
         /// Prevents runaway LLM values while still allowing meaningful transactions.
         /// </summary>
-        public const int MaxGoldTransfer = 10000;
-
-        /// <summary>
-        /// Maximum relation delta per con
+        public con
