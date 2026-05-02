@@ -82,8 +82,12 @@ namespace RF_AIDialog
                 Stream = false,
                 Messages = new[]
                 {
-                    new OllamaMessage { Role = "system", Content = systemPrompt },
-                    new OllamaMessage { Role = "user",   Content = userMessage  }
+                    new OllamaMessage { Role = "system",    Content = systemPrompt },
+                    // Few-shot barter example — assistant role is far more effective
+                    // than text rules for small models like gemma3:4b.
+                    new OllamaMessage { Role = "user",      Content = "ok deal, 3 grain for 1 wine, take it" },
+                    new OllamaMessage { Role = "assistant", Content = "{\"internal_thoughts\":\"Fair exchange. Three grain for one wine.\",\"response\":\"Agreed. The grain is yours to give and the wine is yours to take.\",\"tone\":\"neutral\",\"actions\":[{\"type\":\"take_item\",\"item_id\":\"grain\",\"value\":3},{\"type\":\"give_item\",\"item_id\":\"wine\",\"value\":1}]}" },
+                    new OllamaMessage { Role = "user",      Content = userMessage  }
                 },
                 Options = new OllamaOptions
                 {
