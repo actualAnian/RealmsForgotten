@@ -1,18 +1,18 @@
 namespace RF_AIDialog
 {
     /// <summary>
-    /// Configurações centrais do mod RF_AIDialog.
-    /// Edite aqui para ajustar o modelo e o endpoint do Ollama.
+    /// Central configuration for the RF_AIDialog mod.
+    /// Edit here to adjust model, endpoint, and behaviour limits.
     /// </summary>
     public static class AIConfig
     {
         /// <summary>
-        /// Nome do modelo Ollama. Use `ollama list` no terminal para ver os disponíveis.
+        /// Ollama model name. Run `ollama list` in a terminal to see available models.
         /// </summary>
         public const string ModelName = "gemma3:4b";
 
         /// <summary>
-        /// Endpoint do Ollama. Padrão para instalação local.
+        /// Ollama endpoint. Default for a local installation.
         /// </summary>
         public const string OllamaEndpoint = "http://localhost:11434/api/chat";
 
@@ -38,6 +38,24 @@ namespace RF_AIDialog
 
         /// <summary>
         /// Maximum gold that can be transferred in a single AI action (give_gold / take_gold).
-        /// Prevents runaway LLM values while still allowing meaningful transactions.
         /// </summary>
-        public con
+        public const int MaxGoldTransfer = 10000;
+
+        /// <summary>
+        /// Maximum relation delta per conversation (relation_change action).
+        /// Keeps relation changes meaningful but not instant max/min.
+        /// </summary>
+        public const int MaxRelationDelta = 5;
+
+        /// <summary>
+        /// Context window size. 4096 gives comfortable headroom for
+        /// prompt (personality + history + actions ~1100 tokens) + response.
+        /// </summary>
+        public const int ContextSize = 4096;
+
+        /// <summary>
+        /// LLM temperature. 0.7 = creative but coherent.
+        /// </summary>
+        public const double Temperature = 0.7;
+    }
+}
