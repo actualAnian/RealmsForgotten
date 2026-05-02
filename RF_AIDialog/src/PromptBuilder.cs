@@ -140,12 +140,17 @@ namespace RF_AIDialog
             sb.AppendLine("  give_item        : give the player an item. value: quantity.");
             sb.AppendLine("                     item_id must be one of: grain, wine, hides, linen, tools,");
             sb.AppendLine("                     silver_ore, wool, pottery, salt, dates.");
-            sb.AppendLine("                     Only as a meaningful gift or trade.");
+            sb.AppendLine("                     Only as a meaningful gift or trade (NPC gives TO player).");
+            sb.AppendLine("  take_item        : receive an item FROM the player. value: quantity.");
+            sb.AppendLine("                     Same item_id list as give_item.");
+            sb.AppendLine("                     Use when the player offers to pay with goods instead of gold.");
+            sb.AppendLine("                     NEVER use take_gold as a substitute for take_item.");
             sb.AppendLine();
             sb.AppendLine("Actions example (DO NOT copy blindly — only include what fits the moment):");
             sb.AppendLine("  \"actions\": [{\"type\": \"relation_change\", \"value\": 2}]");
             sb.AppendLine("  \"actions\": [{\"type\": \"give_gold\", \"value\": 100}]");
             sb.AppendLine("  \"actions\": [{\"type\": \"give_item\", \"item_id\": \"wine\", \"value\": 2}]");
+            sb.AppendLine("  \"actions\": [{\"type\": \"take_item\", \"item_id\": \"grain\", \"value\": 10}]");
             sb.AppendLine("Omit the \"actions\" field entirely if no action is warranted.");
 
             // ── JSON format ───────────────────────────────────────────────
@@ -166,6 +171,8 @@ namespace RF_AIDialog
                 sb.AppendLine("  {\"type\":\"give_gold\",\"value\":100} — you give player 100 gold");
                 sb.AppendLine("  {\"type\":\"relation_change\",\"value\":2} — relation improves by 2");
                 sb.AppendLine("  {\"type\":\"give_item\",\"item_id\":\"wine\",\"value\":1} — you give player 1 wine");
+                sb.AppendLine("  {\"type\":\"take_item\",\"item_id\":\"grain\",\"value\":10} — player gives you 10 grain");
+                sb.AppendLine("  {\"type\":\"take_item\",\"item_id\":\"grain\",\"value\":10} — player gives you 10 grain");
             }
             else
             {
@@ -181,6 +188,8 @@ namespace RF_AIDialog
                 sb.AppendLine("  {\"type\":\"give_gold\",\"value\":100} — you give player 100 gold");
                 sb.AppendLine("  {\"type\":\"relation_change\",\"value\":2} — relation improves by 2");
                 sb.AppendLine("  {\"type\":\"give_item\",\"item_id\":\"wine\",\"value\":1} — you give player 1 wine");
+                sb.AppendLine("  {\"type\":\"take_item\",\"item_id\":\"grain\",\"value\":10} — player gives you 10 grain");
+                sb.AppendLine("  {\"type\":\"take_item\",\"item_id\":\"grain\",\"value\":10} — player gives you 10 grain");
             }
 
             return sb.ToString();
@@ -201,17 +210,4 @@ namespace RF_AIDialog
                 case Occupation.Merchant:
                     sb.AppendLine("You are a merchant — profit, trade routes, and city politics occupy your mind.");
                     break;
-                case Occupation.Artisan:
-                    sb.AppendLine("You are an artisan — proud of your craft, grounded in the rhythms of your workshop.");
-                    break;
-                case Occupation.GangLeader:
-                    sb.AppendLine("You are a gang leader — you rule through fear and favors in the city's shadows.");
-                    break;
-                case Occupation.RuralNotable:
-                    sb.AppendLine("You are a rural notable — respected in your village, wary of outsiders and lords alike.");
-                    break;
-                case Occupation.Headman:
-                    sb.AppendLine("You are a village headman — the voice of common folk, burdened by their needs.");
-                    break;
-            }
-        }
+          

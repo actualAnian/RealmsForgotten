@@ -23,7 +23,7 @@ namespace RF_AIDialog
         private static int MaxRelationDelta => AIConfig.MaxRelationDelta;
         private static int MaxGoldTransfer  => AIConfig.MaxGoldTransfer;
 
-        // Items the LLM is allowed to give (must match IDs in PromptBuilder)
+        // Items the LLM is allowed to give or take (must match IDs in PromptBuilder)
         private static readonly HashSet<string> AllowedItemIds = new HashSet<string>(
             StringComparer.OrdinalIgnoreCase)
         {
@@ -74,6 +74,10 @@ namespace RF_AIDialog
 
                 case "give_item":
                     GiveItem(npc, action.ItemId, Math.Max(1, action.Value));
+                    break;
+
+                case "take_item":
+                    TakeItem(npc, action.ItemId, Math.Max(1, action.Value));
                     break;
             }
         }
@@ -143,4 +147,43 @@ namespace RF_AIDialog
 
         private static void GiveItem(Hero npc, string? itemId, int quantity)
         {
-            if (string.IsNullOrWhiteSpac
+            if (string.IsNullOrWhiteSpace(itemId)) return;
+            if (!AllowedItemIds.Contains(itemId))  return;
+
+            var item = MBObjectManager.Instance.GetObject<ItemObject>(itemId);
+            if (item == null) return;
+
+            MobileParty.MainParty.ItemRoster.AddToCounts(item, quantity);
+
+            InformationManager.DisplayMessage(new InformationMessage(
+                $"[AI] {npc.Name} gave you {quantity}x {item.Name}.",
+                Color.FromUint(0xFF_A0_D0_FFu)));  // light blue
+        }
+
+        // ── take_item ─────────────────────────────────────────────────────
+
+        private static void TakeItem(Hero npc, string? itemId, int quantity)
+        {
+            if (string.IsNullOrWhiteSpace(itemId)) return;
+            if (!AllowedItemIds.Contains(itemId))  return;
+
+            var item = MBObjectManager.Instance.GetObject<ItemObject>(itemId);
+            if (item == null) return;
+
+            int available = MobileParty.MainParty.ItemRoster.GetItemNumber(item);
+            if (available < quantity)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"[AI] You don't have enough {item.Name} ({quantity} required, you have {available}).",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return;
+            }
+
+            MobileParty.MainParty.ItemRoster.AddToCounts(item, -quantity);
+
+            InformationManager.DisplayMessage(new InformationMessage(
+                $"[AI] You gave {npc.Name} {quantity}x {item.Name}.",
+                Color.FromUint(0xFF_A0_D0_FFu)));  // light blue
+        }
+    }
+}
