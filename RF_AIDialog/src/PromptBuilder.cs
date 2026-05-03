@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
@@ -99,6 +100,9 @@ namespace RF_AIDialog
                 if (currentRole != null)
                     sb.AppendLine($"Your current party role is: {currentRole}.");
 
+                // Top skills — companions should speak with authority about their expertise
+                AppendCompanionSkills(sb, npc);
+
                 // Party state — gives companions situational awareness
                 AppendPartyState(sb, party);
             }
@@ -198,6 +202,16 @@ namespace RF_AIDialog
                 sb.AppendLine("                     Example: {\"type\":\"assign_role\",\"role\":\"surgeon\"}");
             }
 
+            bool isLordWithParty = npc.Occupation == TaleWorlds.CampaignSystem.Occupation.Lord
+                                   && npc.PartyBelongedTo != null
+                                   && npc.PartyBelongedTo.MemberRoster.TotalManCount > 5;
+            if (isLordWithParty)
+            {
+                sb.AppendLine("  give_troops      : transfer some of your soldiers to the player. value: count (max 20).");
+                sb.AppendLine("                     Use only as reward, mercenary deal, or significant alliance gesture.");
+                sb.AppendLine("                     Example: {\"type\":\"give_troops\",\"value\":10}");
+            }
+
             sb.AppendLine();
             sb.AppendLine("Actions example (DO NOT copy blindly — only include what fits the moment):");
             sb.AppendLine("  \"actions\": [{\"type\": \"relation_change\", \"value\": 2}]");
@@ -246,15 +260,4 @@ namespace RF_AIDialog
                 sb.AppendLine("  \"tone\": \"friendly|neutral|suspicious|hostile|fearful\",");
                 sb.AppendLine("  \"actions\": []");
                 sb.AppendLine("}");
-                sb.AppendLine("For 'actions': use [] if nothing happens. Otherwise fill with relevant actions:");
-                sb.AppendLine("  {\"type\":\"take_gold\",\"value\":50}  — player gives you 50 gold");
-                sb.AppendLine("  {\"type\":\"give_gold\",\"value\":100} — you give player 100 gold");
-                sb.AppendLine("  {\"type\":\"relation_change\",\"value\":2} — relation improves by 2");
-                sb.AppendLine("  {\"type\":\"give_item\",\"item_id\":\"wine\",\"value\":1} — you give player 1 wine");
-                sb.AppendLine("  {\"type\":\"take_item\",\"item_id\":\"grain\",\"value\":10} — player gives you 10 grain");
-            }
-
-            return sb.ToString();
-        }
-
-        // ── Occupation-specific context ───────────────────────�
+        

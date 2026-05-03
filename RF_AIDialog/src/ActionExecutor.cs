@@ -97,6 +97,10 @@ namespace RF_AIDialog
                 case "assign_role":
                     AssignRole(npc, action.Role);
                     break;
+
+                case "give_troops":
+                    GiveTroops(npc, Math.Max(1, action.Value));
+                    break;
             }
         }
 
@@ -197,7 +201,4 @@ namespace RF_AIDialog
                 return;
             }
 
-            MobileParty.MainParty.ItemRoster.AddToCounts(item, -quantity);
-
-            InformationManager.DisplayMessage(new InformationMessage(
-                $"[AI] You gave {npc.Na
+            MobileParty.MainParty.ItemRoster.AddToCounts(
