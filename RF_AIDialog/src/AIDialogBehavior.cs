@@ -51,6 +51,16 @@ namespace RF_AIDialog
             MBTextManager.SetTextVariable("RF_AI_RESPONSE",  new TextObject("{=!}..."));
             MBTextManager.SetTextVariable("RF_AI_WAIT_TEXT", new TextObject("{=!}..."));
 
+            // ── 0. NPC initiative trigger (higher priority) ───────────────
+            starter.AddPlayerLine(
+                "rf_ai_initiative_trigger",
+                "hero_main_options",
+                "rf_ai_npc_thinking",
+                "You seem like you have something on your mind... [AI]",
+                ConditionHasPendingInitiative,
+                ConsequenceTriggerInitiative,
+                150, null);
+
             // ── 1. Player menu option ─────────────────────────────────────
             starter.AddPlayerLine(
                 "rf_ai_open_input",
@@ -122,6 +132,14 @@ namespace RF_AIDialog
         private bool ConditionCanUseAI()
             => Hero.OneToOneConversationHero != null && !_isWaiting;
 
+        private bool ConditionHasPendingInitiative()
+        {
+            var npc = Hero.OneToOneConversationHero;
+            if (npc == null || _isWaiting) return false;
+            var ctx = NPCContextStore.Instance?.GetOrCreate(npc);
+            return ctx != null && ctx.HasPendingInitiative;
+        }
+
         private bool ConditionIsStillWaiting()
             => _isWaiting || _rawResponse == null;
 
@@ -181,6 +199,18 @@ namespace RF_AIDialog
                 negativeText:              "Cancel",
                 affirmativeAction:         OnPlayerConfirmedInput,
                 negativeAction:            OnPlayerCancelledInput));
+        }
+
+        private void ConsequenceTriggerInitiative()
+        {
+            _currentNpc     = Hero.OneToOneConversationHero;
+            _npcNameText    = _currentNpc?.Name.ToString() ?? "?";
+            _currentContext = _currentNpc != null
+                ? NPCContextStore.Instance?.GetOrCreate(_currentNpc)
+                : null;
+
+            // Send a neutral opener — the NPC will lead with their initiative topic
+            OnPlayerConfirmedInput("(You give the NPC your attention, inviting them to speak first.)");
         }
 
         private void OnPlayerConfirmedInput(string playerText)
@@ -251,38 +281,4 @@ namespace RF_AIDialog
                     _currentContext.GeneratedPersonality = _parsed.PersonalitySummary!;
                 }
 
-                string npcSaid = string.IsNullOrWhiteSpace(_parsed.Response)
-                    ? "..."
-                    : _parsed.Response;
-
-                if (!string.IsNullOrWhiteSpace(_lastPlayerMsg))
-                    _currentContext.AddExchange(_lastPlayerMsg, npcSaid);
-
-                NPCContextStore.Instance?.MarkDirty(_currentContext);
-            }
-
-            // ── Reset state ───────────────────────────────────────────────
-            _rawResponse    = null;
-            _parsed         = null;
-            _currentNpc     = null;
-            _currentContext = null;
-            _lastPlayerMsg  = "";
-        }
-
-        // ── Helpers ───────────────────────────────────────────────────────
-
-        private RFAIResponse? ParseResponse(string raw)
-        {
-            try
-            {
-                string? json = JsonCleaner.ExtractJson(raw);
-                if (json == null) return null;
-                return JsonConvert.DeserializeObject<RFAIResponse>(json);
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        private static string Sanitize(str
+                string npcSaid = string.I

@@ -53,6 +53,16 @@ namespace RF_AIDialog
             sb.AppendLine();
 
             // ── Established personality (injected after first contact) ─────
+            // ── NPC initiative (highest priority — NPC opens with this) ──────
+            if (context != null && context.HasPendingInitiative)
+            {
+                sb.AppendLine("!! YOU INITIATED THIS CONVERSATION !!");
+                sb.AppendLine("Your reason for seeking the player out:");
+                sb.AppendLine(context.PendingInitiativeReason);
+                sb.AppendLine("Open with this topic immediately and naturally. Do not wait for the player to ask.");
+                sb.AppendLine();
+            }
+
             if (context != null && !string.IsNullOrWhiteSpace(context.GeneratedPersonality))
             {
                 sb.AppendLine("YOUR ESTABLISHED PERSONALITY (stay consistent with this):");
@@ -252,12 +262,4 @@ namespace RF_AIDialog
                 sb.AppendLine("Player says: \"ok deal, 3 grain for 1 wine\"");
                 sb.AppendLine("You respond: {\"internal_thoughts\":\"...\",...,\"actions\":[{\"type\":\"take_item\",\"item_id\":\"grain\",\"value\":3},{\"type\":\"give_item\",\"item_id\":\"wine\",\"value\":1}]}");
                 sb.AppendLine("BOTH actions fire at the same time. Never only one.");
-                sb.AppendLine();
-                sb.AppendLine("Output this exact JSON. No text outside it. ALL fields are required.");
-                sb.AppendLine("{");
-                sb.AppendLine("  \"internal_thoughts\": \"your private reaction, 1-2 sentences\",");
-                sb.AppendLine("  \"response\": \"what you say out loud, in character, 2-4 sentences\",");
-                sb.AppendLine("  \"tone\": \"friendly|neutral|suspicious|hostile|fearful\",");
-                sb.AppendLine("  \"actions\": []");
-                sb.AppendLine("}");
-        
+                s

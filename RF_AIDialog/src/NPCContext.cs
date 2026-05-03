@@ -16,7 +16,8 @@ namespace RF_AIDialog
     }
 
     /// <summary>
-    /// Persistent per-NPC state: generated personality, conversation history.
+    /// Persistent per-NPC state: generated personality, conversation history,
+    /// pending initiative, and last known relation.
     /// Serialized to the campaign save via NPCContextStore.
     /// </summary>
     public class NPCContext
@@ -39,21 +40,17 @@ namespace RF_AIDialog
         [JsonProperty("history")]
         public List<ConversationEntry> RecentHistory { get; set; } = new List<ConversationEntry>();
 
-        // Max entries kept in history
-        public static int MaxHistory => 4;
-
-        /// <summary>True on the very first AI conversation with this NPC.</summary>
-        [JsonIgnore]
-        public bool IsFirstConversation => string.IsNullOrWhiteSpace(GeneratedPersonality);
+        /// <summary>
+        /// Reason this NPC wants to initiate a conversation with the player.
+        /// Set by NPCInitiativeBehavior when conditions are met.
+        /// Cleared after the conversation ends.
+        /// Null/empty = no pending initiative.
+        /// </summary>
+        [JsonProperty("pending_initiative")]
+        public string? PendingInitiativeReason { get; set; }
 
         /// <summary>
-        /// Appends an exchange and trims to MaxHistory.
+        /// Relation score at the end of the last conversation.
+        /// Used to detect significant drops that trigger a grievance initiative.
         /// </summary>
-        public void AddExchange(string playerText, string npcText)
-        {
-            RecentHistory.Add(new ConversationEntry { Player = playerText, Npc = npcText });
-            while (RecentHistory.Count > MaxHistory)
-                RecentHistory.RemoveAt(0);
-        }
-    }
-}
+        [JsonProperty("last_kno

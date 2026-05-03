@@ -32,8 +32,11 @@ namespace RF_AIDialog
             if (game.GameType is Campaign &&
                 starterObject is CampaignGameStarter campaignStarter)
             {
-                // NPCContextStore must be registered first — AIDialogBehavior reads from it
+                // NPCContextStore must be registered first — everything reads from it
                 campaignStarter.AddBehavior(new NPCContextStore());
+
+                // NPC initiative — evaluates daily conditions for all lords/notables
+                campaignStarter.AddBehavior(new NPCInitiativeBehavior());
 
                 _dialogBehavior = new AIDialogBehavior();
                 campaignStarter.AddBehavior(_dialogBehavior);
@@ -62,8 +65,4 @@ namespace RF_AIDialog
             string npcName = _dialogBehavior.CurrentNpcName;
             InformationManager.DisplayMessage(
                 new InformationMessage(
-                    $"💬 {npcName} is ready to respond. Click '...' to hear the reply.",
-                    Color.FromUint(0xFF_A0_D0_FFu)));   // azul-claro
-        }
-    }
-}
+                    $"
