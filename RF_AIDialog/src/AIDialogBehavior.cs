@@ -87,15 +87,34 @@ namespace RF_AIDialog
                 ConditionIsStillWaiting,
                 null, 100, null);
 
-            // ── 3b. Response ready — NPC speaks ───────────────────────────
+            // ── 3b. Response ready — NPC speaks, goes to continue menu ──────
             starter.AddDialogLine(
                 "rf_ai_npc_response_line",
                 "rf_ai_player_wait_result",
-                "hero_main_options",
+                "rf_ai_after_response",
                 "{RF_AI_RESPONSE}",
                 ConditionShowResponse,
                 ConsequenceClearResponse,
                 200, null);
+
+            // ── 4a. Continue speaking ─────────────────────────────────────
+            starter.AddPlayerLine(
+                "rf_ai_continue",
+                "rf_ai_after_response",
+                "rf_ai_npc_thinking",
+                "Continue speaking... [AI]",
+                ConditionCanUseAI,
+                ConsequenceOpenTextInput,
+                200, null);
+
+            // ── 4b. End conversation ──────────────────────────────────────
+            starter.AddPlayerLine(
+                "rf_ai_end",
+                "rf_ai_after_response",
+                "hero_main_options",
+                "That will be all.",
+                null, null,
+                100, null);
         }
 
         // ── Conditions ────────────────────────────────────────────────────
@@ -266,29 +285,4 @@ namespace RF_AIDialog
             }
         }
 
-        private static string Sanitize(string text)
-        {
-            if (text == "[cancel]") return "Conversation cancelled.";
-
-            text = text
-                .Replace("\r\n", " ")
-                .Replace("\n",   " ")
-                .Replace("\r",   " ")
-                .Replace("{",    "(")
-                .Replace("}",    ")")
-                .Replace("|",    "/")
-                .Replace("[",    "(")
-                .Replace("]",    ")");
-
-            if (text.Length > 400)
-                text = text.Substring(0, 400) + "...";
-
-            return text;
-        }
-
-        private string FallbackPrompt() =>
-            "You are a medieval lord in Aeurth. " +
-            "Respond ONLY with JSON: " +
-            "{\"internal_thoughts\":\"...\",\"response\":\"your spoken words\",\"tone\":\"neutral\",\"actions\":[]}";
-    }
-}
+        private static string Sanitize(str
