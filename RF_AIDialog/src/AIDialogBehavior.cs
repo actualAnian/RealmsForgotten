@@ -287,7 +287,7 @@ namespace RF_AIDialog
         }
 
         private string FallbackPrompt() =>
-            "You are a medieval lord in Calradia. " +
+            "You are a medieval lord in Aeurth. " +
             "Respond ONLY with JSON: " +
             "{\"internal_thoughts\":\"...\",\"response\":\"your spoken words\",\"tone\":\"neutral\",\"actions\":[]}";
     }
