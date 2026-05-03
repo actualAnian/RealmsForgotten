@@ -110,16 +110,6 @@ namespace RF_AIDialog
 
             string requestJson = JsonConvert.SerializeObject(request);
 
-            // DEBUG — write request JSON to desktop for inspection
-            try
-            {
-                string debugPath = System.IO.Path.Combine(
-                    System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop),
-                    "rf_ai_debug.json");
-                System.IO.File.WriteAllText(debugPath, requestJson, Encoding.UTF8);
-            }
-            catch { /* do not crash on debug write failure */ }
-
             // UTF8Encoding(false) = no BOM — Encoding.UTF8 in .NET Framework includes BOM which breaks Ollama
             var content = new StringContent(requestJson, new UTF8Encoding(false), "application/json");
 
@@ -143,16 +133,6 @@ namespace RF_AIDialog
 
             OllamaResponse? parsed = JsonConvert.DeserializeObject<OllamaResponse>(responseJson);
             string result = parsed?.Message?.Content ?? "(no response)";
-
-            // DEBUG — write raw LLM response to desktop for inspection
-            try
-            {
-                string debugPath = System.IO.Path.Combine(
-                    System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop),
-                    "rf_ai_response.txt");
-                System.IO.File.WriteAllText(debugPath, result, Encoding.UTF8);
-            }
-            catch { }
 
             return result;
         }

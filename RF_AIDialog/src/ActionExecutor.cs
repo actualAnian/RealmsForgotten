@@ -56,11 +56,6 @@ namespace RF_AIDialog
                 return;
             }
 
-            // Debug — remove once actions are confirmed working
-            InformationManager.DisplayMessage(new InformationMessage(
-                $"[AI] Executing {actions.Count} action(s)...",
-                Color.FromUint(0xFF_FF_FF_00u)));
-
             foreach (var action in actions)
             {
                 try   { ExecuteOne(action, npc); }
