@@ -1,6 +1,9 @@
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Settlements;
+using DeclareWarDetail         = TaleWorlds.CampaignSystem.Actions.DeclareWarAction.DeclareWarDetail;
+using MakePeaceDetail          = TaleWorlds.CampaignSystem.Actions.MakePeaceAction.MakePeaceDetail;
+using ChangeOwnerOfSettlementDetail = TaleWorlds.CampaignSystem.Actions.ChangeOwnerOfSettlementAction.ChangeOwnerOfSettlementDetail;
 
 namespace RF_AIDialog
 {
@@ -112,13 +115,4 @@ namespace RF_AIDialog
             {
                 // Skip minor factions and clans with no lords (bandits etc.)
                 if (clan == null)                            return;
-                if (clan.IsMinorFaction)                    return;
-                if (clan.Lords == null || clan.Lords.Count == 0) return;
-
-                string kingdomStr = clan.Kingdom != null
-                    ? $" of {clan.Kingdom.Name}"
-                    : "";
-
-                Record($"Clan {clan.Name}{kingdomStr} has been destroyed.");
-            }
-            cat
+                if (clan.IsMinorFaction)      
