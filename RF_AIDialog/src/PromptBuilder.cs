@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
+using TaleWorlds.CampaignSystem.Party;
 
 namespace RF_AIDialog
 {
@@ -257,5 +258,3 @@ namespace RF_AIDialog
 
         private static void AppendOccupationContext(StringBuilder sb, Hero npc)
         {
-            switch (npc.Occupation)
-  
