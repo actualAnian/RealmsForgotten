@@ -14,6 +14,8 @@ namespace RF_AIDialog
         ///   "give_gold"       — NPC gives gold to player
         ///   "take_gold"       — player pays the NPC
         ///   "give_item"       — NPC gives player an item
+        ///   "take_item"       — player gives the NPC an item
+        ///   "assign_role"     — companion: assign a party role (companions only)
         /// </summary>
         [JsonProperty("type")]
         public string Type { get; set; } = "";
@@ -22,16 +24,11 @@ namespace RF_AIDialog
         /// Numeric magnitude.
         /// relation_change : -5 to +5 (clamped by executor)
         /// give_gold / take_gold : amount in gold coins
-        /// give_item : quantity (default 1)
+        /// give_item / take_item : quantity (default 1)
+        /// assign_role : unused (use role field)
         /// </summary>
         [JsonProperty("value")]
         public int Value { get; set; } = 1;
 
         /// <summary>
-        /// Item string ID — only used for give_item.
-        /// Must be one of the IDs listed in the prompt.
-        /// </summary>
-        [JsonProperty("item_id")]
-        public string? ItemId { get; set; }
-    }
-}
+        //

@@ -29,7 +29,17 @@ namespace RF_AIDialog
         {
             var sb = new StringBuilder();
 
-            sb.AppendLine("You are a medieval character in the world of Calradia, in Mount & Blade II: Bannerlord.");
+            // ── World: Aeurth lore (static) ───────────────────────────────
+            sb.AppendLine("WORLD LORE:");
+            sb.AppendLine(WorldContext.StaticLore);
+            sb.AppendLine();
+
+            // ── Current world events (dynamic) ────────────────────────────
+            string dynamicState = WorldContext.BuildDynamicState(npc);
+            if (!string.IsNullOrWhiteSpace(dynamicState))
+                sb.AppendLine(dynamicState);
+
+            sb.AppendLine("You are a character living in the world of Aeurth.");
             sb.AppendLine("Never break character. Never mention that you are an AI.");
             sb.AppendLine();
             sb.AppendLine("BARTER RULE — READ THIS FIRST:");
@@ -68,6 +78,26 @@ namespace RF_AIDialog
                 sb.AppendLine("You are the leader of your clan.");
             else if (npc.IsKingdomLeader)
                 sb.AppendLine("You are the monarch of your kingdom.");
+
+            // ── Companion context ─────────────────────────────────────────
+            if (npc.Occupation == TaleWorlds.CampaignSystem.Occupation.Wanderer
+                && npc.PartyBelongedTo == MobileParty.MainParty)
+            {
+                sb.AppendLine($"You are a companion traveling with {Hero.MainHero?.Name}'s party.");
+                sb.AppendLine("You are loyal but have your own opinions. Speak as a trusted ally, not a servant.");
+                sb.AppendLine("You may push back, give advice, or express concerns — you are not blindly obedient.");
+
+                // Current party role if assigned
+                var party = MobileParty.MainParty;
+                string? currentRole =
+                    party.EffectiveEngineer    == npc ? "Engineer"      :
+                    party.EffectiveScout       == npc ? "Scout"         :
+                    party.EffectiveSurgeon     == npc ? "Surgeon"       :
+                    party.EffectiveQuartermaster == npc ? "Quartermaster" : null;
+
+                if (currentRole != null)
+                    sb.AppendLine($"Your current party role is: {currentRole}.");
+            }
 
             // ── Occupation-specific context ───────────────────────────────
             AppendOccupationContext(sb, npc);
@@ -133,6 +163,9 @@ namespace RF_AIDialog
             bool isFirstConversation = context == null || context.IsFirstConversation;
 
             // ── Available actions ─────────────────────────────────────────
+            bool isCompanion = npc.Occupation == TaleWorlds.CampaignSystem.Occupation.Wanderer
+                               && npc.PartyBelongedTo == MobileParty.MainParty;
+
             sb.AppendLine();
             sb.AppendLine("AVAILABLE GAME ACTIONS (optional — only use when narratively justified):");
             sb.AppendLine("You may include an \"actions\" array in your response to trigger real in-game effects.");
@@ -152,6 +185,15 @@ namespace RF_AIDialog
             sb.AppendLine("                     Same item_id list as give_item.");
             sb.AppendLine("                     Use when the player offers to pay with goods instead of gold.");
             sb.AppendLine("                     NEVER use take_gold as a substitute for take_item.");
+
+            if (isCompanion)
+            {
+                sb.AppendLine("  assign_role      : accept a role in the player's party. role: one of:");
+                sb.AppendLine("                     \"engineer\", \"scout\", \"surgeon\", \"quartermaster\".");
+                sb.AppendLine("                     Use ONLY when the player explicitly asks you to take a role.");
+                sb.AppendLine("                     Example: {\"type\":\"assign_role\",\"role\":\"surgeon\"}");
+            }
+
             sb.AppendLine();
             sb.AppendLine("Actions example (DO NOT copy blindly — only include what fits the moment):");
             sb.AppendLine("  \"actions\": [{\"type\": \"relation_change\", \"value\": 2}]");
@@ -216,55 +258,4 @@ namespace RF_AIDialog
         private static void AppendOccupationContext(StringBuilder sb, Hero npc)
         {
             switch (npc.Occupation)
-            {
-                case Occupation.Lord:
-                    sb.AppendLine("You are a lord — war, politics, and land are your world.");
-                    break;
-                case Occupation.Wanderer:
-                    sb.AppendLine("You are a wanderer — a skilled adventurer without lands or title, living by your blade and wits.");
-                    break;
-                case Occupation.Merchant:
-                    sb.AppendLine("You are a merchant — profit, trade routes, and city politics occupy your mind.");
-                    break;
-                case Occupation.Artisan:
-                    sb.AppendLine("You are an artisan — proud of your craft, grounded in the rhythms of your workshop.");
-                    break;
-                case Occupation.GangLeader:
-                    sb.AppendLine("You are a gang leader — you rule through fear and favors in the city's shadows.");
-                    break;
-                case Occupation.RuralNotable:
-                    sb.AppendLine("You are a rural notable — respected in your village, wary of outsiders and lords alike.");
-                    break;
-                case Occupation.Headman:
-                    sb.AppendLine("You are a village headman — the voice of common folk, burdened by their needs.");
-                    break;
-            }
-        }
-
-        // ── Helpers ───────────────────────────────────────────────────────
-
-        /// <summary>
-        /// Extracts the epithet from a wanderer's name.
-        /// "Ira the Scholar" → "the Scholar"
-        /// Returns empty string if no epithet found.
-        /// </summary>
-        private static string ExtractEpithet(Hero npc)
-        {
-            if (npc.Occupation != Occupation.Wanderer) return "";
-
-            string name = npc.Name?.ToString() ?? "";
-            int idx = name.IndexOf(" the ", StringComparison.OrdinalIgnoreCase);
-            if (idx >= 0)
-                return name.Substring(idx + 1); // "the Scholar"
-
-            return "";
-        }
-
-        private static void AppendTrait(StringBuilder sb, Hero npc, TraitObject trait, string positive, string negative)
-        {
-            int level = npc.GetTraitLevel(trait);
-            if (level > 0) sb.Append($"{positive}, ");
-            else if (level < 0) sb.Append($"{negative}, ");
-        }
-    }
-}
+  

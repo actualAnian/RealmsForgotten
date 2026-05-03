@@ -93,6 +93,10 @@ namespace RF_AIDialog
                 case "take_item":
                     TakeItem(npc, action.ItemId, Math.Max(1, action.Value));
                     break;
+
+                case "assign_role":
+                    AssignRole(npc, action.Role);
+                    break;
             }
         }
 
@@ -196,8 +200,4 @@ namespace RF_AIDialog
             MobileParty.MainParty.ItemRoster.AddToCounts(item, -quantity);
 
             InformationManager.DisplayMessage(new InformationMessage(
-                $"[AI] You gave {npc.Name} {quantity}x {item.Name}.",
-                Color.FromUint(0xFF_A0_D0_FFu)));  // light blue
-        }
-    }
-}
+                $"[AI] You gave {npc.Na
