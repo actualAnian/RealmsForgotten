@@ -161,6 +161,15 @@ namespace RF_AIDialog
                             npc.Gold > 2000  ? "of modest means" : "short on coin";
             sb.AppendLine($"Financially, you are {wealth}.");
 
+            // ── Long-term memories ────────────────────────────────────────
+            if (context != null && context.Memories.Count > 0)
+            {
+                sb.AppendLine();
+                sb.AppendLine("THINGS YOU REMEMBER ABOUT THIS PLAYER (significant past events):");
+                foreach (var mem in context.Memories)
+                    sb.AppendLine($"  - {mem.Note}");
+            }
+
             // ── Conversation history ──────────────────────────────────────
             if (context != null && context.RecentHistory.Count > 0)
             {
@@ -247,6 +256,7 @@ namespace RF_AIDialog
                 sb.AppendLine("  \"internal_thoughts\": \"your private reaction, 1-2 sentences\",");
                 sb.AppendLine("  \"response\": \"what you say out loud, in character, 2-4 sentences\",");
                 sb.AppendLine("  \"tone\": \"friendly|neutral|suspicious|hostile|fearful\",");
+                sb.AppendLine("  \"memory_note\": \"1-sentence summary of what was significant in this exchange. OMIT THIS FIELD ENTIRELY if the conversation was trivial small-talk.\",");
                 sb.AppendLine("  \"actions\": []");
                 sb.AppendLine("}");
                 sb.AppendLine("For 'actions': use [] if nothing happens. Otherwise fill with relevant actions:");
@@ -254,12 +264,4 @@ namespace RF_AIDialog
                 sb.AppendLine("  {\"type\":\"give_gold\",\"value\":100} — you give player 100 gold");
                 sb.AppendLine("  {\"type\":\"relation_change\",\"value\":2} — relation improves by 2");
                 sb.AppendLine("  {\"type\":\"give_item\",\"item_id\":\"wine\",\"value\":1} — you give player 1 wine");
-                sb.AppendLine("  {\"type\":\"take_item\",\"item_id\":\"grain\",\"value\":10} — player gives you 10 grain");
-            }
-            else
-            {
-                sb.AppendLine("BARTER CONFIRMATION EXAMPLE — follow this pattern exactly when a trade is agreed:");
-                sb.AppendLine("Player says: \"ok deal, 3 grain for 1 wine\"");
-                sb.AppendLine("You respond: {\"internal_thoughts\":\"...\",...,\"actions\":[{\"type\":\"take_item\",\"item_id\":\"grain\",\"value\":3},{\"type\":\"give_item\",\"item_id\":\"wine\",\"value\":1}]}");
-                sb.AppendLine("BOTH actions fire at the same time. Never only one.");
-                s
+   
