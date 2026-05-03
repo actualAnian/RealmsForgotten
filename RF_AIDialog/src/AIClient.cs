@@ -1,5 +1,6 @@
 using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -7,10 +8,10 @@ using Newtonsoft.Json;
 namespace RF_AIDialog
 {
     // ─────────────────────────────────────────────
-    //  Request / response models for Ollama
+    //  Shared message model (role + content)
     // ─────────────────────────────────────────────
 
-    public class OllamaMessage
+    public class ChatMessage
     {
         [JsonProperty("role")]
         public string Role { get; set; } = "";
@@ -18,6 +19,10 @@ namespace RF_AIDialog
         [JsonProperty("content")]
         public string Content { get; set; } = "";
     }
+
+    // ─────────────────────────────────────────────
+    //  Ollama-specific models
+    // ─────────────────────────────────────────────
 
     public class OllamaOptions
     {
@@ -37,7 +42,7 @@ namespace RF_AIDialog
         public string Model { get; set; } = "";
 
         [JsonProperty("messages")]
-        public OllamaMessage[] Messages { get; set; } = Array.Empty<OllamaMessage>();
+        public ChatMessage[] Messages { get; set; } = Array.Empty<ChatMessage>();
 
         [JsonProperty("stream")]
         public bool Stream { get; set; } = false;
@@ -49,25 +54,56 @@ namespace RF_AIDialog
     public class OllamaResponse
     {
         [JsonProperty("message")]
-        public OllamaMessage? Message { get; set; }
+        public ChatMessage? Message { get; set; }
     }
 
     // ─────────────────────────────────────────────
-    //  HTTP client for Ollama
+    //  OpenAI-compatible models (DeepSeek, OpenAI)
+    // ─────────────────────────────────────────────
+
+    public class OpenAIRequest
+    {
+        [JsonProperty("model")]
+        public string Model { get; set; } = "";
+
+        [JsonProperty("messages")]
+        public ChatMessage[] Messages { get; set; } = Array.Empty<ChatMessage>();
+
+        [JsonProperty("max_tokens")]
+        public int MaxTokens { get; set; }
+
+        [JsonProperty("temperature")]
+        public double Temperature { get; set; }
+
+        [JsonProperty("stream")]
+        public bool Stream { get; set; } = false;
+    }
+
+    public class OpenAIChoice
+    {
+        [JsonProperty("message")]
+        public ChatMessage? Message { get; set; }
+    }
+
+    public class OpenAIResponse
+    {
+        [JsonProperty("choices")]
+        public OpenAIChoice[]? Choices { get; set; }
+    }
+
+    // ─────────────────────────────────────────────
+    //  Unified HTTP client
     // ─────────────────────────────────────────────
 
     public static class AIClient
     {
-        // HttpClient must be static — never instantiate per request
         private static readonly HttpClient _http = new HttpClient
         {
             Timeout = TimeSpan.FromSeconds(AIConfig.TimeoutSeconds)
         };
 
-        private const string OllamaEndpoint = AIConfig.OllamaEndpoint;
-
-        // Few-shot barter example injected as an assistant message.
-        // Small models follow role examples far more reliably than written rules.
+        // Few-shot barter example — small models follow role examples far more
+        // reliably than written rules. Kept even for remote APIs (no cost impact).
         private const string FewShotBarterUser =
             "ok deal, 3 grain for 1 wine, take it";
 
@@ -79,7 +115,7 @@ namespace RF_AIDialog
             + "{\"type\":\"give_item\",\"item_id\":\"wine\",\"value\":1}]}";
 
         /// <summary>
-        /// Sends a message to Ollama and returns the raw response string.
+        /// Sends a message to the configured backend and returns the raw response string.
         /// Runs on a background thread — do NOT call InformationManager from here.
         /// </summary>
         public static async Task<string> AskAsync(
@@ -88,53 +124,23 @@ namespace RF_AIDialog
             string userMessage,
             int maxTokens = 300)
         {
-            var request = new OllamaRequest
+            var messages = new[]
             {
-                Model  = model,
-                Stream = false,
-                Messages = new[]
-                {
-                    new OllamaMessage { Role = "system",    Content = systemPrompt },
-                    // Few-shot: shows the model exactly what a confirmed barter looks like.
-                    new OllamaMessage { Role = "user",      Content = FewShotBarterUser },
-                    new OllamaMessage { Role = "assistant", Content = FewShotBarterAssistant },
-                    new OllamaMessage { Role = "user",      Content = userMessage }
-                },
-                Options = new OllamaOptions
-                {
-                    NumPredict  = maxTokens,
-                    Temperature = AIConfig.Temperature,
-                    NumCtx      = AIConfig.ContextSize
-                }
+                new ChatMessage { Role = "system",    Content = systemPrompt },
+                new ChatMessage { Role = "user",      Content = FewShotBarterUser },
+                new ChatMessage { Role = "assistant", Content = FewShotBarterAssistant },
+                new ChatMessage { Role = "user",      Content = userMessage }
             };
 
-            string requestJson = JsonConvert.SerializeObject(request);
-
-            // UTF8Encoding(false) = no BOM — Encoding.UTF8 in .NET Framework includes BOM which breaks Ollama
-            var content = new StringContent(requestJson, new UTF8Encoding(false), "application/json");
-
-            // CancellationToken ensures real timeout independent of HttpClient
-            using var cts = new System.Threading.CancellationTokenSource(
-                TimeSpan.FromSeconds(AIConfig.TimeoutSeconds));
-
-            HttpResponseMessage httpResponse = await _http.PostAsync(OllamaEndpoint, content, cts.Token)
-                .ConfigureAwait(false);
-
-            string responseJson = await httpResponse.Content.ReadAsStringAsync()
-                .ConfigureAwait(false);
-
-            if (!httpResponse.IsSuccessStatusCode)
-            {
-                string errorSnippet = responseJson.Length > 300
-                    ? responseJson.Substring(0, 300)
-                    : responseJson;
-                throw new Exception($"HTTP {(int)httpResponse.StatusCode} - {errorSnippet}");
-            }
-
-            OllamaResponse? parsed = JsonConvert.DeserializeObject<OllamaResponse>(responseJson);
-            string result = parsed?.Message?.Content ?? "(no response)";
-
-            return result;
+            return AIConfig.UseRemoteAPI
+                ? await AskRemoteAsync(messages, maxTokens).ConfigureAwait(false)
+                : await AskOllamaAsync(model, messages, maxTokens).ConfigureAwait(false);
         }
-    }
-}
+
+        // ── Remote OpenAI-compatible (DeepSeek, OpenAI, etc.) ─────────────
+
+        private static async Task<string> AskRemoteAsync(ChatMessage[] messages, int maxTokens)
+        {
+            var request = new OpenAIRequest
+            {
+   
