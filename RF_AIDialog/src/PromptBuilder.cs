@@ -91,13 +91,16 @@ namespace RF_AIDialog
                 // Current party role if assigned
                 var party = MobileParty.MainParty;
                 string? currentRole =
-                    party.EffectiveEngineer    == npc ? "Engineer"      :
-                    party.EffectiveScout       == npc ? "Scout"         :
-                    party.EffectiveSurgeon     == npc ? "Surgeon"       :
+                    party.EffectiveEngineer      == npc ? "Engineer"      :
+                    party.EffectiveScout         == npc ? "Scout"         :
+                    party.EffectiveSurgeon       == npc ? "Surgeon"       :
                     party.EffectiveQuartermaster == npc ? "Quartermaster" : null;
 
                 if (currentRole != null)
                     sb.AppendLine($"Your current party role is: {currentRole}.");
+
+                // Party state — gives companions situational awareness
+                AppendPartyState(sb, party);
             }
 
             // ── Occupation-specific context ───────────────────────────────
@@ -254,7 +257,4 @@ namespace RF_AIDialog
             return sb.ToString();
         }
 
-        // ── Occupation-specific context ───────────────────────────────────
-
-        private static void AppendOccupationContext(StringBuilder sb, Hero npc)
-        {
+        // ── Occupation-specific context ───────────────────────�
