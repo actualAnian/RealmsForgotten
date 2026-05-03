@@ -8,44 +8,40 @@ namespace RF_AIDialog
 {
     /// <summary>
     /// Provides world context for NPC prompts:
-    ///   - StaticLore : the fixed history and peoples of Aeurth (injected once per prompt)
-    ///   - BuildDynamicState : current in-game events (wars, sieges) pulled at call time
+    ///   - StaticLore        : the fixed history and peoples of Aeurth (injected once per prompt)
+    ///   - BuildDynamicState : current in-game events pulled at call time
+    ///
+    /// Dynamic sections (in order):
+    ///   1. Season
+    ///   2. Wars + diplomatic state (peace/war with each kingdom)
+    ///   3. Active sieges
+    ///   4. Fallen kingdoms (eliminated)
+    ///   5. NPC's personal military situation
+    ///   6. NPC's fiefs and their health
+    ///   7. Clan power (renown, influence)
     /// </summary>
     public static class WorldContext
     {
         // ── Static lore ───────────────────────────────────────────────────
         // Condensed from the Aeurth lore document. Token-efficient but rich enough
         // for NPCs to speak authentically about the world they live in.
-
         public const string StaticLore =
-            "The world is called Aeurth, not Calradia. " +
-            "Its peoples are: " +
-            "MEN — divided into three realms (northern, western, southern), " +
-            "descendants of survivors who crossed a frozen sea centuries ago after their homeland sank beneath ice; " +
-            "ELVEANS — an ancient proud people of the High Garden (a mountain realm), " +
-            "part elvish in blood, fiercely distrustful of outsiders, claiming to be the world's original sons; " +
-            "NASORIA — settlers of the fertile western plains, " +
-            "ancestors who fled a culture of endless warlord wars and built a new civilization; " +
-            "PHARUN — sorcerer-kings ruling six rival city-states in the Jathari Desert, " +
-            "whose ancient magic drained the land's life and turned it to wasteland; " +
-            "XILANTLACAY — a powerful race of giants and half-giants, " +
-            "expelled from their homeland by the Pharun, now a proud island kingdom in the tropical south; " +
-            "DREADREALMS — undead remnants of an ancient civilization that once ruled Aeurth, " +
-            "exiled by the Elveans to Eternivora (a valley of eternal winter), now returning to take vengeance; " +
-            "DUGRAST — the small folk, the oldest race, dwellers beneath the mountains for millennia, " +
-            "now venturing into the world to fight for its survival; " +
-            "ALLKHUUR — fierce nomadic horse masters of the steppes between Eternivora and the realms of Men, " +
-            "believers in absolute freedom — no kings, no queens, only the wind; " +
-            "URKHAI — a violent orcish people of unknown origin, " +
-            "said to be born from ancient dark sorcery (the Dragon Moon era), " +
-            "territorial lords of the northern dark mountains.";
+            "This world is Aeurth. Its peoples: " +
+            "MEN (three realms: north, west, south — ancient refugees who crossed a frozen sea); " +
+            "ELVEANS (proud mountain-dwellers of the High Garden, distrustful of all outsiders); " +
+            "NASORIA (western plains settlers, fled endless warlord wars); " +
+            "PHARUN (six rival sorcerer-king city-states in the Jathari Desert — their magic turned fertile land to wasteland); " +
+            "XILANTLACAY (giants and half-giants, exiled south — now a powerful island kingdom); " +
+            "DREADREALMS (ancient undead civilization, exiled to Eternivora's eternal winter, returning for vengeance); " +
+            "DUGRAST (small folk, oldest race, emerging from underground to defend the world); " +
+            "ALLKHUUR (nomadic steppe horse-lords, believers in absolute freedom); " +
+            "URKHAI (orcish people of dark sorcery origin, violent lords of the northern mountains).";
 
         // ── Dynamic world state ───────────────────────────────────────────
 
         /// <summary>
-        /// Builds a short paragraph of current in-game world events:
-        /// wars involving the NPC's faction and active sieges.
-        /// All exceptions are caught — this must never crash the game.
+        /// Builds a contextual paragraph of current in-game world events.
+        /// All sections are wrapped in try/catch — this must never crash the game.
         /// </summary>
         public static string BuildDynamicState(Hero npc)
         {
@@ -54,8 +50,13 @@ namespace RF_AIDialog
                 var sb = new StringBuilder();
                 sb.AppendLine("CURRENT WORLD EVENTS:");
 
-                AppendWarState(sb, npc);
+                AppendSeason(sb);
+                AppendWarAndDiplomacy(sb, npc);
                 AppendSieges(sb);
+                AppendEliminatedKingdoms(sb);
+                AppendNpcPersonalSituation(sb, npc);
+                AppendNpcFiefs(sb, npc);
+                AppendClanPower(sb, npc);
 
                 return sb.ToString();
             }
@@ -65,30 +66,64 @@ namespace RF_AIDialog
             }
         }
 
-        // ── War state ─────────────────────────────────────────────────────
+        // ── 1. Season ─────────────────────────────────────────────────────
 
-        private static void AppendWarState(StringBuilder sb, Hero npc)
+        private static void AppendSeason(StringBuilder sb)
+        {
+            try
+            {
+                var now = CampaignTime.Now;
+                // GetSeasonOfYear is a property returning a CampaignTime.Seasons enum
+                // cast to int: Spring=0, Summer=1, Autumn=2, Winter=3
+                int seasonInt = (int)now.GetSeasonOfYear;
+                string seasonName = seasonInt == 0 ? "Spring" :
+                                    seasonInt == 1 ? "Summer" :
+                                    seasonInt == 2 ? "Autumn" :
+                                    seasonInt == 3 ? "Winter" : "Unknown";
+                string seasonNote = seasonInt == 3 ? " — campaigning is brutal, roads are treacherous"  :
+                                    seasonInt == 0 ? " — armies are beginning to move after winter"      :
+                                    seasonInt == 1 ? " — peak campaigning season, marches are common"   :
+                                                     " — harvest time, lords eye their granaries";
+                sb.AppendLine($"Season: {seasonName}{seasonNote}.");
+            }
+            catch { }
+        }
+
+        // ── 2. Wars and diplomatic state ──────────────────────────────────
+
+        private static void AppendWarAndDiplomacy(StringBuilder sb, Hero npc)
         {
             try
             {
                 if (!(npc.MapFaction is Kingdom npcKingdom)) return;
 
-                var enemies = new List<string>();
+                var enemies   = new List<string>();
+                var peaceful  = new List<string>();
+
                 foreach (var k in Campaign.Current.Kingdoms)
                 {
                     if (k == npcKingdom || k.IsEliminated) continue;
                     if (FactionManager.IsAtWarAgainstFaction(npcKingdom, k))
                         enemies.Add(k.Name.ToString());
+                    else
+                        peaceful.Add(k.Name.ToString());
                 }
 
                 if (enemies.Count > 0)
                     sb.AppendLine($"Your kingdom ({npcKingdom.Name}) is at war with: {string.Join(", ", enemies)}.");
                 else
-                    sb.AppendLine($"Your kingdom ({npcKingdom.Name}) is currently at peace.");
+                    sb.AppendLine($"Your kingdom ({npcKingdom.Name}) is at peace — no active wars.");
 
-                // Player's faction if different
-                if (Hero.MainHero?.MapFaction is Kingdom playerKingdom &&
-                    playerKingdom != npcKingdom)
+                // Only list peaceful kingdoms if the list is short enough to be meaningful
+                if (peaceful.Count > 0 && peaceful.Count <= 3)
+                    sb.AppendLine($"Currently at peace with: {string.Join(", ", peaceful)}.");
+                else if (peaceful.Count > 3)
+                    sb.AppendLine($"At peace with {peaceful.Count} other kingdoms.");
+
+                // Player's faction wars (if different from NPC's kingdom)
+                if (Hero.MainHero?.MapFaction is Kingdom playerKingdom
+                    && playerKingdom != npcKingdom
+                    && !playerKingdom.IsEliminated)
                 {
                     var playerEnemies = new List<string>();
                     foreach (var k in Campaign.Current.Kingdoms)
@@ -101,45 +136,5 @@ namespace RF_AIDialog
                         sb.AppendLine(
                             $"The player's faction ({playerKingdom.Name}) is at war with: " +
                             $"{string.Join(", ", playerEnemies)}.");
-                }
-            }
-            catch { /* never crash */ }
-        }
-
-        // ── Active sieges ─────────────────────────────────────────────────
-
-        private static void AppendSieges(StringBuilder sb)
-        {
-            try
-            {
-                var lines = new List<string>();
-                foreach (var settlement in Settlement.All)
-                {
-                    if (!settlement.IsUnderSiege) continue;
-
-                    var siegeEvent = settlement.SiegeEvent;
-                    if (siegeEvent == null) continue;
-
-                    // Try to get the attacker's name from the besieger party
-                    string attackerName = "Unknown";
-                    try
-                    {
-                        var besiegerParty = siegeEvent.BesiegerParty;
-                        if (besiegerParty?.LeaderHero != null)
-                            attackerName = besiegerParty.LeaderHero.Name.ToString();
-                        else if (besiegerParty?.MapFaction != null)
-                            attackerName = besiegerParty.MapFaction.Name.ToString();
-                    }
-                    catch { }
-
-                    lines.Add($"{attackerName} is besieging {settlement.Name}");
-                    if (lines.Count >= 3) break; // cap at 3 to keep prompt lean
-                }
-
-                if (lines.Count > 0)
-                    sb.AppendLine($"Active sieges: {string.Join("; ", lines)}.");
-            }
-            catch { /* never crash */ }
-        }
-    }
-}
+                    else
+                        sb.AppendLine($"The player's fac
