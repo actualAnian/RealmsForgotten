@@ -1,6 +1,7 @@
-using System;
+using System.Text;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
+using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
@@ -10,15 +11,17 @@ namespace RF_AIDialog
     /// Entry point do mod RF_AIDialog.
     ///
     /// Responsabilidades:
-    ///   1. Registrar AIDialogBehavior (dialog hook) e OllamaTestBehavior (POC) na campanha.
-    ///   2. A cada frame (OnApplicationTick), verificar mensagens pendentes
-    ///      vindas das tasks de background e exibi-las na tela.
+    ///   1. Registrar todos os CampaignBehaviors na campanha.
+    ///   2. A cada frame (OnApplicationTick):
+    ///      a) Verificar mensagens pendentes vindas das tasks de background.
+    ///      b) Detectar F8 para abrir o World Chronicle.
     ///
-    /// InformationManager.DisplayMessage DEVE ser chamado da thread principal.
+    /// InformationManager.DisplayMessage/ShowInquiry DEVEM ser chamados da thread principal.
     /// </summary>
     public class RF_AIDialogSubModule : MBSubModuleBase
     {
         private AIDialogBehavior? _dialogBehavior;
+        private bool _chronicleKeyWasDown = false;
 
         // ── Ciclo de vida ─────────────────────────────────────────────────
 
@@ -52,17 +55,12 @@ namespace RF_AIDialog
 
         protected override void OnApplicationTick(float dt)
         {
-            if (_dialogBehavior == null || !_dialogBehavior.ResponseJustArrived)
-                return;
+            // ── AI response notification ──────────────────────────────────
+            if (_dialogBehavior != null && _dialogBehavior.ResponseJustArrived)
+            {
+                _dialogBehavior.ResponseJustArrived = false;
 
-            _dialogBehavior.ResponseJustArrived = false;
-
-            // Só notifica se o jogador ainda está num diálogo
-            var cm = Campaign.Current?.ConversationManager;
-            if (cm == null || !cm.IsConversationInProgress)
-                return;
-
-            // Notificação no HUD — igual ao padrão do AI Influence
-            // O texto do botão já mudou para "(Resposta pronta — clique aqui)"
-            // via ConditionUpdateWaitText, mas a UI só re-lê quando o jogador
-          
+                var cm = Campaign.Current?.ConversationManager;
+                if (cm != null && cm.IsConversationInProgress)
+                {
+                    string npcName = _dialogBehavior.CurrentNp
