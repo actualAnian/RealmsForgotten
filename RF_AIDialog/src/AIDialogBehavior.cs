@@ -121,7 +121,7 @@ namespace RF_AIDialog
             starter.AddPlayerLine(
                 "rf_ai_end",
                 "rf_ai_after_response",
-                "hero_main_options",
+                "close_window",
                 "That will be all.",
                 null, null,
                 100, null);
@@ -281,4 +281,4 @@ namespace RF_AIDialog
                     _currentContext.GeneratedPersonality = _parsed.PersonalitySummary!;
                 }
 
-                string npcSaid = string.I
+                string npcSaid = string.IsNull
