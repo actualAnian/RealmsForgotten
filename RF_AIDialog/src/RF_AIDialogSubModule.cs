@@ -35,6 +35,10 @@ namespace RF_AIDialog
                 // NPCContextStore must be registered first — everything reads from it
                 campaignStarter.AddBehavior(new NPCContextStore());
 
+                // WorldHistoryStore must be registered before WorldHistoryBehavior
+                campaignStarter.AddBehavior(new WorldHistoryStore());
+                campaignStarter.AddBehavior(new WorldHistoryBehavior());
+
                 // NPC initiative — evaluates daily conditions for all lords/notables
                 campaignStarter.AddBehavior(new NPCInitiativeBehavior());
 
@@ -61,8 +65,4 @@ namespace RF_AIDialog
             // Notificação no HUD — igual ao padrão do AI Influence
             // O texto do botão já mudou para "(Resposta pronta — clique aqui)"
             // via ConditionUpdateWaitText, mas a UI só re-lê quando o jogador
-            // interage. Esta mensagem avisa que é hora de clicar.
-            string npcName = _dialogBehavior.CurrentNpcName;
-            InformationManager.DisplayMessage(
-                new InformationMessage(
-                    $"
+          

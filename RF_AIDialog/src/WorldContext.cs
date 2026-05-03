@@ -57,6 +57,7 @@ namespace RF_AIDialog
                 AppendNpcPersonalSituation(sb, npc);
                 AppendNpcFiefs(sb, npc);
                 AppendClanPower(sb, npc);
+                AppendWorldHistory(sb);
 
                 return sb.ToString();
             }
@@ -137,4 +138,4 @@ namespace RF_AIDialog
                             $"The player's faction ({playerKingdom.Name}) is at war with: " +
                             $"{string.Join(", ", playerEnemies)}.");
                     else
-                        sb.AppendLine($"The player's fac
+                
