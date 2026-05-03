@@ -11,20 +11,11 @@ using TaleWorlds.ObjectSystem;
 
 namespace RF_AIDialog
 {
-    /// <summary>
-    /// Executes game actions returned by the LLM in the "actions" JSON field.
-    /// Called on the main thread after the NPC's response is shown.
-    ///
-    /// All actions include sanity guards — the LLM cannot break the game
-    /// by requesting unreasonable values.
-    /// </summary>
     public static class ActionExecutor
     {
-        // Hard caps pulled from AIConfig
         private static int MaxRelationDelta => AIConfig.MaxRelationDelta;
         private static int MaxGoldTransfer  => AIConfig.MaxGoldTransfer;
 
-        // Items the LLM is allowed to give or take (must match IDs in PromptBuilder)
         private static readonly HashSet<string> AllowedItemIds = new HashSet<string>(
             StringComparer.OrdinalIgnoreCase)
         {
@@ -32,16 +23,10 @@ namespace RF_AIDialog
             "silver_ore", "wool", "pottery", "salt", "dates"
         };
 
-        // ── Entry point ───────────────────────────────────────────────────
-
         public static void Execute(List<AIAction>? actions, Hero npc)
         {
             if (actions == null || actions.Count == 0) return;
 
-            // Guard: take_item must always be paired with give_item or give_gold.
-            // If the LLM fires take_item alone it means it treated the item as a
-            // "deposit to inspect later" — reject the whole batch so the player
-            // keeps their goods and can re-negotiate.
             bool hasTakeItem = actions.Any(a =>
                 string.Equals(a.Type, "take_item", StringComparison.OrdinalIgnoreCase));
             bool hasReturn = actions.Any(a =>
@@ -51,8 +36,8 @@ namespace RF_AIDialog
             if (hasTakeItem && !hasReturn)
             {
                 InformationManager.DisplayMessage(new InformationMessage(
-                    $"[AI] {npc.Name} has not agreed to give anything in return — no trade executed. Try offering again with clearer terms.",
-                    Color.FromUint(0xFF_FF_A0_00u)));  // orange
+                    $"[AI] {npc.Name} has not agreed to give anything in return — no trade executed.",
+                    Color.FromUint(0xFF_FF_A0_00u)));
                 return;
             }
 
@@ -68,87 +53,43 @@ namespace RF_AIDialog
             }
         }
 
-        // ── Individual action handlers ────────────────────────────────────
-
         private static void ExecuteOne(AIAction action, Hero npc)
         {
             switch (action.Type?.ToLowerInvariant())
             {
-                case "relation_change":
-                    RelationChange(npc, action.Value);
-                    break;
-
-                case "give_gold":
-                    GiveGold(npc, action.Value);
-                    break;
-
-                case "take_gold":
-                    TakeGold(npc, action.Value);
-                    break;
-
-                case "give_item":
-                    GiveItem(npc, action.ItemId, Math.Max(1, action.Value));
-                    break;
-
-                case "take_item":
-                    TakeItem(npc, action.ItemId, Math.Max(1, action.Value));
-                    break;
-
-                case "assign_role":
-                    AssignRole(npc, action.Role);
-                    break;
-
-                case "give_troops":
-                    GiveTroops(npc, Math.Max(1, action.Value));
-                    break;
+                case "relation_change": RelationChange(npc, action.Value);               break;
+                case "give_gold":       GiveGold(npc, action.Value);                     break;
+                case "take_gold":       TakeGold(npc, action.Value);                     break;
+                case "give_item":       GiveItem(npc, action.ItemId, Math.Max(1, action.Value)); break;
+                case "take_item":       TakeItem(npc, action.ItemId, Math.Max(1, action.Value)); break;
+                case "assign_role":     AssignRole(npc, action.Role);                    break;
+                case "give_troops":     GiveTroops(npc, Math.Max(1, action.Value));      break;
             }
         }
-
-        // ── relation_change ───────────────────────────────────────────────
 
         private static void RelationChange(Hero npc, int delta)
         {
             delta = Math.Max(-MaxRelationDelta, Math.Min(MaxRelationDelta, delta));
             if (delta == 0) return;
-
-            ChangeRelationAction.ApplyRelationChangeBetweenHeroes(
-                npc, Hero.MainHero, delta);
-
-            string sign    = delta > 0 ? "+" : "";
-            Color  color   = delta > 0
-                ? Color.FromUint(0xFF_80_FF_80u)   // green
-                : Color.FromUint(0xFF_FF_60_60u);  // red
-
+            ChangeRelationAction.ApplyRelationChangeBetweenHeroes(npc, Hero.MainHero, delta);
+            string sign  = delta > 0 ? "+" : "";
+            Color  color = delta > 0 ? Color.FromUint(0xFF_80_FF_80u) : Color.FromUint(0xFF_FF_60_60u);
             InformationManager.DisplayMessage(new InformationMessage(
                 $"[AI] Relation with {npc.Name}: {sign}{delta}.", color));
         }
 
-        // ── give_gold ─────────────────────────────────────────────────────
-
         private static void GiveGold(Hero npc, int amount)
         {
-            if (amount <= 0) return;
-
-            if (npc.Gold < amount)
-            {
-                // NPC can't afford it — silently skip (they shouldn't have offered)
-                return;
-            }
-
+            if (amount <= 0 || npc.Gold < amount) return;
             npc.ChangeHeroGold(-amount);
             Hero.MainHero.ChangeHeroGold(amount);
-
             InformationManager.DisplayMessage(new InformationMessage(
-                $"[AI] {npc.Name} gave you {amount} gold.",
-                Color.FromUint(0xFF_FF_D7_00u)));
+                $"[AI] {npc.Name} gave you {amount} gold.", Color.FromUint(0xFF_FF_D7_00u)));
         }
-
-        // ── take_gold ─────────────────────────────────────────────────────
 
         private static void TakeGold(Hero npc, int amount)
         {
             if (amount <= 0) return;
-
             if (Hero.MainHero.Gold < amount)
             {
                 InformationManager.DisplayMessage(new InformationMessage(
@@ -156,42 +97,27 @@ namespace RF_AIDialog
                     Color.FromUint(0xFF_FF_60_60u)));
                 return;
             }
-
             Hero.MainHero.ChangeHeroGold(-amount);
             npc.ChangeHeroGold(amount);
-
             InformationManager.DisplayMessage(new InformationMessage(
-                $"[AI] You paid {npc.Name} {amount} gold.",
-                Color.FromUint(0xFF_FF_D7_00u)));
+                $"[AI] You paid {npc.Name} {amount} gold.", Color.FromUint(0xFF_FF_D7_00u)));
         }
-
-        // ── give_item ─────────────────────────────────────────────────────
 
         private static void GiveItem(Hero npc, string? itemId, int quantity)
         {
-            if (string.IsNullOrWhiteSpace(itemId)) return;
-            if (!AllowedItemIds.Contains(itemId))  return;
-
+            if (string.IsNullOrWhiteSpace(itemId) || !AllowedItemIds.Contains(itemId)) return;
             var item = MBObjectManager.Instance.GetObject<ItemObject>(itemId);
             if (item == null) return;
-
             MobileParty.MainParty.ItemRoster.AddToCounts(item, quantity);
-
             InformationManager.DisplayMessage(new InformationMessage(
-                $"[AI] {npc.Name} gave you {quantity}x {item.Name}.",
-                Color.FromUint(0xFF_A0_D0_FFu)));  // light blue
+                $"[AI] {npc.Name} gave you {quantity}x {item.Name}.", Color.FromUint(0xFF_A0_D0_FFu)));
         }
-
-        // ── take_item ─────────────────────────────────────────────────────
 
         private static void TakeItem(Hero npc, string? itemId, int quantity)
         {
-            if (string.IsNullOrWhiteSpace(itemId)) return;
-            if (!AllowedItemIds.Contains(itemId))  return;
-
+            if (string.IsNullOrWhiteSpace(itemId) || !AllowedItemIds.Contains(itemId)) return;
             var item = MBObjectManager.Instance.GetObject<ItemObject>(itemId);
             if (item == null) return;
-
             int available = MobileParty.MainParty.ItemRoster.GetItemNumber(item);
             if (available < quantity)
             {
@@ -200,5 +126,75 @@ namespace RF_AIDialog
                     Color.FromUint(0xFF_FF_60_60u)));
                 return;
             }
+            MobileParty.MainParty.ItemRoster.AddToCounts(item, -quantity);
+            InformationManager.DisplayMessage(new InformationMessage(
+                $"[AI] You gave {npc.Name} {quantity}x {item.Name}.", Color.FromUint(0xFF_A0_D0_FFu)));
+        }
 
-            MobileParty.MainParty.ItemRoster.AddToCounts(
+        private static void GiveTroops(Hero npc, int count)
+        {
+            var npcParty = npc.PartyBelongedTo;
+            if (npcParty == null)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"[AI] {npc.Name} has no party to draw troops from.", Color.FromUint(0xFF_FF_60_60u)));
+                return;
+            }
+
+            var available = npcParty.MemberRoster.GetTroopRoster()
+                .Where(e => !e.Character.IsHero && e.Number > 0)
+                .OrderByDescending(e => e.Number)
+                .ToList();
+
+            if (available.Count == 0)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"[AI] {npc.Name} has no troops to give.", Color.FromUint(0xFF_FF_60_60u)));
+                return;
+            }
+
+            int remaining = Math.Min(count, 20);
+            foreach (var element in available)
+            {
+                if (remaining <= 0) break;
+                int toTransfer = Math.Min(remaining, element.Number);
+                npcParty.MemberRoster.AddToCounts(element.Character, -toTransfer);
+                MobileParty.MainParty.MemberRoster.AddToCounts(element.Character, toTransfer);
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"[AI] {npc.Name} transferred {toTransfer}x {element.Character.Name} to your party.",
+                    Color.FromUint(0xFF_80_FF_80u)));
+                remaining -= toTransfer;
+            }
+        }
+
+        private static void AssignRole(Hero npc, string? role)
+        {
+            if (string.IsNullOrWhiteSpace(role)) return;
+            var party = MobileParty.MainParty;
+            if (npc.PartyBelongedTo != party)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"[AI] {npc.Name} is not in your party — role assignment skipped.",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return;
+            }
+
+            string roleLabel;
+            switch (role.Trim().ToLowerInvariant())
+            {
+                case "engineer":     party.SetPartyEngineer(npc);     roleLabel = "Engineer";     break;
+                case "scout":        party.SetPartyScout(npc);        roleLabel = "Scout";        break;
+                case "surgeon":      party.SetPartySurgeon(npc);      roleLabel = "Surgeon";      break;
+                case "quartermaster":party.SetPartyQuartermaster(npc);roleLabel = "Quartermaster";break;
+                default:
+                    InformationManager.DisplayMessage(new InformationMessage(
+                        $"[AI] Unknown role '{role}' — valid: engineer, scout, surgeon, quartermaster.",
+                        Color.FromUint(0xFF_FF_60_60u)));
+                    return;
+            }
+
+            InformationManager.DisplayMessage(new InformationMessage(
+                $"[AI] {npc.Name} is now your party's {roleLabel}.", Color.FromUint(0xFF_80_FF_80u)));
+        }
+    }
+}
