@@ -38,7 +38,7 @@ namespace RF_AIDialog
 
         private static int CurrentDay()
         {
-            try { return (int)Campaign.Current.CampaignStartTime.ElapsedDaysUntilNow; }
+            try { return (int)Campaign.Current.Models.CampaignTimeModel.CampaignStartTime.ElapsedDaysUntilNow; }
             catch { return 0; }
         }
 
@@ -121,7 +121,4 @@ namespace RF_AIDialog
 
                 Record($"Clan {clan.Name}{kingdomStr} has been destroyed.");
             }
-            catch { }
-        }
-    }
-}
+            cat

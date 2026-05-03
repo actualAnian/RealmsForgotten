@@ -85,7 +85,7 @@ namespace RF_AIDialog
         public List<WorldEvent> GetRecentEvents(int maxCount = 15, int maxDays = 0)
         {
             int currentDay = 0;
-            try { currentDay = (int)Campaign.Current.CampaignStartTime.ElapsedDaysUntilNow; } catch { }
+            try { currentDay = (int)Campaign.Current.Models.CampaignTimeModel.CampaignStartTime.ElapsedDaysUntilNow; } catch { }
 
             var result = new List<WorldEvent>();
             // Walk backwards (newest first), collect up to maxCount
@@ -96,7 +96,4 @@ namespace RF_AIDialog
                 result.Add(e);
             }
             result.Reverse(); // back to chronological order
-            return result;
-        }
-    }
-}
+            return r

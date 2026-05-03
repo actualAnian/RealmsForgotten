@@ -4,6 +4,7 @@ using System.Text;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.Core;
 
 namespace RF_AIDialog
 {
@@ -263,5 +264,4 @@ namespace RF_AIDialog
                 sb.AppendLine("  {\"type\":\"take_gold\",\"value\":50}  — player gives you 50 gold");
                 sb.AppendLine("  {\"type\":\"give_gold\",\"value\":100} — you give player 100 gold");
                 sb.AppendLine("  {\"type\":\"relation_change\",\"value\":2} — relation improves by 2");
-                sb.AppendLine("  {\"type\":\"give_item\",\"item_id\":\"wine\",\"value\":1} — you give player 1 wine");
-   
+                sb.AppendLine("  {\"type\":\"give_item\",\"item_id\":\"wine\",\"value\":1} — you gi
