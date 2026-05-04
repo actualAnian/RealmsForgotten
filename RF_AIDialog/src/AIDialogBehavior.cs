@@ -17,20 +17,22 @@ namespace RF_AIDialog
     ///   3. Player types and confirms
     ///   4. LLM processes in background, returning structured JSON
     ///   5. HUD notification: "[NPC] is ready to respond. Click '...' to hear the reply."
-    ///   6. Player clicks '...' → NPC response appears in the dialogue box
+    ///   6. Player clicks '...' -> NPC response appears in the dialogue box
     ///   7. Exchange is saved to NPCContext for continuity in future conversations
+    ///
+    /// Request lifecycle:
+    ///   - If the LLM returns a "request" field and no request is pending, CommitNewRequest() fires.
+    ///   - If a request is already pending, the new text is held in _pendingNewRequest and the NPC
+    ///     surfaces a confirmation dialog ("replace my old request?") before the player commits.
+    ///   - On fulfillment the quest log entry is closed and NPCContext.PendingRequest is cleared.
     /// </summary>
     public class AIDialogBehavior : CampaignBehaviorBase
     {
-        // ── State ─────────────────────────────────────────────────────────
+        // State
         private volatile bool        _isWaiting          = false;
         private volatile string?     _rawResponse        = null;
         private          RFAIResponse? _parsed           = null;
 
-        /// <summary>
-        /// Signals the SubModule that a response just arrived.
-        /// Read and cleared on the main thread (OnApplicationTick).
-        /// </summary>
         public volatile bool ResponseJustArrived = false;
 
         private Hero?       _currentNpc      = null;
@@ -38,20 +40,23 @@ namespace RF_AIDialog
         private string      _lastPlayerMsg   = "";
         private NPCContext? _currentContext  = null;
 
-        /// <summary>Current NPC name — read by the SubModule for HUD notification.</summary>
-        public string CurrentNpcName => _npcNameText;
+        // When non-null, the LLM issued a new request while a previous one is pending.
+        // The NPC will ask the player to choose. _currentNpc/_currentContext stay alive
+        // until the choice is made.
+        private string? _pendingNewRequest = null;
 
-        // ─────────────────────────────────────────────────────────────────
+        public string CurrentNpcName => _npcNameText;
 
         public override void RegisterEvents() { }
         public override void SyncData(IDataStore dataStore) { }
 
         public void AddDialogs(CampaignGameStarter starter)
         {
-            MBTextManager.SetTextVariable("RF_AI_RESPONSE",  new TextObject("{=!}..."));
-            MBTextManager.SetTextVariable("RF_AI_WAIT_TEXT", new TextObject("{=!}..."));
+            MBTextManager.SetTextVariable("RF_AI_RESPONSE",    new TextObject("{=!}..."));
+            MBTextManager.SetTextVariable("RF_AI_WAIT_TEXT",   new TextObject("{=!}..."));
+            MBTextManager.SetTextVariable("RF_AI_OLD_REQUEST", new TextObject("{=!}..."));
 
-            // ── 0. NPC initiative trigger (higher priority) ───────────────
+            // 0. NPC initiative trigger
             starter.AddPlayerLine(
                 "rf_ai_initiative_trigger",
                 "hero_main_options",
@@ -61,7 +66,7 @@ namespace RF_AIDialog
                 ConsequenceTriggerInitiative,
                 150, null);
 
-            // ── 1. Player menu option ─────────────────────────────────────
+            // 1. Player menu option
             starter.AddPlayerLine(
                 "rf_ai_open_input",
                 "hero_main_options",
@@ -71,7 +76,7 @@ namespace RF_AIDialog
                 ConsequenceOpenTextInput,
                 100, null);
 
-            // ── 2. NPC thinking state ─────────────────────────────────────
+            // 2. NPC thinking state
             starter.AddDialogLine(
                 "rf_ai_npc_thinking_line",
                 "rf_ai_npc_thinking",
@@ -79,7 +84,7 @@ namespace RF_AIDialog
                 "[Thoughtful] Give me a moment to choose my words...",
                 null, null, 100, null);
 
-            // ── 3. Single wait option — text updates each time state is entered
+            // 3. Wait option
             starter.AddPlayerLine(
                 "rf_ai_player_waiting",
                 "rf_ai_player_wait",
@@ -88,7 +93,7 @@ namespace RF_AIDialog
                 ConditionUpdateWaitText,
                 null, 100, null);
 
-            // ── 3a. Still waiting — loop back ─────────────────────────────
+            // 3a. Still waiting
             starter.AddDialogLine(
                 "rf_ai_still_waiting_line",
                 "rf_ai_player_wait_result",
@@ -97,7 +102,7 @@ namespace RF_AIDialog
                 ConditionIsStillWaiting,
                 null, 100, null);
 
-            // ── 3b. Response ready — NPC speaks, goes to continue menu ──────
+            // 3b. Response ready
             starter.AddDialogLine(
                 "rf_ai_npc_response_line",
                 "rf_ai_player_wait_result",
@@ -107,7 +112,38 @@ namespace RF_AIDialog
                 ConsequenceClearResponse,
                 200, null);
 
-            // ── 4a. Continue speaking ─────────────────────────────────────
+            // 4. Replace-request offer (higher priority than player options below)
+            starter.AddDialogLine(
+                "rf_ai_replace_request_offer",
+                "rf_ai_after_response",
+                "rf_ai_replace_options",
+                "Before you go — I must also tell you: I already asked something of you ({RF_AI_OLD_REQUEST}). " +
+                "Shall we set that matter aside and have you pursue this new one instead?",
+                ConditionHasPendingNewRequest,
+                null,
+                300, null);
+
+            // 4a. Accept replacing
+            starter.AddPlayerLine(
+                "rf_ai_replace_accept",
+                "rf_ai_replace_options",
+                "rf_ai_after_response",
+                "Very well — let us focus on your new request. The old one can wait.",
+                null,
+                ConsequenceAcceptNewRequest,
+                200, null);
+
+            // 4b. Decline replacing
+            starter.AddPlayerLine(
+                "rf_ai_replace_decline",
+                "rf_ai_replace_options",
+                "rf_ai_after_response",
+                "No, I will honour the original agreement first. We can return to this later.",
+                null,
+                ConsequenceDeclineNewRequest,
+                100, null);
+
+            // 5a. Continue speaking
             starter.AddPlayerLine(
                 "rf_ai_continue",
                 "rf_ai_after_response",
@@ -117,7 +153,7 @@ namespace RF_AIDialog
                 ConsequenceOpenTextInput,
                 200, null);
 
-            // ── 4b. End conversation ──────────────────────────────────────
+            // 5b. End conversation
             starter.AddPlayerLine(
                 "rf_ai_end",
                 "rf_ai_after_response",
@@ -127,7 +163,7 @@ namespace RF_AIDialog
                 100, null);
         }
 
-        // ── Conditions ────────────────────────────────────────────────────
+        // Conditions
 
         private bool ConditionCanUseAI()
             => Hero.OneToOneConversationHero != null && !_isWaiting;
@@ -147,7 +183,7 @@ namespace RF_AIDialog
         {
             string waitText = (_isWaiting || _rawResponse == null)
                 ? "..."
-                : "(Response ready — click here)";
+                : "(Response ready - click here)";
             MBTextManager.SetTextVariable("RF_AI_WAIT_TEXT", new TextObject("{=!}" + waitText));
             return true;
         }
@@ -180,7 +216,21 @@ namespace RF_AIDialog
             return true;
         }
 
-        // ── Consequences ──────────────────────────────────────────────────
+        // Returns true when LLM issued a new request but one is already pending.
+        // Also populates RF_AI_OLD_REQUEST for display.
+        private bool ConditionHasPendingNewRequest()
+        {
+            if (_pendingNewRequest == null) return false;
+
+            string oldDesc = _currentContext?.PendingRequest?.Description ?? "";
+            if (oldDesc.Length > 120) oldDesc = oldDesc.Substring(0, 120) + "...";
+            MBTextManager.SetTextVariable("RF_AI_OLD_REQUEST",
+                new TextObject("{=!}" + Sanitize(oldDesc)));
+
+            return true;
+        }
+
+        // Consequences
 
         private void ConsequenceOpenTextInput()
         {
@@ -209,7 +259,6 @@ namespace RF_AIDialog
                 ? NPCContextStore.Instance?.GetOrCreate(_currentNpc)
                 : null;
 
-            // Send a neutral opener — the NPC will lead with their initiative topic
             OnPlayerConfirmedInput("(You give the NPC your attention, inviting them to speak first.)");
         }
 
@@ -217,7 +266,7 @@ namespace RF_AIDialog
         {
             if (string.IsNullOrWhiteSpace(playerText))
             {
-                _rawResponse = "(Empty message — please try again)";
+                _rawResponse = "(Empty message - please try again)";
                 return;
             }
 
@@ -268,17 +317,159 @@ namespace RF_AIDialog
 
         private void ConsequenceClearResponse()
         {
-            // ── Execute game actions ──────────────────────────────────────
+            // Execute game actions
             if (_parsed?.Actions != null && _currentNpc != null)
                 ActionExecutor.Execute(_parsed.Actions, _currentNpc);
 
-            // ── Save exchange to NPCContext ────────────────────────────────
+            // Save exchange to NPCContext
             if (_currentContext != null && _parsed != null)
             {
                 if (_currentContext.IsFirstConversation &&
                     !string.IsNullOrWhiteSpace(_parsed.PersonalitySummary))
                 {
                     _currentContext.GeneratedPersonality = _parsed.PersonalitySummary!;
+
+                    if (!string.IsNullOrWhiteSpace(_parsed.Ambition) && _currentNpc?.IsLord == true)
+                        _currentContext.GeneratedAmbition = _parsed.Ambition!;
                 }
 
-                string npcSaid = string.IsNull
+                string npcSaid = string.IsNullOrWhiteSpace(_parsed.Response)
+                    ? "..."
+                    : _parsed.Response;
+
+                if (!string.IsNullOrWhiteSpace(_lastPlayerMsg))
+                    _currentContext.AddExchange(_lastPlayerMsg, npcSaid);
+
+                // Long-term memory note
+                if (!string.IsNullOrWhiteSpace(_parsed.MemoryNote))
+                {
+                    int memDay = 0;
+                    try { memDay = (int)Campaign.Current.Models.CampaignTimeModel
+                                        .CampaignStartTime.ElapsedDaysUntilNow; } catch { }
+                    _currentContext.AddMemory(_parsed.MemoryNote, memDay);
+                }
+
+                // Pending request lifecycle
+                if (!string.IsNullOrWhiteSpace(_parsed.Request))
+                {
+                    string requestText = _parsed.Request!.Trim();
+
+                    if (_currentContext.HasPendingRequest)
+                    {
+                        // Conflict: hold and let the NPC offer the player a choice.
+                        // _currentNpc/_currentContext are NOT reset below.
+                        _pendingNewRequest = requestText;
+                    }
+                    else
+                    {
+                        CommitNewRequest(requestText);
+                    }
+                }
+
+                // Request fulfilled
+                if (_parsed.RequestFulfilled && _currentContext.HasPendingRequest)
+                {
+                    _currentContext.PendingRequest = null;
+                }
+
+                // Update last known relation for grievance detection
+                if (_currentNpc != null)
+                    _currentContext.LastKnownRelation = (int)_currentNpc.GetRelationWithPlayer();
+
+                // Clear initiative
+                _currentContext.PendingInitiativeReason = null;
+
+                NPCContextStore.Instance?.MarkDirty(_currentContext);
+            }
+
+            // Reset state
+            _rawResponse   = null;
+            _parsed        = null;
+            _lastPlayerMsg = "";
+
+            // Keep NPC/context alive if the replace-request dialog is about to show.
+            if (_pendingNewRequest == null)
+            {
+                _currentNpc     = null;
+                _currentContext = null;
+            }
+        }
+
+        private void ConsequenceAcceptNewRequest()
+        {
+            if (_pendingNewRequest != null && _currentNpc != null && _currentContext != null)
+            {
+                _currentContext.PendingRequest = null;
+                CommitNewRequest(_pendingNewRequest);
+                NPCContextStore.Instance?.MarkDirty(_currentContext);
+            }
+            FinishPendingRequestCleanup();
+        }
+
+        private void ConsequenceDeclineNewRequest()
+        {
+            FinishPendingRequestCleanup();
+        }
+
+        // Helpers
+
+        private void CommitNewRequest(string requestText)
+        {
+            if (_currentNpc == null || _currentContext == null) return;
+
+            int day = 0;
+            try { day = (int)Campaign.Current.Models.CampaignTimeModel
+                              .CampaignStartTime.ElapsedDaysUntilNow; } catch { }
+
+            _currentContext.PendingRequest = new PendingRequest
+            {
+                Description = requestText,
+                DayIssued   = day
+            };
+        }
+
+        private void FinishPendingRequestCleanup()
+        {
+            _pendingNewRequest = null;
+            _currentNpc        = null;
+            _currentContext    = null;
+        }
+
+        private RFAIResponse? ParseResponse(string raw)
+        {
+            try
+            {
+                string? json = JsonCleaner.ExtractJson(raw);
+                if (json == null) return null;
+                return JsonConvert.DeserializeObject<RFAIResponse>(json);
+            }
+            catch { return null; }
+        }
+
+        private static string Sanitize(string text)
+        {
+            if (text == "[cancel]") return "Conversation cancelled.";
+
+            text = text
+                .Replace("\r\n", " ")
+                .Replace("\n",   " ")
+                .Replace("\r",   " ")
+                .Replace("{",    "(")
+                .Replace("}",    ")")
+                .Replace("|",    "/")
+                .Replace("[",    "(")
+                .Replace("]",    ")");
+
+            if (text.Length > 400)
+                text = text.Substring(0, 400) + "...";
+
+            return text;
+        }
+
+        private string FallbackPrompt() =>
+            "You are a medieval lord in Aeurth. " +
+            "Respond ONLY with JSON: " +
+            "{\"internal_thoughts\":\"...\",\"response\":\"your spoken words\",\"tone\":\"neutral\",\"actions\":[]}";
+    }
+}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
