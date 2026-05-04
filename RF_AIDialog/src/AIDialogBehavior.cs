@@ -168,7 +168,7 @@ namespace RF_AIDialog
                         var req      = ctx.PendingRequest!;
                         int elapsed  = currentDay - req.DayIssued;
                         int daysLeft = Math.Max(1, 30 - elapsed);
-                        string qId   = $"rfai_{hero.StringId}_{req.DayIssued}_r";
+                        string qId   = $"rfai_{hero.StringId}_{req.DayIssued}";
                         RFAIDebug.Log($"ReconstructQuestsFromNPCContexts: recreating {hero.Name} ({daysLeft}d)");
                         new AIDialogQuest(qId, hero, req.Description, daysLeft).StartQuest();
                     }
@@ -561,6 +561,23 @@ namespace RF_AIDialog
                 Description = requestText,
                 DayIssued   = day
             };
+            NPCContextStore.Instance?.MarkDirty(_currentContext);
+
+            // Start the quest log entry immediately (don't wait for next load).
+            try
+            {
+                var existing = AIDialogQuest.ForNpc(_currentNpc.StringId);
+                if (existing == null || !existing.IsOngoing)
+                {
+                    string qId = $"rfai_{_currentNpc.StringId}_{day}";
+                    new AIDialogQuest(qId, _currentNpc, requestText, 30).StartQuest();
+                    RFAIDebug.Log($"CommitNewRequest: quest started for {_currentNpc.Name}");
+                }
+            }
+            catch (Exception ex)
+            {
+                RFAIDebug.Log($"CommitNewRequest: quest start failed — {ex.Message}");
+            }
         }
 
         private void FinishPendingRequestCleanup()
