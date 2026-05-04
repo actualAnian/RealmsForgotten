@@ -145,4 +145,9 @@ namespace RF_AIDialog
                     affirmativeText:          "Close",
                     negativeText:             "",
                     affirmativeAction:        () => { },
-  
+                    negativeAction:           null));
+            }
+            catch { }
+        }
+    }
+}
