@@ -47,8 +47,66 @@ namespace RF_AIDialog
 
         public string CurrentNpcName => _npcNameText;
 
-        public override void RegisterEvents() { }
+        public override void RegisterEvents()
+        {
+            // Use OnGameLoadFinishedEvent (not OnGameLoaded) so quest reconstruction
+            // fires AFTER QuestManager.OnGameLoaded has finished. This is the same
+            // pattern used by RescueUliahBehavior in RealmsForgottenMain.
+            CampaignEvents.OnGameLoadFinishedEvent.AddNonSerializedListener(
+                this, ReconstructQuestsFromNPCContexts);
+        }
+
         public override void SyncData(IDataStore dataStore) { }
+
+        private void ReconstructQuestsFromNPCContexts()
+        {
+            // Rebuild quest log entries from persisted NPCContext data.
+            // AIDialogQuest has no SaveableTypeDefiner, so on load it comes back
+            // as null (unknown type), pruned by QuestManager.PreAfterLoad. We
+            // rebuild here from NPCContext.PendingRequest which persists via JSON.
+            RFAIDebug.Log("ReconstructQuestsFromNPCContexts: start");
+            try
+            {
+                var store = NPCContextStore.Instance;
+                if (store == null) { RFAIDebug.Log("ReconstructQuestsFromNPCContexts: store null"); return; }
+
+                int currentDay = 0;
+                try { currentDay = (int)Campaign.Current.CampaignStartTime.ElapsedDaysUntilNow; }
+                catch { }
+
+                foreach (var ctx in store.GetAll())
+                {
+                    if (!ctx.HasPendingRequest) continue;
+
+                    Hero? hero = null;
+                    try { hero = Hero.FindFirst(h => h.StringId == ctx.HeroId); }
+                    catch { }
+
+                    if (hero == null || hero.IsDead) continue;
+                    if (AIDialogQuest.ForNpc(ctx.HeroId) != null) continue;
+
+                    try
+                    {
+                        var req      = ctx.PendingRequest!;
+                        int elapsed  = currentDay - req.DayIssued;
+                        int daysLeft = Math.Max(1, 30 - elapsed);
+                        string qId   = $"rfai_{hero.StringId}_{req.DayIssued}";
+
+                        RFAIDebug.Log($"ReconstructQuestsFromNPCContexts: recreating for {hero.Name} ({daysLeft}d left)");
+                        new AIDialogQuest(qId, hero, req.Description, daysLeft).StartQuest();
+                    }
+                    catch (Exception ex)
+                    {
+                        RFAIDebug.Log($"ReconstructQuestsFromNPCContexts: failed {ctx.HeroId} — {ex.Message}");
+                    }
+                }
+                RFAIDebug.Log("ReconstructQuestsFromNPCContexts: done");
+            }
+            catch (Exception ex)
+            {
+                RFAIDebug.Log($"ReconstructQuestsFromNPCContexts: outer error — {ex.Message}");
+            }
+        }
 
         public void AddDialogs(CampaignGameStarter starter)
         {
@@ -369,6 +427,13 @@ namespace RF_AIDialog
                 // Request fulfilled
                 if (_parsed.RequestFulfilled && _currentContext.HasPendingRequest)
                 {
+                    try
+                    {
+                        if (_currentNpc != null)
+                            AIDialogQuest.ForNpc(_currentNpc.StringId)?.MarkFulfilled();
+                    }
+                    catch { }
+
                     _currentContext.PendingRequest = null;
                 }
 
@@ -399,77 +464,4 @@ namespace RF_AIDialog
         {
             if (_pendingNewRequest != null && _currentNpc != null && _currentContext != null)
             {
-                _currentContext.PendingRequest = null;
-                CommitNewRequest(_pendingNewRequest);
-                NPCContextStore.Instance?.MarkDirty(_currentContext);
-            }
-            FinishPendingRequestCleanup();
-        }
-
-        private void ConsequenceDeclineNewRequest()
-        {
-            FinishPendingRequestCleanup();
-        }
-
-        // Helpers
-
-        private void CommitNewRequest(string requestText)
-        {
-            if (_currentNpc == null || _currentContext == null) return;
-
-            int day = 0;
-            try { day = (int)Campaign.Current.Models.CampaignTimeModel
-                              .CampaignStartTime.ElapsedDaysUntilNow; } catch { }
-
-            _currentContext.PendingRequest = new PendingRequest
-            {
-                Description = requestText,
-                DayIssued   = day
-            };
-        }
-
-        private void FinishPendingRequestCleanup()
-        {
-            _pendingNewRequest = null;
-            _currentNpc        = null;
-            _currentContext    = null;
-        }
-
-        private RFAIResponse? ParseResponse(string raw)
-        {
-            try
-            {
-                string? json = JsonCleaner.ExtractJson(raw);
-                if (json == null) return null;
-                return JsonConvert.DeserializeObject<RFAIResponse>(json);
-            }
-            catch { return null; }
-        }
-
-        private static string Sanitize(string text)
-        {
-            if (text == "[cancel]") return "Conversation cancelled.";
-
-            text = text
-                .Replace("\r\n", " ")
-                .Replace("\n",   " ")
-                .Replace("\r",   " ")
-                .Replace("{",    "(")
-                .Replace("}",    ")")
-                .Replace("|",    "/")
-                .Replace("[",    "(")
-                .Replace("]",    ")");
-
-            if (text.Length > 400)
-                text = text.Substring(0, 400) + "...";
-
-            return text;
-        }
-
-        private string FallbackPrompt() =>
-            "You are a medieval lord in Aeurth. " +
-            "Respond ONLY with JSON: " +
-            "{\"internal_thoughts\":\"...\",\"response\":\"your spoken words\",\"tone\":\"neutral\",\"actions\":[]}";
-    }
-}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+                AIDialogQ
