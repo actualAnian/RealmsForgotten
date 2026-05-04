@@ -70,33 +70,41 @@ namespace RF_AIDialog
                 this, RestoreQuestsAfterSave);
         }
 
-        private static readonly FieldInfo? _questsField =
-            typeof(QuestManager).GetField("_quests",
-                BindingFlags.NonPublic | BindingFlags.Instance);
-
         private void HideQuestsBeforeSave()
         {
             _questsHiddenForSave.Clear();
             try
             {
                 var qm = Campaign.Current?.QuestManager;
-                if (qm == null) return;
-                var quests = _questsField?.GetValue(qm) as MBList<QuestBase>;
-                if (quests == null) return;
+                if (qm == null) { RFAIDebug.Log("HideQuestsBeforeSave: QuestManager null"); return; }
 
-                for (int i = quests.Count - 1; i >= 0; i--)
+                // Use the public Quests property — underlying object is MBList<QuestBase>
+                var quests = qm.Quests as MBList<QuestBase>;
+                if (quests == null)
+                {
+                    // Fallback: reflect (in case runtime type differs)
+                    var fi = typeof(QuestManager).GetField("_quests",
+                        System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    quests = fi?.GetValue(qm) as MBList<QuestBase>;
+                }
+                if (quests == null) { RFAIDebug.Log("HideQuestsBeforeSave: cannot access quest list"); return; }
+
+                RFAIDebug.Log($"HideQuestsBeforeSave: scanning {quests.Count} quests");
+
+                // Collect first, then remove (safe iteration)
+                for (int i = 0; i < quests.Count; i++)
                 {
                     if (quests[i] is AIDialogQuest aq)
-                    {
                         _questsHiddenForSave.Add(aq);
-                        quests.RemoveAt(i);
-                    }
                 }
-                RFAIDebug.Log($"HideQuestsBeforeSave: hid {_questsHiddenForSave.Count} quest(s)");
+                foreach (var q in _questsHiddenForSave)
+                    quests.Remove(q);
+
+                RFAIDebug.Log($"HideQuestsBeforeSave: hid {_questsHiddenForSave.Count}, remaining {quests.Count}");
             }
             catch (Exception ex)
             {
-                RFAIDebug.Log($"HideQuestsBeforeSave: {ex.Message}");
+                RFAIDebug.Log($"HideQuestsBeforeSave exception: {ex.GetType().Name}: {ex.Message}");
             }
         }
 
@@ -105,19 +113,26 @@ namespace RF_AIDialog
             try
             {
                 var qm = Campaign.Current?.QuestManager;
-                if (qm == null) return;
-                var quests = _questsField?.GetValue(qm) as MBList<QuestBase>;
-                if (quests == null) return;
+                if (qm == null) { RFAIDebug.Log("RestoreQuestsAfterSave: QuestManager null"); return; }
+
+                var quests = qm.Quests as MBList<QuestBase>;
+                if (quests == null)
+                {
+                    var fi = typeof(QuestManager).GetField("_quests",
+                        System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    quests = fi?.GetValue(qm) as MBList<QuestBase>;
+                }
+                if (quests == null) { RFAIDebug.Log("RestoreQuestsAfterSave: cannot access quest list"); return; }
 
                 foreach (var q in _questsHiddenForSave)
                     quests.Add(q);
 
-                RFAIDebug.Log($"RestoreQuestsAfterSave: restored {_questsHiddenForSave.Count} quest(s)");
+                RFAIDebug.Log($"RestoreQuestsAfterSave: restored {_questsHiddenForSave.Count} (success={success})");
                 _questsHiddenForSave.Clear();
             }
             catch (Exception ex)
             {
-                RFAIDebug.Log($"RestoreQuestsAfterSave: {ex.Message}");
+                RFAIDebug.Log($"RestoreQuestsAfterSave exception: {ex.GetType().Name}: {ex.Message}");
             }
         }
 
