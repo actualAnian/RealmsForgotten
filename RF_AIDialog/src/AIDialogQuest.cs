@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Localization;
-using TaleWorlds.SaveSystem;
 
 namespace RF_AIDialog
 {
@@ -10,21 +9,24 @@ namespace RF_AIDialog
     /// native Bannerlord quest log. NPCContext.PendingRequest is ground truth.
     ///
     /// Persistence strategy:
-    ///   - RF_AIDialogSaveDefiner registers this type (base 456789012, class ID 1).
-    ///   - SpecialQuestType = "RfAIDialog" keeps QuestManager.OnGameLoaded from
-    ///     cancelling the quest on reload (same pattern as all other RF quests).
-    ///   - InitializeQuestOnGameLoad() repopulates the static _activeByNpcId lookup.
-    ///   - AIDialogBehavior.ReconstructQuestsFromNPCContexts() acts as a fallback:
-    ///     if the quest somehow fails to survive load, NPCContext.PendingRequest
-    ///     (persisted via JSON) lets us recreate it transparently.
+    ///   AIDialogQuest is NOT registered in any SaveableTypeDefiner.
+    ///   Registering a QuestBase subclass without IssueBase crashes on load in 1.3.0.
+    ///
+    ///   Instead, AIDialogBehavior.OnBeforeSave() removes all AIDialogQuest instances
+    ///   from QuestManager._quests right before the campaign is written to disk.
+    ///   AIDialogBehavior.OnSaveOver() restores them immediately after.
+    ///   As a result, AIDialogQuest never appears in save data and the save system
+    ///   never encounters an unknown type.
+    ///
+    ///   On load, ReconstructQuestsFromNPCContexts (OnGameLoadFinishedEvent) recreates
+    ///   the quest entries from NPCContext.PendingRequest (persisted via JSON).
     /// </summary>
     public class AIDialogQuest : QuestBase
     {
         private static readonly Dictionary<string, AIDialogQuest> _activeByNpcId
             = new Dictionary<string, AIDialogQuest>();
 
-        // Persisted so InitializeQuestOnGameLoad can repopulate _activeByNpcId on load.
-        [SaveableField(1)]
+        // Not persisted — quest is reconstructed from NPCContext on every load.
         private string _npcStringId = "";
 
         public AIDialogQuest(
@@ -38,9 +40,6 @@ namespace RF_AIDialog
             AddLog(new TextObject("{=!}" + Truncate(description, 400)));
         }
 
-        // Marks this as a special/story quest so QuestManager.OnGameLoaded calls
-        // InitializeQuestOnLoadWithQuestManager() instead of cancelling it.
-        // This is the same pattern used by all RealmsForgotten quests.
         public override string SpecialQuestType => "RfAIDialog";
 
         public override TextObject Title
@@ -58,14 +57,10 @@ namespace RF_AIDialog
 
         protected override void InitializeQuestOnGameLoad()
         {
-            // Called by QuestManager.OnGameLoaded -> InitializeQuestOnLoadWithQuestManager()
-            // when SpecialQuestType is set. Repopulate the static lookup so ForNpc() works
-            // and AIDialogBehavior.ReconstructQuestsFromNPCContexts skips re-creation.
+            // Not called in practice: quest is never serialized.
+            // If somehow reached, repopulate the lookup.
             if (!string.IsNullOrWhiteSpace(_npcStringId))
-            {
                 _activeByNpcId[_npcStringId] = this;
-                RFAIDebug.Log($"AIDialogQuest.InitializeQuestOnGameLoad: restored npc={_npcStringId}");
-            }
         }
 
         protected override void OnTimedOut()

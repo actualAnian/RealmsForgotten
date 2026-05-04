@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using TaleWorlds.CampaignSystem;
@@ -47,11 +50,75 @@ namespace RF_AIDialog
 
         public string CurrentNpcName => _npcNameText;
 
+        // Quests removed before save, restored after — so the type never hits disk.
+        private List<QuestBase> _questsHiddenForSave = new List<QuestBase>();
+
         public override void RegisterEvents()
         {
-            // Fire AFTER QuestManager.OnGameLoaded — same pattern as RescueUliahBehavior.
+            // Reconstruct quest log entries after load (quest is never serialized).
             CampaignEvents.OnGameLoadFinishedEvent.AddNonSerializedListener(
                 this, ReconstructQuestsFromNPCContexts);
+
+            // Remove AIDialogQuest from QuestManager._quests before the save system
+            // serializes it — the type is not registered in any SaveableTypeDefiner,
+            // and Bannerlord 1.3.0 crashes when it encounters an unknown QuestBase type.
+            CampaignEvents.OnBeforeSaveEvent.AddNonSerializedListener(
+                this, HideQuestsBeforeSave);
+
+            // Restore the quests immediately after the save file is written.
+            CampaignEvents.OnSaveOverEvent.AddNonSerializedListener(
+                this, RestoreQuestsAfterSave);
+        }
+
+        private static readonly FieldInfo? _questsField =
+            typeof(QuestManager).GetField("_quests",
+                BindingFlags.NonPublic | BindingFlags.Instance);
+
+        private void HideQuestsBeforeSave()
+        {
+            _questsHiddenForSave.Clear();
+            try
+            {
+                var qm = Campaign.Current?.QuestManager;
+                if (qm == null) return;
+                var quests = _questsField?.GetValue(qm) as MBList<QuestBase>;
+                if (quests == null) return;
+
+                for (int i = quests.Count - 1; i >= 0; i--)
+                {
+                    if (quests[i] is AIDialogQuest aq)
+                    {
+                        _questsHiddenForSave.Add(aq);
+                        quests.RemoveAt(i);
+                    }
+                }
+                RFAIDebug.Log($"HideQuestsBeforeSave: hid {_questsHiddenForSave.Count} quest(s)");
+            }
+            catch (Exception ex)
+            {
+                RFAIDebug.Log($"HideQuestsBeforeSave: {ex.Message}");
+            }
+        }
+
+        private void RestoreQuestsAfterSave(bool success, string saveName)
+        {
+            try
+            {
+                var qm = Campaign.Current?.QuestManager;
+                if (qm == null) return;
+                var quests = _questsField?.GetValue(qm) as MBList<QuestBase>;
+                if (quests == null) return;
+
+                foreach (var q in _questsHiddenForSave)
+                    quests.Add(q);
+
+                RFAIDebug.Log($"RestoreQuestsAfterSave: restored {_questsHiddenForSave.Count} quest(s)");
+                _questsHiddenForSave.Clear();
+            }
+            catch (Exception ex)
+            {
+                RFAIDebug.Log($"RestoreQuestsAfterSave: {ex.Message}");
+            }
         }
 
         public override void SyncData(IDataStore dataStore) { }
@@ -525,4 +592,3 @@ namespace RF_AIDialog
             "{\"internal_thoughts\":\"...\",\"response\":\"your spoken words\",\"tone\":\"neutral\",\"actions\":[]}";
     }
 }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
