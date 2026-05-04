@@ -88,3 +88,8 @@ namespace RF_AIDialog
         public void MarkDirty(NPCContext ctx)
         {
             // The dictionary already holds a reference to the same object,
+            // so mutations are visible immediately. This method is a no-op
+            // kept for call-site clarity and future extensibility.
+        }
+    }
+}
