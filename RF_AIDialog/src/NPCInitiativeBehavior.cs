@@ -84,6 +84,28 @@ namespace RF_AIDialog
 
             int relation = (int)hero.GetRelationWithPlayer();
 
+            // ── 0. Pending request follow-up (highest priority) ───────────
+            // If this NPC made a request and hasn't heard back in 12+ days, seek the player out.
+            try
+            {
+                if (ctx.HasPendingRequest)
+                {
+                    int currentDay = 0;
+                    try { currentDay = (int)Campaign.Current.Models.CampaignTimeModel
+                              .CampaignStartTime.ElapsedDaysUntilNow; } catch { }
+
+                    int daysWaiting = currentDay - ctx.PendingRequest!.DayIssued;
+                    if (daysWaiting >= 12)
+                    {
+                        return $"You are following up on a request you made {daysWaiting} days ago: " +
+                               $"\"{ctx.PendingRequest.Description}\" — " +
+                               $"The player has not yet returned. Press them on it directly, but stay in character. " +
+                               $"You may be impatient, concerned, or understanding depending on your nature.";
+                    }
+                }
+            }
+            catch { }
+
             // ── 1. Siege distress ─────────────────────────────────────────
             try
             {

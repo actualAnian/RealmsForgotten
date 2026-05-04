@@ -96,4 +96,7 @@ namespace RF_AIDialog
                 result.Add(e);
             }
             result.Reverse(); // back to chronological order
-            return r
+            return result;
+        }
+    }
+}

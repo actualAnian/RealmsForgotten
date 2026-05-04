@@ -27,7 +27,7 @@ namespace RF_AIDialog
         /// <summary>
         /// Your DeepSeek API key. Do NOT commit this to a public repository.
         /// </summary>
-        public const string APIKey = "YOUR_DEEPSEEK_API_KEY_HERE";
+        public const string APIKey = "sk-d295471bf32849e6b2b66eed0923c607";
 
         /// <summary>
         /// DeepSeek model. "deepseek-chat" = DeepSeek-V3 (fast, cheap, excellent).
@@ -52,4 +52,38 @@ namespace RF_AIDialog
         /// </summary>
         public const int ContextSize = 2048;
 
-        // ── Shared settings ────�
+        // ── Shared settings ───────────────────────────────────────────────
+
+        /// <summary>
+        /// Timeout in seconds. Remote APIs are faster than cold Ollama starts.
+        /// 30s is generous for DeepSeek; 120s was needed for Ollama cold starts.
+        /// </summary>
+        public const int TimeoutSeconds = 30;
+
+        /// <summary>
+        /// Max tokens for the FIRST conversation with an NPC.
+        /// Needs room for personality_summary + full JSON.
+        /// </summary>
+        public const int MaxTokensFirstConversation = 650;
+
+        /// <summary>
+        /// Max tokens for subsequent conversations (no personality_summary).
+        /// </summary>
+        public const int MaxTokensSubsequent = 450;
+
+        /// <summary>
+        /// Maximum gold transferred in a single AI action.
+        /// </summary>
+        public const int MaxGoldTransfer = 10000;
+
+        /// <summary>
+        /// Maximum relation delta per conversation.
+        /// </summary>
+        public const int MaxRelationDelta = 5;
+
+        /// <summary>
+        /// LLM temperature. 0.7 = creative but coherent.
+        /// </summary>
+        public const double Temperature = 0.7;
+    }
+}

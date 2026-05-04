@@ -143,4 +143,84 @@ namespace RF_AIDialog
         {
             var request = new OpenAIRequest
             {
-   
+                Model       = AIConfig.APIModelName,
+                Messages    = messages,
+                MaxTokens   = maxTokens,
+                Temperature = AIConfig.Temperature,
+                Stream      = false
+            };
+
+            string requestJson = JsonConvert.SerializeObject(request);
+            var content = new StringContent(requestJson, new UTF8Encoding(false), "application/json");
+
+            // Clone the default headers per-request to attach the auth token
+            using var reqMsg = new HttpRequestMessage(HttpMethod.Post, AIConfig.APIEndpoint)
+            {
+                Content = content
+            };
+            reqMsg.Headers.Authorization =
+                new AuthenticationHeaderValue("Bearer", AIConfig.APIKey);
+
+            using var cts = new System.Threading.CancellationTokenSource(
+                TimeSpan.FromSeconds(AIConfig.TimeoutSeconds));
+
+            HttpResponseMessage httpResponse =
+                await _http.SendAsync(reqMsg, cts.Token).ConfigureAwait(false);
+
+            string responseJson = await httpResponse.Content.ReadAsStringAsync()
+                .ConfigureAwait(false);
+
+            if (!httpResponse.IsSuccessStatusCode)
+            {
+                string snippet = responseJson.Length > 300
+                    ? responseJson.Substring(0, 300) : responseJson;
+                throw new Exception($"HTTP {(int)httpResponse.StatusCode} - {snippet}");
+            }
+
+            OpenAIResponse? parsed = JsonConvert.DeserializeObject<OpenAIResponse>(responseJson);
+            return parsed?.Choices?[0]?.Message?.Content ?? "(no response)";
+        }
+
+        // ── Local Ollama ──────────────────────────────────────────────────
+
+        private static async Task<string> AskOllamaAsync(
+            string model, ChatMessage[] messages, int maxTokens)
+        {
+            var request = new OllamaRequest
+            {
+                Model    = model,
+                Stream   = false,
+                Messages = messages,
+                Options  = new OllamaOptions
+                {
+                    NumPredict  = maxTokens,
+                    Temperature = AIConfig.Temperature,
+                    NumCtx      = AIConfig.ContextSize
+                }
+            };
+
+            string requestJson = JsonConvert.SerializeObject(request);
+            var content = new StringContent(requestJson, new UTF8Encoding(false), "application/json");
+
+            using var cts = new System.Threading.CancellationTokenSource(
+                TimeSpan.FromSeconds(AIConfig.TimeoutSeconds));
+
+            HttpResponseMessage httpResponse =
+                await _http.PostAsync(AIConfig.OllamaEndpoint, content, cts.Token)
+                    .ConfigureAwait(false);
+
+            string responseJson = await httpResponse.Content.ReadAsStringAsync()
+                .ConfigureAwait(false);
+
+            if (!httpResponse.IsSuccessStatusCode)
+            {
+                string snippet = responseJson.Length > 300
+                    ? responseJson.Substring(0, 300) : responseJson;
+                throw new Exception($"HTTP {(int)httpResponse.StatusCode} - {snippet}");
+            }
+
+            OllamaResponse? parsed = JsonConvert.DeserializeObject<OllamaResponse>(responseJson);
+            return parsed?.Message?.Content ?? "(no response)";
+        }
+    }
+}

@@ -115,4 +115,16 @@ namespace RF_AIDialog
             {
                 // Skip minor factions and clans with no lords (bandits etc.)
                 if (clan == null)                            return;
-                if (clan.IsMinorFaction)      
+                if (clan.IsMinorFaction)                    return;
+                if (clan.AliveLords == null || clan.AliveLords.Count == 0) return;
+
+                string kingdomStr = clan.Kingdom != null
+                    ? $" of {clan.Kingdom.Name}"
+                    : "";
+
+                Record($"Clan {clan.Name}{kingdomStr} has been destroyed.");
+            }
+            catch { }
+        }
+    }
+}

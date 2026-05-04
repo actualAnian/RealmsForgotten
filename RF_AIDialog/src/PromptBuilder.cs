@@ -71,6 +71,34 @@ namespace RF_AIDialog
                 sb.AppendLine();
             }
 
+            // ── Named ambition (lords — injected from second conversation onward) ──
+            if (context != null && context.HasGeneratedAmbition)
+            {
+                sb.AppendLine("YOUR DEEPEST AMBITION (the thing you want most — let it quietly drive your words and choices; never announce it bluntly):");
+                sb.AppendLine(context.GeneratedAmbition);
+                sb.AppendLine();
+            }
+
+            // ── Pending request — highest priority narrative hook ─────────
+            if (context != null && context.HasPendingRequest)
+            {
+                int currentDay = 0;
+                try { currentDay = (int)Campaign.Current.Models.CampaignTimeModel
+                          .CampaignStartTime.ElapsedDaysUntilNow; } catch { }
+
+                int daysAgo = currentDay - context.PendingRequest!.DayIssued;
+                string daysDesc = daysAgo <= 1 ? "earlier today" :
+                                  daysAgo <= 3 ? $"{daysAgo} days ago"  :
+                                  daysAgo <= 14 ? $"{daysAgo} days ago" :
+                                                  "quite some time ago";
+
+                sb.AppendLine("!! YOU HAVE A PENDING REQUEST TO THIS PLAYER !!");
+                sb.AppendLine($"You asked them {daysDesc}: \"{context.PendingRequest.Description}\"");
+                sb.AppendLine("If the player is bringing you what you asked for — acknowledge it warmly and reward them. Use the 'request_fulfilled' field and fire the reward action.");
+                sb.AppendLine("If they are not addressing it, let it quietly colour how you receive them. You may mention it, press them, or let it simmer beneath the surface.");
+                sb.AppendLine();
+            }
+
             // ── Identity ──────────────────────────────────────────────────
             sb.AppendLine($"Your name is {npc.Name}.");
 
@@ -242,6 +270,8 @@ namespace RF_AIDialog
 
             // ── JSON format ───────────────────────────────────────────────
             sb.AppendLine();
+            bool hasPendingRequest = context != null && context.HasPendingRequest;
+
             if (isFirstConversation)
             {
                 sb.AppendLine("This is your FIRST conversation with this player. Include personality_summary.");
@@ -254,14 +284,197 @@ namespace RF_AIDialog
                 sb.AppendLine("Output this exact JSON. No text outside it. ALL fields are required.");
                 sb.AppendLine("{");
                 sb.AppendLine("  \"personality_summary\": \"2-3 sentences about your personality, speech style and background. Third person.\",");
+                if (npc.IsLord)
+                    sb.AppendLine("  \"ambition\": \"one sentence — what do you want most in this world? Be specific: a city, revenge on a clan, to be remembered, to protect your family line. Lords only. Third person.\",");
                 sb.AppendLine("  \"internal_thoughts\": \"your private reaction, 1-2 sentences\",");
                 sb.AppendLine("  \"response\": \"what you say out loud, in character, 2-4 sentences\",");
                 sb.AppendLine("  \"tone\": \"friendly|neutral|suspicious|hostile|fearful\",");
                 sb.AppendLine("  \"memory_note\": \"1-sentence summary of what was significant in this exchange. OMIT THIS FIELD ENTIRELY if the conversation was trivial small-talk.\",");
+                sb.AppendLine("  \"request\": \"OPTIONAL — only include if making a clear, actionable task for the player (bring X, find out Y, deliver Z to someone). One sentence including what reward you offer. Omit entirely if no request.\",");
                 sb.AppendLine("  \"actions\": []");
                 sb.AppendLine("}");
                 sb.AppendLine("For 'actions': use [] if nothing happens. Otherwise fill with relevant actions:");
                 sb.AppendLine("  {\"type\":\"take_gold\",\"value\":50}  — player gives you 50 gold");
                 sb.AppendLine("  {\"type\":\"give_gold\",\"value\":100} — you give player 100 gold");
                 sb.AppendLine("  {\"type\":\"relation_change\",\"value\":2} — relation improves by 2");
-                sb.AppendLine("  {\"type\":\"give_item\",\"item_id\":\"wine\",\"value\":1} — you gi
+                sb.AppendLine("  {\"type\":\"give_item\",\"item_id\":\"wine\",\"value\":1} — you give player 1 wine");
+                sb.AppendLine("  {\"type\":\"take_item\",\"item_id\":\"grain\",\"value\":10} — player gives you 10 grain");
+            }
+            else
+            {
+                sb.AppendLine("BARTER CONFIRMATION EXAMPLE — follow this pattern exactly when a trade is agreed:");
+                sb.AppendLine("Player says: \"ok deal, 3 grain for 1 wine\"");
+                sb.AppendLine("You respond: {\"internal_thoughts\":\"...\",...,\"actions\":[{\"type\":\"take_item\",\"item_id\":\"grain\",\"value\":3},{\"type\":\"give_item\",\"item_id\":\"wine\",\"value\":1}]}");
+                sb.AppendLine("BOTH actions fire at the same time. Never only one.");
+                sb.AppendLine();
+                sb.AppendLine("Output this exact JSON. No text outside it. ALL fields are required.");
+                sb.AppendLine("{");
+                sb.AppendLine("  \"internal_thoughts\": \"your private reaction, 1-2 sentences\",");
+                sb.AppendLine("  \"response\": \"what you say out loud, in character, 2-4 sentences\",");
+                sb.AppendLine("  \"tone\": \"friendly|neutral|suspicious|hostile|fearful\",");
+                sb.AppendLine("  \"memory_note\": \"1-sentence summary of what was significant in this exchange. OMIT THIS FIELD ENTIRELY if the conversation was trivial small-talk.\",");
+                sb.AppendLine("  \"request\": \"OPTIONAL — only include if making a clear, actionable task for the player (bring X, find out Y, deliver Z). One sentence with reward hint. Omit entirely if no request.\",");
+                if (hasPendingRequest)
+                    sb.AppendLine("  \"request_fulfilled\": false,  // set true if the player has now delivered on your pending request. Fire the reward action when true.");
+                sb.AppendLine("  \"actions\": []");
+                sb.AppendLine("}");
+                sb.AppendLine("For 'actions': use [] if nothing happens. Otherwise fill with relevant actions:");
+                sb.AppendLine("  {\"type\":\"take_gold\",\"value\":50}  — player gives you 50 gold");
+                sb.AppendLine("  {\"type\":\"give_gold\",\"value\":100} — you give player 100 gold");
+                sb.AppendLine("  {\"type\":\"relation_change\",\"value\":2} — relation improves by 2");
+                sb.AppendLine("  {\"type\":\"give_item\",\"item_id\":\"wine\",\"value\":1} — you give player 1 wine");
+                sb.AppendLine("  {\"type\":\"take_item\",\"item_id\":\"grain\",\"value\":10} — player gives you 10 grain");
+            }
+
+            return sb.ToString();
+        }
+
+        // ── Occupation-specific context ───────────────────────────────────
+
+        private static void AppendOccupationContext(StringBuilder sb, Hero npc)
+        {
+            switch (npc.Occupation)
+            {
+                case Occupation.Lord:
+                    sb.AppendLine("You are a lord — war, politics, and land are your world.");
+                    break;
+                case Occupation.Wanderer:
+                    sb.AppendLine("You are a wanderer — a skilled adventurer without lands or title, living by your blade and wits.");
+                    break;
+                case Occupation.Merchant:
+                    sb.AppendLine("You are a merchant — profit, trade routes, and city politics occupy your mind.");
+                    break;
+                case Occupation.Artisan:
+                    sb.AppendLine("You are an artisan — proud of your craft, grounded in the rhythms of your workshop.");
+                    break;
+                case Occupation.GangLeader:
+                    sb.AppendLine("You are a gang leader — you rule through fear and favors in the city's shadows.");
+                    break;
+                case Occupation.RuralNotable:
+                    sb.AppendLine("You are a rural notable — respected in your village, wary of outsiders and lords alike.");
+                    break;
+                case Occupation.Headman:
+                    sb.AppendLine("You are a village headman — the voice of common folk, burdened by their needs.");
+                    break;
+            }
+        }
+
+        // ── Helpers ───────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Extracts the epithet from a wanderer's name.
+        /// "Ira the Scholar" → "the Scholar"
+        /// Returns empty string if no epithet found.
+        /// </summary>
+        private static string ExtractEpithet(Hero npc)
+        {
+            if (npc.Occupation != Occupation.Wanderer) return "";
+
+            string name = npc.Name?.ToString() ?? "";
+            int idx = name.IndexOf(" the ", StringComparison.OrdinalIgnoreCase);
+            if (idx >= 0)
+                return name.Substring(idx + 1); // "the Scholar"
+
+            return "";
+        }
+
+        private static void AppendTrait(StringBuilder sb, Hero npc, TraitObject trait, string positive, string negative)
+        {
+            int level = npc.GetTraitLevel(trait);
+            if (level > 0) sb.Append($"{positive}, ");
+            else if (level < 0) sb.Append($"{negative}, ");
+        }
+
+        // ── Party state (companions only) ─────────────────────────────────
+
+        /// <summary>
+        /// Injects a concise party status paragraph so companions can give
+        /// situationally aware advice. All calls are guarded — never crashes.
+        /// </summary>
+        private static void AppendPartyState(StringBuilder sb, MobileParty party)
+        {
+            try
+            {
+                var roster = party.MemberRoster;
+                int total   = roster.TotalManCount;
+                int healthy = roster.TotalHealthyCount;
+                int wounded = roster.TotalWoundedRegulars;
+
+                // Morale descriptor
+                float morale = party.Morale;
+                string moraleDesc = morale >= 80 ? "high"    :
+                                    morale >= 50 ? "steady"  :
+                                    morale >= 30 ? "wavering": "low";
+
+                // Food — days remaining
+                string foodDesc;
+                try
+                {
+                    int days = party.GetNumDaysForFoodToLast();
+                    foodDesc = days >= 10 ? $"{days} days of food left"  :
+                               days >= 4  ? $"only {days} days of food"  :
+                               days >= 1  ? $"critically low food ({days} days)" :
+                                            "no food — starving";
+                }
+                catch { foodDesc = "food status unknown"; }
+
+                // Prisoners
+                int prisoners = 0;
+                try { prisoners = party.PrisonRoster.TotalManCount; } catch { }
+
+                sb.AppendLine();
+                sb.AppendLine("CURRENT PARTY STATUS (use this for situational advice):");
+                sb.AppendLine($"  Troops: {healthy} healthy, {wounded} wounded (total {total}).");
+                sb.AppendLine($"  Morale: {moraleDesc} ({(int)morale}/100).");
+                sb.AppendLine($"  Supplies: {foodDesc}.");
+                if (prisoners > 0)
+                    sb.AppendLine($"  Prisoners: {prisoners} captives in tow.");
+            }
+            catch { /* never crash the prompt builder */ }
+        }
+
+        // ── Companion skills ──────────────────────────────────────────────
+
+        /// <summary>
+        /// Injects the companion's top skills so they speak with authority
+        /// about what they are actually good at in the game.
+        /// </summary>
+        private static void AppendCompanionSkills(StringBuilder sb, Hero npc)
+        {
+            try
+            {
+                var skillDefs = new (SkillObject skill, string label)[]
+                {
+                    (DefaultSkills.Medicine,     "Medicine"),
+                    (DefaultSkills.Engineering,  "Engineering"),
+                    (DefaultSkills.Scouting,     "Scouting"),
+                    (DefaultSkills.Steward,      "Stewardship"),
+                    (DefaultSkills.Tactics,      "Tactics"),
+                    (DefaultSkills.Leadership,   "Leadership"),
+                    (DefaultSkills.Trade,        "Trade"),
+                    (DefaultSkills.Charm,        "Charm"),
+                    (DefaultSkills.Roguery,      "Roguery"),
+                    (DefaultSkills.OneHanded,    "One-Handed"),
+                    (DefaultSkills.TwoHanded,    "Two-Handed"),
+                    (DefaultSkills.Polearm,      "Polearm"),
+                    (DefaultSkills.Bow,          "Archery"),
+                    (DefaultSkills.Throwing,     "Throwing"),
+                    (DefaultSkills.Riding,       "Riding"),
+                    (DefaultSkills.Athletics,    "Athletics"),
+                };
+
+                var notable = new List<string>();
+                foreach (var (skill, label) in skillDefs)
+                {
+                    int level = npc.GetSkillValue(skill);
+                    if (level >= 100)
+                        notable.Add($"{label} {level}");
+                }
+
+                if (notable.Count > 0)
+                    sb.AppendLine($"Your strongest skills: {string.Join(", ", notable)}.");
+            }
+            catch { }
+        }
+    }
+}

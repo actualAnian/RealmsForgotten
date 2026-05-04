@@ -31,4 +31,16 @@ namespace RF_AIDialog
         public int Value { get; set; } = 1;
 
         /// <summary>
-        //
+        /// Item string ID — only for give_item / take_item.
+        /// </summary>
+        [JsonProperty("item_id")]
+        public string? ItemId { get; set; }
+
+        /// <summary>
+        /// Role string — only for assign_role.
+        /// Valid values: "engineer", "scout", "surgeon", "quartermaster"
+        /// </summary>
+        [JsonProperty("role")]
+        public string? Role { get; set; }
+    }
+}
