@@ -57,7 +57,7 @@ namespace RF_AIDialog
         {
             // Reconstruct quest log entries after load (quest is never serialized).
             CampaignEvents.OnGameLoadFinishedEvent.AddNonSerializedListener(
-                this, ReconstructQuestsFromNPCContexts);
+                this, OnGameLoadFinished);
 
             // Remove AIDialogQuest from QuestManager._quests before the save system
             // serializes it — the type is not registered in any SaveableTypeDefiner,
@@ -125,7 +125,8 @@ namespace RF_AIDialog
                     }
                 }
 
-                RFAIDebug.Log($"HideQuestsBeforeSave: hid {_questsHiddenForSave.Count}, remaining {quests.Count}");
+                int trackedCount = GetTrackedObjects(qm)?.Count ?? -1;
+                RFAIDebug.Log($"HideQuestsBeforeSave: hid {_questsHiddenForSave.Count}, remaining {quests.Count}, trackedObjs {trackedCount}");
             }
             catch (Exception ex)
             {
@@ -171,6 +172,12 @@ namespace RF_AIDialog
         }
 
         public override void SyncData(IDataStore dataStore) { }
+
+        private void OnGameLoadFinished()
+        {
+            RFAIDebug.Log("OnGameLoadFinished: fired");
+            ReconstructQuestsFromNPCContexts();
+        }
 
         private void ReconstructQuestsFromNPCContexts()
         {

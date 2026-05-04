@@ -29,7 +29,9 @@ namespace RF_AIDialog
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
+            RFAIDebug.Log("OnSubModuleLoad: start");
             new Harmony("RF_AIDialog").PatchAll(typeof(RF_AIDialogSubModule).Assembly);
+            RFAIDebug.Log("OnSubModuleLoad: OK");
         }
 
         protected override void InitializeGameStarter(Game game, IGameStarter starterObject)
