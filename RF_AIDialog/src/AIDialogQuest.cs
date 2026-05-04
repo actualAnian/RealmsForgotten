@@ -10,12 +10,6 @@ namespace RF_AIDialog
     /// native Bannerlord quest log. NPCContext.PendingRequest is ground truth;
     /// this class persists across save/load via RF_AIDialogSaveDefiner.
     ///
-    /// Lifecycle:
-    ///   Created   — when the LLM returns a non-empty "request" field
-    ///   Fulfilled — when the LLM returns "request_fulfilled": true
-    ///   Cancelled — when the NPC makes a new request (replace flow)
-    ///   Timed-out — after 30 in-game days; also clears NPCContext.PendingRequest
-    ///
     /// Note: IsSpecialQuest cannot be overridden in 1.3.0 (property is not virtual
     /// in the binary). AIDialogQuestPatch (Harmony postfix) handles this by forcing
     /// IsSpecialQuest = true at runtime so QuestManager.OnGameLoaded keeps the quest
@@ -23,7 +17,6 @@ namespace RF_AIDialog
     /// </summary>
     public class AIDialogQuest : QuestBase
     {
-        // In-memory registry keyed by questGiver.StringId.
         private static readonly Dictionary<string, AIDialogQuest> _activeByNpcId
             = new Dictionary<string, AIDialogQuest>();
 
@@ -48,14 +41,24 @@ namespace RF_AIDialog
 
         protected override void SetDialogs() { }
 
+        // Called by the save system immediately after SaveableFields are restored,
+        // BEFORE QuestManager.OnGameLoaded. Earliest possible log point on load.
+        [LoadInitializationCallback]
+        private void OnLoadInit()
+        {
+            RFAIDebug.Log($"AIDialogQuest.[LoadInit]: npc={_npcStringId} desc={Truncate(_description, 40)}");
+        }
+
         protected override void InitializeQuestOnGameLoad()
         {
+            RFAIDebug.Log($"AIDialogQuest.InitializeQuestOnGameLoad: npc={_npcStringId}");
             if (!string.IsNullOrWhiteSpace(_npcStringId))
                 _activeByNpcId[_npcStringId] = this;
         }
 
         protected override void OnStartQuest()
         {
+            RFAIDebug.Log($"AIDialogQuest.OnStartQuest: npc={_npcStringId}");
             _activeByNpcId[_npcStringId] = this;
             AddLog(new TextObject("{=!}" + Truncate(_description, 400)));
         }
@@ -120,10 +123,14 @@ namespace RF_AIDialog
     /// </summary>
     public class RF_AIDialogSaveDefiner : SaveableTypeDefiner
     {
-        public RF_AIDialogSaveDefiner() : base(912_345_678) { }
+        public RF_AIDialogSaveDefiner() : base(912_345_678)
+        {
+            RFAIDebug.Log("RF_AIDialogSaveDefiner: constructed (base=912345678)");
+        }
 
         protected override void DefineClassTypes()
         {
+            RFAIDebug.Log("RF_AIDialogSaveDefiner.DefineClassTypes: registering AIDialogQuest as ID 1");
             AddClassDefinition(typeof(AIDialogQuest), 1);
         }
     }
