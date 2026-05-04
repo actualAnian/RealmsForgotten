@@ -49,9 +49,7 @@ namespace RF_AIDialog
 
         public override void RegisterEvents()
         {
-            // Use OnGameLoadFinishedEvent (not OnGameLoaded) so quest reconstruction
-            // fires AFTER QuestManager.OnGameLoaded has finished. This is the same
-            // pattern used by RescueUliahBehavior in RealmsForgottenMain.
+            // Fire AFTER QuestManager.OnGameLoaded — same pattern as RescueUliahBehavior.
             CampaignEvents.OnGameLoadFinishedEvent.AddNonSerializedListener(
                 this, ReconstructQuestsFromNPCContexts);
         }
@@ -60,39 +58,36 @@ namespace RF_AIDialog
 
         private void ReconstructQuestsFromNPCContexts()
         {
-            // Rebuild quest log entries from persisted NPCContext data.
-            // AIDialogQuest has no SaveableTypeDefiner, so on load it comes back
-            // as null (unknown type), pruned by QuestManager.PreAfterLoad. We
-            // rebuild here from NPCContext.PendingRequest which persists via JSON.
+            // AIDialogQuest has no SaveableTypeDefiner — comes back null on load,
+            // pruned by QuestManager.PreAfterLoad. Rebuild from NPCContext.PendingRequest.
             RFAIDebug.Log("ReconstructQuestsFromNPCContexts: start");
             try
             {
                 var store = NPCContextStore.Instance;
-                if (store == null) { RFAIDebug.Log("ReconstructQuestsFromNPCContexts: store null"); return; }
+                if (store == null) { RFAIDebug.Log("store null"); return; }
 
                 int currentDay = 0;
-                try { currentDay = (int)Campaign.Current.CampaignStartTime.ElapsedDaysUntilNow; }
-                catch { }
+                try { currentDay = (int)Campaign.Current.Models.CampaignTimeModel
+                                            .CampaignStartTime.ElapsedDaysUntilNow; } catch { }
 
                 foreach (var ctx in store.GetAll())
                 {
                     if (!ctx.HasPendingRequest) continue;
 
                     Hero? hero = null;
-                    try { hero = Hero.FindFirst(h => h.StringId == ctx.HeroId); }
-                    catch { }
-
+                    try { hero = Hero.FindFirst(h => h.StringId == ctx.HeroId); } catch { }
                     if (hero == null || hero.IsDead) continue;
-                    if (AIDialogQuest.ForNpc(ctx.HeroId) != null) continue;
+
+                    var existing = AIDialogQuest.ForNpc(ctx.HeroId);
+                    if (existing != null && existing.IsOngoing) continue;
 
                     try
                     {
                         var req      = ctx.PendingRequest!;
                         int elapsed  = currentDay - req.DayIssued;
                         int daysLeft = Math.Max(1, 30 - elapsed);
-                        string qId   = $"rfai_{hero.StringId}_{req.DayIssued}";
-
-                        RFAIDebug.Log($"ReconstructQuestsFromNPCContexts: recreating for {hero.Name} ({daysLeft}d left)");
+                        string qId   = $"rfai_{hero.StringId}_{req.DayIssued}_r";
+                        RFAIDebug.Log($"ReconstructQuestsFromNPCContexts: recreating {hero.Name} ({daysLeft}d)");
                         new AIDialogQuest(qId, hero, req.Description, daysLeft).StartQuest();
                     }
                     catch (Exception ex)
@@ -104,7 +99,7 @@ namespace RF_AIDialog
             }
             catch (Exception ex)
             {
-                RFAIDebug.Log($"ReconstructQuestsFromNPCContexts: outer error — {ex.Message}");
+                RFAIDebug.Log($"ReconstructQuestsFromNPCContexts: outer — {ex.Message}");
             }
         }
 
@@ -427,13 +422,6 @@ namespace RF_AIDialog
                 // Request fulfilled
                 if (_parsed.RequestFulfilled && _currentContext.HasPendingRequest)
                 {
-                    try
-                    {
-                        if (_currentNpc != null)
-                            AIDialogQuest.ForNpc(_currentNpc.StringId)?.MarkFulfilled();
-                    }
-                    catch { }
-
                     _currentContext.PendingRequest = null;
                 }
 
@@ -464,4 +452,77 @@ namespace RF_AIDialog
         {
             if (_pendingNewRequest != null && _currentNpc != null && _currentContext != null)
             {
-                AIDialogQ
+                _currentContext.PendingRequest = null;
+                CommitNewRequest(_pendingNewRequest);
+                NPCContextStore.Instance?.MarkDirty(_currentContext);
+            }
+            FinishPendingRequestCleanup();
+        }
+
+        private void ConsequenceDeclineNewRequest()
+        {
+            FinishPendingRequestCleanup();
+        }
+
+        // Helpers
+
+        private void CommitNewRequest(string requestText)
+        {
+            if (_currentNpc == null || _currentContext == null) return;
+
+            int day = 0;
+            try { day = (int)Campaign.Current.Models.CampaignTimeModel
+                              .CampaignStartTime.ElapsedDaysUntilNow; } catch { }
+
+            _currentContext.PendingRequest = new PendingRequest
+            {
+                Description = requestText,
+                DayIssued   = day
+            };
+        }
+
+        private void FinishPendingRequestCleanup()
+        {
+            _pendingNewRequest = null;
+            _currentNpc        = null;
+            _currentContext    = null;
+        }
+
+        private RFAIResponse? ParseResponse(string raw)
+        {
+            try
+            {
+                string? json = JsonCleaner.ExtractJson(raw);
+                if (json == null) return null;
+                return JsonConvert.DeserializeObject<RFAIResponse>(json);
+            }
+            catch { return null; }
+        }
+
+        private static string Sanitize(string text)
+        {
+            if (text == "[cancel]") return "Conversation cancelled.";
+
+            text = text
+                .Replace("\r\n", " ")
+                .Replace("\n",   " ")
+                .Replace("\r",   " ")
+                .Replace("{",    "(")
+                .Replace("}",    ")")
+                .Replace("|",    "/")
+                .Replace("[",    "(")
+                .Replace("]",    ")");
+
+            if (text.Length > 400)
+                text = text.Substring(0, 400) + "...";
+
+            return text;
+        }
+
+        private string FallbackPrompt() =>
+            "You are a medieval lord in Aeurth. " +
+            "Respond ONLY with JSON: " +
+            "{\"internal_thoughts\":\"...\",\"response\":\"your spoken words\",\"tone\":\"neutral\",\"actions\":[]}";
+    }
+}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   

@@ -76,16 +76,15 @@ namespace RF_AIDialog
         }
 
         /// <summary>
+        /// Returns all persisted contexts. Used by ReconstructQuestsFromNPCContexts
+        /// to rebuild quest log entries on load without creating blank contexts.
+        /// </summary>
+        public IEnumerable<NPCContext> GetAll() => _contexts.Values;
+
+        /// <summary>
         /// Persists changes to an existing context (already referenced by the dictionary).
         /// Call after mutating the context returned by GetOrCreate.
         /// </summary>
         public void MarkDirty(NPCContext ctx)
         {
             // The dictionary already holds a reference to the same object,
-            // so no explicit write-back is needed — this method exists as
-            // a clear call-site signal that the context was mutated.
-            if (ctx != null && !string.IsNullOrWhiteSpace(ctx.HeroId))
-                _contexts[ctx.HeroId] = ctx;
-        }
-    }
-}
