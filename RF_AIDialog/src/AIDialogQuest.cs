@@ -7,21 +7,22 @@ namespace RF_AIDialog
 {
     /// <summary>
     /// Thin QuestBase wrapper that surfaces an NPC pending request in the
-    /// native Bannerlord quest log. NPCContext.PendingRequest is ground truth;
-    /// this class persists across save/load via RF_AIDialogSaveDefiner.
+    /// native Bannerlord quest log. NPCContext.PendingRequest is ground truth.
     ///
-    /// Note: IsSpecialQuest cannot be overridden in 1.3.0 (property is not virtual
-    /// in the binary). AIDialogQuestPatch (Harmony postfix) handles this by forcing
-    /// IsSpecialQuest = true at runtime so QuestManager.OnGameLoaded keeps the quest
-    /// alive instead of cancelling it.
+    /// Persistence strategy: AIDialogQuest is NOT registered in a SaveableTypeDefiner.
+    /// On save, the quest is written by QuestManager but the type is unknown to the
+    /// save system, so it comes back as null on load and is cleaned up by
+    /// QuestManager.PreAfterLoad — no crash. AIDialogBehavior.OnGameLoaded then
+    /// reconstructs the quest from NPCContext.PendingRequest (which persists via JSON).
+    ///
+    /// This mirrors the pattern used by MerchantDeliveryQuest in RealmsForgottenMain.
     /// </summary>
     public class AIDialogQuest : QuestBase
     {
         private static readonly Dictionary<string, AIDialogQuest> _activeByNpcId
             = new Dictionary<string, AIDialogQuest>();
 
-        [SaveableField(1)] private string _npcStringId = "";
-        [SaveableField(2)] private string _description  = "";
+        private string _npcStringId = "";
 
         public AIDialogQuest(
             string questId,
@@ -31,36 +32,25 @@ namespace RF_AIDialog
             : base(questId, questGiver, CampaignTime.Now + CampaignTime.Days(durationDays), 0)
         {
             _npcStringId = questGiver.StringId;
-            _description = description;
+            AddLog(new TextObject("{=!}" + Truncate(description, 400)));
         }
 
         public override TextObject Title
-            => new TextObject("{=!}" + BuildTitle());
+            => new TextObject("{=!}" + (QuestGiver?.Name?.ToString() ?? "NPC") + " — pending request");
 
         public override bool IsRemainingTimeHidden => false;
 
         protected override void SetDialogs() { }
 
-        // Called by the save system immediately after SaveableFields are restored,
-        // BEFORE QuestManager.OnGameLoaded. Earliest possible log point on load.
-        [LoadInitializationCallback]
-        private void OnLoadInit()
-        {
-            RFAIDebug.Log($"AIDialogQuest.[LoadInit]: npc={_npcStringId} desc={Truncate(_description, 40)}");
-        }
-
-        protected override void InitializeQuestOnGameLoad()
-        {
-            RFAIDebug.Log($"AIDialogQuest.InitializeQuestOnGameLoad: npc={_npcStringId}");
-            if (!string.IsNullOrWhiteSpace(_npcStringId))
-                _activeByNpcId[_npcStringId] = this;
-        }
-
         protected override void OnStartQuest()
         {
             RFAIDebug.Log($"AIDialogQuest.OnStartQuest: npc={_npcStringId}");
             _activeByNpcId[_npcStringId] = this;
-            AddLog(new TextObject("{=!}" + Truncate(_description, 400)));
+        }
+
+        protected override void InitializeQuestOnGameLoad()
+        {
+            // Not called — quest is not persisted via SaveDefiner.
         }
 
         protected override void OnTimedOut()
@@ -102,36 +92,7 @@ namespace RF_AIDialog
             return _activeByNpcId.TryGetValue(npcStringId, out var q) ? q : null;
         }
 
-        private string BuildTitle()
-        {
-            int dot = _description.IndexOf('.');
-            string candidate = (dot > 0 && dot <= 60)
-                ? _description.Substring(0, dot)
-                : Truncate(_description, 50);
-            return candidate.Trim();
-        }
-
         private static string Truncate(string s, int max)
             => s.Length <= max ? s : s.Substring(0, max) + "...";
-    }
-
-    /// <summary>
-    /// Auto-discovered by Bannerlord's reflection scan.
-    /// Base ID 912_345_678 is distinct from:
-    ///   RealmsForgottenMain : 287_656_493
-    ///   RFReligions         : 1_992_358_567
-    /// </summary>
-    public class RF_AIDialogSaveDefiner : SaveableTypeDefiner
-    {
-        public RF_AIDialogSaveDefiner() : base(912_345_678)
-        {
-            RFAIDebug.Log("RF_AIDialogSaveDefiner: constructed (base=912345678)");
-        }
-
-        protected override void DefineClassTypes()
-        {
-            RFAIDebug.Log("RF_AIDialogSaveDefiner.DefineClassTypes: registering AIDialogQuest as ID 1");
-            AddClassDefinition(typeof(AIDialogQuest), 1);
-        }
     }
 }
