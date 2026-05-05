@@ -666,9 +666,32 @@ namespace RF_AIDialog
                     }
                 }
 
-                // Request fulfilled
+                // Request fulfilled — this is the single trigger for quest closure.
                 if (_parsed.RequestFulfilled && _currentContext.HasPendingRequest)
                 {
+                    // Pay mechanic reward gold (if the LLM didn't already give gold via actions).
+                    int rewardGold = _currentContext.PendingRequest!.Mechanic?.RewardGold ?? 0;
+                    if (rewardGold > 0)
+                    {
+                        try
+                        {
+                            Hero.MainHero?.ChangeHeroGold(rewardGold);
+                            RFAIDebug.Log($"ConsequenceClearResponse: paid {rewardGold} gold from mechanic");
+                        }
+                        catch { }
+                    }
+
+                    // Close the quest log entry.
+                    if (_currentNpc != null)
+                    {
+                        try
+                        {
+                            var q = AIDialogQuest.ForNpc(_currentNpc.StringId);
+                            if (q != null && q.IsOngoing) q.MarkFulfilled();
+                        }
+                        catch { }
+                    }
+
                     _currentContext.PendingRequest = null;
                 }
 

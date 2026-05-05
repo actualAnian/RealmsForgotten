@@ -92,11 +92,51 @@ namespace RF_AIDialog
                                   daysAgo <= 14 ? $"{daysAgo} days ago" :
                                                   "quite some time ago";
 
-                sb.AppendLine("!! YOU HAVE A PENDING REQUEST TO THIS PLAYER !!");
-                sb.AppendLine($"You asked them {daysDesc}: \"{context.PendingRequest.Description}\"");
-                sb.AppendLine("If the player is bringing you what you asked for — acknowledge it warmly and reward them. Use the 'request_fulfilled' field and fire the reward action.");
-                sb.AppendLine("If they are not addressing it, let it quietly colour how you receive them. You may mention it, press them, or let it simmer beneath the surface.");
-                sb.AppendLine();
+                var mechanic = context.PendingRequest.Mechanic;
+
+                // ── All objectives verified by the game engine ────────────
+                if (mechanic != null && mechanic.AllCompleted)
+                {
+                    sb.AppendLine("!! ALL QUEST OBJECTIVES HAVE BEEN VERIFIED BY THE GAME ENGINE !!");
+                    sb.AppendLine($"You asked them {daysDesc}: \"{context.PendingRequest.Description}\"");
+                    sb.AppendLine("The following objectives are confirmed complete:");
+                    mechanic.Normalize();
+                    for (int i = 0; i < mechanic.Objectives.Count; i++)
+                    {
+                        string objLabel = mechanic.Objectives[i].Label;
+                        if (!string.IsNullOrWhiteSpace(objLabel))
+                            sb.AppendLine($"  ✓ {objLabel}");
+                    }
+                    if (mechanic.RewardGold > 0)
+                        sb.AppendLine($"You promised a reward of {mechanic.RewardGold} gold. Honor it now.");
+                    sb.AppendLine("Greet the player warmly, acknowledge what they have accomplished, and set");
+                    sb.AppendLine("  \"request_fulfilled\": true");
+                    sb.AppendLine("This triggers the reward and closes the quest. Do NOT skip this field.");
+                    sb.AppendLine();
+                }
+                else
+                {
+                    sb.AppendLine("!! YOU HAVE A PENDING REQUEST TO THIS PLAYER !!");
+                    sb.AppendLine($"You asked them {daysDesc}: \"{context.PendingRequest.Description}\"");
+
+                    // Show partial atom progress if there is a mechanic
+                    if (mechanic != null && mechanic.Objectives.Count > 0)
+                    {
+                        mechanic.Normalize();
+                        sb.AppendLine("Objective status (tracked by the game engine):");
+                        for (int i = 0; i < mechanic.Objectives.Count; i++)
+                        {
+                            string objLabel = mechanic.Objectives[i].Label;
+                            bool   done     = mechanic.IsCompleted(i);
+                            if (!string.IsNullOrWhiteSpace(objLabel))
+                                sb.AppendLine($"  {(done ? "✓" : "○")} {objLabel}");
+                        }
+                    }
+
+                    sb.AppendLine("If the player has now delivered on your request — acknowledge it and set 'request_fulfilled': true.");
+                    sb.AppendLine("If they are not addressing it, let it quietly colour how you receive them.");
+                    sb.AppendLine();
+                }
             }
 
             // ── Identity ──────────────────────────────────────────────────

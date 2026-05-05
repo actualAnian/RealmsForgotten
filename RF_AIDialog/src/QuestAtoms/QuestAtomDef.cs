@@ -115,5 +115,28 @@ namespace RF_AIDialog
 
         /// <summary>True if at least one atom of the given type exists and is not complete.</summary>
         public bool HasPendingAtom(string atomType) => IndexOfFirstIncomplete(atomType) >= 0;
+
+        /// <summary>
+        /// True when every atom EXCEPT RETURN_TO_NPC is complete.
+        /// Used to notify the player to return to the NPC before the final conversation.
+        /// </summary>
+        [JsonIgnore]
+        public bool AllExceptReturnCompleted
+        {
+            get
+            {
+                Normalize();
+                if (Objectives.Count == 0) return false;
+                for (int i = 0; i < Objectives.Count; i++)
+                    if (Objectives[i].AtomType != "RETURN_TO_NPC" && !Completed[i])
+                        return false;
+                return true;
+            }
+        }
+
+        /// <summary>True if any objective uses RETURN_TO_NPC (quest closes via conversation).</summary>
+        [JsonIgnore]
+        public bool HasReturnStep =>
+            Objectives.Any(a => a.AtomType == "RETURN_TO_NPC");
     }
 }

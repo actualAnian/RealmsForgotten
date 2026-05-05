@@ -1,72 +1,160 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.Library;
 
 namespace RF_AIDialog
 {
     /// <summary>
-    /// Builds the quest-atom catalog string that is injected into the LLM system prompt.
+    /// Builds the quest-atom catalog injected into the LLM system prompt.
     ///
-    /// The catalog has three parts:
-    ///   1. Static atom-type docs — what each atom does, what params it needs.
-    ///   2. Dynamic settlement list — real StringIds the LLM can reference.
-    ///   3. Dynamic faction list   — real StringIds the LLM can reference.
+    /// Settlement IDs are loaded ONCE from RF_Map/ModuleData/settlements.xml
+    /// (the authoritative source for this mod's map) and cached for the session.
+    /// At runtime they are filtered by the NPC's culture so the LLM receives
+    /// only contextually relevant IDs (max ~15), keeping prompt size manageable.
     ///
-    /// Injected only for lords and notables (not companions).
+    /// Faction IDs come from the live Kingdom list (they can be eliminated mid-game).
     /// </summary>
     public static class QuestAtomCatalog
     {
-        // ── Static docs ───────────────────────────────────────────────────
+        // ── Static atom docs ──────────────────────────────────────────────
 
         private const string AtomDocs =
 @"QUEST MECHANIC SYSTEM — READ CAREFULLY:
-You may attach a 'quest_mechanic' object to ANY 'request' that involves verifiable
-real-world conditions (travel, combat, inventory, troop count).
+Attach 'quest_mechanic' to any 'request' that involves verifiable real-world
+conditions (travel, combat, inventory, troop count).
+The game engine tracks completion automatically — do NOT rely on the player claiming
+they finished. OMIT 'quest_mechanic' for pure information/roleplay requests.
 
-When 'quest_mechanic' is present the game engine tracks completion automatically —
-do NOT rely on the player telling you they finished. The game will tell YOU.
+ATOM TYPES (use in quest_mechanic.objectives[]):
 
-OMIT 'quest_mechanic' for pure information/roleplay requests (e.g. 'find out rumors').
+  VISIT_SETTLEMENT  — player must travel to a specific settlement
+    params: settlement_id (use ids from the list below), [label]
+    example: {""atom"":""VISIT_SETTLEMENT"",""params"":{""settlement_id"":""town_EN1""},""label"":""Go to Aispur""}
 
-ATOM TYPES — use these in quest_mechanic.objectives[]:
-  VISIT_SETTLEMENT
-    desc: player must travel to a specific settlement
-    params: settlement_id (string — use ids from the list below), [label (string)]
-    example: {""atom"":""VISIT_SETTLEMENT"",""params"":{""settlement_id"":""town_ES3""},""label"":""Go to Epicrotea""}
+  DEFEAT_PARTY  — player must defeat N enemy parties of a given faction
+    params: faction_id (use ids from the list below), faction_name, count (string int, default ""1"")
+    example: {""atom"":""DEFEAT_PARTY"",""params"":{""faction_id"":""vlandia"",""faction_name"":""Vlandian"",""count"":""3""},""label"":""Rout 3 Vlandian patrols""}
 
-  DEFEAT_PARTY
-    desc: player must defeat N enemy parties of a given faction
-    params: faction_id (string — use ids from the list below),
-            faction_name (string — human-readable name),
-            count (string-encoded int, default ""1"")
-    example: {""atom"":""DEFEAT_PARTY"",""params"":{""faction_id"":""vlandia"",""faction_name"":""Vlandian"",""count"":""2""},""label"":""Rout 2 Vlandian patrols""}
+  BRING_ITEM  — player must carry the item when next speaking to you
+    params: item_id (one of: grain wine hides linen tools silver_ore wool pottery salt dates), quantity (string int)
+    example: {""atom"":""BRING_ITEM"",""params"":{""item_id"":""grain"",""quantity"":""10""},""label"":""Bring 10 grain""}
 
-  BRING_ITEM
-    desc: player must carry a specific trade good when they next speak to you
-    params: item_id (string — one of: grain wine hides linen tools silver_ore wool pottery salt dates),
-            quantity (string-encoded int, default ""1"")
-    example: {""atom"":""BRING_ITEM"",""params"":{""item_id"":""grain"",""quantity"":""10""},""label"":""Bring 10 units of grain""}
-
-  BRING_TROOPS
-    desc: player must have at least N healthy soldiers when they next speak to you
-    params: troop_count (string-encoded int)
+  BRING_TROOPS  — player must have at least N healthy soldiers when next speaking to you
+    params: troop_count (string int)
     example: {""atom"":""BRING_TROOPS"",""params"":{""troop_count"":""50""},""label"":""Muster 50 soldiers""}
 
-  RETURN_TO_NPC
-    desc: player must return to YOU after all prior objectives are complete
-    params: (none required)
+  RETURN_TO_NPC  — player must return to YOU after all prior objectives are done
+    params: (none)
     example: {""atom"":""RETURN_TO_NPC"",""params"":{},""label"":""Come back and report""}
 
-Objectives are evaluated IN ORDER. Put RETURN_TO_NPC last if used.
-'reward_gold' is paid automatically when ALL objectives are complete.
-'days' is the quest deadline (default 30).";
+Rules:
+• Objectives are validated IN ORDER. Put RETURN_TO_NPC LAST.
+• When RETURN_TO_NPC is present, reward and closure happen in the return conversation
+  via 'request_fulfilled': true. Do NOT include both RETURN_TO_NPC and expect automatic closure.
+• 'reward_gold' is paid when 'request_fulfilled': true fires in the conversation.
+• 'days' is the quest deadline (default 30).";
+
+        // ── XML cache ─────────────────────────────────────────────────────
+
+        // Key: culture string (e.g. "empire", "vlandia"). Value: list of (id, name, type).
+        private static Dictionary<string, List<(string id, string name, string type)>>? _byCulture;
+        private static readonly object _lock = new object();
+
+        private static Dictionary<string, List<(string id, string name, string type)>> GetCache()
+        {
+            if (_byCulture != null) return _byCulture;
+            lock (_lock)
+            {
+                if (_byCulture != null) return _byCulture;
+                _byCulture = LoadFromXml();
+            }
+            return _byCulture;
+        }
+
+        private static Dictionary<string, List<(string id, string name, string type)>> LoadFromXml()
+        {
+            var result = new Dictionary<string, List<(string, string, string)>>(
+                StringComparer.OrdinalIgnoreCase);
+
+            try
+            {
+                string path = Path.Combine(
+                    BasePath.Name,
+                    "Modules", "RF_Map", "ModuleData", "settlements.xml");
+
+                if (!File.Exists(path))
+                {
+                    RFAIDebug.Log($"QuestAtomCatalog: settlements.xml not found at {path}");
+                    return result;
+                }
+
+                var doc = XDocument.Load(path);
+                int loaded = 0;
+
+                foreach (var s in doc.Root?.Elements("Settlement") ?? Enumerable.Empty<XElement>())
+                {
+                    string id = s.Attribute("id")?.Value ?? "";
+                    if (string.IsNullOrWhiteSpace(id)) continue;
+
+                    // Villages are not useful quest destinations — skip them
+                    bool hasVillage  = s.Descendants("Village").Any();
+                    if (hasVillage && !s.Descendants("Town").Any()) continue;
+
+                    // Castle or town?
+                    var townEl = s.Descendants("Town").FirstOrDefault();
+                    if (townEl == null) continue; // no Town component at all
+
+                    bool isCastle = townEl.Attribute("is_castle")?.Value
+                                       ?.Equals("true", StringComparison.OrdinalIgnoreCase) == true;
+                    string type  = isCastle ? "castle" : "town";
+
+                    // Human-readable name — strip localization key "{=key}Actual Name"
+                    string rawName = s.Attribute("name")?.Value ?? id;
+                    string name    = StripLocKey(rawName);
+
+                    // Culture string, e.g. "Culture.empire" → "empire"
+                    string rawCulture = s.Attribute("culture")?.Value ?? "";
+                    string culture    = rawCulture.Replace("Culture.", "").Trim();
+                    if (string.IsNullOrWhiteSpace(culture)) culture = "unknown";
+
+                    if (!result.TryGetValue(culture, out var list))
+                    {
+                        list = new List<(string, string, string)>();
+                        result[culture] = list;
+                    }
+                    list.Add((id, name, type));
+                    loaded++;
+                }
+
+                RFAIDebug.Log($"QuestAtomCatalog: loaded {loaded} towns/castles from XML " +
+                              $"across {result.Count} cultures");
+            }
+            catch (Exception ex)
+            {
+                RFAIDebug.Log($"QuestAtomCatalog: XML load failed — {ex.Message}");
+            }
+
+            return result;
+        }
+
+        private static string StripLocKey(string raw)
+        {
+            int end = raw.IndexOf('}');
+            if (end >= 0 && end < raw.Length - 1)
+                return raw.Substring(end + 1).Trim();
+            return raw;
+        }
 
         // ── Public API ────────────────────────────────────────────────────
 
         /// <summary>
         /// Returns the full catalog string for injection into the system prompt.
-        /// All game data calls are wrapped in try/catch — never throws.
+        /// Never throws — all game data access is guarded.
         /// </summary>
         public static string Build(Hero npc)
         {
@@ -74,13 +162,13 @@ Objectives are evaluated IN ORDER. Put RETURN_TO_NPC last if used.
             sb.AppendLine(AtomDocs);
             sb.AppendLine();
 
-            // Dynamic settlement list
+            // Settlement list filtered by NPC culture
             try
             {
-                var settlements = GetSettlements(npc, maxCount: 10);
+                var settlements = GetSettlementsForNpc(npc, maxCount: 15);
                 if (settlements.Count > 0)
                 {
-                    sb.AppendLine("VALID settlement_id VALUES (use these — do not invent ids):");
+                    sb.AppendLine("VALID settlement_id VALUES (use these exactly — do not invent ids):");
                     foreach (var (id, name, type) in settlements)
                         sb.AppendLine($"  \"{id}\"  →  {name} ({type})");
                     sb.AppendLine();
@@ -88,13 +176,13 @@ Objectives are evaluated IN ORDER. Put RETURN_TO_NPC last if used.
             }
             catch { }
 
-            // Dynamic faction list
+            // Live faction list
             try
             {
-                var factions = GetFactions(maxCount: 10);
+                var factions = GetLiveFactions(maxCount: 10);
                 if (factions.Count > 0)
                 {
-                    sb.AppendLine("VALID faction_id VALUES (use these — do not invent ids):");
+                    sb.AppendLine("VALID faction_id VALUES (active kingdoms — do not invent ids):");
                     foreach (var (id, name) in factions)
                         sb.AppendLine($"  \"{id}\"  →  {name}");
                     sb.AppendLine();
@@ -107,54 +195,66 @@ Objectives are evaluated IN ORDER. Put RETURN_TO_NPC last if used.
 
         // ── Private helpers ───────────────────────────────────────────────
 
-        private static List<(string id, string name, string type)> GetSettlements(Hero npc, int maxCount)
+        private static List<(string id, string name, string type)> GetSettlementsForNpc(
+            Hero npc, int maxCount)
         {
-            var result = new List<(string, string, string)>();
-            var seen   = new HashSet<string>();
+            var cache   = GetCache();
+            var result  = new List<(string, string, string)>();
+            var seenIds = new HashSet<string>();
 
-            void Add(Settlement s)
+            // Derive culture string from the NPC's faction/clan culture
+            string npcCulture = npc.MapFaction?.Culture?.StringId
+                             ?? npc.Culture?.StringId
+                             ?? "";
+            npcCulture = npcCulture.Replace("Culture.", "").Trim();
+
+            // 1. NPC's own culture first (most relevant)
+            if (!string.IsNullOrWhiteSpace(npcCulture)
+                && cache.TryGetValue(npcCulture, out var ownList))
             {
-                if (seen.Contains(s.StringId)) return;
-                seen.Add(s.StringId);
-                string type = s.IsTown ? "town" : s.IsCastle ? "castle" : "village";
-                result.Add((s.StringId, s.Name.ToString(), type));
-            }
-
-            // 1. NPC's current settlement (most contextually relevant)
-            if (npc.CurrentSettlement != null)
-                Add(npc.CurrentSettlement);
-
-            // 2. NPC's own faction (towns + castles)
-            if (npc.MapFaction != null)
-            {
-                foreach (var s in Settlement.All)
+                // Towns before castles — towns are better quest destinations
+                foreach (var entry in ownList.Where(e => e.type == "town"))
                 {
                     if (result.Count >= maxCount) break;
-                    if (!s.IsTown && !s.IsCastle) continue;
-                    if (s.MapFaction == npc.MapFaction) Add(s);
+                    if (seenIds.Add(entry.id)) result.Add(entry);
+                }
+                foreach (var entry in ownList.Where(e => e.type == "castle"))
+                {
+                    if (result.Count >= maxCount) break;
+                    if (seenIds.Add(entry.id)) result.Add(entry);
                 }
             }
 
-            // 3. Fill remaining slots with towns from other kingdoms
-            foreach (var s in Settlement.All)
+            // 2. Fill remaining with towns from all other cultures
+            if (result.Count < maxCount)
             {
-                if (result.Count >= maxCount) break;
-                if (!s.IsTown) continue;
-                Add(s);
+                foreach (var list in cache.Values)
+                {
+                    foreach (var entry in list.Where(e => e.type == "town"))
+                    {
+                        if (result.Count >= maxCount) break;
+                        if (seenIds.Add(entry.id)) result.Add(entry);
+                    }
+                    if (result.Count >= maxCount) break;
+                }
             }
 
             return result;
         }
 
-        private static List<(string id, string name)> GetFactions(int maxCount)
+        private static List<(string id, string name)> GetLiveFactions(int maxCount)
         {
             var result = new List<(string, string)>();
-            foreach (var k in Kingdom.All)
+            try
             {
-                if (k.IsEliminated) continue;
-                result.Add((k.StringId, k.Name.ToString()));
-                if (result.Count >= maxCount) break;
+                foreach (var k in Kingdom.All)
+                {
+                    if (k.IsEliminated) continue;
+                    result.Add((k.StringId, k.Name.ToString()));
+                    if (result.Count >= maxCount) break;
+                }
             }
+            catch { }
             return result;
         }
     }

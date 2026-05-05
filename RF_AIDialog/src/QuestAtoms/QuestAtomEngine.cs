@@ -82,10 +82,11 @@ namespace RF_AIDialog
                     UpdateQuestLog(ctx.HeroId, $"✓ {label}");
 
                     // Notify player
-                    Notify($"Quest objective: {label}");
+                    Notify($"Quest objective: ✓ {label}");
 
-                    // Check if all done
+                    // Check completion / near-completion
                     CheckMechanicCompletion(ctx);
+                    CheckNearCompletion(ctx);
                 }
             }
             catch (Exception ex)
@@ -143,8 +144,9 @@ namespace RF_AIDialog
                         store.MarkDirty(ctx);
                         RFAIDebug.Log($"QuestAtomEngine: DEFEAT_PARTY completed for {ctx.HeroId} ({current}/{required})");
                         UpdateQuestLog(ctx.HeroId, $"✓ {label}");
-                        Notify($"Quest objective: {label}");
+                        Notify($"Quest objective: ✓ {label}");
                         CheckMechanicCompletion(ctx);
+                        CheckNearCompletion(ctx);
                     }
                     else
                     {
@@ -239,29 +241,58 @@ namespace RF_AIDialog
 
             RFAIDebug.Log($"QuestAtomEngine: ALL objectives complete for {ctx.HeroId}");
 
-            // Mark the AIDialogQuest fulfilled
+            if (mechanic.HasReturnStep)
+            {
+                // Quest closes through the return conversation.
+                // PromptBuilder will inject the "ALL VERIFIED" hint so the LLM
+                // fires request_fulfilled: true, which pays the gold and closes the quest.
+                NPCContextStore.Instance?.MarkDirty(ctx);
+                Notify("All objectives complete — return to the NPC to collect your reward.");
+                RFAIDebug.Log($"QuestAtomEngine: RETURN_TO_NPC pending for {ctx.HeroId} — " +
+                              "closure deferred to conversation");
+                return;
+            }
+
+            // No return step — auto-close immediately.
             var quest = AIDialogQuest.ForNpc(ctx.HeroId);
             if (quest != null && quest.IsOngoing)
             {
                 quest.MarkFulfilled();
-                RFAIDebug.Log($"QuestAtomEngine: AIDialogQuest fulfilled for {ctx.HeroId}");
+                RFAIDebug.Log($"QuestAtomEngine: auto-fulfilled for {ctx.HeroId}");
             }
 
-            // Reward gold if specified
             if (mechanic.RewardGold > 0)
             {
                 try
                 {
                     Hero.MainHero?.ChangeHeroGold(mechanic.RewardGold);
-                    RFAIDebug.Log($"QuestAtomEngine: rewarded {mechanic.RewardGold} gold");
+                    RFAIDebug.Log($"QuestAtomEngine: auto-rewarded {mechanic.RewardGold} gold");
                     Notify($"Quest complete! You received {mechanic.RewardGold} gold.");
                 }
                 catch { }
             }
             else
             {
-                Notify("All objectives complete — speak to the NPC to collect your reward.");
+                Notify("Quest complete!");
             }
+
+            // Clear the pending request — quest is done with no further conversation needed.
+            ctx.PendingRequest = null;
+            NPCContextStore.Instance?.MarkDirty(ctx);
+        }
+
+        // Also check after non-return atoms complete whether the only thing left is RETURN_TO_NPC.
+        // If so, nudge the player to go speak with the NPC.
+        private static void CheckNearCompletion(NPCContext ctx)
+        {
+            var mechanic = ctx.PendingRequest?.Mechanic;
+            if (mechanic == null || mechanic.AllCompleted) return;
+            if (!mechanic.HasReturnStep) return;
+            if (!mechanic.AllExceptReturnCompleted) return;
+
+            // All done except RETURN_TO_NPC.
+            Notify("All objectives done — return to the NPC to collect your reward.");
+            RFAIDebug.Log($"QuestAtomEngine: all pre-return objectives done for {ctx.HeroId}");
         }
 
         // ── Inventory checks ──────────────────────────────────────────────
