@@ -108,7 +108,8 @@ namespace RF_AIDialog
         private static QuestAtom? CopySettlementAtom(QuestAtom source, QuestAtom target)
         {
             string settlementId = source.GetParam("settlement_id").Trim();
-            if (string.IsNullOrWhiteSpace(settlementId))
+            if (string.IsNullOrWhiteSpace(settlementId) ||
+                !QuestAtomCatalog.IsValidSettlementId(settlementId))
                 return null;
 
             target.Params["settlement_id"] = settlementId;
@@ -118,7 +119,8 @@ namespace RF_AIDialog
         private static QuestAtom? CopyDefeatPartyAtom(QuestAtom source, QuestAtom target)
         {
             string factionId = source.GetParam("faction_id").Trim();
-            if (string.IsNullOrWhiteSpace(factionId))
+            if (string.IsNullOrWhiteSpace(factionId) ||
+                !QuestAtomCatalog.IsValidFactionId(factionId))
                 return null;
 
             target.Params["faction_id"] = factionId;
@@ -136,6 +138,10 @@ namespace RF_AIDialog
             string factionId = source.GetParam("faction_id").Trim();
             string partyId = source.GetParam("party_id").Trim();
             string heroId = source.GetParam("hero_id").Trim();
+
+            if (!string.IsNullOrWhiteSpace(factionId) &&
+                !QuestAtomCatalog.IsValidFactionId(factionId))
+                factionId = "";
 
             if (string.IsNullOrWhiteSpace(factionId) &&
                 string.IsNullOrWhiteSpace(partyId) &&

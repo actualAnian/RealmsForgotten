@@ -111,7 +111,8 @@ namespace RF_AIDialog
                         sb.AppendLine($"You promised a reward of {mechanic.RewardGold} gold. Honor it now.");
                     sb.AppendLine("Greet the player warmly, acknowledge what they have accomplished, and set");
                     sb.AppendLine("  \"request_fulfilled\": true");
-                    sb.AppendLine("This triggers the reward and closes the quest. Do NOT skip this field.");
+                    sb.AppendLine("This closes the quest and pays quest_mechanic.reward_gold automatically.");
+                    sb.AppendLine("Do NOT add a matching give_gold action for the same promised reward.");
                     sb.AppendLine();
                 }
                 else
@@ -134,6 +135,7 @@ namespace RF_AIDialog
                     }
 
                     sb.AppendLine("If the player has now delivered on your request — acknowledge it and set 'request_fulfilled': true.");
+                    sb.AppendLine("If the request has quest_mechanic.reward_gold, do NOT repeat that same reward via give_gold.");
                     sb.AppendLine("If they are not addressing it, let it quietly colour how you receive them.");
                     sb.AppendLine();
                 }
@@ -346,10 +348,11 @@ namespace RF_AIDialog
                 sb.AppendLine("  \"response\": \"what you say out loud, in character, 2-4 sentences\",");
                 sb.AppendLine("  \"tone\": \"friendly|neutral|suspicious|hostile|fearful\",");
                 sb.AppendLine("  \"memory_note\": \"1-sentence summary of what was significant in this exchange. OMIT THIS FIELD ENTIRELY if the conversation was trivial small-talk.\",");
-                sb.AppendLine("  \"request\": \"OPTIONAL — only include if making a clear, actionable task for the player (bring X, find out Y, deliver Z to someone). One sentence including what reward you offer. Omit entirely if no request.\",");
+                    sb.AppendLine("  \"request\": \"OPTIONAL — only include if making a clear, actionable task for the player (bring X, find out Y, deliver Z to someone). One sentence including what reward you offer. Omit entirely if no request.\",");
                 if (!isCompanion)
                 {
                     sb.AppendLine("  \"quest_mechanic\": {  // OPTIONAL — include ONLY when 'request' is present AND has verifiable objectives");
+                    sb.AppendLine("    // Prefer 1-3 simple objectives. Do not invent settlement_id or faction_id.");
                     sb.AppendLine("    \"objectives\": [");
                     sb.AppendLine("      {\"atom\":\"VISIT_SETTLEMENT\",\"params\":{\"settlement_id\":\"<id>\"},\"label\":\"Go to <name>\"},");
                     sb.AppendLine("      {\"atom\":\"RETURN_TO_NPC\",\"params\":{},\"label\":\"Report back\"}");
@@ -380,10 +383,11 @@ namespace RF_AIDialog
                 sb.AppendLine("  \"response\": \"what you say out loud, in character, 2-4 sentences\",");
                 sb.AppendLine("  \"tone\": \"friendly|neutral|suspicious|hostile|fearful\",");
                 sb.AppendLine("  \"memory_note\": \"1-sentence summary of what was significant in this exchange. OMIT THIS FIELD ENTIRELY if the conversation was trivial small-talk.\",");
-                sb.AppendLine("  \"request\": \"OPTIONAL — only include if making a clear, actionable task for the player (bring X, find out Y, deliver Z). One sentence with reward hint. Omit entirely if no request.\",");
+                    sb.AppendLine("  \"request\": \"OPTIONAL — only include if making a clear, actionable task for the player (bring X, find out Y, deliver Z). One sentence with reward hint. Omit entirely if no request.\",");
                 if (!isCompanion)
                 {
                     sb.AppendLine("  \"quest_mechanic\": {  // OPTIONAL — include ONLY when 'request' is present AND has verifiable objectives");
+                    sb.AppendLine("    // Prefer 1-3 simple objectives. Do not invent settlement_id or faction_id.");
                     sb.AppendLine("    \"objectives\": [");
                     sb.AppendLine("      {\"atom\":\"BRING_ITEM\",\"params\":{\"item_id\":\"grain\",\"quantity\":\"10\"},\"label\":\"Bring 10 grain\"},");
                     sb.AppendLine("      {\"atom\":\"RETURN_TO_NPC\",\"params\":{},\"label\":\"Report back\"}");
@@ -393,7 +397,7 @@ namespace RF_AIDialog
                     sb.AppendLine("  },  // omit entirely for pure roleplay requests");
                 }
                 if (hasPendingRequest)
-                    sb.AppendLine("  \"request_fulfilled\": false,  // set true if the player has now delivered on your pending request. Fire the reward action when true.");
+                    sb.AppendLine("  \"request_fulfilled\": false,  // set true if the player has now delivered on your pending request. If quest_mechanic.reward_gold exists, do not mirror it with give_gold.");
                 sb.AppendLine("  \"actions\": []");
                 sb.AppendLine("}");
                 sb.AppendLine("For 'actions': use [] if nothing happens. Otherwise fill with relevant actions:");

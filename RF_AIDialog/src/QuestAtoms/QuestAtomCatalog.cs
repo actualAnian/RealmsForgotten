@@ -204,6 +204,42 @@ Rules:
             return sb.ToString().TrimEnd();
         }
 
+        public static bool IsValidSettlementId(string settlementId)
+        {
+            if (string.IsNullOrWhiteSpace(settlementId))
+                return false;
+
+            try
+            {
+                var cache = GetCache();
+                foreach (var list in cache.Values)
+                {
+                    if (list.Any(e => e.id.Equals(settlementId, StringComparison.OrdinalIgnoreCase)))
+                        return true;
+                }
+            }
+            catch { }
+
+            return false;
+        }
+
+        public static bool IsValidFactionId(string factionId)
+        {
+            if (string.IsNullOrWhiteSpace(factionId))
+                return false;
+
+            try
+            {
+                return Kingdom.All.Any(k =>
+                    !k.IsEliminated &&
+                    k.StringId.Equals(factionId, StringComparison.OrdinalIgnoreCase));
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         // ── Private helpers ───────────────────────────────────────────────
 
         private static List<(string id, string name, string type)> GetSettlementsForNpc(
