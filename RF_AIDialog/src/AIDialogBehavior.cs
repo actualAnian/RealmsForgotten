@@ -31,6 +31,10 @@ namespace RF_AIDialog
     /// </summary>
     public class AIDialogBehavior : CampaignBehaviorBase
     {
+        // Singleton — used by the CampaignBehaviorManager Harmony prefix so it can
+        // call PrehideBeforeBehaviorSave() before behavior SyncData is stored.
+        public static AIDialogBehavior? Instance { get; private set; }
+
         // State
         private volatile bool        _isWaiting          = false;
         private volatile string?     _rawResponse        = null;
@@ -51,10 +55,17 @@ namespace RF_AIDialog
         public string CurrentNpcName => _npcNameText;
 
         // Quests removed before save, restored after — so the type never hits disk.
-        private List<QuestBase> _questsHiddenForSave = new List<QuestBase>();
+        private List<QuestBase>    _questsHiddenForSave      = new List<QuestBase>();
+        // Subset that were also in _trackedObjects — only these go back there on restore.
+        private HashSet<QuestBase> _questsRemovedFromTracked = new HashSet<QuestBase>();
+        // _questSelection saved from ViewDataTrackerCampaignBehavior before save.
+        private QuestBase?         _savedQuestSelection      = null;
+        // True once PrehideBeforeBehaviorSave has run for the current save cycle.
+        private bool               _prehideDone              = false;
 
         public override void RegisterEvents()
         {
+            Instance = this;
             // Reconstruct quest log entries after load (quest is never serialized).
             CampaignEvents.OnGameLoadFinishedEvent.AddNonSerializedListener(
                 this, OnGameLoadFinished);
@@ -86,60 +97,139 @@ namespace RF_AIDialog
             return fi?.GetValue(qm) as Dictionary<ITrackableCampaignObject, List<QuestBase>>;
         }
 
-        private void HideQuestsBeforeSave()
+        // ── Save hide/restore ─────────────────────────────────────────────
+
+        /// <summary>
+        /// Called from the Harmony prefix on CampaignBehaviorManager.OnBeforeSave,
+        /// which fires BEFORE behavior SyncData is stored. This guarantees that
+        /// AIDialogQuest is invisible both to QuestManager and to
+        /// ViewDataTrackerCampaignBehavior._questSelection when the serializer
+        /// traverses BehaviorSaveData._records.
+        /// </summary>
+        internal void PrehideBeforeBehaviorSave()
         {
             _questsHiddenForSave.Clear();
+            _questsRemovedFromTracked.Clear();
+            _savedQuestSelection = null;
+            _prehideDone         = false;
+
+            // 1. Remove AIDialogQuests from QuestManager._quests + _trackedObjects.
             try
             {
                 var qm = Campaign.Current?.QuestManager;
-                if (qm == null) { RFAIDebug.Log("HideQuestsBeforeSave: QuestManager null"); return; }
-
-                var quests = GetQuestsList(qm);
-                if (quests == null) { RFAIDebug.Log("HideQuestsBeforeSave: cannot access _quests"); return; }
-
-                RFAIDebug.Log($"HideQuestsBeforeSave: scanning {quests.Count} quests");
-
-                // Collect AIDialogQuests (iterate reverse so removal by index is safe)
-                for (int i = quests.Count - 1; i >= 0; i--)
+                if (qm == null)
                 {
-                    if (quests[i] is AIDialogQuest aq)
-                    {
-                        _questsHiddenForSave.Add(aq);
-                        quests.RemoveAt(i);
-                    }
+                    RFAIDebug.Log("PrehideBeforeBehaviorSave: QuestManager null");
                 }
-
-                // Also remove from _trackedObjects (StartQuest adds QuestGiver there)
-                var tracked = GetTrackedObjects(qm);
-                if (tracked != null)
+                else
                 {
-                    foreach (var aq in _questsHiddenForSave)
+                    var quests = GetQuestsList(qm);
+                    if (quests == null)
                     {
-                        if (aq.QuestGiver == null) continue;
-                        if (tracked.TryGetValue(aq.QuestGiver, out var list))
+                        RFAIDebug.Log("PrehideBeforeBehaviorSave: cannot access _quests");
+                    }
+                    else
+                    {
+                        for (int i = quests.Count - 1; i >= 0; i--)
                         {
-                            list.Remove(aq);
-                            if (list.Count == 0)
-                                tracked.Remove(aq.QuestGiver);
+                            if (quests[i] is AIDialogQuest aq)
+                            {
+                                _questsHiddenForSave.Add(aq);
+                                quests.RemoveAt(i);
+                            }
                         }
+
+                        var tracked = GetTrackedObjects(qm);
+                        if (tracked != null)
+                        {
+                            foreach (var aq in _questsHiddenForSave)
+                            {
+                                if (aq.QuestGiver == null) continue;
+                                if (tracked.TryGetValue(aq.QuestGiver, out var list) && list.Contains(aq))
+                                {
+                                    _questsRemovedFromTracked.Add(aq);
+                                    list.Remove(aq);
+                                    if (list.Count == 0)
+                                        tracked.Remove(aq.QuestGiver);
+                                }
+                            }
+                        }
+
+                        int trackedCount = GetTrackedObjects(qm)?.Count ?? -1;
+                        RFAIDebug.Log($"PrehideBeforeBehaviorSave: hid {_questsHiddenForSave.Count}, " +
+                                      $"remaining {quests.Count}, trackedObjs {trackedCount}");
                     }
                 }
-
-                int trackedCount = GetTrackedObjects(qm)?.Count ?? -1;
-                RFAIDebug.Log($"HideQuestsBeforeSave: hid {_questsHiddenForSave.Count}, remaining {quests.Count}, trackedObjs {trackedCount}");
             }
             catch (Exception ex)
             {
-                RFAIDebug.Log($"HideQuestsBeforeSave exception: {ex.GetType().Name}: {ex.Message}");
+                RFAIDebug.Log($"PrehideBeforeBehaviorSave: QM exception: {ex.GetType().Name}: {ex.Message}");
             }
+
+            // 2. Clear _questSelection in ViewDataTrackerCampaignBehavior so it is
+            //    null when SyncData stores it into BehaviorSaveData._records.
+            try
+            {
+                var viewTracker = Campaign.Current?.GetCampaignBehavior<IViewDataTracker>();
+                if (viewTracker != null)
+                {
+                    var sel = viewTracker.GetQuestSelection();
+                    if (sel is AIDialogQuest)
+                    {
+                        _savedQuestSelection = sel;
+                        viewTracker.SetQuestSelection(null);
+                        RFAIDebug.Log("PrehideBeforeBehaviorSave: cleared _questSelection");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                RFAIDebug.Log($"PrehideBeforeBehaviorSave: questSel exception: {ex.Message}");
+            }
+
+            _prehideDone = true;
+        }
+
+        private void HideQuestsBeforeSave()
+        {
+            // PrehideBeforeBehaviorSave() already ran via Harmony prefix on
+            // CampaignBehaviorManager.OnBeforeSave (which fires before this listener).
+            // Fall through only if the prefix somehow didn't run.
+            if (_prehideDone)
+            {
+                RFAIDebug.Log("HideQuestsBeforeSave: prehide already done, skip");
+                return;
+            }
+            RFAIDebug.Log("HideQuestsBeforeSave: prehide not done — running now (fallback)");
+            PrehideBeforeBehaviorSave();
         }
 
         private void RestoreQuestsAfterSave(bool success, string saveName)
         {
+            _prehideDone = false;
             try
             {
+                // Restore _questSelection regardless of QuestManager state.
+                if (_savedQuestSelection != null)
+                {
+                    try
+                    {
+                        Campaign.Current?.GetCampaignBehavior<IViewDataTracker>()
+                                        ?.SetQuestSelection(_savedQuestSelection);
+                        RFAIDebug.Log("RestoreQuestsAfterSave: restored questSelection");
+                    }
+                    catch { }
+                    _savedQuestSelection = null;
+                }
+
                 var qm = Campaign.Current?.QuestManager;
-                if (qm == null) { RFAIDebug.Log("RestoreQuestsAfterSave: QuestManager null"); return; }
+                if (qm == null)
+                {
+                    RFAIDebug.Log($"RestoreQuestsAfterSave: QuestManager null (success={success})");
+                    _questsHiddenForSave.Clear();
+                    _questsRemovedFromTracked.Clear();
+                    return;
+                }
 
                 var quests = GetQuestsList(qm);
                 if (quests == null) { RFAIDebug.Log("RestoreQuestsAfterSave: cannot access _quests"); return; }
@@ -148,12 +238,13 @@ namespace RF_AIDialog
                 foreach (var q in _questsHiddenForSave)
                     quests.Add(q);
 
-                // Restore to _trackedObjects
+                // Restore only quests that were originally in _trackedObjects
                 var tracked = GetTrackedObjects(qm);
                 if (tracked != null)
                 {
                     foreach (var aq in _questsHiddenForSave)
                     {
+                        if (!_questsRemovedFromTracked.Contains(aq)) continue;
                         if (aq.QuestGiver == null) continue;
                         if (!tracked.ContainsKey(aq.QuestGiver))
                             tracked[aq.QuestGiver] = new List<QuestBase>();
@@ -162,8 +253,10 @@ namespace RF_AIDialog
                     }
                 }
 
-                RFAIDebug.Log($"RestoreQuestsAfterSave: restored {_questsHiddenForSave.Count} (success={success})");
+                RFAIDebug.Log($"RestoreQuestsAfterSave: restored {_questsHiddenForSave.Count} quests, " +
+                              $"{_questsRemovedFromTracked.Count} tracked (success={success})");
                 _questsHiddenForSave.Clear();
+                _questsRemovedFromTracked.Clear();
             }
             catch (Exception ex)
             {
@@ -183,6 +276,12 @@ namespace RF_AIDialog
         {
             // AIDialogQuest has no SaveableTypeDefiner — comes back null on load,
             // pruned by QuestManager.PreAfterLoad. Rebuild from NPCContext.PendingRequest.
+            //
+            // _activeByNpcId is static and survives across game loads. Clear it first —
+            // stale entries from the previous session would make ForNpc() return a dead
+            // quest object and cause the "existing != null && existing.IsOngoing" guard
+            // to skip recreation entirely.
+            AIDialogQuest.ClearAll();
             RFAIDebug.Log("ReconstructQuestsFromNPCContexts: start");
             try
             {

@@ -1,5 +1,6 @@
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
 namespace RF_AIDialog
 {
@@ -22,6 +23,31 @@ namespace RF_AIDialog
         {
             if (__instance is AIDialogQuest)
                 __result = true;
+        }
+    }
+
+    /// <summary>
+    /// CampaignBehaviorManager.OnBeforeSave() fires BEFORE AIDialogBehavior's own
+    /// OnBeforeSave listener, because CampaignBehaviorManager registers its listener
+    /// in its constructor while our behavior registers in RegisterEvents().
+    ///
+    /// When CampaignBehaviorManager.OnBeforeSave() runs it calls SyncData on every
+    /// behavior, including ViewDataTrackerCampaignBehavior, which stores
+    /// _questSelection (a QuestBase reference) into BehaviorSaveData._records.
+    /// If _questSelection == AIDialogQuest, CollectObjects finds the unregistered
+    /// type and the save fails with "Could not find type definition".
+    ///
+    /// This prefix runs our hide logic BEFORE behavior data is stored, so
+    /// _questSelection is cleared (and later restored) around the save window.
+    /// </summary>
+    [HarmonyPatch(typeof(CampaignBehaviorManager), "OnBeforeSave")]
+    internal static class AIDialogPreSavePatch
+    {
+        [HarmonyPrefix]
+        private static void Prefix()
+        {
+            try { AIDialogBehavior.Instance?.PrehideBeforeBehaviorSave(); }
+            catch { }
         }
     }
 }

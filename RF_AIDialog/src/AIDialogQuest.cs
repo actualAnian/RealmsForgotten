@@ -27,7 +27,8 @@ namespace RF_AIDialog
             = new Dictionary<string, AIDialogQuest>();
 
         // Not persisted — quest is reconstructed from NPCContext on every load.
-        private string _npcStringId = "";
+        private string _npcStringId  = "";
+        private string _description  = "";
 
         public AIDialogQuest(
             string questId,
@@ -37,10 +38,12 @@ namespace RF_AIDialog
             : base(questId, questGiver, CampaignTime.Now + CampaignTime.Days(durationDays), 0)
         {
             _npcStringId = questGiver.StringId;
-            AddLog(new TextObject("{=!}" + Truncate(description, 400)));
+            _description = Truncate(description, 400);
         }
 
         public override string SpecialQuestType => "RfAIDialog";
+
+        // IsSpecialQuest is not virtual in 1.3.0 binary — handled by AIDialogQuestPatch.
 
         public override TextObject Title
             => new TextObject("{=!}" + (QuestGiver?.Name?.ToString() ?? "NPC") + " — pending request");
@@ -51,16 +54,24 @@ namespace RF_AIDialog
 
         protected override void OnStartQuest()
         {
-            RFAIDebug.Log($"AIDialogQuest.OnStartQuest: npc={_npcStringId}");
-            _activeByNpcId[_npcStringId] = this;
+            string id = !string.IsNullOrWhiteSpace(_npcStringId)
+                ? _npcStringId
+                : QuestGiver?.StringId ?? "";
+            RFAIDebug.Log($"AIDialogQuest.OnStartQuest: npc={id}");
+            if (!string.IsNullOrWhiteSpace(id))
+                _activeByNpcId[id] = this;
+            AddLog(new TextObject("{=!}" + _description));
         }
 
         protected override void InitializeQuestOnGameLoad()
         {
             // Not called in practice: quest is never serialized.
-            // If somehow reached, repopulate the lookup.
-            if (!string.IsNullOrWhiteSpace(_npcStringId))
-                _activeByNpcId[_npcStringId] = this;
+            // If somehow reached, derive id from QuestGiver (which base class does persist).
+            string id = !string.IsNullOrWhiteSpace(_npcStringId)
+                ? _npcStringId
+                : QuestGiver?.StringId ?? "";
+            if (!string.IsNullOrWhiteSpace(id))
+                _activeByNpcId[id] = this;
         }
 
         protected override void OnTimedOut()
@@ -101,6 +112,13 @@ namespace RF_AIDialog
             if (string.IsNullOrWhiteSpace(npcStringId)) return null;
             return _activeByNpcId.TryGetValue(npcStringId, out var q) ? q : null;
         }
+
+        /// <summary>
+        /// Clears all entries from the static lookup. Must be called before
+        /// reconstructing quests from NPCContext after a game load — the dictionary
+        /// persists across load boundaries and stale entries would block recreation.
+        /// </summary>
+        internal static void ClearAll() => _activeByNpcId.Clear();
 
         private static string Truncate(string s, int max)
             => s.Length <= max ? s : s.Substring(0, max) + "...";
