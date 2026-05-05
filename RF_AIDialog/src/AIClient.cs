@@ -141,6 +141,10 @@ namespace RF_AIDialog
 
         private static async Task<string> AskRemoteAsync(ChatMessage[] messages, int maxTokens)
         {
+            if (string.IsNullOrWhiteSpace(AIConfig.APIKey))
+                throw new Exception(
+                    "Remote API key not configured. Use RF_AIDIALOG_API_KEY, RF_AIDIALOG_API_KEY_FILE, or ai_config.local.json.");
+
             var request = new OpenAIRequest
             {
                 Model       = AIConfig.APIModelName,

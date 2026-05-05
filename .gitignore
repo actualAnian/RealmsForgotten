@@ -34,6 +34,4 @@ RFCustomScenes/BehaviorTrees/
 # RF_AIDialog build artifacts
 RF_AIDialog/bin
 RF_AIDialog/obj
-
-# API key — never commit AIConfig.cs with a real key
-# Before pushing: replace APIKey value with "YOUR_DEEPSEEK_API_KEY_HERE"
+RF_AIDialog/ai_config.local.json

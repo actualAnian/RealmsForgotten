@@ -1,89 +1,198 @@
+using System;
+using System.IO;
+using System.Reflection;
+using Newtonsoft.Json;
+using TaleWorlds.Library;
+
 namespace RF_AIDialog
 {
     /// <summary>
-    /// Central configuration for the RF_AIDialog mod.
+    /// Central configuration for RF_AIDialog.
     ///
-    /// SWITCHING BETWEEN LOCAL (Ollama) AND API (DeepSeek / OpenAI-compatible):
-    ///   Set UseRemoteAPI = true  → uses APIEndpoint + APIKey + APIModelName
-    ///   Set UseRemoteAPI = false → uses OllamaEndpoint + ModelName (local)
+    /// Loading order:
+    /// 1. Modules/RealmsForgotten/ai_config.local.json
+    /// 2. Environment variables
+    /// 3. Safe defaults in code
     /// </summary>
     public static class AIConfig
     {
-        // ── Backend selection ─────────────────────────────────────────────
+        private const string DefaultApiEndpoint = "https://api.deepseek.com/chat/completions";
+        private const string DefaultApiModelName = "deepseek-chat";
+        private const string DefaultOllamaModelName = "gemma3:4b";
+        private const string DefaultOllamaEndpoint = "http://localhost:11434/api/chat";
 
-        /// <summary>
-        /// true  = use remote OpenAI-compatible API (DeepSeek, OpenAI, etc.)
-        /// false = use local Ollama
-        /// </summary>
-        public const bool UseRemoteAPI = true;
+        private static readonly Lazy<LocalAIConfig> _localConfig =
+            new Lazy<LocalAIConfig>(LoadLocalConfig);
 
-        // ── Remote API (DeepSeek / OpenAI-compatible) ─────────────────────
+        public static bool UseRemoteAPI => GetBool(
+            _localConfig.Value.UseRemoteAPI,
+            "RF_AIDIALOG_USE_REMOTE_API",
+            true);
 
-        /// <summary>
-        /// DeepSeek chat completions endpoint (OpenAI-compatible).
-        /// </summary>
-        public const string APIEndpoint = "https://api.deepseek.com/chat/completions";
+        public static string APIEndpoint => GetString(
+            _localConfig.Value.APIEndpoint,
+            "RF_AIDIALOG_API_ENDPOINT",
+            DefaultApiEndpoint);
 
-        /// <summary>
-        /// Your DeepSeek API key. Do NOT commit this to a public repository.
-        /// </summary>
-        public const string APIKey = "sk-d295471bf32849e6b2b66eed0923c607";
+        public static string APIKey => GetString(
+            ResolveApiKey(),
+            "RF_AIDIALOG_API_KEY",
+            "");
 
-        /// <summary>
-        /// DeepSeek model. "deepseek-chat" = DeepSeek-V3 (fast, cheap, excellent).
-        /// </summary>
-        public const string APIModelName = "deepseek-chat";
+        public static string APIModelName => GetString(
+            _localConfig.Value.APIModelName,
+            "RF_AIDIALOG_API_MODEL",
+            DefaultApiModelName);
 
-        // ── Local Ollama ──────────────────────────────────────────────────
+        public static string ModelName => GetString(
+            _localConfig.Value.ModelName,
+            "RF_AIDIALOG_OLLAMA_MODEL",
+            DefaultOllamaModelName);
 
-        /// <summary>
-        /// Ollama model name. Run `ollama list` to see available models.
-        /// </summary>
-        public const string ModelName = "gemma3:4b";
+        public static string OllamaEndpoint => GetString(
+            _localConfig.Value.OllamaEndpoint,
+            "RF_AIDIALOG_OLLAMA_ENDPOINT",
+            DefaultOllamaEndpoint);
 
-        /// <summary>
-        /// Ollama endpoint. Default for a local installation.
-        /// </summary>
-        public const string OllamaEndpoint = "http://localhost:11434/api/chat";
-
-        /// <summary>
-        /// Context window size for Ollama (ignored for remote API).
-        /// Keep at 2048 on an 8GB GPU running alongside Bannerlord.
-        /// </summary>
         public const int ContextSize = 2048;
-
-        // ── Shared settings ───────────────────────────────────────────────
-
-        /// <summary>
-        /// Timeout in seconds. Remote APIs are faster than cold Ollama starts.
-        /// 30s is generous for DeepSeek; 120s was needed for Ollama cold starts.
-        /// </summary>
         public const int TimeoutSeconds = 30;
-
-        /// <summary>
-        /// Max tokens for the FIRST conversation with an NPC.
-        /// Needs room for personality_summary + full JSON.
-        /// </summary>
         public const int MaxTokensFirstConversation = 650;
-
-        /// <summary>
-        /// Max tokens for subsequent conversations (no personality_summary).
-        /// </summary>
         public const int MaxTokensSubsequent = 450;
-
-        /// <summary>
-        /// Maximum gold transferred in a single AI action.
-        /// </summary>
         public const int MaxGoldTransfer = 10000;
-
-        /// <summary>
-        /// Maximum relation delta per conversation.
-        /// </summary>
         public const int MaxRelationDelta = 5;
-
-        /// <summary>
-        /// LLM temperature. 0.7 = creative but coherent.
-        /// </summary>
         public const double Temperature = 0.7;
+
+        private static LocalAIConfig LoadLocalConfig()
+        {
+            try
+            {
+                foreach (string path in GetCandidatePaths())
+                {
+                    if (!File.Exists(path))
+                        continue;
+
+                    string json = File.ReadAllText(path);
+                    var config = JsonConvert.DeserializeObject<LocalAIConfig>(json);
+                    if (config != null)
+                    {
+                        RFAIDebug.Log($"AIConfig: loaded local config from {path}");
+                        return config;
+                    }
+                }
+
+                return new LocalAIConfig();
+            }
+            catch (Exception ex)
+            {
+                RFAIDebug.Log($"AIConfig: failed to load local config - {ex.Message}");
+                return new LocalAIConfig();
+            }
+        }
+
+        private static string[] GetCandidatePaths()
+        {
+            string? explicitPath = Environment.GetEnvironmentVariable("RF_AIDIALOG_CONFIG_PATH");
+            string assemblyDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "";
+            string moduleRootFromAssembly = "";
+            try
+            {
+                moduleRootFromAssembly = Directory.GetParent(assemblyDir)?.Parent?.Parent?.FullName ?? "";
+            }
+            catch { }
+
+            return new[]
+            {
+                explicitPath ?? "",
+                Path.Combine(BasePath.Name, "Modules", "RealmsForgotten", "ai_config.local.json"),
+                Path.Combine(BasePath.Name, "RF_AIDialog", "ai_config.local.json"),
+                string.IsNullOrWhiteSpace(moduleRootFromAssembly) ? "" : Path.Combine(moduleRootFromAssembly, "ai_config.local.json")
+            };
+        }
+
+        private static string? ResolveApiKey()
+        {
+            if (!string.IsNullOrWhiteSpace(_localConfig.Value.APIKeyFile))
+            {
+                string? fromFile = TryReadSecretFile(_localConfig.Value.APIKeyFile);
+                if (!string.IsNullOrWhiteSpace(fromFile))
+                    return fromFile;
+            }
+
+            string? envKeyFile = Environment.GetEnvironmentVariable("RF_AIDIALOG_API_KEY_FILE");
+            if (!string.IsNullOrWhiteSpace(envKeyFile))
+            {
+                string? fromFile = TryReadSecretFile(envKeyFile);
+                if (!string.IsNullOrWhiteSpace(fromFile))
+                    return fromFile;
+            }
+
+            return _localConfig.Value.APIKey;
+        }
+
+        private static string? TryReadSecretFile(string path)
+        {
+            try
+            {
+                string expanded = Environment.ExpandEnvironmentVariables(path).Trim();
+                if (string.IsNullOrWhiteSpace(expanded) || !File.Exists(expanded))
+                    return null;
+
+                string content = File.ReadAllText(expanded).Trim();
+                return string.IsNullOrWhiteSpace(content) ? null : content;
+            }
+            catch (Exception ex)
+            {
+                RFAIDebug.Log($"AIConfig: failed to read secret file - {ex.Message}");
+                return null;
+            }
+        }
+
+        private static string GetString(string? localValue, string envName, string defaultValue)
+        {
+            if (!string.IsNullOrWhiteSpace(localValue))
+                return localValue.Trim();
+
+            string? envValue = Environment.GetEnvironmentVariable(envName);
+            if (!string.IsNullOrWhiteSpace(envValue))
+                return envValue.Trim();
+
+            return defaultValue;
+        }
+
+        private static bool GetBool(bool? localValue, string envName, bool defaultValue)
+        {
+            if (localValue.HasValue)
+                return localValue.Value;
+
+            string? envValue = Environment.GetEnvironmentVariable(envName);
+            if (bool.TryParse(envValue, out bool parsed))
+                return parsed;
+
+            return defaultValue;
+        }
+
+        private sealed class LocalAIConfig
+        {
+            [JsonProperty("use_remote_api")]
+            public bool? UseRemoteAPI { get; set; }
+
+            [JsonProperty("api_endpoint")]
+            public string? APIEndpoint { get; set; }
+
+            [JsonProperty("api_key")]
+            public string? APIKey { get; set; }
+
+            [JsonProperty("api_key_file")]
+            public string? APIKeyFile { get; set; }
+
+            [JsonProperty("api_model_name")]
+            public string? APIModelName { get; set; }
+
+            [JsonProperty("ollama_model_name")]
+            public string? ModelName { get; set; }
+
+            [JsonProperty("ollama_endpoint")]
+            public string? OllamaEndpoint { get; set; }
+        }
     }
 }
