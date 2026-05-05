@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
@@ -13,14 +14,16 @@ namespace RF_AIDialog
     /// when the real game state satisfies them.
     ///
     /// Supported atoms:
-    ///   VISIT_SETTLEMENT — OnSettlementEntered
-    ///   DEFEAT_PARTY     — MobilePartyDestroyed
-    ///   BRING_ITEM       — checked on conversation start (CheckConversationAtoms)
-    ///   BRING_TROOPS     — checked on conversation start (CheckConversationAtoms)
-    ///   RETURN_TO_NPC    — checked on conversation start, all others complete first
+    ///   VISIT_SETTLEMENT - OnSettlementEntered
+    ///   LEAVE_SETTLEMENT - OnSettlementLeftEvent
+    ///   DEFEAT_PARTY     - MobilePartyDestroyed
+    ///   TALK_TO_PARTY    - ConversationEnded
+    ///   BRING_ITEM       - checked on conversation start (CheckConversationAtoms)
+    ///   BRING_TROOPS     - checked on conversation start (CheckConversationAtoms)
+    ///   RETURN_TO_NPC    - checked on conversation start, all others complete first
     ///
-    /// Persistence: completion state lives in PendingRequest.Mechanic.Completed
-    /// which is JSON-serialized by NPCContextStore automatically.
+    /// Persistence: completion state lives in PendingRequest.Mechanic and is
+    /// JSON-serialized by NPCContextStore automatically.
     /// </summary>
     public class QuestAtomEngine : CampaignBehaviorBase
     {
@@ -29,64 +32,34 @@ namespace RF_AIDialog
         public override void RegisterEvents()
         {
             Instance = this;
-            CampaignEvents.OnGameLoadFinishedEvent.AddNonSerializedListener(
-                this, OnGameLoaded);
-            CampaignEvents.SettlementEntered.AddNonSerializedListener(
-                this, OnSettlementEntered);
-            CampaignEvents.MobilePartyDestroyed.AddNonSerializedListener(
-                this, OnPartyDestroyed);
+            CampaignEvents.OnGameLoadFinishedEvent.AddNonSerializedListener(this, OnGameLoaded);
+            CampaignEvents.SettlementEntered.AddNonSerializedListener(this, OnSettlementEntered);
+            CampaignEvents.OnSettlementLeftEvent.AddNonSerializedListener(this, OnSettlementLeft);
+            CampaignEvents.MobilePartyDestroyed.AddNonSerializedListener(this, OnPartyDestroyed);
+            CampaignEvents.ConversationEnded.AddNonSerializedListener(this, OnConversationEnded);
         }
 
         public override void SyncData(IDataStore dataStore) { }
 
-        // ── Event handlers ────────────────────────────────────────────────
-
         private void OnGameLoaded()
         {
-            // State is already loaded from NPCContextStore JSON.
-            // Nothing extra needed — atoms re-activate on next relevant event.
-            RFAIDebug.Log("QuestAtomEngine: OnGameLoaded — mechanics active from NPCContextStore");
+            RFAIDebug.Log("QuestAtomEngine: OnGameLoaded - mechanics active from NPCContextStore");
         }
 
         private void OnSettlementEntered(MobileParty enteredBy, Settlement settlement, Hero _hero)
         {
-            if (enteredBy != MobileParty.MainParty) return;
-            if (settlement == null) return;
+            if (enteredBy != MobileParty.MainParty || settlement == null)
+                return;
 
             try
             {
-                var store = NPCContextStore.Instance;
-                if (store == null) return;
-
-                foreach (var ctx in store.GetAll())
+                foreach (var ctx in GetContextsWithMechanics())
                 {
-                    var mechanic = ctx.PendingRequest?.Mechanic;
-                    if (mechanic == null) continue;
-
-                    int idx = mechanic.IndexOfFirstIncomplete("VISIT_SETTLEMENT");
-                    if (idx < 0) continue;
-
-                    var atom = mechanic.Objectives[idx];
-                    string targetId = atom.GetParam("settlement_id");
-                    if (string.IsNullOrWhiteSpace(targetId)) continue;
-                    if (!settlement.StringId.Equals(targetId, StringComparison.OrdinalIgnoreCase))
-                        continue;
-
-                    mechanic.MarkCompleted(idx);
-                    store.MarkDirty(ctx);
-
-                    string label = atom.Label.Length > 0 ? atom.Label : $"Visited {settlement.Name}";
-                    RFAIDebug.Log($"QuestAtomEngine: VISIT_SETTLEMENT completed for {ctx.HeroId} — {label}");
-
-                    // Add journal entry to the active quest
-                    UpdateQuestLog(ctx.HeroId, $"✓ {label}");
-
-                    // Notify player
-                    Notify($"Quest objective: ✓ {label}");
-
-                    // Check completion / near-completion
-                    CheckMechanicCompletion(ctx);
-                    CheckNearCompletion(ctx);
+                    if (TryCompleteSettlementObjective(ctx, settlement, "VISIT_SETTLEMENT", "Visited"))
+                    {
+                        CheckMechanicCompletion(ctx);
+                        CheckNearCompletion(ctx);
+                    }
                 }
             }
             catch (Exception ex)
@@ -95,39 +68,61 @@ namespace RF_AIDialog
             }
         }
 
-        private void OnPartyDestroyed(MobileParty destroyed, PartyBase destroyerBase)
+        private void OnSettlementLeft(MobileParty party, Settlement settlement)
         {
-            if (destroyed == null) return;
-
-            // Only count if main party was the destroyer (or part of the winning side)
-            var destroyer = destroyerBase?.MobileParty;
-            bool playerInvolved = destroyer == MobileParty.MainParty
-                || destroyer?.LeaderHero == Hero.MainHero
-                || (MobileParty.MainParty?.Army != null
-                    && destroyer?.Army == MobileParty.MainParty.Army);
-
-            if (!playerInvolved) return;
-
-            string destroyedFaction = destroyed.MapFaction?.StringId ?? "";
-            if (string.IsNullOrWhiteSpace(destroyedFaction)) return;
+            if (party != MobileParty.MainParty || settlement == null)
+                return;
 
             try
             {
-                var store = NPCContextStore.Instance;
-                if (store == null) return;
+                foreach (var ctx in GetContextsWithMechanics())
+                {
+                    if (TryCompleteSettlementObjective(ctx, settlement, "LEAVE_SETTLEMENT", "Left"))
+                    {
+                        CheckMechanicCompletion(ctx);
+                        CheckNearCompletion(ctx);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                RFAIDebug.Log($"QuestAtomEngine.OnSettlementLeft exception: {ex.Message}");
+            }
+        }
 
-                foreach (var ctx in store.GetAll())
+        private void OnPartyDestroyed(MobileParty destroyed, PartyBase destroyerBase)
+        {
+            if (destroyed == null)
+                return;
+
+            var destroyer = destroyerBase?.MobileParty;
+            bool playerInvolved = destroyer == MobileParty.MainParty
+                || destroyer?.LeaderHero == Hero.MainHero
+                || (MobileParty.MainParty?.Army != null && destroyer?.Army == MobileParty.MainParty.Army);
+
+            if (!playerInvolved)
+                return;
+
+            string destroyedFaction = destroyed.MapFaction?.StringId ?? "";
+            if (string.IsNullOrWhiteSpace(destroyedFaction))
+                return;
+
+            try
+            {
+                foreach (var ctx in GetContextsWithMechanics())
                 {
                     var mechanic = ctx.PendingRequest?.Mechanic;
-                    if (mechanic == null) continue;
+                    if (mechanic == null)
+                        continue;
 
                     int idx = mechanic.IndexOfFirstIncomplete("DEFEAT_PARTY");
-                    if (idx < 0) continue;
+                    if (idx < 0)
+                        continue;
 
                     var atom = mechanic.Objectives[idx];
                     string targetFaction = atom.GetParam("faction_id");
-                    if (string.IsNullOrWhiteSpace(targetFaction)) continue;
-                    if (!destroyedFaction.Equals(targetFaction, StringComparison.OrdinalIgnoreCase))
+                    if (string.IsNullOrWhiteSpace(targetFaction) ||
+                        !destroyedFaction.Equals(targetFaction, StringComparison.OrdinalIgnoreCase))
                         continue;
 
                     int required = atom.GetParamInt("count", 1);
@@ -135,13 +130,14 @@ namespace RF_AIDialog
                     mechanic.IncrementProgress(progressKey);
                     int current = mechanic.GetProgress(progressKey);
 
-                    string label = atom.Label.Length > 0 ? atom.Label
+                    string label = atom.Label.Length > 0
+                        ? atom.Label
                         : $"Defeat {atom.GetParam("faction_name", "enemies")} parties";
 
                     if (current >= required)
                     {
                         mechanic.MarkCompleted(idx);
-                        store.MarkDirty(ctx);
+                        NPCContextStore.Instance?.MarkDirty(ctx);
                         RFAIDebug.Log($"QuestAtomEngine: DEFEAT_PARTY completed for {ctx.HeroId} ({current}/{required})");
                         UpdateQuestLog(ctx.HeroId, $"✓ {label}");
                         Notify($"Quest objective: ✓ {label}");
@@ -150,7 +146,7 @@ namespace RF_AIDialog
                     }
                     else
                     {
-                        store.MarkDirty(ctx);
+                        NPCContextStore.Instance?.MarkDirty(ctx);
                         RFAIDebug.Log($"QuestAtomEngine: DEFEAT_PARTY progress {current}/{required} for {ctx.HeroId}");
                         UpdateQuestLog(ctx.HeroId, $"Progress: {label} ({current}/{required})");
                     }
@@ -162,20 +158,39 @@ namespace RF_AIDialog
             }
         }
 
-        // ── Conversation-based atom check ─────────────────────────────────
+        private void OnConversationEnded(IEnumerable<CharacterObject> _)
+        {
+            try
+            {
+                MobileParty? conversationParty = MobileParty.ConversationParty;
+                Hero? conversationHero = Hero.OneToOneConversationHero;
+
+                if (conversationParty == null && conversationHero == null)
+                    return;
+
+                foreach (var ctx in GetContextsWithMechanics())
+                {
+                    if (TryProgressTalkToPartyObjective(ctx, conversationParty, conversationHero))
+                    {
+                        CheckMechanicCompletion(ctx);
+                        CheckNearCompletion(ctx);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                RFAIDebug.Log($"QuestAtomEngine.OnConversationEnded exception: {ex.Message}");
+            }
+        }
 
         /// <summary>
-        /// Called by AIDialogBehavior when the player opens a conversation
-        /// with the NPC who issued the mechanic quest.
-        ///
-        /// Checks BRING_ITEM, BRING_TROOPS in the player's party right now.
-        /// Checks RETURN_TO_NPC when all prior objectives are satisfied.
-        ///
-        /// Returns true if any new objective was marked complete.
+        /// Called by AIDialogBehavior when the player opens a conversation with an NPC.
+        /// Handles conversation-time atoms that must react immediately while the NPC is still active.
         /// </summary>
         public bool CheckConversationAtoms(Hero npc, NPCContext ctx)
         {
-            if (npc == null || ctx?.PendingRequest?.Mechanic == null) return false;
+            if (npc == null || ctx?.PendingRequest?.Mechanic == null)
+                return false;
 
             var mechanic = ctx.PendingRequest.Mechanic;
             mechanic.Normalize();
@@ -183,9 +198,10 @@ namespace RF_AIDialog
 
             for (int i = 0; i < mechanic.Objectives.Count; i++)
             {
-                if (mechanic.Completed[i]) continue;
-                var atom = mechanic.Objectives[i];
+                if (mechanic.Completed[i])
+                    continue;
 
+                var atom = mechanic.Objectives[i];
                 switch (atom.AtomType)
                 {
                     case "BRING_ITEM":
@@ -193,7 +209,7 @@ namespace RF_AIDialog
                         {
                             mechanic.MarkCompleted(i);
                             anyNew = true;
-                            RFAIDebug.Log($"QuestAtomEngine: BRING_ITEM complete via conversation for {ctx.HeroId}");
+                            LogConversationAtom(ctx.HeroId, atom, "BRING_ITEM");
                         }
                         break;
 
@@ -202,16 +218,19 @@ namespace RF_AIDialog
                         {
                             mechanic.MarkCompleted(i);
                             anyNew = true;
-                            RFAIDebug.Log($"QuestAtomEngine: BRING_TROOPS complete via conversation for {ctx.HeroId}");
+                            LogConversationAtom(ctx.HeroId, atom, "BRING_TROOPS");
                         }
                         break;
 
                     case "RETURN_TO_NPC":
-                        // All prior objectives must be done
                         bool allPriorDone = true;
                         for (int j = 0; j < i; j++)
                         {
-                            if (!mechanic.Completed[j]) { allPriorDone = false; break; }
+                            if (!mechanic.Completed[j])
+                            {
+                                allPriorDone = false;
+                                break;
+                            }
                         }
                         if (allPriorDone)
                         {
@@ -219,6 +238,11 @@ namespace RF_AIDialog
                             anyNew = true;
                             RFAIDebug.Log($"QuestAtomEngine: RETURN_TO_NPC complete for {ctx.HeroId}");
                         }
+                        break;
+
+                    case "TALK_TO_PARTY":
+                        if (TryProgressTalkToPartyObjective(ctx, MobileParty.ConversationParty, npc))
+                            anyNew = true;
                         break;
                 }
             }
@@ -232,28 +256,172 @@ namespace RF_AIDialog
             return anyNew;
         }
 
-        // ── Completion ────────────────────────────────────────────────────
+        private IEnumerable<NPCContext> GetContextsWithMechanics()
+        {
+            return NPCContextStore.Instance?.GetAll()
+                       ?.Where(x => x.PendingRequest?.Mechanic != null)
+                   ?? Enumerable.Empty<NPCContext>();
+        }
+
+        private bool TryCompleteSettlementObjective(
+            NPCContext ctx,
+            Settlement settlement,
+            string atomType,
+            string fallbackVerb)
+        {
+            var mechanic = ctx.PendingRequest?.Mechanic;
+            if (mechanic == null)
+                return false;
+
+            bool changed = false;
+            mechanic.Normalize();
+
+            for (int i = 0; i < mechanic.Objectives.Count; i++)
+            {
+                if (mechanic.Completed[i])
+                    continue;
+
+                var atom = mechanic.Objectives[i];
+                if (!MatchesSettlementAtom(atom, atomType))
+                    continue;
+
+                string targetId = atom.GetParam("settlement_id");
+                if (string.IsNullOrWhiteSpace(targetId) ||
+                    !settlement.StringId.Equals(targetId, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                mechanic.MarkCompleted(i);
+                NPCContextStore.Instance?.MarkDirty(ctx);
+
+                string label = atom.Label.Length > 0 ? atom.Label : $"{fallbackVerb} {settlement.Name}";
+                RFAIDebug.Log($"QuestAtomEngine: {atomType} completed for {ctx.HeroId} - {label}");
+                UpdateQuestLog(ctx.HeroId, $"✓ {label}");
+                Notify($"Quest objective: ✓ {label}");
+                changed = true;
+            }
+
+            return changed;
+        }
+
+        private static bool MatchesSettlementAtom(QuestAtom atom, string atomType)
+        {
+            if (atom.AtomType.Equals(atomType, StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            if (!atomType.Equals("LEAVE_SETTLEMENT", StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            if (!atom.AtomType.Equals("VISIT_SETTLEMENT", StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            string trigger = atom.GetParam("trigger", atom.GetParam("event", atom.GetParam("mode", "")));
+            if (trigger.Equals("leave", StringComparison.OrdinalIgnoreCase) ||
+                trigger.Equals("exit", StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            string label = atom.Label ?? "";
+            return label.IndexOf("leave", StringComparison.OrdinalIgnoreCase) >= 0
+                || label.IndexOf("exit", StringComparison.OrdinalIgnoreCase) >= 0
+                || label.IndexOf("sair", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private bool TryProgressTalkToPartyObjective(
+            NPCContext ctx,
+            MobileParty? conversationParty,
+            Hero? conversationHero)
+        {
+            var mechanic = ctx.PendingRequest?.Mechanic;
+            if (mechanic == null || conversationParty == null)
+                return false;
+
+            bool changed = false;
+            string currentFaction = conversationParty.MapFaction?.StringId ?? "";
+            string currentPartyId = conversationParty.StringId ?? "";
+            string currentHeroId = conversationHero?.StringId ?? "";
+
+            mechanic.Normalize();
+
+            for (int i = 0; i < mechanic.Objectives.Count; i++)
+            {
+                if (mechanic.Completed[i])
+                    continue;
+
+                var atom = mechanic.Objectives[i];
+                if (!atom.AtomType.Equals("TALK_TO_PARTY", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                string targetFaction = atom.GetParam("faction_id");
+                string targetPartyId = atom.GetParam("party_id");
+                string targetHeroId = atom.GetParam("hero_id");
+
+                if (!string.IsNullOrWhiteSpace(targetFaction) &&
+                    !targetFaction.Equals(currentFaction, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                if (!string.IsNullOrWhiteSpace(targetPartyId) &&
+                    !targetPartyId.Equals(currentPartyId, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                if (!string.IsNullOrWhiteSpace(targetHeroId) &&
+                    !targetHeroId.Equals(currentHeroId, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                string seenKey = $"talk_seen_{i}";
+                string progressKey = $"talk_count_{i}";
+                string uniqueTargetId = !string.IsNullOrWhiteSpace(currentPartyId)
+                    ? currentPartyId
+                    : (!string.IsNullOrWhiteSpace(currentHeroId) ? currentHeroId : $"{currentFaction}_{i}");
+
+                if (mechanic.HasSeenTarget(seenKey, uniqueTargetId))
+                    continue;
+
+                mechanic.MarkTargetSeen(seenKey, uniqueTargetId);
+                mechanic.IncrementProgress(progressKey);
+
+                int current = mechanic.GetProgress(progressKey);
+                int required = atom.GetParamInt("count", 1);
+                string label = atom.Label.Length > 0
+                    ? atom.Label
+                    : $"Talk to {required} parties";
+
+                NPCContextStore.Instance?.MarkDirty(ctx);
+
+                if (current >= required)
+                {
+                    mechanic.MarkCompleted(i);
+                    RFAIDebug.Log($"QuestAtomEngine: TALK_TO_PARTY completed for {ctx.HeroId} ({current}/{required})");
+                    UpdateQuestLog(ctx.HeroId, $"✓ {label}");
+                    Notify($"Quest objective: ✓ {label}");
+                }
+                else
+                {
+                    RFAIDebug.Log($"QuestAtomEngine: TALK_TO_PARTY progress {current}/{required} for {ctx.HeroId}");
+                    UpdateQuestLog(ctx.HeroId, $"Progress: {label} ({current}/{required})");
+                    Notify($"Quest progress: {label} ({current}/{required})");
+                }
+
+                changed = true;
+            }
+
+            return changed;
+        }
 
         private void CheckMechanicCompletion(NPCContext ctx)
         {
             var mechanic = ctx.PendingRequest?.Mechanic;
-            if (mechanic == null || !mechanic.AllCompleted) return;
+            if (mechanic == null || !mechanic.AllCompleted)
+                return;
 
             RFAIDebug.Log($"QuestAtomEngine: ALL objectives complete for {ctx.HeroId}");
 
             if (mechanic.HasReturnStep)
             {
-                // Quest closes through the return conversation.
-                // PromptBuilder will inject the "ALL VERIFIED" hint so the LLM
-                // fires request_fulfilled: true, which pays the gold and closes the quest.
                 NPCContextStore.Instance?.MarkDirty(ctx);
-                Notify("All objectives complete — return to the NPC to collect your reward.");
-                RFAIDebug.Log($"QuestAtomEngine: RETURN_TO_NPC pending for {ctx.HeroId} — " +
-                              "closure deferred to conversation");
+                Notify("All objectives complete - return to the NPC to collect your reward.");
+                RFAIDebug.Log($"QuestAtomEngine: RETURN_TO_NPC pending for {ctx.HeroId} - closure deferred to conversation");
                 return;
             }
 
-            // No return step — auto-close immediately.
             var quest = AIDialogQuest.ForNpc(ctx.HeroId);
             if (quest != null && quest.IsOngoing)
             {
@@ -276,37 +444,32 @@ namespace RF_AIDialog
                 Notify("Quest complete!");
             }
 
-            // Clear the pending request — quest is done with no further conversation needed.
             ctx.PendingRequest = null;
             NPCContextStore.Instance?.MarkDirty(ctx);
         }
 
-        // Also check after non-return atoms complete whether the only thing left is RETURN_TO_NPC.
-        // If so, nudge the player to go speak with the NPC.
         private static void CheckNearCompletion(NPCContext ctx)
         {
             var mechanic = ctx.PendingRequest?.Mechanic;
-            if (mechanic == null || mechanic.AllCompleted) return;
-            if (!mechanic.HasReturnStep) return;
-            if (!mechanic.AllExceptReturnCompleted) return;
+            if (mechanic == null || mechanic.AllCompleted || !mechanic.HasReturnStep || !mechanic.AllExceptReturnCompleted)
+                return;
 
-            // All done except RETURN_TO_NPC.
-            Notify("All objectives done — return to the NPC to collect your reward.");
+            Notify("All objectives done - return to the NPC to collect your reward.");
             RFAIDebug.Log($"QuestAtomEngine: all pre-return objectives done for {ctx.HeroId}");
         }
 
-        // ── Inventory checks ──────────────────────────────────────────────
-
         private static bool CheckBringItem(QuestAtom atom)
         {
-            string itemId   = atom.GetParam("item_id");
-            int    required = atom.GetParamInt("quantity", 1);
-            if (string.IsNullOrWhiteSpace(itemId)) return false;
+            string itemId = atom.GetParam("item_id");
+            int required = atom.GetParamInt("quantity", 1);
+            if (string.IsNullOrWhiteSpace(itemId))
+                return false;
 
             try
             {
                 var party = MobileParty.MainParty;
-                if (party?.ItemRoster == null) return false;
+                if (party?.ItemRoster == null)
+                    return false;
 
                 int total = 0;
                 foreach (var element in party.ItemRoster)
@@ -317,7 +480,10 @@ namespace RF_AIDialog
                 }
                 return total >= required;
             }
-            catch { return false; }
+            catch
+            {
+                return false;
+            }
         }
 
         private static bool CheckBringTroops(QuestAtom atom)
@@ -327,10 +493,19 @@ namespace RF_AIDialog
             {
                 return MobileParty.MainParty?.MemberRoster?.TotalHealthyCount >= required;
             }
-            catch { return false; }
+            catch
+            {
+                return false;
+            }
         }
 
-        // ── Quest log update ──────────────────────────────────────────────
+        private static void LogConversationAtom(string npcId, QuestAtom atom, string atomType)
+        {
+            string label = atom.Label.Length > 0 ? atom.Label : atomType;
+            RFAIDebug.Log($"QuestAtomEngine: {atomType} complete via conversation for {npcId}");
+            UpdateQuestLog(npcId, $"✓ {label}");
+            Notify($"Quest objective: ✓ {label}");
+        }
 
         private static void UpdateQuestLog(string npcId, string message)
         {
@@ -341,8 +516,6 @@ namespace RF_AIDialog
             }
             catch { }
         }
-
-        // ── Notification ──────────────────────────────────────────────────
 
         private static void Notify(string msg)
         {

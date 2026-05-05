@@ -55,6 +55,14 @@ namespace RF_AIDialog
         [JsonProperty("progress")]
         public Dictionary<string, int> Progress { get; set; } = new Dictionary<string, int>();
 
+        /// <summary>
+        /// Per-objective list of unique targets already counted for progress-style atoms
+        /// such as TALK_TO_PARTY, so the same patrol cannot be counted twice.
+        /// </summary>
+        [JsonProperty("seen_targets")]
+        public Dictionary<string, List<string>> SeenTargets { get; set; } =
+            new Dictionary<string, List<string>>();
+
         [JsonProperty("reward_gold")]
         public int RewardGold { get; set; } = 0;
 
@@ -66,6 +74,11 @@ namespace RF_AIDialog
         /// <summary>Ensures Completed list matches Objectives length.</summary>
         public void Normalize()
         {
+            Objectives ??= new List<QuestAtom>();
+            Completed ??= new List<bool>();
+            Progress ??= new Dictionary<string, int>();
+            SeenTargets ??= new Dictionary<string, List<string>>();
+
             while (Completed.Count < Objectives.Count)
                 Completed.Add(false);
             while (Completed.Count > Objectives.Count)
@@ -100,6 +113,25 @@ namespace RF_AIDialog
 
         public void IncrementProgress(string key, int amount = 1) =>
             Progress[key] = GetProgress(key) + amount;
+
+        public bool HasSeenTarget(string key, string targetId)
+        {
+            Normalize();
+            return SeenTargets.TryGetValue(key, out var seen) && seen.Contains(targetId);
+        }
+
+        public void MarkTargetSeen(string key, string targetId)
+        {
+            Normalize();
+            if (!SeenTargets.TryGetValue(key, out var seen))
+            {
+                seen = new List<string>();
+                SeenTargets[key] = seen;
+            }
+
+            if (!seen.Contains(targetId))
+                seen.Add(targetId);
+        }
 
         /// <summary>
         /// Index of the first incomplete atom of the given type, or -1.

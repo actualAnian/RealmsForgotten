@@ -36,9 +36,18 @@ ATOM TYPES (use in quest_mechanic.objectives[]):
     params: settlement_id (use ids from the list below), [label]
     example: {""atom"":""VISIT_SETTLEMENT"",""params"":{""settlement_id"":""town_EN1""},""label"":""Go to Aispur""}
 
+  LEAVE_SETTLEMENT  — player must leave a specific settlement after visiting it
+    params: settlement_id (use ids from the list below), [label]
+    example: {""atom"":""LEAVE_SETTLEMENT"",""params"":{""settlement_id"":""town_EN1""},""label"":""Leave Aispur and begin the count""}
+
   DEFEAT_PARTY  — player must defeat N enemy parties of a given faction
     params: faction_id (use ids from the list below), faction_name, count (string int, default ""1"")
     example: {""atom"":""DEFEAT_PARTY"",""params"":{""faction_id"":""vlandia"",""faction_name"":""Vlandian"",""count"":""3""},""label"":""Rout 3 Vlandian patrols""}
+
+  TALK_TO_PARTY  — player must make contact with N distinct mobile parties
+    params: faction_id (use ids from the list below), [count] (string int, default ""1"")
+    optional params: party_id, hero_id
+    example: {""atom"":""TALK_TO_PARTY"",""params"":{""faction_id"":""vlandia"",""count"":""3""},""label"":""Count 3 Vlandian patrols""}
 
   BRING_ITEM  — player must carry the item when next speaking to you
     params: item_id (one of: grain wine hides linen tools silver_ore wool pottery salt dates), quantity (string int)
@@ -54,6 +63,8 @@ ATOM TYPES (use in quest_mechanic.objectives[]):
 
 Rules:
 • Objectives are validated IN ORDER. Put RETURN_TO_NPC LAST.
+• Use LEAVE_SETTLEMENT when the player must depart from a town/castle; do NOT fake this with VISIT_SETTLEMENT.
+• Use TALK_TO_PARTY when the task is to scout, count, question, or make contact with patrols/caravans/lords on the map.
 • When RETURN_TO_NPC is present, reward and closure happen in the return conversation
   via 'request_fulfilled': true. Do NOT include both RETURN_TO_NPC and expect automatic closure.
 • 'reward_gold' is paid when 'request_fulfilled': true fires in the conversation.
