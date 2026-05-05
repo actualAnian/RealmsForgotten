@@ -55,13 +55,63 @@ public static class ApplyInciteBreakAction
             && sponsorKingdom != null
             && sponsorKingdom != targetClan.Kingdom)
         {
+            // Short loyalty lock (3 days) — just enough to complete the defection
+            // before the new kingdom can expel the clan again. Not a war truce.
             ChangeKingdomAction.ApplyByJoinToKingdomByDefection(
                 targetClan,
                 targetClan.Kingdom,
                 sponsorKingdom,
-                CampaignTime.DaysFromNow(45f),
+                CampaignTime.DaysFromNow(3f),
                 true);
             outcome = IntrigueBreakOutcome.Defection;
+
+            // ── Betrayed kingdom declares war immediately ─────────────────
+            // The betrayed faction marches for the deserter — who is now an
+            // enemy lord within the sponsor kingdom.
+            try
+            {
+                if (!originKingdom.IsAtWarWith(sponsorKingdom))
+                    DeclareWarAction.ApplyByKingdomDecision(originKingdom, sponsorKingdom);
+            }
+            catch { }
+
+            // ── Relation cascade: every lord in the betrayed kingdom
+            //    reviles the deserter personally ────────────────────────────
+            try
+            {
+                Hero deserterLeader = targetClan.Leader;
+                if (deserterLeader != null)
+                {
+                    foreach (Clan c in originKingdom.Clans)
+                    {
+                        if (c?.Leader == null || c == targetClan) continue;
+                        // Ruler suffers a deeper personal betrayal
+                        int penalty = (c == originKingdom.RulingClan) ? -45 : -30;
+                        ChangeRelationAction.ApplyRelationChangeBetweenHeroes(
+                            deserterLeader, c.Leader, penalty, false);
+                    }
+                }
+            }
+            catch { }
+
+            // ── Intrigue cascade on remaining clans ───────────────────────
+            // The precedent shakes loyalty across the kingdom: ambition rises,
+            // but so does fear of being branded the next traitor.
+            try
+            {
+                foreach (Clan c in originKingdom.Clans)
+                {
+                    if (!states.TryGetValue(c, out ClanIntrigueState cs)) continue;
+                    cs.ClaimantAmbition      += 4f;
+                    cs.SoftDefectionPressure += 3f;
+                    cs.FearOfRuler           += 8f;  // king will be watching closely
+                    cs.Dissidence            += 5f;  // precedent emboldens doubts
+                    cs.ClampValues();
+                }
+            }
+            catch { }
+
+            // ── Intrigue state adjustments ────────────────────────────────
             if (originKingdomState != null)
             {
                 originKingdomState.RulerLegitimacy -= 14f;

@@ -2464,30 +2464,103 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
             Hero sponsorLeader = kingdom.RulingClan.Leader;
             Hero targetLeader = targetClan.Leader;
             int relation = targetLeader?.GetRelation(sponsorLeader) ?? 0;
-            if (relation < -10 && kingdom.Culture != targetClan.Culture)
+
+            // Hard block: hostile relation AND no cultural affinity AND not a neighbour
+            float proximity = GetTerritorialProximityScore(targetClan, kingdom);
+            if (relation < -10 && kingdom.Culture != targetClan.Culture && proximity < 0f)
             {
                 continue;
             }
 
+            // ── Base weight factors ───────────────────────────────────────
             float weight = MathF.Max(0f, (float)relation) * 0.85f;
+
             if (kingdom.Culture == targetClan.Culture)
-            {
                 weight += 14f;
-            }
 
             if (_kingdomStates.TryGetValue(kingdom, out KingdomIntrigueState sponsorKingdomState))
-            {
-                weight += sponsorKingdomState.RulerLegitimacy * 0.12f;
-            }
+                weight += sponsorKingdomState.RulerLegitimacy * 0.10f;
 
-            weight += targetState.SoftDefectionPressure * 0.32f;
-            if (weight >= 38f)
+            weight += targetState.SoftDefectionPressure * 0.28f;
+
+            // ── Territorial proximity ─────────────────────────────────────
+            // A clan surrounded by kingdom X's territory has real geographic
+            // reason to seek shelter there. Distant kingdoms make no political sense.
+            weight += proximity;
+
+            // ── Current war relationship ──────────────────────────────────
+            // If the sponsor is already at war with the origin kingdom, absorbing
+            // a defecting clan is strategically motivated (weakens the enemy).
+            // If at peace, the sponsor risks diplomatic fallout.
+            bool atWarWithOrigin = targetClan.Kingdom != null
+                && kingdom.IsAtWarWith(targetClan.Kingdom);
+            if (atWarWithOrigin)
+                weight += 12f;  // strong strategic incentive
+            else
+                weight -= 8f;   // absorbing a defector risks diplomatic incident
+
+            // ── Threshold raised vs original ─────────────────────────────
+            // Harder to qualify: only genuinely plausible sponsors emerge.
+            if (weight >= 50f)
             {
                 sponsors.Add((kingdom.RulingClan, weight));
             }
         }
 
         return ChooseWeightedClan(sponsors);
+    }
+
+    /// <summary>
+    /// Returns a score for how geographically sensible it would be for the
+    /// target clan to defect to the given sponsor kingdom.
+    /// Computed as the minimum gate-to-gate distance between the clan's fiefs
+    /// and the sponsor kingdom's fiefs, converted to a [-20, +25] score.
+    /// Landless clans are location-neutral (score 0).
+    /// </summary>
+    private static float GetTerritorialProximityScore(Clan targetClan, Kingdom sponsorKingdom)
+    {
+        try
+        {
+            var targetFiefs = targetClan.Fiefs;
+            if (targetFiefs == null || targetFiefs.Count == 0)
+                return 0f; // landless clan has no geographic anchor
+
+            var sponsorFiefs = sponsorKingdom.Fiefs;
+            if (sponsorFiefs == null || sponsorFiefs.Count == 0)
+                return 0f; // sponsor has no land either
+
+            float minDist = float.MaxValue;
+            foreach (var tf in targetFiefs)
+            {
+                var tp = tf.Settlement?.GatePosition.ToVec2();
+                if (tp == null) continue;
+                foreach (var sf in sponsorFiefs)
+                {
+                    var sp = sf.Settlement?.GatePosition.ToVec2();
+                    if (sp == null) continue;
+                    float dist = tp.Value.Distance(sp.Value);
+                    if (dist < minDist) minDist = dist;
+                }
+            }
+
+            if (minDist == float.MaxValue) return 0f;
+
+            // Convert distance to score:
+            //   < 80  → adjacent territory          → +25 (very strong pull)
+            //   < 150 → nearby territory             → +15
+            //   < 250 → moderate distance            → +5
+            //   < 400 → far but conceivable          → -5
+            //   >= 400 → geographically implausible → -20
+            if (minDist < 80f)  return 25f;
+            if (minDist < 150f) return 15f;
+            if (minDist < 250f) return  5f;
+            if (minDist < 400f) return -5f;
+            return -20f;
+        }
+        catch
+        {
+            return 0f;
+        }
     }
 
     private float GetOrganicCrisisScore(KingdomIntrigueState kingdomState)

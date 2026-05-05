@@ -28,16 +28,34 @@ public static class StrategicIntrigueConstants
     public const int DeposedRulerIndependentWarFiefThreshold = 2;
     public const float DeposedRulerIndependentWarFiefShareThreshold = 0.35f;
     public const float DeposedRulerAsylumWarDurationDays = 60f;
-    public const float AutoEscalationCommitmentThreshold = 48f;
-    public const float AutoEscalationDelayDays = 2f;
+    // ── Escalation timing ─────────────────────────────────────────────────
+    // A pact must reach this commitment before it can auto-escalate to breakaway.
+    // With daily growth of +0.35/day from a starting point of ~20-35, this means
+    // roughly 80-140 days of natural accumulation before a pact becomes dangerous.
+    public const float AutoEscalationCommitmentThreshold = 68f;
+    // Once escalation conditions are met, the breakaway takes this many days to
+    // execute — giving the player and world time to react and potentially intervene.
+    public const float AutoEscalationDelayDays = 20f;
+
     public const float RulerCountermoveCooldownDays = 7f;
-    public const float OrganicRumorCooldownDays = 4f;
-    public const float OrganicPactCooldownDays = 7f;
-    public const float OrganicRumorCrisisThreshold = 34f;
-    public const float OrganicPactCrisisThreshold = 44f;
+
+    // ── Organic event frequency ────────────────────────────────────────────
+    // Per-kingdom cooldowns: how often the system CAN fire an organic event.
+    // With 6+ kingdoms, even conservative per-kingdom rates add up. Keep these high.
+    public const float OrganicRumorCooldownDays = 10f;   // was 4
+    public const float OrganicPactCooldownDays  = 20f;   // was 7
+
+    // Crisis score thresholds: a kingdom must be in serious trouble before organic
+    // events fire. Raising these means only genuinely unstable kingdoms conspire.
+    public const float OrganicRumorCrisisThreshold = 50f;  // was 34
+    public const float OrganicPactCrisisThreshold  = 65f;  // was 44
+
     public const float OrganicExternalPactSoftDefectionThreshold = 68f;
-    public const float OrganicRumorMaxChance = 0.3f;
-    public const float OrganicPactMaxChance = 0.18f;
+
+    // Per-trigger probability: even when the threshold is met and cooldown passed,
+    // the event still rolls against these chances.
+    public const float OrganicRumorMaxChance = 0.12f;  // was 0.30
+    public const float OrganicPactMaxChance  = 0.06f;  // was 0.18
     public const float KingdomObjectiveSupportRewardCooldownDays = 12f;
     public const float KingdomObjectiveDirectiveCooldownDays = 10f;
     public const int KingdomObjectiveDirectiveBaseInfluenceCost = 20;

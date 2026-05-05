@@ -116,7 +116,7 @@ public static class ApplySecretPactAction
         IntriguePactGoal goal = DetermineGoal(state, sponsorClan, memberClan);
         SecretPact pact = new SecretPact(sponsorClan, memberClan, goal)
         {
-            Commitment = MBMath.ClampFloat(30f + affinity * 0.35f, 35f, 92f),
+            Commitment = MBMath.ClampFloat(18f + affinity * 0.10f, 18f, 48f), // was (30+affinity*0.35, max 92) — capped below AutoEscalationThreshold(68)
             Secrecy = sponsorClan.Kingdom != null && sponsorClan.Kingdom != memberClan.Kingdom ? 80f : 68f
         };
         pact.ClampValues();
