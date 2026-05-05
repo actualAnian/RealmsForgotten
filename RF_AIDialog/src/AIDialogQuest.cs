@@ -94,6 +94,16 @@ namespace RF_AIDialog
             _activeByNpcId.Remove(_npcStringId);
         }
 
+        /// <summary>
+        /// Appends a single-line objective update to the quest log.
+        /// Called by QuestAtomEngine as atoms are completed.
+        /// </summary>
+        public void AddObjectiveLog(string message)
+        {
+            try { AddLog(new TextObject("{=!}" + message)); }
+            catch { }
+        }
+
         public void MarkFulfilled()
         {
             AddLog(new TextObject("{=!}The matter has been settled."));

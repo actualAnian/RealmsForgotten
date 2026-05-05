@@ -211,6 +211,24 @@ namespace RF_AIDialog
                 }
             }
 
+            bool isCompanion = npc.Occupation == TaleWorlds.CampaignSystem.Occupation.Wanderer
+                               && npc.PartyBelongedTo == MobileParty.MainParty;
+
+            // ── Quest atom catalog (lords + notables only, not companions) ──
+            if (!isCompanion)
+            {
+                try
+                {
+                    string catalog = QuestAtomCatalog.Build(npc);
+                    if (!string.IsNullOrWhiteSpace(catalog))
+                    {
+                        sb.AppendLine();
+                        sb.AppendLine(catalog);
+                    }
+                }
+                catch { }
+            }
+
             // ── JSON response instruction ─────────────────────────────────
             sb.AppendLine();
             sb.AppendLine("RESPONSE INSTRUCTION:");
@@ -219,8 +237,6 @@ namespace RF_AIDialog
             bool isFirstConversation = context == null || context.IsFirstConversation;
 
             // ── Available actions ─────────────────────────────────────────
-            bool isCompanion = npc.Occupation == TaleWorlds.CampaignSystem.Occupation.Wanderer
-                               && npc.PartyBelongedTo == MobileParty.MainParty;
 
             sb.AppendLine();
             sb.AppendLine("AVAILABLE GAME ACTIONS (optional — only use when narratively justified):");
@@ -291,6 +307,17 @@ namespace RF_AIDialog
                 sb.AppendLine("  \"tone\": \"friendly|neutral|suspicious|hostile|fearful\",");
                 sb.AppendLine("  \"memory_note\": \"1-sentence summary of what was significant in this exchange. OMIT THIS FIELD ENTIRELY if the conversation was trivial small-talk.\",");
                 sb.AppendLine("  \"request\": \"OPTIONAL — only include if making a clear, actionable task for the player (bring X, find out Y, deliver Z to someone). One sentence including what reward you offer. Omit entirely if no request.\",");
+                if (!isCompanion)
+                {
+                    sb.AppendLine("  \"quest_mechanic\": {  // OPTIONAL — include ONLY when 'request' is present AND has verifiable objectives");
+                    sb.AppendLine("    \"objectives\": [");
+                    sb.AppendLine("      {\"atom\":\"VISIT_SETTLEMENT\",\"params\":{\"settlement_id\":\"<id>\"},\"label\":\"Go to <name>\"},");
+                    sb.AppendLine("      {\"atom\":\"RETURN_TO_NPC\",\"params\":{},\"label\":\"Report back\"}");
+                    sb.AppendLine("    ],");
+                    sb.AppendLine("    \"reward_gold\": 500,");
+                    sb.AppendLine("    \"days\": 30");
+                    sb.AppendLine("  },  // omit entirely for pure roleplay requests");
+                }
                 sb.AppendLine("  \"actions\": []");
                 sb.AppendLine("}");
                 sb.AppendLine("For 'actions': use [] if nothing happens. Otherwise fill with relevant actions:");
@@ -314,6 +341,17 @@ namespace RF_AIDialog
                 sb.AppendLine("  \"tone\": \"friendly|neutral|suspicious|hostile|fearful\",");
                 sb.AppendLine("  \"memory_note\": \"1-sentence summary of what was significant in this exchange. OMIT THIS FIELD ENTIRELY if the conversation was trivial small-talk.\",");
                 sb.AppendLine("  \"request\": \"OPTIONAL — only include if making a clear, actionable task for the player (bring X, find out Y, deliver Z). One sentence with reward hint. Omit entirely if no request.\",");
+                if (!isCompanion)
+                {
+                    sb.AppendLine("  \"quest_mechanic\": {  // OPTIONAL — include ONLY when 'request' is present AND has verifiable objectives");
+                    sb.AppendLine("    \"objectives\": [");
+                    sb.AppendLine("      {\"atom\":\"BRING_ITEM\",\"params\":{\"item_id\":\"grain\",\"quantity\":\"10\"},\"label\":\"Bring 10 grain\"},");
+                    sb.AppendLine("      {\"atom\":\"RETURN_TO_NPC\",\"params\":{},\"label\":\"Report back\"}");
+                    sb.AppendLine("    ],");
+                    sb.AppendLine("    \"reward_gold\": 300,");
+                    sb.AppendLine("    \"days\": 20");
+                    sb.AppendLine("  },  // omit entirely for pure roleplay requests");
+                }
                 if (hasPendingRequest)
                     sb.AppendLine("  \"request_fulfilled\": false,  // set true if the player has now delivered on your pending request. Fire the reward action when true.");
                 sb.AppendLine("  \"actions\": []");

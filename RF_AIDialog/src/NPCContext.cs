@@ -22,6 +22,15 @@ namespace RF_AIDialog
         /// <summary>In-game day when the request was made.</summary>
         [JsonProperty("day")]
         public int DayIssued { get; set; } = 0;
+
+        /// <summary>
+        /// Optional structured mechanic produced by the LLM.
+        /// When present, QuestAtomEngine tracks objectives automatically
+        /// against real game events (settlement visits, party defeats, etc.).
+        /// When absent, the quest is pure roleplay — fulfilled by LLM judgement.
+        /// </summary>
+        [JsonProperty("mechanic")]
+        public QuestMechanic? Mechanic { get; set; }
     }
 
     /// <summary>

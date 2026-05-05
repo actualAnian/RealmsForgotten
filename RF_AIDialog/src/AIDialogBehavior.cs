@@ -50,7 +50,8 @@ namespace RF_AIDialog
         // When non-null, the LLM issued a new request while a previous one is pending.
         // The NPC will ask the player to choose. _currentNpc/_currentContext stay alive
         // until the choice is made.
-        private string? _pendingNewRequest = null;
+        private string?        _pendingNewRequest  = null;
+        private QuestMechanic? _pendingNewMechanic = null;
 
         public string CurrentNpcName => _npcNameText;
 
@@ -305,12 +306,27 @@ namespace RF_AIDialog
 
                     try
                     {
-                        var req      = ctx.PendingRequest!;
-                        int elapsed  = currentDay - req.DayIssued;
-                        int daysLeft = Math.Max(1, 30 - elapsed);
-                        string qId   = $"rfai_{hero.StringId}_{req.DayIssued}";
+                        var req          = ctx.PendingRequest!;
+                        int totalDays    = req.Mechanic?.DurationDays > 0 ? req.Mechanic.DurationDays : 30;
+                        int elapsed      = currentDay - req.DayIssued;
+                        int daysLeft     = Math.Max(1, totalDays - elapsed);
+                        string qId       = $"rfai_{hero.StringId}_{req.DayIssued}";
                         RFAIDebug.Log($"ReconstructQuestsFromNPCContexts: recreating {hero.Name} ({daysLeft}d)");
-                        new AIDialogQuest(qId, hero, req.Description, daysLeft).StartQuest();
+                        var quest = new AIDialogQuest(qId, hero, req.Description, daysLeft);
+                        quest.StartQuest();
+
+                        // Re-add objective bullets so the journal stays current.
+                        if (req.Mechanic != null)
+                        {
+                            req.Mechanic.Normalize();
+                            for (int i = 0; i < req.Mechanic.Objectives.Count; i++)
+                            {
+                                var atom  = req.Mechanic.Objectives[i];
+                                bool done = req.Mechanic.IsCompleted(i);
+                                if (!string.IsNullOrWhiteSpace(atom.Label))
+                                    quest.AddObjectiveLog(done ? $"✓ {atom.Label}" : $"○ {atom.Label}");
+                            }
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -515,6 +531,10 @@ namespace RF_AIDialog
                 ? NPCContextStore.Instance?.GetOrCreate(_currentNpc)
                 : null;
 
+            // Check inventory/troop atoms the moment the player speaks to this NPC.
+            if (_currentNpc != null && _currentContext != null)
+                QuestAtomEngine.Instance?.CheckConversationAtoms(_currentNpc, _currentContext);
+
             InformationManager.ShowTextInquiry(new TextInquiryData(
                 titleText:                $"Speak with {_npcNameText}",
                 text:                     "What do you wish to say?",
@@ -533,6 +553,10 @@ namespace RF_AIDialog
             _currentContext = _currentNpc != null
                 ? NPCContextStore.Instance?.GetOrCreate(_currentNpc)
                 : null;
+
+            // Check inventory/troop atoms for NPC-initiated conversations too.
+            if (_currentNpc != null && _currentContext != null)
+                QuestAtomEngine.Instance?.CheckConversationAtoms(_currentNpc, _currentContext);
 
             OnPlayerConfirmedInput("(You give the NPC your attention, inviting them to speak first.)");
         }
@@ -633,11 +657,12 @@ namespace RF_AIDialog
                     {
                         // Conflict: hold and let the NPC offer the player a choice.
                         // _currentNpc/_currentContext are NOT reset below.
-                        _pendingNewRequest = requestText;
+                        _pendingNewRequest  = requestText;
+                        _pendingNewMechanic = _parsed?.QuestMechanic;
                     }
                     else
                     {
-                        CommitNewRequest(requestText);
+                        CommitNewRequest(requestText, _parsed?.QuestMechanic);
                     }
                 }
 
@@ -675,7 +700,7 @@ namespace RF_AIDialog
             if (_pendingNewRequest != null && _currentNpc != null && _currentContext != null)
             {
                 _currentContext.PendingRequest = null;
-                CommitNewRequest(_pendingNewRequest);
+                CommitNewRequest(_pendingNewRequest, _pendingNewMechanic);
                 NPCContextStore.Instance?.MarkDirty(_currentContext);
             }
             FinishPendingRequestCleanup();
@@ -688,7 +713,7 @@ namespace RF_AIDialog
 
         // Helpers
 
-        private void CommitNewRequest(string requestText)
+        private void CommitNewRequest(string requestText, QuestMechanic? mechanic = null)
         {
             if (_currentNpc == null || _currentContext == null) return;
 
@@ -696,10 +721,14 @@ namespace RF_AIDialog
             try { day = (int)Campaign.Current.Models.CampaignTimeModel
                               .CampaignStartTime.ElapsedDaysUntilNow; } catch { }
 
+            // Normalise mechanic completion list before persisting.
+            mechanic?.Normalize();
+
             _currentContext.PendingRequest = new PendingRequest
             {
                 Description = requestText,
-                DayIssued   = day
+                DayIssued   = day,
+                Mechanic    = mechanic
             };
             NPCContextStore.Instance?.MarkDirty(_currentContext);
 
@@ -709,9 +738,23 @@ namespace RF_AIDialog
                 var existing = AIDialogQuest.ForNpc(_currentNpc.StringId);
                 if (existing == null || !existing.IsOngoing)
                 {
-                    string qId = $"rfai_{_currentNpc.StringId}_{day}";
-                    new AIDialogQuest(qId, _currentNpc, requestText, 30).StartQuest();
-                    RFAIDebug.Log($"CommitNewRequest: quest started for {_currentNpc.Name}");
+                    int durationDays = mechanic?.DurationDays > 0 ? mechanic.DurationDays : 30;
+                    string qId       = $"rfai_{_currentNpc.StringId}_{day}";
+                    var quest = new AIDialogQuest(qId, _currentNpc, requestText, durationDays);
+                    quest.StartQuest();
+
+                    // Log each atom as a to-do bullet so the player sees them in the journal.
+                    if (mechanic != null)
+                    {
+                        foreach (var atom in mechanic.Objectives)
+                        {
+                            if (!string.IsNullOrWhiteSpace(atom.Label))
+                                quest.AddObjectiveLog($"○ {atom.Label}");
+                        }
+                    }
+
+                    RFAIDebug.Log($"CommitNewRequest: quest started for {_currentNpc.Name}" +
+                                  (mechanic != null ? $" ({mechanic.Objectives.Count} atoms)" : ""));
                 }
             }
             catch (Exception ex)
@@ -722,9 +765,10 @@ namespace RF_AIDialog
 
         private void FinishPendingRequestCleanup()
         {
-            _pendingNewRequest = null;
-            _currentNpc        = null;
-            _currentContext    = null;
+            _pendingNewRequest  = null;
+            _pendingNewMechanic = null;
+            _currentNpc         = null;
+            _currentContext     = null;
         }
 
         private RFAIResponse? ParseResponse(string raw)

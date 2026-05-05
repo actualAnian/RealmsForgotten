@@ -42,6 +42,9 @@ namespace RF_AIDialog
                 // NPCContextStore must be registered first — everything reads from it
                 campaignStarter.AddBehavior(new NPCContextStore());
 
+                // QuestAtomEngine — tracks VISIT_SETTLEMENT, DEFEAT_PARTY, etc. against real game events
+                campaignStarter.AddBehavior(new QuestAtomEngine());
+
                 // WorldHistoryStore must be registered before WorldHistoryBehavior
                 campaignStarter.AddBehavior(new WorldHistoryStore());
                 campaignStarter.AddBehavior(new WorldHistoryBehavior());

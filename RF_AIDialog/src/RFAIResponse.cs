@@ -75,6 +75,15 @@ namespace RF_AIDialog
         public bool RequestFulfilled { get; set; } = false;
 
         /// <summary>
+        /// Optional structured quest mechanic that adds real game-world validation
+        /// to the request. The LLM fills this when the request involves something
+        /// verifiable (visit a place, defeat enemies, bring items, etc.).
+        /// Omit entirely for pure roleplay requests.
+        /// </summary>
+        [JsonProperty("quest_mechanic")]
+        public QuestMechanic? QuestMechanic { get; set; }
+
+        /// <summary>
         /// Optional game actions to execute after the NPC speaks.
         /// </summary>
         [JsonProperty("actions")]
