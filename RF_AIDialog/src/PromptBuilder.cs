@@ -352,6 +352,7 @@ namespace RF_AIDialog
                 if (!isCompanion)
                 {
                     sb.AppendLine("  \"quest_mechanic\": {  // OPTIONAL — include ONLY when 'request' is present AND has verifiable objectives");
+                    sb.AppendLine("    \"quest_kind\": \"travel_report|delivery|recruitment|retaliation|scouting|delivery_under_pressure|escort_with_ambush|capture_prisoner|courtship_tournament\",");
                     sb.AppendLine("    // Prefer 1-3 simple objectives. Do not invent settlement_id or faction_id.");
                     sb.AppendLine("    \"objectives\": [");
                     sb.AppendLine("      {\"atom\":\"VISIT_SETTLEMENT\",\"params\":{\"settlement_id\":\"<id>\"},\"label\":\"Go to <name>\"},");
@@ -387,6 +388,7 @@ namespace RF_AIDialog
                 if (!isCompanion)
                 {
                     sb.AppendLine("  \"quest_mechanic\": {  // OPTIONAL — include ONLY when 'request' is present AND has verifiable objectives");
+                    sb.AppendLine("    \"quest_kind\": \"travel_report|delivery|recruitment|retaliation|scouting|delivery_under_pressure|escort_with_ambush|capture_prisoner|courtship_tournament\",");
                     sb.AppendLine("    // Prefer 1-3 simple objectives. Do not invent settlement_id or faction_id.");
                     sb.AppendLine("    \"objectives\": [");
                     sb.AppendLine("      {\"atom\":\"BRING_ITEM\",\"params\":{\"item_id\":\"grain\",\"quantity\":\"10\"},\"label\":\"Bring 10 grain\"},");

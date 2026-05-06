@@ -10,6 +10,7 @@ using RealmsForgotten.AiMade.StrategicIntrigue.Mechanics.SecretPacts;
 using RealmsForgotten.AiMade.StrategicIntrigue.SaveSystem;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.Election;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.MapEvents;
@@ -37,6 +38,8 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
     private List<SecretPact> _secretPacts = new();
     private List<SecretAllianceCompact> _secretAlliances = new();
     private List<IntrigueOperation> _pendingOperations = new();
+    private List<EspionageOperation> _espionageOperations = new();
+    private List<EspionageReport> _espionageReports = new();
     private bool _isInitialized;
     private bool _isInitializing;
     private string _warTableReturnMenuId = "castle";
@@ -67,7 +70,17 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
         dataStore.SyncData("_secretPacts", ref _secretPacts);
         dataStore.SyncData("_secretAlliances", ref _secretAlliances);
         dataStore.SyncData("_pendingOperations", ref _pendingOperations);
+        dataStore.SyncData("_espionageOperations", ref _espionageOperations);
+        dataStore.SyncData("_espionageReports", ref _espionageReports);
         dataStore.SyncData("_isInitialized", ref _isInitialized);
+
+        _clanStates ??= new Dictionary<Clan, ClanIntrigueState>();
+        _kingdomStates ??= new Dictionary<Kingdom, KingdomIntrigueState>();
+        _secretPacts ??= new List<SecretPact>();
+        _secretAlliances ??= new List<SecretAllianceCompact>();
+        _pendingOperations ??= new List<IntrigueOperation>();
+        _espionageOperations ??= new List<EspionageOperation>();
+        _espionageReports ??= new List<EspionageReport>();
     }
 
     public ClanIntrigueState GetState(Clan clan)
@@ -128,6 +141,300 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
             && x.InstigatorClan == Clan.PlayerClan
             && x.TargetClan == clan
                 && (x.Type == IntrigueOperationType.RumorCampaign || x.Type == IntrigueOperationType.SponsorDissidence));
+    }
+
+    public bool HasActiveEspionageAgainstClan(Clan clan)
+    {
+        EnsureInitialized();
+        return clan != null && _espionageOperations.Any(x =>
+            x.Status == EspionageOperationStatus.Pending
+            && x.Type == EspionageOperationType.ClanInfiltration
+            && x.TargetClan == clan);
+    }
+
+    public float GetRemainingEspionageDaysForClan(Clan clan)
+    {
+        EnsureInitialized();
+        EspionageOperation operation = clan == null
+            ? null
+            : _espionageOperations.FirstOrDefault(x =>
+                x.Status == EspionageOperationStatus.Pending
+                && x.Type == EspionageOperationType.ClanInfiltration
+                && x.TargetClan == clan);
+
+        return operation == null
+            ? 0f
+            : MathF.Max(0f, (float)(operation.ResolveAt - CampaignTime.Now).ToDays);
+    }
+
+    public EspionageReport GetLatestEspionageReportForClan(Clan clan)
+    {
+        EnsureInitialized();
+        return clan == null
+            ? null
+            : _espionageReports
+                .Where(x => x.TargetClan == clan)
+                .OrderByDescending(x => x.CreatedAt.ToDays)
+                .FirstOrDefault();
+    }
+
+    public bool HasActiveEspionageAgainstKingdom(Kingdom kingdom)
+    {
+        EnsureInitialized();
+        return kingdom != null && _espionageOperations.Any(x =>
+            x.Status == EspionageOperationStatus.Pending
+            && x.Type == EspionageOperationType.CourtListening
+            && x.TargetKingdom == kingdom);
+    }
+
+    public EspionageReport GetLatestEspionageReportForKingdom(Kingdom kingdom)
+    {
+        EnsureInitialized();
+        return kingdom == null
+            ? null
+            : _espionageReports
+                .Where(x => x.TargetKingdom == kingdom && x.Type == EspionageOperationType.CourtListening)
+                .OrderByDescending(x => x.CreatedAt.ToDays)
+                .FirstOrDefault();
+    }
+
+    public bool IsCompanionAvailableForEspionage(Hero companion)
+    {
+        EnsureInitialized();
+        return CanAssignCompanionToEspionage(companion);
+    }
+
+    public bool HasCompanionEspionageActivity(Hero companion)
+    {
+        EnsureInitialized();
+        return companion != null
+            && (_espionageOperations.Any(x => x.Status == EspionageOperationStatus.Pending && x.Companion == companion)
+                || _espionageReports.Any(x => x.Companion == companion));
+    }
+
+    public IEnumerable<Clan> GetAvailableEspionageClanTargets()
+    {
+        EnsureInitialized();
+        return Clan.All
+            .Where(IsValidIntrigueClan)
+            .Where(x => x != Clan.PlayerClan)
+            .OrderBy(x => x.Kingdom?.Name?.ToString())
+            .ThenBy(x => x.Name.ToString());
+    }
+
+    public IEnumerable<Kingdom> GetAvailableEspionageKingdomTargets()
+    {
+        EnsureInitialized();
+        return Kingdom.All
+            .Where(IsValidIntrigueKingdom)
+            .Where(x => x != Clan.PlayerClan?.Kingdom)
+            .OrderBy(x => x.Name.ToString());
+    }
+
+    public bool TryStartClanInfiltration(Hero companion, Clan targetClan, out TextObject response)
+    {
+        EnsureInitialized();
+        response = new TextObject("{=rf_si_espionage_start_failed}The mission cannot be started right now.");
+
+        if (!IsValidIntrigueClan(targetClan))
+        {
+            response = new TextObject("{=rf_si_espionage_invalid_target}There is no worthwhile clan target here for an infiltration.");
+            return false;
+        }
+
+        if (!CanAssignCompanionToEspionage(companion))
+        {
+            response = new TextObject("{=rf_si_espionage_companion_unavailable}That companion is not available to leave the party on a quiet mission.");
+            return false;
+        }
+
+        if (HasActiveEspionageAgainstClan(targetClan))
+        {
+            response = new TextObject("{=rf_si_espionage_duplicate}You already have an operative moving against that house.");
+            return false;
+        }
+
+        float power = CalculateEspionagePower(companion, targetClan, EspionageOperationType.ClanInfiltration);
+        float risk = CalculateEspionageRisk(companion, targetClan, EspionageOperationType.ClanInfiltration);
+        float durationDays = CalculateEspionageDurationDays(companion, targetClan, EspionageOperationType.ClanInfiltration);
+        EspionageOperation operation = new(
+            EspionageOperationType.ClanInfiltration,
+            companion,
+            targetClan,
+            targetClan.Kingdom,
+            CampaignTime.Now,
+            CampaignTime.DaysFromNow(durationDays),
+            power,
+            risk);
+        operation.ClampValues();
+
+        RemoveCompanionForEspionage(companion);
+        _espionageOperations.Add(operation);
+
+        response = new TextObject("{=rf_si_espionage_started}{COMPANION} slips away to watch the affairs of {CLAN}. If all goes well, a report should return within about {DAYS} days.");
+        response.SetTextVariable("COMPANION", companion.Name);
+        response.SetTextVariable("CLAN", targetClan.Name);
+        response.SetTextVariable("DAYS", MathF.Round(durationDays));
+        return true;
+    }
+
+    public bool TryStartCourtListening(Hero companion, Kingdom targetKingdom, out TextObject response)
+    {
+        EnsureInitialized();
+        response = new TextObject("{=rf_si_espionage_start_failed}The mission cannot be started right now.");
+
+        if (!IsValidIntrigueKingdom(targetKingdom))
+        {
+            response = new TextObject("{=rf_si_espionage_invalid_kingdom}There is no coherent court there worth listening to.");
+            return false;
+        }
+
+        if (!CanAssignCompanionToEspionage(companion))
+        {
+            response = new TextObject("{=rf_si_espionage_companion_unavailable}That companion is not available to leave the party on a quiet mission.");
+            return false;
+        }
+
+        if (HasActiveEspionageAgainstKingdom(targetKingdom))
+        {
+            response = new TextObject("{=rf_si_espionage_duplicate_kingdom}You already have an operative listening at that court.");
+            return false;
+        }
+
+        float power = CalculateEspionagePower(companion, targetKingdom.RulingClan, EspionageOperationType.CourtListening);
+        float risk = CalculateEspionageRisk(companion, targetKingdom.RulingClan, EspionageOperationType.CourtListening);
+        float durationDays = CalculateEspionageDurationDays(companion, targetKingdom.RulingClan, EspionageOperationType.CourtListening);
+        EspionageOperation operation = new(
+            EspionageOperationType.CourtListening,
+            companion,
+            null,
+            targetKingdom,
+            CampaignTime.Now,
+            CampaignTime.DaysFromNow(durationDays),
+            power,
+            risk);
+        operation.ClampValues();
+
+        RemoveCompanionForEspionage(companion);
+        _espionageOperations.Add(operation);
+
+        response = new TextObject("{=rf_si_espionage_court_started}{COMPANION} slips away to listen at the court of {KINGDOM}. If all goes well, word should return within about {DAYS} days.");
+        response.SetTextVariable("COMPANION", companion.Name);
+        response.SetTextVariable("KINGDOM", targetKingdom.Name);
+        response.SetTextVariable("DAYS", MathF.Round(durationDays));
+        return true;
+    }
+
+    public TextObject GetEspionageReportBriefingForClan(Clan clan)
+    {
+        EnsureInitialized();
+        if (HasActiveEspionageAgainstClan(clan))
+        {
+            TextObject pending = new TextObject("{=rf_si_espionage_pending}{COMPANION} is still moving quietly around {CLAN}. Give the agent about {DAYS} more days.");
+            EspionageOperation operation = _espionageOperations.FirstOrDefault(x =>
+                x.Status == EspionageOperationStatus.Pending
+                && x.Type == EspionageOperationType.ClanInfiltration
+                && x.TargetClan == clan);
+            pending.SetTextVariable("COMPANION", operation?.Companion?.Name ?? new TextObject("{=rf_si_unknown_companion}your agent"));
+            pending.SetTextVariable("CLAN", clan?.Name ?? new TextObject("{=rf_si_unknown_clan}the target house"));
+            pending.SetTextVariable("DAYS", MathF.Ceiling(GetRemainingEspionageDaysForClan(clan)));
+            return pending;
+        }
+
+        EspionageReport report = GetLatestEspionageReportForClan(clan);
+        if (report == null)
+        {
+            return new TextObject("{=rf_si_espionage_no_report}No agent has yet returned with anything useful about that house.");
+        }
+
+        TextObject text = report.Outcome switch
+        {
+            EspionageOperationStatus.Exposed => new TextObject("{=rf_si_espionage_report_exposed}{COMPANION} was noticed while probing {CLAN}. Even so, a few scraps survived: the house seems {DISSIDENCE}, its appetite for a claimant is {CLAIMANT}, and the wiser course is {ACTION}. Confidence: {CONFIDENCE}."),
+            EspionageOperationStatus.Failed => new TextObject("{=rf_si_espionage_report_failed}{COMPANION} came back empty-handed from {CLAN}. The house remains difficult to read. Confidence: {CONFIDENCE}."),
+            EspionageOperationStatus.Partial => new TextObject("{=rf_si_espionage_report_partial}{COMPANION} returned with an incomplete read on {CLAN}: dissidence appears {DISSIDENCE}, fear of the ruler {FEAR}, and the best opening looks like {ACTION}. Confidence: {CONFIDENCE}."),
+            _ => new TextObject("{=rf_si_espionage_report_success}{COMPANION} has finished sounding out {CLAN}. Dissidence appears {DISSIDENCE}, fear of the ruler {FEAR}, trust toward your house {TRUST}, and claimant appetite {CLAIMANT}. The recommended next move is {ACTION}. Confidence: {CONFIDENCE}.")
+        };
+
+        text.SetTextVariable("COMPANION", report.Companion?.Name ?? new TextObject("{=rf_si_unknown_companion}your agent"));
+        text.SetTextVariable("CLAN", report.TargetClan?.Name ?? new TextObject("{=rf_si_unknown_clan}the target house"));
+        text.SetTextVariable("DISSIDENCE", DescribeEspionageBand(report.EstimatedDissidence, "fractured", "strained", "steady"));
+        text.SetTextVariable("FEAR", DescribeEspionageBand(report.EstimatedFearOfRuler, "high", "mixed", "low"));
+        text.SetTextVariable("TRUST", DescribeEspionageBand(report.EstimatedTrustToPlayer, "encouraging", "uncertain", "cold"));
+        text.SetTextVariable("CLAIMANT", DescribeEspionageBand(report.EstimatedClaimantAmbition, "strong", "present", "weak"));
+        text.SetTextVariable("ACTION", new TextObject(report.RecommendedAction));
+        text.SetTextVariable("CONFIDENCE", GetConfidenceText(report.Confidence));
+        return text;
+    }
+
+    public TextObject GetEspionageReportBriefingForKingdom(Kingdom kingdom)
+    {
+        EnsureInitialized();
+        if (HasActiveEspionageAgainstKingdom(kingdom))
+        {
+            TextObject pending = new TextObject("{=rf_si_espionage_kingdom_pending}{COMPANION} is still listening at the court of {KINGDOM}. Give the agent about {DAYS} more days.");
+            EspionageOperation operation = _espionageOperations.FirstOrDefault(x =>
+                x.Status == EspionageOperationStatus.Pending
+                && x.Type == EspionageOperationType.CourtListening
+                && x.TargetKingdom == kingdom);
+            pending.SetTextVariable("COMPANION", operation?.Companion?.Name ?? new TextObject("{=rf_si_unknown_companion}your agent"));
+            pending.SetTextVariable("KINGDOM", kingdom?.Name ?? new TextObject("{=rf_si_unknown_kingdom}the realm"));
+            pending.SetTextVariable("DAYS", MathF.Ceiling(MathF.Max(0f, (float)((operation?.ResolveAt ?? CampaignTime.Now) - CampaignTime.Now).ToDays)));
+            return pending;
+        }
+
+        EspionageReport report = GetLatestEspionageReportForKingdom(kingdom);
+        if (report == null)
+        {
+            return new TextObject("{=rf_si_espionage_no_kingdom_report}No agent has yet returned with anything useful about that court.");
+        }
+
+        TextObject text = report.Outcome switch
+        {
+            EspionageOperationStatus.Exposed => new TextObject("{=rf_si_espionage_kingdom_exposed}{COMPANION} was noticed while listening at {KINGDOM}. Even so, the court seems {LEGITIMACY} in legitimacy, {FRACTURE} in cohesion, and the wiser course is {ACTION}. Confidence: {CONFIDENCE}."),
+            EspionageOperationStatus.Failed => new TextObject("{=rf_si_espionage_kingdom_failed}{COMPANION} came back empty-handed from {KINGDOM}. The court remains difficult to read. Confidence: {CONFIDENCE}."),
+            EspionageOperationStatus.Partial => new TextObject("{=rf_si_espionage_kingdom_partial}{COMPANION} returned with a partial read on {KINGDOM}: legitimacy seems {LEGITIMACY}, claimant pressure {CLAIMANTS}, and the best opening looks like {ACTION}. Confidence: {CONFIDENCE}."),
+            _ => new TextObject("{=rf_si_espionage_kingdom_success}{COMPANION} has finished listening at {KINGDOM}. Royal legitimacy seems {LEGITIMACY}, the court is {FRACTURE}, claimant pressure is {CLAIMANTS}, and the recommended next move is {ACTION}. Confidence: {CONFIDENCE}.")
+        };
+
+        text.SetTextVariable("COMPANION", report.Companion?.Name ?? new TextObject("{=rf_si_unknown_companion}your agent"));
+        text.SetTextVariable("KINGDOM", report.TargetKingdom?.Name ?? new TextObject("{=rf_si_unknown_kingdom}the realm"));
+        text.SetTextVariable("LEGITIMACY", DescribeEspionageBand(report.EstimatedRoyalLegitimacy, "strong", "contested", "failing"));
+        text.SetTextVariable("FRACTURE", DescribeEspionageBand(report.EstimatedCourtFragmentation, "splintering", "strained", "coherent"));
+        text.SetTextVariable("CLAIMANTS", DescribeEspionageBand(report.EstimatedClaimantPressure, "dangerous", "restless", "contained"));
+        text.SetTextVariable("ACTION", new TextObject(report.RecommendedAction));
+        text.SetTextVariable("CONFIDENCE", GetConfidenceText(report.Confidence));
+        return text;
+    }
+
+    public TextObject GetCompanionEspionageStatus(Hero companion)
+    {
+        EnsureInitialized();
+        if (companion == null)
+        {
+            return new TextObject("{=rf_si_espionage_no_companion_status}There is no agent to report on.");
+        }
+
+        EspionageOperation activeOperation = _espionageOperations
+            .FirstOrDefault(x => x.Status == EspionageOperationStatus.Pending && x.Companion == companion);
+        if (activeOperation != null)
+        {
+            return activeOperation.Type == EspionageOperationType.CourtListening
+                ? GetEspionageReportBriefingForKingdom(activeOperation.TargetKingdom)
+                : GetEspionageReportBriefingForClan(activeOperation.TargetClan);
+        }
+
+        EspionageReport report = _espionageReports
+            .Where(x => x.Companion == companion)
+            .OrderByDescending(x => x.CreatedAt.ToDays)
+            .FirstOrDefault();
+        if (report == null)
+        {
+            return new TextObject("{=rf_si_espionage_no_companion_report}I have not returned with any intelligence for you yet.");
+        }
+
+        return report.Type == EspionageOperationType.CourtListening
+            ? GetEspionageReportBriefingForKingdom(report.TargetKingdom)
+            : GetEspionageReportBriefingForClan(report.TargetClan);
     }
 
     public bool HasKingdomObjective(Kingdom kingdom)
@@ -1309,6 +1616,7 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
         }
 
         DecayDailyValues();
+        ResolveEspionageOperations();
         ProcessRulerCountermoves();
         ScheduleAutomaticEscalations();
         List<IntrigueOperationResolution> resolutions = IntrigueOperationResolver.ResolveDueOperations(_clanStates, _kingdomStates, _secretPacts, _pendingOperations);
@@ -4259,5 +4567,289 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
             && !kingdom.IsEliminated
             && kingdom.RulingClan?.Leader != null
             && kingdom.Clans.Count > 1;
+    }
+
+    private bool CanAssignCompanionToEspionage(Hero companion)
+    {
+        return companion != null
+            && companion.IsPlayerCompanion
+            && !companion.IsDead
+            && companion.PartyBelongedTo == MobileParty.MainParty
+            && !_espionageOperations.Any(x => x.Status == EspionageOperationStatus.Pending && x.Companion == companion);
+    }
+
+    private Hero GetBestAvailableEspionageCompanion(Clan targetClan)
+    {
+        var troopRoster = MobileParty.MainParty?.MemberRoster?.GetTroopRoster();
+        if (troopRoster == null)
+        {
+            return null;
+        }
+
+        return troopRoster
+            .Select(x => x.Character?.HeroObject)
+            .Where(CanAssignCompanionToEspionage)
+            .OrderByDescending(x => CalculateEspionagePower(x, targetClan, EspionageOperationType.ClanInfiltration))
+            .ThenByDescending(x => x.GetSkillValue(DefaultSkills.Roguery))
+            .FirstOrDefault();
+    }
+
+    private float CalculateEspionagePower(Hero companion, Clan targetClan, EspionageOperationType operationType)
+    {
+        if (companion == null || targetClan == null)
+        {
+            return 0f;
+        }
+
+        float roguery = companion.GetSkillValue(DefaultSkills.Roguery);
+        float scouting = companion.GetSkillValue(DefaultSkills.Scouting);
+        float charm = companion.GetSkillValue(DefaultSkills.Charm);
+        float relation = Hero.MainHero == null || targetClan.Leader == null ? 0f : targetClan.Leader.GetRelation(Hero.MainHero);
+        float cultureBonus = companion.Culture == targetClan.Culture ? 8f : 0f;
+        float relationBonus = MBMath.ClampFloat(relation * 0.25f, -10f, 12f);
+        float typeBonus = operationType == EspionageOperationType.CourtListening ? 4f : 0f;
+
+        return MBMath.ClampFloat((roguery * 0.42f) + (scouting * 0.22f) + (charm * 0.18f) + cultureBonus + relationBonus + typeBonus, 5f, 95f);
+    }
+
+    private float CalculateEspionageRisk(Hero companion, Clan targetClan, EspionageOperationType operationType)
+    {
+        ClanIntrigueState clanState = GetState(targetClan);
+        KingdomIntrigueState kingdomState = GetKingdomState(targetClan?.Kingdom);
+        float suspicion = clanState?.Suspicion ?? 35f;
+        float royalFavor = clanState?.RoyalFavor ?? 30f;
+        float courtPressure = kingdomState?.CourtFragmentation ?? 30f;
+        float power = CalculateEspionagePower(companion, targetClan, operationType);
+        float risk = 28f + (suspicion * 0.34f) + (royalFavor * 0.12f) - (power * 0.22f) - (courtPressure * 0.08f);
+        return MBMath.ClampFloat(risk, 5f, 95f);
+    }
+
+    private float CalculateEspionageDurationDays(Hero companion, Clan targetClan, EspionageOperationType operationType)
+    {
+        float scouting = companion?.GetSkillValue(DefaultSkills.Scouting) ?? 0f;
+        float infiltration = GetState(targetClan)?.Infiltration ?? 20f;
+        float baseDays = operationType == EspionageOperationType.CourtListening ? 5.5f : 4.5f;
+        float reduction = (scouting * 0.01f) + (infiltration * 0.015f);
+        return MBMath.ClampFloat(baseDays - reduction, 2.5f, 7f);
+    }
+
+    private void RemoveCompanionForEspionage(Hero companion)
+    {
+        if (companion?.CharacterObject == null || MobileParty.MainParty?.MemberRoster == null)
+        {
+            return;
+        }
+
+        if (companion.PartyBelongedTo == MobileParty.MainParty)
+        {
+            MobileParty.MainParty.MemberRoster.RemoveTroop(companion.CharacterObject);
+        }
+    }
+
+    private void ReturnCompanionFromEspionage(Hero companion)
+    {
+        if (companion == null || companion.IsDead || MobileParty.MainParty == null)
+        {
+            return;
+        }
+
+        if (companion.PartyBelongedTo != MobileParty.MainParty)
+        {
+            AddHeroToPartyAction.Apply(companion, MobileParty.MainParty, false);
+        }
+    }
+
+    private void ResolveEspionageOperations()
+    {
+        foreach (EspionageOperation operation in _espionageOperations.Where(x => x.IsDue).ToList())
+        {
+            ResolveEspionageOperation(operation);
+        }
+    }
+
+    private void ResolveEspionageOperation(EspionageOperation operation)
+    {
+        if (operation == null)
+        {
+            return;
+        }
+
+        ReturnCompanionFromEspionage(operation.Companion);
+
+        EspionageReport report = BuildEspionageReport(operation);
+        report.ClampValues();
+        _espionageReports.RemoveAll(x =>
+            x.Type == report.Type
+            && (report.Type == EspionageOperationType.CourtListening
+                ? x.TargetKingdom == report.TargetKingdom
+                : x.TargetClan == report.TargetClan));
+        _espionageReports.Add(report);
+
+        operation.Status = report.Outcome;
+        ShowEspionageResolutionNotification(report);
+    }
+
+    private EspionageReport BuildEspionageReport(EspionageOperation operation)
+    {
+        if (operation == null || (operation.TargetClan == null && operation.TargetKingdom == null))
+        {
+            return new EspionageReport(
+                operation?.Companion,
+                operation?.Type ?? EspionageOperationType.ClanInfiltration,
+                operation?.TargetClan,
+                operation?.TargetKingdom,
+                CampaignTime.Now,
+                EspionageOperationStatus.Failed,
+                EspionageReportConfidence.Low,
+                0f,
+                0f,
+                0f,
+                0f,
+                0f,
+                0f,
+                0f,
+                0f,
+                0f,
+                "{=rf_si_espionage_action_none}wait and watch");
+        }
+
+        Kingdom targetKingdom = operation.TargetKingdom ?? operation.TargetClan?.Kingdom;
+        ClanIntrigueState clanState = operation.TargetClan == null ? null : GetState(operation.TargetClan);
+        KingdomIntrigueState kingdomState = GetKingdomState(targetKingdom);
+        float power = operation.Power;
+        float risk = operation.Risk;
+        float successScore = power - risk + MBRandom.RandomFloatRanged(-18f, 18f);
+
+        EspionageOperationStatus outcome;
+        EspionageReportConfidence confidence;
+        float accuracySpread;
+
+        if (successScore >= 20f)
+        {
+            outcome = EspionageOperationStatus.Succeeded;
+            confidence = EspionageReportConfidence.High;
+            accuracySpread = 4f;
+        }
+        else if (successScore >= 0f)
+        {
+            outcome = EspionageOperationStatus.Partial;
+            confidence = EspionageReportConfidence.Medium;
+            accuracySpread = 9f;
+        }
+        else if (successScore <= -18f)
+        {
+            outcome = EspionageOperationStatus.Exposed;
+            confidence = EspionageReportConfidence.Low;
+            accuracySpread = 16f;
+            if (clanState != null)
+            {
+                clanState.Suspicion += 10f;
+                clanState.ClampValues();
+            }
+        }
+        else
+        {
+            outcome = EspionageOperationStatus.Failed;
+            confidence = EspionageReportConfidence.Low;
+            accuracySpread = 22f;
+        }
+
+        float Estimate(float actual) => MBMath.ClampFloat(actual + MBRandom.RandomFloatRanged(-accuracySpread, accuracySpread), 0f, 100f);
+
+        float estimatedDissidence = Estimate(clanState?.Dissidence ?? 0f);
+        float estimatedTrust = Estimate(clanState?.TrustToPlayer ?? 0f);
+        float estimatedFear = Estimate(clanState?.FearOfRuler ?? 0f);
+        float estimatedClaimant = Estimate(clanState?.ClaimantAmbition ?? 0f);
+        float estimatedBreakaway = MBMath.ClampFloat((estimatedDissidence * 0.55f) + (estimatedClaimant * 0.25f) - (estimatedFear * 0.15f), 0f, 100f);
+        float estimatedLegitimacy = Estimate(kingdomState?.RulerLegitimacy ?? 50f);
+        float estimatedFragmentation = Estimate(kingdomState?.CourtFragmentation ?? 40f);
+        float estimatedPressure = Estimate(kingdomState?.ClaimantPressure ?? 35f);
+        float estimatedSupport = Estimate(100f - (kingdomState == null ? 50f : kingdomState.CourtFragmentation * 0.45f));
+
+        return new EspionageReport(
+            operation.Companion,
+            operation.Type,
+            operation.TargetClan,
+            targetKingdom,
+            CampaignTime.Now,
+            outcome,
+            confidence,
+            estimatedDissidence,
+            estimatedTrust,
+            estimatedFear,
+            estimatedClaimant,
+            estimatedBreakaway,
+            estimatedLegitimacy,
+            estimatedFragmentation,
+            estimatedPressure,
+            estimatedSupport,
+            BuildRecommendedEspionageAction(estimatedDissidence, estimatedFear, estimatedTrust, estimatedClaimant));
+    }
+
+    private static string BuildRecommendedEspionageAction(float dissidence, float fear, float trust, float claimant)
+    {
+        if (dissidence >= 72f && trust >= 35f)
+        {
+            return "{=rf_si_espionage_action_pact}cultivate a secret understanding";
+        }
+
+        if (dissidence >= 58f && fear < 55f)
+        {
+            return "{=rf_si_espionage_action_rumor}press with whispers and rumor";
+        }
+
+        if (claimant >= 55f)
+        {
+            return "{=rf_si_espionage_action_claimant}probe for claimant sympathies";
+        }
+
+        if (fear >= 65f)
+        {
+            return "{=rf_si_espionage_action_wait}wait and let pressure on the ruler deepen";
+        }
+
+        return "{=rf_si_espionage_action_observe}keep the house under quiet observation";
+    }
+
+    private void ShowEspionageResolutionNotification(EspionageReport report)
+    {
+        if (report == null)
+        {
+            return;
+        }
+
+        TextObject title = new TextObject("{=rf_si_espionage_title}Spy Returned");
+        TextObject body = report.Outcome switch
+        {
+            EspionageOperationStatus.Exposed => new TextObject("{=rf_si_espionage_body_exposed}{COMPANION} has returned from {TARGET}, but the operation was noticed. The target will be more watchful now."),
+            EspionageOperationStatus.Failed => new TextObject("{=rf_si_espionage_body_failed}{COMPANION} returned from {TARGET} without anything solid enough to trust."),
+            EspionageOperationStatus.Partial => new TextObject("{=rf_si_espionage_body_partial}{COMPANION} returned from {TARGET} with fragments of useful court intelligence."),
+            _ => new TextObject("{=rf_si_espionage_body_success}{COMPANION} returned from {TARGET} with a credible reading of the political ground.")
+        };
+        body.SetTextVariable("COMPANION", report.Companion?.Name ?? new TextObject("{=rf_si_unknown_companion}your agent"));
+        body.SetTextVariable("TARGET", report.Type == EspionageOperationType.CourtListening
+            ? report.TargetKingdom?.Name ?? new TextObject("{=rf_si_unknown_kingdom}the realm")
+            : report.TargetClan?.Name ?? new TextObject("{=rf_si_unknown_clan}the target house"));
+        ShowIntrigueInquiry(title, body);
+    }
+
+    private static TextObject GetConfidenceText(EspionageReportConfidence confidence)
+    {
+        return confidence switch
+        {
+            EspionageReportConfidence.High => new TextObject("{=rf_si_espionage_confidence_high}high"),
+            EspionageReportConfidence.Medium => new TextObject("{=rf_si_espionage_confidence_medium}moderate"),
+            _ => new TextObject("{=rf_si_espionage_confidence_low}low")
+        };
+    }
+
+    private static TextObject DescribeEspionageBand(float value, string high, string mid, string low)
+    {
+        return value switch
+        {
+            >= 67f => new TextObject(high),
+            >= 38f => new TextObject(mid),
+            _ => new TextObject(low)
+        };
     }
 }

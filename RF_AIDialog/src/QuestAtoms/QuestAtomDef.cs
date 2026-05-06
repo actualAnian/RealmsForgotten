@@ -40,6 +40,9 @@ namespace RF_AIDialog
     /// </summary>
     public class QuestMechanic
     {
+        [JsonProperty("quest_kind")]
+        public string QuestKind { get; set; } = "";
+
         [JsonProperty("objectives")]
         public List<QuestAtom> Objectives { get; set; } = new List<QuestAtom>();
 

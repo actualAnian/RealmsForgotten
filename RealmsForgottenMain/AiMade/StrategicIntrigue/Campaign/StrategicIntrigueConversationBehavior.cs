@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using RealmsForgotten.AiMade.StrategicIntrigue.Core;
 using RealmsForgotten.AiMade.StrategicIntrigue.Mechanics.InciteBreak;
 using RealmsForgotten.AiMade.StrategicIntrigue.SaveSystem;
@@ -261,6 +262,21 @@ public sealed class StrategicIntrigueConversationBehavior : CampaignBehaviorBase
             "{=rf_si_foreign_leave}That is all for now.",
             null,
             null);
+
+        starter.AddPlayerLine(
+            "rf_si_companion_espionage_player",
+            "hero_main_options",
+            "close_window",
+            "{=rf_si_companion_espionage_player}I need you to gather intelligence for me.",
+            CanOpenCompanionEspionageMenu,
+            OpenCompanionEspionageMenu);
+        starter.AddPlayerLine(
+            "rf_si_companion_espionage_report_player",
+            "hero_main_options",
+            "close_window",
+            "{=rf_si_companion_espionage_report_player}Report on your latest intelligence work.",
+            CanReviewCompanionEspionage,
+            ReviewCompanionEspionage);
     }
 
     private void OnConversationEnded(IEnumerable<CharacterObject> _)
@@ -790,6 +806,177 @@ public sealed class StrategicIntrigueConversationBehavior : CampaignBehaviorBase
     {
         MBTextManager.SetTextVariable("SI_FOREIGN_ALLIANCE_STATUS_TEXT", _lastForeignAllianceStatusResponse.ToString());
         return true;
+    }
+
+    private bool CanOpenCompanionEspionageMenu()
+    {
+        Hero hero = Hero.OneToOneConversationHero;
+        StrategicIntrigueCampaignBehavior behavior = global::TaleWorlds.CampaignSystem.Campaign.Current?.GetCampaignBehavior<StrategicIntrigueCampaignBehavior>();
+        return hero?.IsPlayerCompanion == true && behavior?.IsCompanionAvailableForEspionage(hero) == true;
+    }
+
+    private bool CanReviewCompanionEspionage()
+    {
+        Hero hero = Hero.OneToOneConversationHero;
+        StrategicIntrigueCampaignBehavior behavior = global::TaleWorlds.CampaignSystem.Campaign.Current?.GetCampaignBehavior<StrategicIntrigueCampaignBehavior>();
+        return hero?.IsPlayerCompanion == true && behavior?.HasCompanionEspionageActivity(hero) == true;
+    }
+
+    private void OpenCompanionEspionageMenu()
+    {
+        Hero companion = Hero.OneToOneConversationHero;
+        StrategicIntrigueCampaignBehavior behavior = global::TaleWorlds.CampaignSystem.Campaign.Current?.GetCampaignBehavior<StrategicIntrigueCampaignBehavior>();
+        if (companion?.IsPlayerCompanion != true || behavior == null)
+        {
+            return;
+        }
+
+        List<InquiryElement> options = new()
+        {
+            new InquiryElement("clan", new TextObject("{=rf_si_companion_target_clan}Investigate a clan").ToString(), null),
+            new InquiryElement("kingdom", new TextObject("{=rf_si_companion_target_kingdom}Listen at a court").ToString(), null)
+        };
+
+        MBInformationManager.ShowMultiSelectionInquiry(
+            new MultiSelectionInquiryData(
+                new TextObject("{=rf_si_companion_menu_title}Intelligence Assignment").ToString(),
+                new TextObject("{=rf_si_companion_menu_desc}Choose the kind of intelligence mission you want this companion to undertake.").ToString(),
+                options,
+                true,
+                1,
+                1,
+                GameTexts.FindText("str_done", null).ToString(),
+                GameTexts.FindText("str_cancel", null).ToString(),
+                selected =>
+                {
+                    string choice = selected.FirstOrDefault()?.Identifier as string;
+                    if (choice == "kingdom")
+                    {
+                        OpenKingdomEspionageTargetSelection(companion, behavior);
+                    }
+                    else
+                    {
+                        OpenClanEspionageTargetSelection(companion, behavior);
+                    }
+                },
+                null,
+                string.Empty,
+                false),
+            false,
+            false);
+    }
+
+    private void OpenClanEspionageTargetSelection(Hero companion, StrategicIntrigueCampaignBehavior behavior)
+    {
+        List<InquiryElement> targets = behavior.GetAvailableEspionageClanTargets()
+            .Select(clan => new InquiryElement(clan, $"{clan.Name} ({clan.Kingdom?.Name})", null))
+            .ToList();
+
+        if (targets.Count == 0)
+        {
+            ShowIntrigueMessage(new TextObject("{=rf_si_no_clan_targets}There are no valid clan targets for espionage right now."));
+            return;
+        }
+
+        MBInformationManager.ShowMultiSelectionInquiry(
+            new MultiSelectionInquiryData(
+                new TextObject("{=rf_si_clan_target_title}Choose Clan Target").ToString(),
+                new TextObject("{=rf_si_clan_target_desc}Select the clan you want watched.").ToString(),
+                targets,
+                true,
+                1,
+                1,
+                GameTexts.FindText("str_done", null).ToString(),
+                GameTexts.FindText("str_cancel", null).ToString(),
+                selected =>
+                {
+                    Clan targetClan = selected.FirstOrDefault()?.Identifier as Clan;
+                    if (targetClan == null)
+                    {
+                        return;
+                    }
+
+                    if (behavior.TryStartClanInfiltration(companion, targetClan, out TextObject response))
+                    {
+                        ShowIntrigueMessage(response);
+                    }
+                    else
+                    {
+                        ShowIntrigueMessage(response);
+                    }
+                },
+                null,
+                string.Empty,
+                false),
+            false,
+            false);
+    }
+
+    private void OpenKingdomEspionageTargetSelection(Hero companion, StrategicIntrigueCampaignBehavior behavior)
+    {
+        List<InquiryElement> targets = behavior.GetAvailableEspionageKingdomTargets()
+            .Select(kingdom => new InquiryElement(kingdom, kingdom.Name.ToString(), null))
+            .ToList();
+
+        if (targets.Count == 0)
+        {
+            ShowIntrigueMessage(new TextObject("{=rf_si_no_kingdom_targets}There are no valid court targets for espionage right now."));
+            return;
+        }
+
+        MBInformationManager.ShowMultiSelectionInquiry(
+            new MultiSelectionInquiryData(
+                new TextObject("{=rf_si_kingdom_target_title}Choose Court Target").ToString(),
+                new TextObject("{=rf_si_kingdom_target_desc}Select the court you want quietly observed.").ToString(),
+                targets,
+                true,
+                1,
+                1,
+                GameTexts.FindText("str_done", null).ToString(),
+                GameTexts.FindText("str_cancel", null).ToString(),
+                selected =>
+                {
+                    Kingdom targetKingdom = selected.FirstOrDefault()?.Identifier as Kingdom;
+                    if (targetKingdom == null)
+                    {
+                        return;
+                    }
+
+                    if (behavior.TryStartCourtListening(companion, targetKingdom, out TextObject response))
+                    {
+                        ShowIntrigueMessage(response);
+                    }
+                    else
+                    {
+                        ShowIntrigueMessage(response);
+                    }
+                },
+                null,
+                string.Empty,
+                false),
+            false,
+            false);
+    }
+
+    private void ReviewCompanionEspionage()
+    {
+        Hero companion = Hero.OneToOneConversationHero;
+        StrategicIntrigueCampaignBehavior behavior = global::TaleWorlds.CampaignSystem.Campaign.Current?.GetCampaignBehavior<StrategicIntrigueCampaignBehavior>();
+        if (companion?.IsPlayerCompanion != true || behavior == null)
+        {
+            return;
+        }
+
+        TextObject report = behavior.GetCompanionEspionageStatus(companion);
+        InformationManager.ShowInquiry(new InquiryData(
+            new TextObject("{=rf_si_companion_report_title}Intelligence Report").ToString(),
+            report.ToString(),
+            true,
+            false,
+            new TextObject("{=rf_si_popup_ack}Understood").ToString(),
+            string.Empty,
+            null,
+            null));
     }
 
     private static void ShowIntrigueMessage(TextObject message)

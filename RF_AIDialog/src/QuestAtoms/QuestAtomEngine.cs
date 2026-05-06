@@ -20,6 +20,8 @@ namespace RF_AIDialog
     ///   TALK_TO_PARTY    - ConversationEnded
     ///   BRING_ITEM       - checked on conversation start (CheckConversationAtoms)
     ///   BRING_TROOPS     - checked on conversation start (CheckConversationAtoms)
+    ///   BRING_PRISONER_HERO - checked on conversation start (CheckConversationAtoms)
+    ///   WIN_TOURNAMENT   - TournamentFinished
     ///   RETURN_TO_NPC    - checked on conversation start, all others complete first
     ///
     /// Persistence: completion state lives in PendingRequest.Mechanic and is
@@ -37,6 +39,7 @@ namespace RF_AIDialog
             CampaignEvents.OnSettlementLeftEvent.AddNonSerializedListener(this, OnSettlementLeft);
             CampaignEvents.MobilePartyDestroyed.AddNonSerializedListener(this, OnPartyDestroyed);
             CampaignEvents.ConversationEnded.AddNonSerializedListener(this, OnConversationEnded);
+            CampaignEvents.TournamentFinished.AddNonSerializedListener(this, OnTournamentFinished);
         }
 
         public override void SyncData(IDataStore dataStore) { }
@@ -104,8 +107,8 @@ namespace RF_AIDialog
                 return;
 
             string destroyedFaction = destroyed.MapFaction?.StringId ?? "";
-            if (string.IsNullOrWhiteSpace(destroyedFaction))
-                return;
+            string destroyedPartyId = destroyed.StringId ?? "";
+            string destroyedHeroId = destroyed.LeaderHero?.StringId ?? "";
 
             try
             {
@@ -121,8 +124,17 @@ namespace RF_AIDialog
 
                     var atom = mechanic.Objectives[idx];
                     string targetFaction = atom.GetParam("faction_id");
-                    if (string.IsNullOrWhiteSpace(targetFaction) ||
-                        !destroyedFaction.Equals(targetFaction, StringComparison.OrdinalIgnoreCase))
+                    string targetPartyId = atom.GetParam("party_id");
+                    string targetHeroId = atom.GetParam("hero_id");
+
+                    bool factionMatches = string.IsNullOrWhiteSpace(targetFaction) ||
+                        destroyedFaction.Equals(targetFaction, StringComparison.OrdinalIgnoreCase);
+                    bool partyMatches = string.IsNullOrWhiteSpace(targetPartyId) ||
+                        destroyedPartyId.Equals(targetPartyId, StringComparison.OrdinalIgnoreCase);
+                    bool heroMatches = string.IsNullOrWhiteSpace(targetHeroId) ||
+                        destroyedHeroId.Equals(targetHeroId, StringComparison.OrdinalIgnoreCase);
+
+                    if (!factionMatches || !partyMatches || !heroMatches)
                         continue;
 
                     int required = atom.GetParamInt("count", 1);
@@ -183,6 +195,32 @@ namespace RF_AIDialog
             }
         }
 
+        private void OnTournamentFinished(
+            CharacterObject winner,
+            MBReadOnlyList<CharacterObject> _participants,
+            Town town,
+            ItemObject _prize)
+        {
+            try
+            {
+                if (winner?.HeroObject != Hero.MainHero || town?.Settlement == null)
+                    return;
+
+                foreach (var ctx in GetContextsWithMechanics())
+                {
+                    if (TryProgressTournamentObjective(ctx, town.Settlement))
+                    {
+                        CheckMechanicCompletion(ctx);
+                        CheckNearCompletion(ctx);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                RFAIDebug.Log($"QuestAtomEngine.OnTournamentFinished exception: {ex.Message}");
+            }
+        }
+
         /// <summary>
         /// Called by AIDialogBehavior when the player opens a conversation with an NPC.
         /// Handles conversation-time atoms that must react immediately while the NPC is still active.
@@ -219,6 +257,15 @@ namespace RF_AIDialog
                             mechanic.MarkCompleted(i);
                             anyNew = true;
                             LogConversationAtom(ctx.HeroId, atom, "BRING_TROOPS");
+                        }
+                        break;
+
+                    case "BRING_PRISONER_HERO":
+                        if (CheckBringPrisonerHero(atom))
+                        {
+                            mechanic.MarkCompleted(i);
+                            anyNew = true;
+                            LogConversationAtom(ctx.HeroId, atom, "BRING_PRISONER_HERO");
                         }
                         break;
 
@@ -474,8 +521,10 @@ namespace RF_AIDialog
                 int total = 0;
                 foreach (var element in party.ItemRoster)
                 {
-                    if (element.EquipmentElement.Item?.StringId
-                            ?.IndexOf(itemId, StringComparison.OrdinalIgnoreCase) >= 0)
+                    if (string.Equals(
+                            element.EquipmentElement.Item?.StringId,
+                            itemId,
+                            StringComparison.OrdinalIgnoreCase))
                         total += element.Amount;
                 }
                 return total >= required;
@@ -497,6 +546,94 @@ namespace RF_AIDialog
             {
                 return false;
             }
+        }
+
+        private static bool CheckBringPrisonerHero(QuestAtom atom)
+        {
+            string heroId = atom.GetParam("hero_id");
+            string factionId = atom.GetParam("faction_id");
+            if (string.IsNullOrWhiteSpace(heroId))
+                return false;
+
+            try
+            {
+                var party = MobileParty.MainParty;
+                if (party?.PrisonRoster == null)
+                    return false;
+
+                foreach (var prisoner in party.PrisonRoster.GetTroopRoster())
+                {
+                    var prisonerHero = prisoner.Character?.HeroObject;
+                    if (prisonerHero == null)
+                        continue;
+
+                    if (!heroId.Equals(prisonerHero.StringId, StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    if (!string.IsNullOrWhiteSpace(factionId) &&
+                        !string.Equals(prisonerHero.MapFaction?.StringId, factionId, StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    return true;
+                }
+            }
+            catch { }
+
+            return false;
+        }
+
+        private bool TryProgressTournamentObjective(NPCContext ctx, Settlement tournamentSettlement)
+        {
+            var mechanic = ctx.PendingRequest?.Mechanic;
+            if (mechanic == null)
+                return false;
+
+            bool changed = false;
+            mechanic.Normalize();
+
+            for (int i = 0; i < mechanic.Objectives.Count; i++)
+            {
+                if (mechanic.Completed[i])
+                    continue;
+
+                var atom = mechanic.Objectives[i];
+                if (!atom.AtomType.Equals("WIN_TOURNAMENT", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                string townId = atom.GetParam("town_id");
+                if (!string.IsNullOrWhiteSpace(townId) &&
+                    !string.Equals(tournamentSettlement.StringId, townId, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                int required = atom.GetParamInt("count", 1);
+                string progressKey = $"tournament_{i}";
+                mechanic.IncrementProgress(progressKey);
+                int current = mechanic.GetProgress(progressKey);
+
+                string label = atom.Label.Length > 0
+                    ? atom.Label
+                    : $"Win {required} tournaments";
+
+                NPCContextStore.Instance?.MarkDirty(ctx);
+
+                if (current >= required)
+                {
+                    mechanic.MarkCompleted(i);
+                    RFAIDebug.Log($"QuestAtomEngine: WIN_TOURNAMENT completed for {ctx.HeroId} ({current}/{required})");
+                    UpdateQuestLog(ctx.HeroId, $"âœ“ {label}");
+                    Notify($"Quest objective: âœ“ {label}");
+                }
+                else
+                {
+                    RFAIDebug.Log($"QuestAtomEngine: WIN_TOURNAMENT progress {current}/{required} for {ctx.HeroId}");
+                    UpdateQuestLog(ctx.HeroId, $"Progress: {label} ({current}/{required})");
+                    Notify($"Quest progress: {label} ({current}/{required})");
+                }
+
+                changed = true;
+            }
+
+            return changed;
         }
 
         private static void LogConversationAtom(string npcId, QuestAtom atom, string atomType)

@@ -19,6 +19,8 @@ public sealed class StrategicIntrigueTypeDefiner : SaveableTypeDefiner
         AddClassDefinition(typeof(IntrigueOperation), 3);
         AddClassDefinition(typeof(KingdomIntrigueState), 4);
         AddClassDefinition(typeof(SecretAllianceCompact), 5);
+        AddClassDefinition(typeof(EspionageOperation), 6);
+        AddClassDefinition(typeof(EspionageReport), 7);
     }
 
     protected override void DefineEnumTypes()
@@ -29,6 +31,9 @@ public sealed class StrategicIntrigueTypeDefiner : SaveableTypeDefiner
         AddEnumDefinition(typeof(IntrigueAllianceObjective), 14);
         AddEnumDefinition(typeof(IntrigueAllianceRewardType), 15);
         AddEnumDefinition(typeof(KingdomObjectiveType), 16);
+        AddEnumDefinition(typeof(EspionageOperationType), 17);
+        AddEnumDefinition(typeof(EspionageOperationStatus), 18);
+        AddEnumDefinition(typeof(EspionageReportConfidence), 19);
     }
 
     protected override void DefineContainerDefinitions()
@@ -36,6 +41,8 @@ public sealed class StrategicIntrigueTypeDefiner : SaveableTypeDefiner
         ConstructContainerDefinition(typeof(List<SecretPact>));
         ConstructContainerDefinition(typeof(List<SecretAllianceCompact>));
         ConstructContainerDefinition(typeof(List<IntrigueOperation>));
+        ConstructContainerDefinition(typeof(List<EspionageOperation>));
+        ConstructContainerDefinition(typeof(List<EspionageReport>));
         ConstructContainerDefinition(typeof(Dictionary<Clan, ClanIntrigueState>));
         ConstructContainerDefinition(typeof(Dictionary<Kingdom, KingdomIntrigueState>));
     }

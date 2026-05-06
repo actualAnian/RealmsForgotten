@@ -30,6 +30,17 @@ conditions (travel, combat, inventory, troop count).
 The game engine tracks completion automatically — do NOT rely on the player claiming
 they finished. OMIT 'quest_mechanic' for pure information/roleplay requests.
 
+QUEST KINDS (use exactly one in quest_mechanic.quest_kind):
+  travel_report  — go somewhere, then return with news
+  delivery       — bring goods, then return
+  recruitment    — gather troops, then return
+  retaliation    — defeat enemy parties, then return
+  scouting       — leave, make contact with target parties, then return
+  delivery_under_pressure — carry goods to a destination despite danger, then return
+  escort_with_ambush — travel toward a destination, repel attackers, then return
+  capture_prisoner — capture a named hero and bring them back as prisoner
+  courtship_tournament — win one or more tournaments, then return to claim favor
+
 ATOM TYPES (use in quest_mechanic.objectives[]):
 
   VISIT_SETTLEMENT  — player must travel to a specific settlement
@@ -40,8 +51,8 @@ ATOM TYPES (use in quest_mechanic.objectives[]):
     params: settlement_id (use ids from the list below), [label]
     example: {""atom"":""LEAVE_SETTLEMENT"",""params"":{""settlement_id"":""town_EN1""},""label"":""Leave Aispur and begin the count""}
 
-  DEFEAT_PARTY  — player must defeat N enemy parties of a given faction
-    params: faction_id (use ids from the list below), faction_name, count (string int, default ""1"")
+  DEFEAT_PARTY  — player must defeat N enemy parties of a given faction, hero, or exact party
+    params: [faction_id] (use ids from the list below), [faction_name], [party_id], [hero_id], count (string int, default ""1"")
     example: {""atom"":""DEFEAT_PARTY"",""params"":{""faction_id"":""vlandia"",""faction_name"":""Vlandian"",""count"":""3""},""label"":""Rout 3 Vlandian patrols""}
 
   TALK_TO_PARTY  — player must make contact with N distinct mobile parties
@@ -57,11 +68,20 @@ ATOM TYPES (use in quest_mechanic.objectives[]):
     params: troop_count (string int)
     example: {""atom"":""BRING_TROOPS"",""params"":{""troop_count"":""50""},""label"":""Muster 50 soldiers""}
 
+  BRING_PRISONER_HERO  — player must return while holding a specific hero as prisoner
+    params: hero_id, [faction_id]
+    example: {""atom"":""BRING_PRISONER_HERO"",""params"":{""hero_id"":""derthert"",""faction_id"":""vlandia""},""label"":""Bring King Derthert back alive as your prisoner""}
+
+  WIN_TOURNAMENT  — player must win N tournaments, optionally in a specific town
+    params: count (string int, default ""1""), [town_id]
+    example: {""atom"":""WIN_TOURNAMENT"",""params"":{""count"":""3""},""label"":""Win 3 tournaments to prove your worth""}
+
   RETURN_TO_NPC  — player must return to YOU after all prior objectives are done
     params: (none)
     example: {""atom"":""RETURN_TO_NPC"",""params"":{},""label"":""Come back and report""}
 
 Rules:
+• Prefer the quest kinds above. Build a mechanic that fits ONE archetype only.
 • Objectives are validated IN ORDER. Put RETURN_TO_NPC LAST.
 • Use LEAVE_SETTLEMENT when the player must depart from a town/castle; do NOT fake this with VISIT_SETTLEMENT.
 • Use TALK_TO_PARTY when the task is to scout, count, question, or make contact with patrols/caravans/lords on the map.
