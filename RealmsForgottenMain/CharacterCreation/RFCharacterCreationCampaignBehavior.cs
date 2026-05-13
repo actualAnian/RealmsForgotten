@@ -4481,12 +4481,24 @@ namespace RealmsForgotten.CharacterCreation
         private int _attributeLevelToAdd = 1;
         private Equipment GetMaleEquipment(IEnumerable<Equipment> eq) { return eq.FirstOrDefault(); }
         private Equipment GetFemaleEquipment(IEnumerable<Equipment> eq) { return eq.LastOrDefault(); }
+        private string ResolveStartEquipmentId(string equipmentId)
+        {
+            return equipmentId.Replace("{sex}", CharacterObject.PlayerCharacter.IsFemale ? "f" : "m");
+        }
+
         protected void ChooseCharacterEquipment(CharacterCreationManager characterCreationManager, StartType startType)
         {
             MBEquipmentRoster equipmentRoster;
             try
             {
-                equipmentRoster = MBObjectManager.Instance.GetObject<MBEquipmentRoster>(CharacterCreationConfig.mainHeroStartingEquipment[startType][Hero.MainHero.Culture.StringId]);
+                string equipmentId = ResolveStartEquipmentId(CharacterCreationConfig.mainHeroStartingEquipment[startType][Hero.MainHero.Culture.StringId]);
+                equipmentRoster = MBObjectManager.Instance.GetObject<MBEquipmentRoster>(equipmentId);
+                if (equipmentRoster == null)
+                {
+                    InformationManager.DisplayMessage(new InformationMessage($"Missing start equipment roster: {equipmentId}", new Color(255, 0, 0)));
+                    return;
+                }
+
                 IEnumerable<Equipment> battleEquipments = equipmentRoster.GetBattleEquipments();
                 IEnumerable<Equipment> civillianEquipments = equipmentRoster.GetCivilianEquipments();
                 Equipment battleEquipment = CharacterObject.PlayerCharacter.IsFemale ? GetFemaleEquipment(battleEquipments) : GetMaleEquipment(battleEquipments);
