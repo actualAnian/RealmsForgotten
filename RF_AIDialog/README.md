@@ -9,6 +9,36 @@ Configuration priority:
 4. Environment variables
 5. Safe defaults in code
 
+The old single-provider format is still supported. To configure multiple providers, set
+`active_profile` and add entries under `profiles`:
+
+```json
+{
+  "use_remote_api": true,
+  "active_profile": "deepseek",
+  "profiles": {
+    "deepseek": {
+      "api_endpoint": "https://api.deepseek.com/chat/completions",
+      "api_model_name": "deepseek-chat",
+      "api_key_file": "C:\\secure\\deepseek.key"
+    },
+    "openai": {
+      "api_endpoint": "https://api.openai.com/v1/chat/completions",
+      "api_model_name": "gpt-4o-mini",
+      "api_key_file": "C:\\secure\\openai.key"
+    },
+    "local_ollama": {
+      "use_remote_api": false,
+      "ollama_model_name": "gemma3:4b",
+      "ollama_endpoint": "http://localhost:11434/api/chat"
+    }
+  }
+}
+```
+
+Profile fields fall back to the root config when omitted. `RF_AIDIALOG_ACTIVE_PROFILE`
+can override `active_profile`.
+
 Recommended secret options:
 
 1. Environment variable only
@@ -41,6 +71,7 @@ Supported environment variables:
 - `RF_AIDIALOG_OLLAMA_MODEL`
 - `RF_AIDIALOG_OLLAMA_ENDPOINT`
 - `RF_AIDIALOG_CONFIG_PATH`
+- `RF_AIDIALOG_ACTIVE_PROFILE`
 
 Notes:
 - Keep `ai_config.local.json` out of git.

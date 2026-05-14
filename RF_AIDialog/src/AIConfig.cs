@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Newtonsoft.Json;
@@ -24,13 +25,16 @@ namespace RF_AIDialog
         private static readonly Lazy<LocalAIConfig> _localConfig =
             new Lazy<LocalAIConfig>(LoadLocalConfig);
 
+        private static readonly Lazy<AIProfileConfig> _activeProfile =
+            new Lazy<AIProfileConfig>(ResolveActiveProfile);
+
         public static bool UseRemoteAPI => GetBool(
-            _localConfig.Value.UseRemoteAPI,
+            _activeProfile.Value.UseRemoteAPI,
             "RF_AIDIALOG_USE_REMOTE_API",
             true);
 
         public static string APIEndpoint => GetString(
-            _localConfig.Value.APIEndpoint,
+            _activeProfile.Value.APIEndpoint,
             "RF_AIDIALOG_API_ENDPOINT",
             DefaultApiEndpoint);
 
@@ -40,17 +44,17 @@ namespace RF_AIDialog
             "");
 
         public static string APIModelName => GetString(
-            _localConfig.Value.APIModelName,
+            _activeProfile.Value.APIModelName,
             "RF_AIDIALOG_API_MODEL",
             DefaultApiModelName);
 
         public static string ModelName => GetString(
-            _localConfig.Value.ModelName,
+            _activeProfile.Value.ModelName,
             "RF_AIDIALOG_OLLAMA_MODEL",
             DefaultOllamaModelName);
 
         public static string OllamaEndpoint => GetString(
-            _localConfig.Value.OllamaEndpoint,
+            _activeProfile.Value.OllamaEndpoint,
             "RF_AIDIALOG_OLLAMA_ENDPOINT",
             DefaultOllamaEndpoint);
 
@@ -89,6 +93,37 @@ namespace RF_AIDialog
             }
         }
 
+        private static AIProfileConfig ResolveActiveProfile()
+        {
+            LocalAIConfig config = _localConfig.Value;
+            if (config.Profiles == null || config.Profiles.Count == 0)
+                return config;
+
+            string profileName = GetString(
+                config.ActiveProfile,
+                "RF_AIDIALOG_ACTIVE_PROFILE",
+                "");
+
+            if (!string.IsNullOrWhiteSpace(profileName)
+                && config.Profiles.TryGetValue(profileName, out AIProfileConfig profile)
+                && profile != null)
+            {
+                RFAIDebug.Log($"AIConfig: using AI profile '{profileName}'");
+                return profile.WithFallbacks(config);
+            }
+
+            foreach (KeyValuePair<string, AIProfileConfig> entry in config.Profiles)
+            {
+                if (entry.Value == null)
+                    continue;
+
+                RFAIDebug.Log($"AIConfig: active profile not found; using first AI profile '{entry.Key}'");
+                return entry.Value.WithFallbacks(config);
+            }
+
+            return config;
+        }
+
         private static string[] GetCandidatePaths()
         {
             string? explicitPath = Environment.GetEnvironmentVariable("RF_AIDIALOG_CONFIG_PATH");
@@ -111,9 +146,10 @@ namespace RF_AIDialog
 
         private static string? ResolveApiKey()
         {
-            if (!string.IsNullOrWhiteSpace(_localConfig.Value.APIKeyFile))
+            AIProfileConfig profile = _activeProfile.Value;
+            if (!string.IsNullOrWhiteSpace(profile.APIKeyFile))
             {
-                string? fromFile = TryReadSecretFile(_localConfig.Value.APIKeyFile);
+                string? fromFile = TryReadSecretFile(profile.APIKeyFile);
                 if (!string.IsNullOrWhiteSpace(fromFile))
                     return fromFile;
             }
@@ -126,7 +162,7 @@ namespace RF_AIDialog
                     return fromFile;
             }
 
-            return _localConfig.Value.APIKey;
+            return profile.APIKey;
         }
 
         private static string? TryReadSecretFile(string path)
@@ -171,7 +207,7 @@ namespace RF_AIDialog
             return defaultValue;
         }
 
-        private sealed class LocalAIConfig
+        private class AIProfileConfig
         {
             [JsonProperty("use_remote_api")]
             public bool? UseRemoteAPI { get; set; }
@@ -193,6 +229,29 @@ namespace RF_AIDialog
 
             [JsonProperty("ollama_endpoint")]
             public string? OllamaEndpoint { get; set; }
+
+            public AIProfileConfig WithFallbacks(AIProfileConfig fallback)
+            {
+                return new AIProfileConfig
+                {
+                    UseRemoteAPI = UseRemoteAPI ?? fallback.UseRemoteAPI,
+                    APIEndpoint = string.IsNullOrWhiteSpace(APIEndpoint) ? fallback.APIEndpoint : APIEndpoint,
+                    APIKey = string.IsNullOrWhiteSpace(APIKey) ? fallback.APIKey : APIKey,
+                    APIKeyFile = string.IsNullOrWhiteSpace(APIKeyFile) ? fallback.APIKeyFile : APIKeyFile,
+                    APIModelName = string.IsNullOrWhiteSpace(APIModelName) ? fallback.APIModelName : APIModelName,
+                    ModelName = string.IsNullOrWhiteSpace(ModelName) ? fallback.ModelName : ModelName,
+                    OllamaEndpoint = string.IsNullOrWhiteSpace(OllamaEndpoint) ? fallback.OllamaEndpoint : OllamaEndpoint
+                };
+            }
+        }
+
+        private sealed class LocalAIConfig : AIProfileConfig
+        {
+            [JsonProperty("active_profile")]
+            public string? ActiveProfile { get; set; }
+
+            [JsonProperty("profiles")]
+            public Dictionary<string, AIProfileConfig>? Profiles { get; set; }
         }
     }
 }
