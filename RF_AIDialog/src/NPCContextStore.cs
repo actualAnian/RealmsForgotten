@@ -38,6 +38,7 @@ namespace RF_AIDialog
             {
                 try   { _serialized = JsonConvert.SerializeObject(_contexts); }
                 catch { _serialized = "{}"; }
+                RFAIDebug.Log($"NPCContextStore.SyncData SAVE | contexts={_contexts.Count} | bytes={(_serialized?.Length ?? 0)}");
             }
 
             dataStore.SyncData("RF_AI_NPCContexts", ref _serialized);
@@ -49,11 +50,17 @@ namespace RF_AIDialog
                 {
                     _contexts = JsonConvert.DeserializeObject<Dictionary<string, NPCContext>>(_serialized)
                                 ?? new Dictionary<string, NPCContext>();
+                    RFAIDebug.Log($"NPCContextStore.SyncData LOAD | contexts={_contexts.Count} | bytes={_serialized.Length}");
                 }
                 catch
                 {
                     _contexts = new Dictionary<string, NPCContext>();
+                    RFAIDebug.Log("NPCContextStore.SyncData LOAD | deserialize failed, contexts reset");
                 }
+            }
+            else if (dataStore.IsLoading)
+            {
+                RFAIDebug.Log("NPCContextStore.SyncData LOAD | empty payload");
             }
         }
 
@@ -73,6 +80,16 @@ namespace RF_AIDialog
                 _contexts[id] = ctx;
             }
             return ctx;
+        }
+
+        /// <summary>
+        /// Returns a context only if one already exists. This avoids creating
+        /// thousands of blank NPC records from passive daily scans.
+        /// </summary>
+        public NPCContext? GetExisting(string heroId)
+        {
+            if (string.IsNullOrWhiteSpace(heroId)) return null;
+            return _contexts.TryGetValue(heroId, out var ctx) ? ctx : null;
         }
 
         /// <summary>

@@ -16,6 +16,7 @@ using RealmsForgotten.AiMade.RF_Diplomacy;
 using RealmsForgotten.AiMade.MercenaryFaction;
 using Bannerlord.UIExtenderEx;
 using RealmsForgotten.AiMade.TradePact;
+using System.Reflection;
 using RealmsForgotten.AiMade.Village_Inn_Quests;
 using RealmsForgotten.AiMade.Village_Inn_Quests.RealmsForgotten.AiMade.Village_Inn_Quests;
 using RealmsForgotten.Chamberlain;
@@ -31,8 +32,9 @@ namespace RealmsForgotten.AiMade
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
-            RFLogger.Log("[RF] SubModule loaded -> calling probe PatchOnce");
-            RFSiegeTransitionProbe.PatchOnce();
+            Assembly asm = typeof(AiSubModule).Assembly;
+            RFLogger.Log($"[Lifecycle] AiSubModule.OnSubModuleLoad | asm={asm.Location} | version={asm.GetName().Version} | lastWrite={System.IO.File.GetLastWriteTime(asm.Location):O}");
+            RFLogger.Log("[RF] SubModule loaded");
             try
             {
                 var harmony = new Harmony("com.realmsforgotten.aimade");
@@ -42,6 +44,7 @@ namespace RealmsForgotten.AiMade
             }
             catch (Exception ex)
             {
+                RFLogger.Log("[Harmony] AiSubModule.PatchAll failed: " + ex);
                 InformationManager.DisplayMessage(new InformationMessage($"RealmsForgotten: Failed to apply Harmony patches. {ex.Message}"));
             }
             
@@ -51,6 +54,7 @@ namespace RealmsForgotten.AiMade
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
             base.OnGameStart(game, gameStarterObject);
+            RFLogger.Log($"[Lifecycle] AiSubModule.OnGameStart | gameType={game.GameType?.GetType().FullName ?? "null"} | starter={gameStarterObject?.GetType().FullName ?? "null"}");
             if (game.GameType is Campaign)
             {
                 var campaignStarter = (CampaignGameStarter)gameStarterObject;
@@ -59,8 +63,7 @@ namespace RealmsForgotten.AiMade
                 //ApplyDelayedJoinEncounterPatch();
 
             }
-            RFSiegeTransitionProbe.PatchOnce();
-            RFLogger.Log("[Probe] PatchOnce called from OnGameStart");
+            RFLogger.Log("[Probe] Siege transition probe disabled for cold-load isolation");
         }
             
         public static void AddCampaignBehaviors(CampaignGameStarter campaignGameStarter)
@@ -174,15 +177,7 @@ namespace RealmsForgotten.AiMade
             mission.AddMissionBehavior(new FindMagicItemsMissionBehavior());
             mission.AddMissionBehavior(new RFMissionHeartbeat());
             // No final do OnMissionBehaviorInitialize, depois de AddMissionBehavior(...)
-            try
-            {
-                RFMissionBehaviorTickProbe.PatchMissionBehaviorsFor(mission);
-                RFLogger.Log("[TickProbe] PatchMissionBehaviorsFor called for mission.");
-            }
-            catch (Exception e)
-            {
-                RFLogger.Log("[TickProbe] Exception: " + (e.InnerException?.Message ?? e.Message));
-            }
+            // Mission tick probe disabled during cold-load investigation.
 
         }
 

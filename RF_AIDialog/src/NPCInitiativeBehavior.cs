@@ -39,13 +39,19 @@ namespace RF_AIDialog
                 var store = NPCContextStore.Instance;
                 if (store == null) return;
 
-                var ctx = store.GetOrCreate(hero);
+                var existingContext = store.GetExisting(hero.StringId);
+                var ctx = existingContext ?? new NPCContext { HeroId = hero.StringId };
 
                 // Don't overwrite an existing pending initiative
                 if (ctx.HasPendingInitiative) return;
 
                 string? reason = EvaluateInitiative(hero, ctx);
                 if (reason == null) return;
+
+                if (existingContext == null)
+                {
+                    ctx = store.GetOrCreate(hero);
+                }
 
                 ctx.PendingInitiativeReason = reason;
                 store.MarkDirty(ctx);

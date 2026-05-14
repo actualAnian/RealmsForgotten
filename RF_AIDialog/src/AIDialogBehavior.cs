@@ -576,6 +576,7 @@ namespace RF_AIDialog
 
             Hero?       npc = _currentNpc;
             NPCContext? ctx = _currentContext;
+            RFAIDebug.Log($"OnPlayerConfirmedInput: npc={npc?.StringId ?? "null"} | first={(ctx == null || ctx.IsFirstConversation)} | pending={ctx?.HasPendingRequest ?? false}");
 
             string systemPrompt;
             try   { systemPrompt = PromptBuilder.Build(npc!, ctx); }
@@ -599,6 +600,7 @@ namespace RF_AIDialog
                 catch (Exception ex)
                 {
                     _rawResponse = $"(AI Error: {ex.Message})";
+                    RFAIDebug.Log($"OnPlayerConfirmedInput: AI exception for {npc?.StringId ?? "null"} | {ex.Message}");
                 }
                 finally
                 {
@@ -616,6 +618,7 @@ namespace RF_AIDialog
 
         private void ConsequenceClearResponse()
         {
+            RFAIDebug.Log($"ConsequenceClearResponse: parsedNull={_parsed == null} | npc={_currentNpc?.StringId ?? "null"} | rawPreview={(_rawResponse ?? "").Substring(0, Math.Min((_rawResponse ?? "").Length, 120))}");
             // Execute game actions
             if (_parsed?.Actions != null && _currentNpc != null)
                 ActionExecutor.Execute(_parsed.Actions, _currentNpc);
@@ -707,6 +710,7 @@ namespace RF_AIDialog
                 _currentContext.PendingInitiativeReason = null;
 
                 NPCContextStore.Instance?.MarkDirty(_currentContext);
+                RFAIDebug.Log($"ConsequenceClearResponse: context saved for {_currentContext.HeroId} | pending={_currentContext.HasPendingRequest} | history={_currentContext.RecentHistory.Count} | memories={_currentContext.Memories.Count}");
             }
 
             // Reset state

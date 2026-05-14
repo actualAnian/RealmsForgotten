@@ -7,6 +7,7 @@ using RealmsForgotten.Career;
 using RealmsForgotten.Career.Ability;
 using RealmsForgotten.Career.Logic;
 using RealmsForgotten.CharacterCreation;
+using RealmsForgotten.AiMade.StrategicIntrigue.SaveSystem;
 using RealmsForgotten.CustomBandits;
 using RealmsForgotten.CustomSkills;
 using RealmsForgotten.LegendaryTroops;
@@ -32,6 +33,7 @@ using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.InputSystem;
@@ -75,6 +77,7 @@ namespace RealmsForgotten
         };
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
+            RFLogger.Log($"[Lifecycle] RealmsForgotten.SubModule.OnGameStart | gameType={game.GameType?.GetType().FullName ?? "null"} | starter={gameStarterObject?.GetType().FullName ?? "null"}");
             if (gameStarterObject is CampaignGameStarter campaignGameStarter)
             {
                 campaignGameStarter.AddBehavior(new BaseGameDebugCampaignBehavior());
@@ -228,6 +231,7 @@ namespace RealmsForgotten
         public override void OnGameInitializationFinished(Game game)
         {
             base.OnGameInitializationFinished(game);
+            RFLogger.Log($"[Lifecycle] RealmsForgotten.SubModule.OnGameInitializationFinished | gameType={game.GameType?.GetType().FullName ?? "null"}");
 
             //Globals.SetRacesIds();
             if (!manualPatchesHaveFired)
@@ -263,6 +267,12 @@ namespace RealmsForgotten
             harmony.Patch(hideoutSendTroops, postfix: new HarmonyMethod(typeof(GameMenuPatches), nameof(GameMenuPatches.SendTroopsPostfix)));
             harmony.Patch(hideoutSneakIn, postfix: new HarmonyMethod(typeof(GameMenuPatches), nameof(GameMenuPatches.SneakInPostfix)));
             harmony.Patch(hideoutAssault, postfix: new HarmonyMethod(typeof(GameMenuPatches), nameof(GameMenuPatches.AssaultHideoutPostfix)));
+
+            MethodInfo characterDeveloperInit = AccessTools.Method(typeof(CharacterDeveloperHeroItemVM), "InitializeCharacter");
+            if (characterDeveloperInit != null)
+            {
+                harmony.Patch(characterDeveloperInit, postfix: new HarmonyMethod(typeof(CharacterDeveloperAttributeOrderPatch), nameof(CharacterDeveloperAttributeOrderPatch.ReorderCustomAttributesPostfix)));
+            }
         }
 
         private void RemoveSandboxAndStoryOptions()
@@ -278,6 +288,9 @@ namespace RealmsForgotten
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
+            Assembly asm = typeof(SubModule).Assembly;
+            RFLogger.Log($"[Lifecycle] RealmsForgotten.SubModule.OnSubModuleLoad | asm={asm.Location} | version={asm.GetName().Version} | lastWrite={File.GetLastWriteTime(asm.Location):O}");
+            RFLogger.Log($"[Lifecycle] SaveableTypeDefiners present | main={typeof(SaveDefiner).FullName} | ai={typeof(CustomSaveableTypeDefiner).FullName} | intrigue={typeof(StrategicIntrigueTypeDefiner).FullName} | quest={typeof(QuestTypeDefiner).FullName}");
             ViewModelExtensionManager.Initialize(); //has to happen before harmony PatchAll
             harmony.PatchAll();
 
@@ -330,6 +343,7 @@ namespace RealmsForgotten
         {
 
             base.OnGameLoaded(game, initializerObject);
+            RFLogger.Log($"[Lifecycle] RealmsForgotten.SubModule.OnGameLoaded begin | gameType={game.GameType?.GetType().FullName ?? "null"} | initializer={initializerObject?.GetType().FullName ?? "null"}");
 
             if (initializerObject is CampaignGameStarter campaignGameStarter)
             {
@@ -339,6 +353,8 @@ namespace RealmsForgotten
                 
                 AccessTools.Property(typeof(MissionGameModels), "AgentStatCalculateModel").SetValue(MissionGameModels.Current, rfAgentStatCalculateModel);
             }
+
+            RFLogger.Log("[Lifecycle] RealmsForgotten.SubModule.OnGameLoaded end");
         }
 
         public override void OnNewGameCreated(Game game, object initializerObject)
@@ -352,6 +368,7 @@ namespace RealmsForgotten
             //        withBrokenFaces.Add(settlement.StringId);
             //}
             base.OnNewGameCreated(game, initializerObject);
+            RFLogger.Log($"[Lifecycle] RealmsForgotten.SubModule.OnNewGameCreated | initializer={initializerObject?.GetType().FullName ?? "null"}");
             QuestSubModule.OnNewGameCreated((CampaignGameStarter)initializerObject);
         }
 

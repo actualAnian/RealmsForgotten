@@ -86,7 +86,7 @@
 								</ListPanel>
 
 								<!--Character Tableau-->
-								<CharacterTableauWidget DataSource="{CurrentCharacter\HeroCharacter}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="550" SuggestedHeight="1000" HorizontalAlignment="Center" PositionYOffset="-200" VerticalAlignment="Center" BannerCodeText="@BannerCodeText" BodyProperties="@BodyProperties" CharStringId="@CharStringId" EquipmentCode="@EquipmentCode" IsFemale="@IsFemale" MountCreationKey="@MountCreationKey" StanceIndex="@StanceIndex" ArmorColor1="@ArmorColor1" ArmorColor2="@ArmorColor2" Race="@Race" IsEnabled="false" PositionXOffset="-50" DoNotUseCustomScale="true"/>
+								<CharacterTableauWidget DataSource="{CurrentCharacter\HeroCharacter}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="550" SuggestedHeight="1000" HorizontalAlignment="Center" PositionYOffset="60" VerticalAlignment="Center" BannerCodeText="@BannerCodeText" BodyProperties="@BodyProperties" CharStringId="@CharStringId" EquipmentCode="@EquipmentCode" IsFemale="@IsFemale" MountCreationKey="@MountCreationKey" StanceIndex="@StanceIndex" ArmorColor1="@ArmorColor1" ArmorColor2="@ArmorColor2" Race="@Race" IsEnabled="false" PositionXOffset="-120" DoNotUseCustomScale="true"/>
 
 								<ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Top" MarginRight="30" MarginTop="0" PositionYOffset="-350" StackLayout.LayoutMethod="VerticalBottomToTop">
 									<Children>
@@ -564,17 +564,17 @@
 							<Children>
 
 								<NavigationScopeTargeter ScopeID="AttributesScope" ScopeParent="..\AttributesList" ScopeMovements="Vertical" RightNavigationScope="SkillsScope" />
-								<NavigatableListPanel Id="AttributesList" DataSource="{CurrentCharacter\Attributes}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop">
+								<NavigatableListPanel Id="AttributesList" DataSource="{CurrentCharacter\Attributes}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
 									<ItemTemplate>
-										<RFAttributeListItem MarginBottom="14"/>
+										<RFAttributeListItem MarginBottom="3" Parameter.Compact="true"/>
 									</ItemTemplate>
 								</NavigatableListPanel>
 
 								<!--Skills Grid-->
 								<NavigationScopeTargeter ScopeID="SkillsScope" ScopeParent="..\SkillsGrid" ScopeMovements="Horizontal" AlternateScopeMovements="Vertical" IsDefaultNavigationScope="true" AlternateMovementStepSize="3" LeftNavigationScope="AttributesScope" RightNavigationScope="PerksFirstScope" />
-								<NavigatableGridWidget Id="SkillsGid" DataSource="{CurrentCharacter\Skills}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" DefaultCellWidth="178" DefaultCellHeight="120" ColumnCount="3" MarginLeft="11.558">
+								<NavigatableGridWidget Id="SkillsGid" DataSource="{CurrentCharacter\Skills}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" DefaultCellWidth="178" DefaultCellHeight="98" ColumnCount="3" MarginLeft="11.558">
 									<ItemTemplate>
-										<RFSkillGridItem SuggestedHeight="108" VerticalAlignment="Top" HorizontaAlignment="Center" />
+										<RFSkillGridItem SuggestedHeight="92" VerticalAlignment="Top" HorizontaAlignment="Center" />
 									</ItemTemplate>
 								</NavigatableGridWidget>
 

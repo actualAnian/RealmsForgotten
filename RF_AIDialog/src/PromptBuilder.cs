@@ -52,6 +52,14 @@ namespace RF_AIDialog
             sb.AppendLine("  {\"type\":\"give_item\",\"item_id\":\"wine\",\"value\":5}   <- player receives this");
             sb.AppendLine("If you are not ready to give your goods immediately, REFUSE the offer. Do NOT take items and promise delivery later.");
             sb.AppendLine();
+            sb.AppendLine("REQUEST GATING RULE â€” READ THIS CAREFULLY:");
+            sb.AppendLine("Use the AI REQUEST NEED PROFILE in the world context as a hard constraint.");
+            sb.AppendLine("If it says should_offer_request: no, OMIT both 'request' and 'quest_mechanic' entirely.");
+            sb.AppendLine("If need_level is low, prefer conversation, advice, or atmosphere over creating work.");
+            sb.AppendLine("Only use quest kinds listed in allowed_quest_kinds.");
+            sb.AppendLine("When naming settlements, strongly prefer the NEARBY SETTLEMENTS list unless locality_scope clearly allows broader travel.");
+            sb.AppendLine("Do not invent urgent needs just because the player asked whether you have work.");
+            sb.AppendLine();
 
             // ── Established personality (injected after first contact) ─────
             // ── NPC initiative (highest priority — NPC opens with this) ──────
@@ -340,6 +348,8 @@ namespace RF_AIDialog
                 sb.AppendLine("BOTH actions fire at the same time. Never only one.");
                 sb.AppendLine();
                 sb.AppendLine("Output this exact JSON. No text outside it. ALL fields are required.");
+                sb.AppendLine("If the AI REQUEST NEED PROFILE says should_offer_request: no, omit both request and quest_mechanic.");
+                sb.AppendLine("If you do include a request, its quest_kind must fit allowed_quest_kinds and its places should come from NEARBY SETTLEMENTS whenever possible.");
                 sb.AppendLine("{");
                 sb.AppendLine("  \"personality_summary\": \"2-3 sentences about your personality, speech style and background. Third person.\",");
                 if (npc.IsLord)
@@ -352,7 +362,7 @@ namespace RF_AIDialog
                 if (!isCompanion)
                 {
                     sb.AppendLine("  \"quest_mechanic\": {  // OPTIONAL — include ONLY when 'request' is present AND has verifiable objectives");
-                    sb.AppendLine("    \"quest_kind\": \"travel_report|delivery|recruitment|retaliation|scouting|delivery_under_pressure|escort_with_ambush|capture_prisoner|courtship_tournament\",");
+                    sb.AppendLine("    \"quest_kind\": \"travel_report|delivery|recruitment|retaliation|scouting|delivery_under_pressure|escort_with_ambush|capture_prisoner|rescue_prisoner_noble|courtship_tournament\",");
                     sb.AppendLine("    // Prefer 1-3 simple objectives. Do not invent settlement_id or faction_id.");
                     sb.AppendLine("    \"objectives\": [");
                     sb.AppendLine("      {\"atom\":\"VISIT_SETTLEMENT\",\"params\":{\"settlement_id\":\"<id>\"},\"label\":\"Go to <name>\"},");
@@ -379,6 +389,8 @@ namespace RF_AIDialog
                 sb.AppendLine("BOTH actions fire at the same time. Never only one.");
                 sb.AppendLine();
                 sb.AppendLine("Output this exact JSON. No text outside it. ALL fields are required.");
+                sb.AppendLine("If the AI REQUEST NEED PROFILE says should_offer_request: no, omit both request and quest_mechanic.");
+                sb.AppendLine("If you do include a request, its quest_kind must fit allowed_quest_kinds and its places should come from NEARBY SETTLEMENTS whenever possible.");
                 sb.AppendLine("{");
                 sb.AppendLine("  \"internal_thoughts\": \"your private reaction, 1-2 sentences\",");
                 sb.AppendLine("  \"response\": \"what you say out loud, in character, 2-4 sentences\",");
@@ -388,7 +400,7 @@ namespace RF_AIDialog
                 if (!isCompanion)
                 {
                     sb.AppendLine("  \"quest_mechanic\": {  // OPTIONAL — include ONLY when 'request' is present AND has verifiable objectives");
-                    sb.AppendLine("    \"quest_kind\": \"travel_report|delivery|recruitment|retaliation|scouting|delivery_under_pressure|escort_with_ambush|capture_prisoner|courtship_tournament\",");
+                    sb.AppendLine("    \"quest_kind\": \"travel_report|delivery|recruitment|retaliation|scouting|delivery_under_pressure|escort_with_ambush|capture_prisoner|rescue_prisoner_noble|courtship_tournament\",");
                     sb.AppendLine("    // Prefer 1-3 simple objectives. Do not invent settlement_id or faction_id.");
                     sb.AppendLine("    \"objectives\": [");
                     sb.AppendLine("      {\"atom\":\"BRING_ITEM\",\"params\":{\"item_id\":\"grain\",\"quantity\":\"10\"},\"label\":\"Bring 10 grain\"},");

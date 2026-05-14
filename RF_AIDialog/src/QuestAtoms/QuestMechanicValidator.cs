@@ -43,7 +43,8 @@ namespace RF_AIDialog
                 "delivery_under_pressure",
                 "escort_with_ambush",
                 "capture_prisoner",
-                "courtship_tournament"
+                "courtship_tournament",
+                "rescue_prisoner_noble"
             };
 
         public static QuestMechanic? Sanitize(QuestMechanic? mechanic)
@@ -269,6 +270,17 @@ namespace RF_AIDialog
                     EnsureLabel(tournament, "Win the required tournaments");
                     destination.Add(tournament);
                     destination.Add(BuildReturnAtom(source, "Return after proving yourself in the arena"));
+                    return true;
+                }
+
+                case "rescue_prisoner_noble":
+                {
+                    var visit = GetFirstSanitizedAtom(source, "VISIT_SETTLEMENT");
+                    if (visit == null) return false;
+
+                    EnsureLabel(visit, "Go to the place where the imprisoned noble is being held");
+                    destination.Add(visit);
+                    destination.Add(BuildReturnAtom(source, "Return with word of the rescue attempt"));
                     return true;
                 }
 

@@ -61,6 +61,8 @@ namespace RF_AIDialog
                 AppendNpcPersonalSituation(sb, npc);
                 AppendNpcFiefs(sb, npc);
                 AppendClanPower(sb, npc);
+                AppendRequestNeedProfile(sb, npc);
+                AppendNearbySettlements(sb, npc);
                 AppendWorldHistory(sb);
                 AppendIntrigueState(sb, npc);
                 AppendPlayerReputation(sb);
@@ -342,6 +344,57 @@ namespace RF_AIDialog
                 sb.AppendLine(
                     $"Your clan ({clan.Name}) is Tier {tier} with {renownDesc} " +
                     $"({(int)renown}) and {influenceDesc} ({(int)influence}).");
+            }
+            catch { }
+        }
+
+        private static void AppendRequestNeedProfile(StringBuilder sb, Hero npc)
+        {
+            try
+            {
+                if (npc == null) return;
+
+                var profile = AIRequestNeedEvaluator.Evaluate(npc);
+                sb.AppendLine();
+                sb.AppendLine("AI REQUEST NEED PROFILE (hard constraints for whether you should offer work):");
+                sb.AppendLine($"  need_level: {profile.NeedLevel}");
+                sb.AppendLine($"  should_offer_request: {(profile.ShouldOfferRequest ? "yes" : "no")}");
+                sb.AppendLine($"  locality_scope: {profile.LocalityScope}");
+
+                if (profile.NeedDomains.Count > 0)
+                    sb.AppendLine($"  need_domains: {string.Join(", ", profile.NeedDomains)}");
+
+                if (profile.NeedSignals.Count > 0)
+                    sb.AppendLine($"  need_signals: {string.Join(", ", profile.NeedSignals)}");
+
+                if (profile.AllowedQuestKinds.Count > 0)
+                    sb.AppendLine($"  allowed_quest_kinds: {string.Join(", ", profile.AllowedQuestKinds)}");
+                else
+                    sb.AppendLine("  allowed_quest_kinds: none");
+
+                foreach (var note in profile.Notes)
+                    sb.AppendLine($"  note: {note}");
+            }
+            catch { }
+        }
+
+        private static void AppendNearbySettlements(StringBuilder sb, Hero npc)
+        {
+            try
+            {
+                var nearby = AIRequestNeedEvaluator.GetNearbySettlements(npc, 5);
+                if (nearby.Count == 0) return;
+
+                sb.AppendLine();
+                sb.AppendLine("NEARBY SETTLEMENTS (prefer these when naming destinations, targets, or local trouble):");
+                foreach (var settlement in nearby)
+                {
+                    string type = settlement.IsTown ? "town" :
+                                  settlement.IsCastle ? "castle" :
+                                  settlement.IsVillage ? "village" : "settlement";
+                    string faction = settlement.MapFaction?.Name?.ToString() ?? "No faction";
+                    sb.AppendLine($"  - {settlement.Name} [{type}, {faction}]");
+                }
             }
             catch { }
         }

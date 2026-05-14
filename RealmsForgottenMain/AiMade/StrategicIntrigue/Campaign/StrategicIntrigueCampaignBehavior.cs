@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
+using RealmsForgotten.AiMade;
 using RealmsForgotten.AiMade.StrategicIntrigue.Core;
 using RealmsForgotten.AiMade.StrategicIntrigue.Mechanics.ClanAlignment;
 using RealmsForgotten.AiMade.StrategicIntrigue.Mechanics.InciteBreak;
@@ -25,6 +27,8 @@ namespace RealmsForgotten.AiMade.StrategicIntrigue.Campaign;
 
 public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
 {
+    private const bool PersistEspionageSaveData = true;
+
     private enum CrackdownPunishmentOutcome
     {
         None,
@@ -40,6 +44,8 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
     private List<IntrigueOperation> _pendingOperations = new();
     private List<EspionageOperation> _espionageOperations = new();
     private List<EspionageReport> _espionageReports = new();
+    private string _espionageOperationsState = "";
+    private string _espionageReportsState = "";
     private bool _isInitialized;
     private bool _isInitializing;
     private string _warTableReturnMenuId = "castle";
@@ -65,13 +71,23 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
 
     public override void SyncData(IDataStore dataStore)
     {
+        RFLogger.Log($"[StrategicIntrigue] SyncData begin | loading={dataStore.IsLoading} | saving={dataStore.IsSaving} | persistEspionage={PersistEspionageSaveData}");
         dataStore.SyncData("_clanStates", ref _clanStates);
         dataStore.SyncData("_kingdomStates", ref _kingdomStates);
         dataStore.SyncData("_secretPacts", ref _secretPacts);
         dataStore.SyncData("_secretAlliances", ref _secretAlliances);
         dataStore.SyncData("_pendingOperations", ref _pendingOperations);
-        dataStore.SyncData("_espionageOperations", ref _espionageOperations);
-        dataStore.SyncData("_espionageReports", ref _espionageReports);
+        if (PersistEspionageSaveData)
+        {
+            if (!dataStore.IsLoading)
+            {
+                _espionageOperationsState = SerializeEspionageOperations();
+                _espionageReportsState = SerializeEspionageReports();
+            }
+
+            dataStore.SyncData("_espionageOperationsState", ref _espionageOperationsState);
+            dataStore.SyncData("_espionageReportsState", ref _espionageReportsState);
+        }
         dataStore.SyncData("_isInitialized", ref _isInitialized);
 
         _clanStates ??= new Dictionary<Clan, ClanIntrigueState>();
@@ -81,6 +97,217 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
         _pendingOperations ??= new List<IntrigueOperation>();
         _espionageOperations ??= new List<EspionageOperation>();
         _espionageReports ??= new List<EspionageReport>();
+
+        if (!PersistEspionageSaveData)
+        {
+            _espionageOperations.Clear();
+            _espionageReports.Clear();
+        }
+        else if (dataStore.IsLoading)
+        {
+            _espionageOperations = DeserializeEspionageOperations(_espionageOperationsState);
+            _espionageReports = DeserializeEspionageReports(_espionageReportsState);
+        }
+
+        if (dataStore.IsLoading)
+        {
+            RepairEspionageCompanions();
+        }
+
+        RFLogger.Log($"[StrategicIntrigue] SyncData end | ops={_pendingOperations.Count} | espionageOps={_espionageOperations.Count} | espionageReports={_espionageReports.Count}");
+    }
+
+    private string SerializeEspionageOperations()
+    {
+        try
+        {
+            var payload = _espionageOperations.Select(x => new EspionageOperationRecord
+            {
+                Type = x.Type,
+                CompanionId = x.Companion?.StringId ?? "",
+                TargetClanId = x.TargetClan?.StringId ?? "",
+                TargetKingdomId = x.TargetKingdom?.StringId ?? "",
+                StartedAtDays = (float)x.StartedAt.ToDays,
+                ResolveAtDays = (float)x.ResolveAt.ToDays,
+                Status = x.Status,
+                Power = x.Power,
+                Risk = x.Risk
+            }).ToList();
+
+            return JsonConvert.SerializeObject(payload);
+        }
+        catch (Exception ex)
+        {
+            RFLogger.Log($"[StrategicIntrigue] SerializeEspionageOperations failed | {ex.Message}");
+            return "[]";
+        }
+    }
+
+    private string SerializeEspionageReports()
+    {
+        try
+        {
+            var payload = _espionageReports.Select(x => new EspionageReportRecord
+            {
+                CompanionId = x.Companion?.StringId ?? "",
+                Type = x.Type,
+                TargetClanId = x.TargetClan?.StringId ?? "",
+                TargetKingdomId = x.TargetKingdom?.StringId ?? "",
+                CreatedAtDays = (float)x.CreatedAt.ToDays,
+                Outcome = x.Outcome,
+                Confidence = x.Confidence,
+                EstimatedDissidence = x.EstimatedDissidence,
+                EstimatedTrustToPlayer = x.EstimatedTrustToPlayer,
+                EstimatedFearOfRuler = x.EstimatedFearOfRuler,
+                EstimatedClaimantAmbition = x.EstimatedClaimantAmbition,
+                EstimatedBreakawayViability = x.EstimatedBreakawayViability,
+                EstimatedRoyalLegitimacy = x.EstimatedRoyalLegitimacy,
+                EstimatedCourtFragmentation = x.EstimatedCourtFragmentation,
+                EstimatedClaimantPressure = x.EstimatedClaimantPressure,
+                EstimatedRulerSupport = x.EstimatedRulerSupport,
+                RecommendedAction = x.RecommendedAction
+            }).ToList();
+
+            return JsonConvert.SerializeObject(payload);
+        }
+        catch (Exception ex)
+        {
+            RFLogger.Log($"[StrategicIntrigue] SerializeEspionageReports failed | {ex.Message}");
+            return "[]";
+        }
+    }
+
+    private List<EspionageOperation> DeserializeEspionageOperations(string serialized)
+    {
+        try
+        {
+            var payload = JsonConvert.DeserializeObject<List<EspionageOperationRecord>>(serialized ?? "[]")
+                ?? new List<EspionageOperationRecord>();
+
+            var result = new List<EspionageOperation>();
+            foreach (EspionageOperationRecord record in payload)
+            {
+                Hero companion = ResolveHero(record.CompanionId);
+                Clan targetClan = ResolveClan(record.TargetClanId);
+                Kingdom targetKingdom = ResolveKingdom(record.TargetKingdomId);
+
+                var operation = new EspionageOperation(
+                    record.Type,
+                    companion,
+                    targetClan,
+                    targetKingdom,
+                    CampaignTime.Days(record.StartedAtDays),
+                    CampaignTime.Days(record.ResolveAtDays),
+                    record.Power,
+                    record.Risk);
+                operation.Status = record.Status;
+                operation.ClampValues();
+                result.Add(operation);
+            }
+
+            RFLogger.Log($"[StrategicIntrigue] DeserializeEspionageOperations ok | count={result.Count}");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            RFLogger.Log($"[StrategicIntrigue] DeserializeEspionageOperations failed | {ex.Message}");
+            return new List<EspionageOperation>();
+        }
+    }
+
+    private List<EspionageReport> DeserializeEspionageReports(string serialized)
+    {
+        try
+        {
+            var payload = JsonConvert.DeserializeObject<List<EspionageReportRecord>>(serialized ?? "[]")
+                ?? new List<EspionageReportRecord>();
+
+            var result = new List<EspionageReport>();
+            foreach (EspionageReportRecord record in payload)
+            {
+                Hero companion = ResolveHero(record.CompanionId);
+                Clan targetClan = ResolveClan(record.TargetClanId);
+                Kingdom targetKingdom = ResolveKingdom(record.TargetKingdomId);
+
+                var report = new EspionageReport(
+                    companion,
+                    record.Type,
+                    targetClan,
+                    targetKingdom,
+                    CampaignTime.Days(record.CreatedAtDays),
+                    record.Outcome,
+                    record.Confidence,
+                    record.EstimatedDissidence,
+                    record.EstimatedTrustToPlayer,
+                    record.EstimatedFearOfRuler,
+                    record.EstimatedClaimantAmbition,
+                    record.EstimatedBreakawayViability,
+                    record.EstimatedRoyalLegitimacy,
+                    record.EstimatedCourtFragmentation,
+                    record.EstimatedClaimantPressure,
+                    record.EstimatedRulerSupport,
+                    record.RecommendedAction ?? "");
+                report.ClampValues();
+                result.Add(report);
+            }
+
+            RFLogger.Log($"[StrategicIntrigue] DeserializeEspionageReports ok | count={result.Count}");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            RFLogger.Log($"[StrategicIntrigue] DeserializeEspionageReports failed | {ex.Message}");
+            return new List<EspionageReport>();
+        }
+    }
+
+    private static Hero ResolveHero(string heroId)
+    {
+        return string.IsNullOrWhiteSpace(heroId) ? null : Hero.FindFirst(x => x.StringId == heroId);
+    }
+
+    private static Clan ResolveClan(string clanId)
+    {
+        return string.IsNullOrWhiteSpace(clanId) ? null : Clan.All.FirstOrDefault(x => x.StringId == clanId);
+    }
+
+    private static Kingdom ResolveKingdom(string kingdomId)
+    {
+        return string.IsNullOrWhiteSpace(kingdomId) ? null : Kingdom.All.FirstOrDefault(x => x.StringId == kingdomId);
+    }
+
+    private sealed class EspionageOperationRecord
+    {
+        public EspionageOperationType Type { get; set; }
+        public string CompanionId { get; set; } = "";
+        public string TargetClanId { get; set; } = "";
+        public string TargetKingdomId { get; set; } = "";
+        public float StartedAtDays { get; set; }
+        public float ResolveAtDays { get; set; }
+        public EspionageOperationStatus Status { get; set; }
+        public float Power { get; set; }
+        public float Risk { get; set; }
+    }
+
+    private sealed class EspionageReportRecord
+    {
+        public string CompanionId { get; set; } = "";
+        public EspionageOperationType Type { get; set; }
+        public string TargetClanId { get; set; } = "";
+        public string TargetKingdomId { get; set; } = "";
+        public float CreatedAtDays { get; set; }
+        public EspionageOperationStatus Outcome { get; set; }
+        public EspionageReportConfidence Confidence { get; set; }
+        public float EstimatedDissidence { get; set; }
+        public float EstimatedTrustToPlayer { get; set; }
+        public float EstimatedFearOfRuler { get; set; }
+        public float EstimatedClaimantAmbition { get; set; }
+        public float EstimatedBreakawayViability { get; set; }
+        public float EstimatedRoyalLegitimacy { get; set; }
+        public float EstimatedCourtFragmentation { get; set; }
+        public float EstimatedClaimantPressure { get; set; }
+        public float EstimatedRulerSupport { get; set; }
+        public string RecommendedAction { get; set; } = "";
     }
 
     public ClanIntrigueState GetState(Clan clan)
@@ -4635,15 +4862,10 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
 
     private void RemoveCompanionForEspionage(Hero companion)
     {
-        if (companion?.CharacterObject == null || MobileParty.MainParty?.MemberRoster == null)
-        {
-            return;
-        }
-
-        if (companion.PartyBelongedTo == MobileParty.MainParty)
-        {
-            MobileParty.MainParty.MemberRoster.RemoveTroop(companion.CharacterObject);
-        }
+        // Intentionally no-op for save stability.
+        // Removing a player companion from MainParty without using Bannerlord's
+        // official "companion mission / alternative solution" lifecycle can leave
+        // the hero in an orphaned state across save/load.
     }
 
     private void ReturnCompanionFromEspionage(Hero companion)
@@ -4656,6 +4878,36 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
         if (companion.PartyBelongedTo != MobileParty.MainParty)
         {
             AddHeroToPartyAction.Apply(companion, MobileParty.MainParty, false);
+        }
+    }
+
+    private void RepairEspionageCompanions()
+    {
+        if (MobileParty.MainParty == null)
+        {
+            return;
+        }
+
+        foreach (EspionageOperation operation in _espionageOperations.Where(x => x?.Companion != null))
+        {
+            Hero companion = operation.Companion;
+            if (companion.IsDead)
+            {
+                continue;
+            }
+
+            if (companion.PartyBelongedTo != MobileParty.MainParty)
+            {
+                try
+                {
+                    AddHeroToPartyAction.Apply(companion, MobileParty.MainParty, false);
+                }
+                catch
+                {
+                    // Best-effort repair only. If Bannerlord rejects the add here,
+                    // we leave the original state untouched rather than worsening it.
+                }
+            }
         }
     }
 
