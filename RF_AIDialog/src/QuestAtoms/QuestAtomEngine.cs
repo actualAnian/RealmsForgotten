@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
@@ -172,12 +173,12 @@ namespace RF_AIDialog
             }
         }
 
-        private void OnConversationEnded(IEnumerable<CharacterObject> _)
+        private void OnConversationEnded(IEnumerable<CharacterObject> conversationCharacters)
         {
             try
             {
-                MobileParty? conversationParty = MobileParty.ConversationParty ?? _lastConversationParty;
                 Hero? conversationHero = Hero.OneToOneConversationHero ?? _lastConversationHero;
+                MobileParty? conversationParty = ResolveConversationParty(conversationHero, conversationCharacters);
 
                 _lastConversationParty = null;
                 _lastConversationHero = null;
@@ -204,10 +205,46 @@ namespace RF_AIDialog
         {
             try
             {
-                _lastConversationParty = MobileParty.ConversationParty ?? _lastConversationParty;
+                _lastConversationParty = ResolveConversationParty(Hero.OneToOneConversationHero, null) ?? _lastConversationParty;
                 _lastConversationHero = Hero.OneToOneConversationHero ?? _lastConversationHero;
             }
             catch { }
+        }
+
+        private MobileParty? ResolveConversationParty(
+            Hero? conversationHero,
+            IEnumerable<CharacterObject>? conversationCharacters)
+        {
+            MobileParty? party = MobileParty.ConversationParty;
+            if (party != null)
+                return party;
+
+            if (_lastConversationParty != null)
+                return _lastConversationParty;
+
+            party = conversationHero?.PartyBelongedTo;
+            if (party != null)
+                return party;
+
+            if (conversationCharacters != null)
+            {
+                foreach (var character in conversationCharacters)
+                {
+                    party = character?.HeroObject?.PartyBelongedTo;
+                    if (party != null && party != MobileParty.MainParty)
+                        return party;
+                }
+            }
+
+            try
+            {
+                party = PlayerEncounter.EncounteredMobileParty;
+                if (party != null && party != MobileParty.MainParty)
+                    return party;
+            }
+            catch { }
+
+            return null;
         }
 
         private void OnTournamentFinished(
@@ -394,7 +431,11 @@ namespace RF_AIDialog
         {
             var mechanic = ctx.PendingRequest?.Mechanic;
             if (mechanic == null || conversationParty == null)
+            {
+                if (mechanic != null)
+                    RFAIDebug.Log($"QuestAtomEngine: TALK_TO_PARTY skipped for {ctx.HeroId} - conversationParty null");
                 return false;
+            }
 
             bool changed = false;
             string currentFaction = conversationParty.MapFaction?.StringId ?? "";
@@ -415,6 +456,10 @@ namespace RF_AIDialog
                 string targetFaction = atom.GetParam("faction_id");
                 string targetPartyId = atom.GetParam("party_id");
                 string targetHeroId = atom.GetParam("hero_id");
+                RFAIDebug.Log(
+                    $"QuestAtomEngine: TALK_TO_PARTY check ctx={ctx.HeroId} targetFaction={targetFaction} " +
+                    $"currentFaction={currentFaction} targetParty={targetPartyId} currentParty={currentPartyId} " +
+                    $"targetHero={targetHeroId} currentHero={currentHeroId}");
 
                 if (!string.IsNullOrWhiteSpace(targetFaction) &&
                     !targetFaction.Equals(currentFaction, StringComparison.OrdinalIgnoreCase))
