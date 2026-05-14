@@ -27,6 +27,11 @@ The old single-provider format is still supported. To configure multiple provide
       "api_model_name": "gpt-4o-mini",
       "api_key_file": "C:\\secure\\openai.key"
     },
+    "gemini_flash": {
+      "api_endpoint": "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+      "api_model_name": "gemini-2.5-flash",
+      "api_key_file": "C:\\secure\\gemini.key"
+    },
     "local_ollama": {
       "use_remote_api": false,
       "ollama_model_name": "gemma3:4b",
