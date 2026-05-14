@@ -35,7 +35,7 @@ QUEST KINDS (use exactly one in quest_mechanic.quest_kind):
   delivery       — bring goods, then return
   recruitment    — gather troops, then return
   retaliation    — defeat enemy parties, then return
-  scouting       — leave, make contact with target parties, then return
+  scouting       — make contact with enemy parties/armies near a frontier or holding, then return
   delivery_under_pressure — carry goods to a destination despite danger, then return
   escort_with_ambush — travel toward a destination, repel attackers, then return
   capture_prisoner — capture a named hero and bring them back as prisoner
@@ -55,10 +55,11 @@ ATOM TYPES (use in quest_mechanic.objectives[]):
     params: [faction_id] (use ids from the list below), [faction_name], [party_id], [hero_id], count (string int, default ""1"")
     example: {""atom"":""DEFEAT_PARTY"",""params"":{""faction_id"":""vlandia"",""faction_name"":""Vlandian"",""count"":""3""},""label"":""Rout 3 Vlandian patrols""}
 
-  TALK_TO_PARTY  — player must make contact with N distinct mobile parties
+  TALK_TO_PARTY  — player must make contact with N distinct mobile parties or armies
     params: faction_id (use ids from the list below), [count] (string int, default ""1"")
-    optional params: party_id, hero_id
-    example: {""atom"":""TALK_TO_PARTY"",""params"":{""faction_id"":""vlandia"",""count"":""3""},""label"":""Count 3 Vlandian patrols""}
+    optional params: party_id, hero_id, settlement_id, radius
+    settlement_id + radius means only count contacts currently near that settlement/frontier reference.
+    example: {""atom"":""TALK_TO_PARTY"",""params"":{""faction_id"":""vlandia"",""settlement_id"":""town_EN1"",""radius"":""80"",""count"":""1""},""label"":""Question a Vlandian party or army moving near Aispur""}
 
   BRING_ITEM  — player must carry the item when next speaking to you
     params: item_id (one of: grain wine hides linen tools silver_ore wool pottery salt dates), quantity (string int)
@@ -84,7 +85,8 @@ Rules:
 • Prefer the quest kinds above. Build a mechanic that fits ONE archetype only.
 • Objectives are validated IN ORDER. Put RETURN_TO_NPC LAST.
 • Use LEAVE_SETTLEMENT when the player must depart from a town/castle; do NOT fake this with VISIT_SETTLEMENT.
-• Use TALK_TO_PARTY when the task is to scout, count, question, or make contact with patrols/caravans/lords on the map.
+• Use TALK_TO_PARTY when the task is to scout, count, question, or make contact with mobile parties/caravans/lords/armies on the map.
+• For war scouting, do NOT ask for patrols circling another faction's settlement. Patrols usually stay in their own territory. Ask the player to find an enemy party or army near local holdings/frontier instead.
 • When RETURN_TO_NPC is present, reward and closure happen in the return conversation
   via 'request_fulfilled': true. Do NOT include both RETURN_TO_NPC and expect automatic closure.
 • 'reward_gold' is paid when 'request_fulfilled': true fires in the conversation.

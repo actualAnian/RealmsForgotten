@@ -123,6 +123,7 @@ namespace RF_AIDialog
                 {
                     AddNeed(profile, "war", "active_war_pressure",
                         "scouting", "retaliation", "capture_prisoner", "recruitment");
+                    profile.Notes.Add("For scouting requests, ask about enemy mobile parties or armies near local holdings/frontier; do not claim enemy patrols circle another faction's towns.");
                     if (profile.LocalityScope != "local")
                         profile.LocalityScope = "regional";
                     urgency += 2;

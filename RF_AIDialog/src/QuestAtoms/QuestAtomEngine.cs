@@ -456,10 +456,13 @@ namespace RF_AIDialog
                 string targetFaction = atom.GetParam("faction_id");
                 string targetPartyId = atom.GetParam("party_id");
                 string targetHeroId = atom.GetParam("hero_id");
+                string targetSettlementId = atom.GetParam("settlement_id");
+                int targetRadius = ClampTalkRadius(atom.GetParamInt("radius", 80));
                 RFAIDebug.Log(
                     $"QuestAtomEngine: TALK_TO_PARTY check ctx={ctx.HeroId} targetFaction={targetFaction} " +
                     $"currentFaction={currentFaction} targetParty={targetPartyId} currentParty={currentPartyId} " +
-                    $"targetHero={targetHeroId} currentHero={currentHeroId}");
+                    $"targetHero={targetHeroId} currentHero={currentHeroId} targetSettlement={targetSettlementId} " +
+                    $"radius={targetRadius}");
 
                 if (!string.IsNullOrWhiteSpace(targetFaction) &&
                     !targetFaction.Equals(currentFaction, StringComparison.OrdinalIgnoreCase))
@@ -472,6 +475,15 @@ namespace RF_AIDialog
                 if (!string.IsNullOrWhiteSpace(targetHeroId) &&
                     !targetHeroId.Equals(currentHeroId, StringComparison.OrdinalIgnoreCase))
                     continue;
+
+                if (!string.IsNullOrWhiteSpace(targetSettlementId) &&
+                    !IsPartyNearSettlement(conversationParty, targetSettlementId, targetRadius))
+                {
+                    RFAIDebug.Log(
+                        $"QuestAtomEngine: TALK_TO_PARTY skipped - {currentPartyId} is not near {targetSettlementId} " +
+                        $"within radius {targetRadius}");
+                    continue;
+                }
 
                 string seenKey = $"talk_seen_{i}";
                 string progressKey = $"talk_count_{i}";
@@ -511,6 +523,38 @@ namespace RF_AIDialog
             }
 
             return changed;
+        }
+
+        private static bool IsPartyNearSettlement(MobileParty party, string settlementId, int radius)
+        {
+            if (party == null || string.IsNullOrWhiteSpace(settlementId))
+                return false;
+
+            try
+            {
+                var settlement = Settlement.All.FirstOrDefault(s =>
+                    s != null &&
+                    s.StringId.Equals(settlementId, StringComparison.OrdinalIgnoreCase));
+
+                if (settlement == null)
+                    return false;
+
+                int safeRadius = ClampTalkRadius(radius);
+                float radiusSquared = safeRadius * safeRadius;
+                return party.Position.DistanceSquared(settlement.Position) <= radiusSquared;
+            }
+            catch (Exception ex)
+            {
+                RFAIDebug.Log($"QuestAtomEngine: settlement proximity check failed for {settlementId}: {ex.Message}");
+                return false;
+            }
+        }
+
+        private static int ClampTalkRadius(int radius)
+        {
+            if (radius <= 0)
+                radius = 80;
+            return Math.Max(20, Math.Min(150, radius));
         }
 
         private void CheckMechanicCompletion(NPCContext ctx)

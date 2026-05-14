@@ -422,6 +422,7 @@ namespace RF_AIDialog
             string factionId = source.GetParam("faction_id").Trim();
             string partyId = source.GetParam("party_id").Trim();
             string heroId = source.GetParam("hero_id").Trim();
+            string settlementId = source.GetParam("settlement_id").Trim();
 
             if (!string.IsNullOrWhiteSpace(factionId) &&
                 !QuestAtomCatalog.IsValidFactionId(factionId))
@@ -438,6 +439,13 @@ namespace RF_AIDialog
                 target.Params["party_id"] = partyId;
             if (!string.IsNullOrWhiteSpace(heroId))
                 target.Params["hero_id"] = heroId;
+
+            if (!string.IsNullOrWhiteSpace(settlementId) &&
+                QuestAtomCatalog.IsValidSettlementId(settlementId))
+            {
+                target.Params["settlement_id"] = settlementId;
+                target.Params["radius"] = ClampRadius(source.GetParamInt("radius", 80)).ToString();
+            }
 
             target.Params["count"] = ClampCount(source.GetParamInt("count", 1)).ToString();
             return target;
@@ -489,6 +497,8 @@ namespace RF_AIDialog
         }
 
         private static int ClampCount(int value) => Math.Max(1, Math.Min(20, value));
+
+        private static int ClampRadius(int value) => Math.Max(20, Math.Min(150, value <= 0 ? 80 : value));
 
         private static int ClampRewardGold(int value) => Math.Max(0, Math.Min(AIConfig.MaxGoldTransfer, value));
 

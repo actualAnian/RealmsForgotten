@@ -349,7 +349,8 @@ namespace RF_AIDialog
                 sb.AppendLine();
                 sb.AppendLine("Output this exact JSON. No text outside it. ALL fields are required.");
                 sb.AppendLine("If the AI REQUEST NEED PROFILE says should_offer_request: no, omit both request and quest_mechanic.");
-                sb.AppendLine("If you do include a request, its quest_kind must fit allowed_quest_kinds and its places should come from NEARBY SETTLEMENTS whenever possible.");
+                sb.AppendLine("If you do include a request, its quest_kind must fit allowed_quest_kinds and travel/delivery places should come from NEARBY SETTLEMENTS whenever possible.");
+                sb.AppendLine("For scouting, use nearby settlements only as a frontier/holding reference: ask about enemy parties or armies near that area, not patrols circling another faction's town.");
                 sb.AppendLine("{");
                 sb.AppendLine("  \"personality_summary\": \"2-3 sentences about your personality, speech style and background. Third person.\",");
                 if (npc.IsLord)
@@ -390,7 +391,8 @@ namespace RF_AIDialog
                 sb.AppendLine();
                 sb.AppendLine("Output this exact JSON. No text outside it. ALL fields are required.");
                 sb.AppendLine("If the AI REQUEST NEED PROFILE says should_offer_request: no, omit both request and quest_mechanic.");
-                sb.AppendLine("If you do include a request, its quest_kind must fit allowed_quest_kinds and its places should come from NEARBY SETTLEMENTS whenever possible.");
+                sb.AppendLine("If you do include a request, its quest_kind must fit allowed_quest_kinds and travel/delivery places should come from NEARBY SETTLEMENTS whenever possible.");
+                sb.AppendLine("For scouting, use nearby settlements only as a frontier/holding reference: ask about enemy parties or armies near that area, not patrols circling another faction's town.");
                 sb.AppendLine("{");
                 sb.AppendLine("  \"internal_thoughts\": \"your private reaction, 1-2 sentences\",");
                 sb.AppendLine("  \"response\": \"what you say out loud, in character, 2-4 sentences\",");
