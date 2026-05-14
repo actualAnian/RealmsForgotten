@@ -60,6 +60,8 @@ namespace RF_AIDialog
             RFAIDebug.Log($"AIDialogQuest.OnStartQuest: npc={id}");
             if (!string.IsNullOrWhiteSpace(id))
                 _activeByNpcId[id] = this;
+            if (QuestGiver != null)
+                AddTrackedObject(QuestGiver);
             AddLog(new TextObject("{=!}" + _description));
         }
 

@@ -30,6 +30,8 @@ namespace RF_AIDialog
     public class QuestAtomEngine : CampaignBehaviorBase
     {
         public static QuestAtomEngine? Instance { get; private set; }
+        private MobileParty? _lastConversationParty;
+        private Hero? _lastConversationHero;
 
         public override void RegisterEvents()
         {
@@ -174,8 +176,11 @@ namespace RF_AIDialog
         {
             try
             {
-                MobileParty? conversationParty = MobileParty.ConversationParty;
-                Hero? conversationHero = Hero.OneToOneConversationHero;
+                MobileParty? conversationParty = MobileParty.ConversationParty ?? _lastConversationParty;
+                Hero? conversationHero = Hero.OneToOneConversationHero ?? _lastConversationHero;
+
+                _lastConversationParty = null;
+                _lastConversationHero = null;
 
                 if (conversationParty == null && conversationHero == null)
                     return;
@@ -193,6 +198,16 @@ namespace RF_AIDialog
             {
                 RFAIDebug.Log($"QuestAtomEngine.OnConversationEnded exception: {ex.Message}");
             }
+        }
+
+        public void CaptureConversationTarget()
+        {
+            try
+            {
+                _lastConversationParty = MobileParty.ConversationParty ?? _lastConversationParty;
+                _lastConversationHero = Hero.OneToOneConversationHero ?? _lastConversationHero;
+            }
+            catch { }
         }
 
         private void OnTournamentFinished(

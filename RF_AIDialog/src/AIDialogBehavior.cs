@@ -457,10 +457,14 @@ namespace RF_AIDialog
         // Conditions
 
         private bool ConditionCanUseAI()
-            => Hero.OneToOneConversationHero != null && !_isWaiting;
+        {
+            QuestAtomEngine.Instance?.CaptureConversationTarget();
+            return Hero.OneToOneConversationHero != null && !_isWaiting;
+        }
 
         private bool ConditionHasPendingInitiative()
         {
+            QuestAtomEngine.Instance?.CaptureConversationTarget();
             var npc = Hero.OneToOneConversationHero;
             if (npc == null || _isWaiting) return false;
             var ctx = NPCContextStore.Instance?.GetOrCreate(npc);
