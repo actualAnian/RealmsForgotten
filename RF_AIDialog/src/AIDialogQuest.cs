@@ -29,16 +29,19 @@ namespace RF_AIDialog
         // Not persisted — quest is reconstructed from NPCContext on every load.
         private string _npcStringId  = "";
         private string _description  = "";
+        private bool _isResolvedDisplay = false;
 
         public AIDialogQuest(
             string questId,
             Hero   questGiver,
             string description,
-            int    durationDays)
+            int    durationDays,
+            bool   resolvedDisplay = false)
             : base(questId, questGiver, CampaignTime.Now + CampaignTime.Days(durationDays), 0)
         {
             _npcStringId = questGiver.StringId;
             _description = Truncate(description, 400);
+            _isResolvedDisplay = resolvedDisplay;
         }
 
         public override string SpecialQuestType => "RfAIDialog";
@@ -46,9 +49,10 @@ namespace RF_AIDialog
         // IsSpecialQuest is not virtual in 1.3.0 binary — handled by AIDialogQuestPatch.
 
         public override TextObject Title
-            => new TextObject("{=!}" + (QuestGiver?.Name?.ToString() ?? "NPC") + " — pending request");
+            => new TextObject("{=!}" + (QuestGiver?.Name?.ToString() ?? "NPC") +
+                              (_isResolvedDisplay ? " - completed request" : " - pending request"));
 
-        public override bool IsRemainingTimeHidden => false;
+        public override bool IsRemainingTimeHidden => _isResolvedDisplay;
 
         protected override void SetDialogs() { }
 
@@ -58,11 +62,13 @@ namespace RF_AIDialog
                 ? _npcStringId
                 : QuestGiver?.StringId ?? "";
             RFAIDebug.Log($"AIDialogQuest.OnStartQuest: npc={id}");
-            if (!string.IsNullOrWhiteSpace(id))
+            if (!string.IsNullOrWhiteSpace(id) && !_isResolvedDisplay)
                 _activeByNpcId[id] = this;
             if (QuestGiver != null)
                 AddTrackedObject(QuestGiver);
             AddLog(new TextObject("{=!}" + _description));
+            if (_isResolvedDisplay)
+                AddCompletedLog();
         }
 
         protected override void InitializeQuestOnGameLoad()
@@ -108,8 +114,13 @@ namespace RF_AIDialog
 
         public void MarkFulfilled()
         {
-            AddLog(new TextObject("{=!}The matter has been settled."));
-            CompleteQuestWithSuccess();
+            if (!_isResolvedDisplay)
+            {
+                _isResolvedDisplay = true;
+                AddCompletedLog();
+                try { ChangeQuestDueTime(CampaignTime.Now + CampaignTime.Days(36500)); }
+                catch { }
+            }
             _activeByNpcId.Remove(_npcStringId);
         }
 
@@ -134,5 +145,21 @@ namespace RF_AIDialog
 
         private static string Truncate(string s, int max)
             => s.Length <= max ? s : s.Substring(0, max) + "...";
+
+        private void AddCompletedLog()
+        {
+            try
+            {
+                AddLog(new TextObject("{=!}Completed: the matter has been settled."));
+                AddDiscreteLog(
+                    new TextObject("{=!}The request has been completed."),
+                    new TextObject("{=!}Completed"),
+                    1,
+                    1,
+                    new TextObject("{=!}Done"),
+                    false);
+            }
+            catch { }
+        }
     }
 }

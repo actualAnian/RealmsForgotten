@@ -63,6 +63,26 @@ namespace RF_AIDialog
     }
 
     /// <summary>
+    /// Lightweight receipt for AI quests that were completed. We keep this as
+    /// plain JSON state, not as QuestBase, so the save system never has to
+    /// serialize the custom quest class.
+    /// </summary>
+    public class CompletedRequestRecord
+    {
+        [JsonProperty("desc")]
+        public string Description { get; set; } = "";
+
+        [JsonProperty("day_issued")]
+        public int DayIssued { get; set; }
+
+        [JsonProperty("day_completed")]
+        public int DayCompleted { get; set; }
+
+        [JsonProperty("outcome")]
+        public string Outcome { get; set; } = "";
+    }
+
+    /// <summary>
     /// Persistent per-NPC state: personality, conversation history,
     /// long-term memories, pending initiative, and last known relation.
     /// Serialized to the campaign save via NPCContextStore.
@@ -113,6 +133,13 @@ namespace RF_AIDialog
         public PendingRequest? PendingRequest { get; set; }
 
         /// <summary>
+        /// Recently completed AI requests, used only to rebuild completed-looking
+        /// journal entries after load. This stays small and contains no QuestBase.
+        /// </summary>
+        [JsonProperty("completed_requests")]
+        public List<CompletedRequestRecord> CompletedRequests { get; set; } = new List<CompletedRequestRecord>();
+
+        /// <summary>
         /// Reason this NPC wants to initiate a conversation with the player.
         /// Set by NPCInitiativeBehavior. Cleared after the conversation ends.
         /// </summary>
@@ -130,6 +157,7 @@ namespace RF_AIDialog
 
         public static int MaxHistory  => 6;   // raw exchanges kept
         public static int MaxMemories => 10;  // semantic facts kept
+        public static int MaxCompletedRequests => 3;
 
         // ── Computed ──────────────────────────────────────────────────────
 
@@ -161,6 +189,23 @@ namespace RF_AIDialog
             Memories.Add(new MemoryEntry { Note = note.Trim(), Day = currentDay });
             while (Memories.Count > MaxMemories)
                 Memories.RemoveAt(0);
+        }
+
+        public void AddCompletedRequest(PendingRequest request, int currentDay, string outcome)
+        {
+            if (request == null || string.IsNullOrWhiteSpace(request.Description))
+                return;
+
+            CompletedRequests.Add(new CompletedRequestRecord
+            {
+                Description = request.Description.Trim(),
+                DayIssued = request.DayIssued,
+                DayCompleted = currentDay,
+                Outcome = string.IsNullOrWhiteSpace(outcome) ? "Completed" : outcome.Trim()
+            });
+
+            while (CompletedRequests.Count > MaxCompletedRequests)
+                CompletedRequests.RemoveAt(0);
         }
     }
 }

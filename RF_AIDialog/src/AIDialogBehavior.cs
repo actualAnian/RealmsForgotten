@@ -295,11 +295,17 @@ namespace RF_AIDialog
 
                 foreach (var ctx in store.GetAll())
                 {
-                    if (!ctx.HasPendingRequest) continue;
+                    if (!ctx.HasPendingRequest && (ctx.CompletedRequests == null || ctx.CompletedRequests.Count == 0)) continue;
 
                     Hero? hero = null;
                     try { hero = Hero.FindFirst(h => h.StringId == ctx.HeroId); } catch { }
                     if (hero == null || hero.IsDead) continue;
+
+                    if (!ctx.HasPendingRequest)
+                    {
+                        ReconstructCompletedQuests(hero, ctx);
+                        continue;
+                    }
 
                     var existing = AIDialogQuest.ForNpc(ctx.HeroId);
                     if (existing != null && existing.IsOngoing) continue;
@@ -338,6 +344,29 @@ namespace RF_AIDialog
             catch (Exception ex)
             {
                 RFAIDebug.Log($"ReconstructQuestsFromNPCContexts: outer — {ex.Message}");
+            }
+        }
+
+        private static void ReconstructCompletedQuests(Hero hero, NPCContext ctx)
+        {
+            if (ctx.CompletedRequests == null || ctx.CompletedRequests.Count == 0)
+                return;
+
+            foreach (var completed in ctx.CompletedRequests)
+            {
+                if (completed == null || string.IsNullOrWhiteSpace(completed.Description))
+                    continue;
+
+                try
+                {
+                    string qId = $"rfai_done_{hero.StringId}_{completed.DayIssued}_{completed.DayCompleted}";
+                    var quest = new AIDialogQuest(qId, hero, completed.Description, 36500, resolvedDisplay: true);
+                    quest.StartQuest();
+                }
+                catch (Exception ex)
+                {
+                    RFAIDebug.Log($"ReconstructCompletedQuests: failed {hero.StringId} - {ex.Message}");
+                }
             }
         }
 
@@ -703,6 +732,10 @@ namespace RF_AIDialog
                         catch { }
                     }
 
+                    _currentContext.AddCompletedRequest(
+                        _currentContext.PendingRequest!,
+                        CurrentDay(),
+                        "Completed");
                     _currentContext.PendingRequest = null;
                 }
 
@@ -808,6 +841,16 @@ namespace RF_AIDialog
             _pendingNewMechanic = null;
             _currentNpc         = null;
             _currentContext     = null;
+        }
+
+        private static int CurrentDay()
+        {
+            try
+            {
+                return (int)Campaign.Current.Models.CampaignTimeModel
+                    .CampaignStartTime.ElapsedDaysUntilNow;
+            }
+            catch { return 0; }
         }
 
         private static bool HasGoldRewardAction(List<AIAction>? actions)

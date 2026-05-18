@@ -157,6 +157,7 @@ namespace RF_AIDialog
             return !string.IsNullOrWhiteSpace(ctx.GeneratedPersonality)
                 || !string.IsNullOrWhiteSpace(ctx.GeneratedAmbition)
                 || (ctx.RecentHistory != null && ctx.RecentHistory.Count > 0)
+                || (ctx.CompletedRequests != null && ctx.CompletedRequests.Count > 0)
                 || ctx.HasPendingRequest
                 || ctx.HasPendingInitiative
                 || ctx.LastKnownRelation != 0;

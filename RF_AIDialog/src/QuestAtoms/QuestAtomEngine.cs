@@ -595,8 +595,19 @@ namespace RF_AIDialog
                 Notify("Quest complete!");
             }
 
+            ctx.AddCompletedRequest(ctx.PendingRequest, CurrentDay(), "Completed");
             ctx.PendingRequest = null;
             NPCContextStore.Instance?.MarkDirty(ctx);
+        }
+
+        private static int CurrentDay()
+        {
+            try
+            {
+                return (int)Campaign.Current.Models.CampaignTimeModel
+                    .CampaignStartTime.ElapsedDaysUntilNow;
+            }
+            catch { return 0; }
         }
 
         private static void CheckNearCompletion(NPCContext ctx)
