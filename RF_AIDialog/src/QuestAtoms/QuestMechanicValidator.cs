@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Settlements;
 
 namespace RF_AIDialog
 {
@@ -47,13 +49,16 @@ namespace RF_AIDialog
                 "rescue_prisoner_noble"
             };
 
-        public static QuestMechanic? Sanitize(QuestMechanic? mechanic)
+        public static QuestMechanic? Sanitize(QuestMechanic? mechanic, Hero? questGiver = null)
         {
             if (mechanic == null || mechanic.Objectives == null)
                 return null;
 
             string questKind = ResolveQuestKind(mechanic);
             if (string.IsNullOrWhiteSpace(questKind))
+                return null;
+
+            if (!IsQuestKindAppropriateForNpc(questKind, questGiver))
                 return null;
 
             var sanitized = new QuestMechanic
@@ -67,7 +72,10 @@ namespace RF_AIDialog
                 return null;
 
             sanitized.Normalize();
-            return sanitized.Objectives.Count == 0 ? null : sanitized;
+            if (sanitized.Objectives.Count == 0)
+                return null;
+
+            return PassesQualityRules(sanitized, questGiver) ? sanitized : null;
         }
 
         private static string ResolveQuestKind(QuestMechanic mechanic)
@@ -503,6 +511,138 @@ namespace RF_AIDialog
         private static int ClampRewardGold(int value) => Math.Max(0, Math.Min(AIConfig.MaxGoldTransfer, value));
 
         private static int ClampDurationDays(int value) => Math.Max(1, Math.Min(120, value <= 0 ? 30 : value));
+
+        private static bool IsQuestKindAppropriateForNpc(string questKind, Hero? questGiver)
+        {
+            if (questGiver == null)
+                return true;
+
+            try
+            {
+                var profile = AIRequestNeedEvaluator.Evaluate(questGiver);
+                if (profile.AllowedQuestKinds.Count == 0)
+                    return true;
+
+                bool allowed = profile.AllowedQuestKinds.Any(k =>
+                    k.Equals(questKind, StringComparison.OrdinalIgnoreCase));
+
+                if (!allowed)
+                    RFAIDebug.Log($"QuestMechanicValidator: rejected {questKind} for {questGiver.StringId} - not in allowed_quest_kinds");
+
+                return allowed;
+            }
+            catch
+            {
+                return true;
+            }
+        }
+
+        private static bool PassesQualityRules(QuestMechanic mechanic, Hero? questGiver)
+        {
+            try
+            {
+                if (questGiver == null)
+                    return true;
+
+                if (!PassesWarTargetRules(mechanic, questGiver))
+                    return false;
+
+                if (!PassesLocalityRules(mechanic, questGiver))
+                    return false;
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                RFAIDebug.Log($"QuestMechanicValidator: quality rules failed open: {ex.GetType().Name}: {ex.Message}");
+                return true;
+            }
+        }
+
+        private static bool PassesWarTargetRules(QuestMechanic mechanic, Hero questGiver)
+        {
+            bool isWarQuest =
+                mechanic.QuestKind.Equals("retaliation", StringComparison.OrdinalIgnoreCase) ||
+                mechanic.QuestKind.Equals("scouting", StringComparison.OrdinalIgnoreCase) ||
+                mechanic.QuestKind.Equals("capture_prisoner", StringComparison.OrdinalIgnoreCase);
+
+            if (!isWarQuest || questGiver.MapFaction == null)
+                return true;
+
+            foreach (var atom in mechanic.Objectives)
+            {
+                string factionId = atom.GetParam("faction_id");
+                if (string.IsNullOrWhiteSpace(factionId))
+                    continue;
+
+                var targetFaction = FindKingdom(factionId);
+                if (targetFaction == null)
+                    continue;
+
+                if (targetFaction == questGiver.MapFaction)
+                {
+                    RFAIDebug.Log($"QuestMechanicValidator: rejected {mechanic.QuestKind} - target faction is quest giver faction ({factionId})");
+                    return false;
+                }
+
+                if (questGiver.Occupation == Occupation.Lord &&
+                    !FactionManager.IsAtWarAgainstFaction(questGiver.MapFaction, targetFaction))
+                {
+                    RFAIDebug.Log($"QuestMechanicValidator: rejected {mechanic.QuestKind} - {questGiver.MapFaction.StringId} is not at war with {factionId}");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static bool PassesLocalityRules(QuestMechanic mechanic, Hero questGiver)
+        {
+            var profile = AIRequestNeedEvaluator.Evaluate(questGiver);
+            if (!profile.LocalityScope.Equals("local", StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            var nearby = AIRequestNeedEvaluator.GetNearbySettlements(questGiver, maxCount: 8);
+            if (nearby == null || nearby.Count == 0)
+                return true;
+
+            var allowedSettlementIds = new HashSet<string>(
+                nearby.Where(s => s != null).Select(s => s.StringId),
+                StringComparer.OrdinalIgnoreCase);
+
+            foreach (var atom in mechanic.Objectives)
+            {
+                string settlementId = atom.GetParam("settlement_id");
+                if (string.IsNullOrWhiteSpace(settlementId))
+                    continue;
+
+                if (!allowedSettlementIds.Contains(settlementId))
+                {
+                    RFAIDebug.Log($"QuestMechanicValidator: rejected {mechanic.QuestKind} - settlement {settlementId} outside local scope for {questGiver.StringId}");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static Kingdom? FindKingdom(string factionId)
+        {
+            if (string.IsNullOrWhiteSpace(factionId))
+                return null;
+
+            try
+            {
+                return Kingdom.All.FirstOrDefault(k =>
+                    k != null &&
+                    !k.IsEliminated &&
+                    k.StringId.Equals(factionId, StringComparison.OrdinalIgnoreCase));
+            }
+            catch
+            {
+                return null;
+            }
+        }
 
         private static string SanitizeLabel(string? label)
         {

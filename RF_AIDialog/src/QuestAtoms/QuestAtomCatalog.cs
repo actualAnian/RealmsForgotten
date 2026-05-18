@@ -84,6 +84,7 @@ ATOM TYPES (use in quest_mechanic.objectives[]):
 Rules:
 • Prefer the quest kinds above. Build a mechanic that fits ONE archetype only.
 • Objectives are validated IN ORDER. Put RETURN_TO_NPC LAST.
+• The game validates quest quality before accepting a mechanic. If the quest kind is not in allowed_quest_kinds, if a local quest targets a far settlement, or if a lord asks for war work against a non-enemy/same faction, the mechanic will be discarded.
 • Use LEAVE_SETTLEMENT when the player must depart from a town/castle; do NOT fake this with VISIT_SETTLEMENT.
 • Use TALK_TO_PARTY when the task is to scout, count, question, or make contact with mobile parties/caravans/lords/armies on the map.
 • For war scouting, do NOT ask for patrols circling another faction's settlement. Patrols usually stay in their own territory. Ask the player to find an enemy party or army near local holdings/frontier instead.
