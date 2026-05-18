@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
     <Reference Include="$(GameFolder)\bin\Win64_Shipping_Client\Newtonsoft.Json.dll">
       <HintPath>%(Identity)</HintPath>
