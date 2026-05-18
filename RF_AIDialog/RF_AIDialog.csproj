@@ -8,6 +8,8 @@
     <Nullable>enable</Nullable>
     <RootNamespace>RF_AIDialog</RootNamespace>
     <GameFolder>$(BANNERLORD_GAME_DIR)</GameFolder>
+    <ModuleRoot>$(GameFolder)\Modules\RealmsForgotten</ModuleRoot>
+    <ModuleBin>$(ModuleRoot)\bin\Win64_Shipping_Client</ModuleBin>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,9 +33,29 @@
     <ProjectReference Include="..\RealmsForgottenMain\RealmsForgotten.csproj" />
   </ItemGroup>
 
-  <!-- Copia a DLL para o bin do módulo RealmsForgotten -->
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /y /d &quot;$(ProjectDir)bin\x64\Debug\net472\RF_AIDialog.*&quot; &quot;$(BANNERLORD_GAME_DIR)\Modules\RealmsForgotten\bin\Win64_Shipping_Client&quot;" />
+  <!-- Deploys the AI dialog assembly and safe config templates into the RealmsForgotten module. -->
+  <Target Name="PostBuild" AfterTargets="Build">
+    <MakeDir Directories="$(ModuleBin)" Condition="'$(GameFolder)' != ''" />
+    <Copy SourceFiles="$(TargetPath)"
+          DestinationFolder="$(ModuleBin)"
+          SkipUnchangedFiles="true"
+          Condition="'$(GameFolder)' != ''" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb"
+          DestinationFolder="$(ModuleBin)"
+          SkipUnchangedFiles="true"
+          Condition="'$(GameFolder)' != '' and Exists('$(TargetDir)$(TargetName).pdb')" />
+    <Copy SourceFiles="$(ProjectDir)ai_config.example.json"
+          DestinationFolder="$(ModuleRoot)"
+          SkipUnchangedFiles="true"
+          Condition="'$(GameFolder)' != '' and Exists('$(ProjectDir)ai_config.example.json')" />
+    <Copy SourceFiles="$(ProjectDir)ai_config.default.json"
+          DestinationFolder="$(ModuleRoot)"
+          SkipUnchangedFiles="true"
+          Condition="'$(GameFolder)' != '' and Exists('$(ProjectDir)ai_config.default.json')" />
+    <Copy SourceFiles="$(ProjectDir)ai_config.default.json"
+          DestinationFiles="$(ModuleRoot)\ai_config.local.json"
+          SkipUnchangedFiles="true"
+          Condition="'$(GameFolder)' != '' and Exists('$(ProjectDir)ai_config.default.json') and !Exists('$(ModuleRoot)\ai_config.local.json')" />
   </Target>
 
 </Project>

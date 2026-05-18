@@ -53,6 +53,8 @@ $env:RF_AIDIALOG_API_KEY="your_key_here"
 
 2. Local JSON file ignored by git
 Create `ai_config.local.json` based on `ai_config.example.json`.
+During deploy, the mod copies `ai_config.example.json` to the module root and
+creates a safe `ai_config.local.json` there only if one does not already exist.
 
 3. Secret file path
 Put only the key text in a file outside the repo and set either:
