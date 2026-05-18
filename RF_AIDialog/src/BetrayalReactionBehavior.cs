@@ -56,6 +56,15 @@ namespace RF_AIDialog
                     $"Clan {deserterName} betrayed {oldKingName} and defected to {newKingName}. " +
                     $"{oldKingName} declared war in vengeance.",
                     day);
+                AIMemoryStore.AddClanMemory(
+                    clan.StringId,
+                    $"Clan {deserterName} betrayed {oldKingName} and defected to {newKingName}.",
+                    day);
+                AIMemoryStore.UpsertSummary(
+                    "clan",
+                    clan.StringId,
+                    $"Clan {deserterName} is remembered for defecting from {oldKingName} to {newKingName} on day {day}.",
+                    day);
 
                 // ── 2. PendingInitiative on the betrayed ruler ────────────
                 // If the player speaks with the betrayed king within the next

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using RealmsForgotten.AiMade.StrategicIntrigue.Campaign;
 using RealmsForgotten.AiMade.StrategicIntrigue.SaveSystem;
@@ -303,6 +304,14 @@ namespace RF_AIDialog
                         }
                         catch { }
 
+                        try
+                        {
+                            var memories = AIMemoryStore.GetSettlementMemories(s.StringId, maxCount: 2, maxDays: 0);
+                            if (memories.Count > 0)
+                                scarDesc += $", remembered locally: {string.Join(" / ", memories.Select(m => m.Text))}";
+                        }
+                        catch { }
+
                         lines.Add($"{type} {s.Name}{status}{prosperityDesc}{loyaltyDesc}{securityDesc}{scarDesc}");
                         count++;
                     }
@@ -344,6 +353,18 @@ namespace RF_AIDialog
                 sb.AppendLine(
                     $"Your clan ({clan.Name}) is Tier {tier} with {renownDesc} " +
                     $"({(int)renown}) and {influenceDesc} ({(int)influence}).");
+
+                try
+                {
+                    var memories = AIMemoryStore.GetClanMemories(clan.StringId, maxCount: 3, maxDays: 0);
+                    if (memories.Count > 0)
+                    {
+                        sb.AppendLine("Recent memories attached to your clan:");
+                        foreach (var memory in memories)
+                            sb.AppendLine($"  - {memory.Text}");
+                    }
+                }
+                catch { }
             }
             catch { }
         }

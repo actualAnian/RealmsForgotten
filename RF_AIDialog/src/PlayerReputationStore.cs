@@ -60,6 +60,8 @@ namespace RF_AIDialog
             dataStore.SyncData("PlayerRep_Honor",      ref _honorScore);
             dataStore.SyncData("PlayerRep_Mercy",      ref _mercyScore);
             dataStore.SyncData("PlayerRep_Aggression", ref _aggressionScore);
+            if (!dataStore.IsLoading)
+                WriteExternalSnapshot();
         }
 
         // ── Event handlers ────────────────────────────────────────────────
@@ -81,6 +83,7 @@ namespace RF_AIDialog
                 _honorScore      = Math.Max(0f, _honorScore      - 10f);
                 _mercyScore      = Math.Max(0f, _mercyScore      -  8f);
                 _aggressionScore = Math.Min(100f, _aggressionScore + 3f);
+                WriteExternalSnapshot();
             }
             catch { }
         }
@@ -102,6 +105,7 @@ namespace RF_AIDialog
                 // Generous release: builds mercy and honour
                 _mercyScore = Math.Min(100f, _mercyScore + 4f);
                 _honorScore = Math.Min(100f, _honorScore + 2f);
+                WriteExternalSnapshot();
             }
             catch { }
         }
@@ -119,6 +123,7 @@ namespace RF_AIDialog
 
                 // Player's kingdom goes to war — raises aggression perception
                 _aggressionScore = Math.Min(100f, _aggressionScore + 5f);
+                WriteExternalSnapshot();
             }
             catch { }
         }
@@ -137,6 +142,7 @@ namespace RF_AIDialog
                 // Choosing peace: honors the player's restraint
                 _honorScore      = Math.Min(100f, _honorScore      + 3f);
                 _aggressionScore = Math.Max(0f,   _aggressionScore - 3f);
+                WriteExternalSnapshot();
             }
             catch { }
         }
@@ -153,8 +159,43 @@ namespace RF_AIDialog
                 // Player raided a village and won — clear act of aggression
                 _aggressionScore = Math.Min(100f, _aggressionScore + 6f);
                 _mercyScore      = Math.Max(0f,   _mercyScore      - 2f);
+                WriteExternalSnapshot();
             }
             catch { }
+        }
+
+        private void WriteExternalSnapshot()
+        {
+            try
+            {
+                AIMemoryStore.WritePlayerReputation(
+                    _honorScore,
+                    _mercyScore,
+                    _aggressionScore,
+                    BuildSummary(),
+                    CurrentDay());
+            }
+            catch { }
+        }
+
+        private string BuildSummary()
+        {
+            string honor = _honorScore >= 65f ? "honorable" : _honorScore <= 35f ? "dishonorable" : "mixed in honor";
+            string mercy = _mercyScore >= 65f ? "merciful" : _mercyScore <= 35f ? "cruel" : "pragmatic about mercy";
+            string aggression = _aggressionScore >= 65f ? "aggressive" : _aggressionScore <= 35f ? "restrained" : "moderate in aggression";
+            return $"The player is seen as {honor}, {mercy}, and {aggression}.";
+        }
+
+        private static int CurrentDay()
+        {
+            try
+            {
+                return (int)Campaign.Current.Models.CampaignTimeModel.CampaignStartTime.ElapsedDaysUntilNow;
+            }
+            catch
+            {
+                return 0;
+            }
         }
     }
 }

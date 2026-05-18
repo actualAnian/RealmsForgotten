@@ -30,6 +30,10 @@ namespace RF_AIDialog
 
         private static readonly string NpcMemoryPath = Path.Combine(MemoryDirectory, "npc_memories.jsonl");
         private static readonly string WorldEventPath = Path.Combine(MemoryDirectory, "world_events.jsonl");
+        private static readonly string SettlementMemoryPath = Path.Combine(MemoryDirectory, "settlement_memories.jsonl");
+        private static readonly string ClanMemoryPath = Path.Combine(MemoryDirectory, "clan_memories.jsonl");
+        private static readonly string PlayerReputationPath = Path.Combine(MemoryDirectory, "player_reputation.json");
+        private static readonly string SummariesPath = Path.Combine(MemoryDirectory, "summaries.json");
 
         public static string DirectoryPath => MemoryDirectory;
 
@@ -65,6 +69,87 @@ namespace RF_AIDialog
             });
         }
 
+        public static void AddSettlementMemory(string settlementId, string note, int day)
+        {
+            if (string.IsNullOrWhiteSpace(settlementId) || string.IsNullOrWhiteSpace(note))
+                return;
+
+            Append(SettlementMemoryPath, new AIMemoryRecord
+            {
+                Kind = "settlement_memory",
+                SubjectId = settlementId.Trim(),
+                Day = day,
+                Text = Clean(note),
+                CampaignKey = GetCampaignKey(),
+                CreatedUtc = DateTime.UtcNow.ToString("o")
+            });
+        }
+
+        public static void AddClanMemory(string clanId, string note, int day)
+        {
+            if (string.IsNullOrWhiteSpace(clanId) || string.IsNullOrWhiteSpace(note))
+                return;
+
+            Append(ClanMemoryPath, new AIMemoryRecord
+            {
+                Kind = "clan_memory",
+                SubjectId = clanId.Trim(),
+                Day = day,
+                Text = Clean(note),
+                CampaignKey = GetCampaignKey(),
+                CreatedUtc = DateTime.UtcNow.ToString("o")
+            });
+        }
+
+        public static void WritePlayerReputation(float honor, float mercy, float aggression, string summary, int day)
+        {
+            try
+            {
+                lock (_lock)
+                {
+                    Directory.CreateDirectory(MemoryDirectory);
+                    var snapshot = new AIPlayerReputationSnapshot
+                    {
+                        Honor = honor,
+                        Mercy = mercy,
+                        Aggression = aggression,
+                        Summary = Clean(summary),
+                        Day = day,
+                        CampaignKey = GetCampaignKey(),
+                        UpdatedUtc = DateTime.UtcNow.ToString("o")
+                    };
+
+                    File.WriteAllText(PlayerReputationPath, JsonConvert.SerializeObject(snapshot, Formatting.Indented));
+                    UpsertSummaryUnsafe("player", "player", snapshot.Summary, day);
+                }
+            }
+            catch (Exception ex)
+            {
+                RFAIDebug.Log($"AIMemoryStore player reputation write failed: {ex.GetType().Name}: {ex.Message}");
+            }
+        }
+
+        public static void UpsertSummary(string category, string subjectId, string text, int day)
+        {
+            if (string.IsNullOrWhiteSpace(category) ||
+                string.IsNullOrWhiteSpace(subjectId) ||
+                string.IsNullOrWhiteSpace(text))
+                return;
+
+            try
+            {
+                lock (_lock)
+                {
+                    Directory.CreateDirectory(MemoryDirectory);
+                    UpsertSummaryUnsafe(category.Trim(), subjectId.Trim(), Clean(text), day);
+                }
+            }
+            catch (Exception ex)
+            {
+                RFAIDebug.Log($"AIMemoryStore summary write failed: {ex.GetType().Name}: {ex.Message}");
+            }
+        }
+
         public static List<AIMemoryRecord> GetNpcMemories(string heroId, int maxCount = 8, int maxDays = 0)
         {
             if (string.IsNullOrWhiteSpace(heroId))
@@ -78,6 +163,32 @@ namespace RF_AIDialog
                      r.SubjectId.Equals(heroId, StringComparison.OrdinalIgnoreCase));
         }
 
+        public static List<AIMemoryRecord> GetSettlementMemories(string settlementId, int maxCount = 8, int maxDays = 0)
+        {
+            if (string.IsNullOrWhiteSpace(settlementId))
+                return new List<AIMemoryRecord>();
+
+            return ReadRecent(
+                SettlementMemoryPath,
+                maxCount,
+                maxDays,
+                r => r.Kind == "settlement_memory" &&
+                     r.SubjectId.Equals(settlementId, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public static List<AIMemoryRecord> GetClanMemories(string clanId, int maxCount = 8, int maxDays = 0)
+        {
+            if (string.IsNullOrWhiteSpace(clanId))
+                return new List<AIMemoryRecord>();
+
+            return ReadRecent(
+                ClanMemoryPath,
+                maxCount,
+                maxDays,
+                r => r.Kind == "clan_memory" &&
+                     r.SubjectId.Equals(clanId, StringComparison.OrdinalIgnoreCase));
+        }
+
         public static List<AIMemoryRecord> GetWorldEvents(int maxCount = 40, int maxDays = 0)
         {
             return ReadRecent(
@@ -85,6 +196,39 @@ namespace RF_AIDialog
                 maxCount,
                 maxDays,
                 r => r.Kind == "world_event");
+        }
+
+        private static void UpsertSummaryUnsafe(string category, string subjectId, string text, int day)
+        {
+            var summaries = ReadSummariesUnsafe();
+            string key = $"{category}:{subjectId}";
+            summaries[key] = new AIMemorySummary
+            {
+                Category = category,
+                SubjectId = subjectId,
+                Text = Clean(text),
+                Day = day,
+                CampaignKey = GetCampaignKey(),
+                UpdatedUtc = DateTime.UtcNow.ToString("o")
+            };
+            File.WriteAllText(SummariesPath, JsonConvert.SerializeObject(summaries, Formatting.Indented));
+        }
+
+        private static Dictionary<string, AIMemorySummary> ReadSummariesUnsafe()
+        {
+            if (!File.Exists(SummariesPath))
+                return new Dictionary<string, AIMemorySummary>(StringComparer.OrdinalIgnoreCase);
+
+            try
+            {
+                return JsonConvert.DeserializeObject<Dictionary<string, AIMemorySummary>>(
+                           File.ReadAllText(SummariesPath))
+                       ?? new Dictionary<string, AIMemorySummary>(StringComparer.OrdinalIgnoreCase);
+            }
+            catch
+            {
+                return new Dictionary<string, AIMemorySummary>(StringComparer.OrdinalIgnoreCase);
+            }
         }
 
         private static void Append(string path, AIMemoryRecord record)
@@ -217,5 +361,50 @@ namespace RF_AIDialog
 
         [JsonProperty("created_utc")]
         public string CreatedUtc { get; set; } = "";
+    }
+
+    public sealed class AIPlayerReputationSnapshot
+    {
+        [JsonProperty("honor")]
+        public float Honor { get; set; }
+
+        [JsonProperty("mercy")]
+        public float Mercy { get; set; }
+
+        [JsonProperty("aggression")]
+        public float Aggression { get; set; }
+
+        [JsonProperty("summary")]
+        public string Summary { get; set; } = "";
+
+        [JsonProperty("day")]
+        public int Day { get; set; }
+
+        [JsonProperty("campaign_key")]
+        public string CampaignKey { get; set; } = "";
+
+        [JsonProperty("updated_utc")]
+        public string UpdatedUtc { get; set; } = "";
+    }
+
+    public sealed class AIMemorySummary
+    {
+        [JsonProperty("category")]
+        public string Category { get; set; } = "";
+
+        [JsonProperty("subject_id")]
+        public string SubjectId { get; set; } = "";
+
+        [JsonProperty("text")]
+        public string Text { get; set; } = "";
+
+        [JsonProperty("day")]
+        public int Day { get; set; }
+
+        [JsonProperty("campaign_key")]
+        public string CampaignKey { get; set; } = "";
+
+        [JsonProperty("updated_utc")]
+        public string UpdatedUtc { get; set; } = "";
     }
 }

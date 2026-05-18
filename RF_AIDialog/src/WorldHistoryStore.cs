@@ -52,6 +52,7 @@ namespace RF_AIDialog
             if (string.IsNullOrWhiteSpace(description)) return;
             _events.Add(new WorldEvent { Description = description, Day = day });
             AIMemoryStore.AddWorldEvent(description, day);
+            AIMemoryStore.UpsertSummary("world", "recent", $"Recent major event: {description}", day);
             while (_events.Count > MaxEvents)
                 _events.RemoveAt(0);
         }

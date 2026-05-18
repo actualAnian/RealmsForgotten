@@ -113,6 +113,16 @@ namespace RF_AIDialog
                         TimesChanged              = 1
                     };
                 }
+
+                AIMemoryStore.AddSettlementMemory(
+                    id,
+                    $"{settlement.Name} was captured by {newKingdomName} from {prevKingdomName} after a siege. Capturer: {capturerName}.",
+                    day);
+                AIMemoryStore.UpsertSummary(
+                    "settlement",
+                    id,
+                    $"{settlement.Name} last changed hands by siege on day {day}, taken by {newKingdomName} from {prevKingdomName}.",
+                    day);
             }
             catch { }
         }
