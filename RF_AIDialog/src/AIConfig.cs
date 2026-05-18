@@ -58,6 +58,11 @@ namespace RF_AIDialog
             "RF_AIDIALOG_OLLAMA_ENDPOINT",
             DefaultOllamaEndpoint);
 
+        public static bool DebugMenuEnabled => GetBool(
+            _activeProfile.Value.DebugMenuEnabled,
+            "RF_AIDIALOG_DEBUG_MENU_ENABLED",
+            false);
+
         public const int ContextSize = 2048;
         public const int TimeoutSeconds = 30;
         public const int MaxTokensFirstConversation = 650;
@@ -230,6 +235,9 @@ namespace RF_AIDialog
             [JsonProperty("ollama_endpoint")]
             public string? OllamaEndpoint { get; set; }
 
+            [JsonProperty("debug_menu_enabled")]
+            public bool? DebugMenuEnabled { get; set; }
+
             public AIProfileConfig WithFallbacks(AIProfileConfig fallback)
             {
                 return new AIProfileConfig
@@ -240,7 +248,8 @@ namespace RF_AIDialog
                     APIKeyFile = string.IsNullOrWhiteSpace(APIKeyFile) ? fallback.APIKeyFile : APIKeyFile,
                     APIModelName = string.IsNullOrWhiteSpace(APIModelName) ? fallback.APIModelName : APIModelName,
                     ModelName = string.IsNullOrWhiteSpace(ModelName) ? fallback.ModelName : ModelName,
-                    OllamaEndpoint = string.IsNullOrWhiteSpace(OllamaEndpoint) ? fallback.OllamaEndpoint : OllamaEndpoint
+                    OllamaEndpoint = string.IsNullOrWhiteSpace(OllamaEndpoint) ? fallback.OllamaEndpoint : OllamaEndpoint,
+                    DebugMenuEnabled = DebugMenuEnabled ?? fallback.DebugMenuEnabled
                 };
             }
         }

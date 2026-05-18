@@ -77,6 +77,12 @@ Supported environment variables:
 - `RF_AIDIALOG_OLLAMA_ENDPOINT`
 - `RF_AIDIALOG_CONFIG_PATH`
 - `RF_AIDIALOG_ACTIVE_PROFILE`
+- `RF_AIDIALOG_DEBUG_MENU_ENABLED`
+
+Developer debug menu:
+Set `"debug_menu_enabled": true` in `ai_config.local.json` or set
+`RF_AIDIALOG_DEBUG_MENU_ENABLED=true`, then press `Ctrl+F9` in game.
+It is disabled by default and only reads AI quest/memory state.
 
 Notes:
 - Keep `ai_config.local.json` out of git.

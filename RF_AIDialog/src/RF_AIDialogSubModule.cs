@@ -23,6 +23,7 @@ namespace RF_AIDialog
     {
         private AIDialogBehavior? _dialogBehavior;
         private bool _chronicleKeyWasDown = false;
+        private bool _debugKeyWasDown = false;
 
         // ── Ciclo de vida ─────────────────────────────────────────────────
 
@@ -91,6 +92,8 @@ namespace RF_AIDialog
             // ── F8 — World Chronicle ──────────────────────────────────────
             try
             {
+                HandleDebugMenuHotkey();
+
                 bool keyDown = Input.IsKeyDown(InputKey.F8);
 
                 // Rising edge only — fire once per press, not while held
@@ -109,6 +112,20 @@ namespace RF_AIDialog
         }
 
         // ── World Chronicle popup ─────────────────────────────────────────
+
+        private void HandleDebugMenuHotkey()
+        {
+            if (!AIConfig.DebugMenuEnabled)
+                return;
+
+            bool modifierDown = Input.IsKeyDown(InputKey.LeftControl) || Input.IsKeyDown(InputKey.RightControl);
+            bool keyDown = modifierDown && Input.IsKeyDown(InputKey.F9);
+
+            if (keyDown && !_debugKeyWasDown)
+                RFAIDebugMenu.Show();
+
+            _debugKeyWasDown = keyDown;
+        }
 
         private static void ShowChronicle()
         {
