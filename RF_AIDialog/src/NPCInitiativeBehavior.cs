@@ -13,11 +13,12 @@ namespace RF_AIDialog
     /// seek out the player. The dialog system picks this up and presents a
     /// special option: "You seem like you have something on your mind..."
     ///
-    /// Trigger priority (first match wins, one per NPC per day):
-    ///   1. Siege distress   — NPC's home settlement is besieged
-    ///   2. Prisoner ransom  — player holds a clansman of this NPC
-    ///   3. War coordination — NPC and player share a common enemy
-    ///   4. Grievance        — relation dropped ≥ 15 since last conversation
+    /// Trigger priority, first match wins:
+    ///   1. Pending request follow-up
+    ///   2. Siege distress
+    ///   3. Prisoner ransom
+    ///   4. War coordination
+    ///   5. Grievance
     /// </summary>
     public class NPCInitiativeBehavior : CampaignBehaviorBase
     {
@@ -27,8 +28,6 @@ namespace RF_AIDialog
         }
 
         public override void SyncData(IDataStore dataStore) { }
-
-        // ── Daily evaluation ──────────────────────────────────────────────
 
         private void OnDailyTickHero(Hero hero)
         {
@@ -42,36 +41,55 @@ namespace RF_AIDialog
                 var existingContext = store.GetExisting(hero.StringId);
                 var ctx = existingContext ?? new NPCContext { HeroId = hero.StringId };
 
-                // Don't overwrite an existing pending initiative
+                // Do not overwrite an existing pending initiative.
                 if (ctx.HasPendingInitiative) return;
 
                 string? reason = EvaluateInitiative(hero, ctx);
                 if (reason == null) return;
 
                 if (existingContext == null)
-                {
                     ctx = store.GetOrCreate(hero);
-                }
 
                 ctx.PendingInitiativeReason = reason;
                 store.MarkDirty(ctx);
 
-                // HUD notification — same blue as the response notification
-                InformationManager.DisplayMessage(new InformationMessage(
-                    $"💬 {hero.Name} seeks an audience with you.",
-                    Color.FromUint(0xFF_A0_D0_FFu)));
+                ShowAudienceNotification(hero);
             }
             catch { /* never crash on tick */ }
         }
 
-        // ── Guard ─────────────────────────────────────────────────────────
+        private static void ShowAudienceNotification(Hero hero)
+        {
+            try
+            {
+                string heroName = hero?.Name?.ToString() ?? "Someone";
+
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"{heroName} seeks an audience with you.",
+                    Color.FromUint(0xFF_A0_D0_FFu)));
+
+                bool inConversation = Campaign.Current?.ConversationManager?.IsConversationInProgress ?? false;
+                if (inConversation)
+                    return;
+
+                InformationManager.ShowInquiry(new InquiryData(
+                    titleText:                "Audience Requested",
+                    text:                     $"A messenger reports that {heroName} seeks an audience with you.\n\nSpeak with them to learn what is on their mind.",
+                    isAffirmativeOptionShown: true,
+                    isNegativeOptionShown:    false,
+                    affirmativeText:          "Understood",
+                    negativeText:             "",
+                    affirmativeAction:        () => { },
+                    negativeAction:           null));
+            }
+            catch { }
+        }
 
         private static bool ShouldEvaluate(Hero hero)
         {
             if (hero == null || hero == Hero.MainHero) return false;
-            if (!hero.IsAlive || hero.IsChild)         return false;
+            if (!hero.IsAlive || hero.IsChild) return false;
 
-            // Only lords and notables — companions handled separately
             var occ = hero.Occupation;
             return occ == Occupation.Lord
                 || occ == Occupation.Merchant
@@ -81,8 +99,6 @@ namespace RF_AIDialog
                 || occ == Occupation.Headman;
         }
 
-        // ── Condition evaluation ──────────────────────────────────────────
-
         private static string? EvaluateInitiative(Hero hero, NPCContext ctx)
         {
             var player = Hero.MainHero;
@@ -90,29 +106,33 @@ namespace RF_AIDialog
 
             int relation = (int)hero.GetRelationWithPlayer();
 
-            // ── 0. Pending request follow-up (highest priority) ───────────
-            // If this NPC made a request and hasn't heard back in 12+ days, seek the player out.
+            // 0. Pending request follow-up. If this NPC made a request and
+            // has not heard back in 12+ days, seek the player out.
             try
             {
                 if (ctx.HasPendingRequest)
                 {
                     int currentDay = 0;
-                    try { currentDay = (int)Campaign.Current.Models.CampaignTimeModel
-                              .CampaignStartTime.ElapsedDaysUntilNow; } catch { }
+                    try
+                    {
+                        currentDay = (int)Campaign.Current.Models.CampaignTimeModel
+                            .CampaignStartTime.ElapsedDaysUntilNow;
+                    }
+                    catch { }
 
                     int daysWaiting = currentDay - ctx.PendingRequest!.DayIssued;
                     if (daysWaiting >= 12)
                     {
                         return $"You are following up on a request you made {daysWaiting} days ago: " +
-                               $"\"{ctx.PendingRequest.Description}\" — " +
-                               $"The player has not yet returned. Press them on it directly, but stay in character. " +
-                               $"You may be impatient, concerned, or understanding depending on your nature.";
+                               $"\"{ctx.PendingRequest.Description}\" - " +
+                               "The player has not yet returned. Press them on it directly, but stay in character. " +
+                               "You may be impatient, concerned, or understanding depending on your nature.";
                     }
                 }
             }
             catch { }
 
-            // ── 1. Siege distress ─────────────────────────────────────────
+            // 1. Siege distress.
             try
             {
                 var home = hero.HomeSettlement ?? hero.BornSettlement;
@@ -121,7 +141,7 @@ namespace RF_AIDialog
             }
             catch { }
 
-            // ── 2. Prisoner ransom ────────────────────────────────────────
+            // 2. Prisoner ransom.
             try
             {
                 bool holdsClansman = MobileParty.MainParty.PrisonRoster
@@ -131,11 +151,11 @@ namespace RF_AIDialog
                            && e.Character.HeroObject != hero);
 
                 if (holdsClansman)
-                    return "The player holds a member of your clan as prisoner. You want to negotiate their release — through coin, trade, or appeal to honor.";
+                    return "The player holds a member of your clan as prisoner. You want to negotiate their release through coin, trade, or appeal to honor.";
             }
             catch { }
 
-            // ── 3. War coordination ───────────────────────────────────────
+            // 3. War coordination.
             try
             {
                 if (hero.MapFaction is Kingdom npcKingdom
@@ -156,7 +176,7 @@ namespace RF_AIDialog
             }
             catch { }
 
-            // ── 4. Grievance (relation dropped ≥ 15) ─────────────────────
+            // 4. Grievance: relation dropped by 15 or more since last known conversation.
             try
             {
                 if (ctx.LastKnownRelation != 0)
