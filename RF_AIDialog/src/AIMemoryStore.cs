@@ -198,6 +198,65 @@ namespace RF_AIDialog
                 r => r.Kind == "world_event");
         }
 
+        public static AIMemorySummary? GetSummary(string category, string subjectId)
+        {
+            if (string.IsNullOrWhiteSpace(category) || string.IsNullOrWhiteSpace(subjectId))
+                return null;
+
+            try
+            {
+                lock (_lock)
+                {
+                    var summaries = ReadSummariesUnsafe();
+                    string key = $"{category.Trim()}:{subjectId.Trim()}";
+                    if (!summaries.TryGetValue(key, out var summary) ||
+                        summary == null ||
+                        string.IsNullOrWhiteSpace(summary.Text))
+                        return null;
+
+                    string campaignKey = GetCampaignKey();
+                    if (!string.IsNullOrWhiteSpace(campaignKey) &&
+                        !string.IsNullOrWhiteSpace(summary.CampaignKey) &&
+                        !summary.CampaignKey.Equals(campaignKey, StringComparison.OrdinalIgnoreCase))
+                        return null;
+
+                    return summary;
+                }
+            }
+            catch (Exception ex)
+            {
+                RFAIDebug.Log($"AIMemoryStore summary read failed: {ex.GetType().Name}: {ex.Message}");
+                return null;
+            }
+        }
+
+        public static void RebuildSummaries()
+        {
+            try
+            {
+                lock (_lock)
+                {
+                    Directory.CreateDirectory(MemoryDirectory);
+
+                    var summaries = ReadSummariesUnsafe();
+                    int day = CurrentDay();
+                    string campaignKey = GetCampaignKey();
+                    string now = DateTime.UtcNow.ToString("o");
+
+                    BuildWorldSummary(summaries, day, campaignKey, now);
+                    BuildGroupedSummaries(summaries, "npc", NpcMemoryPath, "npc_memory", day, campaignKey, now);
+                    BuildGroupedSummaries(summaries, "settlement", SettlementMemoryPath, "settlement_memory", day, campaignKey, now);
+                    BuildGroupedSummaries(summaries, "clan", ClanMemoryPath, "clan_memory", day, campaignKey, now);
+
+                    File.WriteAllText(SummariesPath, JsonConvert.SerializeObject(summaries, Formatting.Indented));
+                }
+            }
+            catch (Exception ex)
+            {
+                RFAIDebug.Log($"AIMemoryStore summary rebuild failed: {ex.GetType().Name}: {ex.Message}");
+            }
+        }
+
         private static void UpsertSummaryUnsafe(string category, string subjectId, string text, int day)
         {
             var summaries = ReadSummariesUnsafe();
@@ -295,6 +354,115 @@ namespace RF_AIDialog
             catch (Exception ex)
             {
                 RFAIDebug.Log($"AIMemoryStore read failed: {ex.GetType().Name}: {ex.Message}");
+            }
+
+            return result;
+        }
+
+        private static void BuildWorldSummary(
+            Dictionary<string, AIMemorySummary> summaries,
+            int day,
+            string campaignKey,
+            string now)
+        {
+            var records = ReadAllRecordsUnsafe(WorldEventPath, "world_event", campaignKey);
+            string text = BuildSummaryText(records, "Recent world memory");
+            if (string.IsNullOrWhiteSpace(text))
+                return;
+
+            summaries["world:recent"] = new AIMemorySummary
+            {
+                Category = "world",
+                SubjectId = "recent",
+                Text = text,
+                Day = day,
+                CampaignKey = campaignKey,
+                UpdatedUtc = now
+            };
+        }
+
+        private static void BuildGroupedSummaries(
+            Dictionary<string, AIMemorySummary> summaries,
+            string category,
+            string path,
+            string kind,
+            int day,
+            string campaignKey,
+            string now)
+        {
+            var records = ReadAllRecordsUnsafe(path, kind, campaignKey);
+            foreach (var group in records
+                         .Where(r => !string.IsNullOrWhiteSpace(r.SubjectId))
+                         .GroupBy(r => r.SubjectId, StringComparer.OrdinalIgnoreCase)
+                         .Take(500))
+            {
+                string text = BuildSummaryText(group.ToList(), $"{category} memory");
+                if (string.IsNullOrWhiteSpace(text))
+                    continue;
+
+                string subjectId = group.Key.Trim();
+                summaries[$"{category}:{subjectId}"] = new AIMemorySummary
+                {
+                    Category = category,
+                    SubjectId = subjectId,
+                    Text = text,
+                    Day = day,
+                    CampaignKey = campaignKey,
+                    UpdatedUtc = now
+                };
+            }
+        }
+
+        private static string BuildSummaryText(List<AIMemoryRecord> records, string label)
+        {
+            if (records == null || records.Count == 0)
+                return "";
+
+            var recent = records
+                .Where(r => !string.IsNullOrWhiteSpace(r.Text))
+                .OrderByDescending(r => r.Day)
+                .ThenByDescending(r => r.CreatedUtc)
+                .Take(5)
+                .Reverse()
+                .ToList();
+
+            if (recent.Count == 0)
+                return "";
+
+            int firstDay = recent.Min(r => r.Day);
+            int lastDay = recent.Max(r => r.Day);
+            string dayRange = firstDay == lastDay ? $"day {lastDay}" : $"days {firstDay}-{lastDay}";
+            string joined = string.Join(" / ", recent.Select(r => r.Text));
+            return Clean($"{label} ({recent.Count} recent entries, {dayRange}): {joined}");
+        }
+
+        private static List<AIMemoryRecord> ReadAllRecordsUnsafe(string path, string kind, string campaignKey)
+        {
+            var result = new List<AIMemoryRecord>();
+
+            if (!File.Exists(path))
+                return result;
+
+            foreach (string line in File.ReadLines(path))
+            {
+                if (string.IsNullOrWhiteSpace(line))
+                    continue;
+
+                AIMemoryRecord? record = null;
+                try { record = JsonConvert.DeserializeObject<AIMemoryRecord>(line); }
+                catch { }
+
+                if (record == null ||
+                    string.IsNullOrWhiteSpace(record.Text) ||
+                    !record.Kind.Equals(kind, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                if (!string.IsNullOrWhiteSpace(campaignKey) &&
+                    !string.IsNullOrWhiteSpace(record.CampaignKey) &&
+                    !record.CampaignKey.Equals(campaignKey, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                result.Add(record);
             }
 
             return result;

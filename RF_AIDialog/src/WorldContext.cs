@@ -306,9 +306,17 @@ namespace RF_AIDialog
 
                         try
                         {
-                            var memories = AIMemoryStore.GetSettlementMemories(s.StringId, maxCount: 2, maxDays: 0);
-                            if (memories.Count > 0)
-                                scarDesc += $", remembered locally: {string.Join(" / ", memories.Select(m => m.Text))}";
+                            var summary = AIMemoryStore.GetSummary("settlement", s.StringId);
+                            if (summary != null)
+                            {
+                                scarDesc += $", remembered locally: {summary.Text}";
+                            }
+                            else
+                            {
+                                var memories = AIMemoryStore.GetSettlementMemories(s.StringId, maxCount: 2, maxDays: 0);
+                                if (memories.Count > 0)
+                                    scarDesc += $", remembered locally: {string.Join(" / ", memories.Select(m => m.Text))}";
+                            }
                         }
                         catch { }
 
@@ -356,12 +364,20 @@ namespace RF_AIDialog
 
                 try
                 {
-                    var memories = AIMemoryStore.GetClanMemories(clan.StringId, maxCount: 3, maxDays: 0);
-                    if (memories.Count > 0)
+                    var summary = AIMemoryStore.GetSummary("clan", clan.StringId);
+                    if (summary != null)
                     {
-                        sb.AppendLine("Recent memories attached to your clan:");
-                        foreach (var memory in memories)
-                            sb.AppendLine($"  - {memory.Text}");
+                        sb.AppendLine($"Clan memory summary: {summary.Text}");
+                    }
+                    else
+                    {
+                        var memories = AIMemoryStore.GetClanMemories(clan.StringId, maxCount: 3, maxDays: 0);
+                        if (memories.Count > 0)
+                        {
+                            sb.AppendLine("Recent memories attached to your clan:");
+                            foreach (var memory in memories)
+                                sb.AppendLine($"  - {memory.Text}");
+                        }
                     }
                 }
                 catch { }
@@ -429,12 +445,16 @@ namespace RF_AIDialog
                 var store = WorldHistoryStore.Instance;
                 if (store == null) return;
 
-                // Last 15 events within the past 90 in-game days
-                var events = store.GetRecentEvents(maxCount: 15, maxDays: 90);
+                // Last events within the past 90 in-game days
+                var summary = AIMemoryStore.GetSummary("world", "recent");
+                var events = store.GetRecentEvents(maxCount: summary != null ? 8 : 15, maxDays: 90);
                 if (events == null || events.Count == 0) return;
 
                 sb.AppendLine();
                 sb.AppendLine("RECENT WORLD HISTORY (significant events you would know about):");
+                if (summary != null)
+                    sb.AppendLine($"  Summary: {summary.Text}");
+
                 foreach (var e in events)
                     sb.AppendLine($"  [Day {e.Day}] {e.Description}");
             }

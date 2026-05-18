@@ -48,6 +48,7 @@ namespace RF_AIDialog
                 // WorldHistoryStore must be registered before WorldHistoryBehavior
                 campaignStarter.AddBehavior(new WorldHistoryStore());
                 campaignStarter.AddBehavior(new WorldHistoryBehavior());
+                campaignStarter.AddBehavior(new AIMemorySummaryBehavior());
 
                 // NPC initiative — evaluates daily conditions for all lords/notables
                 campaignStarter.AddBehavior(new NPCInitiativeBehavior());

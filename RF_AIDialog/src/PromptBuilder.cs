@@ -242,15 +242,23 @@ namespace RF_AIDialog
             sb.AppendLine($"Financially, you are {wealth}.");
 
             // ── Long-term memories ────────────────────────────────────────
+            var memorySummary = context != null
+                ? AIMemoryStore.GetSummary("npc", context.HeroId)
+                : null;
+
             var externalMemories = context != null
-                ? AIMemoryStore.GetNpcMemories(context.HeroId, maxCount: 8, maxDays: 0)
+                ? AIMemoryStore.GetNpcMemories(context.HeroId, maxCount: memorySummary != null ? 4 : 8, maxDays: 0)
                 : new List<AIMemoryRecord>();
 
-            if ((externalMemories != null && externalMemories.Count > 0) ||
+            if (memorySummary != null ||
+                (externalMemories != null && externalMemories.Count > 0) ||
                 (context != null && context.Memories.Count > 0))
             {
                 sb.AppendLine();
                 sb.AppendLine("THINGS YOU REMEMBER ABOUT THIS PLAYER (significant past events):");
+                if (memorySummary != null)
+                    sb.AppendLine($"  Summary: {memorySummary.Text}");
+
                 if (externalMemories != null)
                 {
                     foreach (var mem in externalMemories)
