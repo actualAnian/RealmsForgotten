@@ -118,7 +118,7 @@ namespace RF_AIDialog
             {
                 _isResolvedDisplay = true;
                 AddCompletedLog();
-                try { ChangeQuestDueTime(CampaignTime.Now + CampaignTime.Days(36500)); }
+                try { CompleteQuestWithSuccess(); }
                 catch { }
             }
             _activeByNpcId.Remove(_npcStringId);

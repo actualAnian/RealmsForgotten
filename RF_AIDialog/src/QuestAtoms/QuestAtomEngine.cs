@@ -349,7 +349,14 @@ namespace RF_AIDialog
             if (anyNew)
             {
                 NPCContextStore.Instance?.MarkDirty(ctx);
-                CheckMechanicCompletion(ctx);
+                if (mechanic.AllCompleted)
+                {
+                    CompleteMechanicQuest(ctx, notifyReturnReward: true);
+                }
+                else
+                {
+                    CheckMechanicCompletion(ctx);
+                }
             }
 
             return anyNew;
@@ -573,11 +580,21 @@ namespace RF_AIDialog
                 return;
             }
 
+            CompleteMechanicQuest(ctx, notifyReturnReward: false);
+        }
+
+        private static void CompleteMechanicQuest(NPCContext ctx, bool notifyReturnReward)
+        {
+            var request = ctx.PendingRequest;
+            var mechanic = request?.Mechanic;
+            if (request == null || mechanic == null)
+                return;
+
             var quest = AIDialogQuest.ForNpc(ctx.HeroId);
             if (quest != null && quest.IsOngoing)
             {
                 quest.MarkFulfilled();
-                RFAIDebug.Log($"QuestAtomEngine: auto-fulfilled for {ctx.HeroId}");
+                RFAIDebug.Log($"QuestAtomEngine: fulfilled for {ctx.HeroId}");
             }
 
             if (mechanic.RewardGold > 0)
@@ -585,17 +602,17 @@ namespace RF_AIDialog
                 try
                 {
                     Hero.MainHero?.ChangeHeroGold(mechanic.RewardGold);
-                    RFAIDebug.Log($"QuestAtomEngine: auto-rewarded {mechanic.RewardGold} gold");
+                    RFAIDebug.Log($"QuestAtomEngine: rewarded {mechanic.RewardGold} gold");
                     Notify($"Quest complete! You received {mechanic.RewardGold} gold.");
                 }
                 catch { }
             }
             else
             {
-                Notify("Quest complete!");
+                Notify(notifyReturnReward ? "Quest complete! You reported back to the NPC." : "Quest complete!");
             }
 
-            ctx.AddCompletedRequest(ctx.PendingRequest, CurrentDay(), "Completed");
+            ctx.AddCompletedRequest(request, CurrentDay(), "Completed");
             ctx.PendingRequest = null;
             NPCContextStore.Instance?.MarkDirty(ctx);
         }
