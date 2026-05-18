@@ -5,7 +5,7 @@ using TaleWorlds.CampaignSystem;
 namespace RF_AIDialog
 {
     /// <summary>
-    /// A significant world event captured in real time and stored in the campaign save.
+    /// A significant world event captured in real time and read from external AI memory.
     /// Examples: wars declared, settlements captured, clans or kingdoms destroyed.
     /// </summary>
     public class WorldEvent
@@ -20,7 +20,8 @@ namespace RF_AIDialog
     }
 
     /// <summary>
-    /// Persists world history events across campaign saves.
+    /// Keeps a lightweight in-session view of world history.
+    /// Long-term world history is written to AIMemoryStore instead of the campaign save.
     /// Populated by WorldHistoryBehavior (event listeners).
     /// Read by WorldContext.BuildDynamicState for NPC prompt injection.
     /// </summary>
@@ -31,9 +32,7 @@ namespace RF_AIDialog
 
         // ── Data ──────────────────────────────────────────────────────────
         private List<WorldEvent> _events = new List<WorldEvent>();
-        private string _serialized = "";
-
-        public const int MaxEvents = 40; // hard cap on stored events
+        public const int MaxEvents = 40; // hard cap on in-session fallback events
 
         // ── Construction ──────────────────────────────────────────────────
         public WorldHistoryStore()
@@ -44,29 +43,7 @@ namespace RF_AIDialog
         // ── CampaignBehaviorBase ──────────────────────────────────────────
         public override void RegisterEvents() { }
 
-        public override void SyncData(IDataStore dataStore)
-        {
-            if (!dataStore.IsLoading)
-            {
-                try   { _serialized = JsonConvert.SerializeObject(_events); }
-                catch { _serialized = "[]"; }
-            }
-
-            dataStore.SyncData("RF_AI_WorldHistory", ref _serialized);
-
-            if (dataStore.IsLoading && !string.IsNullOrWhiteSpace(_serialized))
-            {
-                try
-                {
-                    _events = JsonConvert.DeserializeObject<List<WorldEvent>>(_serialized)
-                              ?? new List<WorldEvent>();
-                }
-                catch
-                {
-                    _events = new List<WorldEvent>();
-                }
-            }
-        }
+        public override void SyncData(IDataStore dataStore) { }
 
         // ── Public API ────────────────────────────────────────────────────
 
@@ -74,6 +51,7 @@ namespace RF_AIDialog
         {
             if (string.IsNullOrWhiteSpace(description)) return;
             _events.Add(new WorldEvent { Description = description, Day = day });
+            AIMemoryStore.AddWorldEvent(description, day);
             while (_events.Count > MaxEvents)
                 _events.RemoveAt(0);
         }
@@ -86,6 +64,14 @@ namespace RF_AIDialog
         {
             int currentDay = 0;
             try { currentDay = (int)Campaign.Current.Models.CampaignTimeModel.CampaignStartTime.ElapsedDaysUntilNow; } catch { }
+
+            var external = AIMemoryStore.GetWorldEvents(maxCount, maxDays);
+            if (external.Count > 0)
+            {
+                return external
+                    .Select(e => new WorldEvent { Description = e.Text, Day = e.Day })
+                    .ToList();
+            }
 
             var result = new List<WorldEvent>();
             // Walk backwards (newest first), collect up to maxCount

@@ -36,6 +36,7 @@ namespace RF_AIDialog
             // Serialize current state before saving
             if (!dataStore.IsLoading)
             {
+                PrepareForSave();
                 try   { _serialized = JsonConvert.SerializeObject(_contexts); }
                 catch { _serialized = "{}"; }
                 RFAIDebug.Log($"NPCContextStore.SyncData SAVE | contexts={_contexts.Count} | bytes={(_serialized?.Length ?? 0)}");
@@ -107,6 +108,58 @@ namespace RF_AIDialog
             // The dictionary already holds a reference to the same object,
             // so mutations are visible immediately. This method is a no-op
             // kept for call-site clarity and future extensibility.
+        }
+
+        private void PrepareForSave()
+        {
+            try
+            {
+                var remove = new List<string>();
+
+                foreach (var pair in _contexts)
+                {
+                    var ctx = pair.Value;
+                    if (ctx == null)
+                    {
+                        remove.Add(pair.Key);
+                        continue;
+                    }
+
+                    // Migrate legacy save-backed semantic memories out of the save.
+                    if (ctx.Memories != null && ctx.Memories.Count > 0)
+                    {
+                        foreach (var mem in ctx.Memories)
+                        {
+                            if (!string.IsNullOrWhiteSpace(mem.Note))
+                                AIMemoryStore.AddNpcMemory(ctx.HeroId, mem.Note, mem.Day);
+                        }
+                        ctx.Memories.Clear();
+                    }
+
+                    if (!ShouldPersist(ctx))
+                        remove.Add(pair.Key);
+                }
+
+                foreach (string key in remove)
+                    _contexts.Remove(key);
+            }
+            catch (Exception ex)
+            {
+                RFAIDebug.Log($"NPCContextStore.PrepareForSave failed: {ex.GetType().Name}: {ex.Message}");
+            }
+        }
+
+        private static bool ShouldPersist(NPCContext ctx)
+        {
+            if (ctx == null)
+                return false;
+
+            return !string.IsNullOrWhiteSpace(ctx.GeneratedPersonality)
+                || !string.IsNullOrWhiteSpace(ctx.GeneratedAmbition)
+                || (ctx.RecentHistory != null && ctx.RecentHistory.Count > 0)
+                || ctx.HasPendingRequest
+                || ctx.HasPendingInitiative
+                || ctx.LastKnownRelation != 0;
         }
     }
 }

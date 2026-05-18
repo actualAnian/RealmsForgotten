@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
@@ -241,12 +242,32 @@ namespace RF_AIDialog
             sb.AppendLine($"Financially, you are {wealth}.");
 
             // ── Long-term memories ────────────────────────────────────────
-            if (context != null && context.Memories.Count > 0)
+            var externalMemories = context != null
+                ? AIMemoryStore.GetNpcMemories(context.HeroId, maxCount: 8, maxDays: 0)
+                : new List<AIMemoryRecord>();
+
+            if ((externalMemories != null && externalMemories.Count > 0) ||
+                (context != null && context.Memories.Count > 0))
             {
                 sb.AppendLine();
                 sb.AppendLine("THINGS YOU REMEMBER ABOUT THIS PLAYER (significant past events):");
-                foreach (var mem in context.Memories)
-                    sb.AppendLine($"  - {mem.Note}");
+                if (externalMemories != null)
+                {
+                    foreach (var mem in externalMemories)
+                        sb.AppendLine($"  - {mem.Text}");
+                }
+
+                if (context != null)
+                {
+                    foreach (var mem in context.Memories)
+                    {
+                        if (string.IsNullOrWhiteSpace(mem.Note))
+                            continue;
+                        if (externalMemories != null && externalMemories.Any(e => e.Text == mem.Note))
+                            continue;
+                        sb.AppendLine($"  - {mem.Note}");
+                    }
+                }
             }
 
             // ── Conversation history ──────────────────────────────────────

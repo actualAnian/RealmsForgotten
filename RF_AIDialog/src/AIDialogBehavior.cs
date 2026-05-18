@@ -652,7 +652,7 @@ namespace RF_AIDialog
                     int memDay = 0;
                     try { memDay = (int)Campaign.Current.Models.CampaignTimeModel
                                         .CampaignStartTime.ElapsedDaysUntilNow; } catch { }
-                    _currentContext.AddMemory(_parsed.MemoryNote, memDay);
+                    AIMemoryStore.AddNpcMemory(_currentContext.HeroId, _parsed.MemoryNote!, memDay);
                 }
 
                 // Pending request lifecycle
@@ -714,7 +714,7 @@ namespace RF_AIDialog
                 _currentContext.PendingInitiativeReason = null;
 
                 NPCContextStore.Instance?.MarkDirty(_currentContext);
-                RFAIDebug.Log($"ConsequenceClearResponse: context saved for {_currentContext.HeroId} | pending={_currentContext.HasPendingRequest} | history={_currentContext.RecentHistory.Count} | memories={_currentContext.Memories.Count}");
+                RFAIDebug.Log($"ConsequenceClearResponse: context saved for {_currentContext.HeroId} | pending={_currentContext.HasPendingRequest} | history={_currentContext.RecentHistory.Count} | externalMemoryPath={AIMemoryStore.DirectoryPath}");
             }
 
             // Reset state
