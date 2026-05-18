@@ -37,6 +37,27 @@ namespace RF_AIDialog
 
         public static string DirectoryPath => MemoryDirectory;
 
+        public static void EnsureInitialized()
+        {
+            try
+            {
+                lock (_lock)
+                {
+                    Directory.CreateDirectory(MemoryDirectory);
+
+                    EnsureFile(NpcMemoryPath, "");
+                    EnsureFile(WorldEventPath, "");
+                    EnsureFile(SettlementMemoryPath, "");
+                    EnsureFile(ClanMemoryPath, "");
+                    EnsureFile(SummariesPath, "{}");
+                }
+            }
+            catch (Exception ex)
+            {
+                RFAIDebug.Log($"AIMemoryStore initialize failed: {ex.GetType().Name}: {ex.Message}");
+            }
+        }
+
         public static void AddNpcMemory(string heroId, string note, int day)
         {
             if (string.IsNullOrWhiteSpace(heroId) || string.IsNullOrWhiteSpace(note))
@@ -305,6 +326,14 @@ namespace RF_AIDialog
             {
                 RFAIDebug.Log($"AIMemoryStore append failed: {ex.GetType().Name}: {ex.Message}");
             }
+        }
+
+        private static void EnsureFile(string path, string contents)
+        {
+            if (File.Exists(path))
+                return;
+
+            File.WriteAllText(path, contents);
         }
 
         private static List<AIMemoryRecord> ReadRecent(

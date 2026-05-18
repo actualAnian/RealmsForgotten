@@ -31,6 +31,7 @@ namespace RF_AIDialog
         {
             base.OnSubModuleLoad();
             RFAIDebug.Log("OnSubModuleLoad: start");
+            AIMemoryStore.EnsureInitialized();
             new Harmony("RF_AIDialog").PatchAll(typeof(RF_AIDialogSubModule).Assembly);
             RFAIDebug.Log("OnSubModuleLoad: OK");
         }
