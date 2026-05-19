@@ -16,11 +16,17 @@ namespace RF_AIDialog
     /// </summary>
     public static class PromptBuilder
     {
-        public static string Build(Hero npc, NPCContext? context = null)
+        private enum PromptProfile
+        {
+            Lean,
+            Full
+        }
+
+        public static string Build(Hero npc, NPCContext? context = null, string playerText = "")
         {
             try
             {
-                return BuildInternal(npc, context);
+                return BuildInternal(npc, context, ResolveProfile(npc, context, playerText));
             }
             catch (Exception ex)
             {
@@ -29,9 +35,37 @@ namespace RF_AIDialog
             }
         }
 
-        private static string BuildInternal(Hero npc, NPCContext? context)
+        private static PromptProfile ResolveProfile(Hero npc, NPCContext? context, string playerText)
+        {
+            if (context == null ||
+                context.IsFirstConversation ||
+                context.HasPendingRequest ||
+                context.HasPendingInitiative)
+                return PromptProfile.Full;
+
+            bool isCompanion = npc.Occupation == TaleWorlds.CampaignSystem.Occupation.Wanderer
+                               && npc.PartyBelongedTo == MobileParty.MainParty;
+            if (isCompanion || npc.IsLord || npc.IsKingdomLeader)
+                return PromptProfile.Full;
+
+            string text = (playerText ?? "").ToLowerInvariant();
+            string[] fullKeywords =
+            {
+                "work", "job", "quest", "task", "mission", "problem", "help",
+                "trade", "barter", "buy", "sell", "gold", "grain", "wine",
+                "troop", "soldier", "prisoner", "patrol", "scout", "deliver",
+                "war", "army", "kingdom", "clan", "politic", "alliance"
+            };
+
+            return fullKeywords.Any(text.Contains)
+                ? PromptProfile.Full
+                : PromptProfile.Lean;
+        }
+
+        private static string BuildInternal(Hero npc, NPCContext? context, PromptProfile profile)
         {
             var sb = new StringBuilder();
+            bool isFullProfile = profile == PromptProfile.Full;
 
             // ── World: Aeurth lore (static) ───────────────────────────────
             sb.AppendLine("WORLD LORE:");
@@ -39,12 +73,17 @@ namespace RF_AIDialog
             sb.AppendLine();
 
             // ── Current world events (dynamic) ────────────────────────────
-            string dynamicState = WorldContext.BuildDynamicState(npc);
-            if (!string.IsNullOrWhiteSpace(dynamicState))
-                sb.AppendLine(dynamicState);
+            if (isFullProfile)
+            {
+                string dynamicState = WorldContext.BuildDynamicState(npc);
+                if (!string.IsNullOrWhiteSpace(dynamicState))
+                    sb.AppendLine(dynamicState);
+            }
 
             sb.AppendLine("You are a character living in the world of Aeurth.");
             sb.AppendLine("Never break character. Never mention that you are an AI.");
+            if (!isFullProfile)
+                sb.AppendLine("LEAN PROMPT: this is ordinary conversation. Do not create quests, trades, or mechanical actions; focus on voice, memory, and relationship.");
             sb.AppendLine();
             sb.AppendLine("BARTER RULE — READ THIS FIRST:");
             sb.AppendLine("When you accept a trade offer, the exchange happens ON THE SPOT. No inspection phase. No 'bring it and I will pay later'.");
@@ -300,7 +339,7 @@ namespace RF_AIDialog
                                && npc.PartyBelongedTo == MobileParty.MainParty;
 
             // ── Quest atom catalog (lords + notables only, not companions) ──
-            if (!isCompanion)
+            if (isFullProfile && !isCompanion)
             {
                 try
                 {
@@ -325,6 +364,12 @@ namespace RF_AIDialog
 
             sb.AppendLine();
             sb.AppendLine("AVAILABLE GAME ACTIONS (optional — only use when narratively justified):");
+            if (!isFullProfile)
+            {
+                sb.AppendLine("In this lean prompt, prefer \"actions\": [] and do not trigger trades, gold, items, troops, or roles.");
+            }
+            else
+            {
             sb.AppendLine("You may include an \"actions\" array in your response to trigger real in-game effects.");
             sb.AppendLine("Use sparingly and only when the conversation genuinely warrants it. Never abuse.");
             sb.AppendLine();
@@ -368,12 +413,25 @@ namespace RF_AIDialog
             sb.AppendLine("  \"actions\": [{\"type\": \"give_item\", \"item_id\": \"wine\", \"value\": 2}]");
             sb.AppendLine("  \"actions\": [{\"type\": \"take_item\", \"item_id\": \"grain\", \"value\": 10}]");
             sb.AppendLine("Omit the \"actions\" field entirely if no action is warranted.");
+            }
 
             // ── JSON format ───────────────────────────────────────────────
             sb.AppendLine();
             bool hasPendingRequest = context != null && context.HasPendingRequest;
 
-            if (isFirstConversation)
+            if (!isFullProfile)
+            {
+                sb.AppendLine("Output this exact compact JSON. No text outside it. ALL fields are required.");
+                sb.AppendLine("{");
+                sb.AppendLine("  \"internal_thoughts\": \"your private reaction, 1 sentence\",");
+                sb.AppendLine("  \"response\": \"what you say out loud, in character, 2-4 sentences\",");
+                sb.AppendLine("  \"tone\": \"friendly|neutral|suspicious|hostile|fearful\",");
+                sb.AppendLine("  \"memory_note\": \"OPTIONAL - one sentence only if something significant happened. Omit for trivial small-talk.\",");
+                sb.AppendLine("  \"actions\": []");
+                sb.AppendLine("}");
+                sb.AppendLine("Do not create a request or quest_mechanic in this lean prompt.");
+            }
+            else if (isFirstConversation)
             {
                 sb.AppendLine("This is your FIRST conversation with this player. Include personality_summary.");
                 sb.AppendLine();

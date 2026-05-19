@@ -612,7 +612,7 @@ namespace RF_AIDialog
             RFAIDebug.Log($"OnPlayerConfirmedInput: npc={npc?.StringId ?? "null"} | first={(ctx == null || ctx.IsFirstConversation)} | pending={ctx?.HasPendingRequest ?? false}");
 
             string systemPrompt;
-            try   { systemPrompt = PromptBuilder.Build(npc!, ctx); }
+            try   { systemPrompt = PromptBuilder.Build(npc!, ctx, playerText); }
             catch { systemPrompt = FallbackPrompt(); }
 
             Task.Run(async () =>
