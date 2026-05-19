@@ -18,6 +18,9 @@ namespace RF_AIDialog
     public static class AIMemoryStore
     {
         private const int MaxTextLength = 1000;
+        public const int PromptRecentMemoryDays = 20;
+        public const int PromptRecentMemoryCountWithSummary = 4;
+        public const int PromptRecentMemoryCountWithoutSummary = 8;
 
         private static readonly object _lock = new object();
 
@@ -264,6 +267,7 @@ namespace RF_AIDialog
                     string campaignKey = GetCampaignKey();
                     string now = DateTime.UtcNow.ToString("o");
 
+                    ClearGeneratedSummaries(summaries, campaignKey);
                     BuildWorldSummary(summaries, day, campaignKey, now);
                     BuildGroupedSummaries(summaries, "npc", NpcMemoryPath, "npc_memory", day, campaignKey, now);
                     BuildGroupedSummaries(summaries, "settlement", SettlementMemoryPath, "settlement_memory", day, campaignKey, now);
@@ -276,6 +280,27 @@ namespace RF_AIDialog
             {
                 RFAIDebug.Log($"AIMemoryStore summary rebuild failed: {ex.GetType().Name}: {ex.Message}");
             }
+        }
+
+        private static void ClearGeneratedSummaries(
+            Dictionary<string, AIMemorySummary> summaries,
+            string campaignKey)
+        {
+            var remove = summaries
+                .Where(pair =>
+                    pair.Value != null &&
+                    (pair.Value.Category == "world" ||
+                     pair.Value.Category == "npc" ||
+                     pair.Value.Category == "settlement" ||
+                     pair.Value.Category == "clan") &&
+                    (string.IsNullOrWhiteSpace(campaignKey) ||
+                     string.IsNullOrWhiteSpace(pair.Value.CampaignKey) ||
+                     pair.Value.CampaignKey.Equals(campaignKey, StringComparison.OrdinalIgnoreCase)))
+                .Select(pair => pair.Key)
+                .ToList();
+
+            foreach (string key in remove)
+                summaries.Remove(key);
         }
 
         private static void UpsertSummaryUnsafe(string category, string subjectId, string text, int day)
@@ -395,7 +420,7 @@ namespace RF_AIDialog
             string now)
         {
             var records = ReadAllRecordsUnsafe(WorldEventPath, "world_event", campaignKey);
-            string text = BuildSummaryText(records, "Recent world memory");
+            string text = BuildSummaryText(records, "Older world memory", day);
             if (string.IsNullOrWhiteSpace(text))
                 return;
 
@@ -425,7 +450,7 @@ namespace RF_AIDialog
                          .GroupBy(r => r.SubjectId, StringComparer.OrdinalIgnoreCase)
                          .Take(500))
             {
-                string text = BuildSummaryText(group.ToList(), $"{category} memory");
+                string text = BuildSummaryText(group.ToList(), $"Older {category} memory", day);
                 if (string.IsNullOrWhiteSpace(text))
                     continue;
 
@@ -442,27 +467,28 @@ namespace RF_AIDialog
             }
         }
 
-        private static string BuildSummaryText(List<AIMemoryRecord> records, string label)
+        private static string BuildSummaryText(List<AIMemoryRecord> records, string label, int currentDay)
         {
             if (records == null || records.Count == 0)
                 return "";
 
-            var recent = records
+            var older = records
                 .Where(r => !string.IsNullOrWhiteSpace(r.Text))
+                .Where(r => currentDay <= 0 || r.Day <= currentDay - PromptRecentMemoryDays)
                 .OrderByDescending(r => r.Day)
                 .ThenByDescending(r => r.CreatedUtc)
-                .Take(5)
+                .Take(6)
                 .Reverse()
                 .ToList();
 
-            if (recent.Count == 0)
+            if (older.Count == 0)
                 return "";
 
-            int firstDay = recent.Min(r => r.Day);
-            int lastDay = recent.Max(r => r.Day);
+            int firstDay = older.Min(r => r.Day);
+            int lastDay = older.Max(r => r.Day);
             string dayRange = firstDay == lastDay ? $"day {lastDay}" : $"days {firstDay}-{lastDay}";
-            string joined = string.Join(" / ", recent.Select(r => r.Text));
-            return Clean($"{label} ({recent.Count} recent entries, {dayRange}): {joined}");
+            string joined = string.Join(" / ", older.Select(r => r.Text));
+            return Clean($"{label} ({older.Count} compacted entries, {dayRange}): {joined}");
         }
 
         private static List<AIMemoryRecord> ReadAllRecordsUnsafe(string path, string kind, string campaignKey)

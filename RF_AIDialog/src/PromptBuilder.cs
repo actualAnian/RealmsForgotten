@@ -248,7 +248,12 @@ namespace RF_AIDialog
                 : null;
 
             var externalMemories = context != null
-                ? AIMemoryStore.GetNpcMemories(context.HeroId, maxCount: memorySummary != null ? 4 : 8, maxDays: 0)
+                ? AIMemoryStore.GetNpcMemories(
+                    context.HeroId,
+                    maxCount: memorySummary != null
+                        ? AIMemoryStore.PromptRecentMemoryCountWithSummary
+                        : AIMemoryStore.PromptRecentMemoryCountWithoutSummary,
+                    maxDays: AIMemoryStore.PromptRecentMemoryDays)
                 : new List<AIMemoryRecord>();
 
             if (memorySummary != null ||
