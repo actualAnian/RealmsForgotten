@@ -64,7 +64,7 @@ namespace RF_AIDialog
             var sanitized = new QuestMechanic
             {
                 QuestKind = questKind,
-                RewardGold = ClampRewardGold(mechanic.RewardGold),
+                RewardGold = NormalizeRewardGold(questKind, mechanic.RewardGold),
                 DurationDays = ClampDurationDays(mechanic.DurationDays)
             };
 
@@ -509,6 +509,63 @@ namespace RF_AIDialog
         private static int ClampRadius(int value) => Math.Max(20, Math.Min(150, value <= 0 ? 80 : value));
 
         private static int ClampRewardGold(int value) => Math.Max(0, Math.Min(AIConfig.MaxGoldTransfer, value));
+
+        private static int NormalizeRewardGold(string questKind, int requested)
+        {
+            int min = 150;
+            int suggested = 300;
+            int max = AIConfig.MaxGoldTransfer;
+
+            switch ((questKind ?? "").Trim().ToLowerInvariant())
+            {
+                case "travel_report":
+                    min = 150;
+                    suggested = 300;
+                    break;
+                case "delivery":
+                    min = 200;
+                    suggested = 350;
+                    break;
+                case "recruitment":
+                    min = 300;
+                    suggested = 500;
+                    break;
+                case "scouting":
+                    min = 250;
+                    suggested = 450;
+                    break;
+                case "delivery_under_pressure":
+                    min = 400;
+                    suggested = 700;
+                    break;
+                case "retaliation":
+                    min = 500;
+                    suggested = 900;
+                    break;
+                case "escort_with_ambush":
+                    min = 600;
+                    suggested = 1000;
+                    break;
+                case "capture_prisoner":
+                    min = 700;
+                    suggested = 1200;
+                    break;
+                case "rescue_prisoner_noble":
+                    min = 900;
+                    suggested = 1500;
+                    break;
+                case "courtship_tournament":
+                    min = 300;
+                    suggested = 600;
+                    break;
+            }
+
+            int value = requested <= 0 ? suggested : requested;
+            if (value < min)
+                value = min;
+
+            return ClampRewardGold(Math.Min(value, max));
+        }
 
         private static int ClampDurationDays(int value) => Math.Max(1, Math.Min(120, value <= 0 ? 30 : value));
 

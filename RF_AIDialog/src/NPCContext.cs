@@ -153,11 +153,20 @@ namespace RF_AIDialog
         [JsonProperty("last_known_relation")]
         public int LastKnownRelation { get; set; } = 0;
 
+        /// <summary>
+        /// Last in-game day on which this NPC created an AI request.
+        /// Used as a lightweight cooldown so the same NPC does not offer work
+        /// too frequently across conversations or save/load.
+        /// </summary>
+        [JsonProperty("last_request_day")]
+        public int LastRequestDay { get; set; } = -100000;
+
         // ── Limits ────────────────────────────────────────────────────────
 
         public static int MaxHistory  => 6;   // raw exchanges kept
         public static int MaxMemories => 10;  // semantic facts kept
         public static int MaxCompletedRequests => 3;
+        public static int RequestCooldownDays => 10;
 
         // ── Computed ──────────────────────────────────────────────────────
 

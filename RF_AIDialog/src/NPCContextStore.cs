@@ -160,7 +160,8 @@ namespace RF_AIDialog
                 || (ctx.CompletedRequests != null && ctx.CompletedRequests.Count > 0)
                 || ctx.HasPendingRequest
                 || ctx.HasPendingInitiative
-                || ctx.LastKnownRelation != 0;
+                || ctx.LastKnownRelation != 0
+                || ctx.LastRequestDay > -100000;
         }
     }
 }

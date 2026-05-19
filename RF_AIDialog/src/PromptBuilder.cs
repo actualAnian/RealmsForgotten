@@ -60,6 +60,7 @@ namespace RF_AIDialog
             sb.AppendLine("Only use quest kinds listed in allowed_quest_kinds.");
             sb.AppendLine("When naming settlements, strongly prefer the NEARBY SETTLEMENTS list unless locality_scope clearly allows broader travel.");
             sb.AppendLine("Do not invent urgent needs just because the player asked whether you have work.");
+            AppendRequestCooldownRule(sb, context);
             sb.AppendLine();
 
             // ── Established personality (injected after first contact) ─────
@@ -457,6 +458,27 @@ namespace RF_AIDialog
         }
 
         // ── Occupation-specific context ───────────────────────────────────
+
+        private static void AppendRequestCooldownRule(StringBuilder sb, NPCContext? context)
+        {
+            if (context == null || context.LastRequestDay <= -100000)
+                return;
+
+            int currentDay = 0;
+            try
+            {
+                currentDay = (int)Campaign.Current.Models.CampaignTimeModel
+                    .CampaignStartTime.ElapsedDaysUntilNow;
+            }
+            catch { }
+
+            int daysSince = currentDay - context.LastRequestDay;
+            int daysLeft = NPCContext.RequestCooldownDays - daysSince;
+            if (daysLeft <= 0)
+                return;
+
+            sb.AppendLine($"REQUEST COOLDOWN: You offered the player work {daysSince} days ago. Do not create a new request for another {daysLeft} days unless an existing pending request is being resolved.");
+        }
 
         private static void AppendOccupationContext(StringBuilder sb, Hero npc)
         {
