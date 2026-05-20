@@ -5,9 +5,11 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
+using TaleWorlds.ObjectSystem;
 
 namespace RF_AIDialog
 {
@@ -821,6 +823,7 @@ namespace RF_AIDialog
                     string qId       = $"rfai_{_currentNpc.StringId}_{day}";
                     var quest = new AIDialogQuest(qId, _currentNpc, requestText, durationDays);
                     quest.StartQuest();
+                    GrantSuppliedDeliveryGoods(mechanic, _currentNpc);
 
                     // Log each atom as a to-do bullet so the player sees them in the journal.
                     if (mechanic != null)
@@ -866,6 +869,47 @@ namespace RF_AIDialog
                 return false;
 
             return currentDay - ctx.LastRequestDay < NPCContext.RequestCooldownDays;
+        }
+
+        private static void GrantSuppliedDeliveryGoods(QuestMechanic? mechanic, Hero npc)
+        {
+            if (mechanic == null ||
+                !mechanic.QuestKind.Equals("delivery", StringComparison.OrdinalIgnoreCase) &&
+                !mechanic.QuestKind.Equals("delivery_under_pressure", StringComparison.OrdinalIgnoreCase))
+                return;
+
+            bool hasDestination = mechanic.Objectives.Any(atom =>
+                string.Equals(atom.AtomType, "VISIT_SETTLEMENT", StringComparison.OrdinalIgnoreCase));
+            if (!hasDestination)
+                return;
+
+            foreach (var atom in mechanic.Objectives)
+            {
+                if (!string.Equals(atom.AtomType, "BRING_ITEM", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                string itemId = atom.GetParam("item_id");
+                int quantity = Math.Max(1, atom.GetParamInt("quantity", 1));
+                if (string.IsNullOrWhiteSpace(itemId))
+                    continue;
+
+                try
+                {
+                    var item = MBObjectManager.Instance.GetObject<ItemObject>(itemId);
+                    if (item == null)
+                        continue;
+
+                    MobileParty.MainParty.ItemRoster.AddToCounts(item, quantity);
+                    InformationManager.DisplayMessage(new InformationMessage(
+                        $"[AI Quest] {npc.Name} supplied {quantity}x {item.Name} for delivery.",
+                        Color.FromUint(0xFF_A0_D0_FFu)));
+                    RFAIDebug.Log($"GrantSuppliedDeliveryGoods: supplied {quantity}x {itemId} for {npc.StringId}");
+                }
+                catch (Exception ex)
+                {
+                    RFAIDebug.Log($"GrantSuppliedDeliveryGoods failed: {ex.GetType().Name}: {ex.Message}");
+                }
+            }
         }
 
         private static bool HasGoldRewardAction(List<AIAction>? actions)

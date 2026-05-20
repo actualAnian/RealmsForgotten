@@ -185,7 +185,18 @@ namespace RF_AIDialog
                     var bringItem = GetFirstSanitizedAtom(source, "BRING_ITEM");
                     if (bringItem == null) return false;
 
-                    EnsureLabel(bringItem, "Deliver the requested goods");
+                    var visit = GetFirstSanitizedAtom(source, "VISIT_SETTLEMENT");
+                    if (visit != null)
+                    {
+                        EnsureLabel(bringItem, "Carry the supplied goods");
+                        EnsureLabel(visit, "Deliver the goods to the destination");
+                        destination.Add(bringItem);
+                        destination.Add(visit);
+                        destination.Add(BuildReturnAtom(source, "Return after the delivery"));
+                        return true;
+                    }
+
+                    EnsureLabel(bringItem, "Bring the requested goods");
                     destination.Add(bringItem);
                     destination.Add(BuildReturnAtom(source, "Return with the goods"));
                     return true;
@@ -607,6 +618,9 @@ namespace RF_AIDialog
                 if (!PassesLocalityRules(mechanic, questGiver))
                     return false;
 
+                if (!PassesDeliveryRules(mechanic))
+                    return false;
+
                 return true;
             }
             catch (Exception ex)
@@ -678,6 +692,29 @@ namespace RF_AIDialog
                     RFAIDebug.Log($"QuestMechanicValidator: rejected {mechanic.QuestKind} - settlement {settlementId} outside local scope for {questGiver.StringId}");
                     return false;
                 }
+            }
+
+            return true;
+        }
+
+        private static bool PassesDeliveryRules(QuestMechanic mechanic)
+        {
+            bool isDelivery =
+                mechanic.QuestKind.Equals("delivery", StringComparison.OrdinalIgnoreCase) ||
+                mechanic.QuestKind.Equals("delivery_under_pressure", StringComparison.OrdinalIgnoreCase);
+
+            if (!isDelivery)
+                return true;
+
+            bool hasItem = mechanic.Objectives.Any(atom =>
+                string.Equals(atom.AtomType, "BRING_ITEM", StringComparison.OrdinalIgnoreCase));
+            bool hasDestination = mechanic.Objectives.Any(atom =>
+                string.Equals(atom.AtomType, "VISIT_SETTLEMENT", StringComparison.OrdinalIgnoreCase));
+
+            if (!hasItem || !hasDestination)
+            {
+                RFAIDebug.Log($"QuestMechanicValidator: rejected {mechanic.QuestKind} - delivery needs goods and a destination");
+                return false;
             }
 
             return true;
