@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Library;
 
-[HarmonyPatch(typeof(NavalMapSceneWrapper), "InitializePirateSpawnPoints")]
+// NOTE: This patch is applied manually from SubModule.RunWarSailsPatches
 public static class InitializePirateSpawnPointsPatch
 {
-    // Your custom data source
     public static List<(string clanStringId, Vec2 position, float radius)> CustomSpawnPoints = new()
     {
        ("northern_pirates", new Vec2(994, 1108), 10f),
@@ -19,7 +18,7 @@ public static class InitializePirateSpawnPointsPatch
         ("southern_pirates", new Vec2(624, 501), 10f),
     };
 
-    static bool Prefix(object __instance)
+    public static bool Prefix(object __instance)
     {
         var pirateSpawnPoints = Traverse.Create(__instance)
             .Field("_pirateSpawnPoints")

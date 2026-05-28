@@ -6,6 +6,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+using TaleWorlds.ModuleManager;
 
 namespace RealmsForgotten
 {
@@ -132,5 +133,6 @@ namespace RealmsForgotten
         {
             return TaleWorlds.MountAndBlade.Agent.Main != null && TaleWorlds.MountAndBlade.Agent.Main.Character == CharacterObject.PlayerCharacter;
         }
+        public static bool IsWarSailsLoaded => ModuleHelper.IsModuleActive("NavalDLC");
     }
 }

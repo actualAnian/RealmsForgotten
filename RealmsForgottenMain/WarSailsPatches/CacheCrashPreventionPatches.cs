@@ -10,7 +10,7 @@ using TaleWorlds.Library;
 // GetClosestEntranceToFace returns null Item1 on custom map faces with no reachable naval settlement,
 // causing NullReferenceException both in GetDistance(item, ...) and item.IsVillage (1.4beta).
 // Called from NavalDLCMobilePartyAIModel.ShouldConsiderAttacking during every AI tick.
-[HarmonyPatch(typeof(NavalDLCBanditDensityModel), nameof(NavalDLCBanditDensityModel.IsPositionInsideNavalSafeZone))]
+// NOTE: This patch is applied manually from SubModule.RunWarSailsPatches
 public class NavalDLCBanditDensityModel_IsPositionInsideNavalSafeZone_Patch
 {
     public static bool Prefix(CampaignVec2 position, ref bool __result)
