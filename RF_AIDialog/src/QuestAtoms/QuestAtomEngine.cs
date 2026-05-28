@@ -7,6 +7,7 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+using TaleWorlds.ObjectSystem;
 
 namespace RF_AIDialog
 {
@@ -61,7 +62,8 @@ namespace RF_AIDialog
             {
                 foreach (var ctx in GetContextsWithMechanics())
                 {
-                    if (TryCompleteSettlementObjective(ctx, settlement, "VISIT_SETTLEMENT", "Visited"))
+                    if (TryCompleteDeliveryAtDestination(ctx, settlement) ||
+                        TryCompleteSettlementObjective(ctx, settlement, "VISIT_SETTLEMENT", "Visited"))
                     {
                         CheckMechanicCompletion(ctx);
                         CheckNearCompletion(ctx);
@@ -407,6 +409,98 @@ namespace RF_AIDialog
             }
 
             return changed;
+        }
+
+        private bool TryCompleteDeliveryAtDestination(NPCContext ctx, Settlement settlement)
+        {
+            var mechanic = ctx.PendingRequest?.Mechanic;
+            if (mechanic == null || settlement == null)
+                return false;
+
+            bool isDelivery =
+                mechanic.QuestKind.Equals("delivery", StringComparison.OrdinalIgnoreCase) ||
+                mechanic.QuestKind.Equals("delivery_under_pressure", StringComparison.OrdinalIgnoreCase);
+            if (!isDelivery)
+                return false;
+
+            mechanic.Normalize();
+
+            int visitIndex = -1;
+            QuestAtom? visitAtom = null;
+            for (int i = 0; i < mechanic.Objectives.Count; i++)
+            {
+                if (mechanic.Completed[i])
+                    continue;
+
+                var atom = mechanic.Objectives[i];
+                if (!atom.AtomType.Equals("VISIT_SETTLEMENT", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                string targetId = atom.GetParam("settlement_id");
+                if (!settlement.StringId.Equals(targetId, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                visitIndex = i;
+                visitAtom = atom;
+                break;
+            }
+
+            if (visitIndex < 0 || visitAtom == null)
+                return false;
+
+            int itemIndex = -1;
+            QuestAtom? itemAtom = null;
+            for (int i = 0; i < mechanic.Objectives.Count; i++)
+            {
+                var atom = mechanic.Objectives[i];
+                if (!atom.AtomType.Equals("BRING_ITEM", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                itemIndex = i;
+                itemAtom = atom;
+                break;
+            }
+
+            if (itemAtom == null)
+                return false;
+
+            string itemId = itemAtom.GetParam("item_id");
+            int quantity = Math.Max(1, itemAtom.GetParamInt("quantity", 1));
+            if (string.IsNullOrWhiteSpace(itemId))
+                return false;
+
+            var item = MBObjectManager.Instance.GetObject<ItemObject>(itemId);
+            if (item == null)
+            {
+                RFAIDebug.Log($"QuestAtomEngine: delivery item not found: {itemId}");
+                return false;
+            }
+
+            int available = MobileParty.MainParty.ItemRoster.GetItemNumber(item);
+            if (available < quantity)
+            {
+                Notify($"Delivery requires {quantity}x {item.Name}. You currently have {available}.");
+                RFAIDebug.Log($"QuestAtomEngine: delivery blocked for {ctx.HeroId} - missing {itemId} ({available}/{quantity})");
+                return false;
+            }
+
+            MobileParty.MainParty.ItemRoster.AddToCounts(item, -quantity);
+
+            if (itemIndex >= 0 && !mechanic.Completed[itemIndex])
+            {
+                mechanic.MarkCompleted(itemIndex);
+                string itemLabel = itemAtom.Label.Length > 0 ? itemAtom.Label : $"Carry {quantity}x {item.Name}";
+                UpdateQuestLog(ctx.HeroId, $"Done: {itemLabel}");
+            }
+
+            mechanic.MarkCompleted(visitIndex);
+            NPCContextStore.Instance?.MarkDirty(ctx);
+
+            string visitLabel = visitAtom.Label.Length > 0 ? visitAtom.Label : $"Deliver goods to {settlement.Name}";
+            RFAIDebug.Log($"QuestAtomEngine: delivery completed for {ctx.HeroId} - {quantity}x {itemId} at {settlement.StringId}");
+            UpdateQuestLog(ctx.HeroId, $"Done: {visitLabel}");
+            Notify($"Delivered {quantity}x {item.Name} to {settlement.Name}.");
+            return true;
         }
 
         private static bool MatchesSettlementAtom(QuestAtom atom, string atomType)
