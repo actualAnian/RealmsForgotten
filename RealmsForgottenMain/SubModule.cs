@@ -2,12 +2,12 @@ using HarmonyLib;
 using MCM.Abstractions.Attributes;
 using Newtonsoft.Json.Linq;
 using RealmsForgotten.AiMade;
+using RealmsForgotten.AiMade.StrategicIntrigue.SaveSystem;
 using RealmsForgotten.Behaviors;
 using RealmsForgotten.Career;
 using RealmsForgotten.Career.Ability;
 using RealmsForgotten.Career.Logic;
 using RealmsForgotten.CharacterCreation;
-using RealmsForgotten.AiMade.StrategicIntrigue.SaveSystem;
 using RealmsForgotten.CustomBandits;
 using RealmsForgotten.CustomSkills;
 using RealmsForgotten.LegendaryTroops;
@@ -19,6 +19,7 @@ using RealmsForgotten.Quest.FourthUpdate;
 using RealmsForgotten.RFCustomBandits;
 using RealmsForgotten.RFCustomHorses;
 using RealmsForgotten.RFEffects;
+using RealmsForgotten.RFEffects.Alchemy;
 using RealmsForgotten.RFMissionLogic;
 using RealmsForgotten.UI;
 using System;
@@ -208,6 +209,7 @@ namespace RealmsForgotten
             mission.AddMissionBehavior(new MagicEffectsBehavior());
             mission.AddMissionBehavior(new WeaponParticlesBehavior());
             mission.AddMissionBehavior(new MeteorMissionLogic());
+            mission.AddMissionBehavior(new AlchemyMissionLogic());
         }
         public override void BeginGameStart(Game game)
         {

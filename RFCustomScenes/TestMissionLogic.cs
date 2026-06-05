@@ -1,10 +1,5 @@
-﻿using RealmsForgotten.MusicSounds;
-using RealmsForgotten.Quest.FourthUpdate;
-using System.Linq;
-using TaleWorlds.Core;
-using TaleWorlds.InputSystem;
+﻿using TaleWorlds.InputSystem;
 using TaleWorlds.MountAndBlade;
-using TaleWorlds.ObjectSystem;
 
 namespace RFCustomSettlements
 {
@@ -22,6 +17,12 @@ namespace RFCustomSettlements
                 return;
             if (Input.IsKeyPressed(InputKey.H))
             {
+                var test = Agent.Main.Velocity;
+                Agent.Main.Health = 1000;
+
+                //TOWParticleSystem.ApplyParticleToAgent(Agent.Main, "alchemical_mist2", out GameEntity child);
+                //if (child != null)
+                //    { int a = 5; }
                 //foreach (var agent in Mission.Current.AllAgents)
                 //{
                 //    Blow b = new();
