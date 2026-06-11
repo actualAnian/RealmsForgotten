@@ -11,5 +11,6 @@ namespace RealmsForgotten.RFEffects.Alchemy
         void OnLeft(Agent agent);
         void OnProjectileEntered(Mission.Missile missile);
         void OnProjectileLeft(Mission.Missile missile);
+        void OnAgentDiedInside(Agent agent);
     }
 }

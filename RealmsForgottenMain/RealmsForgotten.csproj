@@ -112,6 +112,7 @@
     </ItemGroup>
     <ItemGroup>
         <Folder Include="AiMade\TroopUnlocker\" />
+        <Folder Include="MissionEffects\" />
         <Folder Include="_Module\GUI\Prefabs\CharacterDeveloper\" />
         <Folder Include="_Module\ModuleSounds\" />
     </ItemGroup>

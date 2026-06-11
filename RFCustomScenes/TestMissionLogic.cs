@@ -1,11 +1,29 @@
-﻿using TaleWorlds.InputSystem;
+﻿using HarmonyLib;
+using System;
+using TaleWorlds.Core;
+using TaleWorlds.InputSystem;
+using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
-
+using RealmsForgotten.RFEffects.Alchemy;
 namespace RFCustomSettlements
 {
 
     public class TestMissionLogic : MissionLogic
     {
+        public override void OnAgentBuild(Agent agent, Banner banner)
+        {
+            var properties = agent.AgentDrivenProperties;
+            int a = 5;
+            properties.AIBlockOnDecideAbility = 0;
+            properties.AIAttackOnDecideChance = 1;
+            properties.AiKick = 0.5f;
+            properties.AiDecideOnAttackingContinue = 1;
+            properties.AiAttackingShieldDefenseChance = 0f;
+            agent.UpdateAgentProperties();
+
+        }
+        long ticksLootersDefended = 0;
+        long ticksElvesDefended = 0;
         public override void OnMissionTick(float dt)
         {
             //var lolol = Mission.Current.Agents.First(a => a.Character.StringId.Contains("witch"));
@@ -15,78 +33,82 @@ namespace RFCustomSettlements
             //Agent.Main.Health = 1000;
             if (Agent.Main == null)
                 return;
+            var playerTeam = Agent.Main.Team;
+            //if (Input.IsKeyPressed(InputKey.J))
+            foreach (var agent in Mission.Current.AllAgents)
+                agent.SetIsAIPaused(false);
+
+            foreach (var agent in Mission.Current.AllAgents)
+            {
+                if (agent.IsFadingOut()) continue;
+                var action = agent.GetCurrentActionType(1);
+                if (action == Agent.ActionCodeType.DefendAllBegin
+                    || action == Agent.ActionCodeType.DefendFist
+                    || action == Agent.ActionCodeType.DefendForward1h
+                    || action == Agent.ActionCodeType.DefendForward2h
+                    || action == Agent.ActionCodeType.DefendLeft2h
+                    || action == Agent.ActionCodeType.DefendRight2h
+                    || action == Agent.ActionCodeType.DefendUp2h
+                    || action == Agent.ActionCodeType.BlockedMelee)
+                {
+                    agent.EventControlFlags = Agent.EventControlFlag.Jump;
+                    agent.SetIsAIPaused(false);
+                    //agent.ResetGuard();
+                    if (agent.GetCurrentActionStage(1) == Agent.ActionStage.Defend)
+                        InformationManager.DisplayMessage(new($"priority: {agent.GetCurrentActionPriority(1)}"));
+                    if (agent.Team == playerTeam)
+                        ticksElvesDefended += 1;
+                    else ticksLootersDefended += 1;
+                    InformationManager.DisplayMessage(new($"Elves: {ticksElvesDefended} Looters: {ticksLootersDefended}"));
+                }
+            }
+                    //var act = "act_release_overswing_2h";
+                    //ActionIndexCache actionIndexCache = ActionIndexCache.Create(act);
+                    //agent.SetActionChannel(1, actionIndexCache);
+                //InformationManager.DisplayMessage(new($"priority: {Agent.Main.GetCurrentActionPriority(1)}"));
+
             if (Input.IsKeyPressed(InputKey.H))
             {
+                foreach(var agent in Mission.Current.AllAgents)
+                {
+                    agent.AddComponent(new BerserkerAgentComponent(agent));
+                    agent.SetHasOnAiInputSetCallback(true);
+                    //int a = 5;
+                    //agent.AgentDrivenProperties.SetStat(DrivenProperty.UseRealisticBlocking, 1f);
+                    //float[] values = AccessTools.Field(typeof(AgentDrivenProperties), "_statValues")
+                    //.GetValue(agent.AgentDrivenProperties) as float[];
+
+                    //Array.Clear(values, 0, 51);
+                    ////agent.SetAgentFlags(agent.GetAgentFlags() & ~AgentFlag.CanDefend);
+                    //agent.AgentDrivenProperties.AISetNoDefendTimerAfterHittingAbility = 0;
+                    //agent.AgentDrivenProperties.AISetNoDefendTimerAfterParryingAbility = 0;
+                    //agent.AgentDrivenProperties.AIDecideOnAttackChance = 1;
+                    //agent.AgentDrivenProperties.AIAttackOnDecideChance = 1;
+                    //agent.AgentDrivenProperties.AIBlockOnDecideAbility = float.MinValue;
+                    //agent.AgentDrivenProperties.AiDecideOnAttackingContinue = float.MaxValue;
+                    //agent.AgentDrivenProperties.AIBlockOnDecideAbility = float.MinValue;
+                    //agent.AgentDrivenProperties.AIParryOnAttackAbility = float.MinValue;
+                    //agent.AgentDrivenProperties.AiAttackingShieldDefenseChance = float.MinValue;
+                    //agent.AgentDrivenProperties.AIParryOnAttackingContinueAbility = float.MinValue;
+                    //agent.AgentDrivenProperties.AIParryOnAttackAbility = float.MinValue;
+                    //agent.AgentDrivenProperties.AiDefendWithShieldDecisionChanceValue = float.MinValue;
+                    //agent.AgentDrivenProperties.AiParryDecisionChangeValue = float.MinValue;
+                    //agent.AgentDrivenProperties.AISetNoAttackTimerAfterBeingHitAbility = float.MinValue;
+
+                    //agent.AgentDrivenProperties.AIDecideOnAttackChance = 1f;
+                    //agent.AgentDrivenProperties.AIParryOnAttackAbility = 0f;
+                    //agent.AgentDrivenProperties.AiParryDecisionChangeValue = 0f;
+                    //agent.AgentDrivenProperties.AISetNoAttackTimerAfterBeingHitAbility = 0f;
+                    //agent.AgentDrivenProperties.AIAttackOnDecideChance = 1;
+                    //agent.AgentDrivenProperties.AiKick = 0.5f;
+                    //agent.AgentDrivenProperties.AiDecideOnAttackingContinue = 1;
+                    //agent.AgentDrivenProperties.AiAttackingShieldDefenseChance = 0f;
+                    //agent.UpdateCustomDrivenProperties();
+                    //agent.UpdateAgentProperties();
+                }
                 var test = Agent.Main.Velocity;
                 Agent.Main.Health = 1000;
 
-                //TOWParticleSystem.ApplyParticleToAgent(Agent.Main, "alchemical_mist2", out GameEntity child);
-                //if (child != null)
-                //    { int a = 5; }
-                //foreach (var agent in Mission.Current.AllAgents)
-                //{
-                //    Blow b = new();
-                //    if (agent.GetDistanceTo(Agent.Main) < 10 && agent.Team != Agent.Main.Team)
-                //        agent.Die(b);
-                //}
-                //RFMissionSoundManager? soundManager = Mission.Current.GetMissionBehavior<RFMissionSoundManager>();
-                //if (soundManager == null || !soundManager.AddSoundEvent("medieval_alarm_horn", true));
-
-                //Mission.Current.AllAgents[8].TeleportToPosition(Agent.Main.Position);
-                //Agent.Main.TryToWieldWeaponInSlot(EquipmentIndex.Weapon1, Agent.WeaponWieldActionType.Instant, false);
-                //var enemy = Mission.Current.PlayerEnemyTeam.ActiveAgents[0];
-                //var meteor = MBObjectManager.Instance.GetObject<ItemObject>("meteor_test");
-                //WingedWitchSpellsLogic.FireMeteor(enemy, Agent.Main.Position + new TaleWorlds.Library.Vec3(0,0, 20), meteor);
-                //        //// closest
-                //        Agent? closest = null;
-                //        float closestDistance = float.MaxValue;
-
-                //        foreach (Agent a in Mission.Current.Agents)
-                //        {
-                //            if (a == null || a == Agent.Main)
-                //                continue;
-
-                //            float d = a.GetDistanceTo(Agent.Main);
-                //            if (d < closestDistance)
-                //            {
-                //                closestDistance = d;
-                //                closest = a;
-                //            }
-                //        }
-
-                //        //var nav = closest.GetComponent<CampaignAgentComponent>();
-                //        //closest.AIStateFlags |= Agent.AIStateFlag.Cautious;
-                //        //WorldPosition lastSuspiciousPosition = Agent.Main.GetWorldPosition();
-                //        //closest.SetAILastSuspiciousPosition(lastSuspiciousPosition, checkNavMeshForCorrection: false);
-                //        var obj = MBObjectManager.Instance.GetObject<ItemObject>("balrog_axe");
-                //        //MissionWeapon weapon = new(obj, null, null);
-                //        //var pos = new Vec3(5, 0, 0) + Agent.Main.Position;
-                //        //var rot = new Vec3(0, 0, 0);
-                //        //this.Mission.SpawnWeaponWithNewEntityAux(weapon, Mission.WeaponSpawnFlags.WithPhysics, new MatrixFrame(Mat3.CreateMat3WithForward(rot), pos), 0, null, false);
-
-                //        //Agent.Main.EquipWeaponToExtraSlotAndWield(ref weapon);
-                //        //var ab = weapon.GetWeaponData(false).WeaponFrame;
-                //        //closest.EquipWeaponToExtraSlotAndWield(ref weapon);
-                //        //closest.SetTargetPosition(closest.Position.AsVec2);
-
-                //        //closest.DisableScriptedMovement();
-                //        //closest.SetAgentFlags(AgentFlag.IsHumanoid);
-                //        //closest.SetIsAIPaused(true);
-                //        //closest.TryToWieldWeaponInSlot(EquipmentIndex.ExtraWeaponSlot, Agent.WeaponWieldActionType.WithAnimationUninterruptible, false);
-
-                //        //var foesThatCanHearHorn = Mission.Current.Agents.Where(agent => agent.IsEnemyOf(TaleWorlds.MountAndBlade.Agent.Main)
-                //        //&& agent.GetDistanceTo(closest) < 50
-                //        //&& agent != closest);
-                //        //foreach (var agent in foesThatCanHearHorn)
-                //        //{
-                //        //    var alarmedBehavior = agent.GetComponent<CampaignAgentComponent>().AgentNavigator.GetBehaviorGroup<AlarmedBehaviorGroup>();
-                //        //    agent.SetAlarmState(TaleWorlds.MountAndBlade.Agent.AIStateFlag.Cautious);
-                //        //    MethodInfo setterMethod = AccessTools.PropertySetter(typeof(AlarmedBehaviorGroup), "AlarmFactor");
-                //        //    setterMethod.Invoke(alarmedBehavior, new object[] { 1f});
-                //        //    WorldPosition lastSuspiciousPosition = closest.GetWorldPosition();
-                //        //    agent.SetAILastSuspiciousPosition(lastSuspiciousPosition, checkNavMeshForCorrection: false);
-                //        //}
-                //    Agent.Main.SetActionChannel(0, ActionIndexCache.Create("act_human_blow_horn"), true);
                 //InformationManager.DisplayMessage(new InformationMessage("TestMissionLogic: H key pressed"));
             }
         }

@@ -12,6 +12,10 @@ namespace RealmsForgotten.RFEffects.Alchemy.Bombs
         public float Duration { get; set; } = 10f;
         public string ParticleId { get; set; } = "alchemical_mist2";
 
+        public void OnAgentDiedInside(Agent agent)
+        {
+        }
+
         public void OnEntered(Agent agent)
         {
             //agent.AgentDrivenProperties.WeaponInaccuracy += 1000;
