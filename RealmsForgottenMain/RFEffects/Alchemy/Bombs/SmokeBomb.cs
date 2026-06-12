@@ -1,47 +1,30 @@
+using System;
+using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
-using TaleWorlds.ObjectSystem;
 using static TaleWorlds.MountAndBlade.Mission;
 
 namespace RealmsForgotten.RFEffects.Alchemy.Bombs
 {
-    public class SmokeBomb : IAlchemicalBomb
+    public class SmokeBomb : AbstractBomb
     {
-        public float Size { get; set; } = 6f;
-        public float Duration { get; set; } = 10f;
-        public string ParticleId { get; set; } = "alchemical_mist2";
+        internal override float BaseDuration => 5f;
+        internal override float BaseRadius => 6f;
+        public SmokeBomb(Agent caster, Vec3 center) : base(center, caster) { }
+        public override string ParticleId { get; set; } = "alchemical_mist2";
+        public override void OnEntered(Agent agent) => agent.SetFiringOrder(FiringOrder.RangedWeaponUsageOrderEnum.HoldYourFire);
+        public override void OnLeft(Agent agent) => agent.SetFiringOrder(FiringOrder.RangedWeaponUsageOrderEnum.FireAtWill);
 
-        public void OnAgentDiedInside(Agent agent)
+        public override void OnProjectileEntered(Missile missile)
         {
-        }
-
-        public void OnEntered(Agent agent)
-        {
-            //agent.AgentDrivenProperties.WeaponInaccuracy += 1000;
-            //agent.UpdateAgentProperties();
-            agent.SetFiringOrder(FiringOrder.RangedWeaponUsageOrderEnum.HoldYourFire);
-        }
-
-        public void OnLeft(Agent agent)
-        {
-            agent.SetFiringOrder(FiringOrder.RangedWeaponUsageOrderEnum.FireAtWill);
-        }
-
-        public void OnProjectileEntered(Mission.Missile missile)
-        {
-            var particleId = "fire_ground";
-            if (ParticleSystemManager.GetRuntimeIdByName(particleId) == -1)
-                InformationManager.DisplayMessage(new InformationMessage("Error, Particle with id: " + particleId + "not found", new Color(1, 0, 0)));
-
-            MatrixFrame localFrame = new(Mat3.Identity, new(0, 0, 0));
-            GameEntity childEntity = GameEntity.CreateEmpty(Current.Scene);
-            ParticleSystem particle = ParticleSystem.CreateParticleSystemAttachedToEntity(particleId, childEntity, ref localFrame);
-            missile.Entity.AddChild(childEntity);
-        }
-
-        public void OnProjectileLeft(Mission.Missile missile)
-        {
+            var velocity = missile.GetVelocity();
+            var random = new Random();
+            var xDiff = random.NextFloat();
+            var xVec = velocity.X + ((xDiff / 5) - 0.1f);
+            var yDiff = random.NextFloat();
+            var yVec = velocity.Y + ((yDiff / 5) - 0.1f);
+            missile.SetVelocity(new(xVec, yVec, velocity.z));
         }
     }
 }

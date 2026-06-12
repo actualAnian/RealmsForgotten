@@ -1,10 +1,11 @@
 ﻿using HarmonyLib;
+using RealmsForgotten.RFEffects.Alchemy;
 using System;
 using TaleWorlds.Core;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
-using RealmsForgotten.RFEffects.Alchemy;
+using TaleWorlds.MountAndBlade.View.MissionViews;
 namespace RFCustomSettlements
 {
 
@@ -69,10 +70,22 @@ namespace RFCustomSettlements
 
             if (Input.IsKeyPressed(InputKey.H))
             {
-                foreach(var agent in Mission.Current.AllAgents)
-                {
-                    agent.AddComponent(new BerserkerAgentComponent(agent));
-                    agent.SetHasOnAiInputSetCallback(true);
+                Agent.Main.EventControlFlags |= Agent.EventControlFlag.Dismount;
+                //Agent.Main.EventControlFlags |= Agent.EventControlFlag.Rear;
+
+                //Agent.MovementControlFlag movementControlFlag = Agent.MovementControlFlag.jump;
+
+                //Agent.Main.EventControlFlags |= Agent.EventControlFlag.Jump;
+                //Game game = Game.Current;
+                //if (game != null)
+                //game.EventManager.TriggerEvent<MissionPlayerMovementFlagsChangeEvent>(new MissionPlayerMovementFlagsChangeEvent(Agent.MovementControlFlag.ju));
+                //foreach (var agent in Mission.Current.AllAgents)
+                //{
+                //    if (!agent.HasMount) continue;
+                //    agent.EventControlFlags |= Agent.EventControlFlag.Dismount;
+                //}
+                    //agent.AddComponent(new BerserkerAgentComponent(agent));
+                    //agent.SetHasOnAiInputSetCallback(true);
                     //int a = 5;
                     //agent.AgentDrivenProperties.SetStat(DrivenProperty.UseRealisticBlocking, 1f);
                     //float[] values = AccessTools.Field(typeof(AgentDrivenProperties), "_statValues")
@@ -94,19 +107,8 @@ namespace RFCustomSettlements
                     //agent.AgentDrivenProperties.AiDefendWithShieldDecisionChanceValue = float.MinValue;
                     //agent.AgentDrivenProperties.AiParryDecisionChangeValue = float.MinValue;
                     //agent.AgentDrivenProperties.AISetNoAttackTimerAfterBeingHitAbility = float.MinValue;
-
-                    //agent.AgentDrivenProperties.AIDecideOnAttackChance = 1f;
-                    //agent.AgentDrivenProperties.AIParryOnAttackAbility = 0f;
-                    //agent.AgentDrivenProperties.AiParryDecisionChangeValue = 0f;
-                    //agent.AgentDrivenProperties.AISetNoAttackTimerAfterBeingHitAbility = 0f;
-                    //agent.AgentDrivenProperties.AIAttackOnDecideChance = 1;
-                    //agent.AgentDrivenProperties.AiKick = 0.5f;
-                    //agent.AgentDrivenProperties.AiDecideOnAttackingContinue = 1;
-                    //agent.AgentDrivenProperties.AiAttackingShieldDefenseChance = 0f;
-                    //agent.UpdateCustomDrivenProperties();
-                    //agent.UpdateAgentProperties();
-                }
-                var test = Agent.Main.Velocity;
+                    //}
+                    var test = Agent.Main.Velocity;
                 Agent.Main.Health = 1000;
 
                 //InformationManager.DisplayMessage(new InformationMessage("TestMissionLogic: H key pressed"));

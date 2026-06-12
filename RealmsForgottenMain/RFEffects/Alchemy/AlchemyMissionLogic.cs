@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using TaleWorlds.Core;
+﻿using RealmsForgotten.RFEffects.Alchemy.Bombs;
+using RealmsForgotten.RFEffects.Alchemy.OnHitEffects;
+using System.Collections.Generic;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
@@ -7,30 +8,48 @@ using static TaleWorlds.MountAndBlade.Mission;
 
 namespace RealmsForgotten.RFEffects.Alchemy
 {
-    public class AlchemyMissionLogic : MissionBehavior
+    internal record ActiveBomb
     {
-        public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;
-        private record ActiveBomb
+        public ActiveBomb(GameEntity entity, ParticleSystem particle, AbstractBomb bomb)
         {
-            public ActiveBomb(GameEntity entity, ParticleSystem particle, IAlchemicalBomb bomb, Vec3 position)
-            {
-                Entity = entity;
-                Particle = particle;
-                Bomb = bomb;
-                Position = position;
-                InsideAgents = new HashSet<Agent>();
-                Elapsed = 0f;
-            }
-
-            public GameEntity Entity { get; set; }
-            public ParticleSystem Particle { get; set; }
-            public IAlchemicalBomb Bomb { get; set; }
-            public Vec3 Position { get; set; }
-            public float Elapsed { get; set; }
-            public HashSet<Agent> InsideAgents { get; } = new();
-            public HashSet<Missile> InsideProjectiles { get; } = new();
+            Entity = entity;
+            Particle = particle;
+            Bomb = bomb;
+            Elapsed = 0f;
         }
 
+        public GameEntity Entity { get; set; }
+        public ParticleSystem Particle { get; set; }
+        public AbstractBomb Bomb { get; set; }
+        public Vec3 Position { get; set; }
+        public float Elapsed { get; set; }
+    }
+
+    public class AlchemyMissionLogic : MissionBehavior
+    {
+        public static AlchemyMissionLogic? Instance 
+        {
+            get
+            {
+                var logic = Current?.GetMissionBehavior<AlchemyMissionLogic>();
+                if (logic == null)
+                {
+                    InformationManager.DisplayMessage(new InformationMessage("Error, AlchemyMissionLogic instance not found!", new Color(1, 0, 0)));
+                    return null;
+                }
+                return logic;
+            }
+        }
+        public void AddMissileEffect(Missile missile, IOnHitEffect effect)
+        {
+            if (_misslesWithEffects.TryGetValue(missile, out var effects))
+                effects.Add(effect);
+            else
+                _misslesWithEffects[missile] = new List<IOnHitEffect> { effect };
+        }
+        public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;
+
+        readonly Dictionary<Missile, List<IOnHitEffect>> _misslesWithEffects = new();
         private readonly List<ActiveBomb> _activeBombs = new();
         private float _areaCheckAccumulator = 0f;
         private const float AreaCheckInterval = 0.5f;
@@ -50,9 +69,7 @@ namespace RealmsForgotten.RFEffects.Alchemy
             }
 
             foreach (var missile in Current.MissilesList)
-            {
                 _projectileGrid.Add(missile.GetPosition().AsVec2, missile);
-            }
         }
         public override void OnMissionTick(float dt)
         {
@@ -83,110 +100,88 @@ namespace RealmsForgotten.RFEffects.Alchemy
         private readonly List<Missile> _missilesToRemove = new();
         private void CheckProjectilesInBombAreas(ActiveBomb bomb)
         {
-            float radius = bomb.Bomb.Size;
-            float radiusSq = radius * radius;
-
-            var nearbyMissiles = _projectileGrid.QueryCircle(bomb.Position.AsVec2, radius);
-
+            var nearbyMissiles = _projectileGrid.QueryBox(bomb.Bomb.Bounds);
             HashSet<Missile> currentlyInside = new();
-
             foreach (var missile in nearbyMissiles)
             {
-                var distSq = missile.GetPosition().AsVec2.DistanceSquared(bomb.Position.AsVec2);
-
-                if (distSq > radiusSq)
+                if (!bomb.Bomb.Contains(missile.GetPosition()))
                     continue;
 
                 currentlyInside.Add(missile);
-
-                if (!bomb.InsideProjectiles.Contains(missile))
+                if (!bomb.Bomb.InsideProjectiles.Contains(missile))
                 {
-                    bomb.InsideProjectiles.Add(missile);
+                    bomb.Bomb.InsideProjectiles.Add(missile);
                     bomb.Bomb.OnProjectileEntered(missile);
                 }
             }
             _missilesToRemove.Clear();
 
-            foreach (var missile in bomb.InsideProjectiles)
+            foreach (var missile in bomb.Bomb.InsideProjectiles)
                 if (!currentlyInside.Contains(missile))
                     _missilesToRemove.Add(missile);
 
             foreach (var missile in _missilesToRemove)
             {
-                bomb.InsideProjectiles.Remove(missile);
+                bomb.Bomb.InsideProjectiles.Remove(missile);
                 bomb.Bomb.OnProjectileLeft(missile);
             }
         }
         private readonly List<Agent> _agentsToRemove = new();
         private void CheckAgentsInBombAreas(ActiveBomb bomb)
         {
-            float radius = bomb.Bomb.Size;
-            float radiusSq = radius * radius;
-
-            var nearbyAgents = _agentGrid.QueryCircle(bomb.Position.AsVec2, radius);
-
+            var nearbyAgents = _agentGrid.QueryBox(bomb.Bomb.Bounds);
             HashSet<Agent> currentlyInside = new();
             foreach (var agent in nearbyAgents)
             {
-                if (agent.IsMount) continue;
-                var inside = bomb.Position.Distance(agent.Position) <= bomb.Bomb.Size;
-                if (inside)
+                //if (agent.IsMount) continue;
+                if (!bomb.Bomb.Contains(agent.Position))
+                    continue;
+                currentlyInside.Add(agent);
+                if (!bomb.Bomb.InsideAgents.Contains(agent))
                 {
-                    currentlyInside.Add(agent);
-                    if (!bomb.InsideAgents.Contains(agent))
-                    {
-                        bomb.InsideAgents.Add(agent);
-                        bomb.Bomb.OnEntered(agent);
-                    }
+                    bomb.Bomb.InsideAgents.Add(agent);
+                    bomb.Bomb.OnEntered(agent);
                 }
             }
             _agentsToRemove.Clear();
 
-            foreach (var agent in bomb.InsideAgents)
+            foreach (var agent in bomb.Bomb.InsideAgents)
                 if (!currentlyInside.Contains(agent))
                     _agentsToRemove.Add(agent);
 
             foreach (var agent in _agentsToRemove)
             {
-                bomb.InsideAgents.Remove(agent);
+                bomb.Bomb.InsideAgents.Remove(agent);
                 bomb.Bomb.OnLeft(agent);
             }
-        }
-        public override void OnAgentShootMissile(Agent shooterAgent, EquipmentIndex weaponIndex, Vec3 position, Vec3 velocity, Mat3 orientation, bool hasRigidBody, int forcedMissileIndex)
-        {
-            //Random random = new();
-            //var xDiff = random.NextFloat();
-            //var xVec = velocity.X + ((xDiff / 5) - 0.1f);
-            //var yDiff = random.NextFloat();
-            //var yVec = velocity.Y + ((yDiff / 5) - 0.1f);
-            
-            //var test = Agent.Main.Velocity;
-            //var missle = Current.MissilesList.Last();
-            //int a = 5;
-            ////missle.Entity.GetLocalFrame;
-            //missle.SetVelocity(new(xVec, yVec, velocity.z));
         }
         private void RemoveExpiredBomb(ActiveBomb active)
         {
             active.Entity.RemoveAllParticleSystems();
-            foreach (var a in active.InsideAgents)
+            foreach (var a in active.Bomb.InsideAgents)
                 if (a != null && a.IsActive())
                     active.Bomb.OnLeft(a);
             _activeBombs.Remove(active);
         }
+        private void ApplyMissleEffects(Missile missile, Agent victim)
+        {
+            if (_misslesWithEffects.TryGetValue(missile, out List<IOnHitEffect> effects) == false) return;
+            effects.ForEach(e => e.OnHit(victim));
+        }
         public override void OnMissileHit(Agent attacker, Agent victim, bool isCanceled, AttackCollisionData collisionData)
         {
-            Missile? missle = null;
+            Missile? missile = null;
             foreach (var m in Current.MissilesList)
             {
                 if (m.Index == collisionData.AffectorWeaponSlotOrMissileIndex)
                 {
-                    missle = m;
+                    missile = m;
                     break;
                 }
             }
-            if (missle == null) return;
-            var bomb = AlchemicalBombFactory.GetBombType(missle.Weapon.Item);
+            if (missile == null) return;
+            ApplyMissleEffects(missile, victim);
+            var bomb = AlchemicalBombFactory.GetBombType(attacker, missile.Entity.GetGlobalFrame().origin, missile.Weapon.Item);
             if (bomb == null) return;
 
             if (ParticleSystemManager.GetRuntimeIdByName(bomb.ParticleId) == -1)
@@ -194,11 +189,11 @@ namespace RealmsForgotten.RFEffects.Alchemy
 
             MatrixFrame localFrame = new(Mat3.Identity, new(0, 0, 0));
             GameEntity childEntity = GameEntity.CreateEmpty(Current.Scene);
-            childEntity.SetGlobalFrame(missle.Entity.GetGlobalFrame());
+            childEntity.SetGlobalFrame(missile.Entity.GetGlobalFrame());
             ParticleSystem particle = ParticleSystem.CreateParticleSystemAttachedToEntity(bomb.ParticleId, childEntity, ref localFrame);
 
             var position = childEntity.GlobalPosition;
-            var newBomb = new ActiveBomb(childEntity, particle, bomb, position);
+            var newBomb = new ActiveBomb(childEntity, particle, bomb);
             _activeBombs.Add(newBomb);
             CheckAgentsInBombAreas(newBomb);
         }

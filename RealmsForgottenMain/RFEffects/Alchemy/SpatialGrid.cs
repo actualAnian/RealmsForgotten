@@ -36,16 +36,30 @@ namespace RealmsForgotten.RFEffects.Alchemy
             list.Add(item);
         }
 
-        public IEnumerable<T> QueryCircle(Vec2 center, float radius)
-        {
-            var minX = MathF.Floor((center.X - radius) / _cellSize);
-            var maxX = MathF.Floor((center.X + radius) / _cellSize);
-            var minY = MathF.Floor((center.Y - radius) / _cellSize);
-            var maxY = MathF.Floor((center.Y + radius) / _cellSize);
+        //public IEnumerable<T> QueryCircle(Vec2 center, float radius)
+        //{
+        //    var minX = MathF.Floor((center.X - radius) / _cellSize);
+        //    var maxX = MathF.Floor((center.X + radius) / _cellSize);
+        //    var minY = MathF.Floor((center.Y - radius) / _cellSize);
+        //    var maxY = MathF.Floor((center.Y + radius) / _cellSize);
 
-            for (int x = minX; x <= maxX; x++)
+        //    for (int x = minX; x <= maxX; x++)
+        //    {
+        //        for (int y = minY; y <= maxY; y++)
+        //        {
+        //            if (_cells.TryGetValue((x, y), out var list))
+        //            {
+        //                foreach (var item in list)
+        //                    yield return item;
+        //            }
+        //        }
+        //    }
+        //}
+        public IEnumerable<T> QueryBox(RFBoundingBox box)
+        {
+            for (int x = MathF.Floor(box.MinX); x <= box.MaxX; x++)
             {
-                for (int y = minY; y <= maxY; y++)
+                for (int y = MathF.Floor(box.MinY); y <= box.MaxY; y++)
                 {
                     if (_cells.TryGetValue((x, y), out var list))
                     {
