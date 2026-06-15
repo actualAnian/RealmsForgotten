@@ -35,8 +35,29 @@ namespace RealmsForgotten.CustomBandits
         {
             CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, DailyTick);
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, AddDialogs);
-            //CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, SpawnDesertersIfPossible);
+            //CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, Temp);
         }
+
+        //private void Temp()
+        //{
+        //    int parties = 0;
+        //    foreach (var party in MobileParty.AllLordParties)
+        //    {
+        //        if (party.LeaderHero == null)
+        //        {
+        //            parties += 1;
+        //            var isFromDissident = LordPartyComponent_OnChangePartyLeader_Patch.CapturedParties.FirstOrDefault(t => t.Item2 == party.StringId)?.Item3.GetFrames()[6].ToString().Contains("TryImprisonDissident");
+        //            var isFromExecution = LordPartyComponent_OnChangePartyLeader_Patch.CapturedParties.FirstOrDefault(t => t.Item2 == party.StringId)?.Item3.GetFrames()[7].ToString().Contains("ApplyCrackdownPunishment");
+        //            var isFromMovingNonCombatantToCombatantLord = LordPartyComponent_OnChangePartyLeader_Patch.CapturedParties.FirstOrDefault(t => t.Item2 == party.StringId)?.Item3.GetFrames()[4].ToString().Contains("DailyTickParty");
+        //            var frames = LordPartyComponent_OnChangePartyLeader_Patch.CapturedParties.FirstOrDefault(t => t.Item2 == party.StringId)?.Item3.GetFrames();
+        //            if (isFromDissident != null && isFromDissident == true) continue;
+        //            if (isFromExecution != null && isFromExecution == true) continue;
+        //            if (isFromMovingNonCombatantToCombatantLord != null && isFromMovingNonCombatantToCombatantLord == true) continue;
+        //            int a = 5;
+        //        }
+        //    }
+        //    int b = 5;
+        //}
 
         private void AddDialogs(CampaignGameStarter campaignGameSystemStarter)
         {

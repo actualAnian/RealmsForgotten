@@ -3708,6 +3708,8 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
             && dissident.IsAlive
             && !dissident.IsChild)
         {
+            if (dissident.PartyBelongedTo != null)
+                DisbandPartyAction.StartDisband(dissident.PartyBelongedTo);
             KillCharacterAction.ApplyByExecution(dissident, ruler, showNotification: true, isForced: true);
             threatenedState.Dissidence = 0f;
             threatenedState.TrustToPlayer = 0f;
@@ -3754,6 +3756,8 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
             return false;
         }
 
+        if (dissident.PartyBelongedTo != null)
+            DisbandPartyAction.StartDisband(dissident.PartyBelongedTo);
         TakePrisonerAction.Apply(capturerParty, dissident);
         return true;
     }
