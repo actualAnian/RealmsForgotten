@@ -2,22 +2,16 @@
 using TaleWorlds.GauntletUI.BaseTypes;
 using TaleWorlds.Library;
 
-namespace RealmsForgotten.AreaBuffs
+namespace RealmsForgotten.UI.FloatingText
 {
-    internal class FloatingTextListPanel : ListPanel
+    public class FloatingTextListPanel : ListPanel
     {
         Vec2 _position;
-        public FloatingTextListPanel(UIContext context) : base(context)
-        {
-        }
+        public FloatingTextListPanel(UIContext context) : base(context) { }
         protected override void OnLateUpdate(float dt)
         {
             ScaledPositionYOffset = Position.y - Size.Y / 2f;
             ScaledPositionXOffset = Position.x - Size.X / 2f;
-            //if ((nameTextWidget != null && nameTextWidget.IsVisible) || this.TypeVisualWidget.IsVisible)
-            //{
-            //}
-
         }
         [DataSourceProperty]
         public Vec2 Position
@@ -51,6 +45,5 @@ namespace RealmsForgotten.AreaBuffs
         //        }
         //    }
         //}
-
     }
 }

@@ -78,9 +78,6 @@ namespace RFCustomSettlements
                 // to check
                 // new StealthAreaMissionLogic()
                 // VisualTrackerMissionBehavior
-
-                new FloatingTextMissionView()
-
             }, true, true);
         }
         [MissionMethod]
