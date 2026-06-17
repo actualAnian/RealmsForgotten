@@ -6,7 +6,6 @@ using TaleWorlds.CampaignSystem.AgentOrigins;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
-using static TaleWorlds.MountAndBlade.HumanAIComponent;
 
 namespace RealmsForgotten.AiMade.Infect
 {

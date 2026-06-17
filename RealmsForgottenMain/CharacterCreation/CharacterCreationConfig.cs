@@ -1,8 +1,5 @@
 ﻿using RealmsForgotten.Managers;
-using System.Collections;
 using System.Collections.Generic;
-using TaleWorlds.CampaignSystem;
-using TaleWorlds.MountAndBlade.Diamond;
 using static RealmsForgotten.Globals;
 
 namespace RealmsForgotten.CharacterCreation

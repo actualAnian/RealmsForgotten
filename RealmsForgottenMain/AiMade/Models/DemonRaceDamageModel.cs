@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using SandBox.GameComponents;
 using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.AiMade.Models

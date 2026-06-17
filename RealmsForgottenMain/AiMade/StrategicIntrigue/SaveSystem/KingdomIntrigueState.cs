@@ -1,4 +1,3 @@
-using System;
 using RealmsForgotten.AiMade.StrategicIntrigue.Core;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Library;

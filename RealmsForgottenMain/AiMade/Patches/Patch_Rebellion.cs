@@ -1,9 +1,7 @@
 ﻿using HarmonyLib;
 using System.Collections.Generic;
-using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.Library;
-using TaleWorlds.Localization;
 
 namespace RealmsForgotten.AiMade.Patches
 {

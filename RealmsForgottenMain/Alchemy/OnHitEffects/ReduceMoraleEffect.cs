@@ -1,6 +1,6 @@
 ﻿using TaleWorlds.MountAndBlade;
 
-namespace RealmsForgotten.RFEffects.Alchemy.OnHitEffects
+namespace RealmsForgotten.Alchemy.OnHitEffects
 {
     internal class ReduceMoraleEffect : IOnHitEffect
     {

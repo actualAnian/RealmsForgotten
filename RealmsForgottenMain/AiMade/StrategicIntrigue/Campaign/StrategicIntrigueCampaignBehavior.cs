@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
-using RealmsForgotten.AiMade;
 using RealmsForgotten.AiMade.StrategicIntrigue.Core;
 using RealmsForgotten.AiMade.StrategicIntrigue.Mechanics.ClanAlignment;
 using RealmsForgotten.AiMade.StrategicIntrigue.Mechanics.InciteBreak;
@@ -12,7 +11,6 @@ using RealmsForgotten.AiMade.StrategicIntrigue.Mechanics.SecretPacts;
 using RealmsForgotten.AiMade.StrategicIntrigue.SaveSystem;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
-using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.Election;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.MapEvents;
@@ -21,7 +19,6 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
-using TaleWorlds.SaveSystem;
 
 namespace RealmsForgotten.AiMade.StrategicIntrigue.Campaign;
 

@@ -1,9 +1,10 @@
-﻿using TaleWorlds.Core;
+﻿using RealmsForgotten.Alchemy;
+using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-namespace RealmsForgotten.RFEffects.Alchemy.Bombs
+namespace RealmsForgotten.Alchemy.Bombs
 {
     internal class HorseBane : AbstractBomb
     {
@@ -79,7 +80,7 @@ namespace RealmsForgotten.RFEffects.Alchemy.Bombs
             mount.MountAgent.SetScriptedPosition(ref nextMountPos, false, Agent.AIScriptedFrameFlags.None);
         }
 
-        public override void OnEntered(Agent agent)
+        public override void OnAgentEntered(Agent agent)
         {
             if (agent.RiderAgent == null) return;
             MakeHorseDoRear(agent);

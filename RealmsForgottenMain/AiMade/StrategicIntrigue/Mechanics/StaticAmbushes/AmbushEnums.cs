@@ -1,5 +1,3 @@
-using TaleWorlds.MountAndBlade;
-
 namespace RealmsForgotten.AiMade.StrategicIntrigue.Mechanics.StaticAmbushes;
 
 public enum AmbushZoneShape

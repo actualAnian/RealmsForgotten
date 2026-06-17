@@ -2,40 +2,23 @@ using System;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.Library;
 using TaleWorlds.Core;
+using RealmsForgotten.MissionEffects.EffectDurationTypes;
 
-namespace RealmsForgotten.RFEffects.MissionEffects
+namespace RealmsForgotten.MissionEffects.MissionEffectTypes
 {
-    public class BurnEffect : IMissionEffect
+    public class BurnEffect : TickMissionEffect
     {
         private readonly float _damagePerSecond;
-        private float _tickAccumulator = 0f;
 
-        public BurnEffect(float damagePerSecond = 5f)
+        public BurnEffect(Agent belongsTo, IEffectDuration duration, float damagePerSecond = 5f) : base(belongsTo, duration)
         {
             _damagePerSecond = damagePerSecond;
         }
 
-        public void OnApply(object target)
+        public override float BaseTickInterval => 1f;
+        public override void OnActivate()
         {
-            // Could add VFX or sound here when starting the burn.
-        }
-
-        public void OnUpdate(object target, float dt)
-        {
-            if (target is not Agent agent || !agent.IsActive()) return;
-
-            _tickAccumulator += dt;
-            // Apply damage each full second
-            while (_tickAccumulator >= 1f)
-            {
-                ApplyDamage(agent, _damagePerSecond);
-                _tickAccumulator -= 1f;
-            }
-        }
-
-        public void OnEnd(object target)
-        {
-            // Cleanup VFX or state here
+            ApplyDamage(AgentEffectBelongsTo, _damagePerSecond);
         }
 
         private void ApplyDamage(Agent victim, float amount)

@@ -1,12 +1,4 @@
-﻿using System;
-using System.Reflection;
-using HarmonyLib;
-using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.ComponentInterfaces;
-using TaleWorlds.CampaignSystem.GameComponents;
-using TaleWorlds.Library;
-
-namespace RealmsForgotten
+﻿namespace RealmsForgotten
 {
     //[HarmonyPatch(typeof(DefaultMapWeatherModel), "GetWeatherEventInPosition")]
     //public class DefaultMapWeatherModel_GetWeatherEventInPosition_Patch

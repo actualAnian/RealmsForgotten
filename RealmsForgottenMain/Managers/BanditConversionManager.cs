@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using TaleWorlds.CampaignSystem;
-using RealmsForgotten.Career;
 
 namespace RealmsForgotten.Career
 {

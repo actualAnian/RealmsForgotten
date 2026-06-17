@@ -1,7 +1,6 @@
 ﻿using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
-using TaleWorlds.Library;
 
 namespace RealmsForgotten.AiMade.Career
 {

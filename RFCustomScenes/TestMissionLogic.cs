@@ -1,11 +1,7 @@
-﻿using HarmonyLib;
-using RealmsForgotten.RFEffects.Alchemy;
-using System;
-using TaleWorlds.Core;
+﻿using TaleWorlds.Core;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
-using TaleWorlds.MountAndBlade.View.MissionViews;
 namespace RFCustomSettlements
 {
 
@@ -36,33 +32,31 @@ namespace RFCustomSettlements
                 return;
             var playerTeam = Agent.Main.Team;
             //if (Input.IsKeyPressed(InputKey.J))
-            foreach (var agent in Mission.Current.AllAgents)
-                agent.SetIsAIPaused(false);
 
-            foreach (var agent in Mission.Current.AllAgents)
-            {
-                if (agent.IsFadingOut()) continue;
-                var action = agent.GetCurrentActionType(1);
-                if (action == Agent.ActionCodeType.DefendAllBegin
-                    || action == Agent.ActionCodeType.DefendFist
-                    || action == Agent.ActionCodeType.DefendForward1h
-                    || action == Agent.ActionCodeType.DefendForward2h
-                    || action == Agent.ActionCodeType.DefendLeft2h
-                    || action == Agent.ActionCodeType.DefendRight2h
-                    || action == Agent.ActionCodeType.DefendUp2h
-                    || action == Agent.ActionCodeType.BlockedMelee)
-                {
-                    agent.EventControlFlags = Agent.EventControlFlag.Jump;
-                    agent.SetIsAIPaused(false);
-                    //agent.ResetGuard();
-                    if (agent.GetCurrentActionStage(1) == Agent.ActionStage.Defend)
-                        InformationManager.DisplayMessage(new($"priority: {agent.GetCurrentActionPriority(1)}"));
-                    if (agent.Team == playerTeam)
-                        ticksElvesDefended += 1;
-                    else ticksLootersDefended += 1;
-                    InformationManager.DisplayMessage(new($"Elves: {ticksElvesDefended} Looters: {ticksLootersDefended}"));
-                }
-            }
+            //foreach (var agent in Mission.Current.AllAgents)
+            //{
+            //    if (agent.IsFadingOut()) continue;
+            //    var action = agent.GetCurrentActionType(1);
+            //    if (action == Agent.ActionCodeType.DefendAllBegin
+            //        || action == Agent.ActionCodeType.DefendFist
+            //        || action == Agent.ActionCodeType.DefendForward1h
+            //        || action == Agent.ActionCodeType.DefendForward2h
+            //        || action == Agent.ActionCodeType.DefendLeft2h
+            //        || action == Agent.ActionCodeType.DefendRight2h
+            //        || action == Agent.ActionCodeType.DefendUp2h
+            //        || action == Agent.ActionCodeType.BlockedMelee)
+            //    {
+            //        agent.EventControlFlags = Agent.EventControlFlag.Jump;
+            //        agent.SetIsAIPaused(false);
+            //        //agent.ResetGuard();
+            //        if (agent.GetCurrentActionStage(1) == Agent.ActionStage.Defend)
+            //            InformationManager.DisplayMessage(new($"priority: {agent.GetCurrentActionPriority(1)}"));
+            //        if (agent.Team == playerTeam)
+            //            ticksElvesDefended += 1;
+            //        else ticksLootersDefended += 1;
+            //        InformationManager.DisplayMessage(new($"Elves: {ticksElvesDefended} Looters: {ticksLootersDefended}"));
+            //    }
+            //}
                     //var act = "act_release_overswing_2h";
                     //ActionIndexCache actionIndexCache = ActionIndexCache.Create(act);
                     //agent.SetActionChannel(1, actionIndexCache);
@@ -70,20 +64,6 @@ namespace RFCustomSettlements
 
             if (Input.IsKeyPressed(InputKey.H))
             {
-                Agent.Main.EventControlFlags |= Agent.EventControlFlag.Dismount;
-                //Agent.Main.EventControlFlags |= Agent.EventControlFlag.Rear;
-
-                //Agent.MovementControlFlag movementControlFlag = Agent.MovementControlFlag.jump;
-
-                //Agent.Main.EventControlFlags |= Agent.EventControlFlag.Jump;
-                //Game game = Game.Current;
-                //if (game != null)
-                //game.EventManager.TriggerEvent<MissionPlayerMovementFlagsChangeEvent>(new MissionPlayerMovementFlagsChangeEvent(Agent.MovementControlFlag.ju));
-                //foreach (var agent in Mission.Current.AllAgents)
-                //{
-                //    if (!agent.HasMount) continue;
-                //    agent.EventControlFlags |= Agent.EventControlFlag.Dismount;
-                //}
                     //agent.AddComponent(new BerserkerAgentComponent(agent));
                     //agent.SetHasOnAiInputSetCallback(true);
                     //int a = 5;
@@ -108,7 +88,6 @@ namespace RFCustomSettlements
                     //agent.AgentDrivenProperties.AiParryDecisionChangeValue = float.MinValue;
                     //agent.AgentDrivenProperties.AISetNoAttackTimerAfterBeingHitAbility = float.MinValue;
                     //}
-                    var test = Agent.Main.Velocity;
                 Agent.Main.Health = 1000;
 
                 //InformationManager.DisplayMessage(new InformationMessage("TestMissionLogic: H key pressed"));

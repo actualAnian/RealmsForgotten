@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using RealmsForgotten.Alchemy;
+using System.Collections.Generic;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using static TaleWorlds.MountAndBlade.Mission;
 
-namespace RealmsForgotten.RFEffects.Alchemy.Bombs
+namespace RealmsForgotten.Alchemy.Bombs
 {
     public abstract class AbstractBomb : IMissionPlane
     {
@@ -27,7 +28,7 @@ namespace RealmsForgotten.RFEffects.Alchemy.Bombs
         public float Duration { get; set; } = 5;
         public virtual string? ParticleId { get; set; } = null;
         public virtual void OnAgentDiedInside(Agent agent) { }
-        public virtual void OnEntered(Agent agent) { }
+        public virtual void OnAgentEntered(Agent agent) { }
         public virtual void OnLeft(Agent agent) { }
         public virtual void OnProjectileEntered(Mission.Missile missile) { }
         public virtual void OnProjectileLeft(Mission.Missile missile) { }

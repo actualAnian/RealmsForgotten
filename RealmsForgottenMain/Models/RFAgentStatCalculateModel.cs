@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Helpers;
 using RealmsForgotten.Behaviors;
 using RealmsForgotten.Career;
@@ -11,7 +7,6 @@ using RealmsForgotten.CustomSkills;
 using RealmsForgotten.ObjectExtensions;
 using SandBox.GameComponents;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using static RealmsForgotten.Career.CareerChoiceObject;

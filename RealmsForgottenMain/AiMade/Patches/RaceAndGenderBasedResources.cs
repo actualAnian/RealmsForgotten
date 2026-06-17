@@ -1,13 +1,5 @@
 ﻿using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaleWorlds.MountAndBlade.ViewModelCollection.FaceGenerator;
-using RealmsForgotten.AiMade.Patches;
-using System.Reflection;
-using TaleWorlds.CampaignSystem.Extensions;
 using TaleWorlds.Core;
 
 namespace RealmsForgotten.AiMade.Patches

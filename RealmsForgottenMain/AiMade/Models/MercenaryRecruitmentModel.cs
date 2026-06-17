@@ -1,5 +1,4 @@
 ﻿using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.GameComponents;
 
 namespace RealmsForgotten.AiMade.Career
 {

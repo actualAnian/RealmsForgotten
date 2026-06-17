@@ -1,9 +1,9 @@
-using RealmsForgotten.RFEffects.Alchemy.Bombs;
+using RealmsForgotten.Alchemy.Bombs;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-namespace RealmsForgotten.RFEffects.Alchemy
+namespace RealmsForgotten.Alchemy
 {
     public static class AlchemicalBombFactory
     {

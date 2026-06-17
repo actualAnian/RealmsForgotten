@@ -1,11 +1,13 @@
 using System;
+using RealmsForgotten.MissionEffects;
+using RealmsForgotten.MissionEffects.EffectDurationTypes;
+using RealmsForgotten.MissionEffects.MissionEffectTypes;
 using TaleWorlds.Core;
-using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using static TaleWorlds.MountAndBlade.Mission;
 
-namespace RealmsForgotten.RFEffects.Alchemy.Bombs
+namespace RealmsForgotten.Alchemy.Bombs
 {
     public class SmokeBomb : AbstractBomb
     {
@@ -13,8 +15,15 @@ namespace RealmsForgotten.RFEffects.Alchemy.Bombs
         internal override float BaseRadius => 6f;
         public SmokeBomb(Agent caster, Vec3 center) : base(center, caster) { }
         public override string ParticleId { get; set; } = "alchemical_mist2";
-        public override void OnEntered(Agent agent) => agent.SetFiringOrder(FiringOrder.RangedWeaponUsageOrderEnum.HoldYourFire);
-        public override void OnLeft(Agent agent) => agent.SetFiringOrder(FiringOrder.RangedWeaponUsageOrderEnum.FireAtWill);
+        public override void OnAgentEntered(Agent agent)
+        {
+            var effect = new SmokeEffect(agent, new TimeBasedDuration(BaseDuration));
+            MissionEffectsBehavior.Instance?.ApplyEffect(effect);
+        }
+        public override void OnLeft(Agent agent)
+        {
+            MissionEffectsBehavior.Instance?.RemoveEffect(agent, typeof(SmokeEffect));
+        }
 
         public override void OnProjectileEntered(Missile missile)
         {

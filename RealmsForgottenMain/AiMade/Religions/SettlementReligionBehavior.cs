@@ -1,8 +1,6 @@
 ﻿using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Library;
-using TaleWorlds.Localization;
 
 namespace RealmsForgotten.AiMade.Religions
 {

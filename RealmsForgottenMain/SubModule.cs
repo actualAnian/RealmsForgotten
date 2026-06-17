@@ -3,6 +3,7 @@ using MCM.Abstractions.Attributes;
 using Newtonsoft.Json.Linq;
 using RealmsForgotten.AiMade;
 using RealmsForgotten.AiMade.StrategicIntrigue.SaveSystem;
+using RealmsForgotten.Alchemy;
 using RealmsForgotten.Behaviors;
 using RealmsForgotten.Career;
 using RealmsForgotten.Career.Ability;
@@ -12,6 +13,7 @@ using RealmsForgotten.CustomBandits;
 using RealmsForgotten.CustomSkills;
 using RealmsForgotten.LegendaryTroops;
 using RealmsForgotten.Managers;
+using RealmsForgotten.MissionEffects;
 using RealmsForgotten.Models;
 using RealmsForgotten.Patches;
 using RealmsForgotten.Quest;
@@ -19,7 +21,6 @@ using RealmsForgotten.Quest.FourthUpdate;
 using RealmsForgotten.RFCustomBandits;
 using RealmsForgotten.RFCustomHorses;
 using RealmsForgotten.RFEffects;
-using RealmsForgotten.RFEffects.Alchemy;
 using RealmsForgotten.RFMissionLogic;
 using RealmsForgotten.UI;
 using System;
@@ -31,9 +32,7 @@ using System.Xml;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
-using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
-using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
@@ -171,37 +170,35 @@ namespace RealmsForgotten
         }
         public override void OnMissionBehaviorInitialize(Mission mission)
         {
-            if (mission != null)
-            {
-                //temp
-                if (mission.SceneName == "witch_lair_inside_final")
-                    mission.AddMissionBehavior(new WingedWitchFinalMissionLogic());
-                if (mission.SceneName == "witch_lair_canyon")
-                    mission.AddMissionBehavior(new WitchCanyonMissionLogic());
-                //
-                mission.AddMissionBehavior(new SpawnAgentMissionLogic());
-                mission.AddMissionBehavior(new DeferredMissionDamageBehavior());
-                mission.AddMissionBehavior(new AbilityManagerMissionLogic());
-                mission.AddMissionBehavior(new AbilityHUDMissionView());
-                if (mission.Mode == MissionMode.Battle && mission.CombatType != Mission.MissionCombatType.ArenaCombat)
-                {
-                    mission.AddMissionBehavior(new RFEnchantedWeaponsMissionBehavior());
-                    mission.AddMissionBehavior(new NecromancerStaffMissionBehavior());
-                    mission.AddMissionBehavior(new SpecialDamageMissionLogic());
-                    mission.AddMissionBehavior(new DemonLordsAmbushLogic());
-                    mission.AddMissionBehavior(new GandalfStaffMissionBehavior());
-                }
-                mission.AddMissionBehavior(new SpellAmmoMissionBehavior());
+            //temp
+            if (mission.SceneName == "witch_lair_inside_final")
+                mission.AddMissionBehavior(new WingedWitchFinalMissionLogic());
+            if (mission.SceneName == "witch_lair_canyon")
+                mission.AddMissionBehavior(new WitchCanyonMissionLogic());
+            //
 
-                if (Campaign.Current != null)
-                {
-                    ItemRosterElement elixir = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("elixir_rfmisc"));
-                    ItemRosterElement berserker = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("berzerker_potion"));
-                    if (!elixir.IsEmpty || !berserker.IsEmpty)
-                        mission.AddMissionBehavior(new PotionsMissionBehavior(elixir, berserker));
-                }
-                mission.AddMissionBehavior(new HealOnKillMissionBehavior());
+            mission.AddMissionBehavior(new SpawnAgentMissionLogic());
+            mission.AddMissionBehavior(new DeferredMissionDamageBehavior());
+            mission.AddMissionBehavior(new AbilityManagerMissionLogic());
+            mission.AddMissionBehavior(new AbilityHUDMissionView());
+            if (mission.Mode == MissionMode.Battle && mission.CombatType != Mission.MissionCombatType.ArenaCombat)
+            {
+                mission.AddMissionBehavior(new RFEnchantedWeaponsMissionBehavior());
+                mission.AddMissionBehavior(new NecromancerStaffMissionBehavior());
+                mission.AddMissionBehavior(new SpecialDamageMissionLogic());
+                mission.AddMissionBehavior(new DemonLordsAmbushLogic());
+                mission.AddMissionBehavior(new GandalfStaffMissionBehavior());
             }
+            mission.AddMissionBehavior(new SpellAmmoMissionBehavior());
+
+            if (Campaign.Current != null)
+            {
+                ItemRosterElement elixir = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("elixir_rfmisc"));
+                ItemRosterElement berserker = PartyBase.MainParty.ItemRoster.FirstOrDefault(x => x.EquipmentElement.Item.StringId.Contains("berzerker_potion"));
+                if (!elixir.IsEmpty || !berserker.IsEmpty)
+                    mission.AddMissionBehavior(new PotionsMissionBehavior(elixir, berserker));
+            }
+            mission.AddMissionBehavior(new HealOnKillMissionBehavior());
             if (Game.Current.GameType is Campaign)
             {
                 mission.AddMissionBehavior(new CareerPerkMissionBehavior());
@@ -210,6 +207,7 @@ namespace RealmsForgotten
             mission.AddMissionBehavior(new WeaponParticlesBehavior());
             mission.AddMissionBehavior(new MeteorMissionLogic());
             mission.AddMissionBehavior(new AlchemyMissionLogic());
+            mission.AddMissionBehavior(new MissionEffectsBehavior());
         }
         public override void BeginGameStart(Game game)
         {

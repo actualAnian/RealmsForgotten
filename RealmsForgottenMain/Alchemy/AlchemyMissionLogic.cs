@@ -1,12 +1,12 @@
-﻿using RealmsForgotten.RFEffects.Alchemy.Bombs;
-using RealmsForgotten.RFEffects.Alchemy.OnHitEffects;
+﻿using RealmsForgotten.Alchemy.Bombs;
+using RealmsForgotten.Alchemy.OnHitEffects;
 using System.Collections.Generic;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using static TaleWorlds.MountAndBlade.Mission;
 
-namespace RealmsForgotten.RFEffects.Alchemy
+namespace RealmsForgotten.Alchemy
 {
     internal record ActiveBomb
     {
@@ -140,7 +140,7 @@ namespace RealmsForgotten.RFEffects.Alchemy
                 if (!bomb.Bomb.InsideAgents.Contains(agent))
                 {
                     bomb.Bomb.InsideAgents.Add(agent);
-                    bomb.Bomb.OnEntered(agent);
+                    bomb.Bomb.OnAgentEntered(agent);
                 }
             }
             _agentsToRemove.Clear();
@@ -167,6 +167,17 @@ namespace RealmsForgotten.RFEffects.Alchemy
         {
             if (_misslesWithEffects.TryGetValue(missile, out List<IOnHitEffect> effects) == false) return;
             effects.ForEach(e => e.OnHit(victim));
+        }
+        private void CheckForInteractions(AbstractBomb newBomb)
+        {
+            foreach(var existingBomb in _activeBombs)
+            {
+                if (existingBomb.Bomb.Contains(newBomb.Center))
+                {
+                    existingBomb.Bomb.OnInteraction(newBomb);
+                    newBomb.OnInteraction(existingBomb.Bomb);
+                }
+            }
         }
         public override void OnMissileHit(Agent attacker, Agent victim, bool isCanceled, AttackCollisionData collisionData)
         {
@@ -196,6 +207,7 @@ namespace RealmsForgotten.RFEffects.Alchemy
             var newBomb = new ActiveBomb(childEntity, particle, bomb);
             _activeBombs.Add(newBomb);
             CheckAgentsInBombAreas(newBomb);
+            CheckForInteractions(newBomb.Bomb);
         }
     }
 }

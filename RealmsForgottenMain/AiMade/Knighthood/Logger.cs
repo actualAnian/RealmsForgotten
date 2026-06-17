@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RealmsForgotten.AiMade.Knighthood
+﻿namespace RealmsForgotten.AiMade.Knighthood
 {
     public static class Logger
     {

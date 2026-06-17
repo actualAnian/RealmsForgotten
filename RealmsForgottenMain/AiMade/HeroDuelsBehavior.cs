@@ -5,7 +5,6 @@
 // Assembly location: C:\Users\gupol\Downloads\lordofduels-7021-0-0-1-0-1721043990\LordOfDuels\bin\Win64_Shipping_Client\LordOfDuels.dll
 
 using System;
-using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.Core;

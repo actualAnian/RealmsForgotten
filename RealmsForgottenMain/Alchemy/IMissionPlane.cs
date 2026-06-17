@@ -1,7 +1,7 @@
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-namespace RealmsForgotten.RFEffects.Alchemy
+namespace RealmsForgotten.Alchemy
 {
     public record RFBoundingBox
     {
@@ -24,7 +24,7 @@ namespace RealmsForgotten.RFEffects.Alchemy
         public bool Contains(Vec3 position);
         float Duration { get; set; }
         string? ParticleId { get; set; }
-        void OnEntered(Agent agent);
+        void OnAgentEntered(Agent agent);
         void OnLeft(Agent agent);
         void OnProjectileEntered(Mission.Missile missile);
         void OnProjectileLeft(Mission.Missile missile);

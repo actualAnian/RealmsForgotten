@@ -1,12 +1,15 @@
-﻿using RealmsForgotten.RFEffects.Alchemy.OnHitEffects;
+﻿using RealmsForgotten.Alchemy.OnHitEffects;
+using RealmsForgotten.MissionEffects;
+using RealmsForgotten.MissionEffects.EffectDurationTypes;
+using RealmsForgotten.MissionEffects.MissionEffectTypes;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using static TaleWorlds.MountAndBlade.Mission;
 
-namespace RealmsForgotten.RFEffects.Alchemy.Bombs
+namespace RealmsForgotten.Alchemy.Bombs
 {
-    internal class HeatBomb : AbstractBomb
+    public class HeatBomb : AbstractBomb
     {
         public HeatBomb(Vec3 center, Agent caster) : base(center, caster) { }
         internal override float BaseDuration => 10f;
@@ -15,17 +18,17 @@ namespace RealmsForgotten.RFEffects.Alchemy.Bombs
         public float DurationSecondsAfterLeave => 5f;
         public float DamagePerSecond => 5f;
 
-        public override void OnEntered(Agent agent)
+        public override void OnAgentEntered(Agent agent)
         {
-            agent.AgentDrivenProperties.SwingSpeedMultiplier *= 1.2f;
-            agent.AgentDrivenProperties.ReloadSpeed *= 1.2f;
-            //var burn = new BurnEffect(DamagePerSecond);
-            //MissionEffectsBehavior.Instance.ApplyEffect(burn, agent, 0f, null, DurationSecondsAfterLeave);
+            var heat = new HeatEffect(agent, new TimeBasedDuration(BaseDuration));
+            MissionEffectsBehavior.Instance?.ApplyEffect(heat);
+
+            var burn = new BurnEffect(agent, new TimeBasedDuration(DurationSecondsAfterLeave), DamagePerSecond);
+            MissionEffectsBehavior.Instance?.ApplyEffect(burn);
         }
         public override void OnLeft(Agent agent)
         {
-            agent.AgentDrivenProperties.SwingSpeedMultiplier *= 5/6;
-            agent.AgentDrivenProperties.ReloadSpeed *= 5/6f;
+            MissionEffectsBehavior.Instance?.RemoveEffect(agent, typeof(HeatEffect));
         }
         public override void OnProjectileEntered(Missile missile)
         {

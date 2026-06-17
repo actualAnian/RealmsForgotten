@@ -1,7 +1,7 @@
 ﻿using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-namespace RealmsForgotten.RFEffects.Alchemy
+namespace RealmsForgotten.Alchemy
 {
     public class BerserkerAgentComponent : AgentComponent
     {

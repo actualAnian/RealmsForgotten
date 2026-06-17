@@ -1,5 +1,4 @@
 ﻿using RealmsForgotten.Quest;
-using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;

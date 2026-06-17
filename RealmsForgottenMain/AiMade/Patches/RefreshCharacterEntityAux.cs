@@ -1,19 +1,10 @@
 ﻿using HarmonyLib;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection.Emit;
-using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Party.PartyComponents;
-using TaleWorlds.CampaignSystem.CampaignBehaviors;
-using TaleWorlds.Library;
-using TaleWorlds.MountAndBlade.View;
-using TaleWorlds.MountAndBlade.View.Tableaus;
-using TaleWorlds.ModuleManager;
 using TaleWorlds.MountAndBlade.GauntletUI.BodyGenerator;
 using TaleWorlds.MountAndBlade;
-using System.Reflection;
 
 namespace RealmsForgotten.AiMade.Patches
 {

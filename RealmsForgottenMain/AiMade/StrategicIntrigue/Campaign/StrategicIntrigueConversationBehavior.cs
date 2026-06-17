@@ -8,7 +8,6 @@ using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
-using TaleWorlds.SaveSystem;
 
 namespace RealmsForgotten.AiMade.StrategicIntrigue.Campaign;
 

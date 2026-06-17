@@ -1,5 +1,4 @@
-﻿using SandBox.GameComponents;
-using TaleWorlds.CampaignSystem;
+﻿using TaleWorlds.CampaignSystem;
 using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.AiMade.Career

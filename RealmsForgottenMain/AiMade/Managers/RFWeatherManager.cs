@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TaleWorlds.Library;
+﻿using System.Collections.Generic;
 
 namespace RealmsForgotten.AiMade.Managers
 {

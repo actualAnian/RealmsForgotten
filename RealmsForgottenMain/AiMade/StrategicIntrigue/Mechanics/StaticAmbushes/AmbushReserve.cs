@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using TaleWorlds.Core;
-using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.AiMade.StrategicIntrigue.Mechanics.StaticAmbushes;
 

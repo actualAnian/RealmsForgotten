@@ -10,7 +10,6 @@ using TaleWorlds.CampaignSystem.Settlements.Locations;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
-using TaleWorlds.ModuleManager;
 using TaleWorlds.ObjectSystem;
 
 namespace RealmsForgotten.AiMade

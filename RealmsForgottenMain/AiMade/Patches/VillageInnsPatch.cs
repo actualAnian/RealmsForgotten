@@ -1,14 +1,8 @@
 ﻿using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.Settlements.Locations;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
-using RealmsForgotten.AiMade.Patches;
 
 namespace RealmsForgotten.AiMade.Patches
 {

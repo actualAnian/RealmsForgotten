@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using TaleWorlds.Library;
 
-namespace RealmsForgotten.RFEffects.Alchemy
+namespace RealmsForgotten.Alchemy
 {
     public class SpatialGrid<T>
     {
