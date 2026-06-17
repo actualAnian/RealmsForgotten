@@ -17,6 +17,7 @@ namespace RealmsForgotten.CharacterCreation
                 ["empire"] = "player_char_creation_default",
                 ["khuzait"] = "player_char_creation_default",
                 ["sturgia"] = "player_char_creation_default",
+                ["nord"] = "player_char_creation_nord_guard_{sex}",
                 ["battania"] = "player_char_creation_default",
                 ["vlandia"] = "player_char_creation_default",
                 ["giant"] = "rf_xilan_default",
@@ -34,6 +35,7 @@ namespace RealmsForgotten.CharacterCreation
                 ["empire"] = "merchant_start_empire",
                 ["khuzait"] = "merchant_start_khuzait",
                 ["sturgia"] = "merchant_start_sturgia",
+                ["nord"] = "player_char_creation_nord_seafarer_{sex}",
                 ["battania"] = "rf_elvean_merchant",
                 ["vlandia"] = "merchant_start_vlandia",
                 ["giant"] = "merchant_start_xilan",
@@ -51,6 +53,7 @@ namespace RealmsForgotten.CharacterCreation
                 ["empire"] = "rf_exiled_equip",
                 ["khuzait"] = "rf_exiled_equip",
                 ["sturgia"] = "rf_exiled_equip",
+                ["nord"] = "player_char_creation_nord_skirmisher_{sex}",
                 ["battania"] = "rf_exiled_equip",
                 ["vlandia"] = "rf_exiled_equip",
                 ["giant"] = "rf_exiled_equip",
@@ -68,6 +71,7 @@ namespace RealmsForgotten.CharacterCreation
                 ["empire"] = "rf_empire_mistic",
                 ["khuzait"] = "rf_khuzait_mistic",
                 ["sturgia"] = "rf_sturgia_mistic",
+                ["nord"] = "player_char_creation_nord_6_{sex}",
                 ["battania"] = "rf_elvean_mistic",
                 ["vlandia"] = "rf_nasoria_mistic",
                 ["giant"] = "rf_giant_mistic",
@@ -85,6 +89,7 @@ namespace RealmsForgotten.CharacterCreation
                 ["empire"] = "rf_looter",
                 ["khuzait"] = "rf_looter",
                 ["sturgia"] = "rf_looter",
+                ["nord"] = "player_char_creation_nord_vagabond_{sex}",
                 ["battania"] = "rf_looter",
                 ["vlandia"] = "rf_looter",
                 ["giant"] = "rf_looter",
@@ -102,6 +107,7 @@ namespace RealmsForgotten.CharacterCreation
                 ["empire"] = "merc_realms_start",
                 ["khuzait"] = "merc_allkhuur_start",
                 ["sturgia"] = "merc_vortiak_start",
+                ["nord"] = "player_char_creation_nord_mercenary_{sex}",
                 ["battania"] = "merc_elvean_start",
                 ["vlandia"] = "merc_nasoria_start",
                 ["giant"] = "merc_giant_start",
@@ -119,6 +125,7 @@ namespace RealmsForgotten.CharacterCreation
                 ["empire"] = "realms_vassal_nofief",
                 ["khuzait"] = "khuzait_vassal_nofief",
                 ["sturgia"] = "dreadrealms_vassal_nofief",
+                ["nord"] = "player_char_creation_nord_infantry_{sex}",
                 ["battania"] = "elvean_vassal_nofief",
                 ["vlandia"] = "nasoria_vassal_nofief",
                 ["giant"] = "giant_vassal_nofief",
@@ -136,6 +143,7 @@ namespace RealmsForgotten.CharacterCreation
                 ["empire"] = "realms_vassal_nofief",
                 ["khuzait"] = "khuzait_vassal_nofief",
                 ["sturgia"] = "dreadrealms_vassal_nofief",
+                ["nord"] = "player_char_creation_nord_infantry_{sex}",
                 ["battania"] = "elvean_vassal_nofief",
                 ["vlandia"] = "nasoria_vassal_nofief",
                 ["giant"] = "giant_vassal_nofief",
@@ -153,6 +161,7 @@ namespace RealmsForgotten.CharacterCreation
                 ["empire"] = "king_realms_start",
                 ["khuzait"] = "king_allkhuur_start",
                 ["sturgia"] = "king_vortiak_start",
+                ["nord"] = "player_char_creation_nord_guard_{sex}",
                 ["battania"] = "king_elvean_start",
                 ["vlandia"] = "king_nasoria_start",
                 ["giant"] = "king_giant_start",
@@ -170,6 +179,7 @@ namespace RealmsForgotten.CharacterCreation
                 ["empire"] = "vassal_realms_start",
                 ["khuzait"] = "vassal_allkhuur_start",
                 ["sturgia"] = "vassal_vortiak_start",
+                ["nord"] = "player_char_creation_nord_infantry_{sex}",
                 ["battania"] = "vassal_elvean_start",
                 ["vlandia"] = "vassal_nasoria_start",
                 ["giant"] = "vassal_giant_start",
@@ -336,6 +346,45 @@ namespace RealmsForgotten.CharacterCreation
                 new TroopSpawnInfo("sturgian_veteran_warrior", 10),
                 new TroopSpawnInfo("sturgian_shock_troop", 5),
                 new TroopSpawnInfo("druzhinnik", 5) }},
+
+            { ("nord", StartType.Merchant), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("nord_youngling", 8),
+                new TroopSpawnInfo("nord_huntsman", 4) }},
+
+            { ("nord", StartType.Exiled), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("nord_youngling", 5),
+                new TroopSpawnInfo("nord_huntsman", 2) }},
+
+            { ("nord", StartType.Mistic), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("nord_youngling", 2) }},
+
+            { ("nord", StartType.Outlaw), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("looter", 8) }},
+
+            { ("nord", StartType.Mercenary), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("nord_drengr", 8),
+                new TroopSpawnInfo("nord_huntsman", 3) }},
+
+            { ("nord", StartType.VassalNoFief), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("nord_boandi", 10),
+                new TroopSpawnInfo("nord_marksman", 5),
+                new TroopSpawnInfo("nord_jarlsmann", 3) }},
+
+            { ("nord", StartType.King), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("nord_hirdmann", 20),
+                new TroopSpawnInfo("nord_huscarl", 10),
+                new TroopSpawnInfo("nord_marksman", 10),
+                new TroopSpawnInfo("nord_ulfhednar", 8) }},
+
+            { ("nord", StartType.Usurper), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("nord_thegn", 15),
+                new TroopSpawnInfo("nord_marksman", 8),
+                new TroopSpawnInfo("nord_berserkr", 5) }},
+
+            { ("nord", StartType.Knight), new List<TroopSpawnInfo> {
+                new TroopSpawnInfo("nord_thegn", 10),
+                new TroopSpawnInfo("nord_marksman", 5),
+                new TroopSpawnInfo("nord_berserkr", 5) }},
 
             { ("khuzait", StartType.Merchant), new List<TroopSpawnInfo> {
                 new TroopSpawnInfo("merchant_trained_infantry", 3),
@@ -764,6 +813,7 @@ namespace RealmsForgotten.CharacterCreation
             ["empire"] = HumanBodyPropString,
             ["khuzait"] = AllKhuurBodyPropString,
             ["sturgia"] = UndeadBodyPropString,
+            ["nord"] = NordBodyPropString,
             ["vlandia"] = NasoriaBodyPropString,
             ["giant"] = XilantlacayBodyPropString,
             ["aqarun"] = AqarunBodyPropString,
@@ -799,10 +849,11 @@ namespace RealmsForgotten.CharacterCreation
         const string XilantlacayBodyPropString = "<BodyProperties version=\"4\" age=\"22.2\" weight=\"0.3272\" build=\"0.6343\"  key=\"003458078000200AFDAECE6F0BB44F0EF5F1DEFEDAA6B1818E66E1EE818DF07A007A560307E84F31000000000000000000000000000000000000000052F43142\"  />";
         const string DwarfBodyPropString = "<BodyProperties version=\"4\" age=\"22.2\" weight=\"1\" build=\"0.9954\"  key=\"002BB00780003A50FFEFFFFEEEFEF00FFEF5EFA74756E898FFFCF80E516FFEFF003FF60303EFBE9E0000000000000000000000000000000000000000105C9142\"  />";
         const string WulfBodyPropString = "<BodyProperties version=\"4\" age=\"22.03\" weight=\"0.4738\" build=\"1\"  key=\"0029B00FC000140AE6DC6DFD98ECBF8901516F289FAC23B49FD822F795D3F08900CF76030CFEEDAA0000000000000000000000000000000000000000439C3142\"  />";
+        const string NordBodyPropString = "<BodyProperties version=\"4\" age=\"22.25\" weight=\"0.4713\" build=\"0.7263\"  key=\"0000040026000ADEA2900010502050960160417360A700301111100170000006006B70030611200000000000000000000000000000000000000000000ED00000\"  />";
 
         public static List<string> PlayerSelectableCultures = new()
         {
-            "aserai", "battania", "empire", "khuzait", "sturgia", "vlandia", // DO NOT REMOVE, in Bannelord 1.3 beta removing one of the default cultures causes a crash    
+            "aserai", "battania", "empire", "khuzait", "sturgia", "vlandia", "nord", // DO NOT REMOVE, in Bannelord 1.3 beta removing one of the default cultures causes a crash
             "south_realm", "west_realm", "mage","aqarun","dwarf","urkhai", "wulf", "giant",
         };
     }

@@ -55,7 +55,7 @@ public class FloatingTextMissionView : MissionView
             _vm.AddAgent(new FloatingTextItemVM
             {
                 ScreenPosition = worldPos,
-                Text = ""
+                Text = "lolol"
             });
         }
     }

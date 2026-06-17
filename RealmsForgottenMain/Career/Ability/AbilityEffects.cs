@@ -9,6 +9,7 @@ using TaleWorlds.MountAndBlade;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Engine;
 using RealmsForgotten.RFEffects;
+using RealmsForgotten.RFMissionLogic;
 
 namespace RealmsForgotten.Career.Ability
 {
@@ -258,7 +259,7 @@ namespace RealmsForgotten.Career.Ability
                     Vec3.Up, blow.Direction, blow.GlobalPosition, Vec3.Zero, Vec3.Zero, victim.Velocity,
                     Vec3.Up);
 
-            attacker.RegisterBlow(divineBlow, attackCollisionDataForDebugPurpose);
+            DeferredMissionDamageBehavior.QueueAgentBlow(attacker, divineBlow, attackCollisionDataForDebugPurpose);
         }
         public static float GetSpellAmmoPercent()
         {

@@ -63,6 +63,15 @@ namespace RealmsForgotten.Behaviors
 
         private bool ReviveTroops(Agent main)
         {
+            if (Mission.Current == null || Mission.Current.Mode == MissionMode.StartUp)
+                return false;
+
+            if (Mission.Current.MissionLogics.OfType<DeploymentMissionController>().Any())
+            {
+                MBInformationManager.AddQuickInformation(new TextObject("{=necromancy_wait_deployment}You cannot raise the dead while the armies are still deploying."));
+                return false;
+            }
+
             MapEvent playerEvent = MapEvent.PlayerMapEvent;
             if (playerEvent == null)
                 return false; 
@@ -115,8 +124,8 @@ namespace RealmsForgotten.Behaviors
                     ? new PartyAgentOrigin(PartyBase.MainParty, zombieTroop)
                     : new SimpleAgentOrigin(zombieTroop);
                 
-                Agent agent = Mission.Current.SpawnTroop(agentOriginBase, true, true,
-                    zombieTroop.IsMounted, false, 1, 1, true, true, false, position, position.AsVec2);
+                Agent agent = Mission.Current.SpawnTroop(agentOriginBase, true, false,
+                    zombieTroop.IsMounted, false, 1, 0, true, true, position, main.LookDirection.AsVec2);
 
                 agent.TeleportToPosition(position);
                 agent.SetMorale(100);

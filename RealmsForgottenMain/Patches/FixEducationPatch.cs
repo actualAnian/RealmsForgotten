@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
-using MonoMod.Utils;
 using RealmsForgotten.CustomSkills;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
@@ -25,8 +24,9 @@ public static class FixPickAll
         bool result = false;
         for (int i = 0; i < 5; i++)
         {
-            if (new StackFrame(i).GetMethod()?.GetType()?.Name?.Contains("Education") == true ||
-                new StackFrame(i).GetMethod()?.GetRealDeclaringType()?.Name?.Contains("Education") == true)
+            MethodBase method = new StackFrame(i).GetMethod();
+            if (method?.DeclaringType?.Name?.Contains("Education") == true ||
+                method?.ReflectedType?.Name?.Contains("Education") == true)
             {
                 result = true;
             }
@@ -48,13 +48,15 @@ public static class FixPickAll2
         bool result = false;
         for (int i = 0; i < 5; i++)
         {
-            if (new StackFrame(i).GetMethod()?.GetType()?.Name?.Contains("Education") == true ||
-                new StackFrame(i).GetMethod()?.GetRealDeclaringType()?.Name?.Contains("Education") == true)
+            MethodBase method = new StackFrame(i).GetMethod();
+            if (method?.DeclaringType?.Name?.Contains("Education") == true ||
+                method?.ReflectedType?.Name?.Contains("Education") == true)
                 result = true;
         }
         if (result)
         {
             __result.Remove(RFAttributes.Discipline);
+            __result.Remove(RFAttributes.Seafaring);
         }
     }
 }

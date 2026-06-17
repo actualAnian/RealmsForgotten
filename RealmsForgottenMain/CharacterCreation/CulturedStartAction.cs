@@ -13,6 +13,7 @@ using TaleWorlds.Library;
 using TaleWorlds.ObjectSystem;
 using static RealmsForgotten.CharacterCreation.CharacterCreationConfig;
 using static RealmsForgotten.Globals;
+using static TaleWorlds.Core.Equipment;
 
 namespace RealmsForgotten.CharacterCreation
 {
@@ -24,7 +25,6 @@ namespace RealmsForgotten.CharacterCreation
             {
                 Hero mainHero = Hero.MainHero;
 
-                // remove original items
                 GiveGoldAction.ApplyBetweenCharacters(mainHero, null, mainHero.Gold, true);
                 mainHero.PartyBelongedTo.ItemRoster.Clear();
 
@@ -42,23 +42,23 @@ namespace RealmsForgotten.CharacterCreation
                     if (troop != null)
                         mainHero.PartyBelongedTo.AddElementToMemberRoster(troop, troopInfo.Quantity, false);
                 }
-
                 foreach (SkillObject skill in Skills.All)
                     mainHero.SetSkillValue(skill, (int)(mainHero.GetSkillValue(skill) * startingSkillMult[startType]));
 
-
-                Kingdom kingdom = Kingdom.All.Where(k => k.Culture == mainHero.Culture).FirstOrDefault();
+                Kingdom kingdom = Kingdom.All.FirstOrDefault(k => k.Culture == mainHero.Culture);
                 switch (startType)
                 {
                     case StartType.Mercenary:
                         mainHero.PartyBelongedTo.RecentEventsMorale -= 40;
                         break;
+
                     case StartType.Exiled:
                         ChangeCrimeRatingAction.Apply(kingdom, 50, false);
                         CharacterRelationManager.SetHeroRelation(mainHero, kingdom.RulingClan.Leader, -50);
                         foreach (Hero lord in kingdom.AliveLords)
                             CharacterRelationManager.SetHeroRelation(mainHero, lord, -10);
                         break;
+
                     case StartType.King:
                         ChangeKingdomAction.ApplyByJoinToKingdom(mainHero.Clan, kingdom);
                         ChangeRulingClanAction.Apply(kingdom, mainHero.Clan);
@@ -68,33 +68,43 @@ namespace RealmsForgotten.CharacterCreation
                         Settlement castle = kingdom.Settlements.GetRandomElementWithPredicate(settlement => settlement.IsCastle);
                         ChangeOwnerOfSettlementAction.ApplyByDefault(mainHero, castle);
                         break;
+
                     case StartType.Knight:
                         CharacterRelationManager.SetHeroRelation(mainHero, kingdom.RulingClan.Leader, 20);
                         ChangeKingdomAction.ApplyByJoinToKingdom(mainHero.Clan, kingdom, default, false);
                         mainHero.Clan.Influence = 500;
                         break;
+
                     case StartType.Usurper:
-                        Settlement settlement = mainHero.Clan.Kingdom.Settlements.GetRandomElementWithPredicate(settlement => settlement.IsCastle);
+                        Settlement settlement = mainHero.Clan.Kingdom.Settlements.GetRandomElementWithPredicate(s => s.IsCastle);
                         ChangeOwnerOfSettlementAction.ApplyByDefault(mainHero, settlement);
                         Campaign.Current.KingdomManager.CreateKingdom(mainHero.Clan.Name, mainHero.Clan.InformalName, mainHero.Clan.Culture, mainHero.Clan);
                         mainHero.Clan.Influence = 50;
                         break;
+
                     case StartType.Outlaw:
                         foreach (Kingdom k in Campaign.Current.Kingdoms)
                             ChangeCrimeRatingAction.Apply(k.MapFaction, 50, false);
-                        break;
-                    default:
                         break;
                 }
             }
             catch (Exception e)
             {
-                InformationManager.DisplayMessage(new($"Error in character creation for start type: {startType}, settlement: {startSettlement}. Message: {e.Message}"));
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"Error in character creation for start type: {startType}, settlement: {startSettlement}. Message: {e.Message}",
+                    Colors.Red));
             }
-            Settlement? startingSettlement = startSettlement == RFCharacterCreationCampaignBehavior.IS_PLAYER_SETTLEMENT ? Clan.PlayerClan.Settlements.GetRandomElement() : Settlement.Find(startSettlement);
+
+            Settlement startingSettlement = startSettlement == RFCharacterCreationCampaignBehavior.IS_PLAYER_SETTLEMENT
+                ? Clan.PlayerClan.Settlements.GetRandomElement()
+                : Settlement.Find(startSettlement);
 
             if (startingSettlement == null)
-                InformationManager.DisplayMessage(new($"Error, settlement with id {startSettlement} not found."));
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"Error, settlement with id {startSettlement} not found.",
+                    Colors.Red));
+            }
             else
             {
                 MobileParty.MainParty.Position = startingSettlement.GatePosition;
@@ -108,50 +118,54 @@ namespace RealmsForgotten.CharacterCreation
         private static void AddCompanions(int companions = 0, int companionParties = 0, StartType startOption = StartType.Default)
         {
             Clan playerClan = Clan.PlayerClan;
+
             for (int i = 0; i < companions; i++)
             {
-                CharacterObject wanderer = (from character in CharacterObject.All
-                                            where character.Occupation == Occupation.Wanderer && character.Culture == Hero.MainHero.Culture
-                                            select character).GetRandomElementInefficiently();
-                Settlement randomSettlement = (from settlement in Settlement.All
-                                               where settlement.Culture == wanderer?.Culture && settlement.IsTown
-                                               select settlement).GetRandomElementInefficiently();
+                CharacterObject wanderer = CharacterObject.All
+                    .Where(character => character.Occupation == Occupation.Wanderer && character.Culture == Hero.MainHero.Culture)
+                    .GetRandomElementInefficiently();
+
                 if (wanderer == null)
                 {
                     InformationManager.DisplayMessage(new InformationMessage("CULTURED START WANDERER ERROR", Colors.Red));
                     break;
                 }
+
+                Settlement randomSettlement = Settlement.All
+                    .Where(settlement => settlement.Culture == wanderer.Culture && settlement.IsTown)
+                    .GetRandomElementInefficiently();
+
                 Hero companion = HeroCreator.CreateSpecialHero(wanderer, randomSettlement, null, null, 33);
                 companion.Clan = randomSettlement.OwnerClan;
                 companion.ChangeState(Hero.CharacterStates.Active);
-                if (startOption == StartType.King || startOption == StartType.Usurper || startOption == StartType.Knight) // gives companions noble equipment
+
+                if (startOption == StartType.King || startOption == StartType.Usurper || startOption == StartType.Knight)
                 {
                     try
                     {
-                        companion.BattleEquipment.FillFrom(Campaign.Current.Models.EquipmentSelectionModel.GetEquipmentRostersForHeroComeOfAge(companion, false)[0].AllEquipments.GetRandomElement());
-                        if (companion.IsFemale)
-                            companion.CivilianEquipment.FillFrom(ChooseLadyCivillianEquipment(companion)[0].AllEquipments.GetRandomElement());
-                        else
-                            companion.CivilianEquipment.FillFrom(Campaign.Current.Models.EquipmentSelectionModel.GetEquipmentRostersForHeroComeOfAge(companion, true)[0].AllEquipments.GetRandomElement());
+                        companion.BattleEquipment.FillFrom(
+                            Campaign.Current.Models.EquipmentSelectionModel
+                                .GetEquipmentForHeroComeOfAge(companion, EquipmentType.Battle));
+
+                        companion.CivilianEquipment.FillFrom(
+                            Campaign.Current.Models.EquipmentSelectionModel
+                                .GetEquipmentForHeroComeOfAge(companion, EquipmentType.Civilian));
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        InformationManager.DisplayMessage(new InformationMessage("ERROR FILLING EQUIPMENT ON COMPANION", Colors.Red));
+                        InformationManager.DisplayMessage(new InformationMessage(
+                            $"ERROR FILLING EQUIPMENT ON COMPANION: {ex.Message}",
+                            Colors.Red));
                     }
                 }
-                AddCompanionAction.Apply(Clan.PlayerClan, companion);
+
+                AddCompanionAction.Apply(playerClan, companion);
                 AddHeroToPartyAction.Apply(companion, MobileParty.MainParty, false);
                 GiveGoldAction.ApplyBetweenCharacters(null, companion, 2000, true);
+
                 if (i < companionParties)
                     MobilePartyHelper.CreateNewClanMobileParty(companion, Hero.MainHero.Clan);
             }
-        }
-        private static List<MBEquipmentRoster> ChooseLadyCivillianEquipment(Hero companion)
-        {
-            return MBEquipmentRosterExtensions.All.Where(a => a.EquipmentCulture == companion.Culture
-                    && a.HasEquipmentFlags(EquipmentFlags.IsFemaleTemplate)
-                    && a.HasEquipmentFlags(EquipmentFlags.IsNobleTemplate)
-                    && a.HasEquipmentFlags(EquipmentFlags.IsNoncombatantTemplate)).ToList();
         }
     }
 }

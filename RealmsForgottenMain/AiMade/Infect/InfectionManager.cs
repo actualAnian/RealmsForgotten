@@ -106,7 +106,6 @@ namespace RealmsForgotten.AiMade.Infect
                     formationTroopIndex: 0,
                     isAlarmed: true,
                     wieldInitialWeapons: true,
-                    forceDismounted: false,
                     initialPosition: pos,
                     initialDirection: dir,
                     specialActionSetSuffix: null,

@@ -1,10 +1,9 @@
 ﻿using System;
-using HarmonyLib;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-namespace RealmsForgotten.NecromancyAndSummoning.Patch
+namespace NecromancyAndSummoning.Patch
 {
     internal class SummoningAndRaiseCorpsePatch
     {

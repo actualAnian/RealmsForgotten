@@ -1,9 +1,5 @@
 ﻿using RealmsForgotten.AiMade.Encounters.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
@@ -68,7 +64,7 @@ namespace RealmsForgotten.AiMade.Encounters.Scenario
                 new InformationMessage($"🏹 Defend mission started outside {_settlement.Name}!")
             );
 
-            var spawnLogic = Mission.Current.GetMissionBehavior<MissionAgentSpawnLogic>();
+            var spawnLogic = Mission.Current.GetMissionBehavior<DefaultBattleMissionAgentSpawnLogic>();
 
             var playerTeam = Mission.Current.Teams.Add(BattleSideEnum.Attacker, 0, uint.MaxValue, null);
             var banditTeam = Mission.Current.Teams.Add(BattleSideEnum.Defender, 1, uint.MaxValue, null);

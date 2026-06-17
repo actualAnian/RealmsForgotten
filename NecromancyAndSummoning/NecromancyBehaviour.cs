@@ -3,12 +3,10 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
 
-namespace RealmsForgotten.NecromancyAndSummoning
+namespace NecromancyAndSummoning
 {
-	// Token: 0x02000003 RID: 3
 	internal class NecromancyBehaviour : CampaignBehaviorBase
 	{
-		// Token: 0x06000011 RID: 17 RVA: 0x000028F0 File Offset: 0x00000AF0
 		public override void RegisterEvents()
 		{
 			try

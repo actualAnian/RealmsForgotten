@@ -1,0 +1,36 @@
+{
+  "use_remote_api": true,
+  "active_profile": "deepseek",
+  "api_endpoint": "https://api.deepseek.com/chat/completions",
+  "api_key": "",
+  "api_key_file": "",
+  "api_model_name": "deepseek-chat",
+  "ollama_model_name": "gemma3:4b",
+  "ollama_endpoint": "http://localhost:11434/api/chat",
+  "debug_menu_enabled": false,
+  "profiles": {
+    "deepseek": {
+      "use_remote_api": true,
+      "api_endpoint": "https://api.deepseek.com/chat/completions",
+      "api_model_name": "deepseek-chat",
+      "api_key_file": ""
+    },
+    "openai": {
+      "use_remote_api": true,
+      "api_endpoint": "https://api.openai.com/v1/chat/completions",
+      "api_model_name": "gpt-4o-mini",
+      "api_key_file": ""
+    },
+    "gemini_flash": {
+      "use_remote_api": true,
+      "api_endpoint": "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+      "api_model_name": "gemini-2.5-flash",
+      "api_key_file": ""
+    },
+    "local_ollama": {
+      "use_remote_api": false,
+      "ollama_model_name": "gemma3:4b",
+      "ollama_endpoint": "http://localhost:11434/api/chat"
+    }
+  }
+}

@@ -636,7 +636,7 @@ namespace RealmsForgotten.AiMade
                                     }
                                     if (partiesTimerDic.Count != 0)
                                     {
-                                        missionSidesBoth = typeof(MissionAgentSpawnLogic).GetField("_missionSides", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(Mission.GetMissionBehavior<MissionAgentSpawnLogic>()) as IEnumerable;
+                                        missionSidesBoth = typeof(DefaultBattleMissionAgentSpawnLogic).GetField("_missionSides", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(Mission.GetMissionBehavior<DefaultBattleMissionAgentSpawnLogic>()) as IEnumerable;
                                         timerStart = true;
                                     }
                                 }
@@ -992,7 +992,7 @@ namespace RealmsForgotten.AiMade
                                 true, true,
                                 0,
                                 originBase.Troop.DefaultFormationGroup,
-                                true, false, false,
+                                true, false,
                                 Mission.Current.GetFormationSpawnPosition(Mission.Current.PlayerTeam, originBase.Troop.DefaultFormationClass).ToVec3(0.0f),
                                 Mission.Current.GetFormationSpawnPosition(Mission.Current.PlayerTeam, originBase.Troop.DefaultFormationClass),
                                 null,

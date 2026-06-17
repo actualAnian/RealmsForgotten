@@ -65,7 +65,7 @@ namespace RealmsForgotten.Quest
             TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
             TroopRoster strongestAndPriorTroops = MobilePartyHelper.GetStrongestAndPriorTroops(MobileParty.MainParty, _maxTroopCountInHideout, true);
             troopRoster.Add(strongestAndPriorTroops);
-            args.MenuContext.OpenTroopSelection(MobileParty.MainParty.MemberRoster, troopRoster, new Func<CharacterObject, bool>(CanChangeStatusOfTroop), new Action<TroopRoster>(OnTroopRosterManageDone), _maxTroopCountInHideout, 1);
+            args.MenuContext.OpenTroopSelection(MobileParty.MainParty.MemberRoster, troopRoster, null, new Func<CharacterObject, bool>(CanChangeStatusOfTroop), new Action<TroopRoster>(OnTroopRosterManageDone), _maxTroopCountInHideout, 1);
         }
         private void OnTroopRosterManageDone(TroopRoster roster)
         {

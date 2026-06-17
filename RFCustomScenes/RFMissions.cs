@@ -7,6 +7,8 @@ using SandBox.Missions.MissionLogics.Arena;
 using SandBox.View;
 using SandBox.View.Missions;
 using System;
+using System.Collections.Generic;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
@@ -15,6 +17,8 @@ using TaleWorlds.MountAndBlade.Source.Missions.Handlers;
 using TaleWorlds.MountAndBlade.View;
 using TaleWorlds.MountAndBlade.View.MissionViews;
 using TaleWorlds.MountAndBlade.View.MissionViews.Order;
+using TaleWorlds.MountAndBlade.View.MissionViews.Singleplayer;
+using TaleWorlds.MountAndBlade.View.MissionViews.Sound;
 using static RFCustomSettlements.ArenaBuildData;
 
 namespace RFCustomSettlements

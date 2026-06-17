@@ -48,7 +48,7 @@ namespace RealmsForgotten.AiMade.Village_Inn_Quests
                     false,  // spawnWithHorse
                     false,  // isReinforcement
                     0, 0,
-                    false, false, false,
+                    false, false,
                     null, null, null, null,
                     FormationClass.Infantry,
                     false

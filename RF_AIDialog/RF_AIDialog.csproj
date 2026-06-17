@@ -1,0 +1,61 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Version>0.1.0</Version>
+    <TargetFramework>net472</TargetFramework>
+    <Platforms>x64</Platforms>
+    <LangVersion>10.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <RootNamespace>RF_AIDialog</RootNamespace>
+    <GameFolder>$(BANNERLORD_GAME_DIR)</GameFolder>
+    <ModuleRoot>$(GameFolder)\Modules\RealmsForgotten</ModuleRoot>
+    <ModuleBin>$(ModuleRoot)\bin\Win64_Shipping_Client</ModuleBin>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="$(GameFolder)\bin\Win64_Shipping_Client\Newtonsoft.Json.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.*.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(GameFolder)\Modules\SandBox\bin\Win64_Shipping_Client\*.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RealmsForgottenMain\RealmsForgotten.csproj" />
+  </ItemGroup>
+
+  <!-- Deploys the AI dialog assembly and safe config templates into the RealmsForgotten module. -->
+  <Target Name="PostBuild" AfterTargets="Build">
+    <MakeDir Directories="$(ModuleBin)" Condition="'$(GameFolder)' != ''" />
+    <Copy SourceFiles="$(TargetPath)"
+          DestinationFolder="$(ModuleBin)"
+          SkipUnchangedFiles="true"
+          Condition="'$(GameFolder)' != ''" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb"
+          DestinationFolder="$(ModuleBin)"
+          SkipUnchangedFiles="true"
+          Condition="'$(GameFolder)' != '' and Exists('$(TargetDir)$(TargetName).pdb')" />
+    <Copy SourceFiles="$(ProjectDir)ai_config.example.json"
+          DestinationFolder="$(ModuleRoot)"
+          SkipUnchangedFiles="true"
+          Condition="'$(GameFolder)' != '' and Exists('$(ProjectDir)ai_config.example.json')" />
+    <Copy SourceFiles="$(ProjectDir)ai_config.default.json"
+          DestinationFolder="$(ModuleRoot)"
+          SkipUnchangedFiles="true"
+          Condition="'$(GameFolder)' != '' and Exists('$(ProjectDir)ai_config.default.json')" />
+    <Copy SourceFiles="$(ProjectDir)ai_config.default.json"
+          DestinationFiles="$(ModuleRoot)\ai_config.local.json"
+          SkipUnchangedFiles="true"
+          Condition="'$(GameFolder)' != '' and Exists('$(ProjectDir)ai_config.default.json') and !Exists('$(ModuleRoot)\ai_config.local.json')" />
+  </Target>
+
+</Project>

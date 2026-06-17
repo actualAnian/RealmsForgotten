@@ -30,3 +30,8 @@ fixCode.py
 .vs
 .vscode
 RFCustomScenes/BehaviorTrees/
+
+# RF_AIDialog build artifacts
+RF_AIDialog/bin
+RF_AIDialog/obj
+RF_AIDialog/ai_config.local.json
