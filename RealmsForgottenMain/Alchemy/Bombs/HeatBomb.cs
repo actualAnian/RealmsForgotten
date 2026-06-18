@@ -2,15 +2,19 @@
 using RealmsForgotten.MissionEffects;
 using RealmsForgotten.MissionEffects.EffectDurationTypes;
 using RealmsForgotten.MissionEffects.MissionEffectTypes;
+using System;
+using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 using static TaleWorlds.MountAndBlade.Mission;
 
 namespace RealmsForgotten.Alchemy.Bombs
 {
-    public class HeatBomb : AbstractBomb
+    public class HeatBomb : AbstractBomb 
     {
+        private readonly OnProjectilePassedTextProvider _projectilePassedText = new();
         public HeatBomb(Vec3 center, Agent caster) : base(center, caster) { }
         internal override float BaseDuration => 10f;
         internal override float BaseRadius => 6f;
@@ -18,6 +22,16 @@ namespace RealmsForgotten.Alchemy.Bombs
         public float DurationSecondsAfterLeave => 5f;
         public float DamagePerSecond => 5f;
 
+        TextObject _baseDescription = new("{rf_alchemy_heat_base} +20% swing speed, reload for {DURATION} seconds");
+        TextObject _projectilePassedDescription = new("{rf_alchemy_heat_pro} +1 morale damage on projectile hit");
+        public override string Description
+        {
+            get
+            {
+                GameTexts.SetVariable("DUTARION", Duration);
+                return TextHelper.GetBaseDecriptionAndOnProjectilePassed(_baseDescription, _projectilePassedDescription, _projectilePassedText.ShowText);
+            }
+        } 
         public override void OnAgentEntered(Agent agent)
         {
             var heat = new HeatEffect(agent, new TimeBasedDuration(BaseDuration));
@@ -32,6 +46,7 @@ namespace RealmsForgotten.Alchemy.Bombs
         }
         public override void OnProjectileEntered(Missile missile)
         {
+            _projectilePassedText.OnProjectilePassed();
             var particleId = "fire_ground";
             if (ParticleSystemManager.GetRuntimeIdByName(particleId) == -1)
                 InformationManager.DisplayMessage(new InformationMessage("Error, Particle with id: " + particleId + "not found", new Color(1, 0, 0)));

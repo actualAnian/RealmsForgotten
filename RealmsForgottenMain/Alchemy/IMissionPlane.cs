@@ -24,11 +24,15 @@ namespace RealmsForgotten.Alchemy
         public bool Contains(Vec3 position);
         float Duration { get; set; }
         string? ParticleId { get; set; }
+        public string Description { get; }
+        public abstract Color TextColor { get; }
+        public Vec3 TextPositionInMission { get; }
         void OnAgentEntered(Agent agent);
         void OnLeft(Agent agent);
         void OnProjectileEntered(Mission.Missile missile);
         void OnProjectileLeft(Mission.Missile missile);
         void OnAgentDiedInside(Agent agent);
         void OnInteraction(IMissionPlane anotherPlane);
+        void OnTick(float dt);
     }
 }

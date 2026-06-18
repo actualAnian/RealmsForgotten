@@ -1,0 +1,7 @@
+﻿<Brushes>
+	<Brush Name="FloatingText.Brush" Font="Galahad" TextHorizontalAlignment="Center">
+		<Styles>
+			<Style Name="Default" FontColor="#E7B464FF" TextOutlineAmount="0" TextGlowRadius="10" TextBlur="0" TextOutlineColor="#000000FF" />
+		</Styles>
+	</Brush>
+</Brushes>

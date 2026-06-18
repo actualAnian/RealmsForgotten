@@ -9,6 +9,13 @@ namespace RealmsForgotten.Alchemy.Bombs
     internal class PanicDust : AbstractBomb
     {
         public PanicDust(Vec3 center, Agent caster) : base(center, caster) { }
+        public override string Description
+        {
+            get
+            {
+                return "TODO";
+            }
+        }
 
         internal override float BaseDuration => 1f;
 

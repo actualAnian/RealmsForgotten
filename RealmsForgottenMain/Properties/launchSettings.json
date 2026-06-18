@@ -3,7 +3,7 @@
     "Bannerlord": {
       "commandName": "Executable",
       "executablePath": "$(GameFolder)\\bin\\Win64_Shipping_Client\\Bannerlord.exe",
-      "commandLineArgs": "/singleplayer _MODULES_*Bannerlord.Harmony*Bannerlord.ButterLib*Bannerlord.UIExtenderEx*Native*SandBoxCore*CustomBattle*Sandbox*StoryMode*RF_Map*RF_Races*RealmsForgotten*RF_Core_II*RF_Core_III*RF_Extension*RFMonsters*Bannerlord.CCsBanners*BetterEconomoy*VoiceActingPatchRemake*_MODULES_",
+      "commandLineArgs": "/singleplayer _MODULES_*Bannerlord.Harmony*Bannerlord.ButterLib*Bannerlord.UIExtenderEx*Native*SandBoxCore*CustomBattle*Sandbox*StoryMode*NavalDLC*RF_Map*RF_Races*RealmsForgotten*RF_Core_II*RF_Core_III*RF_Extension*RFMonsters*Bannerlord.CCsBanners*BetterEconomoy*VoiceActingPatchRemake*_MODULES_",
       "workingDirectory": "$(GameFolder)\\bin\\Win64_Shipping_Client"
     }
   }

@@ -1,5 +1,6 @@
 ﻿using RealmsForgotten.Alchemy.Bombs;
 using RealmsForgotten.Alchemy.OnHitEffects;
+using RealmsForgotten.UI.FloatingText;
 using System.Collections.Generic;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
@@ -17,6 +18,7 @@ namespace RealmsForgotten.Alchemy
             Bomb = bomb;
             Elapsed = 0f;
         }
+        public int? FloatingTextId { get; set; } 
 
         public GameEntity Entity { get; set; }
         public ParticleSystem Particle { get; set; }
@@ -84,6 +86,7 @@ namespace RealmsForgotten.Alchemy
             for (int i = _activeBombs.Count - 1; i >= 0; i--)
             {
                 var bomb = _activeBombs[i];
+                bomb.Bomb.OnTick(dt);
                 bomb.Elapsed += _areaCheckAccumulator;
                 if (bomb.Elapsed >= bomb.Bomb.Duration)
                 {
@@ -206,8 +209,14 @@ namespace RealmsForgotten.Alchemy
             var position = childEntity.GlobalPosition;
             var newBomb = new ActiveBomb(childEntity, particle, bomb);
             _activeBombs.Add(newBomb);
+            AddTextToFloatingTextManager(newBomb);
             CheckAgentsInBombAreas(newBomb);
             CheckForInteractions(newBomb.Bomb);
+        }
+        private void AddTextToFloatingTextManager(ActiveBomb bomb)
+        {
+            int id = FloatingTextManager.Instance.AddText(() => {return bomb.Bomb.Description; }, () => { return bomb.Bomb.TextPositionInMission; }, bomb.Bomb.TextColor);
+            bomb.FloatingTextId = id;
         }
     }
 }

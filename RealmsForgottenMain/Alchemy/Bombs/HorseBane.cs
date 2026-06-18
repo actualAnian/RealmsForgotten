@@ -1,7 +1,7 @@
-﻿using RealmsForgotten.Alchemy;
-using TaleWorlds.Core;
+﻿using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.Alchemy.Bombs
@@ -10,6 +10,15 @@ namespace RealmsForgotten.Alchemy.Bombs
     {
         internal override float BaseDuration => 10f;
         internal override float BaseRadius => 10f;
+        TextObject _baseDescription = new("{rf_alchemy_horsebane_base} Forces horses to rear");
+
+        public override string Description
+        {
+            get
+            {
+                return _baseDescription.ToString();
+            }
+        }
 
         public HorseBane(Vec3 center, Agent caster) : base(center, caster) { }
 

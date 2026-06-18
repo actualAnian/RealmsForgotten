@@ -1,5 +1,4 @@
-﻿using RealmsForgotten.Alchemy;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using static TaleWorlds.MountAndBlade.Mission;
@@ -27,11 +26,25 @@ namespace RealmsForgotten.Alchemy.Bombs
         public float Radius { get; internal set; }
         public float Duration { get; set; } = 5;
         public virtual string? ParticleId { get; set; } = null;
+        public abstract string Description { get; }
+
+        public virtual Color TextColor { get; } = Color.Black;
+
+        public virtual Vec3 TextPositionInMission
+        {
+            get
+            {
+                return Center + new Vec3(0, 0, Radius + 5);
+            }
+        }
+
         public virtual void OnAgentDiedInside(Agent agent) { }
         public virtual void OnAgentEntered(Agent agent) { }
         public virtual void OnLeft(Agent agent) { }
-        public virtual void OnProjectileEntered(Mission.Missile missile) { }
-        public virtual void OnProjectileLeft(Mission.Missile missile) { }
+        public virtual void OnProjectileEntered(Missile missile) { }
+        public virtual void OnProjectileLeft(Missile missile) { }
         public virtual void OnInteraction(IMissionPlane anotherPlane) { }
+
+        public virtual void OnTick(float dt) { }
     }
 }

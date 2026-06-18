@@ -6,7 +6,6 @@ using SandBox.Missions.MissionLogics;
 using SandBox.Missions.MissionLogics.Arena;
 using SandBox.View;
 using SandBox.View.Missions;
-using SandBox.ViewModelCollection;
 using System;
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;

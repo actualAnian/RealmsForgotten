@@ -1,0 +1,25 @@
+﻿<Prefab>
+	<Window>
+		<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" >
+			<Children>
+				<Widget DataSource="{AllTexts}" Id="AgentMarkersContainer" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+					<ItemTemplate>
+						<FloatingTextListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Position="@ScreenPosition" TypeVisualWidget="TypeWidget" StackLayout.LayoutMethod="VerticalTopToBottom" Distance="50">
+							<Children>
+								<BrushWidget Id="TypeWidget" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="NameMarker.VisualBrush">
+									<Children>
+										<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" StackLayout.LayoutMethod="VerticalBottomToTop">
+											<Children>
+												<TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="350" SuggestedHeight="100" Text="@Text" Brush="FloatingText.Brush"  Brush.FontColor="@Color" HorizontalAlignment="Center" ClipContents="false" IsVisible="@IsVisible" />
+											</Children>
+										</ListPanel>
+									</Children>
+								</BrushWidget>
+							</Children>
+						</FloatingTextListPanel>
+					</ItemTemplate>
+				</Widget>
+			</Children>
+		</Widget>
+	</Window>
+</Prefab>
