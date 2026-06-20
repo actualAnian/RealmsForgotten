@@ -43,6 +43,7 @@ using TaleWorlds.ModuleManager;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.ComponentInterfaces;
 using Module = TaleWorlds.MountAndBlade.Module;
+using RealmsForgotten.Utility;
 
 namespace RealmsForgotten
 {
@@ -300,12 +301,17 @@ namespace RealmsForgotten
             UIConfig.DoNotUseGeneratedPrefabs = true;
             
             RemoveSandboxAndStoryOptions();
-
+            bool hasRFWarsails = Globals.IsUsingRFWarsailsModule;
             Module.CurrentModule.AddInitialStateOption(
                 new InitialStateOption("RF", name: new TextObject("Realms Forgotten", null), 3,
                 () => MBGameManager.StartNewGame(new RFCampaignManager()),
-                () => (Module.CurrentModule.IsOnlyCoreContentEnabled, coreContentDisabledReason))
-            );
+                () =>
+                {
+                    if (Globals.IsWarSailsLoaded && !hasRFWarsails) return (true, new("{=rf_start_remove_warsails}You have war sails enabled but your RF version is not warsails compatible"));
+                    if (!Globals.IsWarSailsLoaded && hasRFWarsails) return (true, new("{=rf_start_add_warsails}You don't have war sails enabled but your RF version IS ONLY warsails compatible"));
+                    return (Module.CurrentModule.IsOnlyCoreContentEnabled, coreContentDisabledReason);
+                }, null, null)
+               );
 
             foreach (var method in AccessTools.GetDeclaredMethods(typeof(WeaponEffectConsequences)).Where(x => x.IsPublic))
             {

@@ -1,6 +1,8 @@
 ﻿using RealmsForgotten.Managers;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
@@ -68,7 +70,7 @@ namespace RealmsForgotten
         public static bool IsBalrog(this BasicCharacterObject c) => c != null && RaceManager.Instance.GetRaceNameFromId(c.Race) == "balrog";
         public static bool IsZombie(this BasicCharacterObject c) => RaceManager.Instance.GetRaceNameFromId(c.Race) == "zombie";
 
-        internal static List<string>  PlayerSelectableRaces { get { return _playerSelectableRaces; } }
+        internal static List<string> PlayerSelectableRaces { get { return _playerSelectableRaces; } }
         private static readonly List<string> _playerSelectableRaces = new() { "human", "elvean", "undead", "mull", "half_giant", "Xilantlacay", "dwarf", "urkhai" };
 
         public static bool IsMissionInitialized = false;
@@ -134,5 +136,6 @@ namespace RealmsForgotten
             return TaleWorlds.MountAndBlade.Agent.Main != null && TaleWorlds.MountAndBlade.Agent.Main.Character == CharacterObject.PlayerCharacter;
         }
         public static bool IsWarSailsLoaded => ModuleHelper.IsModuleActive("NavalDLC");
+        public static bool IsUsingRFWarsailsModule => Directory.GetFiles(ModuleHelper.GetModuleFullPath("RF_Map") + "/ModuleData/DistanceCaches").Count() >= 3;
     }
 }
