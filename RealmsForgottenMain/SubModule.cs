@@ -2,12 +2,12 @@ using HarmonyLib;
 using MCM.Abstractions.Attributes;
 using Newtonsoft.Json.Linq;
 using RealmsForgotten.AiMade;
+using RealmsForgotten.AiMade.StrategicIntrigue.SaveSystem;
 using RealmsForgotten.Behaviors;
 using RealmsForgotten.Career;
 using RealmsForgotten.Career.Ability;
 using RealmsForgotten.Career.Logic;
 using RealmsForgotten.CharacterCreation;
-using RealmsForgotten.AiMade.StrategicIntrigue.SaveSystem;
 using RealmsForgotten.CustomBandits;
 using RealmsForgotten.CustomSkills;
 using RealmsForgotten.LegendaryTroops;
@@ -21,6 +21,7 @@ using RealmsForgotten.RFCustomHorses;
 using RealmsForgotten.RFEffects;
 using RealmsForgotten.RFMissionLogic;
 using RealmsForgotten.UI;
+using RealmsForgotten.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -33,6 +34,7 @@ using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.CampaignSystem.ViewModelCollection;
 using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
@@ -43,7 +45,6 @@ using TaleWorlds.ModuleManager;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.ComponentInterfaces;
 using Module = TaleWorlds.MountAndBlade.Module;
-using RealmsForgotten.Utility;
 
 namespace RealmsForgotten
 {
@@ -240,7 +241,11 @@ namespace RealmsForgotten
                 manualPatchesHaveFired = true;
                 RunManualPatches();
                 if (Globals.IsWarSailsLoaded) RunWarSailsPatches();
+
             }
+
+            FieldInfo field = AccessTools.Field(typeof(CampaignUIHelper), "_skillSortIndices");
+            field?.SetValue(null, Globals.SkillsOrderInCharacterDeveloper);
         }
         private void RunManualPatches()
         {
@@ -269,12 +274,6 @@ namespace RealmsForgotten
             harmony.Patch(hideoutSendTroops, postfix: new HarmonyMethod(typeof(GameMenuPatches), nameof(GameMenuPatches.SendTroopsPostfix)));
             harmony.Patch(hideoutSneakIn, postfix: new HarmonyMethod(typeof(GameMenuPatches), nameof(GameMenuPatches.SneakInPostfix)));
             harmony.Patch(hideoutAssault, postfix: new HarmonyMethod(typeof(GameMenuPatches), nameof(GameMenuPatches.AssaultHideoutPostfix)));
-
-            MethodInfo characterDeveloperInit = AccessTools.Method(typeof(CharacterDeveloperHeroItemVM), "InitializeCharacter");
-            if (characterDeveloperInit != null)
-            {
-                harmony.Patch(characterDeveloperInit, postfix: new HarmonyMethod(typeof(CharacterDeveloperAttributeOrderPatch), nameof(CharacterDeveloperAttributeOrderPatch.ReorderCustomAttributesPostfix)));
-            }
         }
 
         private void RemoveSandboxAndStoryOptions()

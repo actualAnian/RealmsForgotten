@@ -137,5 +137,32 @@ namespace RealmsForgotten
         }
         public static bool IsWarSailsLoaded => ModuleHelper.IsModuleActive("NavalDLC");
         public static bool IsUsingRFWarsailsModule => Directory.GetFiles(ModuleHelper.GetModuleFullPath("RF_Map") + "/ModuleData/DistanceCaches").Count() >= 3;
+        public static List<string> SkillsOrderInCharacterDeveloper = new()
+        {
+            "OneHanded",
+            "TwoHanded",
+            "Polearm",
+            "Bow",
+            "Crossbow",
+            "Throwing",
+            "Riding",
+            "Athletics",
+            "Crafting",
+            "Scouting",
+            "Tactics",
+            "Roguery",
+            "Charm",
+            "Leadership",
+            "Trade",
+            "Steward",
+            "Medicine",
+            "Engineering",
+            "Faith",
+            "Arcane",
+            "Alchemy",
+            "Mariner",
+            "Boatswain",
+            "Shipmaster"
+        };
     }
 }

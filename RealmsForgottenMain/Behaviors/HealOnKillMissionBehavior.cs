@@ -20,8 +20,8 @@ namespace RealmsForgotten.Behaviors
 
         public HealOnKillMissionBehavior()
         {
-            this._characterCache = new List<CharacterObject>();
-            this._nullCharacterCache = new List<MBGUID>();
+            _characterCache = new List<CharacterObject>();
+            _nullCharacterCache = new List<MBGUID>();
         }
 
         public override void OnAgentRemoved(
@@ -39,18 +39,10 @@ namespace RealmsForgotten.Behaviors
 
             // Check if the affectorAgent's race ID is in the healingRaceIds set
             if (affectorAgent.Character != null && healingRaceIds.Contains(affectorAgent.Character.Race.ToString()))
-            {
                 amount = 10.0f; // Example: Heal 10 hit points
-            }
 
             if (amount > 0)
-            {
                 HealAgent(affectorAgent, amount);
-                if (GlobalSettings<HoKSettings>.Instance.healHorsesToo && affectorAgent.MountAgent != null)
-                {
-                    HealAgent(affectorAgent.MountAgent, amount);
-                }
-            }
         }
 
         private int HealAgent(Agent a, float amount)
@@ -62,40 +54,40 @@ namespace RealmsForgotten.Behaviors
             return (int)(a.Health - health);
         }
 
-        private void DoMedicineSkillup(Agent a, float amount)
-        {
-            if (!GlobalSettings<HoKSettings>.Instance.enableMedicineSkillGain || a.Character == null)
-                return;
-            if (a.IsHero)
-            {
-                this.LookupCharacter(a.Character.Id)?.HeroObject.AddSkillXp(DefaultSkills.Medicine, amount);
-            }
-            else
-            {
-                Agent generalAgent = a.Team?.GeneralAgent;
-                if (generalAgent?.Character != null)
-                {
-                    CharacterObject characterObject = this.LookupCharacter(generalAgent.Character.Id);
-                    if (characterObject != null)
-                    {
-                        float num = (float)(a.Team.ActiveAgents.Count * 0.2f);
-                        characterObject.HeroObject.AddSkillXp(DefaultSkills.Medicine, amount / num);
-                    }
-                }
-            }
-        }
+        //private void DoMedicineSkillup(Agent a, float amount)
+        //{
+        //    if (!GlobalSettings<HoKSettings>.Instance.enableMedicineSkillGain || a.Character == null)
+        //        return;
+        //    if (a.IsHero)
+        //    {
+        //        this.LookupCharacter(a.Character.Id)?.HeroObject.AddSkillXp(DefaultSkills.Medicine, amount);
+        //    }
+        //    else
+        //    {
+        //        Agent generalAgent = a.Team?.GeneralAgent;
+        //        if (generalAgent?.Character != null)
+        //        {
+        //            CharacterObject characterObject = this.LookupCharacter(generalAgent.Character.Id);
+        //            if (characterObject != null)
+        //            {
+        //                float num = (float)(a.Team.ActiveAgents.Count * 0.2f);
+        //                characterObject.HeroObject.AddSkillXp(DefaultSkills.Medicine, amount / num);
+        //            }
+        //        }
+        //    }
+        //}
 
         private CharacterObject LookupCharacter(MBGUID id)
         {
-            if (this._nullCharacterCache.Contains(id))
+            if (_nullCharacterCache.Contains(id))
                 return null;
-            CharacterObject characterObject = this._characterCache.FirstOrDefault(x => x.Id == id);
+            CharacterObject characterObject = _characterCache.FirstOrDefault(x => x.Id == id);
             if (characterObject == null && Campaign.Current?.Characters != null)
             {
                 characterObject = Campaign.Current.Characters.FirstOrDefault(x => x.Id == id);
-                this._characterCache.Add(characterObject);
+                _characterCache.Add(characterObject);
                 if (characterObject == null)
-                    this._nullCharacterCache.Add(id);
+                    _nullCharacterCache.Add(id);
             }
             return characterObject;
         }

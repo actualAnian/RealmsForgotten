@@ -56,7 +56,7 @@ public static class FixPickAll2
         if (result)
         {
             __result.Remove(RFAttributes.Discipline);
-            __result.Remove(RFAttributes.Seafaring);
+            //__result.Remove(RFAttributes.Seafaring);
         }
     }
 }
