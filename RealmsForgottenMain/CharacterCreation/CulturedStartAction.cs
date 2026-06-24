@@ -62,7 +62,7 @@ namespace RealmsForgotten.CharacterCreation
                     case StartType.King:
                         ChangeKingdomAction.ApplyByJoinToKingdom(mainHero.Clan, kingdom);
                         ChangeRulingClanAction.Apply(kingdom, mainHero.Clan);
-                        mainHero.Clan.Influence = 200;
+                        mainHero.Clan.Influence = 500;
                         Settlement city = kingdom.Settlements.GetRandomElementWithPredicate(settlement => settlement.IsTown);
                         ChangeOwnerOfSettlementAction.ApplyByDefault(mainHero, city);
                         Settlement castle = kingdom.Settlements.GetRandomElementWithPredicate(settlement => settlement.IsCastle);
@@ -72,14 +72,14 @@ namespace RealmsForgotten.CharacterCreation
                     case StartType.Knight:
                         CharacterRelationManager.SetHeroRelation(mainHero, kingdom.RulingClan.Leader, 20);
                         ChangeKingdomAction.ApplyByJoinToKingdom(mainHero.Clan, kingdom, default, false);
-                        mainHero.Clan.Influence = 500;
+                        mainHero.Clan.Influence = 100;
                         break;
 
                     case StartType.Usurper:
-                        Settlement settlement = mainHero.Clan.Kingdom.Settlements.GetRandomElementWithPredicate(s => s.IsCastle);
+                        Settlement settlement = kingdom.Settlements.GetRandomElementWithPredicate(s => s.IsCastle);
                         ChangeOwnerOfSettlementAction.ApplyByDefault(mainHero, settlement);
                         Campaign.Current.KingdomManager.CreateKingdom(mainHero.Clan.Name, mainHero.Clan.InformalName, mainHero.Clan.Culture, mainHero.Clan);
-                        mainHero.Clan.Influence = 50;
+                        mainHero.Clan.Influence = 300;
                         break;
 
                     case StartType.Outlaw:
