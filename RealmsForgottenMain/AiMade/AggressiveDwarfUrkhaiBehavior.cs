@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Election;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
@@ -43,8 +44,7 @@ namespace RealmsForgotten.AiMade
         {
             var dwarfKingdom = Kingdom.All.FirstOrDefault(k => k.StringId == "dwarf_kingdom");
             var urkhaiKingdom = Kingdom.All.FirstOrDefault(k => k.StringId == "urkhai_kingdom");
-
-            if (dwarfKingdom != null && urkhaiKingdom != null && !dwarfKingdom.IsAtWarWith(urkhaiKingdom))
+            if (dwarfKingdom != null && urkhaiKingdom != null && !dwarfKingdom.IsEliminated && !urkhaiKingdom.IsEliminated && !dwarfKingdom.IsAtWarWith(urkhaiKingdom))
             {
                 FactionManager.DeclareWar(dwarfKingdom, urkhaiKingdom);
                 MBInformationManager.AddQuickInformation(new TextObject(
