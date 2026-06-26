@@ -141,7 +141,7 @@ namespace RealmsForgotten.Models
 
         private float CalculateRaceDamagesAmplifiers(AttackInformation attackInformation, float baseNumber)
         {
-            if (attackInformation.VictimAgent == null) return 0;
+            if (attackInformation.VictimAgent == null) return baseNumber;
             MissionWeapon weapon = attackInformation.AttackerWeapon;
             BasicCharacterObject attackerCharacter = attackInformation.VictimAgent.Character;
             BasicCharacterObject victimCharacter = attackInformation.VictimAgent.Character;
