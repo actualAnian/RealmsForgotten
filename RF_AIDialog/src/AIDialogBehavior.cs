@@ -9,7 +9,6 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
-using TaleWorlds.ObjectSystem;
 
 namespace RF_AIDialog
 {
@@ -43,6 +42,9 @@ namespace RF_AIDialog
         private          RFAIResponse? _parsed           = null;
 
         public volatile bool ResponseJustArrived = false;
+        private bool _responseAudioQueued = false;
+        private static bool _ttsDisclosureShown = false;
+        private bool _voiceCancelPending = false;
 
         private Hero?       _currentNpc      = null;
         private string      _npcNameText     = "";
@@ -398,6 +400,15 @@ namespace RF_AIDialog
                 ConsequenceOpenTextInput,
                 100, null);
 
+            starter.AddPlayerLine(
+                "rf_ai_open_voice_input",
+                "hero_main_options",
+                "rf_ai_npc_thinking",
+                "Speak with voice... [AI]",
+                ConditionCanUseVoiceAI,
+                ConsequenceArmVoiceInput,
+                125, null);
+
             // 2. NPC thinking state
             starter.AddDialogLine(
                 "rf_ai_npc_thinking_line",
@@ -423,6 +434,15 @@ namespace RF_AIDialog
                 "[Thoughtful] Hmm...",
                 ConditionIsStillWaiting,
                 null, 100, null);
+
+            starter.AddDialogLine(
+                "rf_ai_voice_cancel_return",
+                "rf_ai_player_wait_result",
+                "hero_main_options",
+                "Very well.",
+                ConditionVoiceCancelPending,
+                ConsequenceVoiceCancelReturn,
+                150, null);
 
             // 3b. Response ready
             starter.AddDialogLine(
@@ -475,6 +495,15 @@ namespace RF_AIDialog
                 ConsequenceOpenTextInput,
                 200, null);
 
+            starter.AddPlayerLine(
+                "rf_ai_continue_voice",
+                "rf_ai_after_response",
+                "rf_ai_npc_thinking",
+                "Continue speaking with voice... [AI]",
+                ConditionCanUseVoiceAI,
+                ConsequenceArmVoiceInput,
+                175, null);
+
             // 5b. End conversation
             starter.AddPlayerLine(
                 "rf_ai_end",
@@ -491,6 +520,12 @@ namespace RF_AIDialog
         {
             QuestAtomEngine.Instance?.CaptureConversationTarget();
             return Hero.OneToOneConversationHero != null && !_isWaiting;
+        }
+
+        private bool ConditionCanUseVoiceAI()
+        {
+            QuestAtomEngine.Instance?.CaptureConversationTarget();
+            return AIConfig.STTEnabled && Hero.OneToOneConversationHero != null && !_isWaiting;
         }
 
         private bool ConditionHasPendingInitiative()
@@ -513,6 +548,9 @@ namespace RF_AIDialog
             MBTextManager.SetTextVariable("RF_AI_WAIT_TEXT", new TextObject("{=!}" + waitText));
             return true;
         }
+
+        private bool ConditionVoiceCancelPending()
+            => _voiceCancelPending && !_isWaiting;
 
         private bool ConditionShowResponse()
         {
@@ -538,6 +576,7 @@ namespace RF_AIDialog
                 text = "Hmm... the words escape me for the moment.";
             }
 
+            TryQueueResponseAudio(text);
             MBTextManager.SetTextVariable("RF_AI_RESPONSE", new TextObject("{=!}" + Sanitize(text)));
             return true;
         }
@@ -565,20 +604,13 @@ namespace RF_AIDialog
             _currentContext = _currentNpc != null
                 ? NPCContextStore.Instance?.GetOrCreate(_currentNpc)
                 : null;
+            SanitizePendingRequestForCurrentNpc();
 
             // Check inventory/troop atoms the moment the player speaks to this NPC.
             if (_currentNpc != null && _currentContext != null)
                 QuestAtomEngine.Instance?.CheckConversationAtoms(_currentNpc, _currentContext);
 
-            InformationManager.ShowTextInquiry(new TextInquiryData(
-                titleText:                $"Speak with {_npcNameText}",
-                text:                     "What do you wish to say?",
-                isAffirmativeOptionShown:  true,
-                isNegativeOptionShown:     true,
-                affirmativeText:           "Ask",
-                negativeText:              "Cancel",
-                affirmativeAction:         OnPlayerConfirmedInput,
-                negativeAction:            OnPlayerCancelledInput));
+            ShowPlayerInputInquiry("What do you wish to say?");
         }
 
         private void ConsequenceTriggerInitiative()
@@ -588,12 +620,33 @@ namespace RF_AIDialog
             _currentContext = _currentNpc != null
                 ? NPCContextStore.Instance?.GetOrCreate(_currentNpc)
                 : null;
+            SanitizePendingRequestForCurrentNpc();
 
             // Check inventory/troop atoms for NPC-initiated conversations too.
             if (_currentNpc != null && _currentContext != null)
                 QuestAtomEngine.Instance?.CheckConversationAtoms(_currentNpc, _currentContext);
 
             OnPlayerConfirmedInput("(You give the NPC your attention, inviting them to speak first.)");
+        }
+
+        private void ConsequenceArmVoiceInput()
+        {
+            _currentNpc     = Hero.OneToOneConversationHero;
+            _npcNameText    = _currentNpc?.Name.ToString() ?? "?";
+            _currentContext = _currentNpc != null
+                ? NPCContextStore.Instance?.GetOrCreate(_currentNpc)
+                : null;
+            SanitizePendingRequestForCurrentNpc();
+
+            if (_currentNpc != null && _currentContext != null)
+                QuestAtomEngine.Instance?.CheckConversationAtoms(_currentNpc, _currentContext);
+
+            RF_AIDialogSubModule.Instance?.ShowVoiceInputPopup(
+                _npcNameText,
+                $"Speak with {_npcNameText}",
+                "Use the microphone button to dictate, or type directly into the field below.",
+                SubmitVoiceTranscript,
+                OnVoiceInputCancelled);
         }
 
         private void OnPlayerConfirmedInput(string playerText)
@@ -607,6 +660,7 @@ namespace RF_AIDialog
             _isWaiting     = true;
             _rawResponse   = null;
             _parsed        = null;
+            _responseAudioQueued = false;
             _lastPlayerMsg = playerText;
 
             Hero?       npc = _currentNpc;
@@ -649,6 +703,65 @@ namespace RF_AIDialog
         {
             _rawResponse = "[cancel]";
             _isWaiting   = false;
+            _responseAudioQueued = false;
+            _voiceCancelPending = false;
+            RF_AIDialogSubModule.Instance?.DisarmVoiceInput();
+        }
+
+        private void OnVoiceInputCancelled()
+        {
+            _rawResponse = null;
+            _isWaiting = false;
+            _responseAudioQueued = false;
+            _voiceCancelPending = true;
+            RF_AIDialogSubModule.Instance?.DisarmVoiceInput();
+            try
+            {
+                if (Campaign.Current?.ConversationManager?.IsConversationInProgress == true)
+                    Campaign.Current.ConversationManager.ContinueConversation();
+            }
+            catch { }
+        }
+
+        private void ConsequenceVoiceCancelReturn()
+        {
+            _voiceCancelPending = false;
+            _rawResponse = null;
+            _isWaiting = false;
+            _responseAudioQueued = false;
+        }
+
+        public void ReviewVoiceTranscript(string transcript)
+        {
+            if (string.IsNullOrWhiteSpace(transcript))
+                return;
+
+            if (_currentNpc == null)
+            {
+                _currentNpc = Hero.OneToOneConversationHero;
+                _npcNameText = _currentNpc?.Name.ToString() ?? "?";
+            }
+
+            if (_currentNpc != null && _currentContext == null)
+                _currentContext = NPCContextStore.Instance?.GetOrCreate(_currentNpc);
+
+            SanitizePendingRequestForCurrentNpc();
+
+            if (_currentNpc != null && _currentContext != null)
+                QuestAtomEngine.Instance?.CheckConversationAtoms(_currentNpc, _currentContext);
+
+            InformationManager.HideInquiry();
+            ShowPlayerInputInquiry(
+                "Review your spoken words before sending.",
+                transcript.Trim());
+        }
+
+        public void SubmitVoiceTranscript(string transcript)
+        {
+            if (string.IsNullOrWhiteSpace(transcript))
+                return;
+
+            OnPlayerConfirmedInput(transcript.Trim());
         }
 
         private void ConsequenceClearResponse()
@@ -755,6 +868,7 @@ namespace RF_AIDialog
             // Reset state
             _rawResponse   = null;
             _parsed        = null;
+            _responseAudioQueued = false;
             _lastPlayerMsg = "";
 
             // Keep NPC/context alive if the replace-request dialog is about to show.
@@ -782,6 +896,35 @@ namespace RF_AIDialog
         }
 
         // Helpers
+
+        private void SanitizePendingRequestForCurrentNpc()
+        {
+            if (_currentNpc == null || _currentContext?.PendingRequest?.Mechanic == null)
+                return;
+
+            var sanitized = QuestMechanicValidator.Sanitize(
+                _currentContext.PendingRequest.Mechanic,
+                _currentNpc);
+
+            if (sanitized != null)
+            {
+                _currentContext.PendingRequest.Mechanic = sanitized;
+                NPCContextStore.Instance?.MarkDirty(_currentContext);
+                return;
+            }
+
+            RFAIDebug.Log($"SanitizePendingRequestForCurrentNpc: cleared invalid pending request for {_currentNpc.StringId}");
+            _currentContext.PendingRequest = null;
+            NPCContextStore.Instance?.MarkDirty(_currentContext);
+
+            try
+            {
+                var quest = AIDialogQuest.ForNpc(_currentNpc.StringId);
+                if (quest != null && quest.IsOngoing)
+                    quest.Cancel();
+            }
+            catch { }
+        }
 
         private void CommitNewRequest(string requestText, QuestMechanic? mechanic = null)
         {
@@ -853,6 +996,23 @@ namespace RF_AIDialog
             _currentContext     = null;
         }
 
+        private void ShowPlayerInputInquiry(string promptText, string defaultInputText = "")
+        {
+            InformationManager.ShowTextInquiry(new TextInquiryData(
+                titleText:                 $"Speak with {_npcNameText}",
+                text:                      promptText,
+                isAffirmativeOptionShown:  true,
+                isNegativeOptionShown:     true,
+                affirmativeText:           "Ask",
+                negativeText:              "Cancel",
+                affirmativeAction:         OnPlayerConfirmedInput,
+                negativeAction:            OnPlayerCancelledInput,
+                shouldInputBeObfuscated:   false,
+                textCondition:             null,
+                soundEventPath:            "",
+                defaultInputText:          defaultInputText));
+        }
+
         private static int CurrentDay()
         {
             try
@@ -883,6 +1043,11 @@ namespace RF_AIDialog
             if (!hasDestination)
                 return;
 
+            mechanic.Normalize();
+            if (mechanic.GetProgress("delivery_goods_supplied") > 0)
+                return;
+
+            bool suppliedAny = false;
             foreach (var atom in mechanic.Objectives)
             {
                 if (!string.Equals(atom.AtomType, "BRING_ITEM", StringComparison.OrdinalIgnoreCase))
@@ -895,21 +1060,28 @@ namespace RF_AIDialog
 
                 try
                 {
-                    var item = MBObjectManager.Instance.GetObject<ItemObject>(itemId);
+                    var item = QuestDeliveryRules.ResolveDeliveryItem(itemId);
                     if (item == null)
+                    {
+                        RFAIDebug.Log($"GrantSuppliedDeliveryGoods: item not found for {itemId}");
                         continue;
+                    }
 
                     MobileParty.MainParty.ItemRoster.AddToCounts(item, quantity);
+                    suppliedAny = true;
                     InformationManager.DisplayMessage(new InformationMessage(
                         $"[AI Quest] {npc.Name} supplied {quantity}x {item.Name} for delivery.",
                         Color.FromUint(0xFF_A0_D0_FFu)));
-                    RFAIDebug.Log($"GrantSuppliedDeliveryGoods: supplied {quantity}x {itemId} for {npc.StringId}");
+                    RFAIDebug.Log($"GrantSuppliedDeliveryGoods: supplied {quantity}x {item.StringId} for {npc.StringId} (requested {itemId})");
                 }
                 catch (Exception ex)
                 {
                     RFAIDebug.Log($"GrantSuppliedDeliveryGoods failed: {ex.GetType().Name}: {ex.Message}");
                 }
             }
+
+            if (suppliedAny)
+                mechanic.Progress["delivery_goods_supplied"] = 1;
         }
 
         private static bool HasGoldRewardAction(List<AIAction>? actions)
@@ -919,6 +1091,29 @@ namespace RF_AIDialog
                 a != null &&
                 string.Equals(a.Type, "give_gold", StringComparison.OrdinalIgnoreCase) &&
                 a.Value > 0);
+        }
+
+        private void TryQueueResponseAudio(string text)
+        {
+            if (_responseAudioQueued || !AIConfig.TTSEnabled || !AIConfig.TTSAutoPlay)
+                return;
+
+            _responseAudioQueued = true;
+
+            if (!_ttsDisclosureShown)
+            {
+                _ttsDisclosureShown = true;
+                InformationManager.DisplayMessage(new InformationMessage(
+                    "[AI Voice] Spoken dialogue is AI-generated.",
+                    Color.FromUint(0xFF_A0_D0_FFu)));
+            }
+
+            string? npcName = _currentNpc?.Name?.ToString();
+            string instructions = string.IsNullOrWhiteSpace(npcName)
+                ? "Speak as a medieval fantasy character in a grounded, natural tone."
+                : $"Speak as {npcName}, a medieval fantasy character in a grounded, natural tone.";
+
+            RFAudioService.TrySpeakNpcReply(text, instructions);
         }
 
         private RFAIResponse? ParseResponse(string raw)

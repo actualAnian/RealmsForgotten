@@ -1,0 +1,10 @@
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_warsystem\bin\Release\net472\RF_warsystem.dll
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_warsystem\bin\Release\net472\RF_warsystem.pdb
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_warsystem\obj\Release\net472\RF_warsystem.csproj.AssemblyReference.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_warsystem\obj\Release\net472\RF_warsystem.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_warsystem\obj\Release\net472\RF_warsystem.AssemblyInfoInputs.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_warsystem\obj\Release\net472\RF_warsystem.AssemblyInfo.cs
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_warsystem\obj\Release\net472\RF_warsystem.csproj.CoreCompileInputs.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_warsystem\obj\Release\net472\RF_warsystem.sourcelink.json
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_warsystem\obj\Release\net472\RF_warsystem.dll
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_warsystem\obj\Release\net472\RF_warsystem.pdb

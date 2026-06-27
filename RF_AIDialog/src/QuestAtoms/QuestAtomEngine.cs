@@ -7,7 +7,6 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
-using TaleWorlds.ObjectSystem;
 
 namespace RF_AIDialog
 {
@@ -190,11 +189,11 @@ namespace RF_AIDialog
 
                 foreach (var ctx in GetContextsWithMechanics())
                 {
-                    if (TryProgressTalkToPartyObjective(ctx, conversationParty, conversationHero))
-                    {
-                        CheckMechanicCompletion(ctx);
-                        CheckNearCompletion(ctx);
-                    }
+                if (TryProgressTalkToPartyObjective(ctx, conversationParty, conversationHero, conversationCharacters))
+                {
+                    CheckMechanicCompletion(ctx);
+                    CheckNearCompletion(ctx);
+                }
                 }
             }
             catch (Exception ex)
@@ -342,7 +341,7 @@ namespace RF_AIDialog
                         break;
 
                     case "TALK_TO_PARTY":
-                        if (TryProgressTalkToPartyObjective(ctx, MobileParty.ConversationParty, npc))
+                        if (TryProgressTalkToPartyObjective(ctx, MobileParty.ConversationParty, npc, null))
                             anyNew = true;
                         break;
                 }
@@ -424,6 +423,8 @@ namespace RF_AIDialog
                 return false;
 
             mechanic.Normalize();
+            if (HasIncompleteDeliveryRecipient(mechanic))
+                return false;
 
             int visitIndex = -1;
             QuestAtom? visitAtom = null;
@@ -469,7 +470,7 @@ namespace RF_AIDialog
             if (string.IsNullOrWhiteSpace(itemId))
                 return false;
 
-            var item = MBObjectManager.Instance.GetObject<ItemObject>(itemId);
+            var item = QuestDeliveryRules.ResolveDeliveryItem(itemId);
             if (item == null)
             {
                 RFAIDebug.Log($"QuestAtomEngine: delivery item not found: {itemId}");
@@ -503,6 +504,24 @@ namespace RF_AIDialog
             return true;
         }
 
+        private static bool HasIncompleteDeliveryRecipient(QuestMechanic mechanic)
+        {
+            mechanic.Normalize();
+            for (int i = 0; i < mechanic.Objectives.Count; i++)
+            {
+                if (mechanic.Completed[i])
+                    continue;
+
+                var atom = mechanic.Objectives[i];
+                if (atom.AtomType.Equals("TALK_TO_PARTY", StringComparison.OrdinalIgnoreCase) &&
+                    (!string.IsNullOrWhiteSpace(atom.GetParam("hero_id")) ||
+                     !string.IsNullOrWhiteSpace(atom.GetParam("character_id"))))
+                    return true;
+            }
+
+            return false;
+        }
+
         private static bool MatchesSettlementAtom(QuestAtom atom, string atomType)
         {
             if (atom.AtomType.Equals(atomType, StringComparison.OrdinalIgnoreCase))
@@ -528,19 +547,23 @@ namespace RF_AIDialog
         private bool TryProgressTalkToPartyObjective(
             NPCContext ctx,
             MobileParty? conversationParty,
-            Hero? conversationHero)
+            Hero? conversationHero,
+            IEnumerable<CharacterObject>? conversationCharacters)
         {
             var mechanic = ctx.PendingRequest?.Mechanic;
-            if (mechanic == null || conversationParty == null)
+            var currentCharacterIds = ResolveConversationCharacterIds(conversationHero, conversationCharacters);
+            if (mechanic == null || (conversationParty == null && conversationHero == null && currentCharacterIds.Count == 0))
             {
                 if (mechanic != null)
-                    RFAIDebug.Log($"QuestAtomEngine: TALK_TO_PARTY skipped for {ctx.HeroId} - conversationParty null");
+                    RFAIDebug.Log($"QuestAtomEngine: TALK_TO_PARTY skipped for {ctx.HeroId} - conversation target null");
                 return false;
             }
 
             bool changed = false;
-            string currentFaction = conversationParty.MapFaction?.StringId ?? "";
-            string currentPartyId = conversationParty.StringId ?? "";
+            string currentFaction = conversationParty?.MapFaction?.StringId
+                                 ?? conversationHero?.MapFaction?.StringId
+                                 ?? "";
+            string currentPartyId = conversationParty?.StringId ?? "";
             string currentHeroId = conversationHero?.StringId ?? "";
 
             mechanic.Normalize();
@@ -557,12 +580,14 @@ namespace RF_AIDialog
                 string targetFaction = atom.GetParam("faction_id");
                 string targetPartyId = atom.GetParam("party_id");
                 string targetHeroId = atom.GetParam("hero_id");
+                string targetCharacterId = atom.GetParam("character_id");
                 string targetSettlementId = atom.GetParam("settlement_id");
                 int targetRadius = ClampTalkRadius(atom.GetParamInt("radius", 80));
                 RFAIDebug.Log(
                     $"QuestAtomEngine: TALK_TO_PARTY check ctx={ctx.HeroId} targetFaction={targetFaction} " +
                     $"currentFaction={currentFaction} targetParty={targetPartyId} currentParty={currentPartyId} " +
-                    $"targetHero={targetHeroId} currentHero={currentHeroId} targetSettlement={targetSettlementId} " +
+                    $"targetHero={targetHeroId} currentHero={currentHeroId} targetCharacter={targetCharacterId} " +
+                    $"currentCharacters={string.Join(",", currentCharacterIds)} targetSettlement={targetSettlementId} " +
                     $"radius={targetRadius}");
 
                 if (!string.IsNullOrWhiteSpace(targetFaction) &&
@@ -577,7 +602,12 @@ namespace RF_AIDialog
                     !targetHeroId.Equals(currentHeroId, StringComparison.OrdinalIgnoreCase))
                     continue;
 
+                if (!string.IsNullOrWhiteSpace(targetCharacterId) &&
+                    !currentCharacterIds.Any(id => id.Equals(targetCharacterId, StringComparison.OrdinalIgnoreCase)))
+                    continue;
+
                 if (!string.IsNullOrWhiteSpace(targetSettlementId) &&
+                    conversationParty != null &&
                     !IsPartyNearSettlement(conversationParty, targetSettlementId, targetRadius))
                 {
                     RFAIDebug.Log(
@@ -590,7 +620,9 @@ namespace RF_AIDialog
                 string progressKey = $"talk_count_{i}";
                 string uniqueTargetId = !string.IsNullOrWhiteSpace(currentPartyId)
                     ? currentPartyId
-                    : (!string.IsNullOrWhiteSpace(currentHeroId) ? currentHeroId : $"{currentFaction}_{i}");
+                    : (!string.IsNullOrWhiteSpace(currentHeroId)
+                        ? currentHeroId
+                        : (currentCharacterIds.Count > 0 ? currentCharacterIds[0] : $"{currentFaction}_{i}"));
 
                 if (mechanic.HasSeenTarget(seenKey, uniqueTargetId))
                     continue;
@@ -608,6 +640,12 @@ namespace RF_AIDialog
 
                 if (current >= required)
                 {
+                    if (IsDeliveryMechanic(mechanic) &&
+                        (!string.IsNullOrWhiteSpace(targetHeroId) ||
+                         !string.IsNullOrWhiteSpace(targetCharacterId)) &&
+                        !CompleteDeliveryCargoForRecipient(ctx, mechanic))
+                        continue;
+
                     mechanic.MarkCompleted(i);
                     RFAIDebug.Log($"QuestAtomEngine: TALK_TO_PARTY completed for {ctx.HeroId} ({current}/{required})");
                     UpdateQuestLog(ctx.HeroId, $"✓ {label}");
@@ -624,6 +662,94 @@ namespace RF_AIDialog
             }
 
             return changed;
+        }
+
+        private static List<string> ResolveConversationCharacterIds(
+            Hero? conversationHero,
+            IEnumerable<CharacterObject>? conversationCharacters)
+        {
+            var ids = new List<string>();
+
+            void AddId(string? id)
+            {
+                if (!string.IsNullOrWhiteSpace(id) &&
+                    !ids.Any(existing => existing.Equals(id, StringComparison.OrdinalIgnoreCase)))
+                    ids.Add(id);
+            }
+
+            try { AddId(conversationHero?.CharacterObject?.StringId); } catch { }
+
+            if (conversationCharacters != null)
+            {
+                foreach (var character in conversationCharacters)
+                {
+                    try { AddId(character?.StringId); } catch { }
+                    try { AddId(character?.HeroObject?.CharacterObject?.StringId); } catch { }
+                    try
+                    {
+                        var original = character?.GetType()
+                            .GetProperty("OriginalCharacter")?
+                            .GetValue(character) as CharacterObject;
+                        AddId(original?.StringId);
+                    }
+                    catch { }
+                }
+            }
+
+            return ids;
+        }
+
+        private static bool IsDeliveryMechanic(QuestMechanic mechanic)
+        {
+            return mechanic.QuestKind.Equals("delivery", StringComparison.OrdinalIgnoreCase) ||
+                   mechanic.QuestKind.Equals("delivery_under_pressure", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private bool CompleteDeliveryCargoForRecipient(NPCContext ctx, QuestMechanic mechanic)
+        {
+            int itemIndex = -1;
+            QuestAtom? itemAtom = null;
+            for (int i = 0; i < mechanic.Objectives.Count; i++)
+            {
+                var atom = mechanic.Objectives[i];
+                if (!atom.AtomType.Equals("BRING_ITEM", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                itemIndex = i;
+                itemAtom = atom;
+                break;
+            }
+
+            if (itemAtom == null)
+                return false;
+
+            string itemId = itemAtom.GetParam("item_id");
+            int quantity = Math.Max(1, itemAtom.GetParamInt("quantity", 1));
+            var item = QuestDeliveryRules.ResolveDeliveryItem(itemId);
+            if (item == null)
+            {
+                RFAIDebug.Log($"QuestAtomEngine: recipient delivery item not found: {itemId}");
+                return false;
+            }
+
+            int available = MobileParty.MainParty.ItemRoster.GetItemNumber(item);
+            if (available < quantity)
+            {
+                Notify($"Delivery requires {quantity}x {item.Name}. You currently have {available}.");
+                RFAIDebug.Log($"QuestAtomEngine: recipient delivery blocked for {ctx.HeroId} - missing {itemId} ({available}/{quantity})");
+                return false;
+            }
+
+            MobileParty.MainParty.ItemRoster.AddToCounts(item, -quantity);
+            if (itemIndex >= 0 && !mechanic.Completed[itemIndex])
+            {
+                mechanic.MarkCompleted(itemIndex);
+                string itemLabel = itemAtom.Label.Length > 0 ? itemAtom.Label : $"Carry {quantity}x {item.Name}";
+                UpdateQuestLog(ctx.HeroId, $"Done: {itemLabel}");
+            }
+
+            Notify($"Delivered {quantity}x {item.Name}.");
+            return true;
         }
 
         private static bool IsPartyNearSettlement(MobileParty party, string settlementId, int radius)

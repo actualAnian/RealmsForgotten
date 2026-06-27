@@ -11,11 +11,16 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using Helpers;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.Localization;
+using System.Reflection;
 
 namespace RealmsForgotten.AiMade
 {
     public class RFJoinRaidEncounterBehavior : CampaignBehaviorBase
     {
+        private const int AttackersOptionIndex = 3;
+        private const int DefendersOptionIndex = 4;
+
         public override void RegisterEvents()
         {
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, OnSessionLaunched);
@@ -32,65 +37,143 @@ namespace RealmsForgotten.AiMade
 
         private void AddGameMenus(CampaignGameStarter starter)
         {
-            // Join on the raiders' side
             starter.AddGameMenuOption(
-                "join_encounter",
-                "rf_join_raid_as_attacker",
-                "Join the raid (attackers)",
-                JoinRaidAttackerCondition,
-                JoinRaidAttackerConsequence,
+                "town_outside",
+                "rf_open_join_siege_event",
+                "Take part in the siege",
+                OpenJoinSiegeEventCondition,
+                OpenJoinSiegeEventConsequence,
                 isLeave: false,
                 index: 3
             );
 
-            // Join defending the village
+            starter.AddGameMenuOption(
+                "castle_outside",
+                "rf_open_join_siege_event",
+                "Take part in the siege",
+                OpenJoinSiegeEventCondition,
+                OpenJoinSiegeEventConsequence,
+                isLeave: false,
+                index: 3
+            );
+
+            starter.AddGameMenuOption(
+                "join_encounter",
+                "rf_join_raid_as_attacker",
+                "Join the attackers",
+                JoinRaidAttackerCondition,
+                JoinRaidAttackerConsequence,
+                isLeave: false,
+                index: AttackersOptionIndex
+            );
+
             starter.AddGameMenuOption(
                 "join_encounter",
                 "rf_join_raid_as_defender",
-                "Defend the village",
+                "Join the defenders",
                 JoinRaidDefenderCondition,
                 JoinRaidDefenderConsequence,
                 isLeave: false,
-                index: 4
+                index: DefendersOptionIndex
+            );
+
+            starter.AddGameMenuOption(
+                "join_siege_event",
+                "rf_join_siege_as_attacker",
+                "Join the attackers",
+                JoinSiegeAttackerCondition,
+                JoinSiegeAttackerConsequence,
+                isLeave: false,
+                index: 0
+            );
+
+            starter.AddGameMenuOption(
+                "join_siege_event",
+                "rf_join_siege_as_defender",
+                "Join the defenders",
+                JoinSiegeDefenderCondition,
+                JoinSiegeDefenderConsequence,
+                isLeave: false,
+                index: 1
             );
         }
 
-        /// <summary>
-        /// Same source vanilla uses: PlayerEncounter.EncounteredBattle.
-        /// We only care if it's a raid on a village.
-        /// </summary>
-        private static bool TryGetRaidBattle(out MapEvent raidEvent)
+        private static bool HasJoinableSiegeSettlement(out Settlement settlement)
         {
-            raidEvent = PlayerEncounter.EncounteredBattle;
-            if (raidEvent == null || !raidEvent.IsRaid)
+            settlement = PlayerEncounter.EncounterSettlement ?? Settlement.CurrentSettlement;
+            return settlement != null
+                   && settlement.IsFortification
+                   && settlement.IsUnderSiege
+                   && settlement.SiegeEvent != null;
+        }
+
+        private static bool TryGetJoinableBattle(out MapEvent battleEvent)
+        {
+            battleEvent = PlayerEncounter.EncounteredBattle;
+            if (battleEvent == null || battleEvent.IsFinalized)
                 return false;
 
-            Settlement settlement = raidEvent.MapEventSettlement;
-            if (settlement == null || !settlement.IsVillage)
+            bool isSupportedBattle =
+                battleEvent.IsRaid ||
+                battleEvent.IsFieldBattle ||
+                battleEvent.IsSiegeOutside ||
+                battleEvent.IsSiegeAssault ||
+                battleEvent.IsSiegeAmbush ||
+                battleEvent.IsSallyOut;
+
+            if (!isSupportedBattle)
+                return false;
+
+            if (battleEvent.AttackerSide == null || battleEvent.DefenderSide == null)
+                return false;
+
+            if (battleEvent.AttackerSide.GetTotalHealthyTroopCountOfSide() <= 0 ||
+                battleEvent.DefenderSide.GetTotalHealthyTroopCountOfSide() <= 0)
                 return false;
 
             return true;
         }
 
-        /// <summary>
-        /// Ensure there are some defending troops for the village in this raid.
-        /// This is used for BOTH attacker and defender options, so defenders exist either way.
-        /// </summary>
-        private static void EnsureVillageDefenders(MapEvent raidEvent)
+        private static bool IsVillageRaid(MapEvent battleEvent)
         {
-            Settlement settlement = raidEvent.MapEventSettlement;
+            if (battleEvent == null || !battleEvent.IsRaid)
+                return false;
+
+            Settlement settlement = battleEvent.MapEventSettlement;
+            return settlement != null && settlement.IsVillage;
+        }
+
+        private bool OpenJoinSiegeEventCondition(MenuCallbackArgs args)
+        {
+            args.optionLeaveType = GameMenuOption.LeaveType.HostileAction;
+
+            if (!HasJoinableSiegeSettlement(out Settlement settlement))
+                return false;
+
+            args.IsEnabled = true;
+            args.Tooltip = new TextObject("{=rf_join_siege_entry_tooltip}Choose whether to support the attackers or defenders in the siege around this settlement.");
+            MBTextManager.SetTextVariable("SETTLEMENT", settlement.Name);
+            return true;
+        }
+
+        private void OpenJoinSiegeEventConsequence(MenuCallbackArgs args)
+        {
+            GameMenu.SwitchToMenu("join_siege_event");
+        }
+
+        private static void EnsureVillageDefenders(MapEvent battleEvent)
+        {
+            Settlement settlement = battleEvent.MapEventSettlement;
             if (settlement == null || !settlement.IsVillage)
                 return;
 
-            MapEventSide defenderSide = raidEvent.DefenderSide;
+            MapEventSide defenderSide = battleEvent.DefenderSide;
             if (defenderSide == null)
                 return;
 
-            // If there are already defenders, we don't touch it
             if (defenderSide.TroopCount > 0)
                 return;
 
-            // Prefer the defender leader's party, fall back to the settlement party
             PartyBase defenderLeader = defenderSide.LeaderParty ?? settlement.Party;
             if (defenderLeader == null)
                 return;
@@ -102,17 +185,12 @@ namespace RealmsForgotten.AiMade
             if (settlement.Culture?.BasicTroop == null)
                 return;
 
-            // Also don't spam if the party already has troops for some reason
             if (roster.TotalManCount > 0)
                 return;
 
-            // Turn some of the village militia value into actual battle troops
             float militiaValue = settlement.Village?.Militia ?? 0f;
-
-            // Tune this to taste – 1/5 of militia as combatants
             int militiaCount = (int)(militiaValue / 5f);
 
-            // Clamp to reasonable min/max
             if (militiaCount < 10)
                 militiaCount = 10;
             if (militiaCount > 80)
@@ -124,31 +202,38 @@ namespace RealmsForgotten.AiMade
             roster.AddToCounts(settlement.Culture.BasicTroop, militiaCount);
         }
 
-        // =======================
-        //   ATTACKER OPTION
-        // =======================
-
         private bool JoinRaidAttackerCondition(MenuCallbackArgs args)
         {
             args.optionLeaveType = GameMenuOption.LeaveType.Mission;
 
-            if (!TryGetRaidBattle(out _))
+            if (!TryGetJoinableBattle(out MapEvent battleEvent))
                 return false;
 
-            // We want this always clickable whenever it's a village raid
+            if (IsVillageRaid(battleEvent))
+            {
+                args.Tooltip = new TextObject("{=rf_join_custom_attackers_raid}Throw in with the raiders and share their spoils if they prevail.");
+            }
+            else if (battleEvent.IsFieldBattle)
+            {
+                args.Tooltip = new TextObject("{=rf_join_custom_attackers_field}Ride in to reinforce the attacking side of the battle.");
+            }
+            else
+            {
+                args.Tooltip = new TextObject("{=rf_join_custom_attackers_siege}Join the attacking side of this siege or assault in progress.");
+            }
+
             args.IsEnabled = true;
             return true;
         }
 
         private void JoinRaidAttackerConsequence(MenuCallbackArgs args)
         {
-            if (!TryGetRaidBattle(out MapEvent raidEvent))
+            if (!TryGetJoinableBattle(out MapEvent battleEvent))
                 return;
 
-            // Make sure there are *some* defenders in this raid
-            EnsureVillageDefenders(raidEvent);
+            if (IsVillageRaid(battleEvent))
+                EnsureVillageDefenders(battleEvent);
 
-            // Handle edge case: player "inside" a besieged settlement
             if (PlayerEncounter.InsideSettlement &&
                 PlayerEncounter.EncounterSettlement != null &&
                 PlayerEncounter.EncounterSettlement.IsUnderSiege)
@@ -156,23 +241,29 @@ namespace RealmsForgotten.AiMade
                 PlayerEncounter.LeaveSettlement();
             }
 
-            // Join the existing MapEvent on the attacker side
             PlayerEncounter.JoinBattle(BattleSideEnum.Attacker);
-
-            // Use the same logic vanilla uses for "Attack" – this opens the battle mission.
             MenuHelper.EncounterAttackConsequence(args);
         }
-
-        // =======================
-        //   DEFENDER OPTION
-        // =======================
 
         private bool JoinRaidDefenderCondition(MenuCallbackArgs args)
         {
             args.optionLeaveType = GameMenuOption.LeaveType.Mission;
 
-            if (!TryGetRaidBattle(out _))
+            if (!TryGetJoinableBattle(out MapEvent battleEvent))
                 return false;
+
+            if (IsVillageRaid(battleEvent))
+            {
+                args.Tooltip = new TextObject("{=rf_join_custom_defenders_raid}Protect the village and answer for any blood you spill on either side.");
+            }
+            else if (battleEvent.IsFieldBattle)
+            {
+                args.Tooltip = new TextObject("{=rf_join_custom_defenders_field}Ride in to reinforce the defending side of the battle.");
+            }
+            else
+            {
+                args.Tooltip = new TextObject("{=rf_join_custom_defenders_siege}Join the defenders and fight to break or hold the siege.");
+            }
 
             args.IsEnabled = true;
             return true;
@@ -180,11 +271,11 @@ namespace RealmsForgotten.AiMade
 
         private void JoinRaidDefenderConsequence(MenuCallbackArgs args)
         {
-            if (!TryGetRaidBattle(out MapEvent raidEvent))
+            if (!TryGetJoinableBattle(out MapEvent battleEvent))
                 return;
 
-            // Also ensure defenders exist when we defend
-            EnsureVillageDefenders(raidEvent);
+            if (IsVillageRaid(battleEvent))
+                EnsureVillageDefenders(battleEvent);
 
             if (PlayerEncounter.InsideSettlement &&
                 PlayerEncounter.EncounterSettlement != null &&
@@ -193,11 +284,110 @@ namespace RealmsForgotten.AiMade
                 PlayerEncounter.LeaveSettlement();
             }
 
-            // Join the defender side
             PlayerEncounter.JoinBattle(BattleSideEnum.Defender);
-
-            // Same attack flow -> proper mission starts
             MenuHelper.EncounterAttackConsequence(args);
+        }
+
+        private bool JoinSiegeAttackerCondition(MenuCallbackArgs args)
+        {
+            args.optionLeaveType = GameMenuOption.LeaveType.HostileAction;
+
+            if (!HasJoinableSiegeSettlement(out _))
+                return false;
+
+            args.IsEnabled = true;
+            args.Tooltip = new TextObject("{=rf_join_custom_attackers_siege_long}Take the attackers' side. If the assault has already begun, you will enter the battle immediately. Otherwise you will join the siege camp and preparations.");
+            return true;
+        }
+
+        private void JoinSiegeAttackerConsequence(MenuCallbackArgs args)
+        {
+            if (!HasJoinableSiegeSettlement(out Settlement settlement))
+                return;
+
+            if (settlement.Party.MapEvent != null)
+            {
+                PlayerEncounter.JoinBattle((!settlement.Party.MapEvent.IsSallyOut) ? BattleSideEnum.Attacker : BattleSideEnum.Defender);
+                GameMenu.SwitchToMenu("encounter");
+                return;
+            }
+
+            if (Hero.MainHero.CurrentSettlement != null)
+                PlayerEncounter.LeaveSettlement();
+
+            PlayerEncounter.Finish();
+            MobileParty.MainParty.BesiegerCamp = settlement.SiegeEvent.BesiegerCamp;
+            if (TryStartPlayerSiege(BattleSideEnum.Attacker, settlement))
+                Campaign.Current.TimeControlMode = CampaignTimeControlMode.UnstoppablePlay;
+        }
+
+        private bool JoinSiegeDefenderCondition(MenuCallbackArgs args)
+        {
+            args.optionLeaveType = GameMenuOption.LeaveType.DefendAction;
+
+            if (!HasJoinableSiegeSettlement(out _))
+                return false;
+
+            args.IsEnabled = true;
+            args.Tooltip = new TextObject("{=rf_join_custom_defenders_siege_long}Take the defenders' side. If the assault has already begun, you will enter the battle immediately. Otherwise you will attempt to break in and support the garrison.");
+            return true;
+        }
+
+        private void JoinSiegeDefenderConsequence(MenuCallbackArgs args)
+        {
+            if (!HasJoinableSiegeSettlement(out Settlement settlement))
+                return;
+
+            if (settlement.Party.MapEvent != null)
+            {
+                PlayerEncounter.JoinBattle((!settlement.Party.MapEvent.IsSallyOut) ? BattleSideEnum.Defender : BattleSideEnum.Attacker);
+                GameMenu.SwitchToMenu("encounter");
+                return;
+            }
+
+            GameMenu.SwitchToMenu("break_in_menu");
+        }
+
+        private static bool TryStartPlayerSiege(BattleSideEnum side, Settlement settlement)
+        {
+            try
+            {
+                Type playerSiegeType = AppDomain.CurrentDomain.GetAssemblies()
+                    .Select(a =>
+                    {
+                        try { return a.GetType("TaleWorlds.CampaignSystem.PlayerSiege", false); }
+                        catch { return null; }
+                    })
+                    .FirstOrDefault(t => t != null);
+
+                if (playerSiegeType == null)
+                    return false;
+
+                MethodInfo startPlayerSiege = playerSiegeType.GetMethod(
+                    "StartPlayerSiege",
+                    BindingFlags.Static | BindingFlags.Public,
+                    null,
+                    new[] { typeof(BattleSideEnum), typeof(bool), typeof(Settlement) },
+                    null);
+
+                MethodInfo startSiegePreparation = playerSiegeType.GetMethod(
+                    "StartSiegePreparation",
+                    BindingFlags.Static | BindingFlags.Public,
+                    null,
+                    Type.EmptyTypes,
+                    null);
+
+                if (startPlayerSiege == null || startSiegePreparation == null)
+                    return false;
+
+                startPlayerSiege.Invoke(null, new object[] { side, false, settlement });
+                startSiegePreparation.Invoke(null, Array.Empty<object>());
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

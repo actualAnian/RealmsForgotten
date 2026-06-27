@@ -1,9 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TaleWorlds.Library;
+using TaleWorlds.CampaignSystem.Settlements;
 
 namespace RealmsForgotten.AiMade.Managers
 {
@@ -13,36 +10,109 @@ namespace RealmsForgotten.AiMade.Managers
 
         public static void InitializeRegions()
         {
-            string[] cultures = new string[]
-            {
-                "aserai", "battania", "empire", "khuzait", "sturgia", "vlandia",
-                "aqarun", "dwarf", "urkhai", "grimwatch", "Katogai", "tharnmar",
-                "south_realm", "west_realm", "giant", "wulf"
-            };
+            var existingRegions = Regions ?? new Dictionary<string, WeatherRegion>();
+            var rebuiltRegions = new Dictionary<string, WeatherRegion>();
 
-            foreach (var culture in cultures)
+            foreach (ClimateRegionType climateRegion in WeatherClimateCatalog.AllClimateRegions)
             {
-                if (!Regions.ContainsKey(culture))
+                string key = WeatherClimateCatalog.GetRegionKey(climateRegion);
+                WeatherRegion region;
+
+                if (existingRegions.TryGetValue(key, out var currentRegion))
                 {
-                    Regions[culture] = new WeatherRegion(culture);
+                    currentRegion.SetClimateRegion(climateRegion);
+                    region = currentRegion;
                 }
+                else
+                {
+                    region = new WeatherRegion(key, climateRegion);
+                    if (TryGetLegacyWeatherForClimate(existingRegions, climateRegion, out var legacyWeather))
+                    {
+                        region.SetWeather(legacyWeather);
+                    }
+                }
+
+                rebuiltRegions[key] = region;
+            }
+
+            Regions = rebuiltRegions;
+        }
+
+        public static void EnsureInitialized()
+        {
+            if (Regions == null || Regions.Count == 0 || !HasExpectedRegionSet())
+            {
+                InitializeRegions();
             }
         }
 
         public static void RotateAllWeathers()
         {
+            EnsureInitialized();
             foreach (var region in Regions.Values)
+            {
                 region.RotateWeather();
+            }
         }
 
         public static WeatherType GetWeatherForCulture(string cultureId)
         {
-            // This logic can be improved to handle sub-cultures like empire_w, empire_s etc.
-            if (cultureId.Contains("empire")) cultureId = "empire";
+            EnsureInitialized();
+            ClimateRegionType climateRegion = WeatherClimateCatalog.GetClimateForCultureId(cultureId);
+            string regionKey = WeatherClimateCatalog.GetRegionKey(climateRegion);
+            return Regions.TryGetValue(regionKey, out var region) ? region.CurrentWeather : WeatherType.Clear;
+        }
 
-            if (Regions.TryGetValue(cultureId, out var region))
-                return region.CurrentWeather;
-            return WeatherType.Clear;
+        public static WeatherType GetWeatherForSettlement(Settlement settlement)
+        {
+            EnsureInitialized();
+            ClimateRegionType climateRegion = WeatherClimateCatalog.GetClimateForSettlement(settlement);
+            string regionKey = WeatherClimateCatalog.GetRegionKey(climateRegion);
+            return Regions.TryGetValue(regionKey, out var region) ? region.CurrentWeather : WeatherType.Clear;
+        }
+
+        public static WeatherType GetWeatherForVillage(Village village)
+        {
+            return GetWeatherForSettlement(village?.Settlement);
+        }
+
+        public static ClimateRegionType GetClimateForSettlement(Settlement settlement)
+        {
+            return WeatherClimateCatalog.GetClimateForSettlement(settlement);
+        }
+
+        public static ClimateRegionType GetClimateForVillage(Village village)
+        {
+            return WeatherClimateCatalog.GetClimateForVillage(village);
+        }
+
+        private static bool HasExpectedRegionSet()
+        {
+            foreach (ClimateRegionType climateRegion in WeatherClimateCatalog.AllClimateRegions)
+            {
+                if (!Regions.ContainsKey(WeatherClimateCatalog.GetRegionKey(climateRegion)))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static bool TryGetLegacyWeatherForClimate(Dictionary<string, WeatherRegion> legacyRegions, ClimateRegionType climateRegion, out WeatherType weather)
+        {
+            foreach (var legacyRegion in legacyRegions.Values)
+            {
+                ClimateRegionType legacyClimate = WeatherClimateCatalog.GetClimateForCultureId(legacyRegion.CultureId);
+                if (legacyClimate == climateRegion)
+                {
+                    weather = legacyRegion.CurrentWeather;
+                    return true;
+                }
+            }
+
+            weather = WeatherType.Clear;
+            return false;
         }
     }
 }

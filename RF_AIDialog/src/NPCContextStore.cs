@@ -161,7 +161,8 @@ namespace RF_AIDialog
                 || ctx.HasPendingRequest
                 || ctx.HasPendingInitiative
                 || ctx.LastKnownRelation != 0
-                || ctx.LastRequestDay > -100000;
+                || ctx.LastRequestDay > -100000
+                || ctx.LastInitiativeLetterDay > -100000;
         }
     }
 }

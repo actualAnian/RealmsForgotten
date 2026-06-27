@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<SpriteData>
+  <SpriteCategories>
+    <SpriteCategory>
+      <Name>ui_enlistment</Name>
+      <SpriteSheetCount>1</SpriteSheetCount>
+      <SpriteSheetSize ID="1" Width="4096" Height="1024" />
+    </SpriteCategory>
+  </SpriteCategories>
+  <SpriteParts>
+    <SpritePart>
+      <SheetID>1</SheetID>
+      <Name>enlist_back</Name>
+      <Width>1160</Width>
+      <Height>647</Height>
+      <SheetX>1352</SheetX>
+      <SheetY>4</SheetY>
+      <CategoryName>ui_enlistment</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>1</SheetID>
+      <Name>welcome</Name>
+      <Width>1340</Width>
+      <Height>827</Height>
+      <SheetX>4</SheetX>
+      <SheetY>4</SheetY>
+      <CategoryName>ui_enlistment</CategoryName>
+    </SpritePart>
+  </SpriteParts>
+  <Sprites>
+    <GenericSprite>
+      <Name>enlist_back</Name>
+      <SpritePartName>enlist_back</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>welcome</Name>
+      <SpritePartName>welcome</SpritePartName>
+    </GenericSprite>
+  </Sprites>
+</SpriteData>

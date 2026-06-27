@@ -96,18 +96,8 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
         public override int GetRelationValueOfSupportingClan() => _baseModel.GetRelationValueOfSupportingClan();
         public override float GetScoreOfDeclaringPeace(IFaction a, IFaction b)
         {
-            // 🔒 Block peace as long as the global alignment war flag is active
             if (AlignmentWarBehavior.IsActive)
             {
-                //reason = new TextObject("⚔️ Alignment war is active. Peace is forbidden.");
-                return float.MinValue;
-            }
-
-            // (Optional) fallback culture logic if you want both checks
-            if ((a.Culture?.IsGoodCulture() == true && b.Culture?.IsEvilCulture() == true) ||
-                (a.Culture?.IsEvilCulture() == true && b.Culture?.IsGoodCulture() == true))
-            {
-                //reason = new TextObject("⚔️ Alignment war: Peace is forbidden between good and evil.");
                 return float.MinValue;
             }
 

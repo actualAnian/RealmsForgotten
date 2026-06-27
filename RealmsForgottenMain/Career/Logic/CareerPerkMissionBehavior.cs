@@ -20,6 +20,7 @@ namespace RealmsForgotten.Career.Logic
             AbilityEffects.BurningAgentsFromAbility.Clear();
             AbilityEffects.RemoveArcaneSurgeFromWeapons();
             AbilityEffects.PendingBurningDamage.Clear();
+            AbilityEffects.StopDivineRestoration();
         }
 
         public override void OnAgentRemoved(
@@ -240,6 +241,12 @@ namespace RealmsForgotten.Career.Logic
 
                 if (meleeSec > 0f) AbilityEffects.StartPlayerMeleeImmunity(meleeSec);
                 if (rangedSec > 0f) AbilityEffects.StartPlayerRangedImmunity(rangedSec);
+            }
+
+            var career = PlayerCareerExtension.GetCareer();
+            if (career?.StringId == "cleric" && career.Ability.IsActiveInMission)
+            {
+                AbilityEffects.TickDivineRestoration(dt);
             }
         }
 

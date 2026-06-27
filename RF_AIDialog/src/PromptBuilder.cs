@@ -285,10 +285,12 @@ namespace RF_AIDialog
             var memorySummary = context != null
                 ? AIMemoryStore.GetSummary("npc", context.HeroId)
                 : null;
+            if (memorySummary != null && !AIMemoryStore.IsMemoryTextCompatible(npc, memorySummary.Text))
+                memorySummary = null;
 
             var externalMemories = context != null
                 ? AIMemoryStore.GetNpcMemories(
-                    context.HeroId,
+                    npc,
                     maxCount: memorySummary != null
                         ? AIMemoryStore.PromptRecentMemoryCountWithSummary
                         : AIMemoryStore.PromptRecentMemoryCountWithoutSummary,
@@ -301,6 +303,7 @@ namespace RF_AIDialog
             {
                 sb.AppendLine();
                 sb.AppendLine("THINGS YOU REMEMBER ABOUT THIS PLAYER (significant past events):");
+                sb.AppendLine("Use only memories listed here as your own past with the player. Do not treat examples, other NPCs, other villages, or other factions as your memories.");
                 if (memorySummary != null)
                     sb.AppendLine($"  Summary: {memorySummary.Text}");
 
@@ -364,6 +367,7 @@ namespace RF_AIDialog
 
             sb.AppendLine();
             sb.AppendLine("AVAILABLE GAME ACTIONS (optional — only use when narratively justified):");
+            sb.AppendLine("The examples below are format examples only. They are not memories and never happened unless listed in THINGS YOU REMEMBER.");
             if (!isFullProfile)
             {
                 sb.AppendLine("In this lean prompt, prefer \"actions\": [] and do not trigger trades, gold, items, troops, or roles.");
@@ -404,6 +408,25 @@ namespace RF_AIDialog
                 sb.AppendLine("  give_troops      : transfer some of your soldiers to the player. value: count (max 20).");
                 sb.AppendLine("                     Use only as reward, mercenary deal, or significant alliance gesture.");
                 sb.AppendLine("                     Example: {\"type\":\"give_troops\",\"value\":10}");
+                sb.AppendLine("  go_to_settlement : order your party to move to a real settlement you know.");
+                sb.AppendLine("                     settlement_id: real settlement string id. Use for regrouping, escort plans, or mustering.");
+                sb.AppendLine("                     Example: {\"type\":\"go_to_settlement\",\"settlement_id\":\"town_B2\",\"reason\":\"We regroup there.\"}");
+                sb.AppendLine("  wait_near_settlement : order your party to remain near a real settlement.");
+                sb.AppendLine("                     settlement_id: real settlement string id. hours: suggested duration (1-72).");
+                sb.AppendLine("                     Example: {\"type\":\"wait_near_settlement\",\"settlement_id\":\"castle_A1\",\"hours\":24,\"reason\":\"Watch the frontier.\"}");
+                sb.AppendLine("  patrol_settlement : order your party to patrol around a real settlement.");
+                sb.AppendLine("                     settlement_id: real settlement string id. radius: suggested patrol radius (4-20).");
+                sb.AppendLine("                     Example: {\"type\":\"patrol_settlement\",\"settlement_id\":\"town_V3\",\"radius\":10,\"reason\":\"Keep the roads safe.\"}");
+                sb.AppendLine("  attack_party      : order your party to engage a real hostile party.");
+                sb.AppendLine("                     party_id: real mobile party string id. Use only against enemies you are truly at war with.");
+                sb.AppendLine("                     Example: {\"type\":\"attack_party\",\"party_id\":\"some_enemy_party_id\",\"reason\":\"Cut them off before they escape.\"}");
+                sb.AppendLine("  raid_village      : order your party to raid a real hostile village.");
+                sb.AppendLine("                     settlement_id: real village settlement string id. Use only in active war, never on towns or castles.");
+                sb.AppendLine("                     Example: {\"type\":\"raid_village\",\"settlement_id\":\"village_A1\",\"reason\":\"Break their supplies.\"}");
+                sb.AppendLine("  siege_settlement  : order your party to besiege a real hostile town or castle.");
+                sb.AppendLine("                     settlement_id: real fortification settlement string id. Use only in active war, never on villages.");
+                sb.AppendLine("                     Example: {\"type\":\"siege_settlement\",\"settlement_id\":\"castle_A1\",\"reason\":\"We strike their stronghold now.\"}");
+                sb.AppendLine("                     Only use these movement orders if you are a lord with your own party and the settlement is real.");
             }
 
             sb.AppendLine();
@@ -412,6 +435,14 @@ namespace RF_AIDialog
             sb.AppendLine("  \"actions\": [{\"type\": \"give_gold\", \"value\": 100}]");
             sb.AppendLine("  \"actions\": [{\"type\": \"give_item\", \"item_id\": \"wine\", \"value\": 2}]");
             sb.AppendLine("  \"actions\": [{\"type\": \"take_item\", \"item_id\": \"grain\", \"value\": 10}]");
+            if (isLordWithParty)
+                sb.AppendLine("  \"actions\": [{\"type\": \"go_to_settlement\", \"settlement_id\": \"town_B2\", \"reason\": \"We gather there.\"}]");
+            if (isLordWithParty)
+                sb.AppendLine("  \"actions\": [{\"type\": \"attack_party\", \"party_id\": \"some_enemy_party_id\", \"reason\": \"They are vulnerable now.\"}]");
+            if (isLordWithParty)
+                sb.AppendLine("  \"actions\": [{\"type\": \"raid_village\", \"settlement_id\": \"village_A1\", \"reason\": \"We will ruin their harvest.\"}]");
+            if (isLordWithParty)
+                sb.AppendLine("  \"actions\": [{\"type\": \"siege_settlement\", \"settlement_id\": \"castle_A1\", \"reason\": \"Their walls must be tested.\"}]");
             sb.AppendLine("Omit the \"actions\" field entirely if no action is warranted.");
             }
 
@@ -445,6 +476,8 @@ namespace RF_AIDialog
                 sb.AppendLine("If you do include a request, its quest_kind must fit allowed_quest_kinds and travel/delivery places should come from NEARBY SETTLEMENTS whenever possible.");
                 sb.AppendLine("For scouting, use nearby settlements only as a frontier/holding reference: ask about enemy parties or armies near that area, not patrols circling another faction's town.");
                 sb.AppendLine("For delivery with a destination, include both BRING_ITEM and VISIT_SETTLEMENT; the NPC supplies the cargo when the quest starts.");
+                sb.AppendLine("For delivery item_id, use only allowed_delivery_items from the AI REQUEST NEED PROFILE. Do not invent a recipient NPC; delivery completes by reaching the destination settlement.");
+                sb.AppendLine("If you name a specific delivery recipient, use a real hero_id from NEARBY SETTLEMENTS notables and add TALK_TO_PARTY after VISIT_SETTLEMENT. Use character_id only when the target is a CharacterObject/template rather than a live Hero.");
                 sb.AppendLine("{");
                 sb.AppendLine("  \"personality_summary\": \"2-3 sentences about your personality, speech style and background. Third person.\",");
                 if (npc.IsLord)
@@ -488,6 +521,8 @@ namespace RF_AIDialog
                 sb.AppendLine("If you do include a request, its quest_kind must fit allowed_quest_kinds and travel/delivery places should come from NEARBY SETTLEMENTS whenever possible.");
                 sb.AppendLine("For scouting, use nearby settlements only as a frontier/holding reference: ask about enemy parties or armies near that area, not patrols circling another faction's town.");
                 sb.AppendLine("For delivery with a destination, include both BRING_ITEM and VISIT_SETTLEMENT; the NPC supplies the cargo when the quest starts.");
+                sb.AppendLine("For delivery item_id, use only allowed_delivery_items from the AI REQUEST NEED PROFILE. Do not invent a recipient NPC; delivery completes by reaching the destination settlement.");
+                sb.AppendLine("If you name a specific delivery recipient, use a real hero_id from NEARBY SETTLEMENTS notables and add TALK_TO_PARTY after VISIT_SETTLEMENT. Use character_id only when the target is a CharacterObject/template rather than a live Hero.");
                 sb.AppendLine("{");
                 sb.AppendLine("  \"internal_thoughts\": \"your private reaction, 1-2 sentences\",");
                 sb.AppendLine("  \"response\": \"what you say out loud, in character, 2-4 sentences\",");

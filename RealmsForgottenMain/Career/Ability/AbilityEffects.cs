@@ -16,12 +16,15 @@ namespace RealmsForgotten.Career.Ability
     public class AbilityData
     {
         public int Duration { get; private set; }
+        public int UpgradedDuration { get; private set; }
         public int Cooldown { get; private set; }
         public AbilityData(int duration, int cooldown,
             Dictionary<ActionTrigger, List<Delegate>> baseActions,
-            Dictionary<ActionTrigger, List<Delegate>> upgradedActions)
+            Dictionary<ActionTrigger, List<Delegate>> upgradedActions,
+            int? upgradedDuration = null)
         {
             Duration = duration;
+            UpgradedDuration = upgradedDuration ?? duration;
             Cooldown = cooldown;
             BaseActions = baseActions;
             UpgradedActions = upgradedActions;
@@ -49,9 +52,82 @@ namespace RealmsForgotten.Career.Ability
     {
         public static Dictionary<Agent, CareerBurningAgentData> BurningAgentsFromAbility = new();
         private static List<GameEntity> TroopWeaponParticles = new();
+        private const string ClericAbilityHealBoostPerkId = "ClericSaintedIntercessor1_1";
+        private const string ClericAbilityDurationPerkId = "ClericSaintedIntercessor1_2";
+        private const string ClericAbilityAllyHealPerkId = "ClericSaintedIntercessor1_3";
+        private const string ClericAbilityMoralePerkId = "ClericSaintedIntercessor1_4";
+        private static float _clericSelfHealPerSecond;
+        private static float _clericAllyHealPerSecond;
+        private static float _clericNextMoralePulseTime;
 
         // NOVO: Lista para armazenar o dano de burning pendente
         public static List<(Agent victim, int damage)> PendingBurningDamage = new();
+
+        public static float GetAdditionalAbilityDuration(string abilityId)
+        {
+            if (abilityId == "cleric_ability" && PlayerCareerExtension.HasCareerChoice(ClericAbilityDurationPerkId))
+                return 5f;
+
+            return 0f;
+        }
+
+        public static void StartDivineRestoration()
+        {
+            var career = PlayerCareerExtension.GetCareer();
+            if (career == null || career.StringId != "cleric")
+                return;
+
+            _clericSelfHealPerSecond = career.Ability.IsUpgraded ? 3.5f : 2.0f;
+            if (PlayerCareerExtension.HasCareerChoice(ClericAbilityHealBoostPerkId))
+                _clericSelfHealPerSecond *= 1.2f;
+
+            _clericAllyHealPerSecond = PlayerCareerExtension.HasCareerChoice(ClericAbilityAllyHealPerkId) ? 1.0f : 0f;
+            _clericNextMoralePulseTime = Mission.Current?.CurrentTime + 1.5f ?? 0f;
+        }
+
+        public static void StopDivineRestoration()
+        {
+            _clericSelfHealPerSecond = 0f;
+            _clericAllyHealPerSecond = 0f;
+            _clericNextMoralePulseTime = 0f;
+        }
+
+        public static void TickDivineRestoration(float dt)
+        {
+            if (Mission.Current == null || Agent.Main == null || _clericSelfHealPerSecond <= 0f)
+                return;
+
+            if (Agent.Main.IsActive() && Agent.Main.Health > 0f)
+                Agent.Main.Health = MathF.Min(Agent.Main.HealthLimit, Agent.Main.Health + (_clericSelfHealPerSecond * dt));
+
+            foreach (Agent ally in Mission.Current.PlayerTeam.ActiveAgents)
+            {
+                if (ally == null || ally.IsMount || !ally.IsHuman || !ally.BelongsToMainParty())
+                    continue;
+
+                if (_clericAllyHealPerSecond > 0f
+                    && !ally.IsMainAgent
+                    && ally.IsActive()
+                    && ally.Health > 0f
+                    && ally.Position.DistanceSquared(Agent.Main.Position) <= 100f)
+                {
+                    ally.Health = MathF.Min(ally.HealthLimit, ally.Health + (_clericAllyHealPerSecond * dt));
+                }
+
+                if (PlayerCareerExtension.HasCareerChoice(ClericAbilityMoralePerkId)
+                    && Mission.Current.CurrentTime >= _clericNextMoralePulseTime
+                    && ally.Position.DistanceSquared(Agent.Main.Position) <= 144f)
+                {
+                    ally.ChangeMorale(1);
+                }
+            }
+
+            if (PlayerCareerExtension.HasCareerChoice(ClericAbilityMoralePerkId)
+                && Mission.Current.CurrentTime >= _clericNextMoralePulseTime)
+            {
+                _clericNextMoralePulseTime = Mission.Current.CurrentTime + 1.5f;
+            }
+        }
 
 
         public static void TryApplyFireDotOnHit(Agent attacker, Agent victim, MissionWeapon weapon)

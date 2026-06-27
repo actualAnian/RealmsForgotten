@@ -18,6 +18,7 @@ namespace RF_AIDialog
         public List<string> NeedDomains { get; } = new List<string>();
         public List<string> NeedSignals { get; } = new List<string>();
         public List<string> AllowedQuestKinds { get; } = new List<string>();
+        public List<string> AllowedDeliveryItemIds { get; } = new List<string>();
         public List<string> Notes { get; } = new List<string>();
     }
 
@@ -235,6 +236,9 @@ namespace RF_AIDialog
 
             try
             {
+                foreach (string itemId in QuestDeliveryRules.GetAllowedDeliveryItemIds(npc))
+                    profile.AllowedDeliveryItemIds.Add(itemId);
+
                 switch (npc.Occupation)
                 {
                     case Occupation.Merchant:
@@ -270,7 +274,15 @@ namespace RF_AIDialog
             Dedupe(profile.NeedDomains);
             Dedupe(profile.NeedSignals);
             Dedupe(profile.AllowedQuestKinds);
+            Dedupe(profile.AllowedDeliveryItemIds);
             Dedupe(profile.Notes);
+
+            if (profile.AllowedDeliveryItemIds.Count == 0)
+            {
+                profile.AllowedQuestKinds.RemoveAll(k =>
+                    k.Equals("delivery", StringComparison.OrdinalIgnoreCase) ||
+                    k.Equals("delivery_under_pressure", StringComparison.OrdinalIgnoreCase));
+            }
 
             if (!profile.AllowedQuestKinds.Any())
                 profile.ShouldOfferRequest = false;

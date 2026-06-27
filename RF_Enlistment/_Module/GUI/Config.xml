@@ -1,0 +1,5 @@
+<Config>
+    <SpriteCategory Name="ui_enlistment">
+        <AlwaysLoad/>
+    </SpriteCategory>
+</Config>

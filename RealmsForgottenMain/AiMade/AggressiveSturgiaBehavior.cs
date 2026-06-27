@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using RF_warsystem;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Election;
 using TaleWorlds.CampaignSystem.Party;
@@ -78,10 +79,9 @@ namespace RealmsForgotten.Behaviors
             if (potentialEnemies.Any())
             {
                 var chosenEnemy = potentialEnemies[MBRandom.RandomInt(potentialEnemies.Count)];
-                FactionManager.DeclareWar(sturgiaKingdom, chosenEnemy);
+                RFWarExternalIntentApi.ReinforceEnduringRivalryWar(sturgiaKingdom, chosenEnemy);
 
-                // ✅ No InformationManager popup here to avoid pausing
-                MBInformationManager.AddQuickInformation(new TextObject($"Sturgia has declared war on {chosenEnemy.Name}!"));
+                MBInformationManager.AddQuickInformation(new TextObject($"Sturgia is pressing toward war with {chosenEnemy.Name}!"));
             }
         }
     }

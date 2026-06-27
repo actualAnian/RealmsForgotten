@@ -5,6 +5,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
+using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.ObjectSystem;
@@ -64,6 +65,24 @@ namespace RF_AIDialog
                 case "take_item":       TakeItem(npc, action.ItemId, Math.Max(1, action.Value)); break;
                 case "assign_role":     AssignRole(npc, action.Role);                    break;
                 case "give_troops":     GiveTroops(npc, Math.Max(1, action.Value));      break;
+                case "go_to_settlement":
+                    GoToSettlement(npc, action.SettlementId, action.Reason);
+                    break;
+                case "wait_near_settlement":
+                    WaitNearSettlement(npc, action.SettlementId, action.Hours, action.Reason);
+                    break;
+                case "patrol_settlement":
+                    PatrolSettlement(npc, action.SettlementId, action.Radius, action.Reason);
+                    break;
+                case "attack_party":
+                    AttackParty(npc, action.PartyId, action.Reason);
+                    break;
+                case "raid_village":
+                    RaidVillage(npc, action.SettlementId, action.Reason);
+                    break;
+                case "siege_settlement":
+                    SiegeSettlement(npc, action.SettlementId, action.Reason);
+                    break;
             }
         }
 
@@ -195,6 +214,362 @@ namespace RF_AIDialog
 
             InformationManager.DisplayMessage(new InformationMessage(
                 $"[AI] {npc.Name} is now your party's {roleLabel}.", Color.FromUint(0xFF_80_FF_80u)));
+        }
+
+        private static void GoToSettlement(Hero npc, string? settlementId, string? reason)
+        {
+            var party = ValidateNpcPartyOrder(npc, settlementId, out Settlement? settlement);
+            if (party == null || settlement == null)
+                return;
+
+            var navigationType = ResolveNavigationType(party);
+            bool isFromPort = party.IsCurrentlyAtSea;
+            SetPartyAiAction.GetActionForVisitingSettlement(
+                party,
+                settlement,
+                navigationType,
+                isFromPort,
+                isTargetingPort: false);
+
+            InformationManager.DisplayMessage(new InformationMessage(
+                $"[AI] {npc.Name}'s party is moving to {settlement.Name}." + AppendReason(reason),
+                Color.FromUint(0xFF_80_FF_80u)));
+        }
+
+        private static void WaitNearSettlement(Hero npc, string? settlementId, int hours, string? reason)
+        {
+            var party = ValidateNpcPartyOrder(npc, settlementId, out Settlement? settlement);
+            if (party == null || settlement == null)
+                return;
+
+            int clampedHours = Math.Max(1, Math.Min(72, hours <= 0 ? 12 : hours));
+            var navigationType = ResolveNavigationType(party);
+            bool isFromPort = party.IsCurrentlyAtSea;
+
+            // Bannerlord has no simple "go there, then hold for N hours" single AI action.
+            // The safest approximation is a light patrol around the target settlement.
+            SetPartyAiAction.GetActionForPatrollingAroundSettlement(
+                party,
+                settlement,
+                navigationType,
+                isFromPort,
+                isTargetingPort: false);
+
+            InformationManager.DisplayMessage(new InformationMessage(
+                $"[AI] {npc.Name}'s party will wait near {settlement.Name} for a while (about {clampedHours}h)." + AppendReason(reason),
+                Color.FromUint(0xFF_80_FF_80u)));
+        }
+
+        private static void PatrolSettlement(Hero npc, string? settlementId, int radius, string? reason)
+        {
+            var party = ValidateNpcPartyOrder(npc, settlementId, out Settlement? settlement);
+            if (party == null || settlement == null)
+                return;
+
+            int clampedRadius = Math.Max(4, Math.Min(20, radius <= 0 ? 10 : radius));
+            var navigationType = ResolveNavigationType(party);
+            bool isFromPort = party.IsCurrentlyAtSea;
+            SetPartyAiAction.GetActionForPatrollingAroundSettlement(
+                party,
+                settlement,
+                navigationType,
+                isFromPort,
+                isTargetingPort: false);
+
+            InformationManager.DisplayMessage(new InformationMessage(
+                $"[AI] {npc.Name}'s party is patrolling around {settlement.Name} (radius {clampedRadius})." + AppendReason(reason),
+                Color.FromUint(0xFF_80_FF_80u)));
+        }
+
+        private static void AttackParty(Hero npc, string? targetPartyId, string? reason)
+        {
+            var party = ValidateNpcLeaderParty(npc);
+            if (party == null)
+                return;
+
+            if (string.IsNullOrWhiteSpace(targetPartyId))
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    "[AI] Attack order rejected: no target party id was provided.",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return;
+            }
+
+            MobileParty? targetParty = MobileParty.All
+                .FirstOrDefault(p => string.Equals(p.StringId, targetPartyId, StringComparison.OrdinalIgnoreCase));
+
+            if (targetParty == null || !targetParty.IsActive)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"[AI] Attack order rejected: party '{targetPartyId}' is invalid or inactive.",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return;
+            }
+
+            if (targetParty == party)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    "[AI] Attack order rejected: a party cannot attack itself.",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return;
+            }
+
+            if (targetParty.MapEvent != null)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"[AI] Attack order rejected: {targetParty.Name} is already in an encounter.",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return;
+            }
+
+            if (party.MapFaction == null || targetParty.MapFaction == null)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    "[AI] Attack order rejected: one of the parties has no valid faction.",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return;
+            }
+
+            if (!party.MapFaction.IsAtWarWith(targetParty.MapFaction))
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"[AI] Attack order rejected: {npc.Name} is not at war with {targetParty.Name}.",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return;
+            }
+
+            var navigationType = ResolveNavigationType(party);
+            bool isFromPort = party.IsCurrentlyAtSea;
+            SetPartyAiAction.GetActionForEngagingParty(
+                party,
+                targetParty,
+                navigationType,
+                isFromPort);
+
+            InformationManager.DisplayMessage(new InformationMessage(
+                $"[AI] {npc.Name}'s party is moving to engage {targetParty.Name}." + AppendReason(reason),
+                Color.FromUint(0xFF_80_FF_80u)));
+        }
+
+        private static void RaidVillage(Hero npc, string? settlementId, string? reason)
+        {
+            var party = ValidateNpcPartyOrder(npc, settlementId, out Settlement? settlement);
+            if (party == null || settlement == null)
+                return;
+
+            if (!settlement.IsVillage)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"[AI] Raid order rejected: {settlement.Name} is not a village.",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return;
+            }
+
+            if (settlement.Village == null)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"[AI] Raid order rejected: {settlement.Name} has no valid village data.",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return;
+            }
+
+            if (party.MapFaction == null || settlement.MapFaction == null)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    "[AI] Raid order rejected: invalid faction state.",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return;
+            }
+
+            if (!party.MapFaction.IsAtWarWith(settlement.MapFaction))
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"[AI] Raid order rejected: {npc.Name} is not at war with {settlement.Name}.",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return;
+            }
+
+            if (settlement.Party.MapEvent != null || settlement.SiegeEvent != null)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"[AI] Raid order rejected: {settlement.Name} is already in an active conflict.",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return;
+            }
+
+            if (settlement.Village.VillageState != Village.VillageStates.Normal)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"[AI] Raid order rejected: {settlement.Name} is not in a normal state for raiding.",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return;
+            }
+
+            var navigationType = ResolveNavigationType(party);
+            bool isFromPort = party.IsCurrentlyAtSea;
+            SetPartyAiAction.GetActionForRaidingSettlement(
+                party,
+                settlement,
+                navigationType,
+                isFromPort,
+                isTargetingPort: false);
+
+            InformationManager.DisplayMessage(new InformationMessage(
+                $"[AI] {npc.Name}'s party is moving to raid {settlement.Name}." + AppendReason(reason),
+                Color.FromUint(0xFF_FF_A0_00u)));
+        }
+
+        private static void SiegeSettlement(Hero npc, string? settlementId, string? reason)
+        {
+            var party = ValidateNpcPartyOrder(npc, settlementId, out Settlement? settlement);
+            if (party == null || settlement == null)
+                return;
+
+            if (!settlement.IsFortification)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"[AI] Siege order rejected: {settlement.Name} is not a fortification.",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return;
+            }
+
+            if (party.MapFaction == null || settlement.MapFaction == null)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    "[AI] Siege order rejected: invalid faction state.",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return;
+            }
+
+            if (!party.MapFaction.IsAtWarWith(settlement.MapFaction))
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"[AI] Siege order rejected: {npc.Name} is not at war with {settlement.Name}.",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return;
+            }
+
+            if (party.BesiegedSettlement != null && party.BesiegedSettlement != settlement)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"[AI] Siege order rejected: {npc.Name}'s party is already committed to another siege.",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return;
+            }
+
+            if (party.IsCurrentlyAtSea)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    "[AI] Siege order rejected: the party is currently at sea.",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return;
+            }
+
+            if (settlement.Party.MapEvent != null)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"[AI] Siege order rejected: {settlement.Name} is already in an active encounter.",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return;
+            }
+
+            if (settlement.SiegeEvent != null)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"[AI] Siege order rejected: {settlement.Name} is already under siege.",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return;
+            }
+
+            var navigationType = ResolveNavigationType(party);
+            bool isFromPort = party.IsCurrentlyAtSea;
+            SetPartyAiAction.GetActionForBesiegingSettlement(
+                party,
+                settlement,
+                navigationType,
+                isFromPort);
+
+            InformationManager.DisplayMessage(new InformationMessage(
+                $"[AI] {npc.Name}'s party is moving to besiege {settlement.Name}." + AppendReason(reason),
+                Color.FromUint(0xFF_FF_A0_00u)));
+        }
+
+        private static MobileParty? ValidateNpcPartyOrder(Hero npc, string? settlementId, out Settlement? settlement)
+        {
+            settlement = null;
+
+            var party = ValidateNpcLeaderParty(npc);
+            if (party == null)
+                return null;
+
+            if (string.IsNullOrWhiteSpace(settlementId))
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    "[AI] Party order rejected: no target settlement id was provided.",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return null;
+            }
+
+            settlement = MBObjectManager.Instance.GetObject<Settlement>(settlementId);
+            if (settlement == null)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"[AI] Party order rejected: settlement '{settlementId}' is invalid.",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return null;
+            }
+
+            if (!settlement.IsActive)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"[AI] Party order rejected: {settlement.Name} is not active.",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return null;
+            }
+
+            return party;
+        }
+
+        private static MobileParty? ValidateNpcLeaderParty(Hero npc)
+        {
+            if (!npc.IsLord)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"[AI] {npc.Name} cannot issue campaign party orders.",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return null;
+            }
+
+            var party = npc.PartyBelongedTo;
+            if (party == null || party.MapEvent != null || party.Army != null && party.Army.LeaderParty != party)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"[AI] {npc.Name}'s party is not in a safe state to receive map orders.",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return null;
+            }
+
+            if (party.LeaderHero != npc)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"[AI] {npc.Name} is not leading the party that would receive this order.",
+                    Color.FromUint(0xFF_FF_60_60u)));
+                return null;
+            }
+
+            return party;
+        }
+
+        private static MobileParty.NavigationType ResolveNavigationType(MobileParty party)
+        {
+            return party.IsCurrentlyAtSea
+                ? MobileParty.NavigationType.Naval
+                : MobileParty.NavigationType.Default;
+        }
+
+        private static string AppendReason(string? reason)
+        {
+            return string.IsNullOrWhiteSpace(reason) ? string.Empty : $" Reason: {reason}";
         }
     }
 }

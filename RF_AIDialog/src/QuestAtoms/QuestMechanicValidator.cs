@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.Core;
+using TaleWorlds.ObjectSystem;
 
 namespace RF_AIDialog
 {
@@ -31,7 +33,9 @@ namespace RF_AIDialog
             new HashSet<string>(StringComparer.OrdinalIgnoreCase)
             {
                 "grain", "wine", "hides", "linen", "tools",
-                "silver_ore", "wool", "pottery", "salt", "dates"
+                "silver_ore", "iron_ore", "wool", "pottery", "salt", "dates",
+                "cloth", "leather", "oil", "beer", "velvet", "flax", "cotton",
+                "fish", "meat", "butter", "cheese", "olives", "fur", "wood"
             };
 
         private static readonly HashSet<string> AllowedQuestKinds =
@@ -188,10 +192,18 @@ namespace RF_AIDialog
                     var visit = GetFirstSanitizedAtom(source, "VISIT_SETTLEMENT");
                     if (visit != null)
                     {
+                        var recipient = GetFirstSanitizedAtom(source, "TALK_TO_PARTY");
                         EnsureLabel(bringItem, "Carry the supplied goods");
                         EnsureLabel(visit, "Deliver the goods to the destination");
                         destination.Add(bringItem);
                         destination.Add(visit);
+                        if (recipient != null &&
+                            (!string.IsNullOrWhiteSpace(recipient.GetParam("hero_id")) ||
+                             !string.IsNullOrWhiteSpace(recipient.GetParam("character_id"))))
+                        {
+                            EnsureLabel(recipient, "Hand the goods to the recipient");
+                            destination.Add(recipient);
+                        }
                         destination.Add(BuildReturnAtom(source, "Return after the delivery"));
                         return true;
                     }
@@ -246,12 +258,20 @@ namespace RF_AIDialog
                 {
                     var bringItem = GetFirstSanitizedAtom(source, "BRING_ITEM");
                     var visit = GetFirstSanitizedAtom(source, "VISIT_SETTLEMENT");
+                    var recipient = GetFirstSanitizedAtom(source, "TALK_TO_PARTY");
                     if (bringItem == null || visit == null) return false;
 
                     EnsureLabel(bringItem, "Carry the requested goods");
                     EnsureLabel(visit, "Reach the destination despite the danger");
                     destination.Add(bringItem);
                     destination.Add(visit);
+                    if (recipient != null &&
+                        (!string.IsNullOrWhiteSpace(recipient.GetParam("hero_id")) ||
+                         !string.IsNullOrWhiteSpace(recipient.GetParam("character_id"))))
+                    {
+                        EnsureLabel(recipient, "Hand the goods to the recipient");
+                        destination.Add(recipient);
+                    }
                     destination.Add(BuildReturnAtom(source, "Return after the dangerous delivery"));
                     return true;
                 }
@@ -416,6 +436,9 @@ namespace RF_AIDialog
                 !QuestAtomCatalog.IsValidFactionId(factionId))
                 factionId = "";
 
+            if (!string.IsNullOrWhiteSpace(heroId) && !IsValidHeroId(heroId))
+                heroId = "";
+
             if (string.IsNullOrWhiteSpace(factionId) &&
                 string.IsNullOrWhiteSpace(partyId) &&
                 string.IsNullOrWhiteSpace(heroId))
@@ -441,15 +464,27 @@ namespace RF_AIDialog
             string factionId = source.GetParam("faction_id").Trim();
             string partyId = source.GetParam("party_id").Trim();
             string heroId = source.GetParam("hero_id").Trim();
+            string characterId = source.GetParam("character_id").Trim();
             string settlementId = source.GetParam("settlement_id").Trim();
 
             if (!string.IsNullOrWhiteSpace(factionId) &&
                 !QuestAtomCatalog.IsValidFactionId(factionId))
                 factionId = "";
 
+            if (!string.IsNullOrWhiteSpace(heroId) && !IsValidHeroId(heroId))
+            {
+                if (string.IsNullOrWhiteSpace(characterId) && IsValidCharacterObjectId(heroId))
+                    characterId = heroId;
+                heroId = "";
+            }
+
+            if (!string.IsNullOrWhiteSpace(characterId) && !IsValidCharacterObjectId(characterId))
+                characterId = "";
+
             if (string.IsNullOrWhiteSpace(factionId) &&
                 string.IsNullOrWhiteSpace(partyId) &&
-                string.IsNullOrWhiteSpace(heroId))
+                string.IsNullOrWhiteSpace(heroId) &&
+                string.IsNullOrWhiteSpace(characterId))
                 return null;
 
             if (!string.IsNullOrWhiteSpace(factionId))
@@ -458,6 +493,8 @@ namespace RF_AIDialog
                 target.Params["party_id"] = partyId;
             if (!string.IsNullOrWhiteSpace(heroId))
                 target.Params["hero_id"] = heroId;
+            if (!string.IsNullOrWhiteSpace(characterId))
+                target.Params["character_id"] = characterId;
 
             if (!string.IsNullOrWhiteSpace(settlementId) &&
                 QuestAtomCatalog.IsValidSettlementId(settlementId))
@@ -518,6 +555,34 @@ namespace RF_AIDialog
         private static int ClampCount(int value) => Math.Max(1, Math.Min(20, value));
 
         private static int ClampRadius(int value) => Math.Max(20, Math.Min(150, value <= 0 ? 80 : value));
+
+        private static bool IsValidHeroId(string heroId)
+        {
+            try
+            {
+                return Hero.FindFirst(h => h != null &&
+                                           h.StringId.Equals(heroId, StringComparison.OrdinalIgnoreCase)) != null;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static bool IsValidCharacterObjectId(string characterId)
+        {
+            if (string.IsNullOrWhiteSpace(characterId))
+                return false;
+
+            try
+            {
+                return MBObjectManager.Instance.GetObject<CharacterObject>(characterId) != null;
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
         private static int ClampRewardGold(int value) => Math.Max(0, Math.Min(AIConfig.MaxGoldTransfer, value));
 
@@ -618,7 +683,7 @@ namespace RF_AIDialog
                 if (!PassesLocalityRules(mechanic, questGiver))
                     return false;
 
-                if (!PassesDeliveryRules(mechanic))
+                if (!PassesDeliveryRules(mechanic, questGiver))
                     return false;
 
                 return true;
@@ -697,7 +762,7 @@ namespace RF_AIDialog
             return true;
         }
 
-        private static bool PassesDeliveryRules(QuestMechanic mechanic)
+        private static bool PassesDeliveryRules(QuestMechanic mechanic, Hero? questGiver)
         {
             bool isDelivery =
                 mechanic.QuestKind.Equals("delivery", StringComparison.OrdinalIgnoreCase) ||
@@ -715,6 +780,26 @@ namespace RF_AIDialog
             {
                 RFAIDebug.Log($"QuestMechanicValidator: rejected {mechanic.QuestKind} - delivery needs goods and a destination");
                 return false;
+            }
+
+            foreach (var atom in mechanic.Objectives)
+            {
+                if (!string.Equals(atom.AtomType, "BRING_ITEM", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                string itemId = atom.GetParam("item_id");
+                if (QuestDeliveryRules.ResolveDeliveryItem(itemId) == null)
+                {
+                    RFAIDebug.Log($"QuestMechanicValidator: rejected {mechanic.QuestKind} - delivery item not found: {itemId}");
+                    return false;
+                }
+
+                if (!QuestDeliveryRules.IsDeliveryItemAppropriate(questGiver, itemId))
+                {
+                    string giverId = questGiver?.StringId ?? "<null>";
+                    RFAIDebug.Log($"QuestMechanicValidator: rejected {mechanic.QuestKind} - {itemId} does not match giver economy/occupation ({giverId})");
+                    return false;
+                }
             }
 
             return true;

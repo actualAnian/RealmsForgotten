@@ -15,6 +15,9 @@ namespace RealmsForgotten.Models
 {
     internal class RFPrisonerRecruitmentCalculationModel : DefaultPrisonerRecruitmentCalculationModel
     {
+        private const string MercenaryBanditRenownPerkId = "MercenaryLord2_3";
+        private const string ClericBanditRecruitmentPerkId = "ClericBearerOfMercy1_3";
+        private const string ClericPrisonerMoralePerkId = "ClericBearerOfMercy1_4";
         private PrisonerRecruitmentCalculationModel _previousModel;
         public static bool DebugMode = false;
         public RFPrisonerRecruitmentCalculationModel(PrisonerRecruitmentCalculationModel previousModel)
@@ -26,6 +29,33 @@ namespace RealmsForgotten.Models
             int baseValue = _previousModel.CalculateRecruitableNumber(party, character);
             if (party.Owner?.Culture.StringId == "aqarun" && character.Occupation == Occupation.Bandit)
                 return party.PrisonRoster.GetTroopCount(character);
+
+            if (party == PartyBase.MainParty
+                && character.Occupation == Occupation.Bandit
+                && PlayerCareerExtension.HasCareerChoice(MercenaryBanditRenownPerkId))
+            {
+                int troopCount = party.PrisonRoster.GetTroopCount(character);
+                if (troopCount <= 0)
+                    return baseValue;
+
+                float renown = Clan.PlayerClan?.Renown ?? 0f;
+                float recruitFactor = MathF.Clamp(0.25f + (renown / 800f), 0.25f, 1f);
+                int renownRecruitable = (int)MathF.Clamp((int)MathF.Ceiling(troopCount * recruitFactor), 1, troopCount);
+                return MathF.Max(baseValue, renownRecruitable);
+            }
+
+            if (party == PartyBase.MainParty
+                && character.Occupation == Occupation.Bandit
+                && PlayerCareerExtension.HasCareerChoice(ClericBanditRecruitmentPerkId))
+            {
+                int troopCount = party.PrisonRoster.GetTroopCount(character);
+                if (troopCount <= 0)
+                    return baseValue;
+
+                int redeemable = (int)MathF.Clamp((int)MathF.Ceiling(troopCount * 0.35f), 1, troopCount);
+                return MathF.Max(baseValue, redeemable);
+            }
+
             return baseValue;
         }
         public override int GetPrisonerRecruitmentMoraleEffect(PartyBase party, CharacterObject character, int num)
@@ -45,6 +75,12 @@ namespace RealmsForgotten.Models
                 && PlayerCareerExtension.PlayerCareerInfo.CareerID == "mercenary")
             {
                 return 0;
+            }
+
+            if (party == PartyBase.MainParty
+                && PlayerCareerExtension.HasCareerChoice(ClericPrisonerMoralePerkId))
+            {
+                return (int)MathF.Ceiling(baseNumber * 0.5f);
             }
 
             return baseNumber;

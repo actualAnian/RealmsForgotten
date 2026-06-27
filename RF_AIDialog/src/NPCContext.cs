@@ -161,12 +161,17 @@ namespace RF_AIDialog
         [JsonProperty("last_request_day")]
         public int LastRequestDay { get; set; } = -100000;
 
+        [JsonProperty("last_initiative_letter_day")]
+        public int LastInitiativeLetterDay { get; set; } = -100000;
+
         // ── Limits ────────────────────────────────────────────────────────
 
         public static int MaxHistory  => 6;   // raw exchanges kept
         public static int MaxMemories => 10;  // semantic facts kept
         public static int MaxCompletedRequests => 3;
         public static int RequestCooldownDays => 10;
+        public static int InitiativeLetterCooldownDays => 20;
+        public static int GlobalInitiativeLetterSpacingDays => 4;
 
         // ── Computed ──────────────────────────────────────────────────────
 

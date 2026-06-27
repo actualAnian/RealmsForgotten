@@ -4,8 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using RF_warsystem;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.Library;
 using TaleWorlds.SaveSystem;
 
@@ -16,34 +16,56 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
         [SaveableField(0)] private bool _warStarted = false;
         [SaveableField(1)] private List<string> _goodKingdomIds = new();
         [SaveableField(2)] private List<string> _evilKingdomIds = new();
+        [SaveableField(3)] private bool _savedIsActive = false;
 
         public static bool ShouldStartAlignmentWar = false;
 
         public static bool IsActive { get; set; }
 
+        private void SyncRuntimeState()
+        {
+            IsActive = _warStarted || _savedIsActive;
+        }
 
         public void EndWar()
         {
             IsActive = false;
             _warStarted = false;
+            _savedIsActive = false;
             _goodKingdomIds.Clear();
             _evilKingdomIds.Clear();
         }
         public override void RegisterEvents()
         {
+            SyncRuntimeState();
             CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, OnDailyTick);
         }
 
         public override void SyncData(IDataStore dataStore)
         {
+            if (dataStore.IsSaving)
+                _savedIsActive = IsActive;
+
             dataStore.SyncData("_warStarted", ref _warStarted);
             dataStore.SyncData("_goodKingdomIds", ref _goodKingdomIds);
             dataStore.SyncData("_evilKingdomIds", ref _evilKingdomIds);
+            dataStore.SyncData("_savedIsActive", ref _savedIsActive);
+
+            if (dataStore.IsLoading)
+                SyncRuntimeState();
         }
 
         private void OnDailyTick()
         {
-            if (_warStarted || !ShouldStartAlignmentWar)
+            SyncRuntimeState();
+
+            if (_warStarted)
+            {
+                RFWarExternalIntentApi.ReinforceAlignmentWar(GetGoodKingdoms(), GetEvilKingdoms());
+                return;
+            }
+
+            if (!ShouldStartAlignmentWar)
                 return;
 
             StartGlobalAlignmentWar();
@@ -55,6 +77,7 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
 
             IsActive = true;
             _warStarted = true;
+            _savedIsActive = true;
 
             _goodKingdomIds.Clear();
             _evilKingdomIds.Clear();
@@ -70,6 +93,7 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
                     AddKingdomToSide(kingdom, isGood: false);
             }
 
+            RFWarExternalIntentApi.ReinforceAlignmentWar(GetGoodKingdoms(), GetEvilKingdoms());
             ShouldStartAlignmentWar = false;
             InformationManager.DisplayMessage(new InformationMessage("✅ Global alignment war has started!", Colors.Green));
         }
@@ -87,7 +111,6 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
                     Kingdom evil = Kingdom.All.FirstOrDefault(k => k.StringId == evilId);
                     if (evil != null && !FactionManager.IsAtWarAgainstFaction(kingdom, evil))
                     {
-                        FactionManager.DeclareWar(kingdom, evil);
                         InformationManager.DisplayMessage(new InformationMessage($"⚔️ WAR: {kingdom.Name} vs {evil.Name}", Colors.Red));
                     }
                 }
@@ -102,7 +125,6 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
                     Kingdom good = Kingdom.All.FirstOrDefault(k => k.StringId == goodId);
                     if (good != null && !FactionManager.IsAtWarAgainstFaction(kingdom, good))
                     {
-                        FactionManager.DeclareWar(kingdom, good);
                         InformationManager.DisplayMessage(new InformationMessage($"⚔️ WAR: {kingdom.Name} vs {good.Name}", Colors.Red));
                     }
                 }

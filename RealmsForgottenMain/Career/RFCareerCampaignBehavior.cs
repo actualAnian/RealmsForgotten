@@ -13,6 +13,10 @@ namespace RealmsForgotten.Career
 {
     public class RFCareerCampaignBehavior : CampaignBehaviorBase
     {
+        private const string ClericRetreatProtectionPerkId = "ClericConsecratedWarden1_4";
+        private const string ClericPlayerPostBattleHealingPerkId = "ClericBearerOfMercy1_1";
+        private const string ClericTroopPostBattleHealingPerkId = "ClericBearerOfMercy1_2";
+        private const string ClericMajorBattleRecoveryPerkId = "ClericSaintedIntercessor1_5";
         [SaveableField(0)] PlayerClassInfo playerClassInfo = new();
         ItemRoster raidLootedItems = new();
         public Action<Hero, bool>? onLevelUp;
@@ -42,6 +46,7 @@ namespace RealmsForgotten.Career
             CampaignEvents.MapEventEnded.AddNonSerializedListener(this, new Action<MapEvent>(OnMapEventEnded));
             CampaignEvents.MapEventEnded.AddNonSerializedListener(this, new Action<MapEvent>(OnMapEventEnded_AdjustRetreatCasualties));
             CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnMapEventEnded_WizardPostBattleHealing);
+            CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnMapEventEnded_ClericPostBattleEffects);
 
         }
         private void OnMapEventEnded(MapEvent mapEvent)
@@ -175,6 +180,9 @@ namespace RealmsForgotten.Career
                     if (ch.Description.ToString().Contains("Reduce troop losses when escaping"))
                         reduceLossesFactor = MathF.Clamp(ch.Passive.EffectMagnitude, 0f, 0.9f);
                 }
+                if (PlayerCareerExtension.HasCareerChoice(ClericRetreatProtectionPerkId))
+                    reduceLossesFactor = MathF.Max(reduceLossesFactor, 0.20f);
+
                 if (reduceLossesFactor <= 0f) return;
 
                 var party = MobileParty.MainParty;
@@ -299,6 +307,66 @@ namespace RealmsForgotten.Career
                 InformationManager.DisplayMessage(new InformationMessage("[Wizard Healing] " + ex.Message));
             }
         }
+
+        private void OnMapEventEnded_ClericPostBattleEffects(MapEvent mapEvent)
+        {
+            try
+            {
+                if (mapEvent == null || !mapEvent.IsPlayerMapEvent || !PlayerCareerExtension.HasAnyCareer())
+                    return;
+
+                float playerPct = 0f;
+                float troopsPct = 0f;
+
+                if (PlayerCareerExtension.HasCareerChoice(ClericPlayerPostBattleHealingPerkId))
+                    playerPct += 0.15f;
+                if (PlayerCareerExtension.HasCareerChoice(ClericTroopPostBattleHealingPerkId))
+                    troopsPct += 0.15f;
+                if (PlayerCareerExtension.HasCareerChoice(ClericMajorBattleRecoveryPerkId))
+                    troopsPct += 0.10f;
+
+                if (playerPct > 0f)
+                {
+                    Hero hero = Hero.MainHero;
+                    int gain = (int)TaleWorlds.Library.MathF.Round(hero.HitPoints * playerPct);
+                    if (gain > 0)
+                        hero.Heal(gain, true);
+                }
+
+                if (troopsPct > 0f)
+                {
+                    MobileParty party = MobileParty.MainParty;
+                    if (party != null)
+                    {
+                        TroopRoster roster = party.MemberRoster;
+                        var list = roster.GetTroopRoster();
+                        int totalWounded = 0;
+                        for (int i = 0; i < list.Count; i++)
+                            totalWounded += list[i].WoundedNumber;
+
+                        if (totalWounded > 0)
+                        {
+                            int heal = (int)TaleWorlds.Library.MathF.Round(totalWounded * troopsPct);
+                            for (int i = 0; i < list.Count && heal > 0; i++)
+                            {
+                                int wounded = list[i].WoundedNumber;
+                                if (wounded <= 0)
+                                    continue;
+
+                                int toHeal = TaleWorlds.Library.MathF.Min(wounded, heal);
+                                try { roster.SetElementWoundedNumber(i, TaleWorlds.Library.MathF.Max(0, wounded - toHeal)); } catch { }
+                                heal -= toHeal;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                InformationManager.DisplayMessage(new InformationMessage("[Cleric PostBattle] " + ex.Message));
+            }
+        }
+
         public override void SyncData(IDataStore dataStore)
         {
             dataStore.SyncData("playerClassInfo", ref playerClassInfo);

@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
@@ -55,26 +56,25 @@ namespace RealmsForgotten.AiMade
 
             Hero newMonk = HeroCreator.CreateSpecialHero(
                 monkTemplate,
-                Settlement.CurrentSettlement, // where he spawns
-                null, // no father
-                null, // no mother
-                MBRandom.RandomInt(25, 40) // age between 25 and 40
+                Settlement.CurrentSettlement,
+                null,
+                null,
+                MBRandom.RandomInt(25, 40)
             );
 
-            // Correctly setting name: needs BOTH first and full name
             TextObject firstName = new TextObject("Peregrine");
             TextObject fullName = new TextObject("Pilgrim Monk");
             newMonk.SetName(firstName, fullName);
 
-            newMonk.ChangeState(Hero.CharacterStates.Active); // make him active and usable
+            newMonk.ChangeState(Hero.CharacterStates.Active);
             newMonk.SetHasMet();
             newMonk.ChangeHeroGold(100);
-
-            // Optional: set him neutral (PlayerClan or create neutral clan if you want)
             newMonk.Clan = Clan.PlayerClan;
 
-            // Clean up party AI if needed
-            newMonk.PartyBelongedTo?.SetMoveGoToSettlement(Settlement.CurrentSettlement, TaleWorlds.CampaignSystem.Party.MobileParty.NavigationType.Default, false);
+            newMonk.PartyBelongedTo?.SetMoveGoToSettlement(
+                Settlement.CurrentSettlement,
+                TaleWorlds.CampaignSystem.Party.MobileParty.NavigationType.Default,
+                false);
 
             return newMonk;
         }
@@ -102,43 +102,64 @@ namespace RealmsForgotten.AiMade
 
         private void OnAcceptEscort()
         {
-            var towns = Settlement.All.Where(s => s.IsTown).ToList();
-            if (towns.Count == 0)
-            {
-                InformationManager.DisplayMessage(new InformationMessage("❌ No towns found.", Colors.Red));
-                return;
-            }
-
-            var randomTown = towns[MBRandom.RandomInt(towns.Count)];
+            Settlement? randomTown = ChooseEscortDestination();
             if (randomTown == null)
             {
-                InformationManager.DisplayMessage(new InformationMessage("❌ No town selected.", Colors.Red));
+                InformationManager.DisplayMessage(new InformationMessage("❌ No suitable nearby town found.", Colors.Red));
                 return;
             }
 
             Hero monkHero = CreateMonkHero();
             if (monkHero == null)
             {
-                return; // Monk creation failed
+                return;
             }
 
-            // Optional: give unique string ID to avoid name collisions in saves
             monkHero.StringId = "peregrine_monk_" + Guid.NewGuid().ToString();
 
-            // Ensure hero is tracked by clan
             if (!Clan.PlayerClan.Heroes.Contains(monkHero))
+            {
                 Clan.PlayerClan.Heroes.Add(monkHero);
+            }
 
-            // Quest creation and startup
             string questId = "help_peregrine_escort_" + MBRandom.RandomInt(100000, 999999);
             var quest = new HelpPeregrineQuest(questId, monkHero, CampaignTime.Days(7), randomTown);
-            quest.StartQuest(); // this internally registers the quest
+            quest.StartQuest();
 
             InformationManager.DisplayMessage(
                 new InformationMessage($"✅ The peregrine monk has joined you. Escort him to {randomTown.Name}.", Colors.Yellow));
         }
 
+        private static Settlement? ChooseEscortDestination()
+        {
+            Settlement? currentSettlement = Settlement.CurrentSettlement;
+            Vec2 anchorPosition = currentSettlement?.GetPosition2D ?? MobileParty.MainParty?.GetPosition2D ?? Vec2.Zero;
 
+            var nearbyTowns = Settlement.All
+                .Where(settlement =>
+                    settlement != null
+                    && settlement.IsTown
+                    && settlement != currentSettlement
+                    && !settlement.IsUnderSiege)
+                .OrderBy(settlement => settlement.GetPosition2D.DistanceSquared(anchorPosition))
+                .Take(8)
+                .ToList();
+
+            if (nearbyTowns.Count > 0)
+            {
+                int nearbyCount = Math.Min(4, nearbyTowns.Count);
+                return nearbyTowns[MBRandom.RandomInt(nearbyCount)];
+            }
+
+            return Settlement.All
+                .Where(settlement =>
+                    settlement != null
+                    && settlement.IsTown
+                    && settlement != currentSettlement
+                    && !settlement.IsUnderSiege)
+                .OrderBy(settlement => settlement.GetPosition2D.DistanceSquared(anchorPosition))
+                .FirstOrDefault();
+        }
 
         private void OnDeclineEscort()
         {

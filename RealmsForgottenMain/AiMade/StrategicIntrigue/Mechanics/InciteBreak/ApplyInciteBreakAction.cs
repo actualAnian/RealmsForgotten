@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using RealmsForgotten.AiMade.StrategicIntrigue.Core;
 using RealmsForgotten.AiMade.StrategicIntrigue.SaveSystem;
+using RF_warsystem;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.Library;
@@ -71,7 +72,7 @@ public static class ApplyInciteBreakAction
             try
             {
                 if (!originKingdom.IsAtWarWith(sponsorKingdom))
-                    DeclareWarAction.ApplyByKingdomDecision(originKingdom, sponsorKingdom);
+                    RFWarExternalIntentApi.ReinforceStrategicIntrigueWar(originKingdom, sponsorKingdom, null);
             }
             catch { }
 
@@ -251,7 +252,7 @@ public static class ApplyInciteBreakAction
 
         if (!asylumKingdom.IsAtWarWith(originKingdom))
         {
-            DeclareWarAction.ApplyByKingdomDecision(asylumKingdom, originKingdom);
+            RFWarExternalIntentApi.ReinforceStrategicIntrigueWar(asylumKingdom, originKingdom, null);
         }
 
         if (kingdomStates.TryGetValue(asylumKingdom, out KingdomIntrigueState asylumState))

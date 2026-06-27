@@ -1,0 +1,10 @@
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Enlistment\obj\x64\Debug\net472\RF_Enlistment.csproj.AssemblyReference.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Enlistment\obj\x64\Debug\net472\RF_Enlistment.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Enlistment\obj\x64\Debug\net472\RF_Enlistment.AssemblyInfoInputs.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Enlistment\obj\x64\Debug\net472\RF_Enlistment.AssemblyInfo.cs
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Enlistment\obj\x64\Debug\net472\RF_Enlistment.csproj.CoreCompileInputs.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Enlistment\obj\x64\Debug\net472\RF_Enlistment.sourcelink.json
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Enlistment\bin\x64\Debug\net472\RF_Enlistment.dll
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Enlistment\bin\x64\Debug\net472\RF_Enlistment.pdb
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Enlistment\obj\x64\Debug\net472\RF_Enlistment.dll
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Enlistment\obj\x64\Debug\net472\RF_Enlistment.pdb

@@ -57,8 +57,9 @@ ATOM TYPES (use in quest_mechanic.objectives[]):
 
   TALK_TO_PARTY  — player must make contact with N distinct mobile parties or armies
     params: faction_id (use ids from the list below), [count] (string int, default ""1"")
-    optional params: party_id, hero_id, settlement_id, radius
+    optional params: party_id, hero_id, character_id, settlement_id, radius
     settlement_id + radius means only count contacts currently near that settlement/frontier reference.
+    Use hero_id for live heroes/notables; use character_id for CharacterObject/template targets.
     example: {""atom"":""TALK_TO_PARTY"",""params"":{""faction_id"":""vlandia"",""settlement_id"":""town_EN1"",""radius"":""80"",""count"":""1""},""label"":""Question a Vlandian party or army moving near Aispur""}
 
   BRING_ITEM  — player must carry the item when next speaking to you

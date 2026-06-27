@@ -1,45 +1,57 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using NavalDLC.GameComponents;
+using RealmsForgotten.AiMade;
 using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Library;
 
-// Crash prevention for NavalDLCBanditDensityModel.IsPositionInsideNavalSafeZone
-// GetClosestEntranceToFace returns null Item1 on custom map faces with no reachable naval settlement,
-// causing NullReferenceException both in GetDistance(item, ...) and item.IsVillage (1.4beta).
-// Called from NavalDLCMobilePartyAIModel.ShouldConsiderAttacking during every AI tick.
-[HarmonyPatch(typeof(NavalDLCBanditDensityModel), nameof(NavalDLCBanditDensityModel.IsPositionInsideNavalSafeZone))]
-public class NavalDLCBanditDensityModel_IsPositionInsideNavalSafeZone_Patch
+namespace RealmsForgotten.WarSailsPatches
 {
-    public static bool Prefix(CampaignVec2 position, ref bool __result)
+    public class NavalDLCBanditDensityModel_IsPositionInsideNavalSafeZone_Patch
     {
-        try
+        public static bool TryApply(Harmony harmony)
         {
-            __result = false;
+            var target = AccessTools.Method(
+                typeof(NavalDLCBanditDensityModel),
+                nameof(NavalDLCBanditDensityModel.IsPositionInsideNavalSafeZone),
+                new[] { typeof(CampaignVec2) });
 
-            if (!position.IsValid() || position.IsOnLand)
-                return false;
-
-            Settlement item = Campaign.Current.Models.MapDistanceModel
-                .GetClosestEntranceToFace(position.Face, MobileParty.NavigationType.Naval)
-                .Item1;
-
-            if (item == null)
+            if (target == null)
             {
-                InformationManager.DisplayMessage(new($"[NavalDLC SafeZone] GetClosestEntranceToFace returned NULL for position ({position.X}, {position.Y}) - no reachable naval settlement"));
-                return false; // skip original, __result = false
+                RFLogger.Log("[Lifecycle] Optional naval patch skipped | IsPositionInsideNavalSafeZone target not found.");
+                return false;
             }
 
-            // item is valid — let original method run safely
+            harmony.Patch(target, prefix: new HarmonyMethod(typeof(NavalDLCBanditDensityModel_IsPositionInsideNavalSafeZone_Patch), nameof(Prefix)));
             return true;
         }
-        catch (Exception ex)
+
+        public static bool Prefix(CampaignVec2 position, ref bool __result)
         {
-            InformationManager.DisplayMessage(new($"[NavalDLC SafeZone] Unexpected error in prefix: {ex.Message}"));
-            __result = false;
-            return false;
+            try
+            {
+                __result = false;
+
+                if (!position.IsValid() || position.IsOnLand || Campaign.Current?.Models?.MapDistanceModel == null)
+                    return false;
+
+                Settlement item = Campaign.Current.Models.MapDistanceModel
+                    .GetClosestEntranceToFace(position.Face, MobileParty.NavigationType.Naval)
+                    .Item1;
+
+                if (item == null)
+                    return false;
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                RFLogger.Log($"[Lifecycle] Optional naval patch failed inside IsPositionInsideNavalSafeZone prefix. Falling back to safe false. error={ex}");
+                __result = false;
+                return false;
+            }
         }
     }
 }

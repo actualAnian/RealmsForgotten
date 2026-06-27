@@ -155,7 +155,7 @@ namespace RealmsForgotten.Career.CareerTypes
             }, OperationType.Multiply));
             _mercenary_lord_2_passive2.Initialize(CareerID, "{=rf_career_troop_melee_attack_15}Increases the damage of all melee troops by 15%", "MercenaryLord2", new CareerChoiceObject.PassiveEffect(PassiveEffectType.TroopDamage, new DamageProportionTuple(DamageType.PhysicalMelee, 15),
                 (attacker, victim) => attacker.BelongsToMainParty() && !attacker.IsMainAgent));
-            _mercenary_lord_2_passive3.Initialize(CareerID, "{=rf_career_caravan_dest_more_items}After destroying a caravan, get additional 20% of items valued less than 60", "MercenaryLord2", new CareerChoiceObject.PassiveEffect(0.2f, PassiveEffectType.Special));
+            _mercenary_lord_2_passive3.Initialize(CareerID, "{=rf_career_merc_bandit_renown}Your renown draws desperate outlaws to your banner. Nearby bandits may desert and join your party as your fame grows.", "MercenaryLord2", new CareerChoiceObject.PassiveEffect(0.05f, PassiveEffectType.Special));
             _mercenary_lord_2_passive4.Initialize(CareerID, "{=rf_career_40_hitpoints}Increases Hitpoints by 40", "MercenaryLord2", new CareerChoiceObject.PassiveEffect(40, PassiveEffectType.Health));
             _mercenary_lord_2_passive5.Initialize(CareerID, "{=rf_career_player_ranged_attack_15}Increase damage of all ranged weapons by 15%", "MercenaryLord2", new CareerChoiceObject.PassiveEffect(PassiveEffectType.Damage, new DamageProportionTuple(DamageType.PhysicalRanged, 15)));
         }

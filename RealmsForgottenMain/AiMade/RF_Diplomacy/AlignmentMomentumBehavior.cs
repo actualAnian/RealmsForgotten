@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RF_warsystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -18,6 +19,8 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
         [SaveableField(0)] private int _goodMomentum = 0;
         [SaveableField(1)] private int _evilMomentum = 0;
         [SaveableField(2)] private bool _warEnded = false;
+        [SaveableField(3)] private List<string> _promotedGoodCultures = new();
+        [SaveableField(4)] private List<string> _promotedEvilCultures = new();
         private readonly Dictionary<string, string> _neutralToSideMap = new()
         {
             { "wulf", "Evil" },
@@ -30,6 +33,7 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
 
         public override void RegisterEvents()
         {
+            ReapplyPromotedCultures();
             CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnBattleEnded);
             CampaignEvents.OnSettlementOwnerChangedEvent.AddNonSerializedListener(this, OnSettlementCaptured);
             CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, CheckWarIntegrity);
@@ -40,6 +44,26 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
             dataStore.SyncData("_goodMomentum", ref _goodMomentum);
             dataStore.SyncData("_evilMomentum", ref _evilMomentum);
             dataStore.SyncData("_warEnded", ref _warEnded);
+            dataStore.SyncData("_promotedGoodCultures", ref _promotedGoodCultures);
+            dataStore.SyncData("_promotedEvilCultures", ref _promotedEvilCultures);
+
+            if (dataStore.IsLoading)
+                ReapplyPromotedCultures();
+        }
+
+        private void ReapplyPromotedCultures()
+        {
+            foreach (string cultureId in _promotedGoodCultures)
+            {
+                CultureObject culture = Campaign.Current?.ObjectManager?.GetObject<CultureObject>(cultureId);
+                culture?.SetGoodCulture(true);
+            }
+
+            foreach (string cultureId in _promotedEvilCultures)
+            {
+                CultureObject culture = Campaign.Current?.ObjectManager?.GetObject<CultureObject>(cultureId);
+                culture?.SetEvilCulture(true);
+            }
         }
 
         private void CheckWarIntegrity()
@@ -52,7 +76,8 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
                 {
                     if (!FactionManager.IsAtWarAgainstFaction(good, evil))
                     {
-                        FactionManager.DeclareWar(good, evil);
+                        RFWarExternalIntentApi.ReinforceAlignmentWarPair(good, evil);
+                        RFWarExternalIntentApi.ReinforceAlignmentWarPair(evil, good);
                         InformationManager.DisplayMessage(new InformationMessage($"⛔ Peace invalidated: {good.Name} vs {evil.Name} war reinstated."));
                     }
                 }
@@ -129,6 +154,9 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
                     if (neutral != null && !neutral.Culture.IsGoodCulture())
                     {
                         neutral.Culture.SetGoodCulture(true);
+                        if (!_promotedGoodCultures.Contains(neutral.Culture.StringId))
+                            _promotedGoodCultures.Add(neutral.Culture.StringId);
+                        _promotedEvilCultures.Remove(neutral.Culture.StringId);
                         InformationManager.DisplayMessage(new InformationMessage($"✨ {neutral.Name} joins the good-aligned war effort.", Colors.Blue));
 
                         // Ensure the faction is added to the alignment war
@@ -144,6 +172,9 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
                     if (neutral != null && !neutral.Culture.IsEvilCulture())
                     {
                         neutral.Culture.SetEvilCulture(true);
+                        if (!_promotedEvilCultures.Contains(neutral.Culture.StringId))
+                            _promotedEvilCultures.Add(neutral.Culture.StringId);
+                        _promotedGoodCultures.Remove(neutral.Culture.StringId);
                         InformationManager.DisplayMessage(new InformationMessage($"☠️ {neutral.Name} has joined the evil-aligned war effort.", Colors.Red));
 
                         // Ensure the faction is added to the alignment war
@@ -158,23 +189,21 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
         {
             if (_warEnded) return;
             _warEnded = true;
-            AlignmentWarBehavior.IsActive = false;
 
             var warBehavior = Campaign.Current.GetCampaignBehavior<AlignmentWarBehavior>();
-            warBehavior.EndWar();
+            List<Kingdom> goodKingdoms = warBehavior?.GetGoodKingdoms() ?? new List<Kingdom>();
+            List<Kingdom> evilKingdoms = warBehavior?.GetEvilKingdoms() ?? new List<Kingdom>();
 
-            var declarePeace = typeof(FactionManager).Assembly
-                .GetType("TaleWorlds.CampaignSystem.Actions.DeclarePeaceAction")
-                ?.GetMethod("Apply", new[] { typeof(IFaction), typeof(IFaction) });
-
-            foreach (var good in warBehavior.GetGoodKingdoms())
+            foreach (var good in goodKingdoms)
             {
-                foreach (var evil in warBehavior.GetEvilKingdoms())
+                foreach (var evil in evilKingdoms)
                 {
                     if (FactionManager.IsAtWarAgainstFaction(good, evil))
-                        declarePeace?.Invoke(null, new object[] { good, evil });
+                        RFWarExternalIntentApi.RequestCoalitionPeace(good, evil);
                 }
             }
+
+            warBehavior?.EndWar();
 
             InformationManager.DisplayMessage(new InformationMessage(message, Color.FromUint(0xFFFFD700)));
         }

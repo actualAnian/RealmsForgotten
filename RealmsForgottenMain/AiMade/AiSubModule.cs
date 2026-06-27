@@ -21,7 +21,9 @@ using RealmsForgotten.AiMade.Village_Inn_Quests;
 using RealmsForgotten.AiMade.Village_Inn_Quests.RealmsForgotten.AiMade.Village_Inn_Quests;
 using RealmsForgotten.Chamberlain;
 using RealmsForgotten.AiMade.Infect;
+using RF_warsystem;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
+using TaleWorlds.CampaignSystem.ComponentInterfaces;
 
 
 namespace RealmsForgotten.AiMade
@@ -37,6 +39,10 @@ namespace RealmsForgotten.AiMade
             RFLogger.Log("[RF] SubModule loaded");
             try
             {
+                _extender = new UIExtender("RealmsForgotten");
+                _extender.Register(asm);
+                _extender.Enable();
+
                 var harmony = new Harmony("com.realmsforgotten.aimade");
                 harmony.PatchAll();
                 int patched = AgentVisualsDataMonsterFix.TryPatch(harmony);
@@ -51,6 +57,14 @@ namespace RealmsForgotten.AiMade
 
         }
 
+        protected override void OnSubModuleUnloaded()
+        {
+            _extender?.Disable();
+            _extender?.Deregister();
+            _extender = null;
+            base.OnSubModuleUnloaded();
+        }
+
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
             base.OnGameStart(game, gameStarterObject);
@@ -60,7 +74,7 @@ namespace RealmsForgotten.AiMade
                 var campaignStarter = (CampaignGameStarter)gameStarterObject;
                 AddCampaignBehaviors(campaignStarter);
                 AddCustomModels(campaignStarter);
-                //ApplyDelayedJoinEncounterPatch();
+                ApplyDelayedJoinEncounterPatch();
 
             }
             RFLogger.Log("[Probe] Siege transition probe disabled for cold-load isolation");
@@ -71,6 +85,8 @@ namespace RealmsForgotten.AiMade
             // Initialize quest behaviors
             var customItemCategories = new CustomItemCategories();
             customItemCategories.Initialize();
+
+            RFWarSystemRegistrar.RegisterBehaviors(campaignGameStarter);
 
             // Add other behaviors
             campaignGameStarter.AddBehavior(new StrategicIntrigueCampaignBehavior());
@@ -110,6 +126,9 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new SturgiaCultureChangerBehavior());
             campaignGameStarter.AddBehavior(new AlignmentWarBehavior());
             campaignGameStarter.AddBehavior(new AlignmentMomentumBehavior());
+            campaignGameStarter.AddBehavior(new AseraiCollectiveDefenseBehavior());
+            // Heavy campaign AI tracing is disabled during normal play because it generates large logs and noticeable campaign-map lag.
+            // campaignGameStarter.AddBehavior(new RFCampaignAITraceBehavior());
             //campaignGameStarter.AddBehavior(new TickProfilerBehavior());
             //campaignGameStarter.AddBehavior(new RFSnowBattleSceneBehavior());
             //campaignGameStarter.AddBehavior(new EncounterSystemBehavior());
@@ -138,9 +157,12 @@ namespace RealmsForgotten.AiMade
             // Register the custom inventory capacity model
             campaignGameStarter.AddModel(new UrkhaiPartySizeModel());
             campaignGameStarter.AddModel(new AlignmentDiplomacyModel(Campaign.Current.Models.DiplomacyModel));
+            campaignGameStarter.AddModel(new ClimateAwareVillageProductionModel(campaignGameStarter.GetExistingModel<VillageProductionCalculatorModel>()));
+            campaignGameStarter.AddModel(new ClimateAwareSettlementFoodModel(campaignGameStarter.GetExistingModel<SettlementFoodModel>()));
             campaignGameStarter.AddModel(new CustomTradeItemPriceFactorModel());
             //campaignGameStarter.AddModel(new SpearAwareBattleSpawnModel());
             campaignGameStarter.AddModel(new RFDiplomacyModel());
+            RFWarSystemRegistrar.Register(campaignGameStarter);
         }
         public override void OnMissionBehaviorInitialize(Mission mission)
         {

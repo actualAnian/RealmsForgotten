@@ -1,0 +1,229 @@
+REALMS FORGOTTEN AI SETUP GUIDE
+
+This guide explains how to connect your own AI and voice provider keys.
+
+FILES INCLUDED
+
+You should have these files in the RealmsForgotten module folder:
+
+- ai_config.local.json
+- deepseek.key
+- openai.key
+- openai_tts.key
+- fish_tts.key
+- gemini.key
+
+Recommended module folder:
+
+Mount & Blade II Bannerlord\Modules\RealmsForgotten
+
+IMPORTANT
+
+- Do NOT paste your secret API keys into public screenshots or shared mod packages.
+- The safest method is to place each key inside its own .key file.
+- The config already points to these .key files, so most players do NOT need to paste keys directly into the JSON.
+
+--------------------------------------------------
+1. BASIC TEXT AI CHAT SETUP
+--------------------------------------------------
+
+The default profile is:
+
+- deepseek
+
+That means the game expects your text AI key in:
+
+- deepseek.key
+
+How to set it up:
+
+1. Open the provider website you want to use.
+2. Create an account if needed.
+3. Generate an API key from your account dashboard.
+4. Copy the key.
+5. Open the matching .key file with Notepad.
+6. Paste only the key into that file.
+7. Save the file.
+
+For example:
+
+- If you use DeepSeek, paste your key into deepseek.key
+- If you use OpenAI chat, paste your key into openai.key and switch profile to openai
+- If you use Gemini Flash, paste your key into gemini.key and switch profile to gemini_flash
+
+--------------------------------------------------
+2. HOW TO CHANGE THE ACTIVE CHAT PROFILE
+--------------------------------------------------
+
+Open:
+
+- ai_config.local.json
+
+Find this line:
+
+- "active_profile": "deepseek"
+
+Possible values in this template:
+
+- deepseek
+- openai
+- gemini_flash
+- local_ollama
+
+Examples:
+
+- Use DeepSeek text AI:
+  "active_profile": "deepseek"
+
+- Use OpenAI text AI:
+  "active_profile": "openai"
+
+- Use Gemini Flash text AI:
+  "active_profile": "gemini_flash"
+
+- Use local Ollama:
+  "active_profile": "local_ollama"
+
+Save the file after changing it.
+
+--------------------------------------------------
+3. OPENAI VOICE INPUT / SPEECH-TO-TEXT (STT)
+--------------------------------------------------
+
+If you want to speak into your microphone and let the system transcribe your words:
+
+1. Generate an OpenAI API key.
+2. Paste it into:
+   - openai_tts.key
+3. Open ai_config.local.json
+4. Set:
+   - "stt_enabled": true
+
+The template already points STT to:
+
+- openai_tts.key
+
+That means you usually do NOT need to change the STT key path.
+
+--------------------------------------------------
+4. OPENAI NPC VOICE (TTS)
+--------------------------------------------------
+
+If you want NPC AI replies to be spoken with OpenAI voice:
+
+1. Generate an OpenAI API key.
+2. Paste it into:
+   - openai_tts.key
+3. Open ai_config.local.json
+4. Set:
+   - "tts_enabled": true
+   - "tts_provider": "openai"
+
+Optional:
+- choose a different OpenAI voice in:
+  "tts_voice"
+
+--------------------------------------------------
+5. FISH AUDIO NPC VOICE
+--------------------------------------------------
+
+If you want NPC AI replies to use Fish Audio voice:
+
+1. Create a Fish Audio account.
+2. Generate a Fish Audio API key.
+3. Paste it into:
+   - fish_tts.key
+4. Choose a Fish voice on the Fish Audio website.
+5. Copy that voice reference ID.
+6. Open ai_config.local.json
+7. Set:
+   - "tts_enabled": true
+   - "tts_provider": "fish"
+8. Find:
+   - "fish_tts_reference_id": ""
+9. Paste your Fish voice reference ID between the quotes.
+
+Example:
+
+"fish_tts_reference_id": "your_voice_reference_id_here"
+
+If you do not set a valid Fish voice reference ID, Fish voice may not work correctly.
+
+--------------------------------------------------
+6. BATTLE SHOUTS
+--------------------------------------------------
+
+If you want AI battle shout interpretation:
+
+1. Open ai_config.local.json
+2. Set:
+   - "battle_shouts_enabled": true
+
+Current default hotkeys:
+
+- J = open battle shout text/popup mode
+- M = battle voice hotkey / voice input hotkey
+
+--------------------------------------------------
+7. LETTERS / MESSENGERS
+--------------------------------------------------
+
+The medieval letters system is enabled by default in this template:
+
+- "letters_enabled": true
+
+You usually do not need to change anything here.
+
+--------------------------------------------------
+8. SIMPLE SAFE EXAMPLES
+--------------------------------------------------
+
+DeepSeek text only:
+
+- active_profile = deepseek
+- paste DeepSeek key into deepseek.key
+- leave voice disabled
+
+DeepSeek text + OpenAI microphone:
+
+- active_profile = deepseek
+- deepseek.key = your DeepSeek key
+- openai_tts.key = your OpenAI key
+- "stt_enabled": true
+
+DeepSeek text + Fish NPC voice + OpenAI microphone:
+
+- active_profile = deepseek
+- deepseek.key = your DeepSeek key
+- fish_tts.key = your Fish Audio key
+- openai_tts.key = your OpenAI key
+- "tts_enabled": true
+- "tts_provider": "fish"
+- set fish_tts_reference_id
+- "stt_enabled": true
+
+--------------------------------------------------
+9. IF SOMETHING DOES NOT WORK
+--------------------------------------------------
+
+Check these first:
+
+- Did you paste the key into the correct .key file?
+- Did you save the file?
+- Did you choose the correct active_profile?
+- Did you enable tts_enabled or stt_enabled if needed?
+- Did you restart the game after changing the config?
+- If using Fish Audio, did you set a valid fish_tts_reference_id?
+
+--------------------------------------------------
+10. FINAL RECOMMENDATION
+--------------------------------------------------
+
+For most players, the easiest setup is:
+
+- DeepSeek for text AI
+- OpenAI for microphone transcription
+- Fish Audio for NPC voice
+
+That gives a strong balance between cost, flexibility, and voice quality.
+

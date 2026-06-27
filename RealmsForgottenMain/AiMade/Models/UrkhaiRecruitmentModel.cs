@@ -12,11 +12,11 @@ using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
 namespace RealmsForgotten.AiMade.Models
 {
-    [HarmonyPatch(typeof(RecruitmentCampaignBehavior))]
+    [HarmonyPatch]
     public class UrkhaiRecruitmentPatch
     {
         // Reduce Recruitment Costs for Urkhai
-        [HarmonyPatch("ApplyInternal")]
+        [HarmonyPatch(typeof(RecruitmentCampaignBehavior), "ApplyInternal")]
         [HarmonyPrefix]
         private static bool AdjustRecruitmentCost(
             MobileParty side1Party,
@@ -46,7 +46,7 @@ namespace RealmsForgotten.AiMade.Models
         }
 
         // Ensure Urkhai Lords Recruit More Troops
-        [HarmonyPatch("UpdateVolunteersOfNotablesInSettlement")]
+        [HarmonyPatch(typeof(RecruitmentCampaignBehavior), "UpdateVolunteersOfNotablesInSettlement")]
         [HarmonyPostfix]
         private static void IncreaseRecruitment(Settlement settlement)
         {

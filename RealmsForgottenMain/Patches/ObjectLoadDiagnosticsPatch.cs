@@ -10,6 +10,7 @@ using TaleWorlds.ObjectSystem;
 
 namespace RealmsForgotten.Patches
 {
+    [HarmonyPatch]
     internal static class MBEquipmentRosterAddDiagnosticsPatch
     {
         private static MethodBase TargetMethod()
@@ -123,17 +124,32 @@ namespace RealmsForgotten.Patches
         }
     }
 
+    [HarmonyPatch]
     internal static class MBObjectManagerLoadXmlDiagnosticsPatch
     {
         private static MethodBase? TargetMethod()
         {
-            Type? t = AccessTools.TypeByName("TaleWorlds.Core.MBObjectManagerExtensions");
-            if (t == null)
+            try
             {
+                return AccessTools.Method(
+                    typeof(MBObjectManager),
+                    "LoadXML",
+                    new[] { typeof(string), typeof(bool), typeof(string), typeof(bool) });
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    string message = $"[RF LoadXML] Failed to resolve target method: {ex.GetType().FullName}: {ex.Message}";
+                    RFLogger.Log(message);
+                    ObjectLoadDiagnosticsFileSink.SafeWriteDiagnostic(message);
+                }
+                catch
+                {
+                }
+
                 return null;
             }
-
-            return AccessTools.Method(t, "LoadXML", new[] { typeof(MBObjectManager), typeof(string), typeof(bool), typeof(string), typeof(bool) });
         }
 
         private static Exception? Finalizer(Exception? __exception, string id, bool isDevelopment, string gameType, bool skipXmlFilterForEditor)

@@ -101,6 +101,7 @@ namespace RealmsForgotten.Quest
             {
                 if (AvoidDisbanding && army.Parties.Any(x => x == MobileParty.MainParty))
                 {
+                    RealmsForgotten.AiMade.RFLogger.Log($"[QuestPatches] Army disperse blocked | leader={army.LeaderParty?.StringId ?? "none"} | reason={reason} | avoidDisbanding={AvoidDisbanding}");
                     return false;
                 }
 

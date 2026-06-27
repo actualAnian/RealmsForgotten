@@ -10,6 +10,7 @@ using RealmsForgotten.AiMade.StrategicIntrigue.Mechanics.KingdomObjectives;
 using RealmsForgotten.AiMade.StrategicIntrigue.Mechanics.RumorCampaigns;
 using RealmsForgotten.AiMade.StrategicIntrigue.Mechanics.SecretPacts;
 using RealmsForgotten.AiMade.StrategicIntrigue.SaveSystem;
+using RF_warsystem;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
@@ -3380,7 +3381,10 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
             && allyKingdom != alliance.TargetKingdom
             && !allyKingdom.IsAtWarWith(alliance.TargetKingdom))
         {
-            DeclareWarAction.ApplyByKingdomDecision(allyKingdom, alliance.TargetKingdom);
+            RFWarExternalIntentApi.ReinforceStrategicIntrigueWar(
+                allyKingdom,
+                alliance.TargetKingdom,
+                alliance.PromisedSettlement);
         }
 
         if (alliance.InstigatorClan == Clan.PlayerClan)

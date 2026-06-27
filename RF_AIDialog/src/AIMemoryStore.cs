@@ -66,10 +66,18 @@ namespace RF_AIDialog
             if (string.IsNullOrWhiteSpace(heroId) || string.IsNullOrWhiteSpace(note))
                 return;
 
+            Hero? hero = null;
+            try { hero = Hero.FindFirst(h => h != null && h.StringId.Equals(heroId.Trim(), StringComparison.OrdinalIgnoreCase)); }
+            catch { }
+
             Append(NpcMemoryPath, new AIMemoryRecord
             {
                 Kind = "npc_memory",
                 SubjectId = heroId.Trim(),
+                HeroId = heroId.Trim(),
+                SettlementId = GetSettlementId(hero),
+                ClanId = hero?.Clan?.StringId ?? "",
+                FactionId = hero?.MapFaction?.StringId ?? "",
                 Day = day,
                 Text = Clean(note),
                 CampaignKey = GetCampaignKey(),
@@ -179,12 +187,42 @@ namespace RF_AIDialog
             if (string.IsNullOrWhiteSpace(heroId))
                 return new List<AIMemoryRecord>();
 
+            Hero? hero = null;
+            try { hero = Hero.FindFirst(h => h != null && h.StringId.Equals(heroId.Trim(), StringComparison.OrdinalIgnoreCase)); }
+            catch { }
+
+            if (hero != null)
+                return GetNpcMemories(hero, maxCount, maxDays);
+
             return ReadRecent(
                 NpcMemoryPath,
                 maxCount,
                 maxDays,
                 r => r.Kind == "npc_memory" &&
-                     r.SubjectId.Equals(heroId, StringComparison.OrdinalIgnoreCase));
+                      r.SubjectId.Equals(heroId, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public static List<AIMemoryRecord> GetNpcMemories(Hero hero, int maxCount = 8, int maxDays = 0)
+        {
+            if (hero == null || string.IsNullOrWhiteSpace(hero.StringId))
+                return new List<AIMemoryRecord>();
+
+            string heroId = hero.StringId;
+            string settlementId = GetSettlementId(hero);
+            string clanId = hero.Clan?.StringId ?? "";
+            string factionId = hero.MapFaction?.StringId ?? "";
+
+            return ReadRecent(
+                NpcMemoryPath,
+                maxCount,
+                maxDays,
+                r => r.Kind == "npc_memory" &&
+                     r.SubjectId.Equals(heroId, StringComparison.OrdinalIgnoreCase) &&
+                     MetadataMatches(r.HeroId, heroId) &&
+                     MetadataMatches(r.SettlementId, settlementId) &&
+                     MetadataMatches(r.ClanId, clanId) &&
+                     MetadataMatches(r.FactionId, factionId) &&
+                     IsEconomicallyCompatible(r, hero));
         }
 
         public static List<AIMemoryRecord> GetSettlementMemories(string settlementId, int maxCount = 8, int maxDays = 0)
@@ -563,6 +601,78 @@ namespace RF_AIDialog
 
             return "";
         }
+
+        private static bool MetadataMatches(string recorded, string current)
+        {
+            if (string.IsNullOrWhiteSpace(recorded) || string.IsNullOrWhiteSpace(current))
+                return true;
+
+            return recorded.Equals(current, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static bool IsMemoryTextCompatible(Hero hero, string text)
+        {
+            if (hero == null || string.IsNullOrWhiteSpace(text))
+                return true;
+
+            return IsEconomicallyCompatible(new AIMemoryRecord { Text = text }, hero);
+        }
+
+        private static bool IsEconomicallyCompatible(AIMemoryRecord record, Hero hero)
+        {
+            if (record == null || hero == null || string.IsNullOrWhiteSpace(record.Text))
+                return true;
+
+            var allowed = QuestDeliveryRules.GetAllowedDeliveryItemIds(hero);
+            if (allowed.Count == 0)
+                return true;
+
+            foreach (string itemId in QuestDeliveryRules.KnownDeliveryItemIds)
+            {
+                if (!ContainsWholeWord(record.Text, itemId))
+                    continue;
+
+                if (!allowed.Contains(itemId))
+                    return false;
+            }
+
+            return true;
+        }
+
+        private static bool ContainsWholeWord(string text, string token)
+        {
+            if (string.IsNullOrWhiteSpace(text) || string.IsNullOrWhiteSpace(token))
+                return false;
+
+            int index = text.IndexOf(token, StringComparison.OrdinalIgnoreCase);
+            while (index >= 0)
+            {
+                bool leftOk = index == 0 || !char.IsLetterOrDigit(text[index - 1]);
+                int right = index + token.Length;
+                bool rightOk = right >= text.Length || !char.IsLetterOrDigit(text[right]);
+                if (leftOk && rightOk)
+                    return true;
+
+                index = text.IndexOf(token, index + token.Length, StringComparison.OrdinalIgnoreCase);
+            }
+
+            return false;
+        }
+
+        private static string GetSettlementId(Hero? hero)
+        {
+            try
+            {
+                return hero?.CurrentSettlement?.StringId
+                    ?? hero?.HomeSettlement?.StringId
+                    ?? hero?.BornSettlement?.StringId
+                    ?? "";
+            }
+            catch
+            {
+                return "";
+            }
+        }
     }
 
     public sealed class AIMemoryRecord
@@ -572,6 +682,18 @@ namespace RF_AIDialog
 
         [JsonProperty("subject_id")]
         public string SubjectId { get; set; } = "";
+
+        [JsonProperty("hero_id")]
+        public string HeroId { get; set; } = "";
+
+        [JsonProperty("settlement_id")]
+        public string SettlementId { get; set; } = "";
+
+        [JsonProperty("clan_id")]
+        public string ClanId { get; set; } = "";
+
+        [JsonProperty("faction_id")]
+        public string FactionId { get; set; } = "";
 
         [JsonProperty("day")]
         public int Day { get; set; }

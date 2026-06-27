@@ -1,0 +1,76 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\gupol\\Documents\\Bannerlord_Warsails_AI\\RF_Warsails_AI\\RF_BattleAI\\RF_BattleAI.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\gupol\\Documents\\Bannerlord_Warsails_AI\\RF_Warsails_AI\\RF_BattleAI\\RF_BattleAI.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\gupol\\Documents\\Bannerlord_Warsails_AI\\RF_Warsails_AI\\RF_BattleAI\\RF_BattleAI.csproj",
+        "projectName": "RF_BattleAI",
+        "projectPath": "C:\\Users\\gupol\\Documents\\Bannerlord_Warsails_AI\\RF_Warsails_AI\\RF_BattleAI\\RF_BattleAI.csproj",
+        "packagesPath": "C:\\Users\\gupol\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\gupol\\Documents\\Bannerlord_Warsails_AI\\RF_Warsails_AI\\RF_BattleAI\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\gupol\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net472"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net472": {
+            "targetAlias": "net472",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net472": {
+          "targetAlias": "net472",
+          "dependencies": {
+            "BUTR.Harmony.Analyzer": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.1.50, )"
+            },
+            "Harmony.Extensions": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.2.0.77, )"
+            },
+            "Lib.Harmony": {
+              "include": "Compile",
+              "target": "Package",
+              "version": "[2.4.2, )"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.312\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

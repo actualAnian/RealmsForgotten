@@ -1,5 +1,6 @@
 ﻿using RealmsForgotten.RFReligions.Behavior;
 using RealmsForgotten.RFReligions.Helper;
+using RF_warsystem;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,6 +66,8 @@ namespace RFReligions.Behavior
 
             if (_crusadeActive)
             {
+                ReinforceCrusadeIntent();
+
                 if (CampaignTime.Now >= _crusadeEndTime)
                 {
                     FailCrusade("The crusade has ended in failure, its allotted time having expired.");
@@ -124,11 +127,7 @@ namespace RFReligions.Behavior
             _crusadeEndTime = CampaignTime.DaysFromNow(CrusadeDurationInDays);
 
             _crusaderFactions = new List<Kingdom> { _crusadeLeader };
-
-            if (!_crusadeLeader.IsAtWarWith(_crusadeTarget))
-            {
-                DeclareWarAction.ApplyByKingdomDecision(_crusadeLeader, _crusadeTarget);
-            }
+            ReinforceCrusadeIntent();
 
             TextObject title = new TextObject("A Crusade has been Called!", null);
             TextObject message = new TextObject("{LEADER_KINGDOM} has called a Holy Crusade against {TARGET_KINGDOM} to reclaim the holy city of {TARGET_SETTLEMENT}! All followers of {RELIGION} are called to arms!", null);
@@ -151,16 +150,20 @@ namespace RFReligions.Behavior
                 }
             }
 
-            foreach (var kingdom in Kingdom.All.Where(k => k != _crusadeLeader && k != _crusadeTarget && !k.IsMinorFaction && k.Leader != null))
+            foreach (var kingdom in GetEligibleCrusaderKingdoms())
             {
-                if (ReligionBehavior.Instance._heroes.TryGetValue(kingdom.Leader, out var kingReligion) && kingReligion.Religion == _crusadeReligion)
-                {
-                    if (kingdom.Leader.GetTraitLevel(DefaultTraits.Honor) > 0 && MBRandom.RandomFloat < 0.5f)
-                    {
-                        JoinCrusade(kingdom);
-                    }
-                }
+                JoinCrusade(kingdom);
             }
+        }
+
+        private void ReinforceCrusadeIntent()
+        {
+            if (!_crusadeActive || _crusadeLeader == null || _crusadeTarget == null || _crusadeTargetSettlement == null)
+            {
+                return;
+            }
+
+            RFWarExternalIntentApi.ReinforceHolyWar(_crusadeLeader, _crusadeTarget, _crusadeTargetSettlement, _crusaderFactions);
         }
 
         private void ShowPlayerCrusadeInquiry()
@@ -218,11 +221,6 @@ namespace RFReligions.Behavior
             if (kingdom == null || _crusaderFactions.Contains(kingdom)) return;
 
             _crusaderFactions.Add(kingdom);
-
-            if (!kingdom.IsAtWarWith(_crusadeTarget))
-            {
-                DeclareWarAction.ApplyByKingdomDecision(kingdom, _crusadeTarget);
-            }
 
             // FIX: Method expects Hero objects. Now correctly passing the .Leader property to prevent CS1503.
             ChangeRelationAction.ApplyRelationChangeBetweenHeroes(kingdom.Leader, _crusadeLeader.Leader, 20, true);
@@ -312,6 +310,45 @@ namespace RFReligions.Behavior
             _crusadeActive = false;
             _crusaderFactions.Clear();
             _crusadeCooldownEndTime = CampaignTime.DaysFromNow(CooldownBetweenCrusadesInDays);
+        }
+
+        private IEnumerable<Kingdom> GetEligibleCrusaderKingdoms()
+        {
+            return Kingdom.All.Where(kingdom =>
+                kingdom != _crusadeLeader &&
+                kingdom != _crusadeTarget &&
+                !kingdom.IsMinorFaction &&
+                kingdom.Leader != null &&
+                HasCrusadeReligion(kingdom));
+        }
+
+        private bool HasCrusadeReligion(Kingdom kingdom)
+        {
+            return TryGetKingdomReligion(kingdom, out var kingdomReligion) && kingdomReligion == _crusadeReligion;
+        }
+
+        private bool TryGetKingdomReligion(Kingdom kingdom, out RealmsForgotten.RFReligions.Core.RFReligions religion)
+        {
+            religion = RealmsForgotten.RFReligions.Core.RFReligions.None;
+
+            if (kingdom?.Leader == null)
+            {
+                return false;
+            }
+
+            if (ReligionBehavior.Instance._heroes.TryGetValue(kingdom.Leader, out var religionModel))
+            {
+                religion = religionModel.Religion;
+                return true;
+            }
+
+            if (kingdom.Leader.Culture == null)
+            {
+                return false;
+            }
+
+            religion = ReligionMapHelper.GetCultureReligion(kingdom.Leader.Culture.StringId);
+            return true;
         }
 
         private bool AreReligionsIntolerant(RealmsForgotten.RFReligions.Core.RFReligions religion1, RealmsForgotten.RFReligions.Core.RFReligions religion2)

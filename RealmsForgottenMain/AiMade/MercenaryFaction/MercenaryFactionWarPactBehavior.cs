@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
+using RF_warsystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -61,7 +62,6 @@ namespace RealmsForgotten.AiMade.MercenaryFaction
         private bool CanSignWarContract(MenuCallbackArgs args)
         {
             Settlement currentSettlement = Settlement.CurrentSettlement;
-            // FIX: The property is named 'IsEnabled', not 'optionIsEnabled'.
             args.IsEnabled = false;
 
             if (currentSettlement != null && KingdomHqMap.TryGetValue(currentSettlement.StringId, out string kingdomId))
@@ -70,7 +70,6 @@ namespace RealmsForgotten.AiMade.MercenaryFaction
 
                 if (kingdomForHire != null)
                 {
-                    // FIX: 'IsAtWar' doesn't exist. We check the 'Stances' collection instead.
                     bool isPlayerAtWar = Hero.MainHero.MapFaction != null && Hero.MainHero.MapFaction.FactionsAtWarWith.Count > 0;
 
                     args.IsEnabled = isPlayerAtWar && _contractedKingdom == null && kingdomForHire != Hero.MainHero.MapFaction;
@@ -80,6 +79,7 @@ namespace RealmsForgotten.AiMade.MercenaryFaction
                     else if (kingdomForHire == Hero.MainHero.MapFaction) args.Tooltip = new TextObject("You cannot hire your own kingdom.");
                 }
             }
+
             return true;
         }
 
@@ -112,26 +112,34 @@ namespace RealmsForgotten.AiMade.MercenaryFaction
             _contractEndDate = CampaignTime.DaysFromNow(ContractDurationDays);
 
             _playerEnemiesAtSigning = Hero.MainHero.MapFaction.FactionsAtWarWith;
+            List<Kingdom> kingdomEnemies = _playerEnemiesAtSigning
+                .OfType<Kingdom>()
+                .Where(enemy => enemy != null && enemy != _contractedKingdom)
+                .ToList();
 
-            foreach (var enemy in _playerEnemiesAtSigning)
+            if (kingdomEnemies.Count > 0)
             {
+                RFWarExternalIntentApi.ReinforceMercenaryContractWar(_contractedKingdom, kingdomEnemies);
+            }
+
+            foreach (IFaction enemy in _playerEnemiesAtSigning)
+            {
+                if (enemy is Kingdom)
+                {
+                    continue;
+                }
+
                 if (!_contractedKingdom.IsAtWarWith(enemy))
                 {
                     DeclareWarAction.ApplyByKingdomDecision(_contractedKingdom, enemy);
                 }
             }
 
-            // --- FIX: This is the new logic to force the AI to act ---
-            // 1. Find a suitable enemy settlement to target.
             Settlement targetEnemySettlement = Settlement.All.FirstOrDefault(s => s.IsFortification && _playerEnemiesAtSigning.Contains(s.MapFaction));
-
-            // 2. Find a suitable leader for the army (the kingdom's ruler is the best choice).
             Hero armyLeader = _contractedKingdom.Leader;
 
-            // 3. If we have a target and the leader can lead an army, command the kingdom to create one.
             if (targetEnemySettlement != null && armyLeader != null && armyLeader.PartyBelongedTo != null && !armyLeader.IsPrisoner)
             {
-                // This method exists in your Kingdom.cs file.
                 _contractedKingdom.CreateArmy(armyLeader, targetEnemySettlement, Army.ArmyTypes.Patrolling);
             }
 
@@ -167,8 +175,18 @@ namespace RealmsForgotten.AiMade.MercenaryFaction
             endMessage.SetTextVariable("KINGDOM_NAME", _contractedKingdom.Name);
             InformationManager.DisplayMessage(new InformationMessage(endMessage.ToString(), Colors.Yellow));
 
-            foreach (var enemy in _playerEnemiesAtSigning)
+            foreach (IFaction enemy in _playerEnemiesAtSigning)
             {
+                if (enemy is Kingdom enemyKingdom)
+                {
+                    if (_contractedKingdom.IsAtWarWith(enemyKingdom))
+                    {
+                        RFWarExternalIntentApi.RequestCoalitionPeace(_contractedKingdom, enemyKingdom);
+                    }
+
+                    continue;
+                }
+
                 if (_contractedKingdom.IsAtWarWith(enemy))
                 {
                     MakePeaceAction.Apply(_contractedKingdom, enemy);

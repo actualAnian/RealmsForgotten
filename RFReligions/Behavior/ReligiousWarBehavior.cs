@@ -1,11 +1,11 @@
-﻿using RealmsForgotten.RFReligions.Core;
+using RealmsForgotten.RFReligions.Core;
 using RealmsForgotten.RFReligions.Helper;
+using RF_warsystem;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Library;
 using TaleWorlds.Core;
@@ -111,7 +111,7 @@ namespace RealmsForgotten.RFReligions.Behavior
             // Check if high tension triggers a war
             if (_tensionTracker[pairHash] >= TensionThresholdForWar && MBRandom.RandomFloat < WeeklyWarDeclarationChance)
             {
-                DeclareWarAction.ApplyByKingdomDecision(kingdom1, kingdom2);
+                RFWarExternalIntentApi.ReinforceReligiousWar(kingdom1, kingdom2);
 
                 var message = new TextObject("⚔️ Religious tension between {KINGDOM1} and {KINGDOM2} has erupted into a Holy War!", null);
                 message.SetTextVariable("KINGDOM1", kingdom1.Name);

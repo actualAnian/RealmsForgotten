@@ -7,6 +7,24 @@ using TaleWorlds.SaveSystem;
 
 namespace RealmsForgotten.AiMade.Managers
 {
+    public enum ClimateRegionType
+    {
+        TropicalRainforest,
+        Savannah,
+        SavannahTemperateTransition,
+        DryTemperate,
+        FullSteppe,
+        PermaWinter,
+        SacredBalancedMountain,
+        SwampTemperate,
+        CentralEuropeanTemperate,
+        MildAtlanticTemperate,
+        HotTemperatePlains,
+        HarshDesert,
+        SemiAridCoast,
+        WinterNord
+    }
+
     public enum WeatherType
     {
         Clear,
@@ -25,55 +43,32 @@ namespace RealmsForgotten.AiMade.Managers
 
         [SaveableProperty(2)]
         public WeatherType CurrentWeather { get; private set; } = WeatherType.Clear;
-       
+
+        [SaveableProperty(3)]
+        public ClimateRegionType ClimateRegion { get; private set; } = ClimateRegionType.CentralEuropeanTemperate;
+
         private static Random _rng = new();
 
-        public WeatherRegion(string cultureId)
+        public WeatherRegion(string cultureId, ClimateRegionType climateRegion)
         {
             CultureId = cultureId;
+            ClimateRegion = climateRegion;
             RotateWeather();
+        }
+
+        public void SetClimateRegion(ClimateRegionType climateRegion)
+        {
+            ClimateRegion = climateRegion;
+        }
+
+        public void SetWeather(WeatherType weather)
+        {
+            CurrentWeather = weather;
         }
 
         public void RotateWeather()
         {
-            var weatherRoll = _rng.Next(100);
-
-            // Culturas com chance de enchente
-            if (CultureId == "tharnmar" || CultureId == "giant")
-            {
-                if (weatherRoll < 50) CurrentWeather = WeatherType.Rainy;
-                else if (weatherRoll < 80) CurrentWeather = WeatherType.Flooding;
-                else if (weatherRoll < 95) CurrentWeather = WeatherType.Abundance;
-                else CurrentWeather = WeatherType.Clear;
-            }
-            // Culturas frias
-            else if (CultureId == "sturgia" || CultureId == "dwarf" || CultureId == "urkhai")
-            {
-                if (weatherRoll < 70) CurrentWeather = WeatherType.Blizzard;
-                else if (weatherRoll < 90) CurrentWeather = WeatherType.Abundance;
-                else CurrentWeather = WeatherType.Clear;
-            }
-            // Culturas desérticas
-            else if (CultureId == "aserai" || CultureId == "aqarun")
-            {
-                if (weatherRoll < 70) CurrentWeather = WeatherType.Drought;
-                else if (weatherRoll < 90) CurrentWeather = WeatherType.Abundance;
-                else CurrentWeather = WeatherType.Clear;
-            }
-            // Culturas de floresta e chuva
-            else if (CultureId == "battania" || CultureId == "vlandia" || CultureId == "grimwatch")
-            {
-                if (weatherRoll < 60) CurrentWeather = WeatherType.Rainy;
-                else if (weatherRoll < 85) CurrentWeather = WeatherType.Abundance;
-                else CurrentWeather = WeatherType.Clear;
-            }
-            // Outras (misc.)
-            else
-            {
-                if (weatherRoll < 40) CurrentWeather = WeatherType.Rainy;
-                else if (weatherRoll < 70) CurrentWeather = WeatherType.Abundance;
-                else CurrentWeather = WeatherType.Clear;
-            }
+            CurrentWeather = WeatherClimateCatalog.RollWeather(ClimateRegion, _rng);
         }
     }
 }

@@ -40,15 +40,30 @@ namespace RF_AIDialog
 
                 var existingContext = store.GetExisting(hero.StringId);
                 var ctx = existingContext ?? new NPCContext { HeroId = hero.StringId };
+                int currentDay = CurrentDay();
 
                 // Do not overwrite an existing pending initiative.
                 if (ctx.HasPendingInitiative) return;
+                if (ctx.LastInitiativeLetterDay > -100000 &&
+                    currentDay - ctx.LastInitiativeLetterDay < NPCContext.InitiativeLetterCooldownDays)
+                    return;
+
+                if (!HasEstablishedContact(hero, ctx))
+                    return;
 
                 string? reason = EvaluateInitiative(hero, ctx);
                 if (reason == null) return;
 
                 if (existingContext == null)
                     ctx = store.GetOrCreate(hero);
+
+                if (TryRouteInitiativeToLetter(hero, reason, ctx))
+                {
+                    ctx.PendingInitiativeReason = null;
+                    ctx.LastInitiativeLetterDay = currentDay;
+                    store.MarkDirty(ctx);
+                    return;
+                }
 
                 ctx.PendingInitiativeReason = reason;
                 store.MarkDirty(ctx);
@@ -99,12 +114,44 @@ namespace RF_AIDialog
                 || occ == Occupation.Headman;
         }
 
+        private static bool TryRouteInitiativeToLetter(Hero hero, string reason, NPCContext ctx)
+        {
+            try
+            {
+                if (!AIConfig.LettersEnabled)
+                    return false;
+
+                if (hero == null || !hero.IsLord)
+                    return false;
+
+                if (Hero.MainHero == null || MessengerTravelCalculator.IsLikelyNearby(hero, Hero.MainHero))
+                    return false;
+
+                int currentDay = CurrentDay();
+                if (AIMessageStore.HasOpenInitiativeThreadForRecipient(Hero.MainHero.StringId))
+                    return false;
+
+                if (AIMessageStore.HasRecentInitiativeForRecipient(
+                        Hero.MainHero.StringId,
+                        currentDay,
+                        NPCContext.GlobalInitiativeLetterSpacingDays))
+                    return false;
+
+                return AIMessageBehavior.Instance?.QueueInitiativeLetter(hero, reason, ctx) == true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         private static string? EvaluateInitiative(Hero hero, NPCContext ctx)
         {
             var player = Hero.MainHero;
             if (player == null) return null;
 
             int relation = (int)hero.GetRelationWithPlayer();
+            bool politicallyAligned = ArePoliticallyAligned(hero, player);
 
             // 0. Pending request follow-up. If this NPC made a request and
             // has not heard back in 12+ days, seek the player out.
@@ -136,7 +183,10 @@ namespace RF_AIDialog
             try
             {
                 var home = hero.HomeSettlement ?? hero.BornSettlement;
-                if (home != null && home.IsUnderSiege && home.OwnerClan == hero.Clan)
+                if (home != null &&
+                    home.IsUnderSiege &&
+                    home.OwnerClan == hero.Clan &&
+                    (relation >= 5 || politicallyAligned))
                     return $"{home.Name} is under siege. You are desperate and need the player's military aid or counsel immediately.";
             }
             catch { }
@@ -150,7 +200,7 @@ namespace RF_AIDialog
                            && e.Character.HeroObject?.Clan == hero.Clan
                            && e.Character.HeroObject != hero);
 
-                if (holdsClansman)
+                if (holdsClansman && relation >= 0)
                     return "The player holds a member of your clan as prisoner. You want to negotiate their release through coin, trade, or appeal to honor.";
             }
             catch { }
@@ -161,7 +211,8 @@ namespace RF_AIDialog
                 if (hero.MapFaction is Kingdom npcKingdom
                     && player.MapFaction is Kingdom playerKingdom
                     && !FactionManager.IsAtWarAgainstFaction(npcKingdom, playerKingdom)
-                    && relation > 10)
+                    && relation >= 15
+                    && IsStrategicallyImportantLord(hero))
                 {
                     var sharedEnemy = Campaign.Current.Kingdoms
                         .FirstOrDefault(k => !k.IsEliminated
@@ -189,6 +240,84 @@ namespace RF_AIDialog
             catch { }
 
             return null;
+        }
+
+        private static int CurrentDay()
+        {
+            try
+            {
+                return (int)Campaign.Current.Models.CampaignTimeModel
+                    .CampaignStartTime.ElapsedDaysUntilNow;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        private static bool HasEstablishedContact(Hero hero, NPCContext ctx)
+        {
+            try
+            {
+                if (hero == null)
+                    return false;
+
+                if (hero.HasMet)
+                    return true;
+
+                if (ctx.HasPendingRequest || ctx.LastKnownRelation != 0)
+                    return true;
+
+                if (!string.IsNullOrWhiteSpace(ctx.GeneratedPersonality))
+                    return true;
+
+                return ctx.RecentHistory != null && ctx.RecentHistory.Count > 0;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static bool ArePoliticallyAligned(Hero hero, Hero player)
+        {
+            try
+            {
+                if (hero == null || player == null)
+                    return false;
+
+                if (hero.Clan == player.Clan || hero.MapFaction == player.MapFaction)
+                    return true;
+
+                return hero.MapFaction is Kingdom heroKingdom &&
+                       player.MapFaction is Kingdom playerKingdom &&
+                       heroKingdom == playerKingdom;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static bool IsStrategicallyImportantLord(Hero hero)
+        {
+            try
+            {
+                if (hero == null || !hero.IsLord)
+                    return false;
+
+                if (hero.MapFaction?.Leader == hero)
+                    return true;
+
+                if (hero.Clan?.Leader == hero)
+                    return true;
+
+                return hero.PartyBelongedTo?.Army?.LeaderParty?.LeaderHero == hero;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

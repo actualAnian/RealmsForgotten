@@ -11,23 +11,18 @@ namespace RealmsForgotten.AiMade.Patches
         {
             MapEvent battle = PlayerEncounter.EncounteredBattle;
 
-            // Se não tem batalha, não faz sentido mostrar "help"
             if (battle == null)
-                return true;
+                return false;
 
-            // Evento já finalizado -> não mexe mais
             if (battle.IsFinalized)
-                return true;
+                return false;
 
-            // Raid em vila -> é exatamente o caso do seu sistema
-            if (battle.IsRaid)
-            {
-                Settlement settlement = battle.MapEventSettlement;
-                if (settlement != null && settlement.IsVillage)
-                    return true;
-            }
-
-            return false;
+            return battle.IsRaid ||
+                   battle.IsFieldBattle ||
+                   battle.IsSiegeOutside ||
+                   battle.IsSiegeAssault ||
+                   battle.IsSiegeAmbush ||
+                   battle.IsSallyOut;
         }
         public static bool HideVanillaHelpAttackersInVillageRaid(MenuCallbackArgs args, ref bool __result)
         {

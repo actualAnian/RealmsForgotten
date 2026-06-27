@@ -33,6 +33,10 @@
     <ProjectReference Include="..\RealmsForgottenMain\RealmsForgotten.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="NAudio" Version="2.2.1" />
+  </ItemGroup>
+
   <!-- Deploys the AI dialog assembly and safe config templates into the RealmsForgotten module. -->
   <Target Name="PostBuild" AfterTargets="Build">
     <MakeDir Directories="$(ModuleBin)" Condition="'$(GameFolder)' != ''" />
@@ -44,6 +48,13 @@
           DestinationFolder="$(ModuleBin)"
           SkipUnchangedFiles="true"
           Condition="'$(GameFolder)' != '' and Exists('$(TargetDir)$(TargetName).pdb')" />
+    <ItemGroup Condition="'$(GameFolder)' != ''">
+      <NAudioRuntimeFiles Include="$(TargetDir)NAudio*.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(NAudioRuntimeFiles)"
+          DestinationFolder="$(ModuleBin)"
+          SkipUnchangedFiles="true"
+          Condition="'$(GameFolder)' != '' and '@(NAudioRuntimeFiles)' != ''" />
     <Copy SourceFiles="$(ProjectDir)ai_config.example.json"
           DestinationFolder="$(ModuleRoot)"
           SkipUnchangedFiles="true"
@@ -56,6 +67,37 @@
           DestinationFiles="$(ModuleRoot)\ai_config.local.json"
           SkipUnchangedFiles="true"
           Condition="'$(GameFolder)' != '' and Exists('$(ProjectDir)ai_config.default.json') and !Exists('$(ModuleRoot)\ai_config.local.json')" />
+    <Copy SourceFiles="$(ProjectDir)setup_templates\AI_Setup_README.txt"
+          DestinationFiles="$(ModuleRoot)\AI_Setup_README.txt"
+          SkipUnchangedFiles="true"
+          Condition="'$(GameFolder)' != '' and Exists('$(ProjectDir)setup_templates\AI_Setup_README.txt')" />
+    <Copy SourceFiles="$(ProjectDir)setup_templates\deepseek.key"
+          DestinationFiles="$(ModuleRoot)\deepseek.key"
+          SkipUnchangedFiles="true"
+          Condition="'$(GameFolder)' != '' and Exists('$(ProjectDir)setup_templates\deepseek.key') and !Exists('$(ModuleRoot)\deepseek.key')" />
+    <Copy SourceFiles="$(ProjectDir)setup_templates\openai.key"
+          DestinationFiles="$(ModuleRoot)\openai.key"
+          SkipUnchangedFiles="true"
+          Condition="'$(GameFolder)' != '' and Exists('$(ProjectDir)setup_templates\openai.key') and !Exists('$(ModuleRoot)\openai.key')" />
+    <Copy SourceFiles="$(ProjectDir)setup_templates\openai_tts.key"
+          DestinationFiles="$(ModuleRoot)\openai_tts.key"
+          SkipUnchangedFiles="true"
+          Condition="'$(GameFolder)' != '' and Exists('$(ProjectDir)setup_templates\openai_tts.key') and !Exists('$(ModuleRoot)\openai_tts.key')" />
+    <Copy SourceFiles="$(ProjectDir)setup_templates\fish_tts.key"
+          DestinationFiles="$(ModuleRoot)\fish_tts.key"
+          SkipUnchangedFiles="true"
+          Condition="'$(GameFolder)' != '' and Exists('$(ProjectDir)setup_templates\fish_tts.key') and !Exists('$(ModuleRoot)\fish_tts.key')" />
+    <Copy SourceFiles="$(ProjectDir)setup_templates\gemini.key"
+          DestinationFiles="$(ModuleRoot)\gemini.key"
+          SkipUnchangedFiles="true"
+          Condition="'$(GameFolder)' != '' and Exists('$(ProjectDir)setup_templates\gemini.key') and !Exists('$(ModuleRoot)\gemini.key')" />
+    <ItemGroup Condition="'$(GameFolder)' != ''">
+      <UIPrefabFiles Include="$(ProjectDir)_Module\GUI\Prefabs\**\*.xml" />
+    </ItemGroup>
+    <Copy SourceFiles="@(UIPrefabFiles)"
+          DestinationFiles="@(UIPrefabFiles->'$(ModuleRoot)\GUI\Prefabs\%(RecursiveDir)%(Filename)%(Extension)')"
+          SkipUnchangedFiles="true"
+          Condition="'$(GameFolder)' != '' and '@(UIPrefabFiles)' != ''" />
   </Target>
 
 </Project>

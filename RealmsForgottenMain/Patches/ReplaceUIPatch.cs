@@ -14,8 +14,14 @@ namespace RealmsForgotten.Patches
     {
         public static void Prefix(ref string movieName, ViewModel dataSource)
         {
-            if (movieName == "CharacterDeveloper")
-                movieName = "RFCharacterDeveloper";
+            try
+            {
+                if (movieName == "CharacterDeveloper")
+                    movieName = "RFCharacterDeveloper";
+            }
+            catch
+            {
+            }
         }
     }
 }

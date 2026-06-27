@@ -1,4 +1,5 @@
-﻿using System.Linq;
+using System.Linq;
+using RF_warsystem;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Election;
 using TaleWorlds.Core;
@@ -32,8 +33,8 @@ namespace RealmsForgotten.AiMade
                 {
                     if (success)
                     {
-                        FactionManager.DeclareWar(kingdom1, kingdom2);
-                        MBInformationManager.AddQuickInformation(new TextObject($"⚔️ {kingdom1.Name} and {kingdom2.Name} are now at war again!"));
+                        RFWarExternalIntentApi.ReinforceEnduringRivalryWar(kingdom1, kingdom2);
+                        MBInformationManager.AddQuickInformation(new TextObject($"{kingdom1.Name} and {kingdom2.Name} are sliding back into war!"));
                     }
                 }
             }
@@ -46,9 +47,9 @@ namespace RealmsForgotten.AiMade
 
             if (dwarfKingdom != null && urkhaiKingdom != null && !dwarfKingdom.IsAtWarWith(urkhaiKingdom))
             {
-                FactionManager.DeclareWar(dwarfKingdom, urkhaiKingdom);
+                RFWarExternalIntentApi.ReinforceEnduringRivalryWar(dwarfKingdom, urkhaiKingdom);
                 MBInformationManager.AddQuickInformation(new TextObject(
-                    "⚔️ War between the Dwarves and Urkhai has been reinstated!"));
+                    "Dwarven and Urkhai hostility is flaring again!"));
             }
         }
 

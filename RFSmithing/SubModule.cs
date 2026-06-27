@@ -21,8 +21,9 @@ namespace RealmsForgotten.Smithing
   public class SubModule : MBSubModuleBase
   {
     private static readonly string Namespace = typeof (SubModule).Namespace;
-    private readonly UIExtender _extender = new ("RealmsForgotten");
+    private readonly UIExtender _extender = new ("RealmsForgotten.RFSmithing");
     private readonly Harmony _harmony = new (Namespace);
+    private bool _uiExtenderEnabled;
 
     protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
     {
@@ -66,9 +67,29 @@ namespace RealmsForgotten.Smithing
     {
       base.OnSubModuleLoad();
       CraftingMixin.ApplyPatches(_harmony);
-      _extender.Register(typeof (SubModule).Assembly);
-      _extender.Enable();
+      try
+      {
+        _extender.Register(typeof (SubModule).Assembly);
+        _extender.Enable();
+        _uiExtenderEnabled = true;
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine($"RFSmithing UI load failed: {ex}");
+      }
       _harmony.PatchAll();
+    }
+
+    protected override void OnSubModuleUnloaded()
+    {
+      if (_uiExtenderEnabled)
+      {
+        _extender.Disable();
+        _extender.Deregister();
+        _uiExtenderEnabled = false;
+      }
+
+      base.OnSubModuleUnloaded();
     }
 
     private static T? GetGameModel<T>(IGameStarter gameStarterObject) where T : GameModel

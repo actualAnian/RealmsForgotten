@@ -30,6 +30,14 @@ namespace RealmsForgotten.Career
         private CareerChoiceGroupObject _archmage_1;
         private CareerChoiceGroupObject _archmage_2;
 
+        // Cleric
+        private CareerChoiceGroupObject _temple_militant_1;
+        private CareerChoiceGroupObject _humble_shepherd_1;
+        private CareerChoiceGroupObject _consecrated_warden_1;
+        private CareerChoiceGroupObject _bearer_of_mercy_1;
+        private CareerChoiceGroupObject _war_priest_1;
+        private CareerChoiceGroupObject _sainted_intercessor_1;
+
 #pragma warning disable CS8618
         public RFCareerChoiceGroups()
 #pragma warning restore CS8618
@@ -64,6 +72,14 @@ namespace RealmsForgotten.Career
             _magus_2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("WizardMagus2"));
             _archmage_1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("WizardArchmage1"));
             _archmage_2 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("WizardArchmage2"));
+
+            // Cleric
+            _temple_militant_1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("ClericTempleMilitant1"));
+            _humble_shepherd_1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("ClericHumbleShepherd1"));
+            _consecrated_warden_1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("ClericConsecratedWarden1"));
+            _bearer_of_mercy_1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("ClericBearerOfMercy1"));
+            _war_priest_1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("ClericWarPriest1"));
+            _sainted_intercessor_1 = Game.Current.ObjectManager.RegisterPresumedObject(new CareerChoiceGroupObject("ClericSaintedIntercessor1"));
         }
 
         private void InitializeAll()
@@ -91,6 +107,14 @@ namespace RealmsForgotten.Career
             _magus_2.Initialize("{=rf_career_wizard_2}Magus", RFCareers.Wizard, 2);
             _archmage_1.Initialize("{=rf_career_wizard_3}Archmage", RFCareers.Wizard, 3);
             _archmage_2.Initialize("{=rf_career_wizard_3}Archmage", RFCareers.Wizard, 3);
+
+            // Cleric
+            _temple_militant_1.Initialize("{=rf_career_cleric_1}Temple Militant", RFCareers.Cleric, 1);
+            _humble_shepherd_1.Initialize("{=rf_career_cleric_2}Humble Shepherd", RFCareers.Cleric, 1);
+            _consecrated_warden_1.Initialize("{=rf_career_cleric_3}Consecrated Warden", RFCareers.Cleric, 2);
+            _bearer_of_mercy_1.Initialize("{=rf_career_cleric_4}Bearer of Mercy", RFCareers.Cleric, 2);
+            _war_priest_1.Initialize("{=rf_career_cleric_5}War Priest", RFCareers.Cleric, 3);
+            _sainted_intercessor_1.Initialize("{=rf_career_cleric_6}Sainted Intercessor", RFCareers.Cleric, 3);
         }
     }
 }

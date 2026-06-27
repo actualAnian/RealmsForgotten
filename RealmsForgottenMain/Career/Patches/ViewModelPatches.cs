@@ -14,32 +14,68 @@ namespace RealmsForgotten.Career.Patches
         private const string Position = "Position";
         private const string DistanceToCamera = "DistanceToCamera";
 
+        private static void LogPatchFailure(string stage, Exception ex, ViewModel vm = null)
+        {
+            try
+            {
+                global::RealmsForgotten.AiMade.RFLogger.Log(
+                    $"[ViewModelPatches] {stage} failed | vm={vm?.GetType().FullName ?? "null"} | error={ex}");
+            }
+            catch
+            {
+            }
+        }
+
 
         [HarmonyPostfix]
         [HarmonyPatch(typeof(ViewModel), MethodType.Constructor)]
         public static void PatchVMConstructor(ViewModel __instance)
         {
-            if (__instance.HasExtensionType())
+            try
             {
-                var VMExtensionType = __instance.GetExtensionType();
-                if (VMExtensionType != null)
+                if (!__instance.HasExtensionType())
                 {
-                    var exists = Traverse.Create(__instance).Field("_propertiesAndMethods").FieldExists();
-                    if (exists && Activator.CreateInstance(VMExtensionType, __instance) is IViewModelExtension VMExtensionInstance)
-                    {
-                        var field = Traverse.Create(__instance).Field("_propertiesAndMethods").GetValue();
-                        var props = Traverse.Create(field).Property("Properties").GetValue() as Dictionary<string, PropertyInfo>;
-                        var methods = Traverse.Create(field).Property("Methods").GetValue() as Dictionary<string, MethodInfo>;
-                        foreach (var prop in VMExtensionInstance.GetProperties())
-                        {
-                            props.AddItem(prop);
-                        }
-                        foreach (var method in VMExtensionInstance.GetMethods())
-                        {
-                            methods.AddItem(method);
-                        }
-                    }
+                    return;
                 }
+
+                var VMExtensionType = __instance.GetExtensionType();
+                if (VMExtensionType == null)
+                {
+                    return;
+                }
+
+                var exists = Traverse.Create(__instance).Field("_propertiesAndMethods").FieldExists();
+                if (!exists)
+                {
+                    return;
+                }
+
+                if (Activator.CreateInstance(VMExtensionType, __instance) is not IViewModelExtension VMExtensionInstance)
+                {
+                    return;
+                }
+
+                var field = Traverse.Create(__instance).Field("_propertiesAndMethods").GetValue();
+                var props = Traverse.Create(field).Property("Properties").GetValue() as Dictionary<string, PropertyInfo>;
+                var methods = Traverse.Create(field).Property("Methods").GetValue() as Dictionary<string, MethodInfo>;
+                if (props == null || methods == null)
+                {
+                    return;
+                }
+
+                foreach (var prop in VMExtensionInstance.GetProperties())
+                {
+                    props.AddItem(prop);
+                }
+
+                foreach (var method in VMExtensionInstance.GetMethods())
+                {
+                    methods.AddItem(method);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogPatchFailure(nameof(PatchVMConstructor), ex, __instance);
             }
         }
 
@@ -47,9 +83,16 @@ namespace RealmsForgotten.Career.Patches
         [HarmonyPatch(typeof(ViewModel), "OnFinalize")]
         public static void PatchVMDestructor(ViewModel __instance)
         {
-            if (__instance.HasExtensionInstance())
+            try
             {
-                __instance.GetExtensionInstance().OnFinalize();
+                if (__instance.HasExtensionInstance())
+                {
+                    __instance.GetExtensionInstance().OnFinalize();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogPatchFailure(nameof(PatchVMDestructor), ex, __instance);
             }
         }
 
@@ -57,11 +100,19 @@ namespace RealmsForgotten.Career.Patches
         [HarmonyPatch(typeof(ViewModel), "GetViewModelAtPath", typeof(BindingPath))]
         public static bool PatchPathFinder(ViewModel __instance, BindingPath path, ref object __result)
         {
-            if (__instance.HasExtensionInstance())
+            try
             {
-                __result = __instance.GetExtensionInstance().GetViewModelAtPath(path);
-                return false;
+                if (__instance.HasExtensionInstance())
+                {
+                    __result = __instance.GetExtensionInstance().GetViewModelAtPath(path);
+                    return false;
+                }
             }
+            catch (Exception ex)
+            {
+                LogPatchFailure(nameof(PatchPathFinder), ex, __instance);
+            }
+
             return true;
         }
 
@@ -69,11 +120,19 @@ namespace RealmsForgotten.Career.Patches
         [HarmonyPatch(typeof(ViewModel), "GetPropertyValue", typeof(string))]
         public static bool PatchPropertyGetter(ViewModel __instance, string name, ref object __result)
         {
-            if (__instance.HasExtensionInstance())
+            try
             {
-                __result = __instance.GetExtensionInstance().GetPropertyValue(name);
-                return false;
+                if (__instance.HasExtensionInstance())
+                {
+                    __result = __instance.GetExtensionInstance().GetPropertyValue(name);
+                    return false;
+                }
             }
+            catch (Exception ex)
+            {
+                LogPatchFailure(nameof(PatchPropertyGetter), ex, __instance);
+            }
+
             return true;
         }
 
@@ -84,11 +143,20 @@ namespace RealmsForgotten.Career.Patches
             if (name == DistanceToCamera) return true;
             if (name == Position) return true;
             if (name == Headposition) return true;
-            else if (__instance.HasExtensionInstance())
+
+            try
             {
-                __instance.GetExtensionInstance().SetPropertyValue(name, value);
-                return false;
+                if (__instance.HasExtensionInstance())
+                {
+                    __instance.GetExtensionInstance().SetPropertyValue(name, value);
+                    return false;
+                }
             }
+            catch (Exception ex)
+            {
+                LogPatchFailure(nameof(PatchPropertySetter), ex, __instance);
+            }
+
             return true;
         }
 
@@ -96,11 +164,19 @@ namespace RealmsForgotten.Career.Patches
         [HarmonyPatch(typeof(ViewModel), "ExecuteCommand")]
         public static bool PatchExecutor(ViewModel __instance, string commandName, object[] parameters)
         {
-            if (__instance.HasExtensionInstance())
+            try
             {
-                __instance.GetExtensionInstance().ExecuteCommand(commandName, parameters);
-                return false;
+                if (__instance.HasExtensionInstance())
+                {
+                    __instance.GetExtensionInstance().ExecuteCommand(commandName, parameters);
+                    return false;
+                }
             }
+            catch (Exception ex)
+            {
+                LogPatchFailure(nameof(PatchExecutor), ex, __instance);
+            }
+
             return true;
         }
     }

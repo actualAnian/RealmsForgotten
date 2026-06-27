@@ -1,0 +1,58 @@
+<Prefab>
+  <Window>
+    <Widget Id="RFAIVoiceInputPopupRoot" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+      <Children>
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare_9" Color="#000000AA" />
+
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="512" SuggestedHeight="455" HorizontalAlignment="Center" VerticalAlignment="Center" PositionYOffset="-65">
+          <Children>
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="512" SuggestedHeight="455" HorizontalAlignment="Center" VerticalAlignment="Top" Sprite="StdAssets\Popup\canvas" />
+            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="StdAssets\Popup\canvas_gradient" IsEnabled="false" />
+
+            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" SuggestedWidth="512" MarginBottom="102" StackLayout.LayoutMethod="VerticalTopToBottom">
+              <Children>
+                <AutoHideRichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="30" MarginRight="30" MarginTop="10" MinHeight="50" Brush="Popup.Title.Text" Text="@TitleText" />
+                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="23" Sprite="StdAssets\Popup\divider" />
+                <RichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="30" MarginRight="30" MarginTop="20" MarginBottom="16" MinHeight="10" Brush="Popup.Description.Text" Text="@PromptText" />
+
+                <Widget Id="TextInputParent" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="410" SuggestedHeight="70" HorizontalAlignment="Center" Sprite="General\CharacterCreation\name_input_area">
+                  <Children>
+                    <EditableTextWidget Id="TextInputWidget" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" MarginLeft="10" MarginRight="10" MarginTop="12" MarginBottom="12" Brush="Review.NameInput.Text" Text="@InputText" IsEnabled="@CanEditText" />
+                  </Children>
+                </Widget>
+
+                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="251" SuggestedHeight="64" HorizontalAlignment="Center" MarginTop="12" Brush="Popup.Done.Button" IsEnabled="@CanToggleRecording" Command.Click="ExecuteToggleRecording">
+                  <Children>
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="32" VerticalAlignment="Center" MarginLeft="47" MarginRight="40" Brush="Popup.Button.Text" Text="@RecordButtonText" />
+                  </Children>
+                </ButtonWidget>
+
+                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="30" MarginRight="30" MarginTop="4" MarginBottom="2" HorizontalAlignment="Center" Brush="Popup.Description.Text" Text="@RecordHintText" />
+
+                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="30" MarginRight="30" MarginTop="10" MarginBottom="6" Brush="Popup.Description.Text" Text="@StatusText" />
+              </Children>
+            </ListPanel>
+
+            <Widget Id="ControlButtons" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="70" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginLeft="5" MarginRight="5" MarginBottom="18">
+              <Children>
+                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="220" SuggestedHeight="64" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="35" Brush="Popup.Cancel.Button" Command.Click="ExecuteCancel">
+                  <Children>
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="32" VerticalAlignment="Center" MarginLeft="47" MarginRight="40" Brush="Popup.Button.Text" Text="@CancelLabel" />
+                  </Children>
+                </ButtonWidget>
+
+                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="220" SuggestedHeight="64" HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="35" Brush="Popup.Done.Button" Command.Click="ExecuteAsk">
+                  <Children>
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="32" VerticalAlignment="Center" MarginLeft="47" MarginRight="40" Brush="Popup.Button.Text" Text="@AskLabel" />
+                  </Children>
+                </ButtonWidget>
+              </Children>
+            </Widget>
+
+            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ExtendLeft="18" ExtendTop="18" ExtendRight="18" ExtendBottom="18" Sprite="frame_9" IsEnabled="false" />
+          </Children>
+        </Widget>
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

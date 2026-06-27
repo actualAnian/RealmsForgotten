@@ -67,6 +67,21 @@ namespace RealmsForgotten.Career.Ability
                 },
                 upgradedActions: new() { });
 
+            AbilityData clericAbilityData = new(
+                duration: 12,
+                cooldown: 90,
+                baseActions: new()
+                {
+                    [AbilityData.ActionTrigger.OnActivate] = new() {
+                        () => AbilityEffects.StartDivineRestoration()
+                    },
+                    [AbilityData.ActionTrigger.OnDeactivate] = new() {
+                        () => AbilityEffects.StopDivineRestoration()
+                    }
+                },
+                upgradedActions: new() { },
+                upgradedDuration: 18);
+
             All.Add(new ClassAbility(
                 "merc_ability",
                 "{=rf_mercenary_ability_name}Battle Cry",
@@ -90,6 +105,14 @@ namespace RealmsForgotten.Career.Ability
                 "{=rf_wizard_ability_desc}For 15 seconds, your troops’ weapons are imbued with magical fire, igniting enemies on hit.",
                 "{=rf_wizard_ability_desc_up}The same, with stronger magical fire (longer duration).",
                 wizardAbilityData));
+
+            All.Add(new ClassAbility(
+                "cleric_ability",
+                "{=rf_cleric_ability_name}Divine Restoration",
+                "divine_shield_perk_a", "divine_shield_perk_b",
+                "{=rf_cleric_ability_desc}For a short time, sacred recovery restores your health over time.",
+                "{=rf_cleric_ability_desc_up}Divine Restoration heals more strongly and lasts longer.",
+                clericAbilityData));
         }
 
         public enum AbilityType
@@ -182,7 +205,8 @@ namespace RealmsForgotten.Career.Ability
         public void SetCoolDown()
         {
             _coolDownLeft = cooldown;
-            _durationEndTime = Mission.Current.CurrentTime + duration;
+            int activeDuration = IsUpgraded ? data.UpgradedDuration : duration;
+            _durationEndTime = Mission.Current.CurrentTime + activeDuration + AbilityEffects.GetAdditionalAbilityDuration(StringId);
             _cooldown_end_time = Mission.Current.CurrentTime + _coolDownLeft + 0.8f;
             _timer.Start();
         }

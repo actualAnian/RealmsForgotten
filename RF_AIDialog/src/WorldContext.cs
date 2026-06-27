@@ -409,6 +409,11 @@ namespace RF_AIDialog
                 else
                     sb.AppendLine("  allowed_quest_kinds: none");
 
+                if (profile.AllowedDeliveryItemIds.Count > 0)
+                    sb.AppendLine($"  allowed_delivery_items: {string.Join(", ", profile.AllowedDeliveryItemIds)}");
+                else
+                    sb.AppendLine("  allowed_delivery_items: none");
+
                 foreach (var note in profile.Notes)
                     sb.AppendLine($"  note: {note}");
             }
@@ -430,7 +435,18 @@ namespace RF_AIDialog
                                   settlement.IsCastle ? "castle" :
                                   settlement.IsVillage ? "village" : "settlement";
                     string faction = settlement.MapFaction?.Name?.ToString() ?? "No faction";
-                    sb.AppendLine($"  - {settlement.Name} [{type}, {faction}]");
+                    sb.AppendLine($"  - {settlement.Name} id={settlement.StringId} [{type}, {faction}]");
+
+                    var notables = settlement.Notables?
+                        .Where(h => h != null && h.IsAlive)
+                        .Take(4)
+                        .ToList();
+                    if (notables != null && notables.Count > 0)
+                    {
+                        string notableText = string.Join(", ", notables.Select(h =>
+                            $"{h.Name} id={h.StringId} occupation={h.Occupation}"));
+                        sb.AppendLine($"    notables: {notableText}");
+                    }
                 }
             }
             catch { }

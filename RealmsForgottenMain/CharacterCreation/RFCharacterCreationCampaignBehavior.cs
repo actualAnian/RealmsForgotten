@@ -370,12 +370,13 @@ namespace RealmsForgotten.CharacterCreation
             {
                 DefaultSkills.Leadership,
                 DefaultSkills.Steward,
-                DefaultSkills.Charm
+                DefaultSkills.Charm,
+                RFSkills.Faith
             };
             args.SetAffectedSkills(affectedSkills);
             args.SetFocusToSkills(_focusToAdd);
             args.SetLevelToSkills(30);
-            args.SetLevelToAttribute(DefaultCharacterAttributes.Intelligence, _attributeLevelToAdd);
+            args.SetLevelToAttribute(RFAttributes.Discipline, _attributeLevelToAdd);
         }
         private void RFStartMenuKnightNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
@@ -436,6 +437,7 @@ namespace RealmsForgotten.CharacterCreation
         protected void UsurperStartOnConsequence(CharacterCreationManager characterCreation)
         {
             CurrentStartType = StartType.Usurper;
+            PlayerCareerExtension.AddCareer(RFCareers.Cleric);
         }
 
         protected void KnightStartOnConsequence(CharacterCreationManager characterCreation)
