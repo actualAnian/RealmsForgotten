@@ -1,4 +1,5 @@
 using HarmonyLib;
+using Bannerlord.UIExtenderEx;
 using MCM.Abstractions.Attributes;
 using Newtonsoft.Json.Linq;
 using RealmsForgotten.AiMade;
@@ -21,6 +22,8 @@ using RealmsForgotten.RFCustomHorses;
 using RealmsForgotten.RFEffects;
 using RealmsForgotten.RFMissionLogic;
 using RealmsForgotten.UI;
+using RealmsForgotten.WarSailsPatches;
+using RF_BattleAI;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -56,6 +59,8 @@ namespace RealmsForgotten
         internal static Dictionary<string, Tuple<string, string, string, string>> fighterMin = new();
         internal static Dictionary<string, Tuple<string, string, string, string>> fighterMax = new();
         private bool manualPatchesHaveFired;
+        private bool delayedArmyCommandPatchesApplied;
+        private UIExtender uiExtender;
         public Dictionary<string, InputKey> KeysConfig;
 
         public static SubModule Instance;
@@ -88,12 +93,14 @@ namespace RealmsForgotten
                 
                 campaignGameStarter.AddBehavior(RFHorseSpawningCampaignBehavior.Instance);
                 campaignGameStarter.AddBehavior(new RFCareerCampaignBehavior());
+                campaignGameStarter.AddBehavior(new MercenaryBanditAttractionBehavior());
 
                 campaignGameStarter.AddBehavior(new SlaversRosterBehavior());
                 campaignGameStarter.AddBehavior(new AiSlaversPatrollingBehavior());
                 campaignGameStarter.AddBehavior(new RFLegendaryTroopsPlayerVisitTownCampaignBehavior());
                 campaignGameStarter.AddBehavior(new RFLegendaryTroopsNotableBehaviors());
                 campaignGameStarter.AddBehavior(new RFLegendaryTroopsAIRecruitment());
+                campaignGameStarter.AddBehavior(new RealmsForgotten.AiMade.ArmyCommand.RFArmyCommandCampaignBehavior());
 
                 campaignGameStarter.AddModel(new RFAgentApplyDamageModel(campaignGameStarter.GetExistingModel<AgentApplyDamageModel>()));
                 campaignGameStarter.AddModel(new RFBuildingConstructionModel(campaignGameStarter.GetExistingModel<BuildingConstructionModel>()));
@@ -129,6 +136,75 @@ namespace RealmsForgotten
             }
             if (RFSettings.Instance != null)
                 CheckInvalidKeys();
+        }
+
+        private void ApplyDelayedArmyCommandPatches()
+        {
+            if (delayedArmyCommandPatchesApplied)
+            {
+                RFLogger.Log("[Lifecycle] RFArmyCommand patches already active. Skipping reapply.");
+                return;
+            }
+
+            try
+            {
+                RFLogger.Log("[Lifecycle] RFArmyCommand patch apply attempt begin.");
+                RealmsForgotten.AiMade.ArmyCommand.RFArmyCommandRuntimeAudit.LogStartupAudit(typeof(SubModule).Assembly);
+                bool categoryApplied = RealmsForgotten.AiMade.ArmyCommand.RFArmyCommandRuntimeAudit.ApplyCategorySafely(harmony, typeof(SubModule).Assembly);
+                bool canManageApplied = RealmsForgotten.AiMade.ArmyCommand.RFArmyCanManagePatch.Apply(harmony);
+                delayedArmyCommandPatchesApplied = categoryApplied && canManageApplied;
+                RFLogger.Log(delayedArmyCommandPatchesApplied
+                    ? "[Lifecycle] RFArmyCommand patches applied successfully."
+                    : "[Lifecycle] RFArmyCommand patches incomplete. The module will retry later in the lifecycle.");
+            }
+            catch (Exception ex)
+            {
+                RFLogger.Log($"[Lifecycle] RFArmyCommand patches failed to apply: {ex}");
+            }
+        }
+
+        private void ApplyUncategorizedHarmonyPatchesSafely()
+        {
+            Assembly assembly = typeof(SubModule).Assembly;
+            List<Type> patchTypes = GetAssemblyTypesSafe(assembly)
+                .Where(type => type != null)
+                .Where(type => type.CustomAttributes.Any(attribute => attribute.AttributeType.FullName == typeof(HarmonyPatch).FullName))
+                .Where(type => !type.CustomAttributes.Any(attribute => attribute.AttributeType.FullName == typeof(HarmonyPatchCategory).FullName))
+                .OrderBy(type => type.FullName, StringComparer.Ordinal)
+                .ToList();
+
+            RFLogger.Log($"[Lifecycle] Uncategorized harmony patch sweep begin. patchTypes={patchTypes.Count}");
+            int successCount = 0;
+            int failureCount = 0;
+
+            foreach (Type patchType in patchTypes)
+            {
+                try
+                {
+                    harmony.CreateClassProcessor(patchType).Patch();
+                    successCount++;
+                }
+                catch (Exception ex)
+                {
+                    failureCount++;
+                    RFLogger.Log($"[Lifecycle] Uncategorized harmony patch failed | type={patchType.FullName} | error={ex}");
+                }
+            }
+
+            RFLogger.Log($"[Lifecycle] Uncategorized harmony patch sweep finished. success={successCount} failed={failureCount}");
+        }
+
+        private static IEnumerable<Type> GetAssemblyTypesSafe(Assembly assembly)
+        {
+            try
+            {
+                return assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                RFLogger.Log($"[Lifecycle] Type load warning during uncategorized harmony sweep. loaded={ex.Types?.Count(type => type != null) ?? 0} loaderExceptions={ex.LoaderExceptions?.Length ?? 0}");
+                return ex.Types.Where(type => type != null);
+            }
         }
 
         private void CheckInvalidKeys()
@@ -232,6 +308,7 @@ namespace RealmsForgotten
         {
             base.OnGameInitializationFinished(game);
             RFLogger.Log($"[Lifecycle] RealmsForgotten.SubModule.OnGameInitializationFinished | gameType={game.GameType?.GetType().FullName ?? "null"}");
+            ApplyDelayedArmyCommandPatches();
 
             //Globals.SetRacesIds();
             if (!manualPatchesHaveFired)
@@ -292,7 +369,20 @@ namespace RealmsForgotten
             RFLogger.Log($"[Lifecycle] RealmsForgotten.SubModule.OnSubModuleLoad | asm={asm.Location} | version={asm.GetName().Version} | lastWrite={File.GetLastWriteTime(asm.Location):O}");
             RFLogger.Log($"[Lifecycle] SaveableTypeDefiners present | main={typeof(SaveDefiner).FullName} | ai={typeof(CustomSaveableTypeDefiner).FullName} | intrigue={typeof(StrategicIntrigueTypeDefiner).FullName} | quest={typeof(QuestTypeDefiner).FullName}");
             ViewModelExtensionManager.Initialize(); //has to happen before harmony PatchAll
-            harmony.PatchAll();
+            try
+            {
+                uiExtender = new UIExtender("RealmsForgotten");
+                uiExtender.Register(asm);
+                uiExtender.Enable();
+                RFLogger.Log("[Lifecycle] UIExtender registered from RealmsForgotten.SubModule.");
+            }
+            catch (Exception ex)
+            {
+                RFLogger.Log($"[Lifecycle] UIExtender registration failed in RealmsForgotten.SubModule: {ex}");
+            }
+            ApplyUncategorizedHarmonyPatchesSafely();
+            OptionalNavalStartupPatchBootstrap.Apply(harmony);
+            BattleAIBootstrap.Initialize();
 
 
             TextObject coreContentDisabledReason = new("Disabled during installation.", null);
@@ -310,6 +400,14 @@ namespace RealmsForgotten
             {
                 WeaponEffectConsequences.Methods.Add(method.Name, (VictimAgentConsequence)method.CreateDelegate(typeof(VictimAgentConsequence)));
             }
+        }
+
+        protected override void OnSubModuleUnloaded()
+        {
+            uiExtender?.Disable();
+            uiExtender?.Deregister();
+            uiExtender = null;
+            base.OnSubModuleUnloaded();
         }
         public static Dictionary<string, int> undeadRespawnConfig { get; private set; }
         private void ReadConfigFile()

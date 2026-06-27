@@ -1,0 +1,92 @@
+<ListPanel WidthSizePolicy="CoverChildren"
+           HeightSizePolicy="CoverChildren"
+           VerticalAlignment="Center"
+           MarginLeft="10"
+           StackLayout.LayoutMethod="HorizontalLeftToRight">
+  <Children>
+    <Widget WidthSizePolicy="Fixed"
+            HeightSizePolicy="Fixed"
+            SuggestedWidth="41"
+            SuggestedHeight="34"
+            VerticalAlignment="Center"
+            MarginRight="8">
+      <Children>
+        <ButtonWidget DoNotPassEventsToChildren="true"
+                      WidthSizePolicy="StretchToParent"
+                      HeightSizePolicy="StretchToParent"
+                      Brush="MapBar.GatherArmy.Button"
+                      Command.Click="ExecuteOpenArmyManagement"
+                      UpdateChildrenStates="true">
+          <Children>
+            <BrushWidget WidthSizePolicy="Fixed"
+                         HeightSizePolicy="Fixed"
+                         SuggestedWidth="24"
+                         SuggestedHeight="24"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center"
+                         Brush="MapBar.GatherArmy.Icon" />
+            <HintWidget DataSource="{ManageArmyHint}"
+                        WidthSizePolicy="StretchToParent"
+                        HeightSizePolicy="StretchToParent"
+                        Command.HoverBegin="ExecuteBeginHint"
+                        Command.HoverEnd="ExecuteEndHint"
+                        IsDisabled="true" />
+          </Children>
+        </ButtonWidget>
+      </Children>
+    </Widget>
+
+    <ListPanel DataSource="{ACArmiesHint}"
+               DoNotPassEventsToChildren="true"
+               WidthSizePolicy="CoverChildren"
+               HeightSizePolicy="CoverChildren"
+               VerticalAlignment="Center"
+               MarginRight="10"
+               StackLayout.LayoutMethod="HorizontalLeftToRight"
+               Command.HoverBegin="ExecuteBeginHint"
+               Command.HoverEnd="ExecuteEndHint">
+      <Children>
+        <Widget DoNotAcceptEvents="true"
+                WidthSizePolicy="Fixed"
+                HeightSizePolicy="Fixed"
+                SuggestedWidth="26"
+                SuggestedHeight="26"
+                VerticalAlignment="Center"
+                Sprite="SPGeneral\MapOverlay\Encounter\WarIcon"
+                Color="#D4AF37FF" />
+        <TextWidget WidthSizePolicy="CoverChildren"
+                    HeightSizePolicy="CoverChildren"
+                    VerticalAlignment="Center"
+                    Brush="ArmyOverlay.PageControl.Text"
+                    Brush.FontSize="18"
+                    Text="@ACArmiesCount" />
+      </Children>
+    </ListPanel>
+
+    <ListPanel DataSource="{ACPartiesHint}"
+               DoNotPassEventsToChildren="true"
+               WidthSizePolicy="CoverChildren"
+               HeightSizePolicy="CoverChildren"
+               VerticalAlignment="Center"
+               StackLayout.LayoutMethod="HorizontalLeftToRight"
+               Command.HoverBegin="ExecuteBeginHint"
+               Command.HoverEnd="ExecuteEndHint">
+      <Children>
+        <Widget DoNotAcceptEvents="true"
+                WidthSizePolicy="Fixed"
+                HeightSizePolicy="Fixed"
+                SuggestedWidth="28"
+                SuggestedHeight="28"
+                VerticalAlignment="Center"
+                Sprite="MapBar\mapbar_icon2"
+                Color="#D4AF37FF" />
+        <TextWidget WidthSizePolicy="CoverChildren"
+                    HeightSizePolicy="CoverChildren"
+                    VerticalAlignment="Center"
+                    Brush="ArmyOverlay.PageControl.Text"
+                    Brush.FontSize="18"
+                    Text="@ACPartiesCount" />
+      </Children>
+    </ListPanel>
+  </Children>
+</ListPanel>

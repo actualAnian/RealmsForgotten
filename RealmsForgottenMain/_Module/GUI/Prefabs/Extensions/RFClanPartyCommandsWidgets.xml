@@ -1,0 +1,154 @@
+<ListPanel DataSource="{CurrentSelectedParty}"
+           WidthSizePolicy="CoverChildren"
+           HeightSizePolicy="CoverChildren"
+           StackLayout.LayoutMethod="VerticalTopToBottom"
+           IsVisible="@RFPartyCommandsVisible">
+  <Children>
+    <BrushWidget WidthSizePolicy="Fixed"
+                 HeightSizePolicy="Fixed"
+                 SuggestedWidth="578"
+                 SuggestedHeight="56"
+                 Brush="Clan.Management.Collapser">
+      <Children>
+        <TextWidget WidthSizePolicy="CoverChildren"
+                    HeightSizePolicy="CoverChildren"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Brush="Clan.Management.Collapser.Text"
+                    Text="Party Controls" />
+      </Children>
+    </BrushWidget>
+
+    <BrushWidget WidthSizePolicy="Fixed"
+                 HeightSizePolicy="Fixed"
+                 SuggestedWidth="578"
+                 SuggestedHeight="138"
+                 Brush="Kingdom.Item.Tuple">
+      <Children>
+        <ListPanel WidthSizePolicy="StretchToParent"
+                   HeightSizePolicy="CoverChildren"
+                   MarginLeft="18"
+                   MarginRight="18"
+                   MarginTop="10"
+                   MarginBottom="10"
+                   StackLayout.LayoutMethod="VerticalTopToBottom">
+          <Children>
+            <TextWidget WidthSizePolicy="StretchToParent"
+                        HeightSizePolicy="CoverChildren"
+                        Brush="Clan.Tuple.Name.Text"
+                        Brush.TextHorizontalAlignment="Center"
+                        Text="@RFPartyCommandsHeader"
+                        MarginBottom="8" />
+
+            <ListPanel WidthSizePolicy="CoverChildren"
+                       HeightSizePolicy="Fixed"
+                       SuggestedHeight="40"
+                       HorizontalAlignment="Center"
+                       StackLayout.LayoutMethod="HorizontalLeftToRight"
+                       MarginBottom="8">
+              <Children>
+                <ButtonWidget IsVisible="@RFPartyTargetEnabled"
+                              Command.Click="ExecuteRFSelectPartyTarget"
+                              DoNotPassEventsToChildren="true"
+                              Brush="ArmyManagement.Army.AddCoherenceButton"
+                              WidthSizePolicy="Fixed"
+                              HeightSizePolicy="Fixed"
+                              SuggestedWidth="250"
+                              SuggestedHeight="36"
+                              MarginRight="8">
+                  <Children>
+                    <TextWidget MarginLeft="8"
+                                MarginRight="8"
+                                Brush="ArmyManagement.Army.TotalCostAndStrength.Title"
+                                Brush.FontSize="12"
+                                WidthSizePolicy="StretchToParent"
+                                HeightSizePolicy="StretchToParent"
+                                Text="@RFPartyTargetText"
+                                ClipContents="true"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+                  </Children>
+                </ButtonWidget>
+
+                <ButtonWidget IsVisible="@RFPartyBehaviorEnabled"
+                              Command.Click="ExecuteRFSelectPartyBehavior"
+                              DoNotPassEventsToChildren="true"
+                              Brush="ArmyManagement.Army.AddCoherenceButton"
+                              WidthSizePolicy="Fixed"
+                              HeightSizePolicy="Fixed"
+                              SuggestedWidth="250"
+                              SuggestedHeight="36">
+                  <Children>
+                    <TextWidget MarginLeft="8"
+                                MarginRight="8"
+                                Brush="ArmyManagement.Army.TotalCostAndStrength.Title"
+                                Brush.FontSize="12"
+                                WidthSizePolicy="StretchToParent"
+                                HeightSizePolicy="StretchToParent"
+                                Text="@RFPartyBehaviorText"
+                                ClipContents="true"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+                  </Children>
+                </ButtonWidget>
+              </Children>
+            </ListPanel>
+
+            <ListPanel WidthSizePolicy="CoverChildren"
+                       HeightSizePolicy="Fixed"
+                       SuggestedHeight="40"
+                       HorizontalAlignment="Center"
+                       StackLayout.LayoutMethod="HorizontalLeftToRight">
+              <Children>
+                <ButtonWidget IsVisible="@RFPartyRecommendedEnabled"
+                              Command.Click="ExecuteRFUseRecommendedPartyPlan"
+                              DoNotPassEventsToChildren="true"
+                              Brush="ArmyManagement.Army.AddCoherenceButton"
+                              WidthSizePolicy="Fixed"
+                              HeightSizePolicy="Fixed"
+                              SuggestedWidth="250"
+                              SuggestedHeight="36"
+                              MarginRight="8">
+                  <Children>
+                    <TextWidget MarginLeft="8"
+                                MarginRight="8"
+                                Brush="ArmyManagement.Army.TotalCostAndStrength.Title"
+                                Brush.FontSize="12"
+                                WidthSizePolicy="StretchToParent"
+                                HeightSizePolicy="StretchToParent"
+                                Text="@RFPartyRecommendedText"
+                                ClipContents="true"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+                  </Children>
+                </ButtonWidget>
+
+                <ButtonWidget IsVisible="@RFPartyStrategicEnabled"
+                              Command.Click="ExecuteRFSelectPartyStrategicPlan"
+                              DoNotPassEventsToChildren="true"
+                              Brush="ArmyManagement.Army.AddCoherenceButton"
+                              WidthSizePolicy="Fixed"
+                              HeightSizePolicy="Fixed"
+                              SuggestedWidth="250"
+                              SuggestedHeight="36">
+                  <Children>
+                    <TextWidget MarginLeft="8"
+                                MarginRight="8"
+                                Brush="ArmyManagement.Army.TotalCostAndStrength.Title"
+                                Brush.FontSize="12"
+                                WidthSizePolicy="StretchToParent"
+                                HeightSizePolicy="StretchToParent"
+                                Text="@RFPartyStrategicText"
+                                ClipContents="true"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+                  </Children>
+                </ButtonWidget>
+              </Children>
+            </ListPanel>
+          </Children>
+        </ListPanel>
+      </Children>
+    </BrushWidget>
+  </Children>
+</ListPanel>

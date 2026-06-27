@@ -11,12 +11,16 @@
         <ModuleId>$(MSBuildProjectName)</ModuleId>
         <ModuleName>$(MSBuildProjectName)</ModuleName>
         <GameFolder>$(BANNERLORD_GAME_DIR)</GameFolder>
+        <ModuleRoot>$(GameFolder)\Modules\RealmsForgotten</ModuleRoot>
+        <ModuleBin>$(ModuleRoot)\bin\Win64_Shipping_Client</ModuleBin>
+        <LocalModuleBin>_Module\bin\Win64_Shipping_Client</LocalModuleBin>
         <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       <Optimize>False</Optimize>
       <DebugType>portable</DebugType>
+      <PlatformTarget>x64</PlatformTarget>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -87,9 +91,6 @@
 			<HintPath>%(Identity)</HintPath>
 			<Private>False</Private>
 		</Reference>
-        <Reference Include="ServeAsSoldier">
-            <HintPath>_Module\bin\Win64_Shipping_Client\ServeAsSoldier.dll</HintPath>
-        </Reference>
 		<Compile Remove="AiMade\Stealth\**" />
 		<EmbeddedResource Remove="AiMade\Stealth\**" />
 		<None Remove="AiMade\Stealth\**" />
@@ -116,6 +117,50 @@
         <Folder Include="_Module\ModuleSounds\" />
     </ItemGroup>
     <ItemGroup>
+      <ProjectReference Include="..\RF_BattleAI\RF_BattleAI.csproj" />
+      <ProjectReference Include="..\RF_warsystem\RF_warsystem.csproj" />
+    </ItemGroup>
+    <ItemGroup>
       <None Include="_Module\ModuleData\project.mbproj" />
     </ItemGroup>
+    <ItemGroup>
+      <RFArmyCommandAsset Include="_Module\SubModule.xml">
+        <ModuleRelativePath>SubModule.xml</ModuleRelativePath>
+      </RFArmyCommandAsset>
+      <RFArmyCommandAsset Include="_Module\GUI\Prefabs\Map\RFArmyOverlayWindow.xml">
+        <ModuleRelativePath>GUI\Prefabs\Map\RFArmyOverlayWindow.xml</ModuleRelativePath>
+      </RFArmyCommandAsset>
+      <RFArmyCommandAsset Include="_Module\GUI\Prefabs\Extensions\RFArmyManagementWidgets.xml">
+        <ModuleRelativePath>GUI\Prefabs\Extensions\RFArmyManagementWidgets.xml</ModuleRelativePath>
+      </RFArmyCommandAsset>
+      <RFArmyCommandAsset Include="_Module\GUI\Brushes\ArmyCommanderBrushes.xml">
+        <ModuleRelativePath>GUI\Brushes\ArmyCommanderBrushes.xml</ModuleRelativePath>
+      </RFArmyCommandAsset>
+    </ItemGroup>
+
+    <Target Name="PostBuild" AfterTargets="Build">
+      <MakeDir Directories="$(LocalModuleBin)" />
+      <Copy SourceFiles="$(TargetPath)"
+            DestinationFolder="$(LocalModuleBin)"
+            SkipUnchangedFiles="true" />
+      <Copy SourceFiles="$(TargetDir)$(TargetName).pdb"
+            DestinationFolder="$(LocalModuleBin)"
+            SkipUnchangedFiles="true"
+            Condition="Exists('$(TargetDir)$(TargetName).pdb')" />
+
+      <MakeDir Directories="$(ModuleBin)" Condition="'$(GameFolder)' != '' and '$(DisableModuleCopy)' != 'true'" />
+      <Copy SourceFiles="$(TargetPath)"
+            DestinationFolder="$(ModuleBin)"
+            SkipUnchangedFiles="true"
+            Condition="'$(GameFolder)' != '' and '$(DisableModuleCopy)' != 'true'" />
+      <Copy SourceFiles="$(TargetDir)$(TargetName).pdb"
+            DestinationFolder="$(ModuleBin)"
+            SkipUnchangedFiles="true"
+            Condition="'$(GameFolder)' != '' and '$(DisableModuleCopy)' != 'true' and Exists('$(TargetDir)$(TargetName).pdb')" />
+
+      <Copy SourceFiles="@(RFArmyCommandAsset)"
+            DestinationFiles="@(RFArmyCommandAsset->'$(ModuleRoot)\%(ModuleRelativePath)')"
+            SkipUnchangedFiles="true"
+            Condition="'$(GameFolder)' != '' and '$(DisableModuleCopy)' != 'true'" />
+    </Target>
 </Project>

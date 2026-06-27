@@ -1,0 +1,59 @@
+<Brushes>
+    <Brush Name="ArmyCommander.ArmyLine.Button">
+        <Layers>
+            <BrushLayer Name="Default" Sprite="StdAssets\Popup\frame" IsHidden="true" />
+        </Layers>
+        <Styles>
+            <Style Name="Default">
+                <BrushLayer Name="Default" ColorFactor="1" IsHidden="false" />
+            </Style>
+            <Style Name="Hovered">
+                <BrushLayer Name="Default" ColorFactor="0.3" IsHidden="false" />
+            </Style>
+            <Style Name="Selected">
+                <BrushLayer Name="Default" ColorFactor="0.3" IsHidden="false" />
+            </Style>
+            <Style Name="Pressed">
+                <BrushLayer Name="Default" ColorFactor="1" Color="#FFFFFFFF" IsHidden="false" />
+            </Style>
+            <Style Name="Disabled">
+                <BrushLayer Name="Default" ColorFactor="1" Color="#FFFB00FF" IsHidden="false" />
+            </Style>
+        </Styles>
+    </Brush>
+
+    <Brush Name="ArmyCommander.NextPageButton">
+        <Layers>
+            <BrushLayer Name="Background" Sprite="StdAssets\Popup\progress_bar_slider_knob" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="29" SuggestedHeight="39" ExtendLeft="8" ExtendRight="8" ExtendTop="4" ExtendBottom="4" IsHidden="false" IsVisible="true" Color="#FFFFFFFF" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <BrushLayer Name="Arrow" Sprite="StdAssets\arrow_pointing_left" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="29" SuggestedHeight="39" IsHidden="false" IsVisible="true" Color="#FFFFFFFF" HorizontalFlip="true" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Layers>
+        <Styles>
+            <Style Name="Default">
+                <BrushLayer Name="Background" ColorFactor="1.0" />
+                <BrushLayer Name="Arrow" ColorFactor="1.0" />
+            </Style>
+            <Style Name="Hovered">
+                <BrushLayer Name="Background" ColorFactor="1.2" />
+                <BrushLayer Name="Arrow" ColorFactor="1.5" />
+            </Style>
+            <Style Name="Pressed">
+                <BrushLayer Name="Background" ColorFactor="0.8" />
+                <BrushLayer Name="Arrow" ColorFactor="0.85" />
+            </Style>
+        </Styles>
+    </Brush>
+
+    <Brush Name="ArmyCommander.TopWidgetsBackground">
+        <Layers>
+            <BrushLayer Name="Border" Sprite="SPGeneral\MapOverlay\Settlement\parties_characters_group_frame" IsHidden="false" IsVisible="true" ExtendBottom="12" ExtendLeft="28" Color="#FFFFFFFF" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Layers>
+        <Styles>
+            <Style Name="Default">
+                <BrushLayer Name="Border" ColorFactor="1.0" />
+            </Style>
+            <Style Name="Hovered">
+                <BrushLayer Name="Border" ColorFactor="1.5" />
+            </Style>
+        </Styles>
+    </Brush>
+</Brushes>

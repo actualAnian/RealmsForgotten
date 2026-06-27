@@ -1,0 +1,150 @@
+<ListPanel IsVisible="@ACIsValidArmySelected"
+           WidthSizePolicy="Fixed"
+           SuggestedWidth="320"
+           HeightSizePolicy="CoverChildren"
+           StackLayout.LayoutMethod="VerticalTopToBottom"
+           HorizontalAlignment="Center"
+           VerticalAlignment="Top"
+           MarginTop="205">
+  <Children>
+    <TextWidget WidthSizePolicy="StretchToParent"
+                HeightSizePolicy="CoverChildren"
+                Brush="ArmyManagement.Army.TotalCostAndStrength.Title"
+                Brush.FontSize="18"
+                Text="@ArmyBehaviorDescription"
+                ClipContents="true"
+                HorizontalAlignment="Center"
+                MarginBottom="8" />
+
+    <ListPanel WidthSizePolicy="CoverChildren"
+               HeightSizePolicy="Fixed"
+               SuggestedHeight="36"
+               HorizontalAlignment="Center"
+               StackLayout.LayoutMethod="HorizontalLeftToRight"
+               MarginBottom="8">
+      <Children>
+        <ButtonWidget IsVisible="@TargetSettlementEnabled"
+                      Command.Click="ExecuteSelectTargetSettlement"
+                      DoNotPassEventsToChildren="true"
+                      Brush="ArmyManagement.Army.AddCoherenceButton"
+                      WidthSizePolicy="Fixed"
+                      HeightSizePolicy="Fixed"
+                      SuggestedWidth="150"
+                      SuggestedHeight="36"
+                      MarginRight="8">
+          <Children>
+            <TextWidget MarginLeft="10"
+                        MarginRight="10"
+                        Brush="ArmyManagement.Army.TotalCostAndStrength.Title"
+                        Brush.FontSize="13"
+                        WidthSizePolicy="StretchToParent"
+                        HeightSizePolicy="StretchToParent"
+                        Text="@TargetSettlementName"
+                        ClipContents="true"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
+          </Children>
+        </ButtonWidget>
+
+        <ButtonWidget IsVisible="@ArmyBehaviorEnabled"
+                      Command.Click="ExecuteSelectArmyBehavior"
+                      DoNotPassEventsToChildren="true"
+                      Brush="ArmyManagement.Army.AddCoherenceButton"
+                      WidthSizePolicy="Fixed"
+                      HeightSizePolicy="Fixed"
+                      SuggestedWidth="150"
+                      SuggestedHeight="36">
+          <Children>
+            <TextWidget MarginLeft="10"
+                        MarginRight="10"
+                        Brush="ArmyManagement.Army.TotalCostAndStrength.Title"
+                        Brush.FontSize="13"
+                        WidthSizePolicy="StretchToParent"
+                        HeightSizePolicy="StretchToParent"
+                        Text="@ArmyBehaviorText"
+                        ClipContents="true"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
+          </Children>
+        </ButtonWidget>
+      </Children>
+    </ListPanel>
+
+    <ListPanel WidthSizePolicy="CoverChildren"
+               HeightSizePolicy="Fixed"
+               SuggestedHeight="36"
+               HorizontalAlignment="Center"
+               StackLayout.LayoutMethod="HorizontalLeftToRight"
+               MarginBottom="8">
+      <Children>
+        <ButtonWidget IsVisible="@RecommendedPlanEnabled"
+                      Command.Click="ExecuteUseRecommendedPlan"
+                      DoNotPassEventsToChildren="true"
+                      Brush="ArmyManagement.Army.AddCoherenceButton"
+                      WidthSizePolicy="Fixed"
+                      HeightSizePolicy="Fixed"
+                      SuggestedWidth="150"
+                      SuggestedHeight="36"
+                      MarginRight="8">
+          <Children>
+            <TextWidget MarginLeft="10"
+                        MarginRight="10"
+                        Brush="ArmyManagement.Army.TotalCostAndStrength.Title"
+                        Brush.FontSize="13"
+                        WidthSizePolicy="StretchToParent"
+                        HeightSizePolicy="StretchToParent"
+                        Text="@RecommendedOrderText"
+                        ClipContents="true"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
+          </Children>
+        </ButtonWidget>
+
+        <ButtonWidget IsVisible="@StrategicPlanEnabled"
+                      Command.Click="ExecuteSelectStrategicPlan"
+                      DoNotPassEventsToChildren="true"
+                      Brush="ArmyManagement.Army.AddCoherenceButton"
+                      WidthSizePolicy="Fixed"
+                      HeightSizePolicy="Fixed"
+                      SuggestedWidth="150"
+                      SuggestedHeight="36">
+          <Children>
+            <TextWidget MarginLeft="10"
+                        MarginRight="10"
+                        Brush="ArmyManagement.Army.TotalCostAndStrength.Title"
+                        Brush.FontSize="13"
+                        WidthSizePolicy="StretchToParent"
+                        HeightSizePolicy="StretchToParent"
+                        Text="@StrategicPlanText"
+                        ClipContents="true"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
+          </Children>
+        </ButtonWidget>
+      </Children>
+    </ListPanel>
+
+    <ButtonWidget IsVisible="@SendInfluenceEnabled"
+                  Command.Click="ExecuteSendInfluence"
+                  DoNotPassEventsToChildren="true"
+                  Brush="ArmyManagement.Army.AddCoherenceButton"
+                  WidthSizePolicy="Fixed"
+                  HeightSizePolicy="Fixed"
+                  SuggestedWidth="180"
+                  SuggestedHeight="36"
+                  HorizontalAlignment="Center">
+      <Children>
+        <TextWidget MarginLeft="10"
+                    MarginRight="10"
+                    Brush="ArmyManagement.Army.TotalCostAndStrength.Title"
+                    Brush.FontSize="13"
+                    WidthSizePolicy="StretchToParent"
+                    HeightSizePolicy="StretchToParent"
+                    Text="Send 50 Influence"
+                    ClipContents="true"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center" />
+      </Children>
+    </ButtonWidget>
+  </Children>
+</ListPanel>
