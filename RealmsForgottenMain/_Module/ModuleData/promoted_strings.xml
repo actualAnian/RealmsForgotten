@@ -1,0 +1,15 @@
+<strings>
+  <string id="rf_promoted_offer_title" text="Promoted" />
+  <string id="rf_promoted_offer_body" text="{TROOP_NAME} stood out in battle.{newline}{newline}Do you want to raise this soldier into hero status?" />
+  <string id="rf_promoted_offer_accept" text="Promote" />
+  <string id="rf_promoted_offer_decline" text="Leave As Troop" />
+  <string id="rf_promoted_family_only_body" text="Your companion room is full. You can still take this promoted soldier into your clan as a family retainer." />
+  <string id="rf_promoted_choose_path_body" text="How should this promoted soldier join you?" />
+  <string id="rf_promoted_companion_option" text="Companion" />
+  <string id="rf_promoted_family_option" text="Clan Retainer" />
+  <string id="rf_promoted_cancel" text="Cancel" />
+  <string id="rf_promoted_rename_title" text="Promoted" />
+  <string id="rf_promoted_rename_body" text="Choose a name for your new hero." />
+  <string id="rf_promoted_confirm" text="Confirm" />
+  <string id="rf_promoted_keep_default" text="Keep Default" />
+</strings>

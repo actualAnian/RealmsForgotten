@@ -1,10 +1,6 @@
 using System.Linq;
 using RF_warsystem;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Election;
-using TaleWorlds.Core;
-using TaleWorlds.Library;
-using TaleWorlds.Localization;
 
 namespace RealmsForgotten.AiMade
 {
@@ -12,8 +8,7 @@ namespace RealmsForgotten.AiMade
     {
         public override void RegisterEvents()
         {
-            CampaignEvents.KingdomDecisionConcluded.AddNonSerializedListener(this, OnKingdomDecisionConcluded);
-            CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, OnDailyTick);
+            CampaignEvents.WeeklyTickEvent.AddNonSerializedListener(this, OnWeeklyTick);
         }
 
         public override void SyncData(IDataStore dataStore)
@@ -21,41 +16,24 @@ namespace RealmsForgotten.AiMade
             // Nothing to sync for now
         }
 
-        private void OnKingdomDecisionConcluded(KingdomDecision decision, DecisionOutcome outcome, bool success)
+        private void OnWeeklyTick()
         {
-            if (decision is MakePeaceKingdomDecision makePeaceDecision)
+            if (!TryGetEnduringRivalryPair(out Kingdom dwarfKingdom, out Kingdom urkhaiKingdom))
             {
-                var kingdom1 = makePeaceDecision.Kingdom;
-                var kingdom2 = makePeaceDecision.FactionToMakePeaceWith as Kingdom;
-
-                if (kingdom1 != null && kingdom2 != null &&
-                    (IsRestrictedCulture(kingdom1.Culture.StringId) || IsRestrictedCulture(kingdom2.Culture.StringId)))
-                {
-                    if (success)
-                    {
-                        RFWarExternalIntentApi.ReinforceEnduringRivalryWar(kingdom1, kingdom2);
-                        MBInformationManager.AddQuickInformation(new TextObject($"{kingdom1.Name} and {kingdom2.Name} are sliding back into war!"));
-                    }
-                }
+                return;
             }
-        }
 
-        private void OnDailyTick()
-        {
-            var dwarfKingdom = Kingdom.All.FirstOrDefault(k => k.StringId == "dwarf_kingdom");
-            var urkhaiKingdom = Kingdom.All.FirstOrDefault(k => k.StringId == "urkhai_kingdom");
-
-            if (dwarfKingdom != null && urkhaiKingdom != null && !dwarfKingdom.IsAtWarWith(urkhaiKingdom))
+            if (!dwarfKingdom.IsAtWarWith(urkhaiKingdom))
             {
                 RFWarExternalIntentApi.ReinforceEnduringRivalryWar(dwarfKingdom, urkhaiKingdom);
-                MBInformationManager.AddQuickInformation(new TextObject(
-                    "Dwarven and Urkhai hostility is flaring again!"));
             }
         }
 
-        private bool IsRestrictedCulture(string cultureId)
+        private static bool TryGetEnduringRivalryPair(out Kingdom dwarfKingdom, out Kingdom urkhaiKingdom)
         {
-            return cultureId == "dwarf" || cultureId == "urkhai";
+            dwarfKingdom = Kingdom.All.FirstOrDefault(k => k.StringId == "dwarf_kingdom");
+            urkhaiKingdom = Kingdom.All.FirstOrDefault(k => k.StringId == "urkhai_kingdom");
+            return dwarfKingdom != null && urkhaiKingdom != null;
         }
     }
 }

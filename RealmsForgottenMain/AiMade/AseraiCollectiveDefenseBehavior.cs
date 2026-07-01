@@ -161,7 +161,7 @@ namespace RealmsForgotten.AiMade
             if (anyJoined)
             {
                 InformationManager.DisplayMessage(new InformationMessage(
-                    $"{attackedAserai.Name} has called the desert realms to arms. The Aserai kingdoms unite against {attacker.Name}.",
+                    $"{attackedAserai.Name} has called the desert realms to arms. The Athas kingdoms unite against {attacker.Name}.",
                     Colors.Yellow));
             }
         }

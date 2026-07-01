@@ -7,6 +7,8 @@ namespace RealmsForgotten.AiMade
 {
     internal static class RFLogger
     {
+        private const bool Enabled = false;
+
         private static readonly string[] LogPaths =
         {
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Mount and Blade II Bannerlord", "Configs", "ModLogs", "RF_ColdLoadProbe.log"),
@@ -16,6 +18,11 @@ namespace RealmsForgotten.AiMade
 
         internal static void Log(string msg)
         {
+            if (!Enabled)
+            {
+                return;
+            }
+
             try
             {
                 string line = $"[{DateTime.Now:HH:mm:ss.fff}] {msg}\n";

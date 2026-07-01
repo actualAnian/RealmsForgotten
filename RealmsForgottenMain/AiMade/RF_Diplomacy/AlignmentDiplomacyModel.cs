@@ -53,6 +53,24 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
             return (c1.IsGoodCulture() && c2.IsEvilCulture()) || (c1.IsEvilCulture() && c2.IsGoodCulture());
         }
 
+        private static bool IsDwarfUrkhaiEnduringRivalry(IFaction faction1, IFaction faction2)
+        {
+            if (faction1 is not Kingdom kingdom1 || faction2 is not Kingdom kingdom2)
+            {
+                return false;
+            }
+
+            if (kingdom1.Culture == null || kingdom2.Culture == null)
+            {
+                return false;
+            }
+
+            string culture1 = kingdom1.Culture.StringId;
+            string culture2 = kingdom2.Culture.StringId;
+            return (culture1 == "dwarf" && culture2 == "urkhai") ||
+                   (culture1 == "urkhai" && culture2 == "dwarf");
+        }
+
         // Delegate everything else
         public override int MaxRelationLimit => _baseModel.MaxRelationLimit;
         public override int MinRelationLimit => _baseModel.MinRelationLimit;
@@ -101,6 +119,11 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
                 return float.MinValue;
             }
 
+            if (IsDwarfUrkhaiEnduringRivalry(a, b))
+            {
+                return float.MinValue;
+            }
+
             return _baseModel.GetScoreOfDeclaringPeace(a, b);
         }
         public override float GetScoreOfClanToLeaveKingdom(Clan c, Kingdom k) => _baseModel.GetScoreOfClanToLeaveKingdom(c, k);
@@ -112,7 +135,15 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
         public override float GetStrengthThresholdForNonMutualWarsToBeIgnoredToJoinKingdom(Kingdom k) => _baseModel.GetStrengthThresholdForNonMutualWarsToBeIgnoredToJoinKingdom(k);
         public override float GetValueOfHeroForFaction(Hero h, IFaction f, bool marriage) => _baseModel.GetValueOfHeroForFaction(h, f, marriage);
         public override bool IsClanEligibleToBecomeRuler(Clan c) => _baseModel.IsClanEligibleToBecomeRuler(c);
-        public override bool IsPeaceSuitable(IFaction factionDeclaresPeace, IFaction factionDeclaredPeace) => _baseModel.IsPeaceSuitable(factionDeclaresPeace, factionDeclaredPeace);
+        public override bool IsPeaceSuitable(IFaction factionDeclaresPeace, IFaction factionDeclaredPeace)
+        {
+            if (AlignmentWarBehavior.IsActive || IsDwarfUrkhaiEnduringRivalry(factionDeclaresPeace, factionDeclaredPeace))
+            {
+                return false;
+            }
+
+            return _baseModel.IsPeaceSuitable(factionDeclaresPeace, factionDeclaredPeace);
+        }
         public override float GetValueOfSettlementsForFaction(IFaction faction) => _baseModel.GetValueOfSettlementsForFaction(faction);
         public override DiplomacyStance? GetShallowDiplomaticStance(IFaction faction1, IFaction faction2) => _baseModel.GetShallowDiplomaticStance(faction1 , faction2);
         public override DiplomacyStance GetDefaultDiplomaticStance(IFaction faction1, IFaction faction2) => _baseModel.GetDefaultDiplomaticStance(faction1, faction2);
@@ -121,6 +152,18 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
 
         public override float GetScoreOfDeclaringPeaceForClan(IFaction factionDeclaresPeace, IFaction factionDeclaredPeace, Clan evaluatingClan, out TextObject reason, bool includeReason = false)
         {
+            if (AlignmentWarBehavior.IsActive)
+            {
+                reason = includeReason ? new TextObject("{=rf_alignment_war_no_peace}This realm cannot seek peace while the alignment war is active.") : new TextObject(string.Empty);
+                return float.MinValue;
+            }
+
+            if (IsDwarfUrkhaiEnduringRivalry(factionDeclaresPeace, factionDeclaredPeace))
+            {
+                reason = includeReason ? new TextObject("{=rf_dwarf_urkhai_no_peace}Dwarves and Urkhai are locked in an enduring blood-feud and will not accept peace.") : new TextObject(string.Empty);
+                return float.MinValue;
+            }
+
             return _baseModel.GetScoreOfDeclaringPeaceForClan(factionDeclaresPeace, factionDeclaredPeace, evaluatingClan, out reason, includeReason);
         }
 

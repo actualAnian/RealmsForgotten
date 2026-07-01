@@ -21,7 +21,6 @@ using RealmsForgotten.AiMade.Village_Inn_Quests;
 using RealmsForgotten.AiMade.Village_Inn_Quests.RealmsForgotten.AiMade.Village_Inn_Quests;
 using RealmsForgotten.Chamberlain;
 using RealmsForgotten.AiMade.Infect;
-using RF_warsystem;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 
@@ -85,8 +84,6 @@ namespace RealmsForgotten.AiMade
             // Initialize quest behaviors
             var customItemCategories = new CustomItemCategories();
             customItemCategories.Initialize();
-
-            RFWarSystemRegistrar.RegisterBehaviors(campaignGameStarter);
 
             // Add other behaviors
             campaignGameStarter.AddBehavior(new StrategicIntrigueCampaignBehavior());
@@ -162,7 +159,6 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddModel(new CustomTradeItemPriceFactorModel());
             //campaignGameStarter.AddModel(new SpearAwareBattleSpawnModel());
             campaignGameStarter.AddModel(new RFDiplomacyModel());
-            RFWarSystemRegistrar.Register(campaignGameStarter);
         }
         public override void OnMissionBehaviorInitialize(Mission mission)
         {
@@ -197,7 +193,6 @@ namespace RealmsForgotten.AiMade
             }
             // Add Find Magic Items behavior to all missions
             mission.AddMissionBehavior(new FindMagicItemsMissionBehavior());
-            mission.AddMissionBehavior(new RFMissionHeartbeat());
             // No final do OnMissionBehaviorInitialize, depois de AddMissionBehavior(...)
             // Mission tick probe disabled during cold-load investigation.
 

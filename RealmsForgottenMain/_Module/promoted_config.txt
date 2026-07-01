@@ -1,0 +1,11 @@
+# RF Promoted configuration
+
+DebugMessages = false
+AlwaysPromote = false
+RatioThreshold = 1.1
+MeritPerKill = 1
+MeritThreshold = 8
+AllowMultiplePromotions = false
+PromotedCompanionsIncreaseLimit = false
+EnableBonusCompanionLimit = false
+BonusCompanionLimitValue = 1

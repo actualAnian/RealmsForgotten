@@ -17,6 +17,8 @@ namespace RealmsForgotten
 {
     public class CapitulationSystemBehavior : CampaignBehaviorBase
     {
+        private const int CapitulationAuditMaxLines = 120;
+        private static int _remainingAuditLines = CapitulationAuditMaxLines;
         private Dictionary<Kingdom, CampaignTime> _lastCapitulation = new Dictionary<Kingdom, CampaignTime>();
         private Dictionary<Kingdom, CampaignTime> _lastAidAppeal = new Dictionary<Kingdom, CampaignTime>();
         private readonly List<string> NonCapitulatingNations = new()
@@ -63,25 +65,35 @@ namespace RealmsForgotten
                     if (strong == null || strong.IsEliminated)
                         continue;
 
+                    AuditCapitulation(
+                        $"CHECK weak={weak.StringId} strong={strong.StringId} weakFiefs={weak.Fiefs.Count()} weakStrength={weak.CurrentTotalStrength:F1} strongStrength={strong.CurrentTotalStrength:F1}");
+
                     if (TrySeekProtectiveAid(weak, strong))
                     {
+                        AuditCapitulation($"AID weak={weak.StringId} strong={strong.StringId} result=protective_aid");
                         _lastAidAppeal[weak] = CampaignTime.Now;
                         break;
                     }
 
                     if (!ShouldCapitulate(weak, strong))
+                    {
+                        AuditCapitulation($"REJECT weak={weak.StringId} strong={strong.StringId} reason=threshold_not_met");
                         continue;
+                    }
 
                     if (weak == Hero.MainHero.Clan.Kingdom)
                     {
+                        AuditCapitulation($"PLAYER weak={weak.StringId} strong={strong.StringId} action=show_surrender_inquiry");
                         ShowPlayerSurrenderInquiry(weak, strong);
                     }
                     else if (strong == Hero.MainHero.Clan.Kingdom)
                     {
+                        AuditCapitulation($"PLAYER strong={strong.StringId} weak={weak.StringId} action=show_ai_demand_inquiry");
                         ShowAIDemandInquiry(weak, strong);
                     }
                     else
                     {
+                        AuditCapitulation($"CAPITULATE weak={weak.StringId} strong={strong.StringId} action=apply");
                         ApplyCapitulation(weak, strong);
                     }
 
@@ -108,6 +120,7 @@ namespace RealmsForgotten
             int weakFiefs = weak.Fiefs.Count();
             float strengthRatio = strong.CurrentTotalStrength / (weak.CurrentTotalStrength + 1f);
 
+            AuditCapitulation($"THRESHOLD weak={weak.StringId} strong={strong.StringId} weakFiefs={weakFiefs} strengthRatio={strengthRatio:F2}");
             return weakFiefs <= 2 && strengthRatio >= 3.0f;
         }
 
@@ -136,13 +149,19 @@ namespace RealmsForgotten
                 .OrderByDescending(k => ScoreHelperKingdom(k, weak, strong))
                 .ToList();
 
+            AuditCapitulation(
+                $"AID_SCAN weak={weak.StringId} strong={strong.StringId} helpers={(helpers.Count == 0 ? "none" : string.Join(",", helpers.Select(x => x.StringId)))}");
+
             if (helpers.Count == 0)
                 return false;
 
             Kingdom helper = helpers[0];
             float helperScore = ScoreHelperKingdom(helper, weak, strong);
             if (helperScore < 45f)
+            {
+                AuditCapitulation($"AID_REJECT weak={weak.StringId} helper={helper.StringId} score={helperScore:F1}");
                 return false;
+            }
 
             bool absorbAsProtectedVassal =
                 weakFiefs <= 1
@@ -152,6 +171,7 @@ namespace RealmsForgotten
 
             if (absorbAsProtectedVassal)
             {
+                AuditCapitulation($"AID_PROTECTED_VASSAL weak={weak.StringId} helper={helper.StringId} strong={strong.StringId}");
                 AbsorbKingdomAsProtectedVassal(weak, helper, strong);
                 return true;
             }
@@ -181,7 +201,10 @@ namespace RealmsForgotten
             }
 
             if (!declaredAnyWar)
+            {
+                AuditCapitulation($"AID_REJECT weak={weak.StringId} strong={strong.StringId} reason=no_helper_joined_war");
                 return false;
+            }
 
             string helperNames = string.Join(", ", mobilizedHelpers.Select(x => x.Name.ToString()));
             InformationManager.DisplayMessage(new InformationMessage(
@@ -261,15 +284,20 @@ namespace RealmsForgotten
             foreach (var clan in weak.Clans.ToList())
             {
                 if (clan.IsUnderMercenaryService)
+                {
+                    AuditCapitulation($"SKIP weak={weak.StringId} clan={clan.StringId} reason=mercenary_service target={helper.StringId} mode=protected_vassal");
                     continue;
+                }
 
                 ChangeKingdomAction.ApplyByJoinToKingdom(clan, helper, showNotification: false);
+                AuditCapitulation($"MOVE weak={weak.StringId} clan={clan.StringId} target={helper.StringId} mode=protected_vassal resultKingdom={clan.Kingdom?.StringId ?? "null"} eliminated={clan.IsEliminated}");
             }
 
             InformationManager.DisplayMessage(new InformationMessage(
                 $"{weak.Name}, facing destruction by {strong.Name}, has sworn itself to {helper.Name} in exchange for protection.",
                 Colors.Yellow));
 
+            AuditCapitulation($"DESTROY_KINGDOM weak={weak.StringId} mode=protected_vassal helper={helper.StringId}");
             DestroyKingdomAction.Apply(weak);
         }
 
@@ -353,12 +381,45 @@ namespace RealmsForgotten
             foreach (var clan in weak.Clans.ToList())
             {
                 if (clan.IsUnderMercenaryService)
+                {
+                    AuditCapitulation($"SKIP weak={weak.StringId} clan={clan.StringId} reason=mercenary_service target={strong.StringId} mode=direct_capitulation");
                     continue;
+                }
 
                 ChangeKingdomAction.ApplyByJoinToKingdom(clan, strong, showNotification: false);
+                AuditCapitulation($"MOVE weak={weak.StringId} clan={clan.StringId} target={strong.StringId} mode=direct_capitulation resultKingdom={clan.Kingdom?.StringId ?? "null"} eliminated={clan.IsEliminated}");
             }
 
+            AuditCapitulation($"DESTROY_KINGDOM weak={weak.StringId} mode=direct_capitulation strong={strong.StringId}");
             DestroyKingdomAction.Apply(weak);
+        }
+
+        private static void AuditCapitulation(string message)
+        {
+            if (_remainingAuditLines <= 0)
+                return;
+
+            try
+            {
+                string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                string logDirectory = System.IO.Path.Combine(documentsPath, "Mount and Blade II Bannerlord", "Configs", "ModLogs");
+                System.IO.Directory.CreateDirectory(logDirectory);
+
+                string logPath = System.IO.Path.Combine(logDirectory, "RF_CapitulationAudit.log");
+                string line = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}{Environment.NewLine}";
+                System.IO.File.AppendAllText(logPath, line);
+                _remainingAuditLines--;
+
+                if (_remainingAuditLines == 0)
+                {
+                    System.IO.File.AppendAllText(
+                        logPath,
+                        $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] AUDIT_DISABLED limit_reached={CapitulationAuditMaxLines}{Environment.NewLine}");
+                }
+            }
+            catch
+            {
+            }
         }
     }
 }

@@ -75,6 +75,24 @@
       <Tags />
     </SubModule>
     <SubModule>
+      <Name value="RF_Promoted" />
+      <DLLName value="RF_Promoted.dll" />
+      <SubModuleClassType value="RF_Promoted.SubModule" />
+      <Tags>
+        <Tag key="DedicatedServerType" value="none" />
+        <Tag key="IsNoRenderModeElement" value="false" />
+      </Tags>
+    </SubModule>
+    <SubModule>
+      <Name value="RF_warsystem" />
+      <DLLName value="RF_warsystem.dll" />
+      <SubModuleClassType value="RF_warsystem.SubModule" />
+      <Tags>
+        <Tag key="DedicatedServerType" value="none" />
+        <Tag key="IsNoRenderModeElement" value="false" />
+      </Tags>
+    </SubModule>
+    <SubModule>
       <Name value="MCMv5" />
       <DLLName value="MCMv5.dll" />
       <SubModuleClassType value="MCM.MCMSubModule" />
@@ -421,6 +439,13 @@
     </XmlNode>
     <XmlNode>
       <XmlName id="strings" path="enlistment_strings" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="strings" path="promoted_strings" />
       <IncludedGameTypes>
         <GameType value="Campaign" />
         <GameType value="CampaignStoryMode" />

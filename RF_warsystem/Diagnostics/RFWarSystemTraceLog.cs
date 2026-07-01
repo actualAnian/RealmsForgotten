@@ -11,6 +11,9 @@ namespace RF_warsystem.Diagnostics;
 
 internal static class RFWarSystemTraceLog
 {
+    private const bool Enabled = false;
+    internal static bool IsEnabled => Enabled;
+
     private static readonly string[] LogPaths =
     {
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Mount and Blade II Bannerlord", "Configs", "ModLogs", "RF_WarSystemTrace.log"),
@@ -20,6 +23,11 @@ internal static class RFWarSystemTraceLog
 
     internal static void Write(string message)
     {
+        if (!Enabled)
+        {
+            return;
+        }
+
         try
         {
             string line = $"[{DateTime.Now:HH:mm:ss.fff}] {message}{Environment.NewLine}";
@@ -174,6 +182,11 @@ internal static class RFWarSystemTargetTraceCollector
 
     internal static void Observe(MobileParty? mobileParty, Army.ArmyTypes missionType, Settlement? settlement, float baseScore, float adjustedScore)
     {
+        if (!RFWarSystemTraceLog.IsEnabled)
+        {
+            return;
+        }
+
         if (mobileParty == null || settlement == null || adjustedScore <= 0f)
         {
             return;
@@ -230,4 +243,5 @@ internal static class RFWarSystemTargetTraceCollector
         record.FocusedEnemy = focusedEnemy;
         record.LastFlushDay = currentDay;
     }
+
 }

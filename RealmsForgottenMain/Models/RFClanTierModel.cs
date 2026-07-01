@@ -1,5 +1,6 @@
-﻿using RealmsForgotten.Career.Logic;
+using RealmsForgotten.Career.Logic;
 using RealmsForgotten.Career;
+using RF_Promoted;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,8 @@ namespace RealmsForgotten.Models
 
             if (PlayerCareerExtension.HasAnyCareer())
                 CareerHelper.ApplyBasicCareerPassives(ref companionLimit, PassiveEffectType.CompanionLimit);
+
+            companionLimit += PromotedHelper.GetAdditionalCompanionLimit(clan);
             return companionLimit;
         }
     }

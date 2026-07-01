@@ -118,6 +118,7 @@
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\RF_BattleAI\RF_BattleAI.csproj" />
+      <ProjectReference Include="..\RF_Promoted\RF_Promoted.csproj" />
       <ProjectReference Include="..\RF_warsystem\RF_warsystem.csproj" />
     </ItemGroup>
     <ItemGroup>
