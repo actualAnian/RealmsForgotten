@@ -12,7 +12,7 @@ namespace RealmsForgotten.WarSailsPatches
     {
         public static List<(string clanStringId, Vec2 position, float radius)> CustomSpawnPoints = new()
         {
-           ("northern_pirates", new Vec2(994, 1108), 10f),
+            ("northern_pirates", new Vec2(994, 1108), 10f),
             ("northern_pirates", new Vec2(305, 736), 10f),
             ("northern_pirates", new Vec2(683, 713), 10f),
             ("northern_pirates", new Vec2(400, 1138), 10f),

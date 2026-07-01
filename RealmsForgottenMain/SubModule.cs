@@ -315,6 +315,7 @@ namespace RealmsForgotten
             {
                 manualPatchesHaveFired = true;
                 RunManualPatches();
+                if (Globals.IsWarSailsLoaded) RunWarSailsPatches();
             }
         }
         private void RunManualPatches()
@@ -469,7 +470,23 @@ namespace RealmsForgotten
             RFLogger.Log($"[Lifecycle] RealmsForgotten.SubModule.OnNewGameCreated | initializer={initializerObject?.GetType().FullName ?? "null"}");
             QuestSubModule.OnNewGameCreated((CampaignGameStarter)initializerObject);
         }
-
+        private void RunWarSailsPatches()
+        {
+            try
+            {
+                var navalTarget = AccessTools.Method("NavalDLC.GameComponents.NavalDLCBanditDensityModel:IsPositionInsideNavalSafeZone");
+                harmony.Patch(navalTarget, prefix: new HarmonyMethod(typeof(NavalDLCBanditDensityModel_IsPositionInsideNavalSafeZone_Patch), nameof(NavalDLCBanditDensityModel_IsPositionInsideNavalSafeZone_Patch.Prefix)));
+                var cacheTarget = AccessTools.Method("SandBox.View.Map.SettlementPositionScript:RegisterNavigationCachesOnGameLoad");
+                harmony.Patch(cacheTarget, prefix: new HarmonyMethod(typeof(RealmsForgotten.WarSailsPatches.FillMissingCachesPatch), nameof(WarSailsPatches.FillMissingCachesPatch.Prefix)));
+                
+                var pirateTarget = AccessTools.Method("NavalDLC.View.NavalMapSceneWrapper:InitializePirateSpawnPoints");
+                harmony.Patch(pirateTarget, prefix: new HarmonyMethod(typeof(InitializePirateSpawnPointsPatch), nameof(InitializePirateSpawnPointsPatch.Prefix)));
+            }
+            catch (Exception ex)
+            {
+                RFLogger.Log($"[WarSailsPatches] Error applying patches: {ex}");
+            }
+        }
         protected override void InitializeGameStarter(Game game, IGameStarter starterObject)
         {
             base.InitializeGameStarter(game, starterObject);

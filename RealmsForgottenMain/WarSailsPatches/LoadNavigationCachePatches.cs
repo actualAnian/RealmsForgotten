@@ -1,15 +1,12 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using NavalDLC.GameComponents;
 using SandBox.View.Map;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.Map.DistanceCache;
 using TaleWorlds.CampaignSystem.Party;
-using TaleWorlds.Library;
 using TaleWorlds.ModuleManager;
 
 namespace RealmsForgotten.WarSailsPatches
@@ -30,8 +27,6 @@ namespace RealmsForgotten.WarSailsPatches
             DateTime defaultWrite = File.GetLastWriteTimeUtc(defaultCachePath);
             DateTime candidateWrite = File.GetLastWriteTimeUtc(candidatePath);
 
-            // If settlements were edited and only the default cache was regenerated,
-            // using stale All/Naval caches can crash native path queries during load.
             return candidateWrite >= defaultWrite;
         }
 
@@ -44,7 +39,7 @@ namespace RealmsForgotten.WarSailsPatches
                     return true;
                 }
 
-                MethodInfo met = AccessTools.Method("SandBox.View.Map.SettlementPositionScript:ReadNavigationCacheForNavigationTypeOnGameLoad");
+                var met = AccessTools.Method("SandBox.View.Map.SettlementPositionScript:ReadNavigationCacheForNavigationTypeOnGameLoad");
                 if (met == null)
                 {
                     return true;
