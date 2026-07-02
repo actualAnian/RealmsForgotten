@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Prefab>
+	<Parameters>
+		<Parameter Name="CloseAction" DefaultValue="ExecuteClose"/>
+	</Parameters>
+	<Constants>
+		<Constant Name="Selected.Additive" Value="30" />
+
+		<Constant Name="RadialItem.Height" Value="50" />
+		<Constant Name="RadialItem.Width" Value="50" />
+
+		<Constant Name="RadialItem.Selected.Height" Additive="!Selected.Additive" Value="!RadialItem.Height" />
+		<Constant Name="RadialItem.Selected.Width" Additive="!Selected.Additive" Value="!RadialItem.Width" />
+	</Constants>
+	<VisualDefinitions>
+		<VisualDefinition Name="RadialItem" TransitionDuration="0.15">
+			<VisualState SuggestedHeight="!RadialItem.Selected.Height" SuggestedWidth="!RadialItem.Selected.Width" State="Selected" />
+			<VisualState SuggestedHeight="!RadialItem.Height" SuggestedWidth="!RadialItem.Width" State="Default" />
+			<VisualState SuggestedHeight="!RadialItem.Height" SuggestedWidth="!RadialItem.Width" State="Pressed" />
+			<VisualState SuggestedHeight="!RadialItem.Height" SuggestedWidth="!RadialItem.Width" State="Hovered" />
+			<VisualState SuggestedHeight="!RadialItem.Height" SuggestedWidth="!RadialItem.Width" State="Disabled" />
+		</VisualDefinition>
+	</VisualDefinitions>
+	<Window>
+		<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+			<Children>
+				<Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="@IsVisible">
+					<Children>
+						<CircleActionSelectorWidget DataSource="{Bombs}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+							SuggestedWidth="450" SuggestedHeight="450" HorizontalAlignment="Center" VerticalAlignment="Center"
+							DirectionWidget="..\..\DirectionWidget" ActivateOnlyWithController="false"
+							DirectionWidgetDistanceMultiplier="0.7" DistanceFromCenterModifier="250"
+							Sprite="General\RadialMenu\radial_menu_bg" Color="#00000099">
+							<ItemTemplate>
+								<BombSelectionItemWidget VisualDefinition="RadialItem" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+									SuggestedWidth="!RadialItem.Width" SuggestedHeight="!RadialItem.Height" Sprite="@SpriteName" HorizontalAlignment="Center" VerticalAlignment="Center" Command.OnSelected="OnSelected">
+									<Children>
+										<TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+										Text="@Count" AlignmentMargin="-10,10,-10,-10" Brush.FontSize="16" />
+										<TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+											Text="@Description" IsVisible="@IsSelected" AlignmentMargin="-20, 20,-40,-60"
+											PositionYOffset="80"
+											Brush.FontSize="26" Brush.TextAlphaFactor="0.85" />
+									</Children>
+								</BombSelectionItemWidget>
+							</ItemTemplate>
+						</CircleActionSelectorWidget>
+					</Children>
+				</Widget>
+			</Children>
+		</Widget>
+	</Window>
+</Prefab>

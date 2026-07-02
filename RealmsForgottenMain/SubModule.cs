@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using RealmsForgotten.AiMade;
 using RealmsForgotten.AiMade.StrategicIntrigue.SaveSystem;
 using RealmsForgotten.Alchemy;
+using RealmsForgotten.Alchemy.UI;
 using RealmsForgotten.Behaviors;
 using RealmsForgotten.Career;
 using RealmsForgotten.Career.Ability;
@@ -23,6 +24,7 @@ using RealmsForgotten.RFCustomHorses;
 using RealmsForgotten.RFEffects;
 using RealmsForgotten.RFMissionLogic;
 using RealmsForgotten.UI;
+using RealmsForgotten.WarSailsPatches;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -207,6 +209,7 @@ namespace RealmsForgotten
             mission.AddMissionBehavior(new WeaponParticlesBehavior());
             mission.AddMissionBehavior(new MeteorMissionLogic());
             mission.AddMissionBehavior(new AlchemyMissionLogic());
+            //mission.AddMissionBehavior(new BombSelectionMissionView());
             mission.AddMissionBehavior(new MissionEffectsBehavior());
         }
         public override void BeginGameStart(Game game)
@@ -379,7 +382,10 @@ namespace RealmsForgotten
                 var navalTarget = AccessTools.Method("NavalDLC.GameComponents.NavalDLCBanditDensityModel:IsPositionInsideNavalSafeZone");
                 harmony.Patch(navalTarget, prefix: new HarmonyMethod(typeof(NavalDLCBanditDensityModel_IsPositionInsideNavalSafeZone_Patch), nameof(NavalDLCBanditDensityModel_IsPositionInsideNavalSafeZone_Patch.Prefix)));
                 var cacheTarget = AccessTools.Method("SandBox.View.Map.SettlementPositionScript:RegisterNavigationCachesOnGameLoad");
-                harmony.Patch(cacheTarget, prefix: new HarmonyMethod(typeof(RealmsForgotten.WarSailsPatches.FillMissingCachesPatch), nameof(WarSailsPatches.FillMissingCachesPatch.Prefix)));
+                MethodInfo methodInfo = harmony.Patch(cacheTarget, prefix: new HarmonyMethod(typeof(FillMissingCachesPatch), nameof(WarSailsPatches.FillMissingCachesPatch.Prefix)));
+                
+                var uiLoader = AccessTools.Method("NavalDLC.GauntletUI.NavalDLCGauntletUISubModule:OnSubModuleLoad");
+                harmony.Patch(uiLoader, postfix: new HarmonyMethod(typeof(DontLoadWarsailsUI), nameof(DontLoadWarsailsUI.Postfix)));
                 
                 var pirateTarget = AccessTools.Method("NavalDLC.View.NavalMapSceneWrapper:InitializePirateSpawnPoints");
                 harmony.Patch(pirateTarget, prefix: new HarmonyMethod(typeof(InitializePirateSpawnPointsPatch), nameof(InitializePirateSpawnPointsPatch.Prefix)));

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Prefab>
+  <Parameters>
+    <Parameter Name="Item.SpriteName" DefaultValue=""/>
+    <Parameter Name="Item.IsSelected" DefaultValue="false"/>
+    <Parameter Name="Item.IsEnabled" DefaultValue="true"/>
+  </Parameters>
+  <Window>
+    <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                  SuggestedWidth="80" SuggestedHeight="80"
+                  Sprite="BlankWhiteSquare_9" Color="@Tint" AlphaFactor="@Alpha"
+                  PositionXOffset="@PositionXOffset"
+                  PositionYOffset="@PositionYOffset"
+                  Command.Click="ExecuteSelectBomb"
+                  UpdateChildrenStates="true"
+                  IsVisible="@Item.IsEnabled">
+      <Children>
+        <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                     Sprite="@Item.SpriteName"/>
+        <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                    HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="4"
+                    Text="@Name"/>
+        <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                     Sprite="StdAssets\Popup\canvas"
+                     AlphaFactor="0.8"
+                     IsVisible="@Item.IsSelected"/>
+      </Children>
+    </ButtonWidget>
+  </Window>
+</Prefab>

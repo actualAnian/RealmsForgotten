@@ -213,9 +213,13 @@ namespace RealmsForgotten.Alchemy
             CheckAgentsInBombAreas(newBomb);
             CheckForInteractions(newBomb.Bomb);
         }
+        private void AddPlayerBombsOnMissionStart()
+        {
+
+        }
         private void AddTextToFloatingTextManager(ActiveBomb bomb)
         {
-            int id = FloatingTextManager.Instance.AddText(() => {return bomb.Bomb.Description; }, () => { return bomb.Bomb.TextPositionInMission; }, bomb.Bomb.TextColor);
+            int id = FloatingTextManager.Instance.AddText(() => { return bomb.Bomb.Description; }, () => { return bomb.Bomb.TextPositionInMission; }, bomb.Bomb.TextColor);
             bomb.FloatingTextId = id;
         }
     }
