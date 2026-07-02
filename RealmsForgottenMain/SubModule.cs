@@ -82,6 +82,7 @@ namespace RealmsForgotten
             RFLogger.Log($"[Lifecycle] RealmsForgotten.SubModule.OnGameStart | gameType={game.GameType?.GetType().FullName ?? "null"} | starter={gameStarterObject?.GetType().FullName ?? "null"}");
             if (gameStarterObject is CampaignGameStarter campaignGameStarter)
             {
+                campaignGameStarter.AddBehavior(new CampaignHealthChecker());
                 campaignGameStarter.AddBehavior(new BaseGameDebugCampaignBehavior());
                 campaignGameStarter.AddBehavior(new RFEnchantmentVendorBehavior());
                 //Faith bhv comes before cultures bhv
