@@ -30,9 +30,7 @@ namespace RealmsForgotten.Behaviors
             try
             {
                 FixIncorrectNotableTypesInSettlement(builder);
-                builder.Append(Environment.NewLine);
                 FixLeaderlessLordParties(builder);
-                builder.Append(Environment.NewLine);
                 FixSettlementParties(builder);
                 if (builder.Length > BaseMessage.Length)
                     InformationManager.DisplayMessage(new(builder.ToString(), new Color(1, 0, 0)));
