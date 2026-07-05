@@ -2,6 +2,8 @@
 using RealmsForgotten.Alchemy.OnHitEffects;
 using RealmsForgotten.UI.FloatingText;
 using System.Collections.Generic;
+using TaleWorlds.CampaignSystem;
+using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
@@ -18,7 +20,7 @@ namespace RealmsForgotten.Alchemy
             Bomb = bomb;
             Elapsed = 0f;
         }
-        public int? FloatingTextId { get; set; } 
+        public int FloatingTextId { get; set; } 
 
         public GameEntity Entity { get; set; }
         public ParticleSystem Particle { get; set; }
@@ -160,6 +162,7 @@ namespace RealmsForgotten.Alchemy
         }
         private void RemoveExpiredBomb(ActiveBomb active)
         {
+            RemoveTextFromFloatingTextManager(active);
             active.Entity.RemoveAllParticleSystems();
             foreach (var a in active.Bomb.InsideAgents)
                 if (a != null && a.IsActive())
@@ -213,14 +216,19 @@ namespace RealmsForgotten.Alchemy
             CheckAgentsInBombAreas(newBomb);
             CheckForInteractions(newBomb.Bomb);
         }
-        private void AddPlayerBombsOnMissionStart()
-        {
-
-        }
         private void AddTextToFloatingTextManager(ActiveBomb bomb)
         {
             int id = FloatingTextManager.Instance.AddText(() => { return bomb.Bomb.Description; }, () => { return bomb.Bomb.TextPositionInMission; }, bomb.Bomb.TextColor);
             bomb.FloatingTextId = id;
+        }
+        private void RemoveTextFromFloatingTextManager(ActiveBomb bomb)
+        {
+            FloatingTextManager.Instance.Remove(bomb.FloatingTextId);
+        }
+        public override void OnAgentBuild(Agent agent, Banner banner)
+        {
+            if (agent.IsPlayerControlled && agent.Character != CharacterObject.PlayerCharacter) return;
+            PlayerBombManager.Instance.AddPlayerBombsOnMissionStart();
         }
     }
 }

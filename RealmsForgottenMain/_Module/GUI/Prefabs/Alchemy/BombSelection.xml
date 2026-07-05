@@ -36,7 +36,7 @@
 									SuggestedWidth="!RadialItem.Width" SuggestedHeight="!RadialItem.Height" Sprite="@SpriteName" HorizontalAlignment="Center" VerticalAlignment="Center" Command.OnSelected="OnSelected">
 									<Children>
 										<TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-										Text="@Count" AlignmentMargin="-10,10,-10,-10" Brush.FontSize="16" />
+										Text="@Amount" AlignmentMargin="-10,10,-10,-10" Brush.FontSize="16" />
 										<TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
 											Text="@Description" IsVisible="@IsSelected" AlignmentMargin="-20, 20,-40,-60"
 											PositionYOffset="80"

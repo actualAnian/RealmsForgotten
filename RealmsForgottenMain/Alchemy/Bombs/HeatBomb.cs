@@ -2,7 +2,6 @@
 using RealmsForgotten.MissionEffects;
 using RealmsForgotten.MissionEffects.EffectDurationTypes;
 using RealmsForgotten.MissionEffects.MissionEffectTypes;
-using System;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
@@ -28,7 +27,7 @@ namespace RealmsForgotten.Alchemy.Bombs
         {
             get
             {
-                GameTexts.SetVariable("DUTARION", Duration);
+                GameTexts.SetVariable("DURATION", Duration);
                 return TextHelper.GetBaseDecriptionAndOnProjectilePassed(_baseDescription, _projectilePassedDescription, _projectilePassedText.ShowText);
             }
         } 

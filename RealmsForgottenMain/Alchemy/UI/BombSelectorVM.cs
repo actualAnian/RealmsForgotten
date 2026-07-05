@@ -1,9 +1,6 @@
-using System;
-using System.Linq;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
-using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.Alchemy.UI
 {
@@ -21,7 +18,23 @@ namespace RealmsForgotten.Alchemy.UI
             _bombs = new MBBindingList<BombItemVM>();
             _titleText = new TextObject("{=alch_bomb_sel_title}Select Alchemical Bomb").ToString();
             _closeButtonText = GameTexts.FindText("str_done").ToString();
-            PopulateBombs();
+        }
+        public void AddBombItem(BombItemVM bombItem)
+        {
+            _bombs.Add(bombItem);
+            HasBombs = _bombs.Count > 0;
+        }
+        public void DecrementBombAmount(BombItemVM bomb)
+        {
+            if (int.Parse(bomb.Amount) > 0)
+            {
+                bomb.Amount = (int.Parse(bomb.Amount) - 1).ToString();
+                if (bomb.Amount == "0")
+                {
+                    _bombs.Remove(bomb);
+                    HasBombs = _bombs.Count > 0;
+                }
+            }
         }
 
         [DataSourceProperty]
@@ -88,7 +101,6 @@ namespace RealmsForgotten.Alchemy.UI
             {
                 if (_isVisible != value)
                 {
-                    PopulateBombs();
                     _isVisible = value;
                     OnPropertyChangedWithValue(value, nameof(IsVisible));
                 }
@@ -106,31 +118,7 @@ namespace RealmsForgotten.Alchemy.UI
                 }
             }
         }
-
-        private void PopulateBombs()
-        {
-            _bombs.Clear();
-
-            var mainAgent = Agent.Main;
-            if (mainAgent == null)
-            {
-                HasBombs = false;
-                return;
-            }
-
-            var smokeBombItem = Game.Current.ObjectManager.GetObject<ItemObject>("grain");
-            var fireBombItem = Game.Current.ObjectManager.GetObject<ItemObject>("grain");
-
-            if (smokeBombItem != null)
-                _bombs.Add(new BombItemVM(smokeBombItem.StringId, 2, OnBombItemSelected));
-
-            if (fireBombItem != null)
-                _bombs.Add(new BombItemVM(fireBombItem..StringId, 1, OnBombItemSelected));
-
-            HasBombs = _bombs.Count > 0;
-        }
-
-        private void OnBombItemSelected(BombItemVM item)
+        public void OnBombItemSelected(BombItemVM item)
         {
             foreach (var bomb in _bombs)
                 bomb.IsSelected = bomb == item;

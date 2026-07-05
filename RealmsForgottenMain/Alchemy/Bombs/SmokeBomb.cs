@@ -25,7 +25,7 @@ namespace RealmsForgotten.Alchemy.Bombs
             }
         }
 
-        public SmokeBomb(Agent caster, Vec3 center) : base(center, caster) { }
+        public SmokeBomb(Vec3 center, Agent caster) : base(center, caster) { }
         public override string ParticleId { get; set; } = "alchemical_mist2";
         public override void OnAgentEntered(Agent agent)
         {

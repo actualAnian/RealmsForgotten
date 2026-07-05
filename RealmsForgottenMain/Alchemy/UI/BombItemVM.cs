@@ -1,5 +1,4 @@
 using System;
-using TaleWorlds.Core;
 using TaleWorlds.Library;
 
 namespace RealmsForgotten.Alchemy.UI
@@ -13,15 +12,16 @@ namespace RealmsForgotten.Alchemy.UI
         private bool _isSelected;
         private float _alpha = 1f;
         private Color _tint = new(0.384f, 0.278f, 0.149f, 1f);
-        private int _count;
-        private string stringId;
-        public BombItemVM(string id, int count, Action<BombItemVM> onSelected)
+        private string _amount;
+        private readonly string _stringId;
+        public string StringId => _stringId;
+        public BombItemVM(string id, string description, string amount, string spriteName, Action<BombItemVM> onSelected)
         {
-            stringId = id;
+            _stringId = id;
+            _description = description;
+            _amount = amount;
+            _spriteName = spriteName;
             _onSelected = onSelected;
-            _spriteName = "BlankWhiteSquare_9";
-            _description = "a temp description0";
-            _count = count;
         }
 
         [DataSourceProperty]
@@ -108,15 +108,15 @@ namespace RealmsForgotten.Alchemy.UI
         }
 
         [DataSourceProperty]
-        public int Count
+        public string Amount
         {
-            get => _count;
+            get => _amount;
             set
             {
-                if (_count != value)
+                if (_amount != value)
                 {
-                    _count = value;
-                    OnPropertyChangedWithValue(value, nameof(Count));
+                    _amount = value;
+                    OnPropertyChangedWithValue(value, nameof(Amount));
                 }
             }
         }

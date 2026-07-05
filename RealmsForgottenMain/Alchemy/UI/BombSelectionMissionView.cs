@@ -1,3 +1,4 @@
+using System.Linq;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.InputSystem;
 using TaleWorlds.MountAndBlade;
@@ -28,12 +29,22 @@ namespace RealmsForgotten.Alchemy.UI
                 return;
 
             if (!_bombSelectorVM.IsVisible && Mission.InputManager.IsKeyPressed(InputKey.H))
-            {
                 _bombSelectorVM.IsVisible = true;
-            }
             else if (_bombSelectorVM.IsVisible && Mission.InputManager.IsKeyPressed(InputKey.Escape))
-            {
                 _bombSelectorVM.IsVisible = false;
+
+            foreach(var bomb in PlayerBombManager.Instance.PlayerBombs)
+            {
+                var definiton = bomb.Key;
+                var amount = bomb.Value;
+                var vmBomb = _bombSelectorVM.Bombs.FirstOrDefault(b => b.StringId == definiton.Item.StringId);
+                if (vmBomb == null)
+                {
+                    _bombSelectorVM.AddBombItem(new(definiton.Item.StringId, definiton.BaseDescription, amount.ToString(), definiton.spriteStringId, _bombSelectorVM.OnBombItemSelected));
+                    continue;
+                }
+                if (vmBomb.Amount != amount.ToString())
+                    _bombSelectorVM.DecrementBombAmount(vmBomb);
             }
         }
     }

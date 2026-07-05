@@ -9,7 +9,6 @@ namespace RealmsForgotten.Alchemy.Bombs
     {
         public Vec3 Center { get; private set; }
         readonly RFBoundingBox _bounds;
-
         internal abstract float BaseDuration { get; }
         internal abstract float BaseRadius { get; }
         public HashSet<Agent> InsideAgents { get; } = new();

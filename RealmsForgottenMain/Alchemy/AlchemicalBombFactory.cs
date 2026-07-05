@@ -11,11 +11,10 @@ namespace RealmsForgotten.Alchemy
         {
             if (item == null) return null;
             var id = item.StringId;
-            if (id.Contains("anorit_fire")) return new HorseBane(position, caster);
-            if (id.Contains("smoke_bomb"))
-            {
-                return new SmokeBomb(caster, position);
-            }
+            if (id == "heat_bomb") return new HeatBomb(position, caster);
+            if (id == "smoke_bomb") return new SmokeBomb(position, caster);
+            if (id == "horse_bane") return new HorseBane(position, caster);
+            if (id == "panic_dust") return new PanicDust(position, caster);
             return null;
         }
     }

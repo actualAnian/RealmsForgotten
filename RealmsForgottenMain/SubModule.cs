@@ -124,7 +124,6 @@ namespace RealmsForgotten
                 new RFSkills().Initialize();
                 new RFSkillEffects().InitializeAll();
                 new RFPerks().Initialize();
-
                 AiSubModule.AddCampaignBehaviors(campaignGameStarter);
 
                 ReadConfigFile();
@@ -230,7 +229,6 @@ namespace RealmsForgotten
                 starter.AddBehavior(new RFCharacterCreationCampaignBehavior());
             }
         }
-        protected override void OnBeforeInitialModuleScreenSetAsRoot() { }
         public override void OnGameInitializationFinished(Game game)
         {
             base.OnGameInitializationFinished(game);
@@ -358,6 +356,7 @@ namespace RealmsForgotten
                 AccessTools.Property(typeof(MissionGameModels), "AgentStatCalculateModel").SetValue(MissionGameModels.Current, rfAgentStatCalculateModel);
             }
 
+            BaseBombDefinitions.Initialize();
             RFLogger.Log("[Lifecycle] RealmsForgotten.SubModule.OnGameLoaded end");
         }
 
