@@ -71,12 +71,21 @@ namespace RealmsForgotten.Behaviors
             int fixedParties = 0;
             foreach (var party in MobileParty.AllLordParties)
             {
-                if (party.LeaderHero == null)
+                if (party.LeaderHero == null && !party.IsDisbanding && party.IsInitialized)
                 {
-                    fixedParties += 1;
-                    AddHeroToPartyAction.Apply(party.Owner, party);
-                    party.ChangePartyLeader(party.Owner);
-                    sBuilder.AppendLine($"restored leader hero to {party.Name}.");
+                    Hero? heroToAdd;
+                    if (party.Owner.IsAlive && party.Owner.PartyBelongedTo == null && !party.Owner.IsPrisoner)
+                        heroToAdd = party.Owner;
+                    else heroToAdd = party.Owner.Clan.AliveLords.FirstOrDefault(l => l.PartyBelongedTo == null && !l.IsPrisoner);
+                    if (heroToAdd == null) sBuilder.AppendLine($"could not restore a leader to {party.Name}. no available leaders");
+                    else
+                    {
+                        fixedParties += 1;
+                        sBuilder.AppendLine($"restored leader hero to {party.Name}.");
+                        AddHeroToPartyAction.Apply(heroToAdd, party);
+                        party.ChangePartyLeader(heroToAdd);
+                        party.LordPartyComponent.ClearCachedName();
+                    }
                 }
             }
             if (fixedParties > 0)
