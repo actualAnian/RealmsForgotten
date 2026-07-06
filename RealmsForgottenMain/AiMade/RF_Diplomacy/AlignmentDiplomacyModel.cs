@@ -71,6 +71,12 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
                    (culture1 == "urkhai" && culture2 == "dwarf");
         }
 
+        private static bool IsAlignmentWarPair(IFaction faction1, IFaction faction2)
+        {
+            AlignmentWarBehavior behavior = Campaign.Current?.GetCampaignBehavior<AlignmentWarBehavior>();
+            return behavior != null && behavior.IsAlignmentWarPair(faction1, faction2);
+        }
+
         // Delegate everything else
         public override int MaxRelationLimit => _baseModel.MaxRelationLimit;
         public override int MinRelationLimit => _baseModel.MinRelationLimit;
@@ -114,7 +120,7 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
         public override int GetRelationValueOfSupportingClan() => _baseModel.GetRelationValueOfSupportingClan();
         public override float GetScoreOfDeclaringPeace(IFaction a, IFaction b)
         {
-            if (AlignmentWarBehavior.IsActive)
+            if (IsAlignmentWarPair(a, b))
             {
                 return float.MinValue;
             }
@@ -137,7 +143,7 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
         public override bool IsClanEligibleToBecomeRuler(Clan c) => _baseModel.IsClanEligibleToBecomeRuler(c);
         public override bool IsPeaceSuitable(IFaction factionDeclaresPeace, IFaction factionDeclaredPeace)
         {
-            if (AlignmentWarBehavior.IsActive || IsDwarfUrkhaiEnduringRivalry(factionDeclaresPeace, factionDeclaredPeace))
+            if (IsAlignmentWarPair(factionDeclaresPeace, factionDeclaredPeace) || IsDwarfUrkhaiEnduringRivalry(factionDeclaresPeace, factionDeclaredPeace))
             {
                 return false;
             }
@@ -152,7 +158,7 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
 
         public override float GetScoreOfDeclaringPeaceForClan(IFaction factionDeclaresPeace, IFaction factionDeclaredPeace, Clan evaluatingClan, out TextObject reason, bool includeReason = false)
         {
-            if (AlignmentWarBehavior.IsActive)
+            if (IsAlignmentWarPair(factionDeclaresPeace, factionDeclaredPeace))
             {
                 reason = includeReason ? new TextObject("{=rf_alignment_war_no_peace}This realm cannot seek peace while the alignment war is active.") : new TextObject(string.Empty);
                 return float.MinValue;

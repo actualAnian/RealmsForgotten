@@ -35,17 +35,20 @@ namespace RealmsForgotten.Models
         public override float GetSurvivalChance(PartyBase party, CharacterObject character, DamageTypes damageType, bool canDamageKillEvenIfBlunt, PartyBase enemyParty = null)
         {
             float value = _baseModel.GetSurvivalChance(party, character, damageType, canDamageKillEvenIfBlunt, enemyParty);
-            if (party == PartyBase.MainParty) value += AddCareerPassivesForSurvivalChance(party, character, damageType, canDamageKillEvenIfBlunt, enemyParty, ref value);
+            if (party == PartyBase.MainParty) value = AddCareerPassivesForSurvivalChance(value);
             return value;
         }
 
-        private float AddCareerPassivesForSurvivalChance(PartyBase party, CharacterObject character, DamageTypes damageType, bool canDamageKillEvenIfBlunt, PartyBase enemyParty, ref float value)
+        private float AddCareerPassivesForSurvivalChance(float value)
         {
-            ExplainedNumber num = new();
+            ExplainedNumber num = new(value);
             if (PlayerCareerExtension.HasAnyCareer())
             {
-                CareerHelper.ApplyBasicCareerPassives(ref num, PassiveEffectType.HealthRegeneration);
+                CareerHelper.ApplyBasicCareerPassives(ref num, PassiveEffectType.WoundedChance);
             }
+
+            if (num.ResultNumber < 0f) return 0f;
+            if (num.ResultNumber > 1f) return 1f;
             return num.ResultNumber;
         }
 

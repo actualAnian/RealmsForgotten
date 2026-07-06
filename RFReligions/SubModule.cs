@@ -29,6 +29,7 @@ public class SubModule : MBSubModuleBase
         if (gameStarterObject is CampaignGameStarter campaignGameStarter)
         {
             campaignGameStarter.AddBehavior(new ReligionBehavior());
+            campaignGameStarter.AddBehavior(new ClericConversionDialogueBehavior());
             campaignGameStarter.AddBehavior(new ReligiousWarBehavior());
             campaignGameStarter.AddBehavior(new CrusadeBehavior());
 

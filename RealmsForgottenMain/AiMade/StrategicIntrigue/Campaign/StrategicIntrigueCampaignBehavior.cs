@@ -47,6 +47,7 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
     private List<EspionageReport> _espionageReports = new();
     private string _espionageOperationsState = "";
     private string _espionageReportsState = "";
+    private CampaignTime _lastIntrigueExecutionAt = CampaignTime.Zero;
     private bool _isInitialized;
     private bool _isInitializing;
     private string _warTableReturnMenuId = "castle";
@@ -78,6 +79,7 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
         dataStore.SyncData("_secretPacts", ref _secretPacts);
         dataStore.SyncData("_secretAlliances", ref _secretAlliances);
         dataStore.SyncData("_pendingOperations", ref _pendingOperations);
+        dataStore.SyncData("_lastIntrigueExecutionAt", ref _lastIntrigueExecutionAt);
         if (PersistEspionageSaveData)
         {
             if (!dataStore.IsLoading)
@@ -3699,50 +3701,112 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
         }
 
         int relationToRuler = dissident.GetRelation(ruler);
-        ChangeRelationAction.ApplyRelationChangeBetweenHeroes(dissident, ruler, -30);
 
         threatenedState.TrustToPlayer -= 28f;
         threatenedState.Dissidence -= 18f;
-        threatenedState.Suspicion = 100f;
+        threatenedState.Suspicion += 18f;
         threatenedState.FearOfRuler += 30f;
         threatenedState.RoyalFavor = 0f;
 
         if (dissident != Hero.MainHero
             && relationToRuler <= StrategicIntrigueConstants.ExecutionRelationThreshold
             && dissident.IsAlive
-            && !dissident.IsChild)
+            && !dissident.IsChild
+            && CanApplyIntrigueExecution(kingdom, threatenedClan))
         {
             KillCharacterAction.ApplyByExecution(dissident, ruler, showNotification: true, isForced: true);
-            threatenedState.Dissidence = 0f;
-            threatenedState.TrustToPlayer = 0f;
-            threatenedState.ClampValues();
+            _lastIntrigueExecutionAt = CampaignTime.Now;
+            ApplyPostCrackdownStabilization(threatenedState, CrackdownPunishmentOutcome.Execution);
             return CrackdownPunishmentOutcome.Execution;
         }
 
         if (relationToRuler <= StrategicIntrigueConstants.ImprisonmentRelationThreshold
             && TryImprisonDissident(kingdom, dissident))
         {
-            threatenedState.Dissidence -= 10f;
-            threatenedState.ClampValues();
+            ChangeRelationAction.ApplyRelationChangeBetweenHeroes(dissident, ruler, -20, false);
+            ApplyPostCrackdownStabilization(threatenedState, CrackdownPunishmentOutcome.Imprisonment);
             return CrackdownPunishmentOutcome.Imprisonment;
         }
 
         if (TryExileClan(threatenedClan))
         {
-            threatenedState.Dissidence = 0f;
-            threatenedState.TrustToPlayer = 0f;
-            threatenedState.ClampValues();
+            ChangeRelationAction.ApplyRelationChangeBetweenHeroes(dissident, ruler, -30, false);
+            ApplyPostCrackdownStabilization(threatenedState, CrackdownPunishmentOutcome.Exile);
             return CrackdownPunishmentOutcome.Exile;
         }
 
         if (dissident != Hero.MainHero && TryImprisonDissident(kingdom, dissident))
         {
-            threatenedState.ClampValues();
+            ChangeRelationAction.ApplyRelationChangeBetweenHeroes(dissident, ruler, -8, false);
+            ApplyPostCrackdownStabilization(threatenedState, CrackdownPunishmentOutcome.Imprisonment);
             return CrackdownPunishmentOutcome.Imprisonment;
         }
 
         threatenedState.ClampValues();
         return CrackdownPunishmentOutcome.None;
+    }
+
+    private static void ApplyPostCrackdownStabilization(ClanIntrigueState state, CrackdownPunishmentOutcome outcome)
+    {
+        if (state == null)
+        {
+            return;
+        }
+
+        switch (outcome)
+        {
+            case CrackdownPunishmentOutcome.Execution:
+            case CrackdownPunishmentOutcome.Exile:
+                state.Dissidence = 0f;
+                state.TrustToPlayer = 0f;
+                state.Suspicion = Math.Min(state.Suspicion, 35f);
+                state.SoftDefectionPressure -= 35f;
+                state.ClaimantAmbition -= 25f;
+                break;
+            case CrackdownPunishmentOutcome.Imprisonment:
+                state.Dissidence -= 35f;
+                state.Suspicion = Math.Min(state.Suspicion, 45f);
+                state.SoftDefectionPressure -= 20f;
+                state.ClaimantAmbition -= 15f;
+                break;
+        }
+
+        state.ClampValues();
+    }
+
+    private bool CanApplyIntrigueExecution(Kingdom kingdom, Clan threatenedClan)
+    {
+        if (_lastIntrigueExecutionAt != CampaignTime.Zero
+            && (CampaignTime.Now - _lastIntrigueExecutionAt).ToDays < StrategicIntrigueConstants.ExecutionGlobalCooldownDays)
+        {
+            return false;
+        }
+
+        int worldAliveLords = Hero.AllAliveHeroes.Count(IsLivingNobleLord);
+        if (worldAliveLords < StrategicIntrigueConstants.ExecutionMinimumWorldAliveLordCount)
+        {
+            return false;
+        }
+
+        int kingdomAliveLords = kingdom?.AliveLords?.Count() ?? 0;
+        if (kingdomAliveLords < StrategicIntrigueConstants.ExecutionMinimumKingdomAliveLordCount)
+        {
+            return false;
+        }
+
+        int clanAliveLords = threatenedClan?.AliveLords?.Count() ?? 0;
+        return clanAliveLords > StrategicIntrigueConstants.ExecutionMinimumClanAliveLordCount;
+    }
+
+    private static bool IsLivingNobleLord(Hero hero)
+    {
+        return hero != null
+            && hero.IsAlive
+            && hero.IsLord
+            && hero.Clan != null
+            && hero.Clan.IsNoble
+            && !hero.Clan.IsMinorFaction
+            && !hero.Clan.IsEliminated;
     }
 
     private static bool TryImprisonDissident(Kingdom kingdom, Hero dissident)

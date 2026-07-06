@@ -109,7 +109,7 @@ namespace RealmsForgotten.Career.Ability
             All.Add(new ClassAbility(
                 "cleric_ability",
                 "{=rf_cleric_ability_name}Divine Restoration",
-                "divine_shield_perk_a", "divine_shield_perk_b",
+                "cleric_ability_perk_a", "cleric_ability_perk_b",
                 "{=rf_cleric_ability_desc}For a short time, sacred recovery restores your health over time.",
                 "{=rf_cleric_ability_desc_up}Divine Restoration heals more strongly and lasts longer.",
                 clericAbilityData));

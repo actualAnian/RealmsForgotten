@@ -44,6 +44,9 @@ namespace RealmsForgotten.AiMade
             ConstructContainerDefinition(typeof(Tuple<string, string>));
             ConstructContainerDefinition(typeof(Dictionary<string, WeatherRegion>));
             ConstructContainerDefinition(typeof(List<PendingRecruitment>));
+            ConstructContainerDefinition(typeof(List<MilitaryAidRequest>));
+            ConstructContainerDefinition(typeof(List<SecretWarCompactRequest>));
+            ConstructContainerDefinition(typeof(Dictionary<string, CampaignTime>));
         }
 
         protected override void DefineEnumTypes()
@@ -129,6 +132,9 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(InfectionMissionBehavior), 94);
             AddClassDefinition(typeof(RFJoinRaidEncounterBehavior), 95);
             AddClassDefinition(typeof(CommanderDefenseBehavior), 96);
+            AddClassDefinition(typeof(MilitaryAidDiplomacyBehavior), 97);
+            AddClassDefinition(typeof(MilitaryAidRequest), 98);
+            AddClassDefinition(typeof(SecretWarCompactRequest), 99);
         }
     }
 }

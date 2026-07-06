@@ -36,6 +36,7 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
             ReapplyPromotedCultures();
             CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnBattleEnded);
             CampaignEvents.OnSettlementOwnerChangedEvent.AddNonSerializedListener(this, OnSettlementCaptured);
+            CampaignEvents.MakePeace.AddNonSerializedListener(this, OnMakePeace);
             CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, CheckWarIntegrity);
         }
 
@@ -69,21 +70,29 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
         private void CheckWarIntegrity()
         {
             if (!AlignmentWarBehavior.IsActive) return;
+        }
 
-            foreach (var good in Kingdom.All.Where(k => k.Culture.IsGoodCulture()))
+        private void OnMakePeace(IFaction faction1, IFaction faction2, MakePeaceAction.MakePeaceDetail detail)
+        {
+            if (!AlignmentWarBehavior.IsActive)
             {
-                foreach (var evil in Kingdom.All.Where(k => k.Culture.IsEvilCulture()))
-                {
-                    if (!FactionManager.IsAtWarAgainstFaction(good, evil))
-                    {
-                        RFWarExternalIntentApi.ReinforceAlignmentWarPair(good, evil);
-                        RFWarExternalIntentApi.ReinforceAlignmentWarPair(evil, good);
-                        InformationManager.DisplayMessage(new InformationMessage($"⛔ Peace invalidated: {good.Name} vs {evil.Name} war reinstated."));
-                    }
-                }
+                return;
             }
 
-            CheckNeutralAllies();
+            AlignmentWarBehavior alignmentWar = Campaign.Current?.GetCampaignBehavior<AlignmentWarBehavior>();
+            if (alignmentWar == null || !alignmentWar.IsAlignmentWarPair(faction1, faction2))
+            {
+                return;
+            }
+
+            if (faction1 is not Kingdom left || faction2 is not Kingdom right)
+            {
+                return;
+            }
+
+            RFWarExternalIntentApi.ReinforceAlignmentWarPair(left, right);
+            RFWarExternalIntentApi.ReinforceAlignmentWarPair(right, left);
+            InformationManager.DisplayMessage(new InformationMessage($"⛔ Peace invalidated: {left.Name} vs {right.Name} war reinstated."));
         }
 
         private void OnBattleEnded(MapEvent mapEvent)

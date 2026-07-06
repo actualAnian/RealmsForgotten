@@ -3,7 +3,9 @@ using RealmsForgotten.Utility;
 using System.Collections.Generic;
 using System.Linq;
 using RealmsForgotten.Behaviors;
+using RealmsForgotten.Career.Ability;
 using RealmsForgotten.Models;
+using RealmsForgotten.Patches;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
@@ -198,7 +200,6 @@ namespace RealmsForgotten.RFEffects
 
                 float HealedAgentHealth = agentsInRadius[amount].Health + 20f;
                 agentsInRadius[amount].Health = HealedAgentHealth > 100 ? 100 : HealedAgentHealth;
-                amount++;
             }
 
             if (affectorAgent.IsMainAgent && amount > 0)
@@ -221,7 +222,13 @@ namespace RealmsForgotten.RFEffects
         private static List<Agent> GetRadiusAgentsOrSingle(
      Agent affectedAgent, Agent affectorAgent, WeaponEffectData weaponEffectData, Blow blow, Func<Agent, bool> condition)
         {
+            if (IncreaseAreaOfDamagePatch.IsProcessingAreaDamage)
+                return new List<Agent>() { affectedAgent };
+
             float areaOfEffect = weaponEffectData.AreaOfEffect;
+            float areaMultiplier = AbilityEffects.GetSpellAreaMultiplier(affectorAgent, allowCareerOnlySplash: false);
+            if (areaMultiplier > 0f)
+                areaOfEffect *= areaMultiplier;
 
           
             if (areaOfEffect <= 0)

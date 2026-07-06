@@ -82,6 +82,7 @@ namespace RealmsForgotten.Patches
 
         public static float isWand = 0f;
         public static Blow CurrentBlow;
+        public static bool IsProcessingAreaDamage { get; private set; }
         private static MethodInfo RegisterBlow = AccessTools.Method(typeof(Mission), "RegisterBlow");
 
         public static void ProcessPendingAreaDamage(Mission mission)
@@ -104,9 +105,17 @@ namespace RealmsForgotten.Patches
                 if (entry.Attacker == null || entry.Victim == null || !entry.Victim.IsActive())
                     continue;
 
-                CurrentBlow = entry.SourceBlow;
-                RegisterBlow.Invoke(mission, new object[] { entry.Attacker, entry.Victim, null, entry.Blow, entry.CollisionData, entry.AttackerWeapon, entry.CombatLog });
-                CurrentBlow = default;
+                try
+                {
+                    IsProcessingAreaDamage = true;
+                    CurrentBlow = entry.SourceBlow;
+                    RegisterBlow.Invoke(mission, new object[] { entry.Attacker, entry.Victim, null, entry.Blow, entry.CollisionData, entry.AttackerWeapon, entry.CombatLog });
+                }
+                finally
+                {
+                    CurrentBlow = default;
+                    IsProcessingAreaDamage = false;
+                }
             }
         }
 
@@ -118,6 +127,7 @@ namespace RealmsForgotten.Patches
             }
 
             CurrentBlow = default;
+            IsProcessingAreaDamage = false;
             isWand = 0f;
         }
 

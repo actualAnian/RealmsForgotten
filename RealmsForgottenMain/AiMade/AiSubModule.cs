@@ -124,6 +124,7 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new AlignmentWarBehavior());
             campaignGameStarter.AddBehavior(new AlignmentMomentumBehavior());
             campaignGameStarter.AddBehavior(new AseraiCollectiveDefenseBehavior());
+            campaignGameStarter.AddBehavior(new MilitaryAidDiplomacyBehavior());
             // Heavy campaign AI tracing is disabled during normal play because it generates large logs and noticeable campaign-map lag.
             // campaignGameStarter.AddBehavior(new RFCampaignAITraceBehavior());
             //campaignGameStarter.AddBehavior(new TickProfilerBehavior());

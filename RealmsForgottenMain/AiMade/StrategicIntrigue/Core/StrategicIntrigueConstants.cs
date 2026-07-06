@@ -37,7 +37,7 @@ public static class StrategicIntrigueConstants
     // execute — giving the player and world time to react and potentially intervene.
     public const float AutoEscalationDelayDays = 20f;
 
-    public const float RulerCountermoveCooldownDays = 7f;
+    public const float RulerCountermoveCooldownDays = 14f;
 
     // ── Organic event frequency ────────────────────────────────────────────
     // Per-kingdom cooldowns: how often the system CAN fire an organic event.
@@ -60,10 +60,14 @@ public static class StrategicIntrigueConstants
     public const float KingdomObjectiveDirectiveCooldownDays = 10f;
     public const int KingdomObjectiveDirectiveBaseInfluenceCost = 20;
     public const int KingdomObjectiveDirectiveBaseGoldCost = 2000;
-    public const float SeverePunishmentSuspicionThreshold = 82f;
-    public const float SeverePunishmentThreatThreshold = 108f;
-    public const int ExecutionRelationThreshold = -25;
-    public const int ImprisonmentRelationThreshold = 20;
+    public const float SeverePunishmentSuspicionThreshold = 92f;
+    public const float SeverePunishmentThreatThreshold = 135f;
+    public const int ExecutionRelationThreshold = -70;
+    public const int ImprisonmentRelationThreshold = 0;
+    public const float ExecutionGlobalCooldownDays = 90f;
+    public const int ExecutionMinimumWorldAliveLordCount = 650;
+    public const int ExecutionMinimumKingdomAliveLordCount = 12;
+    public const int ExecutionMinimumClanAliveLordCount = 2;
 
     public const float DailySuspicionDecay = 1.25f;
     public const float DailyRoyalFavorDecay = 0.5f;

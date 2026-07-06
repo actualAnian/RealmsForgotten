@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.SaveSystem;
@@ -30,12 +31,23 @@ namespace RealmsForgotten.Career.CareerPointsSystem
                 AwardDeedsPoints(20);
             }
 
-            // Added null checks for safety
-            if (attackerParty != null && defenderParty != null && Globals.IsBanditParty(attackerParty) && Globals.IsCaravanParty(defenderParty))
+            bool defendedCiviliansFromBandits = attackerParty != null && defenderParty != null && Globals.IsBanditParty(attackerParty) && Globals.IsCaravanParty(defenderParty);
+            if (defendedCiviliansFromBandits)
             {
                 AwardDeedsPoints(10);
-                InformationManager.DisplayMessage(new InformationMessage("You have successfully defended the villagers/caravan and gained chivalry points!"));
+                InformationManager.DisplayMessage(new InformationMessage("You have successfully defended the villagers/caravan and gained deeds points!"));
             }
+            else if (!mapEvent.IsHideoutBattle && mapEvent.IsPlayerMapEvent && PlayerWonAgainstBandits(mapEvent))
+            {
+                AwardDeedsPoints(5);
+                InformationManager.DisplayMessage(new InformationMessage("You defeated a bandit party and gained deeds points!"));
+            }
+        }
+
+        private bool PlayerWonAgainstBandits(MapEvent mapEvent)
+        {
+            MapEventSide enemySide = mapEvent.PlayerSide == BattleSideEnum.Attacker ? mapEvent.DefenderSide : mapEvent.AttackerSide;
+            return enemySide.Parties.Any(party => Globals.IsBanditParty(party.Party));
         }
         public int AllDeedsPoints()
         {
@@ -94,7 +106,7 @@ namespace RealmsForgotten.Career.CareerPointsSystem
              "Snare The Wealthy", //SnareTheWealthyIssueBehavior
         };
 
-        public override string Description => new TextObject("{=rf_pointsystem_deeds}You gain deeds points by destroying hideouts, helping caravans, villagers in battle, completing good quests, you also lose points through completing bad quets. Every 50 points gives 1 perk point. Your current deeds: ").ToString() + deedsPoints;
+        public override string Description => new TextObject("{=rf_pointsystem_deeds}You gain deeds points by defeating bandit parties, destroying hideouts, helping caravans, villagers in battle, completing good quests, you also lose points through completing bad quests. Every 50 points gives 1 perk point. Your current deeds: ").ToString() + deedsPoints;
 
         private void AwardDeedsPoints(int points)
         {

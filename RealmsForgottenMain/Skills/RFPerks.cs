@@ -129,24 +129,24 @@ namespace RealmsForgotten.CustomSkills
                 PartyRole.Personal, 0.9f, EffectIncrementType.AddFactor);
 
             _neophytesStaff.Initialize("{=arcane_perk_title.2}Neophytes Staff", RFSkills.Arcane, 50, _neophytesTalisman,
-                "{=arcane_perk_desc.2}Augments the area damage by x0.9.",
-                PartyRole.Personal, 0.9f, EffectIncrementType.AddFactor);
+                "{=arcane_perk_desc.2}Augments the area damage by x1.5.",
+                PartyRole.Personal, 1.5f, EffectIncrementType.AddFactor);
 
             _initiatesTalisman.Initialize("{=arcane_perk_title.3}Initiates Talisman", RFSkills.Arcane, 100, _initiatesStaff,
                 "{=arcane_perk_desc.3}Augments the effectiveness your magic damage by x1.2.",
                 PartyRole.Personal, 1.2f, EffectIncrementType.AddFactor);
 
             _initiatesStaff.Initialize("{=arcane_perk_title.4}Initiates Staff", RFSkills.Arcane, 100, _initiatesTalisman,
-                "{=arcane_perk_desc.4}Augments the area damage by x1.35.",
-                PartyRole.Personal, 1.35f, EffectIncrementType.AddFactor);
+                "{=arcane_perk_desc.4}Augments the area damage by x3.0.",
+                PartyRole.Personal, 3.0f, EffectIncrementType.AddFactor);
 
             _hierophantsTalisman.Initialize("{=arcane_perk_title.5}Hierophant's Talisman", RFSkills.Arcane, 150, _hierophantsStaff,
                 "{=arcane_perk_desc.5}Augments the effectiveness your magic items by x1.2 (must be equipped with a magic item).",
                 PartyRole.Personal, 1.2f, EffectIncrementType.AddFactor);
 
             _hierophantsStaff.Initialize("{=arcane_perk_title.6}Hierophant's Staff", RFSkills.Arcane, 150, _hierophantsTalisman,
-                "{=arcane_perk_desc.6}Augments the area damage by x1.8.",
-                PartyRole.Personal, 1.8f, EffectIncrementType.AddFactor);
+                "{=arcane_perk_desc.6}Augments the area damage by x4.5.",
+                PartyRole.Personal, 4.5f, EffectIncrementType.AddFactor);
 
             // Alchemy perks
             _novicesLuck.Initialize("{=alchemy_perk_title.1}Novice's Luck", RFSkills.Alchemy, 50, _novicesDedication,

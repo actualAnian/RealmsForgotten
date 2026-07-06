@@ -263,7 +263,6 @@ namespace RealmsForgotten.CharacterCreation
             narrativeMenu.AddNarrativeMenuOption(new("rf_menu_ranger", new TextObject("A ranger of {CULTURE} in exile", null), new TextObject("{=CulturedStart14}Forced into exile after your parents were executed for suspected treason. With only your family's bodyguard you set off. Should you return you'd be viewed as a criminal.", null), new GetNarrativeMenuOptionArgsDelegate(RFStartMenuRangerNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(m => { return true; }), new NarrativeMenuOptionOnSelectDelegate(m => { ChooseCharacterEquipment(m, StartType.Exiled); }), new NarrativeMenuOptionOnConsequenceDelegate(ExiledStartOnConsequence)));
             narrativeMenu.AddNarrativeMenuOption(new("rf_menu_mercenary", new TextObject("{=CulturedStart15}A leader of a failing mercenary company", null), new TextObject("{=CulturedStart16}With men deserting over lack of wages, your company leader was found dead, and you decided to take your chance and lead.", null), new GetNarrativeMenuOptionArgsDelegate(RFStartMenuMercenaryNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(m => { return true; }), new NarrativeMenuOptionOnSelectDelegate(m => { ChooseCharacterEquipment(m, StartType.Mercenary); }), new NarrativeMenuOptionOnConsequenceDelegate(MercenaryStartOnConsequence)));
             narrativeMenu.AddNarrativeMenuOption(new("rf_menu_outlaw", new TextObject("{=CulturedStart17}A cheap outlaw", null), new TextObject("{=CulturedStart18}Left impoverished from war, you found a group of like-minded ruffians who were desperate to get by.", null), new GetNarrativeMenuOptionArgsDelegate(RFStartMenuOutlawNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(m => { return true; }), new NarrativeMenuOptionOnSelectDelegate(m => { ChooseCharacterEquipment(m, StartType.Outlaw); }), new NarrativeMenuOptionOnConsequenceDelegate(OutlawStartOnConsequence)));
-            //narrativeMenu.AddNarrativeMenuOption(new("rf_menu_cleric", new TextObject("{=CulturedStart19}An cleric of {CULTURE}", null), new TextObject("", null), new GetNarrativeMenuOptionArgsDelegate(RFStartMenuClericNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(m => { return true; }), new NarrativeMenuOptionOnSelectDelegate(DoNothin), new NarrativeMenuOptionOnConsequenceDelegate(ClericStartOnConsequence)));
             narrativeMenu.AddNarrativeMenuOption(new("rf_menu_king", new TextObject("{=CulturedStart21}A King of {CULTURE}", null), new TextObject("{=CulturedStart22}A recognized ruler, you have a kingdom to rule.", null), new GetNarrativeMenuOptionArgsDelegate(RFStartMenuKingNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(m => { return true; }), new NarrativeMenuOptionOnSelectDelegate(m => { ChooseCharacterEquipment(m, StartType.King); }), new NarrativeMenuOptionOnConsequenceDelegate(KingStartOnConsequence)));
             narrativeMenu.AddNarrativeMenuOption(new("rf_menu_usurper", new TextObject("{=CulturedStart23}An ursurper of {CULTURE}", null), new TextObject("{=CulturedStart24}You acquired a castle through your own means and declared yourself a kingdom for better or worse.", null), new GetNarrativeMenuOptionArgsDelegate(RFStartMenuUsurperNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(m => { return true; }), new NarrativeMenuOptionOnSelectDelegate(m => { ChooseCharacterEquipment(m, StartType.Usurper); }), new NarrativeMenuOptionOnConsequenceDelegate(UsurperStartOnConsequence)));
             narrativeMenu.AddNarrativeMenuOption(new("rf_menu_knight", new TextObject("{=CulturedStart25}A knight of {CULTURE}", null), new TextObject("{=CulturedStart26}Under the weight of an oath you came into an arrangement with the king for a chance at land.", null), new GetNarrativeMenuOptionArgsDelegate(RFStartMenuKnightNarrativeOptionArgs), new NarrativeMenuOptionOnConditionDelegate(m => { return true; }), new NarrativeMenuOptionOnSelectDelegate(m => { ChooseCharacterEquipment(m, StartType.Knight); }), new NarrativeMenuOptionOnConsequenceDelegate(KnightStartOnConsequence)));
@@ -337,19 +336,6 @@ namespace RealmsForgotten.CharacterCreation
             args.SetLevelToSkills(25);
             args.SetLevelToAttribute(DefaultCharacterAttributes.Intelligence, _attributeLevelToAdd);
         }
-        //private void RFStartMenuClericNarrativeOptionArgs(NarrativeMenuOptionArgs args)
-        //{
-        //    SkillObject[] affectedSkills = new SkillObject[]
-        //    {
-        //        DefaultSkills.Steward,
-        //        DefaultSkills.Charm,
-        //        RFSkills.Faith
-        //    };
-        //    args.SetAffectedSkills(affectedSkills);
-        //    args.SetFocusToSkills(_focusToAdd);
-        //    args.SetLevelToSkills(20);
-        //    args.SetLevelToAttribute(RFAttributes.Discipline, _attributeLevelToAdd);
-        //}
         private void RFStartMenuKingNarrativeOptionArgs(NarrativeMenuOptionArgs args)
         {
             SkillObject[] affectedSkills = new SkillObject[]

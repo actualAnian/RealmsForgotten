@@ -8,6 +8,7 @@ using TaleWorlds.MountAndBlade;
 using RealmsForgotten.CustomSkills;
 using TaleWorlds.Localization;
 using RealmsForgotten.Patches;
+using RealmsForgotten.Career.Ability;
 
 namespace RealmsForgotten.Behaviors
 {
@@ -129,13 +130,11 @@ namespace RealmsForgotten.Behaviors
         }
         public override void OnAgentHit(Agent affectedAgent, Agent affectorAgent, in MissionWeapon affectorWeapon, in Blow blow, in AttackCollisionData attackCollisionData)
         {
-            if (affectorWeapon.Item != null && affectorWeapon.CurrentUsageItem?.WeaponClass == WeaponClass.Cartridge && IncreaseAreaOfDamagePatch.CurrentBlow.OwnerId != blow.OwnerId)
+            if (affectorWeapon.Item != null && affectorWeapon.CurrentUsageItem?.WeaponClass == WeaponClass.Cartridge && !IncreaseAreaOfDamagePatch.IsProcessingAreaDamage)
             {
                 if (affectorAgent.Character is CharacterObject attackerCharacterObject)
                 {
-                    float areaFactor = attackerCharacterObject.GetPerkValue(RFPerks.Arcane.NeophytesStaff) ? RFPerks.Arcane.NeophytesStaff.PrimaryBonus :
-                        (attackerCharacterObject.GetPerkValue(RFPerks.Arcane.InitiatesStaff) ? RFPerks.Arcane.InitiatesStaff.PrimaryBonus :
-                            (attackerCharacterObject.GetPerkValue(RFPerks.Arcane.HierophantsStaff) ? RFPerks.Arcane.HierophantsStaff.PrimaryBonus : 0));
+                    float areaFactor = AbilityEffects.GetSpellAreaMultiplier(affectorAgent, allowCareerOnlySplash: true);
                     if (areaFactor > 0)
                     {
                         AttackCollisionData collisionData = attackCollisionData;

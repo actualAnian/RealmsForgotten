@@ -133,5 +133,25 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
 
         public List<Kingdom> GetGoodKingdoms() => Kingdom.All.Where(k => _goodKingdomIds.Contains(k.StringId)).ToList();
         public List<Kingdom> GetEvilKingdoms() => Kingdom.All.Where(k => _evilKingdomIds.Contains(k.StringId)).ToList();
+
+        public bool IsAlignmentWarPair(IFaction faction1, IFaction faction2)
+        {
+            if (!_warStarted && !_savedIsActive)
+            {
+                return false;
+            }
+
+            if (faction1 is not Kingdom kingdom1 || faction2 is not Kingdom kingdom2)
+            {
+                return false;
+            }
+
+            bool kingdom1Good = _goodKingdomIds.Contains(kingdom1.StringId);
+            bool kingdom1Evil = _evilKingdomIds.Contains(kingdom1.StringId);
+            bool kingdom2Good = _goodKingdomIds.Contains(kingdom2.StringId);
+            bool kingdom2Evil = _evilKingdomIds.Contains(kingdom2.StringId);
+
+            return (kingdom1Good && kingdom2Evil) || (kingdom1Evil && kingdom2Good);
+        }
     }
 }

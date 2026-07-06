@@ -4,7 +4,6 @@ C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Promoted\obj\D
 C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Promoted\obj\Debug\net472\RF_Promoted.AssemblyInfo.cs
 C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Promoted\obj\Debug\net472\RF_Promoted.csproj.CoreCompileInputs.cache
 C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Promoted\obj\Debug\net472\RF_Promoted.sourcelink.json
-C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Promoted\bin\Debug\net472\promoted_config.txt
 C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Promoted\bin\Debug\net472\RF_Promoted.dll
 C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Promoted\bin\Debug\net472\RF_Promoted.pdb
 C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Promoted\obj\Debug\net472\RF_Promoted.dll

@@ -10,6 +10,8 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Engine;
 using RealmsForgotten.RFEffects;
 using RealmsForgotten.RFMissionLogic;
+using RealmsForgotten.CustomSkills;
+using TaleWorlds.CampaignSystem;
 
 namespace RealmsForgotten.Career.Ability
 {
@@ -362,6 +364,32 @@ namespace RealmsForgotten.Career.Ability
                 if (d.Contains("Increase spell area effect by 10%")) sum += 0.10f;
             }
             return sum;
+        }
+
+        public static float GetSpellAreaMultiplier(Agent casterAgent, bool allowCareerOnlySplash)
+        {
+            float staffMultiplier = 0f;
+            if (casterAgent?.Character is CharacterObject casterCharacter)
+            {
+                if (casterCharacter.GetPerkValue(RFPerks.Arcane.HierophantsStaff))
+                    staffMultiplier = RFPerks.Arcane.HierophantsStaff.PrimaryBonus;
+                else if (casterCharacter.GetPerkValue(RFPerks.Arcane.InitiatesStaff))
+                    staffMultiplier = RFPerks.Arcane.InitiatesStaff.PrimaryBonus;
+                else if (casterCharacter.GetPerkValue(RFPerks.Arcane.NeophytesStaff))
+                    staffMultiplier = RFPerks.Arcane.NeophytesStaff.PrimaryBonus;
+            }
+
+            float careerMultiplier = 1f;
+            if (casterAgent?.IsMainAgent == true)
+                careerMultiplier += GetSpellAOEPercent();
+
+            if (staffMultiplier > 0f)
+                return staffMultiplier * careerMultiplier;
+
+            if (allowCareerOnlySplash && careerMultiplier > 1f)
+                return careerMultiplier;
+
+            return 0f;
         }
 
         public static float PlayerMeleeImmuneUntil = 0f;

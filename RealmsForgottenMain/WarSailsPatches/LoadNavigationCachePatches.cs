@@ -7,6 +7,7 @@ using System.IO;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Map.DistanceCache;
 using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.Library;
 using TaleWorlds.ModuleManager;
 
 namespace RealmsForgotten.WarSailsPatches
@@ -30,7 +31,7 @@ namespace RealmsForgotten.WarSailsPatches
             return candidateWrite >= defaultWrite;
         }
 
-        static bool Prefix(SettlementPositionScript __instance, bool useNavalNavigation)
+        public static bool Prefix(SettlementPositionScript __instance, bool useNavalNavigation)
         {
             try
             {

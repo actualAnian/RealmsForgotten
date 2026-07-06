@@ -21,6 +21,8 @@ namespace RealmsForgotten
         private static int _remainingAuditLines = CapitulationAuditMaxLines;
         private Dictionary<Kingdom, CampaignTime> _lastCapitulation = new Dictionary<Kingdom, CampaignTime>();
         private Dictionary<Kingdom, CampaignTime> _lastAidAppeal = new Dictionary<Kingdom, CampaignTime>();
+        private Dictionary<string, CampaignTime> _capitulationPressureSince = new Dictionary<string, CampaignTime>();
+        private CampaignTime _lastWorldCapitulationAt = CampaignTime.Zero;
         private readonly List<string> NonCapitulatingNations = new()
         {
             "aserai",
@@ -32,7 +34,15 @@ namespace RealmsForgotten
 
         };
         // --- CONFIG ---
-        private const float GraceDays = 25f; // No capitulations during first X days
+        private const float GraceDays = 90f; // No capitulations during first X days
+        private const float DirectCapitulationPressureDays = 21f;
+        private const float ProtectedVassalPressureDays = 14f;
+        private const float GlobalCapitulationCooldownDays = 10f;
+        private const float AidAppealCooldownDays = 20f;
+        private const float AidStrengthRatio = 2.75f;
+        private const float DirectCapitulationStrengthRatioOneFief = 3.75f;
+        private const float DirectCapitulationStrengthRatioTwoFiefs = 4.5f;
+        private const float ProtectedVassalStrengthRatio = 5f;
 
         public override void RegisterEvents()
         {
@@ -43,6 +53,12 @@ namespace RealmsForgotten
         {
             dataStore.SyncData("_lastCapitulation", ref _lastCapitulation);
             dataStore.SyncData("_lastAidAppeal", ref _lastAidAppeal);
+            dataStore.SyncData("_capitulationPressureSince", ref _capitulationPressureSince);
+            dataStore.SyncData("_lastWorldCapitulationAt", ref _lastWorldCapitulationAt);
+
+            _lastCapitulation ??= new Dictionary<Kingdom, CampaignTime>();
+            _lastAidAppeal ??= new Dictionary<Kingdom, CampaignTime>();
+            _capitulationPressureSince ??= new Dictionary<string, CampaignTime>();
         }
 
         private void CheckCapitulations()
@@ -108,9 +124,12 @@ namespace RealmsForgotten
                 return false;
             if (CampaignTime.Now.ToDays < GraceDays)
                 return false;
+            if (_lastWorldCapitulationAt != CampaignTime.Zero
+                && (CampaignTime.Now - _lastWorldCapitulationAt).ToDays < GlobalCapitulationCooldownDays)
+                return false;
             if (_lastCapitulation.TryGetValue(weak, out var last))
             {
-                return (CampaignTime.Now - last).ToDays > 15f;
+                return (CampaignTime.Now - last).ToDays > 30f;
             }
             return true;
         }
@@ -119,9 +138,18 @@ namespace RealmsForgotten
         {
             int weakFiefs = weak.Fiefs.Count();
             float strengthRatio = strong.CurrentTotalStrength / (weak.CurrentTotalStrength + 1f);
+            float requiredStrengthRatio = weakFiefs <= 1
+                ? DirectCapitulationStrengthRatioOneFief
+                : DirectCapitulationStrengthRatioTwoFiefs;
 
-            AuditCapitulation($"THRESHOLD weak={weak.StringId} strong={strong.StringId} weakFiefs={weakFiefs} strengthRatio={strengthRatio:F2}");
-            return weakFiefs <= 2 && strengthRatio >= 3.0f;
+            AuditCapitulation($"THRESHOLD weak={weak.StringId} strong={strong.StringId} weakFiefs={weakFiefs} strengthRatio={strengthRatio:F2} required={requiredStrengthRatio:F2}");
+            if (weakFiefs > 2 || strengthRatio < requiredStrengthRatio)
+            {
+                ClearCapitulationPressure(weak, strong);
+                return false;
+            }
+
+            return HasSustainedCapitulationPressure(weak, strong, DirectCapitulationPressureDays);
         }
 
         private bool TrySeekProtectiveAid(Kingdom weak, Kingdom strong)
@@ -137,11 +165,11 @@ namespace RealmsForgotten
                 return false;
 
             float strengthRatio = strong.CurrentTotalStrength / (weak.CurrentTotalStrength + 1f);
-            if (strengthRatio < 2.25f)
+            if (strengthRatio < AidStrengthRatio)
                 return false;
 
             if (_lastAidAppeal.TryGetValue(weak, out CampaignTime lastAid)
-                && (CampaignTime.Now - lastAid).ToDays < 12f)
+                && (CampaignTime.Now - lastAid).ToDays < AidAppealCooldownDays)
                 return false;
 
             List<Kingdom> helpers = Kingdom.All
@@ -165,11 +193,12 @@ namespace RealmsForgotten
 
             bool absorbAsProtectedVassal =
                 weakFiefs <= 1
-                && strengthRatio >= 4f
+                && strengthRatio >= ProtectedVassalStrengthRatio
                 && string.Equals(helper.Culture?.StringId, weak.Culture?.StringId, StringComparison.OrdinalIgnoreCase)
                 && helper.CurrentTotalStrength >= weak.CurrentTotalStrength * 1.5f;
 
-            if (absorbAsProtectedVassal)
+            if (absorbAsProtectedVassal
+                && HasSustainedCapitulationPressure(weak, strong, ProtectedVassalPressureDays))
             {
                 AuditCapitulation($"AID_PROTECTED_VASSAL weak={weak.StringId} helper={helper.StringId} strong={strong.StringId}");
                 AbsorbKingdomAsProtectedVassal(weak, helper, strong);
@@ -298,6 +327,9 @@ namespace RealmsForgotten
                 Colors.Yellow));
 
             AuditCapitulation($"DESTROY_KINGDOM weak={weak.StringId} mode=protected_vassal helper={helper.StringId}");
+            _lastCapitulation[weak] = CampaignTime.Now;
+            _lastWorldCapitulationAt = CampaignTime.Now;
+            ClearAllCapitulationPressureFor(weak);
             DestroyKingdomAction.Apply(weak);
         }
 
@@ -349,6 +381,9 @@ namespace RealmsForgotten
                 ChangeKingdomAction.ApplyByJoinToKingdom(clan, victor);
             }
 
+            _lastCapitulation[playerKingdom] = CampaignTime.Now;
+            _lastWorldCapitulationAt = CampaignTime.Now;
+            ClearAllCapitulationPressureFor(playerKingdom);
             DestroyKingdomAction.Apply(playerKingdom);
         }
 
@@ -391,7 +426,49 @@ namespace RealmsForgotten
             }
 
             AuditCapitulation($"DESTROY_KINGDOM weak={weak.StringId} mode=direct_capitulation strong={strong.StringId}");
+            _lastCapitulation[weak] = CampaignTime.Now;
+            _lastWorldCapitulationAt = CampaignTime.Now;
+            ClearAllCapitulationPressureFor(weak);
             DestroyKingdomAction.Apply(weak);
+        }
+
+        private bool HasSustainedCapitulationPressure(Kingdom weak, Kingdom strong, float requiredDays)
+        {
+            string key = GetCapitulationPressureKey(weak, strong);
+            if (!_capitulationPressureSince.TryGetValue(key, out CampaignTime since))
+            {
+                _capitulationPressureSince[key] = CampaignTime.Now;
+                AuditCapitulation($"PRESSURE_START weak={weak.StringId} strong={strong.StringId} requiredDays={requiredDays:F1}");
+                return false;
+            }
+
+            float days = (float)(CampaignTime.Now - since).ToDays;
+            if (days < requiredDays)
+            {
+                AuditCapitulation($"PRESSURE_WAIT weak={weak.StringId} strong={strong.StringId} days={days:F1} requiredDays={requiredDays:F1}");
+                return false;
+            }
+
+            return true;
+        }
+
+        private void ClearCapitulationPressure(Kingdom weak, Kingdom strong)
+        {
+            _capitulationPressureSince.Remove(GetCapitulationPressureKey(weak, strong));
+        }
+
+        private void ClearAllCapitulationPressureFor(Kingdom kingdom)
+        {
+            string prefix = $"{kingdom?.StringId}|";
+            foreach (string key in _capitulationPressureSince.Keys.Where(x => x.StartsWith(prefix, StringComparison.Ordinal)).ToList())
+            {
+                _capitulationPressureSince.Remove(key);
+            }
+        }
+
+        private static string GetCapitulationPressureKey(Kingdom weak, Kingdom strong)
+        {
+            return $"{weak?.StringId ?? "none"}|{strong?.StringId ?? "none"}";
         }
 
         private static void AuditCapitulation(string message)
