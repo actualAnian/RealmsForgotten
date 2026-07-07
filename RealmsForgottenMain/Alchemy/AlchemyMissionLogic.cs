@@ -2,6 +2,7 @@
 using RealmsForgotten.Alchemy.OnHitEffects;
 using RealmsForgotten.UI.FloatingText;
 using System.Collections.Generic;
+using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
@@ -75,9 +76,14 @@ namespace RealmsForgotten.Alchemy
             foreach (var missile in Current.MissilesList)
                 _projectileGrid.Add(missile.GetPosition().AsVec2, missile);
         }
+        bool _setNewPlayerBombType = false;
         public override void OnMissionTick(float dt)
         {
-            base.OnMissionTick(dt);
+            if (_setNewPlayerBombType)
+            {
+                PlayerBombManager.Instance.SetBombToNewType();
+                _setNewPlayerBombType = false;
+            }
             BuildGrids();
             if (_activeBombs.Count == 0)
                 return;
@@ -225,10 +231,29 @@ namespace RealmsForgotten.Alchemy
         {
             FloatingTextManager.Instance.Remove(bomb.FloatingTextId);
         }
-        public override void OnAgentBuild(Agent agent, Banner banner)
+        public override void OnDeploymentFinished()
         {
-            if (agent.IsPlayerControlled && agent.Character != CharacterObject.PlayerCharacter) return;
-            PlayerBombManager.Instance.AddPlayerBombsOnMissionStart();
+            var playerAgent = Current.Agents.FirstOrDefault(a => a.IsPlayerControlled);
+            if (playerAgent != null)
+                PlayerBombManager.Instance.AddPlayerBombsOnMissionStart(playerAgent);
+        }
+        public override void OnAfterDeploymentFinished()
+        {
+            var playerAgent = Current.Agents.FirstOrDefault(a => a.IsPlayerControlled);
+            if (playerAgent != null)
+                PlayerBombManager.Instance.AddPlayerBombsOnMissionStart(playerAgent);
+        }
+        //public override void OnAgentControllerSetToPlayer(Agent agent)
+        //{
+        //    PlayerBombManager.Instance.AddPlayerBombsOnMissionStart(agent);
+        //}
+        public override void OnAgentShootMissile(Agent shooterAgent, EquipmentIndex weaponIndex, Vec3 position, Vec3 velocity, Mat3 orientation, bool hasRigidBody, int forcedMissileIndex)
+        {
+            if (!shooterAgent.IsPlayerControlled) return;
+            var itemShot = shooterAgent.Equipment[weaponIndex].Item;
+            var bombDefinition = BaseBombDefinitions.GetBombDefinition(itemShot);
+            if (bombDefinition == null) return;
+            PlayerBombManager.Instance.OnBombFired(bombDefinition, shooterAgent, weaponIndex, ref _setNewPlayerBombType);
         }
     }
 }

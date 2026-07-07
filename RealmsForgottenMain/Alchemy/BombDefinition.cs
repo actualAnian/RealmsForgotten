@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 
@@ -21,5 +22,15 @@ namespace RealmsForgotten.Alchemy
             spriteStringId ??= item.StringId;
             BombDefinitions[item] = new BombDefinition(item, baseDescription, spriteStringId, duration);
         }
+        public static bool IsAlchemicalBomb(ItemObject item)
+        {
+            return BombDefinitions.Keys.Any(b => b.StringId == item.StringId);
+        }
+        public static BombDefinition? GetBombDefinition(ItemObject item)
+        {
+            BombDefinitions.TryGetValue(item, out var result);
+            return result;
+        }
     }
+
 }
