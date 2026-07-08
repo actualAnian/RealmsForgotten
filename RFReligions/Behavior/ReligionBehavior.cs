@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Helpers;
-using RealmsForgotten.CustomSkills;
 using RealmsForgotten.RFReligions.Core;
 using RealmsForgotten.RFReligions.Helper;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
-using TaleWorlds.CampaignSystem.Conversation;
 using TaleWorlds.CampaignSystem.GameMenus;
-using TaleWorlds.CampaignSystem.Overlay;
+using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
@@ -18,6 +16,7 @@ using TaleWorlds.Localization;
 using TaleWorlds.SaveSystem;
 
 namespace RealmsForgotten.RFReligions.Behavior;
+
 
 internal class ReligionBehavior : CampaignBehaviorBase
 {
@@ -28,8 +27,15 @@ internal class ReligionBehavior : CampaignBehaviorBase
         Instance = this;
     }
 
+
     public static ReligionBehavior? Instance;
 
+    public bool IsHeroBlessed(Hero hero, Core.RFReligions religion)
+    {
+        return _activeBlessings.TryGetValue(hero, out var data) &&
+               data.religion == religion &&
+               CampaignTime.Now < data.expiry;
+    }
 
     public override void RegisterEvents()
     {
@@ -45,7 +51,41 @@ internal class ReligionBehavior : CampaignBehaviorBase
             new Action<MobileParty>(MobilePartyDailyTick));
         CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, new Action(OnDailyTick));
         CampaignEvents.TickEvent.AddNonSerializedListener(this, new Action<float>(OnTick));
+        CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnBattleEnded);
+        CampaignEvents.OnGovernorChangedEvent.AddNonSerializedListener(this, OnGovernorChanged);
     }
+
+    private void OnBattleEnded(MapEvent mapEvent)
+    {
+        if (mapEvent == null || !mapEvent.IsPlayerMapEvent)
+            return;
+
+        Hero mainHero = Hero.MainHero;
+
+        if (_activeBlessings.TryGetValue(mainHero, out var blessing)
+            && blessing.religion == Core.RFReligions.Anorites
+            && _heroes.TryGetValue(mainHero, out var heroReligionModel))
+        {
+            // Get devotion and scale bonuses (min 1x, max 2x effect)
+            float devotion = heroReligionModel.GetDevotionToCurrentReligion();
+            float scale = MathF.Clamp(devotion / 100f, 0.5f, 2f); // between 0.5x and 2x
+
+            float influenceBonus = 5f * scale;
+            float moraleBonus = 5f * scale;
+
+            // Apply bonuses
+            ChangeClanInfluenceAction.Apply(mainHero.Clan, influenceBonus);
+            if (mainHero.PartyBelongedTo != null)
+                mainHero.PartyBelongedTo.RecentEventsMorale += moraleBonus;
+
+            // Feedback
+            InformationManager.DisplayMessage(new InformationMessage(
+                $"The relentless will of the Anorites emboldens your troops. (+" +
+                $"{moraleBonus:F1} morale, +{influenceBonus:F1} influence)", Colors.Yellow));
+        }
+    }
+
+
 
 
     private void CharacterCreationOver()
@@ -98,13 +138,88 @@ internal class ReligionBehavior : CampaignBehaviorBase
         }
     }
 
+    private void ApplySacrificeBonus(Hero hero, Core.RFReligions religion)
+    {
+        var expiry = CampaignTime.DaysFromNow(5);
+        _activeBlessings[hero] = (religion, expiry);
 
+        switch (religion)
+        {
+            case Core.RFReligions.Faelora:
+                HealParty(hero.PartyBelongedTo, 0.2f); // 20% healing
+                InformationManager.DisplayMessage(new InformationMessage(
+             "The nurturing embrace of Faelora heals your followers.", Colors.Green));
+                break;
+
+            case Core.RFReligions.AeternaFide:
+                if (hero.CurrentSettlement?.Town != null)
+                    hero.CurrentSettlement.Town.Loyalty += 5f;
+                InformationManager.DisplayMessage(new InformationMessage(
+               "The unwavering light of Aeterna Fide strengthens your city's loyalty.", Colors.Yellow));
+                break;
+
+            case Core.RFReligions.Anorites:
+                if (hero.PartyBelongedTo != null)
+                    hero.PartyBelongedTo.RecentEventsMorale += 5f;
+                InformationManager.DisplayMessage(new InformationMessage(
+                "The relentless will of the Anorites emboldens your troops.", Colors.Yellow));
+                break;
+
+            case Core.RFReligions.Xochxinti:
+                HealParty(hero.PartyBelongedTo, 0.15f); // 15% healing
+                InformationManager.DisplayMessage(new InformationMessage(
+                   "You feel a wave of energy and your health regenerating as the blessing of Xochxinti takes hold.", Colors.Green));
+                break;
+
+            case Core.RFReligions.KharazDrathar:
+                hero.AddSkillXp(DefaultSkills.Crafting, 100); // Smithing XP
+                break;
+
+            case Core.RFReligions.PharunAegis:
+                InformationManager.DisplayMessage(new InformationMessage(
+                "Your Pharunite discipline reduces your food consumption to 10% of your total reserves.", Colors.Green));
+                break;
+
+            case Core.RFReligions.TengralorOrkhai:
+                InformationManager.DisplayMessage(new InformationMessage(
+                "The blessing of Tengralor Orkhai sharpens your pace across the steppes.", Colors.Yellow));
+                break;
+
+            case Core.RFReligions.VyralethAmara:
+                // Add death prevention flag later
+                break;
+        }
+
+        InformationManager.DisplayMessage(new InformationMessage(
+            $"You have received {religion}'s blessing for 5 days!", Colors.Green));
+    }
+
+    private void HealParty(MobileParty party, float percent)
+    {
+        if (party == null || party.MemberRoster == null)
+            return;
+
+        foreach (var element in party.MemberRoster.GetTroopRoster())
+        {
+            if (element.Character != null && element.WoundedNumber > 0)
+            {
+                int healCount = (int)(element.WoundedNumber * percent);
+
+                // Heal by reducing wounded and increasing healthy count
+                party.MemberRoster.AddToCounts(element.Character, healCount); // Add healthy
+                party.MemberRoster.AddToCounts(element.Character, -healCount, insertAtFront: false); // Remove wounded
+            }
+        }
+    }
     private void OnDailyTick()
     {
         try
         {
             DONATION_COST = MBRandom.RandomInt(5000, 10000);
+
+            // Settlement religious devotion update
             foreach (var settlement in Campaign.Current.Settlements)
+            {
                 if (settlement.IsTown)
                 {
                     if (_settlements.ContainsKey(settlement))
@@ -117,15 +232,61 @@ internal class ReligionBehavior : CampaignBehaviorBase
 
                     if (_settlementEffect.ContainsKey(settlement))
                     {
-                        Dictionary<Settlement, float> settlementEffect = _settlementEffect;
-                        var key = settlement;
-                        settlementEffect[key] -= 0.5f;
+                        _settlementEffect[settlement] -= 0.5f;
                     }
                 }
+            }
+
+            // 🔥 New Pharun Aegis blessing logic
+            foreach (var party in MobileParty.All)
+            {
+                if (!party.IsActive || party.LeaderHero == null || !_activeBlessings.ContainsKey(party.LeaderHero))
+                    continue;
+
+                var blessing = _activeBlessings[party.LeaderHero];
+
+                if (blessing.religion == Core.RFReligions.PharunAegis)
+                {
+                    float currentFood = party.Food;
+                    if (currentFood > 0f)
+                    {
+                        float foodConsumed = currentFood * 0.1f;
+                        ConsumeFoodManually(party, foodConsumed);
+
+                        if (party.LeaderHero == Hero.MainHero)
+                        {
+                            InformationManager.DisplayMessage(new InformationMessage(
+                                $"Your Pharunite discipline reduces food use. Only {foodConsumed:0.0} food consumed today.",
+                                Colors.Green));
+                        }
+                    }
+                }
+            }
         }
         catch (Exception ex)
         {
             InformationManager.DisplayMessage(new InformationMessage("Religions DailyTick Error"));
+        }
+    }
+
+    private void ConsumeFoodManually(MobileParty party, float amountToConsume)
+    {
+        var foodItems = party.ItemRoster
+            .Where(e => e.EquipmentElement.Item != null && e.EquipmentElement.Item.IsFood)
+            .ToList();
+
+        foreach (var element in foodItems)
+        {
+            if (amountToConsume <= 0)
+                break;
+
+            float itemValue = element.EquipmentElement.Item.Value; // Value as food
+            int count = element.Amount;
+
+            // Approximate food consumption per item (or just 1 per unit)
+            int toRemove = Math.Min(count, (int)Math.Ceiling(amountToConsume));
+            party.ItemRoster.AddToCounts(element.EquipmentElement.Item, -toRemove);
+            amountToConsume -= toRemove;
         }
     }
 
@@ -141,31 +302,14 @@ internal class ReligionBehavior : CampaignBehaviorBase
 
                 if (!hero.IsDead)
                 {
-                    if (hero == Hero.MainHero || MBRandom.RandomInt(0, 100) >= 60)
-                        continue;
+                    // O bloco de código que penalizava os companheiros foi removido daqui.
+                    // Agora, o código verifica apenas se o herói é um lorde.
 
-                    if (hero.IsPlayerCompanion)
+                    if (hero.IsLord)
                     {
-                        if (!_heroes.ContainsKey(Hero.MainHero))
-                        {
-                            ChangeRelationAction.ApplyPlayerRelation(hero, -1, true, true);
-                        }
-                        else
-                        {
-                            var heroReligionModel2 = _heroes[Hero.MainHero];
-                            if (heroReligionModel2.Religion != heroReligionModel.Religion)
-                            {
-                                if (heroReligionModel2.GetDevotionToCurrentReligion() > 90f)
-                                    ChangeRelationAction.ApplyPlayerRelation(hero,
-                                        -1 * MBRandom.RandomInt(2, 3), true, true);
-                                else if (heroReligionModel2.GetDevotionToCurrentReligion() > 50f)
-                                    ChangeRelationAction.ApplyPlayerRelation(hero,
-                                        -1 * MBRandom.RandomInt(1, 2), true, true);
-                            }
-                        }
-                    }
-                    else if (hero.IsLord)
-                    {
+                        if (hero == Hero.MainHero || MBRandom.RandomInt(0, 100) >= 60)
+                            continue;
+
                         if (hero.CurrentSettlement != null)
                         {
                             var currentSettlement = hero.CurrentSettlement;
@@ -184,8 +328,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
                             if (hero3 != null) RelationshipReligionDecider(hero3, hero, heroReligionModel);
                         }
 
-                        if (hero.MapFaction != null)
-                            if (hero.MapFaction.Leader != hero)
+                        if (hero.MapFaction != null && hero.MapFaction.Leader != null && hero.MapFaction.Leader != hero)
                                 RelationshipReligionDecider(hero.MapFaction.Leader, hero, heroReligionModel);
                         if (hero.Clan != null && hero.Clan.Leader != hero)
                             RelationshipReligionDecider(hero.Clan.Leader, hero, heroReligionModel);
@@ -213,7 +356,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
     public void TriggerReligionMenuEvent()
     {
         if (Campaign.Current.MainParty.CurrentSettlement == null &&
-            !Campaign.Current.MainParty.IsCurrentlyGoingToSettlement) GameMenu.ActivateGameMenu("religion_menu");
+            Campaign.Current.MainParty.ShortTermBehavior != AiBehavior.GoToSettlement) GameMenu.ActivateGameMenu("religion_menu");
     }
 
 
@@ -280,33 +423,101 @@ internal class ReligionBehavior : CampaignBehaviorBase
     }
 
 
-    public float PartyGetMoraleEffect(MobileParty party) =>
-        _partyMoraleEffect.TryGetValue(party, out var effect) ? effect : 0f;
-
-
+    public float PartyGetMoraleEffect(MobileParty party)
+    {
+        try
+        {
+            if (party == null || !party.IsActive)
+                return 0f;
+            if (_partyMoraleEffect.TryGetValue(party, out var effect))
+                return effect;
+            return 0f;
+        }
+        catch (Exception ex)
+        {
+            InformationManager.DisplayMessage(new InformationMessage($"[ReligionBehavior] PartyGetMoraleEffect ERROR: {ex.Message}", Colors.Red));
+            return 0f;
+        }
+    }
     public float SettlementGetLoyaltyEffect(Town town)
     {
-        var settlement = town.Settlement;
-        if (!settlement.IsTown || settlement.OwnerClan?.Leader == null ||
-            !_heroes.TryGetValue(settlement.OwnerClan.Leader, out var heroReligionModel))
+        Settlement settlement = town?.Settlement;
+        if (settlement == null || !_settlements.TryGetValue(settlement, out var settlementReligionModel))
             return 0f;
 
-        var mainReligionRatio = _settlements[settlement].GetMainReligionRatio();
-        var num = (double)mainReligionRatio < 0.6 ? mainReligionRatio / 2f * -1f : mainReligionRatio / 2f;
-        if (_settlements[settlement].GetMainReligion() != heroReligionModel.Religion) num -= 2f;
-        if (!_settlementEffect.ContainsKey(settlement))
-            _settlementEffect.Add(settlement, num);
-        else
-            _settlementEffect[settlement] = num;
-        return _settlementEffect[settlement];
+        RealmsForgotten.RFReligions.Core.RFReligions townReligion = settlementReligionModel.GetMainReligion();
+        float devotion = settlementReligionModel.GetDevotionToReligion(townReligion);
+        float devotionNormalized = MathF.Clamp(devotion / 100f, 0f, 1f);
 
+        Hero owner = settlement.OwnerClan?.Leader;
+        if (owner == null || !_heroes.TryGetValue(owner, out var heroReligionModel))
+            return 0f;
+
+        Core.RFReligions heroReligion = heroReligionModel.Religion;
+
+        float loyaltyEffect;
+
+        if (heroReligion == townReligion)
+        {
+            loyaltyEffect = 0.5f * devotionNormalized;
+        }
+        else if (ReligionLogicHelper.TolerableReligions.TryGetValue(heroReligion, out var tolerated) && tolerated == townReligion)
+        {
+            loyaltyEffect = 0.1f * devotionNormalized;
+        }
+        else
+        {
+            loyaltyEffect = -0.5f * devotionNormalized;
+        }
+        Hero governor = settlement.Town?.Governor;
+        if (governor != null && _heroes.TryGetValue(governor, out var governorReligionModel))
+        {
+            var governorReligion = governorReligionModel.Religion;
+
+            if (governorReligion == townReligion)
+            {
+                loyaltyEffect += 0.2f * devotionNormalized; // Bonus loyalty if governor is aligned
+            }
+        }
+        return loyaltyEffect;
     }
 
+    private void OnGovernorChanged(Town town, Hero newGovernor, Hero oldGovernor)
+    {
+        if (newGovernor == null || town == null || !_heroes.TryGetValue(newGovernor, out var newGovModel))
+            return;
+
+        Settlement settlement = town.Settlement;
+
+        if (!_settlements.TryGetValue(settlement, out var settlementReligionModel))
+            return;
+
+        var townReligion = settlementReligionModel.GetMainReligion();
+        var governorReligion = newGovModel.Religion;
+
+        bool isTolerated = ReligionLogicHelper.TolerableReligions
+            .TryGetValue(townReligion, out var toleratedReligion) &&
+            toleratedReligion == governorReligion;
+
+        if (governorReligion != townReligion && !isTolerated)
+        {
+            InformationManager.DisplayMessage(new InformationMessage(
+                $"{newGovernor.Name} follows a religion that is intolerable in {settlement.Name}. Their appointment may cause unrest.",
+                Colors.Red));
+        }
+    }
 
     private void DailyHeroTick(Hero hero)
     {
         try
         {
+            if (_activeBlessings.TryGetValue(hero, out var bless) && CampaignTime.Now >= bless.expiry)
+            {
+                _activeBlessings.Remove(hero);
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"The blessing of {bless.religion} has faded.", Colors.Gray));
+            }
+
             if (!_heroes.TryGetValue(hero, out var heroReligionModel))
                 return;
             if (!hero.IsDead)
@@ -444,9 +655,13 @@ internal class ReligionBehavior : CampaignBehaviorBase
                 tempSelecteddReligion = Core.RFReligions.KharazDrathar;
                 GameMenu.SwitchToMenu("town_temple_inner");
             });
+        starter.AddGameMenuOption("town_temple", "convert_religion",
+                GameTexts.FindText("RFR43uirM").Value,
+                game_menu_religion_convert_on_condition,
+                game_menu_religion_convert_on_consequence);
         starter.AddGameMenu("town_temple_inner", "{CURRENT_TEMPLE_DESCRIPTION}",
             new OnInitDelegate(game_menu_temple_inner_religion_on_init),
-            GameOverlays.MenuOverlayType.SettlementWithCharacters, GameMenu.MenuFlags.None, null);
+            GameMenu.MenuOverlayType.SettlementWithCharacters, GameMenu.MenuFlags.None, null);
         starter.AddGameMenuOption("town_temple_inner", "do_donation", GameTexts.FindText("RFR6LDN8i").Value,
             game_menu_temple_donation_on_condition,
             game_menu_temple_donation_on_consequence);
@@ -462,14 +677,11 @@ internal class ReligionBehavior : CampaignBehaviorBase
             back_on_condition,
             delegate (MenuCallbackArgs x) { GameMenu.SwitchToMenu("town_temple"); }, true, -1, false);
         starter.AddGameMenu("religion_menu", GameTexts.FindText("RFR86PaBs").Value,
-            new OnInitDelegate(game_menu_religion_on_init), GameOverlays.MenuOverlayType.None, GameMenu.MenuFlags.None,
+            new OnInitDelegate(game_menu_religion_on_init), GameMenu.MenuOverlayType.None, GameMenu.MenuFlags.None,
             null);
         starter.AddGameMenuOption("religion_menu", "do_sacrifice_animal", "{SACRIFICE_ACTION_TYPE}{REQUIRED_ANIMALS}",
             game_menu_religion_sacrifice_on_condition,
             game_menu_religion_sacrifice_on_consequence);
-        starter.AddGameMenuOption("religion_menu", "convert_religion", GameTexts.FindText("RFR43uirM").Value,
-            game_menu_religion_convert_on_condition,
-            game_menu_religion_convert_on_consequence);
         starter.AddGameMenuOption("religion_menu", "close", "{=yQtzabbe}Close", null,
             game_menu_religion_close_on_consequence);
     }
@@ -547,7 +759,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
             ChangeRelationAction.ApplyPlayerRelation(hero2, 2, false, false);
         }
 
-        MBInformationManager.AddQuickInformation(GameTexts.FindText("RFRK4p76r"), 0, null, "");
+        MBInformationManager.AddQuickInformation(GameTexts.FindText("RFRK4p76r"), 0, null);
         RefreshCurrentMenu();
     }
 
@@ -558,7 +770,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
         args.optionLeaveType = GameMenuOption.LeaveType.Trade;
         MBTextManager.SetTextVariable("DONATION", DONATION_COST);
         var flag = true;
-        var disabledText = TextObject.Empty;
+        TextObject? disabledText = null;
         if (Hero.MainHero.Gold < DONATION_COST)
         {
             flag = false;
@@ -579,7 +791,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
                 if (_heroes.ContainsKey(hero))
                     if (_heroes[hero].Religion == tempSelecteddReligion)
                         ChangeRelationAction.ApplyPlayerRelation(hero, 7, true, true);
-            MBInformationManager.AddQuickInformation(GameTexts.FindText("RFRHr5haI"), 0, null, "");
+            MBInformationManager.AddQuickInformation(GameTexts.FindText("RFRHr5haI"), 0, null);
             RefreshCurrentMenu();
         }
     }
@@ -633,7 +845,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
             ReligionLogicHelper.ReligionTempleOfferItems(tempSelecteddReligion), false);
         var canOfferItems = ReligionLogicHelper.CheckRosterOfferItems(tempSelecteddReligion,
             MobileParty.MainParty.ItemRoster);
-        var disabledText = TextObject.Empty;
+        TextObject? disabledText = null;
 
         if (canOfferItems)
             return MenuHelper.SetOptionProperties(args, canOfferItems, !canOfferItems, disabledText);
@@ -654,6 +866,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
 
         AddMoraleEffectToParty(MobileParty.MainParty, 10f, tempSelecteddReligion);
         _heroes[Hero.MainHero].AddDevotion(15f, tempSelecteddReligion, Hero.MainHero);
+        ApplySacrificeBonus(Hero.MainHero, tempSelecteddReligion);
         var haveReligionHero = false;
         foreach (var hero in Settlement.CurrentSettlement.Notables
                      .Where(hero => _heroes.ContainsKey(hero) && _heroes[hero].Religion == tempSelecteddReligion))
@@ -671,28 +884,46 @@ internal class ReligionBehavior : CampaignBehaviorBase
     private bool game_menu_temple_sacrifice_on_condition(MenuCallbackArgs args)
     {
         args.optionLeaveType = GameMenuOption.LeaveType.OrderTroopsToAttack;
-        if (CanReligionSacrifice(tempSelecteddReligion))
+
+        if (!CanReligionSacrifice(tempSelecteddReligion))
+            return false;
+
+        // Set the action text
+        if (tempSelecteddReligion == Core.RFReligions.Xochxinti)
+            MBTextManager.SetTextVariable("SACRIFICE_ACTION_TYPE", GameTexts.FindText("RFRGhjVkq"), false);
+        else
+            MBTextManager.SetTextVariable("SACRIFICE_ACTION_TYPE", GameTexts.FindText("RFRryDfNh"), false);
+
+        MBTextManager.SetTextVariable("REQUIRED_ANIMALS",
+            ReligionLogicHelper.ReligionTempleSacrificeText(tempSelecteddReligion), false);
+
+        TextObject? disabledText = null;
+        var hero = Hero.MainHero;
+
+        if (tempSelecteddReligion == Core.RFReligions.Anorites)
         {
-            if (tempSelecteddReligion == Core.RFReligions.Xochxinti)
-                MBTextManager.SetTextVariable("SACRIFICE_ACTION_TYPE", GameTexts.FindText("RFRGhjVkq"), false);
-            else
-                MBTextManager.SetTextVariable("SACRIFICE_ACTION_TYPE", GameTexts.FindText("RFRryDfNh"), false);
-            MBTextManager.SetTextVariable("REQUIRED_ANIMALS",
-                ReligionLogicHelper.ReligionTempleSacrificeText(tempSelecteddReligion), false);
-            var flag = ReligionLogicHelper.CheckItemSacrificeItems(tempSelecteddReligion, 5,
-                MobileParty.MainParty.ItemRoster);
-            var disabledText = TextObject.Empty;
-            if (!flag)
+            bool hasCharcoal = ReligionLogicHelper.HasEnoughItem(hero, "charcoal", 5);
+            bool hasHardwood = ReligionLogicHelper.HasEnoughItem(hero, "hardwood", 5);
+
+            if (!hasCharcoal || !hasHardwood)
             {
-                var str = GameTexts.FindText("str_warning_crafing_materials").ToString();
-                var textObject = ReligionLogicHelper.ReligionTempleSacrificeText(tempSelecteddReligion);
-                disabledText = new TextObject(str + (textObject != null ? textObject.ToString() : null), null);
+                disabledText = new TextObject("You do not have enough charcoal or hardwood for the sacrifice.");
+                return MenuHelper.SetOptionProperties(args, false, true, disabledText);
             }
 
-            return MenuHelper.SetOptionProperties(args, flag, !flag, disabledText);
+            return MenuHelper.SetOptionProperties(args, true, false, disabledText);
         }
 
-        return false;
+        // ✅ Fallback: original generic check for other religions
+        var flag = ReligionLogicHelper.CheckItemSacrificeItems(tempSelecteddReligion, 5, MobileParty.MainParty.ItemRoster);
+        if (!flag)
+        {
+            var str = GameTexts.FindText("str_warning_crafing_materials").ToString();
+            var textObject = ReligionLogicHelper.ReligionTempleSacrificeText(tempSelecteddReligion);
+            disabledText = new TextObject(str + (textObject?.ToString() ?? ""), null);
+        }
+
+        return MenuHelper.SetOptionProperties(args, flag, !flag, disabledText);
     }
 
 
@@ -787,6 +1018,8 @@ internal class ReligionBehavior : CampaignBehaviorBase
         {
             AddMoraleEffectToParty(MobileParty.MainParty, 10f, heroReligionModel.Religion);
             heroReligionModel.AddDevotion(15f, Hero.MainHero);
+            ApplySacrificeBonus(Hero.MainHero, heroReligionModel.Religion);
+
             RefreshCurrentMenu();
         }
     }
@@ -813,7 +1046,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
         var requiredItemCount = MobileParty.MainParty.MemberRoster.TotalManCount / 10;
         var canReligionSacrificeItems = ReligionLogicHelper.CheckItemSacrificeItems(heroReligionModel.Religion, requiredItemCount,
             MobileParty.MainParty.ItemRoster);
-        var disabledText = TextObject.Empty;
+        TextObject? disabledText = null;
         if (canReligionSacrificeItems)
             return MenuHelper.SetOptionProperties(args, canReligionSacrificeItems, !canReligionSacrificeItems, disabledText);
         var str = GameTexts.FindText("str_warning_crafing_materials").ToString();
@@ -935,7 +1168,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
             Core.RFReligions.Anorites => GameTexts.FindText("RFRiuCYDv"),
             Core.RFReligions.Xochxinti => GameTexts.FindText("RFRfh0egR"),
             Core.RFReligions.KharazDrathar => GameTexts.FindText("RFRR0xJoc"),
-            _ => TextObject.Empty
+            _ => new TextObject("")
         };
     }
 
@@ -1049,6 +1282,9 @@ internal class ReligionBehavior : CampaignBehaviorBase
     [SaveableField(2)] public Dictionary<Hero, HeroReligionModel> _heroes;
     [SaveableField(3)] private Dictionary<MobileParty, float> _partyMoraleEffect;
     [SaveableField(4)] private Dictionary<Settlement, float> _settlementEffect;
+    [SaveableField(5)]
+    private Dictionary<Hero, (Core.RFReligions religion, CampaignTime expiry)> _activeBlessings
+    = new Dictionary<Hero, (Core.RFReligions, CampaignTime)>();
 
     private Core.RFReligions tempSelecteddReligion;
     private int DONATION_COST = 8300;

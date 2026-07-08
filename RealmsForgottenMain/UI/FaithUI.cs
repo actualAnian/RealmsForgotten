@@ -1,26 +1,14 @@
-using SandBox.View.Map;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using RealmsForgotten.CustomSkills;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
-using TaleWorlds.CampaignSystem.BarterSystem.Barterables;
-using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Settlements;
-using TaleWorlds.CampaignSystem.Settlements.Workshops;
 using TaleWorlds.CampaignSystem.ViewModelCollection;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Barter;
 using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
-using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
-using TaleWorlds.MountAndBlade;
-using TaleWorlds.MountAndBlade.View.Screens;
-using TaleWorlds.ScreenSystem;
 using TaleWorlds.TwoDimension;
 
 namespace RealmsForgotten.UI;
@@ -40,7 +28,7 @@ public class FaithUIVM : ViewModel
         onLeaveAction = leaveAction;
 
         _category = UIResourceManager.SpriteData.SpriteCategories["ui_barter"];
-        _category.Load(UIResourceManager.ResourceContext, UIResourceManager.UIResourceDepot);
+        _category.Load(UIResourceManager.ResourceContext, UIResourceManager.ResourceDepot);
 
         CurrentOfferedAmount = 50;
     }
@@ -112,8 +100,7 @@ public class FaithUIVM : ViewModel
 
     public void ExecuteLeave()
     {
-        if (onLeaveAction != null)
-            onLeaveAction();
+        onLeaveAction?.Invoke();
     }
 }
 

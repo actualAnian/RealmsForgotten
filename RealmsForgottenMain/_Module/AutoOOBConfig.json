@@ -1,0 +1,63 @@
+{
+  "defaults": {
+    "formations": [
+      {
+        "index": 0,
+        "class": "Infantry",
+        "primaryWeight": 100,
+        "secondaryWeight": 0,
+        "filters": [ "Spear" ]
+      },
+      {
+        "index": 1,
+        "class": "Infantry",
+        "primaryWeight": 100,
+        "secondaryWeight": 0,
+        "filters": []
+      },
+
+      {
+        "index": 2,
+        "class": "Unset",
+        "primaryWeight": 0,
+        "secondaryWeight": 0,
+        "filters": []
+      },
+      {
+        "index": 3,
+        "class": "Unset",
+        "primaryWeight": 0,
+        "secondaryWeight": 0,
+        "filters": []
+      },
+      {
+        "index": 4,
+        "class": "Unset",
+        "primaryWeight": 0,
+        "secondaryWeight": 0,
+        "filters": []
+      },
+      {
+        "index": 5,
+        "class": "Unset",
+        "primaryWeight": 0,
+        "secondaryWeight": 0,
+        "filters": []
+      },
+      {
+        "index": 6,
+        "class": "Unset",
+        "primaryWeight": 0,
+        "secondaryWeight": 0,
+        "filters": []
+      },
+      {
+        "index": 7,
+        "class": "Unset",
+        "primaryWeight": 0,
+        "secondaryWeight": 0,
+        "filters": []
+      }
+    ]
+  }
+}

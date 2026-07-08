@@ -146,9 +146,9 @@ namespace RealmsForgotten.AiMade.Patches
             Kingdom weakestKingdomInList = null;
             foreach (Kingdom kingdom in kingdoms)
             {
-                if (kingdom.TotalStrength < num)
+                if (kingdom.CurrentTotalStrength < num)
                 {
-                    num = kingdom.TotalStrength;
+                    num = kingdom.CurrentTotalStrength;
                     weakestKingdomInList = kingdom;
                 }
             }

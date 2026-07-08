@@ -3,33 +3,82 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.Roster;
+using TaleWorlds.Core;
 using TaleWorlds.Localization;
 
-namespace RealmsForgotten.Models;
-
-internal class RFInventoryCapacityModel : DefaultInventoryCapacityModel
+namespace RealmsForgotten.Models
 {
-    private InventoryCapacityModel _previousModel;
-        
-    public RFInventoryCapacityModel(InventoryCapacityModel previousModel)
+    public class RFInventoryCapacityModel : InventoryCapacityModel
     {
-        _previousModel = previousModel;
-    }
-    public override ExplainedNumber CalculateInventoryCapacity(MobileParty mobileParty, bool includeDescriptions = false,
-        int additionalTroops = 0, int additionalSpareMounts = 0, int additionalPackAnimals = 0,
-        bool includeFollowers = false)
-    {
-        ExplainedNumber baseValue = _previousModel.CalculateInventoryCapacity(mobileParty, includeDescriptions, additionalTroops, additionalSpareMounts, additionalPackAnimals, includeFollowers);
-        if (mobileParty.IsMainParty)
+        readonly InventoryCapacityModel _baseModel;
+        public RFInventoryCapacityModel(InventoryCapacityModel baseModel) { _baseModel = baseModel; }
+        public override ExplainedNumber CalculateInventoryCapacity(MobileParty mobileParty, bool isCurrentlyAtSea, bool includeDescriptions = false, int additionalManOnFoot = 0, int additionalSpareMounts = 0, int additionalPackAnimals = 0, bool includeFollowers = false)
         {
-            int index = mobileParty.MemberRoster.FindIndexOfTroop(CulturesCampaignBehavior.SlaveCharacter);
-            if (index != -1)
+            // Get base capacity from DefaultInventoryCapacityModel (base class)
+            ExplainedNumber result = _baseModel.CalculateInventoryCapacity(mobileParty, isCurrentlyAtSea, includeDescriptions, additionalManOnFoot, additionalSpareMounts, additionalPackAnimals, includeFollowers);
+
+            // Add slave bonus if in main party
+            if (mobileParty.IsMainParty)
             {
-                var troopElement = mobileParty.MemberRoster.GetElementCopyAtIndex(index);
-                baseValue.Add(troopElement.Number * 5, new TextObject("{=slaves}Slaves"));
+                int index = mobileParty.MemberRoster.FindIndexOfTroop(CulturesCampaignBehavior.SlaveCharacter);
+                if (index != -1)
+                {
+                    var troopElement = mobileParty.MemberRoster.GetElementCopyAtIndex(index);
+                    int slaveCount = troopElement.Number;
+                    if (slaveCount > 0)
+                    {
+                        result.Add(slaveCount * 5, new TextObject("{=slaves}Slaves"));
+                    }
+                }
             }
+
+            if (mobileParty.LeaderHero != null)
+            {
+                Equipment leaderEquipment = mobileParty.LeaderHero.BattleEquipment;
+                if (HasSpecificItemEquipped(leaderEquipment))
+                {
+                    // Increase inventory capacity by a set amount (example: 50) when the specific item is equipped
+                    result.Add(50, new TaleWorlds.Localization.TextObject("Bonus from hero equipped item"));
+                }
+            }
+
+            // Check if any of the troops in the party have the specific item equipped
+            foreach (TroopRosterElement troop in mobileParty.MemberRoster.GetTroopRoster())
+            {
+                // Check each individual troop's equipment
+                Equipment troopEquipment = troop.Character.Equipment;
+                if (HasSpecificItemEquipped(troopEquipment))
+                {
+                    // Increase inventory capacity by a set amount for each troop that has the specific item equipped
+                    result.Add(20, description: new TaleWorlds.Localization.TextObject("Bonus from troop equipped item"));
+                }
+            }
+
+
+
+            return result;
         }
 
-        return baseValue;
+
+        private readonly string specificItemId = "dwarf_backpack";
+        private bool HasSpecificItemEquipped(Equipment equipment)
+        {
+            for (EquipmentIndex equipmentIndex = EquipmentIndex.ArmorItemBeginSlot; equipmentIndex <= EquipmentIndex.ArmorItemEndSlot; equipmentIndex++)
+            {
+                EquipmentElement equipmentElement = equipment[equipmentIndex];
+
+                if (!equipmentElement.IsEmpty && equipmentElement.Item.StringId == specificItemId)
+                    return true;
+            }
+            return false;
+        }
+
+        public override ExplainedNumber CalculateTotalWeightCarried(MobileParty mobileParty, bool isCurrentlyAtSea, bool includeDescriptions = false) => _baseModel.CalculateTotalWeightCarried(mobileParty, isCurrentlyAtSea, includeDescriptions);
+        public override int GetItemAverageWeight() => _baseModel.GetItemAverageWeight();
+        public override float GetItemEffectiveWeight(EquipmentElement equipmentElement, MobileParty mobileParty, bool isCurrentlyAtSea, out TextObject description)
+        {
+            return _baseModel.GetItemEffectiveWeight(equipmentElement, mobileParty, isCurrentlyAtSea, out description);
+        }
     }
 }

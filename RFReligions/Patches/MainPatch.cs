@@ -1,47 +1,39 @@
-﻿using System;
-using HarmonyLib;
+﻿using HarmonyLib;
 using RealmsForgotten.RFReligions.Behavior;
 using RealmsForgotten.RFReligions.Core;
 using RealmsForgotten.RFReligions.Helper;
 using RealmsForgotten.RFReligions.Overlay;
+using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
-using TaleWorlds.CampaignSystem.Overlay;
+using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Pages;
 using TaleWorlds.CampaignSystem.ViewModelCollection.GameMenu.Overlay;
 using TaleWorlds.Core.ViewModelCollection.Generic;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.Library;
+using SandBox.View.Overlay;
 
 namespace RealmsForgotten.RFReligions.Patches;
-
 internal class MainPatch
 {
-    [HarmonyPatch(typeof(GameMenuOverlay), "GetOverlay")]
-    public static class GetOverlayPatch
+    [HarmonyPatch(typeof(DefaultGameMenuOverlayProvider), "GetOverlay")]
+    public static class DefaultGameMenuOverlayProviderPatch
     {
-        internal static GameOverlays.MenuOverlayType currentMenuOverlayType;
+        internal static GameMenu.MenuOverlayType currentMenuOverlayType;
 
-        public static bool Prefix(GameOverlays.MenuOverlayType menuOverlayType, ref GameMenuOverlay __result)
+        public static bool Prefix(GameMenu.MenuOverlayType menuOverlayType, ref GameMenuOverlay __result)
         {
             currentMenuOverlayType = menuOverlayType;
             try
             {
-                if (menuOverlayType - GameOverlays.MenuOverlayType.SettlementWithParties > 2)
-                {
-                    if (menuOverlayType == GameOverlays.MenuOverlayType.Encounter)
-                        __result = new EncounterMenuOverlayVM();
-                    else
-                        __result = null;
-                }
+                if (menuOverlayType == GameMenu.MenuOverlayType.Encounter)
+                    __result = new EncounterMenuOverlayVM();
                 else
-                {
                     __result = new ReligionsSettlementMenuOverlayVM(menuOverlayType);
-                }
-
                 return false;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 InformationManager.DisplayMessage(new InformationMessage("ERROR INITIALIZING SETTLEMENT RELIGION VIEW",
                     Colors.Red));
@@ -51,7 +43,8 @@ internal class MainPatch
         }
     }
 
-    [HarmonyPatch(typeof(GauntletLayer), "LoadMovie")]
+    //moved to ReplaceUIPatch
+    [HarmonyPatch(typeof(GauntletLayer), "LoadMovie", new Type[] { typeof(string), typeof(ViewModel) })]
     public static class LoadMoviePatch
     {
         public static void Prefix(ref string movieName, ref ViewModel dataSource)
@@ -66,7 +59,6 @@ internal class MainPatch
         }
     }
 
-    [HarmonyPatch(typeof(EncyclopediaHeroPageVM), "Refresh")]
     public static class EncyclopediaHeroPageVMPatch
     {
         public static void Postfix(ref Hero ____hero, ref MBBindingList<StringPairItemVM> ____stats)
@@ -86,7 +78,7 @@ internal class MainPatch
             }
         }
     }
-    
+
     [HarmonyPatch(typeof(ChangeRelationAction), "ApplyInternal")]
     public static class ChangeRelationActionPatch
     {
@@ -97,19 +89,33 @@ internal class MainPatch
             bool showQuickNotification,
             ChangeRelationAction.ChangeRelationDetail detail)
         {
-            if (ReligionBehavior.Instance?._heroes.TryGetValue(originalHero, 
-                    out HeroReligionModel heroReligionModel1) == true && ReligionBehavior.Instance?._heroes.TryGetValue(
-                    originalGainedRelationWith, out HeroReligionModel heroReligionModel2) == true)
+            if (originalHero == null || originalGainedRelationWith == null)
             {
-                if (heroReligionModel1.Religion != heroReligionModel2.Religion && ReligionLogicHelper.TolerableReligions.TryGetValue(heroReligionModel1.Religion,
-                        out Core.RFReligions compatibleReligion) && compatibleReligion != Core.RFReligions.All &&
-                        heroReligionModel2.Religion != compatibleReligion)
+                Debug.PrintError("ChangeRelationActionPatch: one of the Hero parameters is null!");
+                return;
+            }
+
+            if (originalHero.IsPlayerCompanion || originalGainedRelationWith.IsPlayerCompanion)
+                return;
+
+            if (ReligionBehavior.Instance != null
+                && ReligionBehavior.Instance._heroes.TryGetValue(originalHero, out HeroReligionModel heroReligionModel1)
+                && ReligionBehavior.Instance._heroes.TryGetValue(originalGainedRelationWith, out HeroReligionModel heroReligionModel2))
+            {
+                if (heroReligionModel1.Religion != heroReligionModel2.Religion &&
+                    ReligionLogicHelper.TolerableReligions.TryGetValue(heroReligionModel1.Religion, out Core.RFReligions compatibleReligion) &&
+                    compatibleReligion != Core.RFReligions.All &&
+                    heroReligionModel2.Religion != compatibleReligion)
                 {
                     int religionPenalty = (int)(relationChange * 0.1f);
-                    relationChange = relationChange - religionPenalty;
-                    if(originalHero == Hero.MainHero)
-                        InformationManager.DisplayMessage(new InformationMessage($"{relationChange} of penalty on relation with {originalGainedRelationWith.Name.ToString()} for being an intolerable religion.", 
+                    relationChange -= religionPenalty;
+
+                    if (originalHero == Hero.MainHero)
+                    {
+                        InformationManager.DisplayMessage(new InformationMessage(
+                            $"-{religionPenalty} relation penalty with {originalGainedRelationWith.Name} due to religious intolerance.",
                             Colors.Yellow));
+                    }
                 }
             }
         }

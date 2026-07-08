@@ -18,7 +18,7 @@ namespace RealmsForgotten.Models
         {
             RaceMappings = new Dictionary<string, int>();
 
-            List<string> targetRaceNames = new List<string> { "half_giant", "bark", "nurh", "daimo", "sillok" };
+            List<string> targetRaceNames = new List<string> { "half_giant", "bark", "nurh", "daimo", "sillok", "balrog" };
 
             foreach (var raceName in targetRaceNames)
             {

@@ -1,15 +1,11 @@
 ﻿using HarmonyLib;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.Library;
 
 namespace RealmsForgotten.Patches
 {
-    [HarmonyPatch(typeof(GauntletLayer), "LoadMovie")]
+    [HarmonyPatch(typeof(GauntletLayer), "LoadMovie", new Type[] { typeof(string), typeof(ViewModel) })]
     public static class ReplaceUIPatch
     {
         public static void Prefix(ref string movieName, ViewModel dataSource)

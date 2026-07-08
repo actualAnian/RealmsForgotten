@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.MapEvents;
@@ -46,13 +47,12 @@ namespace RealmsForgotten.Models
             return baseValue;
         }
 
-        public override float CalculateHitDamage(MapEventSide attackerSide, float settlementHitPoints)
+        public override ExplainedNumber CalculateHitDamage(MapEventSide attackerSide, float settlementHitPoints)
         {
-            float baseValue = _previousModel.CalculateHitDamage(attackerSide, settlementHitPoints);
+            ExplainedNumber value = _previousModel.CalculateHitDamage(attackerSide, settlementHitPoints);
             if (attackerSide.LeaderParty.Owner?.Culture.StringId == "giant")
-                return ((25f / 100f) * baseValue) + baseValue;
-            return baseValue;
-
+                value.AddFactor(1.25f);
+            return value;
         }
     }
 }

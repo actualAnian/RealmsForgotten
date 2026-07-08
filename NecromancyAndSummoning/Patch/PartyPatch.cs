@@ -5,7 +5,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party.PartyComponents;
 
-namespace RealmsForgotten.NecromancyAndSummoning.Patch
+namespace NecromancyAndSummoning.Patch
 {
 	// Token: 0x02000008 RID: 8
 	[HarmonyPatch(typeof(DefaultClanTierModel), "GetPartyLimitForTier")]

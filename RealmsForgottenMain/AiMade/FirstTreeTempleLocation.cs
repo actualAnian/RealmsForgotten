@@ -463,10 +463,16 @@ namespace RealmsForgotten.AiMade
             int goldReward = 1000;
             GiveGoldAction.ApplyBetweenCharacters(null, Hero.MainHero, goldReward);
             Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(Game.Current.ObjectManager.GetObject<ItemObject>("elixir_rfmisc60"), 1);
+            HealMainHero();
 
             // Display a message confirming the reward
             InformationManager.DisplayMessage(new InformationMessage("You have received the Elixir of the Hidden Springs as a blessing! The elixir can heal your health whenever you need it."));
             InformationManager.DisplayMessage(new InformationMessage($"You have received {goldReward} gold as a reward."));
+        }
+        private void HealMainHero()
+        {
+           
+            Hero.MainHero.HitPoints = Hero.MainHero.MaxHitPoints;
         }
     }
 }

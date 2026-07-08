@@ -82,7 +82,7 @@ namespace RealmsForgotten.AiMade
         private void JoinPlayerKingdom()
         {
             GiveGoldAction.ApplyBetweenCharacters(Hero.MainHero, Hero.OneToOneConversationHero, _goldRequirementForFealty, false);
-            ChangeKingdomAction.ApplyByJoinToKingdom(Hero.OneToOneConversationHero.Clan, Hero.MainHero.Clan.Kingdom, true);
+            ChangeKingdomAction.ApplyByJoinToKingdom(Hero.OneToOneConversationHero.Clan, Hero.MainHero.Clan.Kingdom, default, true);
         }
 
         public override void SyncData(IDataStore dataStore) { }

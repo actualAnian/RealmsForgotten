@@ -19,7 +19,7 @@ namespace RealmsForgotten
         public static float GetFaithPerkBonus(this CharacterObject hero, PerkObject perk)
         {
             ExplainedNumber explainedNumber = new ExplainedNumber(perk.PrimaryBonus);
-            SkillHelper.AddSkillBonusForCharacter(RFSkills.Faith, RFSkillEffects.FaithPerkMultiplier, hero, ref explainedNumber);
+            SkillHelper.AddSkillBonusForCharacter(RFSkillEffects.FaithPerkMultiplier, hero, ref explainedNumber);
             return explainedNumber.ResultNumber;
         }
         

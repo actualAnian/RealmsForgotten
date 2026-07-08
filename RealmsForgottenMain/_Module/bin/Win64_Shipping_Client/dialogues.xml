@@ -1,0 +1,2046 @@
+<DialogueTrees>
+<!-- king ruins dialog 1-->
+
+	<Dialogue condition="npcId IS kingruins_npc AND STATE epic_quest_state IS 1">
+		<inputId>start</inputId>
+		<goToId>dialogue_player_1</goToId>
+		<text>Any luck finding something of value?</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+
+	<Dialogue condition="npcId IS kingruins_npc AND STATE epic_quest_state IS 2">
+		<inputId>start</inputId>
+		<goToId>dialogue_player_1</goToId>
+		<text>With each passing year, there's less and less valuables left in the ruins, eh</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+
+	<Dialogue condition="npcId IS kingruins_npc">
+		<inputId>start</inputId>
+		<goToId>dialogue_player_2</goToId>
+		<text>Greetings traveller, are you lost or are you another one looking to try his luck on that dammend old ruins?</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+
+	<Dialogue>
+		<inputId>dialogue_player_2</inputId>
+		<goToId>dialogue_npc_1</goToId>
+		<text>I am not lost, just passing by. But as you mentioned it, what are these ruins about?</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+
+	<Dialogue>
+		<inputId>dialogue_npc_1</inputId>
+		<goToId>dialogue_player_1</goToId>
+		<text>Just a pile of stones from a castle that defies time... But treasure hunters often wander these roads, hoping to turn those stones over and find something hidden beneath. The problem is, the ruins are crawling with bandits, and it's my duty to keep this region free of them. But as you can see, I'm just one soul against who knows how many...</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<!-- quest dialogues-->
+
+	<Dialogue condition="STATE epic_quest_state IS 0" consequence="START quest_1 AND STATE epic_quest_state INCREMENT">
+		<inputId>dialogue_player_1</inputId>
+		<goToId>close_window</goToId>
+		<text>I see, i will put my sword for your cause then.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue condition="EVALUATE quest_1">
+		<inputId>dialogue_player_1</inputId>
+		<goToId>dialogue_quest_complete</goToId>
+		<text>I have put those bastards to the sword!!</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+
+	<Dialogue consequence="COMPLETE quest_1 AND STATE epic_quest_state INCREMENT">
+		<inputId>dialogue_quest_complete</inputId>
+		<goToId>dialogue_player_1</goToId>
+		<text>Ah thats just wonderful, take this as your reward!</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<!-- quest dialogues-->
+
+
+	<!-- lore dialogues-->
+	<Dialogue>
+		<inputId>dialogue_player_1</inputId>
+		<goToId>dialogue_loredump</goToId>
+		<text>Tell me more about this place please.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+
+	<Dialogue>
+		<inputId>dialogue_loredump</inputId>
+		<goToId>dialogue_player_1</goToId>
+		<text>Legends say a mighty Elvean lord once lived here, during the war with men. But his greed was said to be as great as his pride, and when faced with defeat, he locked himself away in his keep rather than surrender. So the folk say his ghost still wanders the ruins by moonlight, sword in hand, guarding his gold.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<!-- lore dialogues-->
+
+	<!-- exit dialogues-->
+	<Dialogue condition="STATE epic_quest_state IS 0">
+		<inputId>dialogue_player_1</inputId>
+		<goToId>close_window</goToId>
+		<text>I am not gonna risk my neck.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+
+	<Dialogue condition="STATE epic_quest_state IS 1">
+		<inputId>dialogue_player_1</inputId>
+		<goToId>close_window</goToId>
+		<text>I am still looking through the area.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+
+	<Dialogue condition="STATE epic_quest_state ISNOT 0 AND STATE epic_quest_2_state ISNOT 1">
+		<inputId>dialogue_player_1</inputId>
+		<goToId>close_window</goToId>
+		<text>I see, I am gonna explore on my own.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	
+	<!-- exit dialogues-->
+
+	<!-- monster hunting dialogue -->
+
+<Dialogue condition="npcId IS ratscene_merchant_notary_battania AND STATE epic_quest_2_state IS 1">
+    <inputId>start</inputId>
+    <goToId>dialogue_rat_player_1</goToId>
+    <text>Any luck finding something of value?</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<Dialogue condition="npcId IS ratscene_merchant_notary_battania AND STATE epic_quest_2_state IS 2">
+    <inputId>start</inputId>
+    <goToId>dialogue_rat_player_1</goToId>
+    <text>With each passing year, there's less and less valuables left in the ruins, eh</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<Dialogue condition="npcId IS ratscene_merchant_notary_battania">
+    <inputId>start</inputId>
+    <goToId>dialogue_rat_player_2</goToId>
+    <text>Greetings traveller, what brings you to this damned place?</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>dialogue_rat_player_2</inputId>
+    <goToId>dialogue_rat_npc_1</goToId>
+    <text>Dammed? Why so? All I see are a few lonely men.</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>dialogue_rat_npc_1</inputId>
+    <goToId>dialogue_rat_player_3</goToId>
+    <text>Here was a merry tavern and I often closed pretty good deals with the caravans that passed by these roads. But folks got scared about some evil living in those ruins above the hill. It ruined my business.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>dialogue_rat_player_3</inputId>
+    <goToId>dialogue_rat_npc_2</goToId>
+    <text>Common folk are of a superstitious nature, believing in all kinds of things that add a chill to the fireside at night.</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>dialogue_rat_npc_2</inputId>
+    <goToId>dialogue_rat_player_4</goToId>
+    <text>Aye, that's true, but we all hear strange sounds at night and sleep with barred doors. That guard doesn't give us much rest either. I assume I'll have to abandon this road once and for all—unless somebody has the courage to prove these tales are nonsense.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>dialogue_rat_player_4</inputId>
+    <goToId>dialogue_rat_npc_3</goToId>
+    <text>For a good amount of coin, I put my sword on your cause.</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>dialogue_rat_npc_3</inputId>
+    <goToId>dialogue_rat_player_1</goToId>
+    <text>Bring some proof of your deed and I will reward you.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<Dialogue condition="npcId IS ratscene_merchant_notary_battania AND STATE epic_quest_2_state IS 0" consequence="START quest_2 AND STATE epic_quest_2_state INCREMENT">
+    <inputId>dialogue_rat_player_1</inputId>
+    <goToId>close_window</goToId>
+    <text>Prepare your purse, sir. I will be back.</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<Dialogue condition="npcId IS ratscene_merchant_notary_battania AND EVALUATE quest_2">
+    <inputId>dialogue_rat_player_1</inputId>
+    <goToId>dialogue_rat_quest_complete</goToId>
+    <text>I have put those bastards to the sword!!</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<Dialogue condition="npcId IS ratscene_merchant_notary_battania" consequence="COMPLETE quest_2 AND STATE epic_quest_2_state INCREMENT">
+    <inputId>dialogue_rat_quest_complete</inputId>
+    <goToId>dialogue_rat_player_1</goToId>
+    <text>Ah, so it was not just a tale? Wonderful—take this as your reward!</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<!-- ratscene dialog 1-->
+	<Dialogue condition="npcId IS guard_tavern_empire_a">
+		<inputId>start</inputId>
+		<goToId>close_window</goToId>
+		<text>I am not at the mood of talking right now</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+<!-- ratscene dialog 2-->
+	<Dialogue condition="npcId IS ratscene_villager_empire_b">
+		<inputId>start</inputId>
+		<goToId>dialogue_guard_tavern_empire_a_start_1</goToId>
+		<text>A bit of time more and food will be ready. Take a sit if you are hungry.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_guard_tavern_empire_a_start_1</inputId>
+		<goToId>dialogue_guard_tavern_empire_a_start_2</goToId>
+		<text>Thats kind of you sir, but i am wondering all those bored faces around.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_guard_tavern_empire_a_start_2</inputId>
+		<goToId>close_window</goToId>
+		<text>Ah, this place have seen better times, sure. Right now those who come here here simply got the wrong curve at crossroads. But i make my living with those, so lucky me.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<!-- ratscene dialog 3-->
+	<Dialogue condition="npcId IS ratscene_villager_empire_c">
+		<inputId>start</inputId>
+		<goToId>dialogue_guard_tavern_empire_a_start_3</goToId>
+		<text>Yes sir, wanna taste sore wine? Just take ypur place and leave me in peace.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+
+	<Dialogue>
+		<inputId>dialogue_guard_tavern_empire_a_start_3</inputId>
+		<goToId>close_window</goToId>
+		<text>What a shit mood...</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+
+	<!-- lizardman_hunt -->
+
+<Dialogue condition="npcId IS lizard_quest_knight AND STATE epic_quest_3_state IS 1">
+    <inputId>start</inputId>
+    <goToId>dialogue_lizardman_player_1</goToId>
+    <text>Any luck finding the bastard?</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<Dialogue condition="npcId IS lizard_quest_knight AND STATE epic_quest_3_state IS 2">
+    <inputId>start</inputId>
+    <goToId>dialogue_lizardman_player_1</goToId>
+    <text>This bastard must be hiding somewhere...</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<Dialogue condition="npcId IS lizard_quest_knight">
+    <inputId>start</inputId>
+    <goToId>dialogue_lizardman_player_2</goToId>
+    <text>What is so important that worth interrupting my dinner?</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>dialogue_lizardman_player_2</inputId>
+    <goToId>dialogue_lizardman_npc_1</goToId>
+    <text>That is something i expected to listen from you. What is so important that asks for such a small force be locked so far from home?</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>dialogue_lizardman_npc_1</inputId>
+    <goToId>dialogue_lizardman_player_3</goToId>
+    <text>Aye, we are locked behind these walls... We are under the Emir's orders to hunt down those creatures—damned ones, half-man, half-beast. They were first seen within our borders some time ago, preying on our most distant settlements and attacking intrepid caravans.We hunted them for days until we discovered that some had set up camp in these parts. We slew many and decided to build an outpost here. Months later, they returned in overwhelming numbers and nearly took all our heads. But since then, there have been no more large raids—only small bands lurking around.We need to find their leader and bring his head to the Emir so we can finally leave this place for good!</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>dialogue_lizardman_player_3</inputId>
+    <goToId>dialogue_lizardman_npc_2</goToId>
+    <text>You are few...Hunt them with such numbers is suicide.</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>dialogue_lizardman_npc_2</inputId>
+    <goToId>dialogue_lizardman_player_4</goToId>
+    <text>Dont think i dont know? We are Nasorians, we die if we must, but no one will bare the torture of shame.And even the emir would take our heads himself if we flee to save our asses.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>dialogue_lizardman_player_4</inputId>
+    <goToId>dialogue_lizardman_npc_3</goToId>
+    <text>For a good amount of coin, I will hunt down their leader for you. I have strong men under my command.</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>dialogue_lizardman_npc_3</inputId>
+    <goToId>dialogue_lizardman_player_1</goToId>
+    <text>Bring his head and you will have a good amount of coin.And keep your men, you will need them to help you carry the reward!</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<Dialogue condition="STATE epic_quest_3_state IS 0" consequence="START quest_3 AND STATE epic_quest_3_state INCREMENT">
+    <inputId>dialogue_lizardman_player_1</inputId>
+    <goToId>close_window</goToId>
+    <text>We have a deal. I will be back.</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<Dialogue condition="EVALUATE quest_3">
+    <inputId>dialogue_lizardman_player_1</inputId>
+    <goToId>dialogue_lizardman_quest_complete</goToId>
+    <text>Here take the bastard head!</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<Dialogue consequence="COMPLETE quest_3 AND STATE epic_quest_3_state INCREMENT">
+    <inputId>dialogue_lizardman_quest_complete</inputId>
+    <goToId>dialogue_lizardman_player_1</goToId>
+    <text>Ah, finally! Enjoy your riches!</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<!-- lizard dialog 1-->
+	<Dialogue condition="npcId IS lizard_quest_spearman">
+		<inputId>start</inputId>
+		<goToId>close_window</goToId>
+		<text>I am not at the mood of talking right now. If you have to meet our superior, proceed.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+<!-- lizard dialog 2-->
+	<Dialogue condition="npcId IS lizard_quest_spearman_b">
+		<inputId>start</inputId>
+		<goToId>dialogue_lizard_quest_spearman_b_start_1</goToId>
+		<text>Yes sir?.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_lizard_quest_spearman_b_start_1</inputId>
+		<goToId>dialogue_lizard_quest_spearman_b_start_2</goToId>
+		<text>Who is the superior at this post?.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_lizard_quest_spearman_b_start_2</inputId>
+		<goToId>close_window</goToId>
+		<text>You will find him at the tower. Be carefull, he is having his supper.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+
+	<!-- lizard dialog 3-->
+	<Dialogue condition="npcId IS lizard_quest_vlandian_levy_crossbowman">
+		<inputId>start</inputId>
+		<goToId>dialogue_lizard_quest_vlandian_levy_crossbowman_start_1</goToId>
+		<text>Yes sir?.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_lizard_quest_vlandian_levy_crossbowman_start_1</inputId>
+		<goToId>dialogue_lizard_quest_vlandian_levy_crossbowman_start_2</goToId>
+		<text>I have talked to your superior about the raiders around here. He told me to talk to you for some information.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_lizard_quest_vlandian_levy_crossbowman_start_2</inputId>
+		<goToId>dialogue_lizard_quest_vlandian_levy_crossbowman_start_3</goToId>
+		<text>We have been watching raiderd parties come and go, but they never aproach our fort. Even those big enough to threaten our walls. Since a few days ago, a small band settled camp among those trees down there. They dont even care to turn of the fire at night so am sure thats just a dustraction to keep as busy here. But i believe there are more of them hiding under the trees, waiting for the right time.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_lizard_quest_vlandian_levy_crossbowman_start_3</inputId>
+		<goToId>dialogue_lizard_quest_vlandian_levy_crossbowman_start_4</goToId>
+		<text>I see, anything else i should know?.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_lizard_quest_vlandian_levy_crossbowman_start_4</inputId>
+		<goToId>dialogue_lizard_quest_vlandian_levy_crossbowman_start_5</goToId>
+		<text>Our scouts have tracked the area where their base should be located. It is several days' travel from here, and based on their findings, it appears to be a dense jungle full of swamps and similar terrain. Not a place where a heavy army could easily advance.So all we can do is hold our position here. God knows how long those bastards will wait before deciding to pay us a visit.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_lizard_quest_vlandian_levy_crossbowman_start_5</inputId>
+		<goToId>close_window</goToId>
+		<text>I will see what i can do.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+
+	<!-- Wounded Soldier / Swamp Fort Quest -->
+
+<!-- 1. State 1: Quest is Active (Reminder) -->
+<Dialogue condition="npcId IS wounded_soldier_npc AND STATE swamp_quest_state IS 1">
+    <inputId>start</inputId>
+    <goToId>close_window</goToId>
+    <text>*Cough*... Don't let them rest. That fort belongs to the Lord, not those filth.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<!-- 2. State 2: Quest is Already Completed (Post-Quest) -->
+<Dialogue condition="npcId IS wounded_soldier_npc AND STATE swamp_quest_state IS 2">
+    <inputId>start</inputId>
+    <goToId>close_window</goToId>
+    <text>My wounds are healing. Once I can walk, I will report your bravery to my Lord.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<!-- 3. State 0: Initial Interaction (The Hook) -->
+<Dialogue condition="npcId IS wounded_soldier_npc">
+    <inputId>start</inputId>
+    <goToId>swamp_player_ask_1</goToId>
+    <text>*The soldier clutches a bloody rag to his side, leaning heavily against the wall.* Ugh... damn them... damn them all to the seven hells.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>swamp_player_ask_1</inputId>
+    <goToId>swamp_npc_explain_1</goToId>
+    <text>You look like you've been through a meat grinder. What happened here?</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>swamp_npc_explain_1</inputId>
+    <goToId>swamp_player_ask_2</goToId>
+    <text>My Lord sent us... a full platoon. We were ordered to clear the old fort in the swamp. But the bandits... they knew the terrain. They were waiting in the muck.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>swamp_player_ask_2</inputId>
+    <goToId>swamp_npc_explain_2</goToId>
+    <text>And the rest of your men?</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>swamp_npc_explain_2</inputId>
+    <goToId>swamp_player_offer</goToId>
+    <text>Dead. Or dying. I am the only one who crawled out. I failed my Lord, but worse, those bastards are still feasting in our fort. I cannot hold a sword like this...</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>swamp_player_offer</inputId>
+    <goToId>swamp_npc_accept</goToId>
+    <text>Stay here and tend to your wounds. I will clear the fort for you.</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>swamp_npc_accept</inputId>
+    <goToId>swamp_player_start_quest</goToId>
+    <text>You would do that? Be careful, the swamp is treacherous. If you survive, whatever gold we carried is yours.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<!-- 4. START QUEST Logic -->
+<Dialogue condition="npcId IS wounded_soldier_npc AND STATE swamp_quest_state IS 0" consequence="START quest_swamp_fort AND STATE swamp_quest_state INCREMENT">
+    <inputId>swamp_player_start_quest</inputId>
+    <goToId>close_window</goToId>
+    <text>I'll be back when the deed is done.</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<!-- 5. TURN IN Logic (Player has killed the bandits) -->
+<!-- This appears when the player talks to NPC again and the quest requirements are met -->
+<Dialogue condition="npcId IS wounded_soldier_npc AND EVALUATE quest_swamp_fort">
+    <inputId>start</inputId>
+    <goToId>swamp_player_turn_in</goToId>
+    <text>The fort is silent. The bandits won't trouble anyone anymore.</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>swamp_player_turn_in</inputId>
+    <goToId>swamp_npc_complete</goToId>
+    <text>Justice... *cough*... justice is served then. My brothers can rest. Take this pouch, I have no need for coin where I am going if I don't recover.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<!-- 6. COMPLETE QUEST Logic -->
+<Dialogue condition="npcId IS wounded_soldier_npc" consequence="COMPLETE quest_swamp_fort AND STATE swamp_quest_state INCREMENT">
+    <inputId>swamp_npc_complete</inputId>
+    <goToId>close_window</goToId>
+    <text>Thank you, stranger.</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<!-- this is a test dialogue, every dialogue should have it's own comment to differenciate-->
+	<Dialogue condition="npcId IS anorite_monastery_militia AND STATE epic_quest_state CREATE" consequence="START quest_1 AND STATE epic_quest_state INCREMENT">
+		<inputId>start</inputId>
+		<goToId>close_window</goToId>
+		<text>yo, i give you quest now thx</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue condition="npcId IS anorite_monastery_militia AND EVALUATE quest_1" consequence="COMPLETE quest_1 AND STATE epic_quest_state INCREMENT">
+		<inputId>start</inputId>
+		<goToId>close_window</goToId>
+		<text>epic, you did my quest!</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue condition="npcId IS anorite_monastery_militia AND STATE epic_quest_state IS 1">
+		<inputId>start</inputId>
+		<goToId>close_window</goToId>
+		<text>WTF, why have you not done me quest yet????</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue condition="npcId IS anorite_monastery_militia AND STATE epic_quest_state IS 2">
+		<inputId>start</inputId>
+		<goToId>close_window</goToId>
+		<text>what do you want, you completed my quest already</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<!-- this is the end of the test dialogue-->
+<!-- anorite dialog 2-->
+	<Dialogue condition="npcId IS anorite_monastery_priest AND STATE quest_1 IS 0">
+		<inputId>start</inputId>
+		<goToId>dialogue_anorite_temple_1</goToId>
+		<text>Greetings, stranger. If you have crossed our gates, I assume you've chosen to receive the blessing of our Lord, the Pure Lord of Light.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_anorite_temple_1</inputId>
+		<goToId>dialogue_anorite_temple_2</goToId>
+		<text>I was informed that anyone can enter...</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_anorite_temple_2</inputId>
+		<goToId>dialogue_anorite_temple_3</goToId>
+		<text>Yes, everyone is welcome to partake in the blessings of our Lord, and joining the Order is not mandatory. Every servant of the Light is a champion of truth, and if they are prepared to dedicate their life to it, they may be graced with His divine fire. Being a soldier of the Light is among the noblest of life's aspirations.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_anorite_temple_3</inputId>
+		<goToId>dialogue_anorite_temple_finish_a</goToId>
+		<text>I see... and what does the Lord's blessing provide?</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_anorite_temple_finish_a</inputId>
+		<goToId>dialogue_anorite_temple_finish_b</goToId>
+		<text>The Lord may grant you the ability to wield the Sword of Fire</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_anorite_temple_finish_b</inputId>
+		<goToId>dialogue_anorite_temple_finish_c</goToId>
+		<text>And how do i prove myself worthy?</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_anorite_temple_finish_c</inputId>
+		<goToId>close_window</goToId>
+		<text>To prove your readiness, you must undergo the Trial of Fire. Inside our cave temple, you will meditate upon the flames and determine for yourself if you are prepared. May the light guide you.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<!-- anorite dialog 3-->
+	<Dialogue condition="npcId IS anorite_monastery_priest_b">
+		<inputId>start</inputId>
+		<goToId>dialogue_anorite_temple_inside_1</goToId>
+		<text>Welcome to the contemplation of the fire, my son. You are free to stay as long as you need. If you decide to venture deeper, simply follow the tunnel within the cave.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_anorite_temple_inside_1</inputId>
+		<goToId>dialogue_anorite_temple_inside_2</goToId>
+		<text>Understood, thank you.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_anorite_temple_inside_2</inputId>
+		<goToId>close_window</goToId>
+		<text>May the Lord of Light be with you.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<!-- king ruins dialog 1-->
+	<Dialogue condition="npcId IS villager_battania">
+		<inputId>start</inputId>
+		<goToId>dialogue_villager_kingruins_start_1</goToId>
+		<text>Greetings traveller, are you lost or are you another one looking to try his luck on that dammend old ruins? </text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_villager_kingruins_start_1</inputId>
+		<goToId>dialogue_villager_kingruins_start_2</goToId>
+		<text>I am not lost, just passing by. But as you mentioned it, what are these ruins about?</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_villager_kingruins_start_2</inputId>
+		<goToId>dialogue_villager_kingruins_start_3</goToId>
+		<text>Only a pile of stones from a castle that resists time... But often treasure hunters come around this roads willing to turn these stones around to find something underneath.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_villager_kingruins_start_3</inputId>
+		<goToId>dialogue_villager_kingruins_start_4</goToId>
+		<text>And? Do they find anything?</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_villager_kingruins_start_4</inputId>
+		<goToId>dialogue_villager_kingruins_start_5</goToId>
+		<text>If the foound or not i cannot. Truth is that i never see the same face twice. I never went to that cursed place, much less by knowing that those who went, never came back...</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_villager_kingruins_start_5</inputId>
+		<goToId>dialogue_villager_kingruins_start_6</goToId>
+		<text>Cursed you say... Tell me more about it.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_villager_kingruins_start_6</inputId>
+		<goToId>dialogue_villager_kingruins_end_1</goToId>
+		<text>Folks say that the ghost of an old king wanders around that place. He was known to be a greedy man, and when the war came, he buried himself with his gold instead of using it to help his people. Who knows if that is the destiny of all that goes searching for his treasure?</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_villager_kingruins_end_1</inputId>
+		<goToId>close_window</goToId>
+		<text>That sounds common folk superstition. Ghost or not, you got my attention. I will check it out myself.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_villager_kingruins_end_2</inputId>
+		<goToId>close_window</goToId>
+		<text>Good Luck.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<!-- ambush dialog 1-->
+	<Dialogue condition="npcId IS villager_ambush">
+		<inputId>start</inputId>
+		<goToId>dialogue_villager_ambush_start_1</goToId>
+		<text>God bless you traveller, i was just praying for somebody to show up! </text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_villager_ambush_start_1</inputId>
+		<goToId>dialogue_villager_ambush_start_2</goToId>
+		<text>Why the distress? What happened here?</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_villager_ambush_start_2</inputId>
+		<goToId>dialogue_villager_ambush_start_3</goToId>
+		<text>I have been attacked by a group of rufians. They broke my wagon and took my wife with them. Please help me!</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_villager_ambush_start_3</inputId>
+		<goToId>dialogue_villager_ambush_start_4</goToId>
+		<text>Where did they head to?</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_villager_ambush_start_4</inputId>
+		<goToId>close_window</goToId>
+		<text>They went down the road, i am afraid they went to my village...</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_villager_ambush_end_2</inputId>
+		<goToId>close_window</goToId>
+		<text>Now worries, i will check it out.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<!-- Road Tavern dialog 1 -->
+	<Dialogue condition="npcId IS tavernkeeper_vlandia">
+		<inputId>start</inputId>
+		<goToId>dialogue_tavernkeeper_vlandia_2</goToId>
+		<text>Welcome, traveler. What brings you to this humble tavern?</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_tavernkeeper_vlandia_2</inputId>
+		<goToId>dialogue_tavernkeeper_vlandia_3</goToId>
+		<text>I merely stumbled upon your tavern. It's an unusual place for such an establishment. What tidings can you share about this place?</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_tavernkeeper_vlandia_3</inputId>
+		<goToId>dialogue_tavernkeeper_vlandia_4</goToId>
+		<text>It's not as strange as it may seem, traveler. We often see wayfarers on these roads. Most of our patrons are simple folk, foresters and wood gatherers. Ocasionally merchants stop for a refreshment, as patrolling troops.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_tavernkeeper_vlandia_4</inputId>
+		<goToId>dialogue_tavernkeeper_vlandia_5</goToId>
+		<text>Quite busy for an establishment at this road's corner... Many things in this world are not as they first appear.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_tavernkeeper_vlandia_5</inputId>
+		<goToId>close_window</goToId>
+		<text>Aye! Feel free to inquire with others around here.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<!-- Road Tavern dialog 2 -->
+	<Dialogue condition="npcId IS villager_vlandia">
+		<inputId>start</inputId>
+		<goToId>dialogue_tavernkeeper_vlandia_tavern_2</goToId>
+		<text>I see a new face around here. Are you in search of anything specific?</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_tavernkeeper_vlandia_tavern_2</inputId>
+		<goToId>dialogue_tavernkeeper_vlandia_tavern_3</goToId>
+		<text>It depends. What can you tell me about this region?</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_tavernkeeper_vlandia_tavern_3</inputId>
+		<goToId>dialogue_tavernkeeper_vlandia_tavern_4</goToId>
+		<text>This is indeed a beautiful place. Lush forests, abundant apple trees, and berries aplenty. But it also has its share of bandits... and...</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_tavernkeeper_vlandia_tavern_4</inputId>
+		<goToId>dialogue_tavernkeeper_vlandia_tavern_5</goToId>
+		<text>And what else?</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_tavernkeeper_vlandia_tavern_5</inputId>
+		<goToId>dialogue_tavernkeeper_vlandia_tavern_6</goToId>
+		<text>Well, sometimes strange things happen. One of my friends recently had his sheep go missing. We suspect that some malevolent force may dwell deep within the forest.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_tavernkeeper_vlandia_tavern_6</inputId>
+		<goToId>dialogue_tavernkeeper_vlandia_tavern_7</goToId>
+		<text>Why assume evil? Bandits need food, and unprotected sheep are a tempting target.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_tavernkeeper_vlandia_tavern_7</inputId>
+		<goToId>dialogue_tavernkeeper_vlandia_tavern_8</goToId>
+		<text>True, they are indeed tempting. But bandits do not leave footprints the size of a man's head.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_tavernkeeper_vlandia_tavern_8</inputId>
+		<goToId>dialogue_tavernkeeper_vlandia_tavern_9</goToId>
+		<text>That's something worth investigating. Where can i find your friend?</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_tavernkeeper_vlandia_tavern_9</inputId>
+		<goToId>close_window</goToId>
+		<text>I saw him today earlier gathering wood further up the road. He´s called Erdin.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<!-- Road Tavern dialog gatherer -->
+	<Dialogue condition="npcId IS blacksmith_vlandia">
+		<inputId>start</inputId>
+		<goToId>dialogue_woodgatherer_vlandia_tavern_2</goToId>
+		<text>Excuse me sir, are you Erdin?</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_woodgatherer_vlandia_tavern_2</inputId>
+		<goToId>dialogue_woodgatherer_vlandia_tavern_3</goToId>
+		<text>Yes i am. How can i be of service?</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_woodgatherer_vlandia_tavern_3</inputId>
+		<goToId>dialogue_woodgatherer_vlandia_tavern_4</goToId>
+		<text>I met somebody that knows you at the tavern, whom shared you had some trouble with your sheep.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_woodgatherer_vlandia_tavern_4</inputId>
+		<goToId>dialogue_woodgatherer_vlandia_tavern_5</goToId>
+		<text>Aye, that's true, indeed. You know, a few of my sheep have gone missing. At first, I reckoned it might be some brigands, but then one day, I spied massive footprints 'round the spot where the last of 'em vanished. It looked like a beast's print, but not the sort that walks on four legs</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_woodgatherer_vlandia_tavern_5</inputId>
+		<goToId>dialogue_woodgatherer_vlandia_tavern_6</goToId>
+		<text>Are you sure of what you saw?</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_woodgatherer_vlandia_tavern_6</inputId>
+		<goToId>dialogue_woodgatherer_vlandia_tavern_7</goToId>
+		<text>Of course, my lord. I'm a shepherd, tending to pigs, chickens, and all. I know well what the tracks of four-legged creatures look like.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_woodgatherer_vlandia_tavern_8</inputId>
+		<goToId>dialogue_woodgatherer_vlandia_tavern_9</goToId>
+		<text>Where exactly did that happened?</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_woodgatherer_vlandia_tavern_9</inputId>
+		<goToId>close_window</goToId>
+		<text>The last time I set them to graze, it was in the northwest, deep in the forest. But do take care, my lord; there are plenty of bandits about those parts.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<!-- Road Tavern dialog 3 -->
+	<Dialogue condition="npcId IS townsman_vlandia">
+		<inputId>start</inputId>
+		<goToId>close_window</goToId>
+		<text>Aye, the folk 'round here can be right superstitious, arent they?.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<!-- Road Tavern dialog 5 -->
+	<Dialogue condition="npcId IS townsman_vlandia">
+		<inputId>start</inputId>
+		<goToId>dialogue_tavernkeeper_elvean_tavern_2</goToId>
+		<text>I'm endeavoring to enlighten this fellow about the concealed facets of the world. We, as elveans, have been raised to connect with the spirits of the land, and their presence is undeniably apparent to us. It's no surprise that other realms lack such insight in these times... </text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_tavernkeeper_elvean_tavern_2</inputId>
+		<goToId>dialogue_tavernkeeper_elvean_tavern_3</goToId>
+		<text>It's indeed a challenge to persuade someone from a different culture to grasp such concepts. As elveans, you do claim to commune with spirits, so are you also capable of weaving magic?</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_tavernkeeper_elvean_tavern_3</inputId>
+		<goToId>dialogue_tavernkeeper_elvean_tavern_4</goToId>
+		<text>Magic has waned in this world, but in the ancient times, our forebears, the elvish blood, possessed the ability to weave magic. They've left behind numerous records of such extraordinary marvels.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_tavernkeeper_elvean_tavern_4</inputId>
+		<goToId>dialogue_tavernkeeper_elvean_tavern_5</goToId>
+		<text>While they left information about it, did they also leave behind magical instructions?</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_tavernkeeper_elvean_tavern_5</inputId>
+		<goToId>dialogue_tavernkeeper_elvean_tavern_6</goToId>
+		<text>No instructions have been left, as our druids proclaim. Magic has vanished from the world, and the reason eludes me. However, our druids believe that magic has been concealed in certain places within Aeurth. Regrettably, I haven't been able to discover any of them...</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_tavernkeeper_elvean_tavern_5</inputId>
+		<goToId>dialogue_tavernkeeper_elvean_tavern_6</goToId>
+		<text>Seeking out magic in this world isn't a bad notion...</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_tavernkeeper_elvean_tavern_6</inputId>
+		<goToId>dialogue_tavernkeeper_elvean_tavern_7</goToId>
+		<text>I've heard tales of a witch dwelling in these woods, but there are also bandits lurking about. I'm not much of a fighter to risk my hide.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_tavernkeeper_elvean_tavern_7</inputId>
+		<goToId>close_window</goToId>
+		<text>Hmm... thank you for the conversation.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<!-- Road Tavern dialog 4 -->
+	<Dialogue condition="npcId IS tavern_wench_vlandia">
+		<inputId>start</inputId>
+		<goToId>close_window</goToId>
+		<text>Are you searching for some pastime?</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+		<!-- Road Tavern dialog 6 -->
+	<Dialogue condition="npcId IS beggar_vlandia">
+		<inputId>start</inputId>
+		<goToId>dialogue_tavernkeeper_beggar_vlandia_tavern_2</goToId>
+		<text>Witches, witches, they're everywhere... They offer you strange brews, odd concoctions... Hahaha... things that make you see strange sights...</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_tavernkeeper_beggar_vlandia_tavern_2</inputId>
+		<goToId>dialogue_tavernkeeper_beggar_vlandia_tavern_3</goToId>
+		<text>Witches? Where have you heard tell of them?</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_tavernkeeper_beggar_vlandia_tavern_3</inputId>
+		<goToId>close_window</goToId>
+		<text>Pssst... not so loud, they might be listening!</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<!-- Road Tavern dialog 4 -->
+	<Dialogue condition="npcId IS female_dancer_vlandia">
+		<inputId>start</inputId>
+		<goToId>dialogue_female_dancer_vlandia_tavern_2</goToId>
+		<text>Greetings stranger, what brings you to my shack?</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_female_dancer_vlandia_tavern_2</inputId>
+		<goToId>dialogue_female_dancer_vlandia_tavern_3</goToId>
+		<text>I am exploring the area, and after visiting the tavern, I must say you seem to fit some of the folks' concerns.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_female_dancer_vlandia_tavern_3</inputId>
+		<goToId>dialogue_female_dancer_vlandia_tavern_4</goToId>
+		<text>And these are?</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_female_dancer_vlandia_tavern_4</inputId>
+		<goToId>dialogue_female_dancer_vlandia_tavern_5</goToId>
+		<text>They say there is a witch dwelling in the forest. Would that, by any chance, be you?</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_female_dancer_vlandia_tavern_5</inputId>
+		<goToId>dialogue_female_dancer_vlandia_tavern_6</goToId>
+		<text>Hahahaha, these simple-minded folks... I am a medicine woman! They come to me often with their aches and injuries. A band of ungrateful they are!</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_female_dancer_vlandia_tavern_5</inputId>
+		<goToId>dialogue_female_dancer_vlandia_tavern_6</goToId>
+		<text>I see... i apologize for the intrusion.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_female_dancer_vlandia_tavern_6</inputId>
+		<goToId>close_window</goToId>
+		<text>Not that I don't have my own tricks; I place my faith in my garden and the forest. But if you're seeking a true witch, someone who can truly perform extraordinary feats, then you better journey a bit further. Not in these parts, but I've heard of a powerful magician in the hills of Ibnailda.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_female_dancer_vlandia_tavern_7</inputId>
+		<goToId>close_window</goToId>
+		<text>Thank you, madam. I bid you farewell.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<!-- usanc dialog 1-->
+	<Dialogue condition="npcId IS villager_usanc">
+		<inputId>start</inputId>
+		<goToId>dialogue_villager_usanc_1</goToId>
+		<text>Good day traveller, how fare you?</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_villager_usanc_1</inputId>
+		<goToId>dialogue_villager_usanc_2</goToId>
+		<text>Good day, sir. I see a fortress on that hill. Do you happen to know to which liege it belongs?</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_villager_usanc_2</inputId>
+		<goToId>dialogue_villager_usanc_3</goToId>
+		<text>Hmm, I... it's not precisely a lord, if I may speak frankly. But I'd best keep my tongue from wagging too freely...</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_villager_usanc_3</inputId>
+		<goToId>dialogue_villager_usanc_4</goToId>
+		<text>What do you fear?</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_villager_usanc_4</inputId>
+		<goToId>dialogue_villager_usanc_5</goToId>
+		<text>It's known that some peculiar power resides in that place. Nobody wishes to draw the lord's wrath upon us. It's better to go about our daily affairs.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_villager_usanc_5</inputId>
+		<goToId>dialogue_villager_usanc_6</goToId>
+		<text>I see... rest assured young man, i will not push the matter further.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_villager_usanc_6</inputId>
+		<goToId>close_window</goToId>
+		<text>Thank you my Lord. We have seen weird creatures wandering around...Most of the people already left their homes, i am about the last to stay. But i am afraid...</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<!-- lake tavern dialog 1-->
+	<Dialogue condition="npcId IS imperial_militia_veteran_spearman">
+		<inputId>start</inputId>
+		<goToId>dialogue_guard_tavern_post_2</goToId>
+		<text>Good day traveller, what brings you here?</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_guard_tavern_post_2</inputId>
+		<goToId>dialogue_guard_tavern_post_3</goToId>
+		<text>I hoped to find a tavern around here.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_guard_tavern_post_3</inputId>
+		<goToId>dialogue_guard_tavern_post_4</goToId>
+		<text>Just follow the road and take the path on the left. Be carefull on the other paths leading out into the hills... there are plenty of bandits lurking around.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<!-- lake tavern dialog 2-->
+	<Dialogue condition="npcId IS caravan_guard_empire">
+		<inputId>start</inputId>
+		<goToId>dialogue_guard_tavern_entrance_2</goToId>
+		<text>yes sir?</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_guard_tavern_entrance_2</inputId>
+		<goToId>dialogue_guard_tavern_entrance_3</goToId>
+		<text>Verily, there seems to be an excessive array of guards for naught but a tavern...</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_guard_tavern_entrance_3</inputId>
+		<goToId>close_window</goToId>
+		<text>Aye, word hath spread of a troupe of scoundrels stirring up trouble 'round these parts. The village elder hath brought forth a plea. This tavern doth host many of noble birth.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_guard_tavern_entrance_4</inputId>
+		<goToId>close_window</goToId>
+		<text>I see, so i guess its worth a look on it.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<!-- lake tavern inside dialog 1-->
+	<Dialogue condition="npcId IS tavernkeeper_empire">
+		<inputId>start</inputId>
+		<goToId>dialogue_guard_tavern_inside_2</goToId>
+		<text>Yes, how can serve you sir?</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_guard_tavern_inside_2</inputId>
+		<goToId>dialogue_guard_tavern_inside_3</goToId>
+		<text>'tis a bustling spot... Wasn't reckoning on such a throng gathered here.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_guard_tavern_inside_3</inputId>
+		<goToId>dialogue_guard_tavern_inside_4</goToId>
+		<text>Aye, we serve fine victuals and brews here. Many of the local folk and esteemed guests break bread together at these tables. 'Tis a fine spot for mixing and mingling.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_guard_tavern_inside_4</inputId>
+		<goToId>dialogue_guard_tavern_inside_5</goToId>
+		<text>Ah, I see. Seems like a fine spot for a hearty conversation.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<!-- lake tavern inside dialog 2-->
+	<Dialogue condition="npcId IS merchant_empire">
+		<inputId>start</inputId>
+		<goToId>dialogue_guard_tavern_inside_b_2</goToId>
+		<text>Yes, what else?</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_guard_tavern_inside_b_2</inputId>
+		<goToId>dialogue_guard_tavern_inside_b_3</goToId>
+		<text>You dont look like around these parts.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_guard_tavern_inside_b_3</inputId>
+		<goToId>dialogue_guard_tavern_inside_b_4</goToId>
+		<text>Neither you and?</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_guard_tavern_inside_b_4</inputId>
+		<goToId>dialogue_guard_tavern_inside_b_5</goToId>
+		<text>I wonder what kind of interesting news such a place can bring.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_guard_tavern_inside_b_5</inputId>
+		<goToId>dialogue_guard_tavern_inside_b_6</goToId>
+		<text>Folks gossip, travelers chat. We do share tidings and our musings here, without restraint. The current talk revolves 'round the peace betwixt the Elveans and the Realms of Men. Folk ponder how long 'twill endure amidst the rampant wars plaguing our lands these days.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_guard_tavern_inside_b_6</inputId>
+		<goToId>dialogue_guard_tavern_inside_b_7</goToId>
+		<text>Thats a good thing to wonder. If they break into war who knows how many villages will suffer from it.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_guard_tavern_inside_b_7</inputId>
+		<goToId>dialogue_guard_tavern_inside_b_8</goToId>
+		<text>Fortunately, we reside a good distance from the northern lands. Our own battles claim our attention. The ongoing strife amongst the Athasian tribes troubles the roads greatly, making trade a risky affair. I've lost many a cargo in these recent months...</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_guard_tavern_inside_b_8</inputId>
+		<goToId>dialogue_guard_tavern_inside_b_9</goToId>
+		<text>I know little of the designs of the Athasian Lords. I harbor no trust in their policies and schemes.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_guard_tavern_inside_b_9</inputId>
+		<goToId>dialogue_guard_tavern_inside_b_10</goToId>
+		<text>Unpredictable rulers, caring not for their folk. The finest of my cargo is destined for the nobles there. I've witnessed too much of servitude and suffering in that realm. The world would not mourn their absence...</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_guard_tavern_inside_b_10</inputId>
+		<goToId>dialogue_guard_tavern_inside_b_11</goToId>
+		<text>Are you sure there are no Athasian ears here?.</text>
+		<isPlayerLine>true</isPlayerLine>
+	</Dialogue>
+	<Dialogue>
+		<inputId>dialogue_guard_tavern_inside_b_11</inputId>
+		<goToId>close_window</goToId>
+		<text>Yes i am. The folk dont look at them with a cheerfull eye.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<!-- lake tavern inside dialog 3-->
+	<Dialogue condition="npcId IS artisan_notary_empire">
+		<inputId>start</inputId>
+		<goToId>close_window</goToId>
+		<text>I am just enjoying the music, not in a mood to tak.</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+	<!-- lake tavern inside dialog 5-->
+	<Dialogue condition="npcId IS treasure_hunter">
+		<inputId>start</inputId>
+		<goToId>dialogue_merc_tavern_inside_c_2</goToId>
+		<text>Hail, traveler. Seekin' trouble, are ye?</text>
+		<isPlayerLine>false</isPlayerLine>
+	</Dialogue>
+<Dialogue>
+    <inputId>dialogue_merc_tavern_inside_c_2</inputId>
+    <goToId>dialogue_merc_tavern_inside_c_3</goToId>
+    <text>Art thou a hired sword?</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_merc_tavern_inside_c_3</inputId>
+    <goToId>dialogue_merc_tavern_inside_c_4</goToId>
+    <text>Aye, at times we are. As are me comrades 'ere. Presently, we seek to change our trade... We've heard tales of ancient ruins that may hold hidden treasures. We aspire to become treasure hunters of sorts...</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>dialogue_merc_tavern_inside_c_4</inputId>
+    <goToId>dialogue_merc_tavern_inside_c_5</goToId>
+    <text>I see. It sounds a prudent choice, for the risk of fallin' beneath an enemy's blade is ever-present...</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<Dialogue>
+    <inputId>dialogue_merc_tavern_inside_c_5</inputId>
+    <goToId>dialogue_merc_tavern_inside_c_6</goToId>
+    <text>Aye, yet who knows what lurks within those ancient places? We've encountered many a common folk tale, and some places are feared for good reason. We aim to journey north, where we've heard tell of pointed-eared folks and their realm, abundant with ancient, crumbled edifices.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_merc_tavern_inside_c_6</inputId>
+    <goToId>dialogue_merc_tavern_inside_c_7</goToId>
+    <text>Indeed, considering they be the eldest folk in this realm, it doth make sense.</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_merc_tavern_inside_c_7</inputId>
+    <goToId>dialogue_merc_tavern_inside_c_8</goToId>
+    <text>Who knoweth, but if our quest yieldeth naught, we may yet join the renegade village. We grow weary of senseless wars waged by nobles.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_merc_tavern_inside_c_8</inputId>
+    <goToId>dialogue_merc_tavern_inside_c_9</goToId>
+    <text>Renegade village, thou sayest?</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_merc_tavern_inside_c_9</inputId>
+    <goToId>dialogue_merc_tavern_inside_c_10</goToId>
+    <text>Aye, rumors abound. 'Tis said that renegades hath claimed an entire village and a fortress somewhere to the north, nigh the mountains borderin' the High Garden. Hahah, that be somethin' I'd like to see with mine own eyes.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_merc_tavern_inside_c_10</inputId>
+    <goToId>close_window</goToId>
+    <text>Tis a certainty. I thank thee for the conversation.</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_merc_tavern_inside_c_11</inputId>
+    <goToId>close_window</goToId>
+    <text>Farewell.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_merc_tavern_inside_c_11</inputId>
+    <goToId>close_window</goToId>
+    <text>Farewell.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+		<!-- lake tavern inside dialog 5-->
+		<Dialogue condition="npcId IS western_mercenary">
+			<inputId>start</inputId>
+			<goToId>dialogue_guard_tavern_inside_c_2</goToId>
+			<text>Evening fellow, it the beds are already taken.I am waiting my turn.</text>
+			<isPlayerLine>false</isPlayerLine>
+		</Dialogue>
+		<Dialogue>
+			<inputId>dialogue_guard_tavern_inside_c_2</inputId>
+			<goToId>dialogue_guard_tavern_inside_c_3</goToId>
+			<text>Are you a warrior for hire?.</text>
+			<isPlayerLine>true</isPlayerLine>
+		</Dialogue>
+		<Dialogue>
+			<inputId>dialogue_guard_tavern_inside_c_3</inputId>
+			<goToId>dialogue_guard_tavern_inside_c_4</goToId>
+			<text>It depends... when i am free iam. Today i am not, i am scounting a wealthy merchant.</text>
+			<isPlayerLine>false</isPlayerLine>
+		</Dialogue>
+		<Dialogue>
+			<inputId>dialogue_guard_tavern_inside_c_4</inputId>
+			<goToId>dialogue_guard_tavern_inside_c_5</goToId>
+			<text>I'd fancy taking a look to see if there's anything intriguing around here.</text>
+			<isPlayerLine>true</isPlayerLine>
+		</Dialogue>
+		<Dialogue>
+			<inputId>dialogue_guard_tavern_inside_c_5</inputId>
+			<goToId>dialogue_guard_tavern_inside_c_6</goToId>
+			<text>I've heard talk among the villagers of a healer dwelling in the nearby groves. A sort of holy man, they say. I'd certainly make use of an elixir or some invigorating remedy, should the opportunity arise.</text>
+			<isPlayerLine>false</isPlayerLine>
+		</Dialogue>
+		<Dialogue>
+			<inputId>dialogue_guard_tavern_inside_c_6</inputId>
+			<goToId>dialogue_guard_tavern_inside_c_7</goToId>
+			<text>Elixirs?</text>
+			<isPlayerLine>true</isPlayerLine>
+		</Dialogue>
+		<Dialogue>
+			<inputId>dialogue_guard_tavern_inside_c_7</inputId>
+			<goToId>dialogue_guard_tavern_inside_c_8</goToId>
+			<text>Potions that can grant a man the strength of two? Have you ever encountered a druid? They tend to dwell in seclusion, yet sometimes entertain themselves by conversing with a stranger.</text>
+			<isPlayerLine>false</isPlayerLine>
+		</Dialogue>
+		<Dialogue>
+			<inputId>dialogue_guard_tavern_inside_c_8</inputId>
+			<goToId>dialogue_guard_tavern_inside_c_9</goToId>
+			<text>That sounds intriguing. Do you have any notion of where one might find him?</text>
+			<isPlayerLine>true</isPlayerLine>
+		</Dialogue>
+		<Dialogue>
+			<inputId>dialogue_guard_tavern_inside_c_9</inputId>
+			<goToId>dialogue_guard_tavern_inside_c_10</goToId>
+			<text>Not really. I am still on my guard, haven't had the opportunity to search for him.</text>
+			<isPlayerLine>false</isPlayerLine>
+		</Dialogue>
+		<Dialogue>
+			<inputId>dialogue_guard_tavern_inside_c_10</inputId>
+			<goToId>close_window</goToId>
+			<text>I see, thank you.</text>
+			<isPlayerLine>true</isPlayerLine>
+		</Dialogue>
+		<!-- lake tavern inside dialog 4-->
+		<Dialogue condition="npcId IS elvean_druid_priest_dialogue">
+			<inputId>start</inputId>
+			<goToId>dialogue_guard_tavern_inside_d_2</goToId>
+			<text>Greetings stranger!</text>
+			<isPlayerLine>false</isPlayerLine>
+		</Dialogue>
+		<Dialogue>
+			<inputId>dialogue_guard_tavern_inside_d_2</inputId>
+			<goToId>dialogue_guard_tavern_inside_d_4</goToId>
+			<text>Greetings sir. I had hoped to encounter a holy man somewhere in the woods.</text>
+			<isPlayerLine>true</isPlayerLine>
+		</Dialogue>
+		<Dialogue>
+			<inputId>dialogue_guard_tavern_inside_d_4</inputId>
+			<goToId>dialogue_guard_tavern_inside_d_5</goToId>
+			<text>Hahaha, a holy man, you say? These folks might one day have me slain. I'm no holy man, just a friend of the wilderness. Mother Nature has provided all we need.</text>
+			<isPlayerLine>false</isPlayerLine>
+		</Dialogue>
+		<Dialogue>
+			<inputId>dialogue_guard_tavern_inside_d_5</inputId>
+			<goToId>dialogue_guard_tavern_inside_d_6</goToId>
+			<text>I have also heard you know how to make special concotions.</text>
+			<isPlayerLine>true</isPlayerLine>
+		</Dialogue>
+		<Dialogue>
+			<inputId>dialogue_guard_tavern_inside_d_6</inputId>
+			<goToId>dialogue_guard_tavern_inside_d_7</goToId>
+			<text>Everything is already there, in the plants and roots, nut and leaves. Some folk asks me for silly things, like how to favor a woman, how to erase the need for sleep. What kind of silly desrie do you have?</text>
+			<isPlayerLine>false</isPlayerLine>
+		</Dialogue>
+		<Dialogue>
+			<inputId>dialogue_guard_tavern_inside_d_7</inputId>
+			<goToId>dialogue_guard_tavern_inside_d_8</goToId>
+			<text>I am a warrior, foolishness is not my concern.</text>
+			<isPlayerLine>true</isPlayerLine>
+		</Dialogue>
+		<Dialogue>
+			<inputId>dialogue_guard_tavern_inside_d_8</inputId>
+			<goToId>dialogue_guard_tavern_inside_d_9</goToId>
+			<text>It depends on what you fight for. I once walked the path of the sword until I realized that shedding blood was folly. I was taught to believe in the history of my people, to defend them in their name, to fight and kill for their protection... What if one day you discovered that everything you fought for was merely a tale?</text>
+			<isPlayerLine>false</isPlayerLine>
+		</Dialogue>
+		<Dialogue>
+			<inputId>dialogue_guard_tavern_inside_d_9</inputId>
+			<goToId>dialogue_guard_tavern_inside_d_10</goToId>
+			<text>I don't reckon I have such a belief... but which people are you referring to?</text>
+			<isPlayerLine>true</isPlayerLine>
+		</Dialogue>
+		<Dialogue>
+			<inputId>dialogue_guard_tavern_inside_d_10</inputId>
+			<goToId>dialogue_guard_tavern_inside_d_11</goToId>
+			<text>It matters not... All tales seem to conclude similarly. Thus, I find solace in the beauty of nature, amidst plants and creatures...Regardless, I believe I left a few potions by the altar on the rocky wall. They're for anyone who pays respects to the spirits.</text>
+			<isPlayerLine>false</isPlayerLine>
+		</Dialogue>
+		<Dialogue>
+			<inputId>dialogue_guard_tavern_inside_d_11</inputId>
+			<goToId>dialogue_guard_tavern_inside_d_12</goToId>
+			<text>I dont want to steal your peace no more.</text>
+			<isPlayerLine>true</isPlayerLine>
+		</Dialogue>
+		<Dialogue>
+			<inputId>dialogue_guard_tavern_inside_d_12</inputId>
+			<goToId>close_window</goToId>
+			<text>From whom does the earth under our feet or the sky belong? A nobleman, a lord, a king? How dare man claim ownership of what he is a part of. Every nation deceives itself and its people. If you delve deeper, you'll discover that long before these lands had their rightful sons and daughters, all we did was take it from them... In the end, no one can steal my peace. And i hope you find yours.</text>
+			<isPlayerLine>false</isPlayerLine>
+		</Dialogue>
+<Dialogue condition="npcId IS quest_monastery_priest">
+    <inputId>start</inputId>
+    <goToId>dialogue_quest_monastery_2</goToId>
+    <text>Welcome, my child. What brings you to our spiritual retreat?</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_quest_monastery_2</inputId>
+    <goToId>dialogue_quest_monastery_4</goToId>
+    <text>I'm not familiar with your order. How should I address you?</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_quest_monastery_4</inputId>
+    <goToId>dialogue_quest_monastery_5</goToId>
+    <text>We are a contemplative order, seeking understanding beyond material desires.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_quest_monastery_5</inputId>
+    <goToId>dialogue_quest_monastery_6</goToId>
+    <text>I've heard you perform miraculous deeds here...</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_quest_monastery_6</inputId>
+    <goToId>dialogue_quest_monastery_7</goToId>
+    <text>What seems miraculous is but our deep understanding of nature's hidden gifts.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_quest_monastery_7</inputId>
+    <goToId>dialogue_quest_monastery_8</goToId>
+    <text>Are there truths about magic in your teachings?</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_quest_monastery_8</inputId>
+    <goToId>dialogue_quest_monastery_9</goToId>
+    <text>Legends tell of a time when magic intertwined with daily life. The ban may reflect a loss of understanding rather than mere control.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_quest_monastery_9</inputId>
+    <goToId>dialogue_quest_monastery_10</goToId>
+    <text>So, this ban might imply that magic was real?</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_quest_monastery_10</inputId>
+    <goToId>dialogue_quest_monastery_11</goToId>
+    <text>Bans often stem from fear. Magic might have been a threat to the prevailing order of beliefs and power.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_quest_monastery_11</inputId>
+    <goToId>dialogue_quest_monastery_12</goToId>
+    <text>But what about artifacts with magical properties? Are they real?</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_quest_monastery_12</inputId>
+    <goToId>dialogue_quest_monastery_13</goToId>
+    <text>Artifacts, or talismans as we call them, harness the earth's energies, reflecting the intentions of their creators.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_quest_monastery_13</inputId>
+    <goToId>dialogue_quest_monastery_15</goToId>
+    <text>Could you share more about this ancient wisdom?</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_quest_monastery_15</inputId>
+    <goToId>dialogue_quest_monastery_16</goToId>
+    <text>Our teachings are reserved for those who forsake the mundane to seek higher truths.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_quest_monastery_16</inputId>
+    <goToId>close_window</goToId>
+    <text>Thank you for your guidance. Farewell.</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+	<!-- quest arena slave master-->
+<Dialogue condition="npcId IS slave_arena_master">
+  <inputId>start</inputId>
+  <goToId>dialogue_quest_slave_arena_2</goToId>
+  <text>Ah, look at you, the newest star of our humble arena! I hope the accommodations are to your liking. We've spared every expense.</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_quest_slave_arena_2</inputId>
+  <goToId>dialogue_quest_slave_arena_4</goToId>
+  <text>What is this place? What's going on?</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_quest_slave_arena_4</inputId>
+  <goToId>dialogue_quest_slave_arena_5</goToId>
+  <text>Oh, just a cozy little spot where dreams come true! You, my friend, have been chosen for the greatest of honors. You get to fight for your life in front of a roaring crowd. Isn't that exciting?</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_quest_slave_arena_5</inputId>
+  <goToId>dialogue_quest_slave_arena_6</goToId>
+  <text>Fight for my life? You can't be serious.</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_quest_slave_arena_6</inputId>
+  <goToId>dialogue_quest_slave_arena_7</goToId>
+  <text>Oh, I'm as serious as a heart attack, but don't worry, it's all in good fun! For the audience, at least. You? Well, you'll have to work a bit harder for your amusement.</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_quest_slave_arena_7</inputId>
+  <goToId>dialogue_quest_slave_arena_8</goToId>
+  <text>And if I refuse?</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_quest_slave_arena_8</inputId>
+  <goToId>dialogue_quest_slave_arena_9</goToId>
+  <text>Refuse? hahaha That's a good one! No, my dear captive, there's no refusing here. Think of it as a mandatory volunteer opportunity. You'll be a hero, a legend! Or... well, let's just say we've got plenty of brooms for cleaning up afterwards.</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_quest_slave_arena_9</inputId>
+  <goToId>dialogue_quest_slave_arena_10</goToId>
+  <text>What happens if I win?</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_quest_slave_arena_10</inputId>
+  <goToId>dialogue_quest_slave_arena_11</goToId>
+  <text>Win? Oh, you're an optimist! I like that. If you win, you get the grand prize - your life! And maybe, just maybe, a chance to do it all over again. Aren't you the lucky one?</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_quest_slave_arena_11</inputId>
+  <goToId>close_window</goToId>
+  <text>Now, I must leave you to your... 'preparations'. Remember, out there, it's kill or be killed. But no pressure, right? Break a leg! Or don't, it might make the fight less entertaining.</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<Dialogue condition="npcId IS elvean_druid_priest_dialogue_burial">
+  <inputId>start</inputId>
+  <goToId>dialogue_quest_king_burial_2</goToId>
+  <text>Good evening stranger. Is it destiny that brought you here or greed?</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_quest_king_burial_2</inputId>
+  <goToId>dialogue_quest_king_burial_4</goToId>
+  <text>What is this place? I cannot answer that without knowing where I am.</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_quest_king_burial_4</inputId>
+  <goToId>dialogue_quest_king_burial_5</goToId>
+  <text>Oh, so I must consider that it is destiny, for sure. You don't know where you are... how should I start... People come here in pursuit of a story. Some have no idea what story they are looking for, so I give them one that would satisfy their curious hearts. Others look for something greater, a saga perhaps. And those are the ones willing to risk their lives...</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_quest_king_burial_5</inputId>
+  <goToId>dialogue_quest_king_burial_6</goToId>
+  <text>Funny talk you have. Why should somebody choose the one that risks their own life?</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_quest_king_burial_6</inputId>
+  <goToId>dialogue_quest_king_burial_7</goToId>
+  <text>Because they hold treasures. Rewards for the soul and rewards for the body. What do you know about your world, my fellow? Judging by your looks, maybe only the path of the sword. Well, I followed the path of time and stones, of stars and memory. You are stepping over holy ground. Here, at the beginning of Elvean history, our ancestors buried one of their kind, a great leader who fought the early wars. Maybe you know nothing about the early wars either? I don't blame you. Elvean songweavers tell what the High King decides. And that is what, over the passing of centuries, grew under the mantle of truth.</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_quest_king_burial_7</inputId>
+  <goToId>dialogue_quest_king_burial_8</goToId>
+  <text>Hmm, you talk too much in parables.</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_quest_king_burial_8</inputId>
+  <goToId>dialogue_quest_king_burial_9</goToId>
+  <text>That's what may sound like to an untrained listener. We, the firstborn, the great Elvean people, came here a long time ago, not on our own, but through our ancestors, the elvish folk. They came in search of a new territory, a new home to spread their lineage. And they found our world, full of mystery and magic. But that world was not bare of intelligence, my fellow. It had its own kings and queens. And what did our ancestors back then? They decided to claim their piece of land. But not any one, but something their druids knew held power, held magic...</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_quest_king_burial_9</inputId>
+  <goToId>dialogue_quest_king_burial_10</goToId>
+  <text>That is getting interesting. Please continue.</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_quest_king_burial_10</inputId>
+  <goToId>dialogue_quest_king_burial_11</goToId>
+  <text>Yes... they found a place teeming with life and energy. And there they decided to plant the First Tree, the spine of our legacy. But that place was already under other people's territory, and when they opposed themselves to it... well, for one who follows the path of the blade, it's a simple aftermath, isn't it? Yes, yes, war followed, and our ancestors won. It was not an easy fight, surely, but they ended up victorious. And what we have here is the burial ground of one of these long-forgotten heroes... or should I say, usurpers?...</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_quest_king_burial_11</inputId>
+  <goToId>close_window</goToId>
+  <text>Oh, I should be more careful with my tongue; that could one day cost my life. Anyway, my fellow, many come here in search of the deceased's treasure. And yes, it was buried with him. But all of those that climb up those stairs, never come back. I don't go there either; I stay here waiting for those who would leave with their souls fulfilled, not their pockets. What kind of man would you be, well, let's see...</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<Dialogue condition="npcId IS rf_quest_prisoner">
+  <inputId>start</inputId>
+  <goToId>dialogue_quest_prisoner_2</goToId>
+  <text>The sleeping beauty finally woke up. They hit you hard didnt them?</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_quest_prisoner_2</inputId>
+  <goToId>dialogue_quest_prisoner_4</goToId>
+  <text>What is this place? Shit what a pain in my head...</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_quest_prisoner_4</inputId>
+  <goToId>dialogue_quest_prisoner_5</goToId>
+  <text>Welcome to rats hotel... all rooms are courtesy of the manager.</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_quest_prisoner_5</inputId>
+  <goToId>dialogue_quest_prisoner_6</goToId>
+  <text>Funny talk you have. Why are you here?</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_quest_prisoner_6</inputId>
+  <goToId>dialogue_quest_prisoner_7</goToId>
+  <text>Me? you should be thinking `why AM I here... i did loads of things, cannot be sure what of them brought me here. But that is not a city prison, we are at the middle of nowhere. Those bastards are paid rufians, somebody must have paid them to catch you.</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_quest_prisoner_7</inputId>
+  <goToId>dialogue_quest_prisoner_8</goToId>
+  <text>Hmm, thats something i need to find out.</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_quest_prisoner_8</inputId>
+  <goToId>dialogue_quest_prisoner_9</goToId>
+  <text>If you want to try your luck, they just repaired that wood wall on your left. It looks like it cannot handle a couple blows... but the guards, well they are armed...</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_quest_prisoner_9</inputId>
+  <goToId>dialogue_quest_prisoner_10</goToId>
+  <text>Lets see what i can do. Would you like come?</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_quest_prisoner_10</inputId>
+  <goToId>close_window</goToId>
+  <text>Me? no no, if they catch me trying to escape i am sure it is death sentence. I prefer to wait and maybe get a chance to work for them. Good luck!</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<!-- dialog m_inside-->
+<Dialogue condition="npcId IS village_woman_empire">
+  <inputId>start</inputId>
+  <goToId>dialogue_m_inside_2</goToId>
+  <text>God bless you! I was praying for arrival!</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_m_inside_2</inputId>
+  <goToId>dialogue_m_inside_4</goToId>
+  <text>How did you came up here?</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_m_inside_4</inputId>
+  <goToId>dialogue_m_inside_5</goToId>
+  <text>They came into our village, taking everybody, inclusive children. We were many, but i dont listen anymore as many voices as before. Oh my fod, i guess they have killed them!</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_m_inside_5</inputId>
+  <goToId>close_window</goToId>
+  <text>Lets find out what happened.</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<Dialogue condition="npcId IS townsman_empire">
+  <inputId>start</inputId>
+  <goToId>dialogue_m_inside_7</goToId>
+  <text>Ah, finally, savious... but for what, we are all already doomed...</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_m_inside_7</inputId>
+  <goToId>dialogue_m_inside_8</goToId>
+  <text>Thats how do you greet your chance to be alive?</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_m_inside_8</inputId>
+  <goToId>close_window</goToId>
+  <text>And for how many more days? I week pehaps? Have you seen those creatures? We are doomed...</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+<!-- dialog portal-->
+<Dialogue condition="npcId IS catacomb_cultists">
+  <inputId>start</inputId>
+  <goToId>dialogue_portal_2</goToId>
+  <text>Another roaming sheep...</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_portal_2</inputId>
+  <goToId>dialogue_portal_4</goToId>
+  <text>Sheep? is that a way to greet an stranger? What is this place?</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_portal_4</inputId>
+  <goToId>dialogue_portal_5</goToId>
+  <text>Oh, thats still a mistery... Those Archers have built in another age, in very ancient times.</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_portal_5</inputId>
+  <goToId>dialogue_portal_6</goToId>
+  <text>That i can realize by myself. So are you taking care of it?</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_portal_6</inputId>
+  <goToId>dialogue_portal_7</goToId>
+  <text>We are studying it. Some times a strange kind of storm gathers around it, where those strange lights floating on it get stronger. We believe it is a kind of portal...</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_portal_7</inputId>
+  <goToId>dialogue_portal_8</goToId>
+  <text>Thats how it obviouslly looks like. Did you try to cross it?</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_portal_8</inputId>
+  <goToId>dialogue_portal_9</goToId>
+  <text>Yes, but nothing happened. Thats why we are studying it. When the next storm starts, i will try again. But who knows when it will happen? Last time was more than a year ago...</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_portal_9</inputId>
+  <goToId>close_window</goToId>
+  <text>An year? thats nuts... so good luck, maybe i visit you another time.</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<!-- Dialog Astronomer -->
+<Dialogue condition="npcId IS the_astronomer">
+  <inputId>start</inputId>
+  <goToId>dialogue_astronomer_2</goToId>
+  <text>Ah, what a surprise! Finally, someone has managed to defeat my guardian.</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_astronomer_2</inputId>
+  <goToId>dialogue_astronomer_4</goToId>
+  <text>Yes, and it seems there are no other soldiers to protect your keep.</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_astronomer_4</inputId>
+  <goToId>dialogue_astronomer_5</goToId>
+  <text>And who said I need protection? I created my guardian solely to scare any unwelcome guests and leave me to my solitude.</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_astronomer_5</inputId>
+  <goToId>dialogue_astronomer_6</goToId>
+  <text>It looks like you will need another to replace him.</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_astronomer_6</inputId>
+  <goToId>dialogue_astronomer_7</goToId>
+  <text>Indeed... but that can be taken care of later. What brings you here, my fellow?</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_astronomer_7</inputId>
+  <goToId>dialogue_astronomer_8</goToId>
+  <text>Just exploring... who knows what kind of fortune would fall upon me?</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_astronomer_8</inputId>
+  <goToId>dialogue_astronomer_9</goToId>
+  <text>And by that pursuit, you risked your life against the Golem. Well, I deserve a little reward, why not? That hasn't happened in years. If you haven't already, down in my quarters, there is a box of concoctions. Elixirs for restoring health. Feel free to grab them.</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_astronomer_9</inputId>
+  <goToId>dialogue_astronomer_10</goToId>
+  <text>Thanks. But if you don't mind the question, what brings you to the edge of the world?</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_astronomer_10</inputId>
+  <goToId>dialogue_astronomer_11</goToId>
+  <text>The stars. Here the sky is clearer than anywhere else in the world. Here, I can watch them and learn what they have to say.</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_astronomer_11</inputId>
+  <goToId>dialogue_astronomer_12</goToId>
+  <text>And what have you learned so far?</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_astronomer_12</inputId>
+  <goToId>dialogue_astronomer_13</goToId>
+  <text>You would need more than just a visit to listen... recently, I realized a new star that has been born. A bright, red star. What omen it brings is still uncertain...</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_astronomer_13</inputId>
+  <goToId>dialogue_astronomer_14</goToId>
+  <text>The end of the world maybe?</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_astronomer_14</inputId>
+  <goToId>dialogue_astronomer_15</goToId>
+  <text>Or the beginning of a new one? That's something only time will tell. But if the skies are changing, sooner or later, the earth will as well. We will see what will fall upon us. Until then, I bid farewell. I need to return to my duty.</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_astronomer_15</inputId>
+  <goToId>close_window</goToId>
+  <text>Farewell.</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<!-- dialog minotaur-->
+<Dialogue condition="npcId IS villager_empire">
+  <inputId>start</inputId>
+  <goToId>dialogue_minotaur_2</goToId>
+  <text>Help...Help...</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_minotaur_2</inputId>
+  <goToId>dialogue_minotaur_4</goToId>
+  <text>What happened sir?</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_minotaur_4</inputId>
+  <goToId>dialogue_minotaur_5</goToId>
+  <text>Monsters... Monsters, everybody run away, many others killed! Oh they will find me here! help me!</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_minotaur_5</inputId>
+  <goToId>dialogue_minotaur_6</goToId>
+  <text>Where are they?</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_minotaur_6</inputId>
+  <goToId>dialogue_minotaur_7</goToId>
+  <text>Close by... they will listen to us!</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_minotaur_7</inputId>
+   <goToId>close_window</goToId>
+  <text>You are in schock... lets see whats going on.</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<!-- dialog lost_fortress-->
+<Dialogue condition="npcId IS caravan_master_empire">
+  <inputId>start</inputId>
+  <goToId>dialogue_lost_fortress_2</goToId>
+  <text>Hail! Methinks our scouts have managed to deliver our missive. We've been awaiting reinforcements for many a day now.</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_lost_fortress_2</inputId>
+  <goToId>dialogue_lost_fortress_4</goToId>
+  <text>Nay, sire. My comrades and I were but passing by when we espied your encampment. We deemed it wise to inquire: What ill hath befallen this place?</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_lost_fortress_4</inputId>
+  <goToId>dialogue_lost_fortress_5</goToId>
+  <text>By the saints, it seems our scouts hath met their untimely end or been taken captive. We were set upon by the Xilantlacay Raiders. Some amongst us did flee, vowing to give chase. They've seized the forsaken outpost and turned it into a foul military den. I've dispatched a messenger to our liege to summon an army to smite them down.</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_lost_fortress_5</inputId>
+  <goToId>dialogue_lost_fortress_6</goToId>
+  <text>Well, I do command a band of men. I might undertake this quest. Pray, what spoils shall we reap in return?</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_lost_fortress_6</inputId>
+  <goToId>dialogue_lost_fortress_7</goToId>
+  <text>They've made off with a fair portion of our goods. All of it shall be thine. And who knows what other treasures might lie therein?</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_lost_fortress_7</inputId>
+   <goToId>close_window</goToId>
+   <text>'Tis an offer most fair. Let me ponder it for a brief moment.</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+
+<Npcs>
+  <Npc>
+  <NpcId>pirate_prisoner</NpcId>
+    <TagId>1</TagId>
+    <ActionSet>_hideout_bandit</ActionSet>
+  </Npc>
+</Npcs>
+
+<!-- dialog pirate_prisoner-->
+<Dialogue condition="npcId IS pirate_prisoner">
+  <inputId>start</inputId>
+  <goToId>dialogue_pirate_prisoner_2</goToId>
+  <text>Hail! I thought i would die here having only those scum faces as my last memories.</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_pirate_prisoner_2</inputId>
+  <goToId>dialogue_pirate_prisoner_4</goToId>
+  <text>What make you think we are better than them?</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_pirate_prisoner_4</inputId>
+  <goToId>dialogue_pirate_prisoner_5</goToId>
+  <text>That is a true thing, i dont know if you are made of better material... but you look better dressed and maybe would be interested in some valuable info...</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_pirate_prisoner_5</inputId>
+  <goToId>dialogue_pirate_prisoner_6</goToId>
+  <text>Well, maybe... and what is the cost of these news?</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_pirate_prisoner_6</inputId>
+  <goToId>dialogue_pirate_prisoner_7</goToId>
+  <text>That you free me and kill all those bastards!</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_pirate_prisoner_7</inputId>
+   <goToId>dialogue_pirate_prisoner_8</goToId>
+   <text>Consider it done. So what do you have to say?</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_pirate_prisoner_8</inputId>
+   <goToId>dialogue_pirate_prisoner_9</goToId>
+   <text>I have been tracking the treasure of Drohar SmellyBeard for many years, thats how i came to be here. But before i could find everything i wanted those bastards got me enprisoned... I was digging out some boxes just behind the ship, on the botton rocks when i got my hands on a kind of map...</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_pirate_prisoner_9</inputId>
+   <goToId>dialogue_pirate_prisoner_10</goToId>
+   <text>Really? That starts to sound interesting...</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_pirate_prisoner_10</inputId>
+   <goToId>dialogue_pirate_prisoner_11</goToId>
+   <text>Well, i kind of have those lines in my memory... if life is still on me for a couple years more i am pretty sure i would search around the tiny islands, those far away spots of land up the northeast shore of the green folk realm.</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_pirate_prisoner_11</inputId>
+   <goToId>dialogue_pirate_prisoner_12</goToId>
+   <text>You must talking about the Xilantlacay...</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_pirate_prisoner_12</inputId>
+   <goToId>dialogue_pirate_prisoner_13</goToId>
+   <text>Aye! Thats how they are called... Smelly Beard must have been chasing the legend of the Golden Islands, where those green people hide their treasures... and sure he ended up crashing here.</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_pirate_prisoner_13</inputId>
+   <goToId>close_window</goToId>
+   <text>That is an interesting story, Never heard about it. Maybe i will take a look on it. Farewell.</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<!-- dialog island_prisoner-->
+<Dialogue condition="npcId IS island_prisoner">
+  <inputId>start</inputId>
+  <goToId>dialogue_island_prisoner_2</goToId>
+  <text>Hail! Please help us! They are sacrificing us for their gods!</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_island_prisoner_2</inputId>
+  <goToId>dialogue_island_prisoner_4</goToId>
+  <text>How did you came up here?</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_island_prisoner_4</inputId>
+  <goToId>dialogue_island_prisoner_5</goToId>
+  <text>We ae caavan mechants and have been kidnapped by those cannibals!</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_island_prisoner_5</inputId>
+  <goToId>dialogue_island_prisoner_6</goToId>
+  <text>How can i free you?</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_island_prisoner_6</inputId>
+  <goToId>dialogue_island_prisoner_7</goToId>
+  <text>You have weapons and soldiers, kill those bastards and break this door!</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_island_prisoner_7</inputId>
+   <goToId>dialogue_island_prisoner_8</goToId>
+   <text>Consider it done. Anything that could reward me?</text>
+  <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+  <inputId>dialogue_island_prisoner_8</inputId>
+   <goToId>close_window</goToId>
+   <text>They took all our goods and took them to their village. They offer everything to this damned Volcano.</text>
+  <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<!--dialogue_temple_allkhuur_inside-->
+<Dialogue condition="npcId IS villager_khuzait_custom">
+    <inputId>start</inputId>
+    <goToId>dialogue_ktemple_1</goToId>
+    <text>Aye, good sir, how may I be of service unto thee?</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_ktemple_1</inputId>
+    <goToId>dialogue_ktemple_2</goToId>
+    <text>Methinks 'tis quiet here, I had hoped to encounter more souls.</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_ktemple_2</inputId>
+    <goToId>dialogue_ktemple_3</goToId>
+    <text>Indeed, on this day, a procession taketh place, milord. All are bound for the capital to revel in celebration. I, forsooth, remain here, attending to my duties.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_ktemple_3</inputId>
+    <goToId>dialogue_ktemple_finish_b</goToId>
+    <text>I perceive... Might I perambulate the premises?</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_ktemple_finish_b</inputId>
+    <goToId>dialogue_ktemple_finish_c</goToId>
+    <text>All are accorded ingress into the abode of the goddess, the essence of the lake.</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_ktemple_finish_c</inputId>
+    <goToId>dialogue_ktemple_finish_d</goToId>
+    <text>Aye, verily, I am grateful. I bid thee farewell.</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_ktemple_finish_d</inputId>
+    <goToId>close_window</goToId>
+    <text>May the goddess bestow her blessings upon thee.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<!--arcane_library_inside-->
+<Dialogue condition="npcId IS arcane_library_maester_c">
+    <inputId>start</inputId>
+    <goToId>dialogue_arc_lib_1</goToId>
+    <text>Aye, good sir, how may I be of service unto thee?</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_arc_lib_1</inputId>
+    <goToId>dialogue_arc_lib_2</goToId>
+    <text>Methinks 'tis quiet here, I had hoped to encounter more souls.</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_arc_lib_2</inputId>
+    <goToId>dialogue_arc_lib_3</goToId>
+    <text>Indeed, on this day, a procession taketh place, milord. All are bound for the capital to revel in celebration. I, forsooth, remain here, attending to my duties.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_arc_lib_3</inputId>
+    <goToId>dialogue_arc_lib_finish_b</goToId>
+    <text>I perceive... Might I perambulate the premises?</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_arc_lib_finish_b</inputId>
+    <goToId>dialogue_arc_lib_finish_c</goToId>
+    <text>All are accorded ingress into the abode of the goddess, the essence of the lake.</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_arc_lib_finish_c</inputId>
+    <goToId>dialogue_arc_lib_finish_d</goToId>
+    <text>Aye, verily, I am grateful. I bid thee farewell.</text>
+    <isPlayerLine>true</isPlayerLine>
+</Dialogue>
+<Dialogue>
+    <inputId>dialogue_arc_lib_finish_d</inputId>
+    <goToId>close_window</goToId>
+    <text>May the goddess bestow her blessings upon thee.</text>
+    <isPlayerLine>false</isPlayerLine>
+</Dialogue>
+
+</DialogueTrees>

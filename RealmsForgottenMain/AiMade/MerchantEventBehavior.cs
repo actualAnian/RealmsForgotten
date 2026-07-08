@@ -5,25 +5,15 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
+using RealmsForgotten.AiMade.AIQuest;
 
 
 namespace RealmsForgotten.AiMade
 {
-    public class MerchantEventBehavior : CampaignBehaviorBase
+    public class MerchantDeliveryBehavior : CampaignBehaviorBase
     {
-        private static readonly TextObject MerchantTitleText = new TextObject("{=MerchantTitle}A Distressed Merchant");
-        private static readonly TextObject MerchantText = new TextObject("{=MerchantText}You meet a distressed merchant on the road with a broken wagon. He asks for help and says: \"Greetings, my lord. I need your help to deliver these goods to a lord in Valtoria. Please, could you deliver them for me? The lord will reward you generously!\"");
-        private static readonly TextObject AcceptText = new TextObject("{=Accept}Accept and carry the goods");
-        private static readonly TextObject DeclineText = new TextObject("{=Decline}Decline and move on");
-
-        private Settlement targetSettlement;
-        private int mercenaryAttackCount = 0;
-        private const int MaxMercenaryAttacks = 1;
-        private bool questAccepted = false;
-        private MobileParty mercenaryParty;
-        private bool caravanSpawned = false;
-
-        private CampaignTime nextTriggerTime;
+        private CampaignTime _nextTriggerTime;
+        private const int DaysBetweenEvents = 60;
 
         public override void RegisterEvents()
         {
@@ -34,93 +24,63 @@ namespace RealmsForgotten.AiMade
 
         public override void SyncData(IDataStore dataStore)
         {
-            dataStore.SyncData("nextTriggerTime", ref nextTriggerTime);
-            dataStore.SyncData("targetSettlement", ref targetSettlement);
-            dataStore.SyncData("mercenaryAttackCount", ref mercenaryAttackCount);
-            dataStore.SyncData("questAccepted", ref questAccepted);
-            dataStore.SyncData("mercenaryParty", ref mercenaryParty);
-            dataStore.SyncData("caravanSpawned", ref caravanSpawned);
+            dataStore.SyncData("MerchantDelivery_NextTriggerTime", ref _nextTriggerTime);
         }
 
-        private void OnNewGameCreated(CampaignGameStarter campaignGameStarter)
+        private void OnNewGameCreated(CampaignGameStarter starter)
         {
-            nextTriggerTime = CampaignTime.Now + CampaignTime.Days(45);
+            // Start merchant event after ~90 days plus a small random variation
+            _nextTriggerTime = CampaignTime.Now + CampaignTime.Days(DaysBetweenEvents + MBRandom.RandomInt(5, 15));
         }
 
-        private void OnGameLoaded(CampaignGameStarter campaignGameStarter)
+        private void OnGameLoaded(CampaignGameStarter starter)
         {
-            if (nextTriggerTime == null || nextTriggerTime == CampaignTime.Zero)
-                nextTriggerTime = CampaignTime.Now + CampaignTime.Days(45);
+            if (_nextTriggerTime == null || _nextTriggerTime == CampaignTime.Zero)
+                _nextTriggerTime = CampaignTime.Now + CampaignTime.Days(DaysBetweenEvents);
         }
 
         private void DailyTick()
         {
-            if (CampaignTime.Now >= nextTriggerTime && !questAccepted)
+            if (CampaignTime.Now >= _nextTriggerTime)
             {
-                CreateMerchantPopUp();
-                nextTriggerTime = CampaignTime.Now + CampaignTime.Days(30);
+                TryOfferMerchantQuest();
+                _nextTriggerTime = CampaignTime.Now + CampaignTime.Days(DaysBetweenEvents);
             }
         }
 
-        private void CreateMerchantPopUp()
+        private void TryOfferMerchantQuest()
         {
-            targetSettlement = GetRandomTown();
-            if (targetSettlement == null)
+            var towns = Settlement.All.Where(x => x.IsTown).ToList();
+            if (towns.Count == 0)
             {
-                InformationManager.DisplayMessage(new InformationMessage("Error: Target town not found.", Colors.Red));
+                InformationManager.DisplayMessage(new InformationMessage("❌ No towns found for merchant quest!", Colors.Red));
                 return;
             }
+            var town = towns[MBRandom.RandomInt(towns.Count)];
 
-            InformationManager.ShowInquiry(new InquiryData(
-                MerchantTitleText.ToString(),
-                MerchantText.ToString() + $" Deliver them to {targetSettlement.Name}?",
+            TextObject title = new TextObject("{=MerchantTitle}A Distressed Merchant");
+            TextObject description = new TextObject("{=MerchantText}You meet a distressed merchant on the road with a broken wagon. He says: \"I need these goods delivered to {TOWN_NAME}. Will you help me?\"");
+            description.SetTextVariable("TOWN_NAME", town.Name);
+
+            InquiryData inquiry = new InquiryData(
+                title.ToString(),
+                description.ToString(),
                 true,
                 true,
-                AcceptText.ToString(),
-                DeclineText.ToString(),
-                OnAccept,
-                OnDecline
-            ));
+                new TextObject("{=Accept}Accept and help").ToString(),
+                new TextObject("{=Decline}Decline and move on").ToString(),
+                () => StartMerchantQuest(town),
+                () => InformationManager.DisplayMessage(new InformationMessage("You declined to help the merchant.", Colors.Red))
+            );
+
+            InformationManager.ShowInquiry(inquiry, true, false);
         }
 
-        private void OnAccept()
+        private void StartMerchantQuest(Settlement destination)
         {
-            questAccepted = true;
-            StartMerchantMission();
-            InformationManager.DisplayMessage(new InformationMessage($"You have accepted to help the merchant. Deliver the goods to {targetSettlement.Name}.", Colors.Yellow));
-        }
-
-        private void OnDecline()
-        {
-            InformationManager.DisplayMessage(new InformationMessage("You have declined to help the merchant.", Colors.Red));
-        }
-
-        private void StartMerchantMission()
-        {
-            if (targetSettlement == null)
-            {
-                InformationManager.DisplayMessage(new InformationMessage("Error: Target town not found.", Colors.Red));
-                return;
-            }
-
-            // Add logic for handling the transportation of goods
-            // Example: Add items to the player's inventory here
-            questAccepted = true; // Ensure quest is marked as accepted
-        }
-
-        private void EndMerchantMission()
-        {
-            questAccepted = false; // Mark the quest as no longer active
-            targetSettlement = null; // Clear the target settlement
-            mercenaryAttackCount = 0; // Reset the count of mercenary attacks
-            caravanSpawned = false; // Ensure the caravan is marked as not spawned
-            InformationManager.DisplayMessage(new InformationMessage("The merchant mission has ended.", Colors.Green));
-        }
-
-        private Settlement GetRandomTown()
-        {
-            var towns = Settlement.All.Where(s => s.IsTown).ToList();
-            return towns.Any() ? towns[MBRandom.RandomInt(towns.Count)] : null;
+            string questId = "merchant_delivery_" + MBRandom.RandomInt(100000, 999999);
+            var quest = new MerchantDeliveryQuest(questId, Hero.MainHero, CampaignTime.Days(25), destination);
+            quest.StartQuest();
         }
     }
 }

@@ -1,10 +1,15 @@
-﻿using RealmsForgotten.Quest.UI;
+﻿using RealmsForgotten.Quest.FourthUpdate;
+using RealmsForgotten.Quest.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.CampaignSystem.Conversation;
 using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.Party.PartyComponents;
+using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
@@ -13,9 +18,6 @@ using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.SaveSystem;
 using TaleWorlds.ScreenSystem;
-using TaleWorlds.CampaignSystem.Conversation;
-using TaleWorlds.CampaignSystem.Party.PartyComponents;
-using TaleWorlds.CampaignSystem.Roster;
 
 namespace RealmsForgotten.Quest.SecondUpdate
 {
@@ -39,37 +41,37 @@ namespace RealmsForgotten.Quest.SecondUpdate
         public SixthQuest(string questId, Hero questGiver, CampaignTime duration, int rewardGold) : base(questId, questGiver, duration, rewardGold) { }
 
         public override TextObject Title => GameTexts.FindText("rf_sixth_quest_title");
-        public override bool IsSpecialQuest => true;
+        public override string SpecialQuestType => "RfMainQuest";
         public override bool IsRemainingTimeHidden => true;
         //public static SixthQuest Instance { get; private set; }
         static Dictionary<string, DemonLord>? _demonLords;
-        static Dictionary<string, DemonLord> DemonLords 
-        { 
+        static Dictionary<string, DemonLord> DemonLords
+        {
             get
             {
                 _demonLords ??= new()
-                    {
-                        ["cs_nurh_raiders"] = new DemonLord("cs_nurh_raiders_boss", "cs_nurh_raiders", new List<TroopDetail>
+                {
+                    ["cs_nurh_raiders"] = new DemonLord("cs_nurh_raiders_boss", "cs_nurh_raiders", new List<TroopDetail>
                             {
                                 new TroopDetail("cs_nurh_raiders_bandit", 500),
                                 new TroopDetail("cs_nurh_raiders_raider", 250),
                                 new TroopDetail("cs_nurh_raiders_chief", 50)
                         }, Settlement.FindFirst(settlement => settlement.StringId == "town_EN1")),
-                        ["cs_daimo_raiders"] =
+                    ["cs_daimo_raiders"] =
                         new DemonLord("cs_daimo_raiders_boss", "cs_daimo_raiders", new List<TroopDetail>
                             {
                                 new TroopDetail("cs_daimo_raiders_bandit", 500),
                                 new TroopDetail("cs_daimo_raiders_raider", 250),
                                 new TroopDetail("cs_daimo_raiders_chief", 50)
                         }, Settlement.FindFirst(settlement => settlement.StringId == "town_B3")),
-                        ["cs_bark_raiders"] =
+                    ["cs_bark_raiders"] =
                         new DemonLord("cs_bark_raiders_boss", "cs_bark_raiders", new List<TroopDetail>
                             {
                                 new TroopDetail("cs_bark_raiders_bandit", 500),
                                 new TroopDetail("cs_bark_raiders_raider", 250),
                                 new TroopDetail("cs_bark_raiders_chief", 50)
                         }, Settlement.FindFirst(settlement => settlement.StringId == "town_V5")),
-                        ["cs_sillok_raiders"] =
+                    ["cs_sillok_raiders"] =
                         new DemonLord("cs_sillok_raiders_boss", "cs_sillok_raiders", new List<TroopDetail>
                             {
                                 new TroopDetail("cs_sillok_raiders_bandit", 500),
@@ -78,7 +80,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                         }, Settlement.FindFirst(settlement => settlement.StringId == "town_K2"))
                 };
                 return _demonLords;
-            } 
+            }
         }
         protected override void SetDialogs()
         {
@@ -101,6 +103,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             CampaignEvents.MobilePartyDestroyed.AddNonSerializedListener(this, OnMobilePartyDestroyed);
             CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, HourlyTick);
             CampaignEvents.TickEvent.AddNonSerializedListener(this, OnTick);
+            CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, DailyTick);
         }
 
         private void OnTick(float obj)
@@ -111,6 +114,49 @@ namespace RealmsForgotten.Quest.SecondUpdate
                     new ConversationCharacterData(CharacterObject.PlayerCharacter),
                     new ConversationCharacterData(TheOwl.CharacterObject)
                 );
+            }
+        }
+
+        private void DailyTick()
+        {
+            // Only print locations if the demon lords have been spawned (after the third objective is active)
+            if (defeatDemonLordPartiesLog == null)
+            {
+                return;
+            }
+
+            // Find all demon lord parties
+            List<MobileParty> demonLordParties = MobileParty.All
+                .Where(party => party.IsActive && DemonLords.ContainsKey(party.StringId))
+                .ToList();
+
+            if (demonLordParties.Count == 0)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    "No demon lord parties are currently active on the map.",
+                    Colors.Yellow));
+                return;
+            }
+
+            InformationManager.DisplayMessage(new InformationMessage(
+                $"===== Demon Lord Locations Report (Day {(int)CampaignTime.Now.ToDays}) =====",
+                Colors.Red));
+
+            foreach (MobileParty demonParty in demonLordParties)
+            {
+                Settlement nearestSettlement = SettlementHelper.FindNearestSettlement(demonParty.GetPosition2D);
+                string nearestSettlementName = nearestSettlement?.Name?.ToString() ?? "unknown location";
+                float distance = nearestSettlement != null
+                    ? demonParty.GetPosition2D.Distance(nearestSettlement.GetPosition2D)
+                    : 0f;
+
+                string partyLeaderName = demonParty.LeaderHero?.Name?.ToString() ?? demonParty.Name?.ToString() ?? "Unknown Demon Lord";
+                int troopCount = demonParty.MemberRoster.TotalManCount;
+
+                string message = $"[Demon Lord] {partyLeaderName} - {troopCount} troops - " +
+                               $"Near {nearestSettlementName} (Distance: {distance:F1})";
+
+                InformationManager.DisplayMessage(new InformationMessage(message, Colors.Red));
             }
         }
 
@@ -208,22 +254,31 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
         private void SpawnDemonLords()
         {
-            foreach(DemonLord lord in DemonLords.Values)
+            foreach (DemonLord lord in DemonLords.Values)
                 CreateDemonLordParty(lord.CharacterId, lord.ClanId, lord.SpawnSettlement, lord.TroopDetails);
         }
 
-        private void CreateDemonLordParty(string demonLordId, string clanId, Settlement nearTown, List<TroopDetail> troopDetails)
+       private void CreateDemonLordParty(string demonLordId, string clanId, Settlement nearTown, List<TroopDetail> troopDetails)
         {
             try
             {
                 Clan clan = Clan.FindFirst(x => x.StringId == clanId) ?? throw new Exception($"Clan with ID {clanId} not found.");
-                MobileParty party = BanditPartyComponent.CreateBanditParty(clanId, clan, null, true) ?? throw new Exception($"Failed to create party for demon lord {demonLordId}.");
+                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("cs_devils_raiders_boss_party_template");
+
+                // Use settlement's gate position directly (it's already a CampaignVec2)
+                CampaignVec2 safeSpawnPosition = nearTown.GatePosition;
+                
+                MobileParty party = BanditPartyComponent.CreateBanditParty(clanId, clan, null, true, looterTemplate, safeSpawnPosition);
+                
+                if (party == null)
+                {
+                    throw new Exception($"Failed to create party for demon lord {demonLordId}.");
+                }
+                
                 TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
-                Dictionary<CharacterObject, int> initialTroops = new Dictionary<CharacterObject, int>();
                 CharacterObject character = CharacterObject.Find(demonLordId) ?? throw new Exception($"lord with id {demonLordId} not found");
                 troopRoster.AddToCounts(character, 1);
-                initialTroops[character] = 1;
-                
+
                 foreach (var troopDetail in troopDetails)
                 {
                     CharacterObject troop = CharacterObject.Find(troopDetail.TroopId);
@@ -233,19 +288,32 @@ namespace RealmsForgotten.Quest.SecondUpdate
                         continue;
                     }
                     troopRoster.AddToCounts(troop, troopDetail.Quantity);
-                    initialTroops[troop] = troopDetail.Quantity;
                 }
-                party.InitializeMobilePartyAroundPosition(troopRoster, TroopRoster.CreateDummyTroopRoster(), nearTown.Position2D, 50f, 10f);
-                party.SetCustomName(new TextObject($"Demon Lord {character.Name} Party"));
+
+                // Initialize party at the safe position
+                party.InitializeMobilePartyAroundPosition(
+                    troopRoster,
+                    TroopRoster.CreateDummyTroopRoster(),
+                    safeSpawnPosition,
+                    10f,
+                    10f
+                );
+
+                party.Party.SetCustomName(new TextObject($"Demon Lord {character.Name} Party"));
                 party.Aggressiveness = 10f;
-                party.Ai.SetMovePatrolAroundPoint(nearTown.Position2D);
-                
+
+                // Set patrol around the settlement gate position (guaranteed safe area)
+                party.SetMovePatrolAroundPoint(safeSpawnPosition, MobileParty.NavigationType.All);
+
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"Demon Lord {character.Name} has emerged near {nearTown.Name}!",
+                    Colors.Red));
+
                 CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, () =>
                 {
                     if (party != null && party.IsActive)
                     {
-                        //EngageNearbyEnemies(party);
-                        Settlement nearestSettlement = SettlementHelper.FindNearestSettlement(party.Position2D);
+                        Settlement nearestSettlement = SettlementHelper.FindNearestSettlement(party.GetPosition2D);
                         string nearestSettlementName = nearestSettlement != null ? nearestSettlement.Name.ToString() : "unknown settlement";
                         InformationManager.DisplayMessage(new InformationMessage($"You hear of an army from hell, laying ruin on the lands near the settlement of {nearestSettlementName}."));
                     }
@@ -266,7 +334,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
                 foreach (Settlement settlement in Settlement.All)
                 {
-                    float distance = settlement.Position2D.Distance(position);
+                    float distance = settlement.GetPosition2D.Distance(position);
                     if (distance < nearestDistance)
                     {
                         nearestDistance = distance;
@@ -283,13 +351,13 @@ namespace RealmsForgotten.Quest.SecondUpdate
             // Get nearby enemy parties and set them as targets
             List<MobileParty> nearbyEnemyParties = MobileParty.All
                 .Where(p => (p.IsLordParty || IsVillagerParty(p) || p.IsCaravan || p.IsBandit) && p.MapFaction.IsAtWarWith(party.MapFaction))
-                .OrderBy(p => p.Position2D.DistanceSquared(party.Position2D))
+                .OrderBy(p => p.Position.DistanceSquared(party.Position))
                 .ToList();
 
             if (nearbyEnemyParties.Count > 0)
             {
                 MobileParty target = nearbyEnemyParties.First();
-                party.Ai.SetMoveEngageParty(target);
+                party.SetMoveEngageParty(target, MobileParty.NavigationType.All);
             }
         }
 
@@ -407,9 +475,22 @@ namespace RealmsForgotten.Quest.SecondUpdate
            .NpcLine(GameTexts.FindText("rf_sixth_quest_after_demon_lords_defeated_owl_dialog_5"))
            .Consequence(() =>
            {
-               CompleteQuestWithSuccess();
+               StartNewChapterQuest();
            })
            .CloseDialog();
+
+        private void StartNewChapterQuest()
+        {
+            // Optionally complete the current quest before transitioning
+            CompleteQuestWithSuccess();
+
+            // Create and start the new chapter quest
+            SeventhQuest newChapter = new SeventhQuest("rf_seventh_quest", QuestGiver, CampaignTime.DaysFromNow(999), 20000);
+            newChapter.StartQuest();
+
+            InformationManager.DisplayMessage(new InformationMessage("A new threat emerges... Your next chapter begins."));
+        }
+
 
         private void GivePlayerTroops(List<(string troopId, int troopCount)> troops)
         {
@@ -440,7 +521,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
     public class SixthQuestBehaviour : CampaignBehaviorBase
     {
         private static GauntletLayer _gauntletLayer;
-        private static GauntletMovie _gauntletMovie;
+        private static GauntletMovieIdentifier _gauntletMovie;
         private static SixthQuestPopupVM _popupVM;
 
         public override void RegisterEvents()
@@ -455,7 +536,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
         {
             if (_gauntletLayer == null)
             {
-                _gauntletLayer = new GauntletLayer(1000, "GauntletLayer", false);
+                _gauntletLayer = new GauntletLayer("GauntletLayer", 1000, false);
             }
 
             if (_popupVM == null)
@@ -467,7 +548,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 _popupVM.UpdatePopup(title, description, spriteName, continueAction, declineAction, buttonLabel);
             }
 
-            _gauntletMovie = (GauntletMovie)_gauntletLayer.LoadMovie("SixthQuestPopup", _popupVM);
+            _gauntletMovie = _gauntletLayer.LoadMovie("SixthQuestPopup", _popupVM);
             _gauntletLayer.InputRestrictions.SetInputRestrictions(true, InputUsageMask.All);
             ScreenManager.TopScreen.AddLayer(_gauntletLayer);
             _gauntletLayer.IsFocusLayer = true;

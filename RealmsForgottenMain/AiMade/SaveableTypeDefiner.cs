@@ -1,11 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using RealmsForgotten.AiMade.AIQuest;
 using RealmsForgotten.AiMade.Career;
-using RealmsForgotten.AiMade.Enlistement;
+using RealmsForgotten.AiMade.Infect;
+using RealmsForgotten.AiMade.Managers;
 using RealmsForgotten.AiMade.Managers.RealmsForgotten.AiMade.Managers;
+using RealmsForgotten.AiMade.MercenaryFaction;
 using RealmsForgotten.AiMade.Models;
-using RealmsForgotten.AiMade.PartyOverrides;
 using RealmsForgotten.AiMade.Patches;
 using RealmsForgotten.AiMade.Religions;
+using RealmsForgotten.AiMade.RF_Diplomacy;
+using RealmsForgotten.AiMade.TradePact;
+using RealmsForgotten.AiMade.Village_Inn_Quests;
+using RealmsForgotten.AiMade.Village_Inn_Quests.RealmsForgotten.AiMade.Village_Inn_Quests;
 using RealmsForgotten.Behaviors;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -25,8 +32,6 @@ namespace RealmsForgotten.AiMade
             ConstructContainerDefinition(typeof(Dictionary<string, ExampleConfig>));
             ConstructContainerDefinition(typeof(Dictionary<Hero, float>));
             ConstructContainerDefinition(typeof(List<Hero>));
-            ConstructContainerDefinition(typeof(List<CareerObject>));
-            ConstructContainerDefinition(typeof(List<CareerChoiceObject>));
             ConstructContainerDefinition(typeof(Dictionary<Hero, ReligionObject>));
             ConstructContainerDefinition(typeof(Dictionary<Clan, List<string>>));
             ConstructContainerDefinition(typeof(Dictionary<CultureObject, List<string>>));
@@ -34,19 +39,24 @@ namespace RealmsForgotten.AiMade
             ConstructContainerDefinition(typeof(Dictionary<string, TownSlaveData>));
             ConstructContainerDefinition(typeof(Dictionary<string, TownPrisonerData>));
             ConstructContainerDefinition(typeof(Dictionary<Settlement, CampaignTime>));
+            ConstructContainerDefinition(typeof(Dictionary<int, double>));
+            ConstructContainerDefinition(typeof(HashSet<(string, string)>));
+            ConstructContainerDefinition(typeof(Tuple<string, string>));
+            ConstructContainerDefinition(typeof(Dictionary<string, WeatherRegion>));
+            ConstructContainerDefinition(typeof(List<PendingRecruitment>));
         }
 
         protected override void DefineEnumTypes()
         {
             base.DefineEnumTypes();
-            AddEnumDefinition(typeof(CareerType), 100);
+            AddEnumDefinition(typeof(WeatherType), 2);
         }
 
         protected override void DefineClassTypes()
         {
             AddClassDefinition(typeof(ExampleConfig), 1);
             AddClassDefinition(typeof(MaestersTowerBehavior), 3);
-            AddClassDefinition(typeof(MerchantEventBehavior), 5);
+            AddClassDefinition(typeof(MerchantDeliveryBehavior), 5);
             AddClassDefinition(typeof(DuelCampaignBehavior), 6);
             AddClassDefinition(typeof(Story2Behavior), 7);
             AddClassDefinition(typeof(HelpPeregrineBehavior), 8);
@@ -56,21 +66,14 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(CultureAppropriateTroopsBehavior), 12);
             AddClassDefinition(typeof(HouseTroopsTownsBehavior), 13);
             AddClassDefinition(typeof(RecruitPrisonersMissionBehavior), 14);
-            AddClassDefinition(typeof(BanditHideoutClearedBehavior), 16);
             AddClassDefinition(typeof(BanditDefeatChivalryBehavior), 17);
-            AddClassDefinition(typeof(CareerProgressionBehavior), 18);
             AddClassDefinition(typeof(ReligionObject), 19);
             AddClassDefinition(typeof(ADODInnBehavior), 20);
-            AddClassDefinition(typeof(DefendVillagersOrCaravansBehavior), 22);
-            AddClassDefinition(typeof(QuestCompletionBehavior), 23);
             AddClassDefinition(typeof(DivineShieldStateBehavior), 24);
             AddClassDefinition(typeof(DivineShieldMissionBehavior), 25);
             AddClassDefinition(typeof(BanditConversionManager), 26);
             AddClassDefinition(typeof(BanditConversionEvent), 27);
             AddClassDefinition(typeof(PietyManager), 28);
-            AddClassDefinition(typeof(CareerManager), 29);
-            AddClassDefinition(typeof(CareerObject), 30);
-            AddClassDefinition(typeof(CareerChoiceObject), 31);
             AddClassDefinition(typeof(ReligionsManager), 33);
             AddClassDefinition(typeof(BattleCryStateBehavior), 34);
             AddClassDefinition(typeof(BanditPartyGrowthBehavior), 35);
@@ -78,20 +81,14 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(HumanCohesionBehavior), 37);
             AddClassDefinition(typeof(HashSet<string>), 38);
             AddClassDefinition(typeof(BanditHordeBehavior), 39);
-            AddClassDefinition(typeof(DuelsBehavior), 41);
+            //AddClassDefinition(typeof(DuelsBehavior), 41);
             AddClassDefinition(typeof(BarbarianHordeInvasion), 42);
             AddClassDefinition(typeof(UndeadHordeBehavior), 43);
             AddClassDefinition(typeof(BanditIncrease), 44);
             AddClassDefinition(typeof(BanditPartyManager), 45);
             AddClassDefinition(typeof(DocksMenuBehavior), 46);
-            AddClassDefinition(typeof(CustomAIBase), 47);
-            AddClassDefinition(typeof(YourFactionAI), 48);
-            AddClassDefinition(typeof(MyModEnlistmentBehavior), 49);
-            AddClassDefinition(typeof(MyModEnlistmentBehaviorExtension), 50);
-            AddClassDefinition(typeof(MyModEnlistmentDialogBehavior), 52);
-            AddClassDefinition(typeof(KingsguardSaveDataBehavior), 53);
             AddClassDefinition(typeof(RaceCraftingStaminaBehavior), 54);
-            AddClassDefinition(typeof(ADODChamberlainsBehavior), 55);
+            //AddClassDefinition(typeof(ADODChamberlainsBehavior), 55); @TODO
             AddClassDefinition(typeof(SlaveBehavior), 56);
             AddClassDefinition(typeof(TownSlaveData), 57);
             AddClassDefinition(typeof(ADODSpecialSettlementTroopsModel), 58);
@@ -101,8 +98,36 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(AggressiveDwarfUrkhaiBehavior), 62);
             AddClassDefinition(typeof(MineBehavior), 63);
             AddClassDefinition(typeof(TownPrisonerData), 64);
-
-
+            AddClassDefinition(typeof(SturgiaCultureChangerBehavior), 65);
+            AddClassDefinition(typeof(AlignmentWarBehavior), 68);
+            AddClassDefinition(typeof(AlignmentMomentumBehavior), 69);
+            //AddClassDefinition(typeof(TickProfilerBehavior), 70);
+            AddClassDefinition(typeof(MerchantDeliveryQuest), 71);
+            AddClassDefinition(typeof(HelpPeregrineQuest), 72);
+            //AddClassDefinition(typeof(EncounterSystemBehavior), 73);
+            //AddClassDefinition(typeof(ALordDialogueCampaignBehavior), 74);
+            //AddClassDefinition(typeof(ARandomEncountersBehavior), 75);
+            //AddClassDefinition(typeof(PendingDuelMissionBehavior), 76);
+            //AddClassDefinition(typeof(DuelChallengeDialogueBehavior), 77);
+            AddClassDefinition(typeof(CapitulationSystemBehavior), 78);
+            AddClassDefinition(typeof(MercenaryHireBehavior), 79);
+            AddClassDefinition(typeof(CaravanTradePactBehavior), 80);
+            AddClassDefinition(typeof(EconomicPactBehavior), 81);
+            AddClassDefinition(typeof(AIBreakInBehavior), 82);
+            AddClassDefinition(typeof(RFWeatherCampaignBehavior), 83);
+            AddClassDefinition(typeof(VassalPromotionBehavior), 84);
+            AddClassDefinition(typeof(MercenaryFactionWarPactBehavior), 85);
+            AddClassDefinition(typeof(WeatherRegion), 86);
+            AddClassDefinition(typeof(PendingRecruitment), 87);
+            AddClassDefinition(typeof(ConsulHallRecruitmentBehavior), 88);
+            AddClassDefinition(typeof(VillageInnNPCBehavior), 89);
+            AddClassDefinition(typeof(WerewolfQuest), 90);
+            AddClassDefinition(typeof(RuinsQuest), 91);
+            AddClassDefinition(typeof(WerewolfVillageMenuBehavior), 92);
+            AddClassDefinition(typeof(RuinsQuestBehavior), 93);
+            AddClassDefinition(typeof(InfectionMissionBehavior), 94);
+            AddClassDefinition(typeof(RFJoinRaidEncounterBehavior), 95);
+            AddClassDefinition(typeof(CommanderDefenseBehavior), 96);
         }
     }
 }

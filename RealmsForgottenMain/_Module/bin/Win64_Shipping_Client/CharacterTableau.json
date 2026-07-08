@@ -1,0 +1,11 @@
+{
+  "Items": [
+    {
+      "Race": "half_giant",
+      "Horizontal": 0,
+      "Vertical": -1,
+      "Zoom": -2,
+      "Mount": false
+    }
+  ]
+}

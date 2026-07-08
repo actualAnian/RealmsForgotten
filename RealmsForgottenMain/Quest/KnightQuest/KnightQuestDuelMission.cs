@@ -29,7 +29,7 @@ namespace RealmsForgotten.Quest
                 new CampaignMissionComponent(),
                 new ArenaDuelMissionBehavior(),
                 new BasicLeaveMissionLogic(),
-                new MissionAgentHandler(location, null, null),
+                new MissionAgentHandler(),
                 new HeroSkillHandler(),
                 new MissionFacialAnimationHandler(),
                 new MissionAgentPanicHandler(),

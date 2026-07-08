@@ -66,7 +66,7 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             if(currentState == ArenaState.Captured)
             {
-                RFMissions.StartExploreMission(currentSettlement.CustomScene, CurrentBuildData, new Action(OnArenaMasterTalkEnd));
+                RFMissions.StartExploreMission(currentSettlement.CustomScene, CurrentBuildData, default, new Action(OnArenaMasterTalkEnd));
             }
             else
             {
@@ -74,7 +74,6 @@ namespace RealmsForgotten.RFCustomSettlements
                 RFMissions.OpenArenaMission(stageData.ArenaSceneId ?? "arena_test", stageData , OnBattleEnd);
             }
         }
-
         private StageData ChooseNextStageData()
         {
             return currentState switch
@@ -86,7 +85,6 @@ namespace RealmsForgotten.RFCustomSettlements
             };
             ;
         }
-
         private void OnBattleEnd(bool isPlayerWinner)
         {
             if (isPlayerWinner)

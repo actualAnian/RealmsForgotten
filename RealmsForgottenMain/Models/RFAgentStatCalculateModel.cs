@@ -5,11 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using Helpers;
 using RealmsForgotten.Behaviors;
+using RealmsForgotten.Career;
+using RealmsForgotten.Career.Logic;
 using RealmsForgotten.CustomSkills;
+using RealmsForgotten.ObjectExtensions;
 using SandBox.GameComponents;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
+using static RealmsForgotten.Career.CareerChoiceObject;
 
 namespace RealmsForgotten.Models
 {
@@ -45,9 +50,24 @@ namespace RealmsForgotten.Models
                         agent.UpdateCustomDrivenProperties();
                     }
                 }
-                
                 AddSkillEffectsForAgent(agent, agentDrivenProperties);
-                //AddPerkEffectsForAgent(agent, agentDrivenProperties);
+                AddCareerAgentProperties(agent, agentDrivenProperties);
+            }
+        }
+
+        private void AddCareerAgentProperties(Agent agent, AgentDrivenProperties agentDrivenProperties)
+        {
+            if (!agent.BelongsToMainParty()) return;
+            PlayerClassInfo info = PlayerCareerExtension.PlayerCareerInfo;
+            if (info == null) return;
+            List<string> choices = info.CareerChoices;
+            foreach (var choiceID in choices)
+            {
+                CareerChoiceObject choice = RFCareerChoices.GetChoice(choiceID);
+                if(choice.Passive is AgentPropertiesPassiveEffect propertiesPassiveEffect)
+                {
+                    propertiesPassiveEffect.OnAgentCreated(agent, agentDrivenProperties);
+                }
             }
         }
 
@@ -56,9 +76,7 @@ namespace RealmsForgotten.Models
         {
             _previousModel.InitializeMissionEquipment(agent);
 
-            CharacterObject agentCharacterObject = agent?.Character as CharacterObject;
-            ;
-            if (agent?.IsMount == true || agent?.Equipment == null || agentCharacterObject == null)
+            if (agent?.IsMount == true || agent?.Equipment == null || agent?.Character is not CharacterObject agentCharacterObject)
                 return;
 
             foreach (var equipmentIndex in equipmentIndices)
@@ -67,45 +85,48 @@ namespace RealmsForgotten.Models
                     continue;
                 if (agent.Equipment[equipmentIndex].Item.PrimaryWeapon.WeaponClass == WeaponClass.Cartridge)
                 {
-                    ExplainedNumber number = new ExplainedNumber(agent.Equipment[equipmentIndex].Amount);
-                    SkillHelper.AddSkillBonusForCharacter(RFSkills.Arcane, RFSkillEffects.MagicStaffPower,
-                        agentCharacterObject, ref number);
-
-
+                    var number = new ExplainedNumber(agent.Equipment[equipmentIndex].Amount);
+                    if (agent.Character?.StringId == "evil_witch")
+                        number.Add(1000);
+                    SkillHelper.AddSkillBonusForCharacter(RFSkillEffects.MagicStaffPower, agentCharacterObject, ref number);
                     agent.SetWeaponAmountInSlot(equipmentIndex, (short)number.ResultNumber, true);
                 }
                 else if (agent.Equipment[equipmentIndex].Item.StringId.Contains("anorit_fire"))
                 {
                     ExplainedNumber number = new ExplainedNumber(agent.Equipment[equipmentIndex].Amount);
-                    SkillHelper.AddSkillBonusForCharacter(RFSkills.Alchemy, RFSkillEffects.BombStackMultiplier,
-                        agentCharacterObject, ref number);
-
+                    SkillHelper.AddSkillBonusForCharacter(RFSkillEffects.BombStackMultiplier, agentCharacterObject, ref number);
 
                     agent.SetWeaponAmountInSlot(equipmentIndex, (short)number.ResultNumber, true);
                 }
-                    
             }
-            
+            if (agent == Agent.Main)
+                CareerLogic.ApplyExtraAmmo();
         }
         private void AddSkillEffectsForAgent(Agent agent, AgentDrivenProperties agentDrivenProperties)
         {
-            var character = agent.Character as CharacterObject;
-            var captain = agent.Team.Leader;
-            if (character != null && agent.WieldedWeapon.Item?.Type == ItemObject.ItemTypeEnum.Musket);
+            if (agent.Character is CharacterObject character && agent.WieldedWeapon.Item?.Type == ItemObject.ItemTypeEnum.Musket)
             {
                 int effectiveSkill = GetEffectiveSkill(agent, RFSkills.Arcane);
                 ExplainedNumber reloadSpeed = new ExplainedNumber(agentDrivenProperties.ReloadSpeed);
                 ExplainedNumber missileSpeed = new ExplainedNumber(agentDrivenProperties.MissileSpeedMultiplier);
 
-                SkillHelper.AddSkillBonusForCharacter(RFSkills.Arcane, RFSkillEffects.WandReloadSpeed, character, ref reloadSpeed, effectiveSkill);
+                SkillHelper.AddSkillBonusForCharacter(RFSkillEffects.WandReloadSpeed, character, ref reloadSpeed);
 
-                SkillHelper.AddSkillBonusForCharacter(RFSkills.Arcane, RFSkillEffects.WandAccuracy, character, ref missileSpeed, effectiveSkill);
+                SkillHelper.AddSkillBonusForCharacter(RFSkillEffects.WandAccuracy, character, ref missileSpeed);
 
 
                 agentDrivenProperties.ReloadSpeed = reloadSpeed.ResultNumber;
                 agentDrivenProperties.MissileSpeedMultiplier = missileSpeed.ResultNumber;
             }
 
+        }
+        public override float GetEffectiveMaxHealth(Agent agent)
+        {
+            if (agent == null) return 0;
+            ExplainedNumber explainedNumber = new ExplainedNumber(base.GetEffectiveMaxHealth(agent));
+            if (agent.IsMount && agent.RiderAgent != null && agent.RiderAgent.IsHero && agent.RiderAgent == Agent.Main)
+                CareerHelper.ApplyBasicCareerPassives(ref explainedNumber, PassiveEffectType.HorseHealth);
+            return explainedNumber.ResultNumber;
         }
         public override float GetWeaponInaccuracy(Agent agent, WeaponComponentData weapon, int weaponSkill)
         {
@@ -116,12 +137,10 @@ namespace RealmsForgotten.Models
             {
                 if (weapon.WeaponClass == WeaponClass.Musket)
                 {
-                    SkillHelper.AddSkillBonusForCharacter(RFSkills.Arcane, RFSkillEffects.WandAccuracy, character, ref accuracy, weaponSkill, false, 0);
+                    SkillHelper.AddSkillBonusForCharacter(RFSkillEffects.WandAccuracy, character, ref accuracy);
                 }
             }
-
             return accuracy.ResultNumber;
-
         }
     }
 }

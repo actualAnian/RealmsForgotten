@@ -46,7 +46,7 @@ namespace RealmsForgotten.Behaviors
                 Agent main = Agent.Main;
                 if (isSpawning)
                 {
-                    if (main.GetCurrentAction(0).Name.Contains("act_cheer") && main.GetCurrentActionProgress(0) >= 0.8)
+                    if (main.GetCurrentAction(0).GetName().Contains("act_cheer") && main.GetCurrentActionProgress(0) >= 0.8)
                     {
                         main.SetActionChannel(0, ActionIndexCache.act_none, true);
                         isSpawning = false;
@@ -63,6 +63,15 @@ namespace RealmsForgotten.Behaviors
 
         private bool ReviveTroops(Agent main)
         {
+            if (Mission.Current == null || Mission.Current.Mode == MissionMode.StartUp)
+                return false;
+
+            if (Mission.Current.MissionLogics.OfType<DeploymentMissionController>().Any())
+            {
+                MBInformationManager.AddQuickInformation(new TextObject("{=necromancy_wait_deployment}You cannot raise the dead while the armies are still deploying."));
+                return false;
+            }
+
             MapEvent playerEvent = MapEvent.PlayerMapEvent;
             if (playerEvent == null)
                 return false; 
@@ -115,8 +124,8 @@ namespace RealmsForgotten.Behaviors
                     ? new PartyAgentOrigin(PartyBase.MainParty, zombieTroop)
                     : new SimpleAgentOrigin(zombieTroop);
                 
-                Agent agent = Mission.Current.SpawnTroop(agentOriginBase, true, true,
-                    zombieTroop.IsMounted, false, 1, 1, true, true, false, position, position.AsVec2);
+                Agent agent = Mission.Current.SpawnTroop(agentOriginBase, true, false,
+                    zombieTroop.IsMounted, false, 1, 0, true, true, position, main.LookDirection.AsVec2);
 
                 agent.TeleportToPosition(position);
                 agent.SetMorale(100);
@@ -140,7 +149,7 @@ namespace RealmsForgotten.Behaviors
                 MissionScreen? missionScreen = TaleWorlds.ScreenSystem.ScreenManager.TopScreen as MissionScreen;
                 necromancyTextObject.SetTextVariable("AMOUNT", maxUses);
                 _dataSource = new SpellStatusVM(necromancyTextObject.ToString(),agent.WieldedWeapon.Item?.StringId.Contains("necromancer_staff") == true, 20, 22);
-                _gauntletLayer = new GauntletLayer(-1);
+                _gauntletLayer = new GauntletLayer("NecromancerStaff", -1);
                 missionScreen.AddLayer(_gauntletLayer);
                 _gauntletLayer.LoadMovie("SpellStatus", _dataSource);
                 

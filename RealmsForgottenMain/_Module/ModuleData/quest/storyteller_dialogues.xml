@@ -1,0 +1,29 @@
+<Dialogs>
+    <Dialog id="start" type="npc">
+        <Text>Greetings traveler, I am a humble storyteller. Would you like to hear a tale?</Text>
+        <Options>
+            <Option id="yes_option">
+                <Text>Yes, I'd love to hear a story.</Text>
+                <Response>Which story would you like to hear?</Response>
+                <StoryOptions>
+                    <Story id="pendraic">
+                        <Text>Tell me about the Battle of Pendraic.</Text>
+                        <Response>Ah, the Battle of Pendraic! It was a time of great conflict...</Response>
+                    </Story>
+                    <Story id="empire">
+                        <Text>Tell me about the founding of the Empire.</Text>
+                        <Response>The founding of the Empire is a tale of ambition and glory...</Response>
+                    </Story>
+                    <Story id="noldor">
+                        <Text>Tell me about the Noldor.</Text>
+                        <Response>The Noldor, a mysterious and ancient people...</Response>
+                    </Story>
+                </StoryOptions>
+            </Option>
+            <Option id="no_option">
+                <Text>Nevermind, I have to go now.</Text>
+                <Response>Very well, traveler. Maybe another time.</Response>
+            </Option>
+        </Options>
+    </Dialog>
+</Dialogs>

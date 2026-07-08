@@ -1,22 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HarmonyLib;
-using Helpers;
+﻿using Helpers;
 using RealmsForgotten.Quest.UI;
+using System.Linq;
+using System.Threading;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
-using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
-using TaleWorlds.CampaignSystem.ComponentInterfaces;    
 using TaleWorlds.CampaignSystem.Conversation;
 using TaleWorlds.CampaignSystem.Conversation.Persuasion;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.Extensions;
-using TaleWorlds.CampaignSystem.GameComponents;
-using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Party.PartyComponents;
@@ -63,7 +55,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
         public override TextObject Title => GameTexts.FindText("rf_quest_title_part_four");
 
         public override bool IsRemainingTimeHidden => true;
-        public override bool IsSpecialQuest => true;
+        public override string SpecialQuestType => "RfMainQuest";
 
 
         protected override void RegisterEvents()
@@ -127,39 +119,43 @@ namespace RealmsForgotten.Quest.SecondUpdate
             if (QuestGiver.IsActive && GetDistanceFromQuestGiver() <= initialDistanceFromQuestGiver * 0.7 && takeBossToLordLog?.CurrentProgress == 0)
             {
                 takeBossToLordLog?.UpdateCurrentProgress(1);
-                Clan hellboundClan =
-                    Clan.FindFirst(x => x.StringId == "cs_nelrog_raiders");
 
-                MobileParty hellboundParty = BanditPartyComponent.CreateBanditParty("quest_hellbound_party", hellboundClan, null,
-                    true);
+                Clan hellboundClan = Clan.FindFirst(x => x.StringId == "cs_nelrog_raiders");
+                CampaignVec2 spawnPos = MobileParty.MainParty.Position;
+                PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("hellbound_outlaw_template");
+                MobileParty hellboundParty = BanditPartyComponent.CreateBanditParty("quest_hellbound_party", hellboundClan, null, true, looterTemplate, spawnPos);
 
-                TroopRoster hellBoundTroopRoster = TroopRoster.CreateDummyTroopRoster();
+                TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
+                string[] units = { "cs_nelrog_bandits_bandit", "cs_nelrog_bandits_raider", "cs_nelrog_bandits_chief" };
 
-                string[] characters = new[] { "cs_nelrog_bandits_bandit", "cs_nelrog_bandits_raider", "cs_nelrog_bandits_chief" };
-                hellBoundTroopRoster.AddToCounts(CharacterObject.Find("cs_nelrog_bandits_boss"), 1);
+                troopRoster.AddToCounts(CharacterObject.Find("cs_nelrog_bandits_boss"), 1);
                 for (int i = 0; i < 60; i++)
+                    troopRoster.AddToCounts(CharacterObject.Find(units.GetRandomElement()), 1);
+
+                hellboundParty.InitializeMobilePartyAtPosition(troopRoster, TroopRoster.CreateDummyTroopRoster(), spawnPos);
+
+                hellboundParty.SetMoveEngageParty(MobileParty.MainParty, MobileParty.NavigationType.Default);
+                hellboundParty.IgnoreForHours(0.2f);
+                hellboundParty.Party.SetCustomName(new TextObject("{=rf_hellbound_party}Hellbound Raiders"));
+                hellboundParty.Aggressiveness = 100f;
+
+                // Force battle
+                if (PlayerEncounter.Current == null)
                 {
-                    hellBoundTroopRoster.AddToCounts(CharacterObject.Find(characters.GetRandomElement()), 1);
+                    PlayerEncounter.RestartPlayerEncounter(hellboundParty.Party, MobileParty.MainParty.Party, true);
+                    PlayerEncounter.StartBattle();
                 }
+            }           
 
-                hellboundParty.InitializeMobilePartyAtPosition(hellBoundTroopRoster,
-                    TroopRoster.CreateDummyTroopRoster(), MobileParty.MainParty.Position2D);
-
-                hellboundParty.IgnoreForHours(24);
-                hellboundParty.Ai.SetMoveEngageParty(MobileParty.MainParty);
-            }
-
+            // 👇 this block must be OUTSIDE of the one above
             if (GetDistanceFromMonastery() <= initialDistanceToMonastery * 0.7 && takeBossToLordLog?.CurrentProgress == 3)
             {
                 takeBossToLordLog.UpdateCurrentProgress(4);
                 CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter), new ConversationCharacterData(TheOwl.CharacterObject));
             }
         }
-
-        private float GetDistanceFromQuestGiver() => MobileParty.MainParty.Position2D.DistanceSquared(QuestGiver.PartyBelongedTo != null ? QuestGiver.PartyBelongedTo.Position2D : QuestGiver.CurrentSettlement.GatePosition);
-        private float GetDistanceFromMonastery() => MobileParty.MainParty.Position2D.DistanceSquared(QuestMonastery.GatePosition);
-
-
+        private float GetDistanceFromQuestGiver() => MobileParty.MainParty.GetPosition2D.DistanceSquared(QuestGiver.PartyBelongedTo != null ? QuestGiver.PartyBelongedTo.GetPosition2D : QuestGiver.CurrentSettlement.GetPosition2D);
+        private float GetDistanceFromMonastery() => MobileParty.MainParty.GetPosition2D.DistanceSquared(QuestMonastery.GetPosition2D);
         protected override void OnStartQuest()
         {
             SetDialogs();
@@ -167,7 +163,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             textObject.SetCharacterProperties("LORD", QuestGiver.CharacterObject);
             takeBossToLordLog = AddLog(textObject);
 
-            initialDistanceFromQuestGiver = MobileParty.MainParty.Position2D.DistanceSquared(QuestGiver.PartyBelongedTo != null ? QuestGiver.PartyBelongedTo.Position2D : QuestGiver.CurrentSettlement.GatePosition);
+            initialDistanceFromQuestGiver = MobileParty.MainParty.GetPosition2D.DistanceSquared(QuestGiver.PartyBelongedTo != null ? QuestGiver.PartyBelongedTo.GetPosition2D : QuestGiver.CurrentSettlement.GetPosition2D);
         }
 
         protected override void InitializeQuestOnGameLoad()
@@ -195,7 +191,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
             goToMonasteryLog = AddLog(GameTexts.FindText("rf_fourth_quest_second_log"));
             QuestMonastery.IsVisible = true;
             QuestMonastery.IsInspected = true;
-            initialDistanceToMonastery = MobileParty.MainParty.Position2D.DistanceSquared(QuestMonastery.GetPosition2D);
+            initialDistanceToMonastery = MobileParty.MainParty.GetPosition2D.DistanceSquared(QuestMonastery.GetPosition2D);
         }
 
         private void ShowWaitScreen()
@@ -209,10 +205,67 @@ namespace RealmsForgotten.Quest.SecondUpdate
             PartyBase.MainParty.ItemRoster.AddToCounts(new EquipmentElement(MBObjectManager.Instance.GetObject<ItemObject>("rfmisc_anorit_fire_stone_t3_rfthrowing50")), 10);
 
             captureHellboundLog = AddLog(GameTexts.FindText("rf_fourth_quest_third_log"));
-
+            SpawnHellboundQuestPartiesNearSeaHideouts();
             goToMonasteryLog.UpdateCurrentProgress(1);
         }
 
+        private void SpawnHellboundQuestPartiesNearSeaHideouts()
+        {
+            SpawnHellboundAtHideout("hideout_seaside_22");
+            SpawnHellboundAtHideout("hideout_seaside_8");
+            SpawnHellboundAtHideout("hideout_seaside_15");
+        }
+
+        private void SpawnHellboundAtHideout(string hideoutId)
+        {
+            Settlement hideout = Settlement.Find(hideoutId);
+            if (hideout == null)
+                return;
+
+            Clan hellboundClan = Clan.FindFirst(x => x.StringId == "hellbound_outlaw");
+            PartyTemplateObject template = Campaign.Current.ObjectManager
+                .GetObject<PartyTemplateObject>("hellbound_outlaw_template");
+
+            if (hellboundClan == null || template == null)
+                return;
+
+            CampaignVec2 spawnPos = hideout.GatePosition;
+
+            // Create party with BanditPartyComponent to properly flag it as a bandit party
+            MobileParty party = BanditPartyComponent.CreateBanditParty(
+                "quest_hellbound_" + hideoutId,
+                hellboundClan,
+                hideout.Hideout, // Must be a Hideout, not Settlement
+                false, // isBossParty parameter
+                template, // PartyTemplateObject parameter
+                spawnPos); // spawn position
+
+            // Build additional troops if needed (the template already spawns basic troops)
+            string[] units =
+            {
+        "hellbound_thief",
+        "hellbound_bandit",
+        "hellbound_chief"
+    };
+
+            CharacterObject boss = CharacterObject.Find("hellbound_boss");
+            if (boss != null)
+                party.MemberRoster.AddToCounts(boss, 1);
+
+            for (int i = 0; i < 35; i++)
+            {
+                CharacterObject troop = CharacterObject.Find(units.GetRandomElement());
+                if (troop != null)
+                    party.MemberRoster.AddToCounts(troop, 1);
+            }
+
+            // Set party properties
+            party.Party.SetCustomName(new TextObject("{=rf_hellbound_party}Hellbound Raiders"));
+            party.Aggressiveness = 100f;
+            // IsBandit is now automatically true because we used BanditPartyComponent.CreateBanditParty
+            party.SetPartyUsedByQuest(true); // Mark as quest party to prevent despawn
+            party.SetMoveEngageParty(MobileParty.MainParty, MobileParty.NavigationType.Default);
+        }
         private TextObject LineWithPlayerLink()
         {
             TextObject text = GameTexts.FindText("rf_fourth_quest_monk_dialog_11");

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using RealmsForgotten.CustomSkills;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
@@ -10,10 +6,7 @@ using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
-using TaleWorlds.CampaignSystem.CampaignBehaviors;
-using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameMenus;
-using TaleWorlds.CampaignSystem.Overlay;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
@@ -107,7 +100,7 @@ internal class CulturesCampaignBehavior : CampaignBehaviorBase
                 
                 if (townSlaveSoldiersData.TryGetValue(Settlement.CurrentSettlement, out MercenaryData data))
                 {
-                    int slaveCost = Campaign.Current.Models.PartyWageModel.GetTroopRecruitmentCost(SlaveCharacter, Hero.MainHero);
+                    int slaveCost = (int)Campaign.Current.Models.PartyWageModel.GetTroopRecruitmentCost(SlaveCharacter, Hero.MainHero).ResultNumber;
                     currentSlaveValues = (slaveCost * data.Amount, data.Amount);
                     GameTexts.SetVariable("AMOUNT", data.Amount);
                     GameTexts.SetVariable("COST", currentSlaveValues.currentCost);
@@ -185,6 +178,7 @@ internal class CulturesCampaignBehavior : CampaignBehaviorBase
         {
             foreach (FlattenedTroopRosterElement troopRosterElement in settlement.Party.PrisonRoster.ToFlattenedRoster())
             {
+                if (troopRosterElement.Troop.IsHero) return;
                 if (MBRandom.RandomFloat < 0.15f)
                 {
                     settlement.Party.PrisonRoster.RemoveTroop(troopRosterElement.Troop);

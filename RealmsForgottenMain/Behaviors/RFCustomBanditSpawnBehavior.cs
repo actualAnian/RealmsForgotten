@@ -51,7 +51,7 @@ namespace RealmsForgotten.Behaviors
                 return;
             }
 
-            Vec2 spawnPosition = hideout.Settlement.Position2D;
+            Vec2 spawnPosition = hideout.Settlement.GetPosition2D;
             var (clanId, partyTemplateId) = banditFactions[banditType];
 
             Clan banditClan = Clan.All.FirstOrDefault(clan => clan.StringId == clanId);
@@ -68,9 +68,9 @@ namespace RealmsForgotten.Behaviors
                 return;
             }
 
-            MobileParty banditParty = MobileParty.CreateParty($"{banditType}_party", new BanditPartyComponent(), delegate (MobileParty mobileParty) { });
-            banditParty.InitializeMobilePartyAroundPosition(partyTemplate, spawnPosition, 2f);
-            banditParty.SetCustomName(new TextObject($"{banditType} Party"));
+            MobileParty banditParty = MobileParty.CreateParty($"{banditType}_party", new BanditPartyComponent());
+            banditParty.InitializeMobilePartyAroundPosition(partyTemplate, new(spawnPosition, false), 2f);
+            banditParty.Party.SetCustomName(new TextObject($"{banditType} Party"));
             banditParty.IsVisible = true;
 
             InformationManager.DisplayMessage(new InformationMessage($"Spawned {banditType} party near {hideout.Settlement.Name}.", Colors.Green));
@@ -85,6 +85,11 @@ namespace RealmsForgotten.Behaviors
             public override TextObject Name => new TextObject("Bandit Party");
 
             public override Settlement HomeSettlement => null;
+
+            public override Banner GetDefaultComponentBanner()
+            {
+                return HomeSettlement == null? new Banner() : HomeSettlement.Banner;
+            }
         }
 
         public override void SyncData(IDataStore dataStore)

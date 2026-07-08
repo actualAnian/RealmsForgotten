@@ -8,15 +8,24 @@ namespace RealmsForgotten.AiMade
 {
     public class MercenaryOfferBehavior : CampaignBehaviorBase
     {
-        private static readonly TextObject JoinWarDecisionTitleText = new TextObject("{=JoinWarDecisionTitle}Join the War");
-        private static readonly TextObject JoinWarDecisionText = new TextObject("{=JoinWarDecisionText}Khalik, the Dragon, has invited you to join the war against his enemies as a mercenary. Do you accept?");
+        private static readonly TextObject JoinWarDecisionTitleText =
+            new TextObject("{=JoinWarDecisionTitle}Join the War");
+
+        private static readonly TextObject JoinWarDecisionText =
+            new TextObject("{=JoinWarDecisionText}Khalik, the Dragon, has invited you to join the war against his enemies as a mercenary. Do you accept?");
+
         private static readonly TextObject AcceptText = new TextObject("{=Accept}Accept");
         private static readonly TextObject DeclineText = new TextObject("{=Decline}Decline");
 
+        // --- CONFIG ---
+        private const float OfferEarliestDay = 30f;
+
         private Hero _lord3_1;
         private Kingdom _lordKingdom;
-        private bool _hasAcceptedOffer; // Flag to track if the offer has been accepted
-        private bool _wasAtPeace; // Flag to track if the kingdom was at peace after the last offer was declined
+
+        private bool _hasAcceptedOffer;   // permanent: accepted -> never show again
+        private bool _hasDeclinedOffer;   // permanent: declined -> never show again
+        private bool _wasAtPeace;         // tracks the peace->war transition
 
         public override void RegisterEvents()
         {
@@ -30,49 +39,53 @@ namespace RealmsForgotten.AiMade
             dataStore.SyncData("_lord3_1", ref _lord3_1);
             dataStore.SyncData("_lordKingdom", ref _lordKingdom);
             dataStore.SyncData("_hasAcceptedOffer", ref _hasAcceptedOffer);
+            dataStore.SyncData("_hasDeclinedOffer", ref _hasDeclinedOffer);
             dataStore.SyncData("_wasAtPeace", ref _wasAtPeace);
         }
 
-        private void OnNewGameCreated(CampaignGameStarter campaignGameStarter)
-        {
-            Initialize();
-        }
-
-        private void OnGameLoaded(CampaignGameStarter campaignGameStarter)
-        {
-            Initialize();
-        }
+        private void OnNewGameCreated(CampaignGameStarter campaignGameStarter) => Initialize();
+        private void OnGameLoaded(CampaignGameStarter campaignGameStarter) => Initialize();
 
         private void Initialize()
         {
             _lord3_1 = Hero.FindFirst(hero => hero.StringId == "lord_3_1");
             _lordKingdom = _lord3_1?.Clan?.Kingdom;
+
             if (_lord3_1 == null || _lordKingdom == null)
             {
-                InformationManager.DisplayMessage(new InformationMessage("Initialization failed: lord_3_1 or his kingdom is null"));
+                InformationManager.DisplayMessage(new InformationMessage(
+                    "Initialization failed: lord_3_1 or his kingdom is null"));
+                return;
             }
-            else
-            {
-                _wasAtPeace = !IsKingdomAtWar(_lordKingdom);
-            }
+
+            // Establish baseline state so you don't instantly trigger on load/new game
+            _wasAtPeace = !IsKingdomAtWar(_lordKingdom);
         }
 
         private void DailyTick()
         {
-            if (_lord3_1 == null || _lordKingdom == null || _hasAcceptedOffer)
+            // Hard gate: don’t even evaluate before day 30
+            if (CampaignTime.Now.ToDays < Campaign.Current.Models.CampaignTimeModel.CampaignStartTime.ToDays + OfferEarliestDay)
                 return;
 
-            if (_wasAtPeace && IsKingdomAtWar(_lordKingdom))
+            // If anything is missing, or offer is already resolved (accepted/declined), never show again
+            if (_lord3_1 == null || _lordKingdom.IsEliminated || _hasAcceptedOffer || _hasDeclinedOffer)
+                return;
+
+            bool isAtWar = IsKingdomAtWar(_lordKingdom);
+
+            // Trigger only on peace -> war transition (after day 30)
+            if (_wasAtPeace && isAtWar)
             {
                 CreateJoinWarDecisionPopUp();
             }
 
-            _wasAtPeace = !IsKingdomAtWar(_lordKingdom);
+            _wasAtPeace = !isAtWar;
         }
 
         private bool IsKingdomAtWar(Kingdom kingdom)
         {
-            return kingdom.Stances.Any(stance => stance.IsAtWar);
+            return kingdom.FactionsAtWarWith.Count > 0;
         }
 
         private void CreateJoinWarDecisionPopUp()
@@ -91,14 +104,19 @@ namespace RealmsForgotten.AiMade
 
         private void OnAccept()
         {
-            ChangeKingdomAction.ApplyByJoinFactionAsMercenary(Clan.PlayerClan, _lordKingdom, 0);
+            ChangeKingdomAction.ApplyByJoinFactionAsMercenary(Clan.PlayerClan, _lordKingdom, default);
             _hasAcceptedOffer = true;
-            InformationManager.DisplayMessage(new InformationMessage("You have joined the war as a mercenary."));
+
+            InformationManager.DisplayMessage(new InformationMessage(
+                "You have joined the war as a mercenary."));
         }
 
         private void OnDecline()
         {
-            InformationManager.DisplayMessage(new InformationMessage("You have declined the offer to join the war."));
+            _hasDeclinedOffer = true;
+
+            InformationManager.DisplayMessage(new InformationMessage(
+                "You have declined the offer to join the war."));
         }
     }
 }

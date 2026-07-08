@@ -1,5 +1,4 @@
-﻿using RealmsForgotten.RFCustomSettlements;
-using System;
+﻿using System;
 using TaleWorlds.CampaignSystem.Inventory;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Library;
@@ -92,7 +91,7 @@ namespace RealmsForgotten.RFCustomSettlements
                 TroopRoster strongestAndPriorTroops = MobilePartyHelper.GetStrongestAndPriorTroops(MobileParty.MainParty, playerMaximumTroopCount, true);
                 troopRoster.Add(strongestAndPriorTroops);
                 Campaign campaign = Campaign.Current;
-                args.MenuContext.OpenTroopSelection(MobileParty.MainParty.MemberRoster, troopRoster, new Func<CharacterObject, bool>(this.CanChangeStatusOfTroop), new Action<TroopRoster>(this.OnTroopRosterManageDone), playerMaximumTroopCount, 1);
+                args.MenuContext.OpenTroopSelection(MobileParty.MainParty.MemberRoster, troopRoster, null, new Func<CharacterObject, bool>(this.CanChangeStatusOfTroop), new Action<TroopRoster>(this.OnTroopRosterManageDone), playerMaximumTroopCount, 1);
             }
             catch
             {
@@ -100,10 +99,10 @@ namespace RealmsForgotten.RFCustomSettlements
             }
         }
         private void OnTroopRosterManageDone(TroopRoster roster)
-          {
+        {
 
             NextSceneData.Instance.playerTroopRoster = roster;
-            RFMissions.StartExploreMission(currentSettlement.CustomScene, CurrentBuildData);
+            RFMissions.StartExploreMission(currentSettlement.CustomScene, CurrentBuildData, currentSettlement.MusicType);
         }
 
         private bool CanChangeStatusOfTroop(CharacterObject character)
@@ -127,8 +126,8 @@ namespace RealmsForgotten.RFCustomSettlements
                     newSceneID = NextSceneData.Instance.newSceneId;
                     try
                     {
-                        CurrentBuildData = CustomSettlementBuildData.allCustomSettlementBuildDatas[newSceneID];
-                        RFMissions.StartExploreMission(newSceneID, CurrentBuildData);
+                        CurrentBuildData = CustomSettlementBuildData.AllCustomSettlementBuildDatas[newSceneID];
+                        RFMissions.StartExploreMission(newSceneID, CurrentBuildData, currentSettlement.MusicType);
                         return;
                     }
                     catch

@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Helpers;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Party.PartyComponents;
@@ -59,7 +60,7 @@ public class ProcessionEscortQuestBehavior : CampaignBehaviorBase
         var playerHero = Hero.MainHero;
         var playerCulture = playerHero.Culture;
 
-        Vec2 playerPosition = MobileParty.MainParty.Position2D;
+        Vec2 playerPosition = MobileParty.MainParty.GetPosition2D;
         Settlement playerSettlement = MobileParty.MainParty.CurrentSettlement;
 
         var allTowns = Town.AllTowns.Where(t => t.Culture == playerCulture).ToList();
@@ -69,8 +70,8 @@ public class ProcessionEscortQuestBehavior : CampaignBehaviorBase
             allTowns = allTowns.Where(t => t.Settlement != playerSettlement).ToList();
         }
 
-        var startingTown = allTowns.OrderBy(t => t.Settlement.Position2D.Distance(playerPosition)).FirstOrDefault();
-        var targetTown = allTowns.Where(t => t != startingTown).OrderBy(t => t.Settlement.Position2D.Distance(startingTown.Settlement.Position2D)).FirstOrDefault();
+        var startingTown = allTowns.OrderBy(t => t.Settlement.GetPosition2D.Distance(playerPosition)).FirstOrDefault();
+        var targetTown = allTowns.Where(t => t != startingTown).OrderBy(t => t.Settlement.GetPosition2D.Distance(startingTown.Settlement.GetPosition2D)).FirstOrDefault();
 
         if (targetTown != null && startingTown != null)
         {
@@ -100,26 +101,24 @@ public class ProcessionEscortQuestBehavior : CampaignBehaviorBase
     {
         var processionPartyComponent = new ProcessionPartyComponent(startingTown.Settlement);
 
-        processionParty = MobileParty.CreateParty("procession", processionPartyComponent, (MobileParty party) =>
+        processionParty = MobileParty.CreateParty("procession", processionPartyComponent);
+        CampaignVec2 gatePosition = startingTown.Settlement.GatePosition;
+        processionParty.InitializeMobilePartyAroundPosition(new TroopRoster(processionParty.Party), new TroopRoster(processionParty.Party), gatePosition, 1f);
+        processionParty.Party.SetCustomName(new TextObject("{=ReligiousProcession}Religious Procession"));
+        processionParty.Ai.SetDoNotMakeNewDecisions(true);
+
+        ItemObject foodItem = MBObjectManager.Instance.GetObject<ItemObject>("grain");
+        if (foodItem != null)
         {
-            Vec2 gatePosition = startingTown.Settlement.GatePosition;
-            party.InitializeMobilePartyAroundPosition(new TroopRoster(party.Party), new TroopRoster(party.Party), gatePosition, 1f);
-            party.SetCustomName(new TextObject("{=ReligiousProcession}Religious Procession"));
-            party.Ai.SetDoNotMakeNewDecisions(true);
+            processionParty.ItemRoster.AddToCounts(foodItem, 20);
+        }
 
-            ItemObject foodItem = MBObjectManager.Instance.GetObject<ItemObject>("grain");
-            if (foodItem != null)
-            {
-                party.ItemRoster.AddToCounts(foodItem, 20);
-            }
+        processionParty.MoraleExplained.Add(20, new TextObject("Initial Morale"));
 
-            party.MoraleExplained.Add(20, new TextObject("Initial Morale"));
+        MobilePartyHelper.TryMatchPartySpeedWithItemWeight(processionParty, MobileParty.MainParty.Speed * 2.7f);
 
-            MobilePartyHelper.TryMatchPartySpeedWithItemWeight(party, MobileParty.MainParty.Speed * 2.7f);
-
-            party.IsVisible = true;
-            party.IgnoreByOtherPartiesTill(CampaignTime.HoursFromNow(24));
-        });
+        processionParty.IsVisible = true;
+        processionParty.IgnoreByOtherPartiesTill(CampaignTime.HoursFromNow(24));
 
         var villagerCharacter = CharacterObject.Find("villager");
 
@@ -136,24 +135,24 @@ public class ProcessionEscortQuestBehavior : CampaignBehaviorBase
 
         if (targetSettlement != null)
         {
-            processionParty.Ai.SetMoveGoToSettlement(targetSettlement);
+            processionParty.SetMoveGoToSettlement(targetSettlement, MobileParty.NavigationType.All, false);
         }
     }
 
     private void CreateBanditParty(Town startingTown)
     {
-        var banditHideout = Hideout.All.OrderBy(h => h.Settlement.Position2D.Distance(startingTown.Settlement.Position2D)).FirstOrDefault();
+        var banditHideout = Hideout.All.OrderBy(h => h.Settlement.GetPosition2D.Distance(startingTown.Settlement.GetPosition2D)).FirstOrDefault();
         if (banditHideout != null)
         {
             Clan banditClan = Clan.BanditFactions.FirstOrDefault(clan => clan.StringId == "looters");
             if (banditClan != null)
             {
-                banditParty = BanditPartyComponent.CreateBanditParty("procession_bandits", banditClan, banditHideout, false);
-                banditParty.SetCustomName(new TextObject("{=ProcessionBandits}Procession Bandits"));
+                MobileParty banditParty = BanditPartyComponent.CreateBanditParty("procession_bandits", banditClan, banditHideout, true, null, banditHideout.Settlement.Position); //@TODO
+                banditParty.Party.SetCustomName(new TextObject("{=ProcessionBandits}Procession Bandits"));
                 banditParty.Ai.SetDoNotMakeNewDecisions(false);
 
                 // Ensure the bandit party targets the procession party
-                banditParty.Ai.SetMoveEngageParty(processionParty);
+                banditParty.SetMoveEngageParty(processionParty, MobileParty.NavigationType.All);
 
                 InformationManager.DisplayMessage(new InformationMessage("Bandits have been sent to attack the procession."));
             }
@@ -190,8 +189,8 @@ public class ProcessionEscortQuestBehavior : CampaignBehaviorBase
 
     private void CompleteProcessionEscort()
     {
-        processionParty?.RemoveParty();
-        banditParty?.RemoveParty();
+        DestroyPartyAction.Apply(null, banditParty);
+        DestroyPartyAction.Apply(null, processionParty);
         processionQuestAccepted = false;
 
         // Add Piety points
@@ -214,8 +213,8 @@ public class ProcessionEscortQuestBehavior : CampaignBehaviorBase
 
     private void FailProcessionEscort()
     {
-        processionParty?.RemoveParty();
-        banditParty?.RemoveParty();
+        DestroyPartyAction.Apply(null, banditParty);
+        DestroyPartyAction.Apply(null, processionParty);
         InformationManager.DisplayMessage(new InformationMessage("You failed to escort the procession."));
         processionQuestAccepted = false;
     }
@@ -239,7 +238,7 @@ public class ProcessionEscortQuestBehavior : CampaignBehaviorBase
 
         if (processionParty != null && processionParty.DefaultBehavior != AiBehavior.GoToSettlement)
         {
-            processionParty.Ai.SetMoveGoToSettlement(targetSettlement);
+            processionParty.SetMoveGoToSettlement(targetSettlement, MobileParty.NavigationType.All, false);
         }
     }
 }
@@ -258,4 +257,9 @@ public class ProcessionPartyComponent : PartyComponent
     public override TextObject Name => new TextObject("{=ReligiousProcession}Religious Procession");
 
     public override Settlement HomeSettlement => _homeSettlement;
+
+    public override Banner GetDefaultComponentBanner()
+    {
+        return _homeSettlement.Banner;
+    }
 }

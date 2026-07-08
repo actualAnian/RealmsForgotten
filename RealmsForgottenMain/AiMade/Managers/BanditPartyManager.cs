@@ -24,13 +24,11 @@ namespace RealmsForgotten.AiMade.Managers
             // Fields to sync across game sessions
             private int _totalBanditParties;
             private Dictionary<Clan, int> _banditClanPartyCounts;
-            private CampaignTime _lastDailyTick;
 
             public BanditPartyManager()
             {
                 _totalBanditParties = 0;
                 _banditClanPartyCounts = new Dictionary<Clan, int>();
-                _lastDailyTick = CampaignTime.Now;
             }
 
             public override void RegisterEvents()
@@ -47,13 +45,11 @@ namespace RealmsForgotten.AiMade.Managers
                 dataStore.SyncData("_banditClanPartyCounts", ref _banditClanPartyCounts);
 
                 // Sync the last time the daily tick occurred
-                dataStore.SyncData("_lastDailyTick", ref _lastDailyTick);
             }
 
             private void OnDailyTick()
             {
                 EnsureBanditParties();
-                _lastDailyTick = CampaignTime.Now;
             }
 
             public void EnsureBanditParties()
@@ -115,7 +111,8 @@ namespace RealmsForgotten.AiMade.Managers
                 if (banditClan == null || targetHideout == null)
                     return;
 
-                MobileParty banditParty = BanditPartyComponent.CreateBanditParty(banditClan.StringId, banditClan, targetHideout, true);
+                MobileParty banditParty = BanditPartyComponent.CreateBanditParty(banditClan.StringId, banditClan, targetHideout, true, null, targetHideout.Settlement.Position);
+
                 if (banditParty == null)
                 {
                     InformationManager.DisplayMessage(new InformationMessage("ERROR: Failed to create bandit party.", Colors.Red));
@@ -125,28 +122,28 @@ namespace RealmsForgotten.AiMade.Managers
                 TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
 
                 var banditTroops = new List<(string troopId, int count)>
-            {
-                ("looter", 30),   
-                ("sea_raider", 20), 
-                ("forest_bandits", 15),
-                ("cs_looters", 20),
-                ("mountain_bandits", 20),
-                ("desert_bandits", 20),
-                ("steppe_bandits", 20),
-                ("gorakthar_giants", 20),
-                ("orguz_raiders", 20),
-                ("trolls_raiders", 20),
-                ("urkrish", 20),
-                ("athas_enslavers", 20),
-                ("athas_enslavers_big", 20),
-                ("deserted_military", 20),
-                ("vagabonds_army", 20),
-                ("arena_warriors_army", 20),
-                ("deserted_military", 20),
-                ("cs_athascultists", 20),
-                ("cs_nasorian_deserters", 20),
-                ("cs_sea_outlaws", 20),
-            };
+                {
+                    ("looter", 30),   
+                    ("sea_raider", 20), 
+                    ("forest_bandits", 15),
+                    ("cs_looters", 20),
+                    ("mountain_bandits", 20),
+                    ("desert_bandits", 20),
+                    ("steppe_bandits", 20),
+                    ("gorakthar_giants", 20),
+                    ("orguz_raiders", 20),
+                    ("trolls_raiders", 20),
+                    ("urkrish", 20),
+                    ("athas_enslavers", 20),
+                    ("athas_enslavers_big", 20),
+                    ("deserted_military", 20),
+                    ("vagabonds_army", 20),
+                    ("arena_warriors_army", 20),
+                    ("deserted_military", 20),
+                    ("cs_athascultists", 20),
+                    ("cs_nasorian_deserters", 20),
+                    ("cs_sea_outlaws", 20),
+                };
 
                 foreach (var (troopId, count) in banditTroops)
                 {
@@ -157,10 +154,10 @@ namespace RealmsForgotten.AiMade.Managers
                     }
                 }
 
-                banditParty.InitializeMobilePartyAroundPosition(troopRoster, TroopRoster.CreateDummyTroopRoster(), targetHideout.Settlement.Position2D, 50f, 10f);
+                banditParty.InitializeMobilePartyAroundPosition(troopRoster, TroopRoster.CreateDummyTroopRoster(), targetHideout.Settlement.Position, 50f, 10f);
                 if (banditParty.Ai != null && targetHideout.Settlement != null)
                 {
-                    banditParty.Ai.SetMoveGoToSettlement(targetHideout.Settlement);
+                    banditParty.SetMoveGoToSettlement(targetHideout.Settlement, MobileParty.NavigationType.Default, false);
                 }
             }
         }

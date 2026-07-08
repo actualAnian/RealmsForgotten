@@ -1,473 +1,563 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<strings>
-	<string id="rf_main_quest_start_inquiry_1" text="{=rf_main_quest_start_inquiry_1}As you traveled along a narrow road, you stumbled upon a shattered wagon, its pieces scattered and blood staining the earth. The ground bore the signs of a fierce struggle. Beneath the debris, a voice weakly called out for help." />
-	<string id="rf_main_quest_start_inquiry_2" text='{=rf_main_quest_start_inquiry_2}"They took him...", a man’s voice rasped, half his body trapped beneath the wreckage. "They fled into the forest... please, rescue Uliah...".' />
-	<string id="rf_main_quest_start_inquiry_3" text="{=rf_main_quest_start_inquiry_3}As you rose, the man's breath faltered and he died, his final words echoing in your mind..." />
-	<string id="rf_main_quest_start_inquiry_4" text="{=rf_main_quest_start_inquiry_4}With his last breath, the man revealed a possible location for the hideout, somewhere at the border where the Elvean kingdom meets the northern sea." />
-	<string id="rf_main_quest_start_inquiry_5" text="{=rf_main_quest_start_inquiry_5}Following the tracks into the forest, you noticed signs of horses, leading deeper into the woods. The trees eventually gave way to open fields, and you saw the trail heading towards a group of hills on the horizon. Certain you were on the right path, you approached the hills, convinced you were nearing the hideout." />
+	<strings>
+		<string id="rf_main_quest_start_inquiry_1" text="{=rf_main_quest_start_inquiry_1}As you traveled along a narrow road, you stumbled upon a shattered wagon, its pieces scattered and blood staining the earth. The ground bore the signs of a fierce struggle. Beneath the debris, a voice weakly called out for help." />
+		<string id="rf_main_quest_start_inquiry_2" text='{=rf_main_quest_start_inquiry_2}"They took him...", a man’s voice rasped, half his body trapped beneath the wreckage. "They fled into the forest... please, rescue Uliah...".' />
+		<string id="rf_main_quest_start_inquiry_3" text="{=rf_main_quest_start_inquiry_3}As you rose, the man's breath faltered and he died, his final words echoing in your mind..." />
+		<string id="rf_main_quest_start_inquiry_4" text="{=rf_main_quest_start_inquiry_4}With his last breath, the man revealed a possible location for the hideout, somewhere at the border where the Elvean kingdom meets the northern sea." />
+		<string id="rf_main_quest_start_inquiry_5" text="{=rf_main_quest_start_inquiry_5}Following the tracks into the forest, you noticed signs of horses, leading deeper into the woods. The trees eventually gave way to open fields, and you saw the trail heading towards a group of hills on the horizon. Certain you were on the right path, you approached the hills, convinced you were nearing the hideout." />
 
-	<string id="rf_first_quest_title" text="{=rf_first_quest_title}Realms Forgotten Quest: Part One" />
-	<string id="rf_first_quest_objective_1" text="{=rf_first_quest_objective_1}Rescue the injured man's friend from the hideout. According to the dying man, he should be somewhere where the borders of the Elvean kingdom meet the North Sea." />
-	<string id="rf_first_quest_objective_2" text="{=rf_first_quest_objective_2}Escort Uliah to Queen {QUEEN.LINK} to receive your ransom reward." />
-	<string id="rf_first_quest_objective_3" text="{=rf_first_quest_objective_3}Queen {QUEEN.LINK} has tasked you with capturing 5 zombies for her research." />
-	<string id="rf_first_quest_objective_3_task" text="{=rf_first_quest_objective_3_task}Captured zombies" />
-	<string id="rf_first_quest_objective_4" text="{=rf_first_quest_objective_4}Deliver the zombies to the Queen" />
+		<string id="rf_first_quest_title" text="{=rf_first_quest_title}Realms Forgotten Quest: Part One" />
+		<string id="rf_first_quest_objective_1" text="{=rf_first_quest_objective_1}Rescue the injured man's friend from the hideout. According to the dying man, he should be somewhere where the borders of the Elvean kingdom meet the North Sea." />
+		<string id="rf_first_quest_objective_2" text="{=rf_first_quest_objective_2}Escort Uliah to Queen {QUEEN.LINK} to receive your reward." />
+		<string id="rf_first_quest_objective_3" text="{=rf_first_quest_objective_3}Queen {QUEEN.LINK} has tasked you with capturing 5 zombies for her research." />
+		<string id="rf_first_quest_objective_3_task" text="{=rf_first_quest_objective_3_task}Captured zombies" />
+		<string id="rf_first_quest_objective_4" text="{=rf_first_quest_objective_4}Deliver the zombies to the Queen" />
 
-	<string id="rf_map_not_found_inquiry" text="{=rf_map_not_found_inquiry}The map eludes you for now, but you have no doubt of the location. Perhaps another attempt later will yield better results." />
+		<string id="rf_map_not_found_inquiry" text="{=rf_map_not_found_inquiry}The map eludes you for now, but you have no doubt of the location. Perhaps another attempt later will yield better results." />
 
-	<string id="rf_uliah_text_1" text="{=rf_uliah_text_1}Thank you for saving my life!" />
-	<string id="rf_uliah_text_2" text="{=rf_uliah_text_2}Why did they kidnap you?" />
-	<string id="rf_uliah_text_3" text="{=rf_uliah_text_3}I don't know... they appeared out of nowhere..." />
-	<string id="rf_uliah_text_4" text="{=rf_uliah_text_4}You are free to go." />
-	<string id="rf_uliah_text_5" text="{=rf_uliah_text_5}I hope someone will reward me for saving your life." />
-	<string id="rf_uliah_text_6" text="{=rf_uliah_text_6}I don't believe I'm safe alone... I don't know how to wield a sword..." />
-	<string id="rf_uliah_text_7" text="{=rf_uliah_text_7}Yes, there are those who will reward you..." />
-	<string id="rf_uliah_text_8" text="{=rf_uliah_text_8}For a proper reward, you should escort me to safety, under Queen Rinaia's protection." />
+		<string id="rf_uliah_text_1" text="{=rf_uliah_text_1}Thank you for saving my life!" />
+		<string id="rf_uliah_text_2" text="{=rf_uliah_text_2}Why did they kidnap you?" />
+		<string id="rf_uliah_text_3" text="{=rf_uliah_text_3}I don't know... they appeared out of nowhere..." />
+		<string id="rf_uliah_text_4" text="{=rf_uliah_text_4}You are free to go." />
+		<string id="rf_uliah_text_5" text="{=rf_uliah_text_5}I hope someone will reward me for saving your life." />
+		<string id="rf_uliah_text_6" text="{=rf_uliah_text_6}I don't believe I'm safe alone... I don't know how to wield a sword..." />
+		<string id="rf_uliah_text_7" text="{=rf_uliah_text_7}Yes, there are those who will reward you..." />
+		<string id="rf_uliah_text_8" text="{=rf_uliah_text_8}For a proper reward, you should escort me to safety, under Queen Rinaia's protection." />
 
-	<string id="rf_first_quest_queen_text_1" text="{=rf_first_quest_queen_text_1}Greetings, Queen Rinaia. I saved your vassal from a bandit attack and have brought him to you." />
-	<string id="rf_first_quest_queen_text_2" text="{=rf_first_quest_queen_text_2}You did well to bring my envoy alive. You deserve a reward. Having proven yourself worthy, I have a task for you." />
-	<string id="rf_first_quest_queen_text_3" text="{=rf_first_quest_queen_text_3}Abominations stalk the lands of winter beyond Nasoria territory—undead creatures. Bring some for our physicians to study. We need to understand this threat." />
-	<string id="rf_first_quest_queen_text_4" text="{=rf_first_quest_queen_text_4}It depends." />
-	<string id="rf_first_quest_queen_text_5" text="{=rf_first_quest_queen_text_5}You will be generously rewarded." />
-	<string id="rf_first_quest_queen_text_6" text="{=rf_first_quest_queen_text_6}No, I am not interested." />
-	<string id="rf_first_quest_queen_text_7" text="{=rf_first_quest_queen_text_7}Accept." />
-	<string id="rf_first_quest_queen_text_8" text="{=rf_first_quest_queen_text_8}Deny." />
-	<string id="rf_first_quest_queen_small_player_army" text="{=rf_first_quest_queen_small_player_army}You need a larger army to venture into those treacherous parts. Recruit more men and return to me." />
-	<string id="rf_first_quest_queen_small_player_army_1" text="{=rf_first_quest_queen_small_player_army_1}Greetings Queen Rinaia, I am now ready for your next mission." />
-	<string id="rf_first_quest_queen_small_player_army_2" text="{=rf_first_quest_queen_small_player_army_2}I believe your current forces are insufficient. Recruit more men and return to me." />
+		<string id="rf_first_quest_queen_text_1" text="{=rf_first_quest_queen_text_1}Greetings, Queen Rinaia. I saved your vassal from a bandit attack and have brought him to you." />
+		<string id="rf_first_quest_queen_text_2" text="{=rf_first_quest_queen_text_2}You did well to bring my envoy back alive. You deserve a reward. Having proven yourself worthy, I have a task for you." />
+		<string id="rf_first_quest_queen_text_3" text="{=rf_first_quest_queen_text_3}Abominations stalk the lands of winter beyond Nasoria territory—undead creatures. Bring some back for our physicians to study. We need to understand this threat." />
+		<string id="rf_first_quest_queen_text_4" text="{=rf_first_quest_queen_text_4}It depends." />
+		<string id="rf_first_quest_queen_text_5" text="{=rf_first_quest_queen_text_5}You will be generously rewarded." />
+		<string id="rf_first_quest_queen_text_6" text="{=rf_first_quest_queen_text_6}No, I am not interested." />
+		<string id="rf_first_quest_queen_text_7" text="{=rf_first_quest_queen_text_7}Accept." />
+		<string id="rf_first_quest_queen_text_8" text="{=rf_first_quest_queen_text_8}Deny." />
+		<string id="rf_first_quest_queen_small_player_army" text="{=rf_first_quest_queen_small_player_army}You need a larger army to venture into those treacherous lands. Recruit more men and return to me." />
+		<string id="rf_first_quest_queen_small_player_army_1" text="{=rf_first_quest_queen_small_player_army_1}Greetings, Queen Rinaia, I am now ready for your next mission." />
+		<string id="rf_first_quest_queen_small_player_army_2" text="{=rf_first_quest_queen_small_player_army_2}I believe your current forces are insufficient. Recruit more men and return to me." />
 
-	<string id="rf_small_player_army_log" text="{=rf_small_player_army_log}Raise your army to at least {MINIMUM_AMOUNT} soldiers." />
-	<string id="rf_soldiers_in_army" text="{=rf_soldiers_in_army}Soldiers in army" />
+		<string id="rf_small_player_army_log" text="{=rf_small_player_army_log}Raise your army to at least {MINIMUM_AMOUNT} soldiers." />
+		<string id="rf_soldiers_in_army" text="{=rf_soldiers_in_army}Soldiers in army" />
 
-	<string id="rf_first_quest_hidden_hand_text_1" text="{=rf_first_quest_hidden_hand_text_1}Halt, stranger. We mean you no harm, but you must hand over your captives." />
-	<string id="rf_first_quest_hidden_hand_text_2" text="{=rf_first_quest_hidden_hand_text_2}Why should I?" />
-	<string id="rf_first_quest_hidden_hand_text_3" text="{=rf_first_quest_hidden_hand_text_3}You probably don't understand what these creatures signify. They are the harbingers of a great tragedy that must be prevented at all costs." />
-	<string id="rf_first_quest_hidden_hand_text_4" text="{=rf_first_quest_hidden_hand_text_4}What do you mean?" />
-	<string id="rf_first_quest_hidden_hand_text_5" text="{=rf_first_quest_hidden_hand_text_5}We believe they are just the beginning of a terrible time that is coming upon us. The wrath of some strange power." />
-	<string id="rf_first_quest_hidden_hand_text_6" text="{=rf_first_quest_hidden_hand_text_6}Impressive, but no, I won't hand them over." />
-	<string id="rf_first_quest_hidden_hand_text_7" text="{=rf_first_quest_hidden_hand_text_7}Unexpected... How much are you willing to pay?" />
-	<string id="rf_first_quest_hidden_hand_text_8" text="{=rf_first_quest_hidden_hand_text_8}You will have to earn them." />
-	<string id="rf_first_quest_hidden_hand_text_9" text="{=rf_first_quest_hidden_hand_text_9}Perhaps you could explain your reasons and attach a generous purse." />
-	<string id="rf_first_quest_hidden_hand_text_10" text="{=rf_first_quest_hidden_hand_text_10}If it is gold you seek, here are 10,000 coins." />
-	<string id="rf_first_quest_hidden_hand_text_11" text="{=rf_first_quest_hidden_hand_text_11}A wise choice. We are always looking for recruits for our order. We have a task for you, if you are interested." />
-	<string id="rf_first_quest_hidden_hand_text_12" text="{=rf_first_quest_hidden_hand_text_12}What do you mean?" />
-	<string id="rf_first_quest_hidden_hand_text_13" text="{=rf_first_quest_hidden_hand_text_13}We seek relics that will shed light on the appearance of these abominations. Find them, and you will be richly rewarded." />
+		<string id="rf_first_quest_hidden_hand_text_1" text="{=rf_first_quest_hidden_hand_text_1}Halt, stranger. We mean you no harm, but you must hand over your captives." />
+		<string id="rf_first_quest_hidden_hand_text_2" text="{=rf_first_quest_hidden_hand_text_2}Why should I?" />
+		<string id="rf_first_quest_hidden_hand_text_3" text="{=rf_first_quest_hidden_hand_text_3}You probably don't understand what these creatures signify. They are the harbingers of a great tragedy that must be prevented at all costs." />
+		<string id="rf_first_quest_hidden_hand_text_4" text="{=rf_first_quest_hidden_hand_text_4}What do you mean?" />
+		<string id="rf_first_quest_hidden_hand_text_5" text="{=rf_first_quest_hidden_hand_text_5}We believe they are just the beginning of a terrible time that is coming upon us, perhaps the wrath of some strange power." />
+		<string id="rf_first_quest_hidden_hand_text_6" text="{=rf_first_quest_hidden_hand_text_6}Impressive, but no, I won't hand them over." />
+		<string id="rf_first_quest_hidden_hand_text_7" text="{=rf_first_quest_hidden_hand_text_7}Unexpected... How much are you willing to pay?" />
+		<string id="rf_first_quest_hidden_hand_text_8" text="{=rf_first_quest_hidden_hand_text_8}You will have to earn them." />
+		<string id="rf_first_quest_hidden_hand_text_9" text="{=rf_first_quest_hidden_hand_text_9}Perhaps you could explain your reasons and attach a generous purse." />
+		<string id="rf_first_quest_hidden_hand_text_10" text="{=rf_first_quest_hidden_hand_text_10}If it is gold you seek, here are 10,000 coins." />
+		<string id="rf_first_quest_hidden_hand_text_11" text="{=rf_first_quest_hidden_hand_text_11}A wise choice. We are always looking for recruits for our order. We have a task for you, if you are interested." />
+		<string id="rf_first_quest_hidden_hand_text_12" text="{=rf_first_quest_hidden_hand_text_12}What do you mean?" />
+		<string id="rf_first_quest_hidden_hand_text_13" text="{=rf_first_quest_hidden_hand_text_13}We seek relics that will shed light on the appearance of these abominations. Find them, and you will be richly rewarded." />
 
-	<string id="rf_first_quest_hidden_hand_text_prisoner_1" text="{=rf_first_quest_hidden_hand_text_prisoner_1}You are my prisoner now. But for a good reason, I let you go." />
-	<string id="rf_first_quest_hidden_hand_text_prisoner_2" text="{=rf_first_quest_hidden_hand_text_prisoner_2}We are here to protect Aeurth, and we will give our lives to it. These monsters, they sign the end of time. No one will be spared." />
-	<string id="rf_first_quest_hidden_hand_text_prisoner_3" text="{=rf_first_quest_hidden_hand_text_prisoner_3}End of time?" />
-	<string id="rf_first_quest_hidden_hand_text_prisoner_4" text="{=rf_first_quest_hidden_hand_text_prisoner_4}I will reveal no more. Do what you must." />
+		<string id="rf_first_quest_hidden_hand_text_prisoner_1" text="{=rf_first_quest_hidden_hand_text_prisoner_1}You are my prisoner now. Give me a good reason to let you go." />
+		<string id="rf_first_quest_hidden_hand_text_prisoner_2" text="{=rf_first_quest_hidden_hand_text_prisoner_2}We are here to protect Aeurth, and we will give our lives for it. These monsters, they signal the end of time. No one will be spared." />
+		<string id="rf_first_quest_hidden_hand_text_prisoner_3" text="{=rf_first_quest_hidden_hand_text_prisoner_3}End of time?" />
+		<string id="rf_first_quest_hidden_hand_text_prisoner_4" text="{=rf_first_quest_hidden_hand_text_prisoner_4}I will reveal no more. Do what you must." />
 
-	<string id="rf_first_quest_player_deliver_prisoners_text_1" text="{=rf_first_quest_player_deliver_prisoners_text_1}I brought your prisoners. And I would like to know why, beyond money, I put my life at risk." />
-	<string id="rf_first_quest_player_deliver_prisoners_text_2" text="{=rf_first_quest_player_deliver_prisoners_text_2}There is much more to this than meets the eye. But to be certain, it's too early to make assumptions. I need more proof..." />
-	<string id="rf_first_quest_player_deliver_prisoners_text_3" text="{=rf_first_quest_player_deliver_prisoners_text_3}Proof of what?" />
-	<string id="rf_first_quest_player_deliver_prisoners_text_4" text="{=rf_first_quest_player_deliver_prisoners_text_4}Proof that these monsters are not just monsters, but messengers of something ancient, hidden in the world." />
-	<string id="rf_first_quest_player_deliver_prisoners_text_5" text="{=rf_first_quest_player_deliver_prisoners_text_5}And what proof are you looking for?" />
-	<string id="rf_first_quest_player_deliver_prisoners_text_6" text="{=rf_first_quest_player_deliver_prisoners_text_6}A relic. Something i hope to bring light upon many of my questions." />
-	<string id="rf_first_quest_player_deliver_prisoners_text_7" text="{=rf_first_quest_player_deliver_prisoners_text_7}Are you willing to take this mission? You will be generously compensated." />
-	<string id="rf_first_quest_player_deliver_prisoners_text_8" text="{=rf_first_quest_player_deliver_prisoners_text_8}I accept." />
-	<string id="rf_first_quest_player_deliver_prisoners_text_9" text="{=rf_first_quest_player_deliver_prisoners_text_9}Maybe another time." />
-	<string id="rf_first_quest_player_deliver_prisoners_text_10" text="{=rf_first_quest_player_deliver_prisoners_text_10}I am here, should you change your mind." />
-	<string id="rf_first_quest_player_deliver_prisoners_text_11" text='{=rf_first_quest_player_deliver_prisoners_text_11}There is one of my informants you need to meet. He will be your contact and share all he knows so far. He is known as "The Owl".' />
+		<string id="rf_first_quest_player_deliver_prisoners_text_1" text="{=rf_first_quest_player_deliver_prisoners_text_1}I brought your prisoners. Now I would like to know why, beyond money, I risked my life." />
+		<string id="rf_first_quest_player_deliver_prisoners_text_2" text="{=rf_first_quest_player_deliver_prisoners_text_2}There is much more to this than meets the eye. But to be certain, it's too early to make assumptions. I need more proof..." />
+		<string id="rf_first_quest_player_deliver_prisoners_text_3" text="{=rf_first_quest_player_deliver_prisoners_text_3}Proof of what?" />
+		<string id="rf_first_quest_player_deliver_prisoners_text_4" text="{=rf_first_quest_player_deliver_prisoners_text_4}Proof that these monsters are not just monsters, but messengers of something ancient, hidden in the world." />
+		<string id="rf_first_quest_player_deliver_prisoners_text_5" text="{=rf_first_quest_player_deliver_prisoners_text_5}And what proof are you looking for?" />
+		<string id="rf_first_quest_player_deliver_prisoners_text_6" text="{=rf_first_quest_player_deliver_prisoners_text_6}A relic. Something I hope will shed light upon many of my questions." />
+		<string id="rf_first_quest_player_deliver_prisoners_text_7" text="{=rf_first_quest_player_deliver_prisoners_text_7}Are you willing to take on this mission? You will be generously compensated." />
+		<string id="rf_first_quest_player_deliver_prisoners_text_8" text="{=rf_first_quest_player_deliver_prisoners_text_8}I accept." />
+		<string id="rf_first_quest_player_deliver_prisoners_text_9" text="{=rf_first_quest_player_deliver_prisoners_text_9}Maybe another time." />
+		<string id="rf_first_quest_player_deliver_prisoners_text_10" text="{=rf_first_quest_player_deliver_prisoners_text_10}I am here, should you change your mind." />
+		<string id="rf_first_quest_player_deliver_prisoners_text_11" text='{=rf_first_quest_player_deliver_prisoners_text_11}There is one of my informants you need to meet. He will be your contact and share all he knows so far. He is known as "The Owl".' />
 
-	<string id="rf_second_quest_title" text="{=rf_second_quest_title}Realms Forgotten Quest: Part Two" />
-	<string id="rf_second_quest_first_log" text="{=rf_second_quest_first_log}Talk to The Owl, he should be in the tavern of the town where the queen resides." />
-	<string id="rf_second_quest_find_map_log" text="{=rf_second_quest_find_map_log}Owl has shown you the locations where you will search for the map pieces. Find all the parts of the map." />
-	<string id="rf_second_quest_first_part_log_task" text="{=rf_second_quest_first_part_log_task}Map parts found" />
-	<string id="rf_second_quest_first_part_log_info" text="{=rf_second_quest_first_part_log_info}You have found {CURRENT_COUNT}/3 parts of the map." />
+		<string id="rf_second_quest_title" text="{=rf_second_quest_title}Realms Forgotten Quest: Part Two" />
+		<string id="rf_second_quest_first_log" text="{=rf_second_quest_first_log}Talk to The Owl; he should be in the tavern of the town where the queen resides." />
+		<string id="rf_second_quest_find_map_log" text="{=rf_second_quest_find_map_log}The Owl has shown you the locations where you should search for the map pieces. Find all the parts of the map." />
+		<string id="rf_second_quest_first_part_log_task" text="{=rf_second_quest_first_part_log_task}Map parts found" />
+		<string id="rf_second_quest_first_part_log_info" text="{=rf_second_quest_first_part_log_info}You have found {CURRENT_COUNT}/3 parts of the map." />
 
-	<string id="rf_the_owl_after_alchemist_text_1" text="{=rf_the_owl_after_alchemist_text_1}Greetings, I have been sent by Queen Rinaia to support you if needed. I see you haven't taken any of these abominations." />
-	<string id="rf_the_owl_after_alchemist_text_2" text="{=rf_the_owl_after_alchemist_text_2}Yes, but they have been taken from me." />
-	<string id="rf_the_owl_after_alchemist_text_3" text="{=rf_the_owl_after_alchemist_text_3}Anyway, I have another proposition. I have been on a mission for the queen to track a treasure. She offered a generous reward. You could join me, and we can share the gold..." />
-	<string id="rf_the_owl_after_alchemist_text_4" text="{=rf_the_owl_after_alchemist_text_4}It seems an interesting proposal." />
-	<string id="rf_the_owl_after_alchemist_text_5" text="{=rf_the_owl_after_alchemist_text_5}I care not for the queen, and you'd better tell me the locations, or you'll lose your head." />
-	<string id="rf_the_owl_after_alchemist_text_6" text="{=rf_the_owl_after_alchemist_text_6}Here are the locations of the relics..." />
-	<string id="rf_the_owl_after_alchemist_text_7" text="{=rf_the_owl_after_alchemist_text_7}If that's how you want to handle things, I'll tell you." />
+		<string id="rf_the_owl_after_alchemist_text_1" text="{=rf_the_owl_after_alchemist_text_1}Greetings. I have been sent by Queen Rinaia to support you if needed. I see you haven't captured any of these abominations yet." />
+		<string id="rf_the_owl_after_alchemist_text_2" text="{=rf_the_owl_after_alchemist_text_2}Yes, but they were taken from me." />
+		<string id="rf_the_owl_after_alchemist_text_3" text="{=rf_the_owl_after_alchemist_text_3}Anyway, I have another proposition. I've been on a mission for the Queen to track down a treasure. She offered a generous reward. You could join me, and we can share the gold..." />
+		<string id="rf_the_owl_after_alchemist_text_4" text="{=rf_the_owl_after_alchemist_text_4}That sounds like an interesting proposal." />
+		<string id="rf_the_owl_after_alchemist_text_5" text="{=rf_the_owl_after_alchemist_text_5}I care not for the Queen. You'd better tell me the locations, or you'll lose your head." />
+		<string id="rf_the_owl_after_alchemist_text_6" text="{=rf_the_owl_after_alchemist_text_6}Here are the locations of the relics..." />
+		<string id="rf_the_owl_after_alchemist_text_7" text="{=rf_the_owl_after_alchemist_text_7}If that's how you want to handle things, I'll tell you." />
 
-	<string id="rf_the_owl_text_1" text="{=rf_the_owl_text_1}I am looking for the one known as The Owl." />
-	<string id="rf_the_owl_text_2" text="{=rf_the_owl_text_2}Are you? Did you try checking the forest? They usually nest in trees..." />
-	<string id="rf_the_owl_text_3" text="{=rf_the_owl_text_3}I didn't expect you to be a comedian. The Queen told me you should be an informer..." />
-	<string id="rf_the_owl_text_4" text="{=rf_the_owl_text_4}Queen?" />
-	<string id="rf_the_owl_text_5" text="{=rf_the_owl_text_5}Yes, I am here on behalf of Queen Rinaia. She told me to find The Owl to inform me about pursuing a relic." />
-	<string id="rf_the_owl_text_6" text="{=rf_the_owl_text_6}I see... listen carefully: I have risked my life searching for places that I believe are the ruins of an old civilization..." />
-	<string id="rf_the_owl_text_7" text="{=rf_the_owl_text_7}But when I approached one of the locations, I was attacked by a group of freaks in black robes." />
-	<string id="rf_the_owl_text_8" text="{=rf_the_owl_text_8}I escaped alive only because I managed to put two of them down with my blade." />
-	<string id="rf_the_owl_text_9" text="{=rf_the_owl_text_9}It seems I should get some tough men for the task..." />
-	<string id="rf_the_owl_text_10" text="{=rf_the_owl_text_10}I have no idea who they are or how many there are. I just know I won't get further alone." />
-	<string id="rf_the_owl_text_11" text="{=rf_the_owl_text_11}I assume that's why the Queen asked for my services." />
-	<string id="rf_the_owl_text_12" text="{=rf_the_owl_text_12}Anyway, I'll show you the locations you need. I wish you luck." />
-	<string id="rf_the_owl_text_13" text="{=rf_the_owl_text_13}Good luck on your mission." />
+		<string id="rf_the_owl_text_1" text="{=rf_the_owl_text_1}I am looking for the one known as The Owl." />
+		<string id="rf_the_owl_text_2" text="{=rf_the_owl_text_2}Are you? Did you try checking the forest? They usually nest in trees..." />
+		<string id="rf_the_owl_text_3" text="{=rf_the_owl_text_3}I didn't expect you to be a comedian. The Queen told me you were an informant..." />
+		<string id="rf_the_owl_text_4" text="{=rf_the_owl_text_4}The Queen?" />
+		<string id="rf_the_owl_text_5" text="{=rf_the_owl_text_5}Yes, I am here on behalf of Queen Rinaia. She told me to find The Owl for information about pursuing a relic." />
+		<string id="rf_the_owl_text_6" text="{=rf_the_owl_text_6}I see... Listen carefully: I have risked my life searching for places that I believe are the ruins of an ancient civilization..." />
+		<string id="rf_the_owl_text_7" text="{=rf_the_owl_text_7}But when I approached one of the locations, I was attacked by a group of fanatics in black robes." />
+		<string id="rf_the_owl_text_8" text="{=rf_the_owl_text_8}I escaped alive only because I managed to put two of them down with my blade." />
+		<string id="rf_the_owl_text_9" text="{=rf_the_owl_text_9}It seems I should gather some tough men for the task..." />
+		<string id="rf_the_owl_text_10" text="{=rf_the_owl_text_10}I have no idea who they are or how many there are. I just know I won't get any further alone." />
+		<string id="rf_the_owl_text_11" text="{=rf_the_owl_text_11}I assume that's why the Queen requires my services." />
+		<string id="rf_the_owl_text_12" text="{=rf_the_owl_text_12}Anyway, I'll show you the locations you need. I wish you luck." />
+		<string id="rf_the_owl_text_13" text="{=rf_the_owl_text_13}Good luck on your mission." />
 
-	<string id="rf_the_owl_intercept_text" text="{=rf_the_owl_intercept_text}I am confident the Queen will show you mercy now that we have the relics. I believe I know where she is. Let me guide you there." />
-	<string id="rf_the_owl_intercept_text_1" text="{=rf_the_owl_intercept_text_1}I'm glad we found you alive. I wasn't sure what could happen, so I requested an army from the queen. We're here to escort you back. She's waiting for you." />
-	<string id="rf_the_owl_intercept_text_2" text="{=rf_the_owl_intercept_text_2}Now, after I've done all the work, that sounds convenient." />
-	<string id="rf_the_owl_intercept_text_3" text="{=rf_the_owl_intercept_text_3}We never know what can happen. War is everywhere nowadays." />
-	<string id="rf_the_owl_intercept_text_4" text="{=rf_the_owl_intercept_text_4}I'm glad we found you alive. I wasn't sure what could happen, so I requested an army from the queen. We're here to escort you back. She's waiting for you." />
+		<string id="rf_the_owl_intercept_text" text="{=rf_the_owl_intercept_text}I am confident the Queen will show you mercy now that we have the relics. I believe I know where she is. Let me guide you there." />
+		<string id="rf_the_owl_intercept_text_1" text="{=rf_the_owl_intercept_text_1}I'm glad we found you alive. I wasn't sure what might happen, so I requested an army from the Queen. We're here to escort you back. She's waiting for you." />
+		<string id="rf_the_owl_intercept_text_2" text="{=rf_the_owl_intercept_text_2}Now, after I've done all the work? That sounds convenient." />
+		<string id="rf_the_owl_intercept_text_3" text="{=rf_the_owl_intercept_text_3}We never know what might happen. War is everywhere nowadays." />
+		<string id="rf_the_owl_intercept_text_4" text="{=rf_the_owl_intercept_text_4}I'm glad we found you alive. I wasn't sure what might happen, so I requested an army from the Queen. We're here to escort you back. She's waiting for you." />
 
-	<string id="rf_anorit_lord_text_1" text="{=rf_anorit_lord_text_1}Wait, that's not the queen. What's going on here?" />
-	<string id="rf_anorit_lord_text_2" text="{=rf_anorit_lord_text_2}Calm down, lad. There's no need for mistrust. He did what I requested. After you hear what I have to say, you're free to go." />
-	<string id="rf_anorit_lord_text_3" text="{=rf_anorit_lord_text_3}Of course I'm free to go! And it better be worth my time." />
-	<string id="rf_anorit_lord_text_4" text="{=rf_anorit_lord_text_4}You have no idea what you hold. And I doubt Queen Rinaia has told you everything. What you have is not just a relic, but a map." />
-	<string id="rf_anorit_lord_text_5" text="{=rf_anorit_lord_text_5}Hmm..." />
-	<string id="rf_anorit_lord_text_6" text="{=rf_anorit_lord_text_6}Listen, even before the Elveans sang their first songs, there was a ruling civilization in Aeurth. People of knowledge, who mastered arcane magic and astronomy. We believe the Elven ancestors are involved with the disappearance of those people." />
-	<string id="rf_anorit_lord_text_7" text="{=rf_anorit_lord_text_7}You can imagine how... There was war. The Elveans were victorious but what was left from their oponents?" />
-	<string id="rf_anorit_lord_text_8" text="{=rf_anorit_lord_text_8}I believe the Elvean songs are fabricated to make the past seem otherwise." />
-	<string id="rf_anorit_lord_text_9" text="{=rf_anorit_lord_text_9}Your arguments doesn't sound reasonable..." />
-	<string id="rf_anorit_lord_text_10" text="{=rf_anorit_lord_text_10}Are undead walking the world of the living reasonable? For some reason the Elveans hide that from their songs. And we believe that can be connected to the presence of this evil." />
-	<string id="rf_anorit_lord_text_11" text="{=rf_anorit_lord_text_11}What the hell... That's too much to swallow without a drink or two. I'm not sure if I can take that." />
-	<string id="rf_anorit_lord_text_12" text="{=rf_anorit_lord_text_12}Believe it or not, the undead walk the world of the living. You've seen it with your own eyes. And now demons are crossing into our world." />
-	<string id="rf_anorit_lord_text_13" text="{=rf_anorit_lord_text_13}Demons... And what is my place in this madness?" />
-	<string id="rf_anorit_lord_text_14" text="{=rf_anorit_lord_text_14}That's for you to decide. I am the master of the Anorites, an Order dedicated to the truth of light, the force that lives in the heart of fire. We protect the living. What you have might help us destroy this enemy." />
-	<string id="rf_anorit_lord_text_15" text="{=rf_anorit_lord_text_15}And maybe not. Maybe I have a treasure map, from an ancient civilization indeed, and you just want to grab it for your coffers." />
-	<string id="rf_anorit_lord_text_16" text="{=rf_anorit_lord_text_16}The path of truth is the path of fire. If you are in the truth, no harm will come to you. But if not, fire has no mercy. We will be watching." />
-	<string id="rf_anorit_lord_text_17" text="{=rf_anorit_lord_text_17}You've made the right decision. Welcome to the path of Fire. Our scholars will study this relic to decipher it. Once it's done, we will reach out to you for the next steps. Until then, prepare yourself." />
+		<string id="rf_anorit_lord_text_1" text="{=rf_anorit_lord_text_1}Wait, that's not the queen. What's going on here?" />
+		<string id="rf_anorit_lord_text_2" text="{=rf_anorit_lord_text_2}Calm down, lad. There's no need for mistrust. He did what I requested. After you hear what I have to say, you're free to go." />
+		<string id="rf_anorit_lord_text_3" text="{=rf_anorit_lord_text_3}Of course I'm free to go! And this had better be worth my time." />
+		<string id="rf_anorit_lord_text_4" text="{=rf_anorit_lord_text_4}You have no idea what you hold. And I doubt Queen Rinaia has told you everything. What you possess is not just a relic, but a map." />
+		<string id="rf_anorit_lord_text_5" text="{=rf_anorit_lord_text_5}Hmm..." />
+		<string id="rf_anorit_lord_text_6" text="{=rf_anorit_lord_text_6}Listen, even before the Elveans sang their first songs, there was a ruling civilization in Aeurth – people of knowledge who mastered arcane magic and astronomy. We believe the Elven ancestors were involved in the disappearance of those people." />
+		<string id="rf_anorit_lord_text_7" text="{=rf_anorit_lord_text_7}You can imagine how... There was war. The Elveans were victorious, but what was left of their opponents?" />
+		<string id="rf_anorit_lord_text_8" text="{=rf_anorit_lord_text_8}I believe the Elvean songs are fabricated to make the past seem otherwise." />
+		<string id="rf_anorit_lord_text_9" text="{=rf_anorit_lord_text_9}Your arguments don't sound reasonable..." />
+		<string id="rf_anorit_lord_text_10" text="{=rf_anorit_lord_text_10}Are undead walking the world of the living reasonable? For some reason, the Elveans hide that from their songs. We believe that omission might be connected to the presence of this evil." />
+		<string id="rf_anorit_lord_text_11" text="{=rf_anorit_lord_text_11}What the hell... That's too much to swallow without a drink or two. I'm not sure if I can believe that." />
+		<string id="rf_anorit_lord_text_12" text="{=rf_anorit_lord_text_12}Believe it or not, the undead walk the world of the living. You've seen it with your own eyes. And now demons are crossing into our world." />
+		<string id="rf_anorit_lord_text_13" text="{=rf_anorit_lord_text_13}Demons... And what is my place in this madness?" />
+		<string id="rf_anorit_lord_text_14" text="{=rf_anorit_lord_text_14}That is for you to decide. I am the master of the Anorites, an Order dedicated to the truth of light, the force that lives in the heart of fire. We protect the living. What you have might help us destroy this enemy." />
+		<string id="rf_anorit_lord_text_15" text="{=rf_anorit_lord_text_15}Or maybe not. Maybe I have a treasure map from an ancient civilization, and you just want to grab it for your coffers." />
+		<string id="rf_anorit_lord_text_16" text="{=rf_anorit_lord_text_16}The path of truth is the path of fire. If you are in the truth, no harm will come to you. But if not, fire has no mercy. We will be watching." />
+		<string id="rf_anorit_lord_text_17" text="{=rf_anorit_lord_text_17}You've made the right decision. Welcome to the Path of Fire. Our scholars will study this relic to decipher it. Once that's done, we will reach out to you for the next steps. Until then, prepare yourself." />
 
-	<string id="rf_guard_text" text="{=rf_guard_text}I hope you've been enjoying our hospitality... You know, we have rules here, and each guest receives what they deserve..." />
-	<string id="rf_guard_option_1" text="{=rf_guard_option_1}Guest? I was kidnapped in the middle of the night! What do you want from me?" />
-	<string id="rf_guard_option_2" text="{=rf_guard_option_2}The bed is a bit hard, and the toilet stinks, so I can't say I'm really enjoying it." />
-	<string id="rf_guard_option_3" text="{=rf_guard_option_3}Is that so? What do I need to do to get a better room?" />
+		<string id="rf_guard_text" text="{=rf_guard_text}I hope you've been enjoying our hospitality... You know, we have rules here, and each guest receives what they deserve..." />
+		<string id="rf_guard_option_1" text="{=rf_guard_option_1}Guest? I was kidnapped in the middle of the night! What do you want from me?" />
+		<string id="rf_guard_option_2" text="{=rf_guard_option_2}The bed is a bit hard, and the toilet stinks, so I can't say I'm really enjoying it." />
+		<string id="rf_guard_option_3" text="{=rf_guard_option_3}Is that so? What do I need to do to get a better room?" />
 
-	<string id="rf_kidnapped_text" text="{=rf_kidnapped_text}Even the best of your guards slept through the night, the weight of the long march falling upon their shoulders. You barely noticed the hands that covered your mouth before something hit hard on the back of your head." />
+		<string id="rf_kidnapped_text" text="{=rf_kidnapped_text}Even the best of your guards slept deeply that night, the weight of the long march heavy upon their shoulders. You barely noticed the hands covering your mouth before something struck hard against the back of your head." />
 
-	<string id="rf_anorit_quest_title" text="{=rf_anorit_quest_title}Deciphering the Map" />
-	<string id="rf_anorit_objective_1" text="{=rf_anorit_objective_1}Wait for {ANORIT.LINK} and his scholars to decipher the map." />
+		<string id="rf_anorit_quest_title" text="{=rf_anorit_quest_title}Deciphering the Map" />
+		<string id="rf_anorit_objective_1" text="{=rf_anorit_objective_1}Wait for {ANORIT.LINK} and his scholars to decipher the map." />
 
-	<string id="quest_continuation_box_title" text="{=quest_continuation_box_title}Quest End" />
-	<string id="quest_continuation_box_desc" text="{=quest_continuation_box_desc}Continues in the next update..." />
+		<string id="quest_continuation_box_title" text="{=quest_continuation_box_title}Quest End" />
+		<string id="quest_continuation_box_desc" text="{=quest_continuation_box_desc}Continues in the next update..." />
 
-	<string id="rf_anorit_lord_option_1" text="{=rf_anorit_lord_option_1}Deliver the map and serve the order." />
-	<string id="rf_anorit_lord_option_2" text="{=rf_anorit_lord_option_2}Deny and deliver it to the queen." />
+		<string id="rf_anorit_lord_option_1" text="{=rf_anorit_lord_option_1}Deliver the map and serve the order." />
+		<string id="rf_anorit_lord_option_2" text="{=rf_anorit_lord_option_2}Deny and deliver it to the queen." />
 
-	<string id="rf_dark_elvean_text" text="{=rf_dark_elvean_text}Attack!!" />
+		<string id="rf_dark_elvean_text" text="{=rf_dark_elvean_text}Attack!!" />
 
-	<string id="rf_quest_title_part_three" text="{=rf_quest_title_part_three}Realms Forgotten Quest: Part Three" />
+		<string id="rf_quest_title_part_three" text="{=rf_quest_title_part_three}Realms Forgotten Quest: Part Three" />
 
-	<string id="rf_anorit_message" text='{=rf_anorit_message}A messenger approached you while your troops were camped, taking a break from the march. "Some progress has been made in the translation. It is time to meet again. Find your way back to my presence."' />
-	<string id="rf_queen_message" text='{=rf_queen_message}While you were away, Owl gave your map to be deciphered by the queen. You must go talk to her now.' />
-	<string id="rf_ityr_arrive_message" text="{=rf_ityr_arrive_message}Your caravan enters Ityr, and you surreptitiously leave the caravan and enter the lord's hall." />
-	<string id="rf_decipher_finished_message" text='{=rf_decipher_finished_message}A messenger approaches you and delivers a message. "The deciphering is complete, come to me when you are ready." ' />
-	<string id="rf_near_hideout_message" text='{=rf_near_hideout_message}As you neared the gate, the howling winds above the mountain peaks grew louder, and the rocky walls seemed to watch your party as if a hidden presence had taken hold of them. A shiver ran down the spines of you and your companions, but there was no doubt this was the place you were looking for.' />
-	<string id="rf_third_quest_cannot_leave" text="{=rf_third_quest_cannot_leave}You need to find the scholar first!" />
+		<string id="rf_anorit_message" text='{=rf_anorit_message}A messenger approached you while your troops were camped, taking a break from the march. "Some progress has been made in the translation. It is time to meet again. Find your way back to my presence."' />
+		<string id="rf_queen_message" text='{=rf_queen_message}While you were away, the Owl gave your map to the Queen to be deciphered. You must go and talk to her now.' />
+		<string id="rf_ityr_arrive_message" text="{=rf_ityr_arrive_message}Your caravan enters Ityr. You surreptitiously leave the caravan and enter the lord's hall." />
+		<string id="rf_decipher_finished_message" text='{=rf_decipher_finished_message}A messenger approaches and delivers a message: "The deciphering is complete. Come to me when you are ready." ' />
+		<string id="rf_near_hideout_message" text='{=rf_near_hideout_message}As you neared the gate, the howling winds above the mountain peaks grew louder, and the rocky walls seemed to watch your party as if a hidden presence had taken hold of them. A shiver ran down the spines of you and your companions, but there was no doubt this was the place you were looking for.' />
+		<string id="rf_third_quest_cannot_leave" text="{=rf_third_quest_cannot_leave}You need to find the scholar first!" />
 
-	<string id="rf_third_quest_anorit_objective_1" text="{=rf_third_quest_anorit_objective_1}Go talk to {ANORIT.LINK}." />
+		<string id="rf_third_quest_anorit_objective_1" text="{=rf_third_quest_anorit_objective_1}Go talk to {ANORIT.LINK}." />
 
-	<string id="rf_third_quest_anorit_objective_2_a" text="{=rf_third_quest_anorit_objective_2_a}Wait until your caravan arrives at {SETTLEMENT}." />
-	<string id="rf_third_quest_anorit_objective_2_b" text="{=rf_third_quest_anorit_objective_2_b}Go to {SETTLEMENT} and try to convince the scholar." />
+		<string id="rf_third_quest_anorit_objective_2_a" text="{=rf_third_quest_anorit_objective_2_a}Wait until your caravan arrives at {SETTLEMENT}." />
+		<string id="rf_third_quest_anorit_objective_2_b" text="{=rf_third_quest_anorit_objective_2_b}Go to {SETTLEMENT} and try to convince the scholar." />
 
-	<string id="rf_third_quest_anorit_objective_3" text="{=rf_third_quest_anorit_objective_3}Wait one day to meet the scholar at {SETTLEMENT}." />
-	<string id="rf_third_quest_anorit_objective_3_failed" text="{=rf_third_quest_anorit_objective_3_failed}You failed to persuade the scholar, now you'll have to fight him in a battle." />
-	<string id="rf_third_quest_anorit_objective_4" text="{=rf_third_quest_anorit_objective_4}Go to {SETTLEMENT} and capture the scholar." />
-	<string id="rf_third_quest_anorit_objective_5" text="{=rf_third_quest_anorit_objective_5}Escort the scholar to {QUESTGIVER.LINK}." />
-	<string id="rf_third_quest_anorit_objective_5_defeated" text="{=rf_third_quest_anorit_objective_5_defeated}Find {SCHOLAR.LINK} and capture him." />
-	<string id="rf_third_quest_anorit_objective_6" text="{=rf_third_quest_anorit_objective_6}Wait until the scholar deciphers the text." />
-	<string id="rf_third_quest_anorit_objective_7" text="{=rf_third_quest_anorit_objective_7}Go to the hiding place indicated by {QUESTGIVER.LINK} and defeat the boss. It should be near Ismilkorg village." />
+		<string id="rf_third_quest_anorit_objective_3" text="{=rf_third_quest_anorit_objective_3}Wait one day to meet the scholar at {SETTLEMENT}." />
+		<string id="rf_third_quest_anorit_objective_3_failed" text="{=rf_third_quest_anorit_objective_3_failed}You failed to persuade the scholar. Now you'll have to fight him." />
+		<string id="rf_third_quest_anorit_objective_4" text="{=rf_third_quest_anorit_objective_4}Go to {SETTLEMENT} and capture the scholar." />
+		<string id="rf_third_quest_anorit_objective_5" text="{=rf_third_quest_anorit_objective_5}Escort the scholar to {QUESTGIVER.LINK}." />
+		<string id="rf_third_quest_anorit_objective_5_defeated" text="{=rf_third_quest_anorit_objective_5_defeated}Find {SCHOLAR.LINK} and capture him." />
+		<string id="rf_third_quest_anorit_objective_6" text="{=rf_third_quest_anorit_objective_6}Wait until the scholar deciphers the text." />
+		<string id="rf_third_quest_anorit_objective_7" text="{=rf_third_quest_anorit_objective_7}Go to the hiding place indicated by {QUESTGIVER.LINK} and defeat the boss. It should be near at the north of Nippura Town." />
 
-	<string id="rf_third_quest_anorit_dialog_1" text="{=rf_third_quest_anorit_dialog_1}Greetings. You are lucky to be alive... Your men are loyal to you. They sent scouts with the relics while you were gone." />
-	<string id="rf_third_quest_anorit_dialog_2" text="{=rf_third_quest_anorit_dialog_2}It took great effort for our scholars to arrive at an unsatisfactory result... The writing is intricate, and the only thing they can relate to it is a resemblance to Athanian scriptures. I believe we need the skills of an Athanian scholar. That's the task I'm giving you. Bring us one, by force if necessary." />
-	<string id="rf_third_quest_anorit_dialog_3" text="{=rf_third_quest_anorit_dialog_3}I will need a clever plan..." />
-	<string id="rf_third_quest_anorit_dialog_8" text="{=rf_third_quest_anorit_dialog_8}I prefer to go by caravan." />
-	<string id="rf_third_quest_anorit_dialog_9" text="{=rf_third_quest_anorit_dialog_9}I will disguise myself with my soldiers and try to assault him." />
+		<string id="rf_third_quest_anorit_dialog_1" text="{=rf_third_quest_anorit_dialog_1}Greetings. You are lucky to be alive... Your men are loyal to you. They sent scouts with the relics while you were gone." />
+		<string id="rf_third_quest_anorit_dialog_2" text="{=rf_third_quest_anorit_dialog_2}It took great effort for our scholars to arrive at an unsatisfactory result... The writing is intricate, and the only thing they can relate it to is a resemblance to Athanian scriptures. I believe we need the skills of an Athanian scholar. That is the task I am giving you: bring us one, by force if necessary." />
+		<string id="rf_third_quest_anorit_dialog_3" text="{=rf_third_quest_anorit_dialog_3}I will need a clever plan..." />
+		<string id="rf_third_quest_anorit_dialog_8" text="{=rf_third_quest_anorit_dialog_8}I prefer to go by caravan." />
+		<string id="rf_third_quest_anorit_dialog_9" text="{=rf_third_quest_anorit_dialog_9}I will disguise myself and my soldiers and try to assault him." />
 
-	<string id="rf_third_quest_anorit_dialog_4" text="{=rf_third_quest_anorit_dialog_4}Scholars are plenty at the courts of the Pharun, as wheat in our fields. The Pharun of Ityr is opening his town to celebrate a holiday, and I planned for you to go as a noble caravan trader along with one of our lords attending the festivities. That's how you will gain access to the town's inner halls." />
-	<string id="rf_third_quest_anorit_dialog_5" text="{=rf_third_quest_anorit_dialog_5}Hmm... not bad. Also, I could have access to a larger army and go disguised as bandits to assault the scholar somewhere..." />
-	<string id="rf_third_quest_anorit_dialog_6" text="{=rf_third_quest_anorit_dialog_6}That could work, but it seems quite risky. If you get caught and they discover anything, we will have war. I will have to let you die... Your choice." />
-	<string id="rf_third_quest_anorit_dialog_7" text="{=rf_third_quest_anorit_dialog_7}So, which way do you choose?" />
+		<string id="rf_third_quest_anorit_dialog_4" text="{=rf_third_quest_anorit_dialog_4}Scholars are as plentiful at the courts of the Pharun as wheat in our fields. The Pharun of Ityr is opening his city to celebrate a holiday, and I have planned for you to go as a noble caravan trader, accompanying one of our lords who will be attending the festivities. That is how you will gain access to the city's inner halls." />
+		<string id="rf_third_quest_anorit_dialog_5" text="{=rf_third_quest_anorit_dialog_5}Hmm... not bad. Alternatively, I could take a larger force and go disguised as bandits to ambush the scholar somewhere..." />
+		<string id="rf_third_quest_anorit_dialog_6" text="{=rf_third_quest_anorit_dialog_6}That could work, but it seems quite risky. If you get caught and they discover anything, we will face war. I will have to let you die... Your choice." />
+		<string id="rf_third_quest_anorit_dialog_7" text="{=rf_third_quest_anorit_dialog_7}So, which way do you choose?" />
 
-	<string id="rf_third_quest_scholar_dialog_1" text="{=rf_third_quest_scholar_dialog_1}Excuse me, sir. You don't know me, but your name is well-known among many caravan masters. You are known for your interest in special items..." />
-	<string id="rf_third_quest_scholar_dialog_2" text="{=rf_third_quest_scholar_dialog_2}Is that so? With whom am I speaking?" />
-	<string id="rf_third_quest_scholar_dialog_3" text="{=rf_third_quest_scholar_dialog_3}My name is {PLAYER.LINK}. I am a merchant of rare items, and I have something that may interest you." />
-	<string id="rf_third_quest_scholar_dialog_4" text="{=rf_third_quest_scholar_dialog_4}I am listening..." />
-	<string id="rf_third_quest_scholar_dialog_5" text="{=rf_third_quest_scholar_dialog_5}I have come into possession of an old text with writings I've never seen before. It is wrapped in a very special garment. I am sure it is unique..." />
-	<string id="rf_third_quest_scholar_dialog_6" text="{=rf_third_quest_scholar_dialog_6}And what do you want from me?" />
-	<string id="rf_third_quest_scholar_dialog_7" text="{=rf_third_quest_scholar_dialog_7}Well, if it interests you, I can offer it at an interesting price." />
-	<string id="rf_third_quest_scholar_dialog_8" text="{=rf_third_quest_scholar_dialog_8}I must see it first. Do you have it here?" />
-	<string id="rf_third_quest_scholar_dialog_9" text="{=rf_third_quest_scholar_dialog_9}Not here, but with my belongings. My caravan is stationed outside the town." />
-	<string id="rf_third_quest_scholar_dialog_10" text="{=rf_third_quest_scholar_dialog_10}Outside... hmm, perhaps we can go there another time..." />
-	<string id="rf_third_quest_scholar_dialog_11" text="{=rf_third_quest_scholar_dialog_11}Why not now?" />
-	<string id="rf_third_quest_scholar_dialog_12" text="{=rf_third_quest_scholar_dialog_12}Now? Why the rush?" />
+		<string id="rf_third_quest_scholar_dialog_1" text="{=rf_third_quest_scholar_dialog_1}Excuse me, sir. You don't know me, but your name is well-known among many caravan masters. You are known for your interest in special items..." />
+		<string id="rf_third_quest_scholar_dialog_2" text="{=rf_third_quest_scholar_dialog_2}Is that so? With whom am I speaking?" />
+		<string id="rf_third_quest_scholar_dialog_3" text="{=rf_third_quest_scholar_dialog_3}My name is {PLAYER.LINK}. I am a merchant of rare items, and I have something that may interest you." />
+		<string id="rf_third_quest_scholar_dialog_4" text="{=rf_third_quest_scholar_dialog_4}I am listening..." />
+		<string id="rf_third_quest_scholar_dialog_5" text="{=rf_third_quest_scholar_dialog_5}I have come into possession of an old text with writings I've never seen before. It is wrapped in a very special garment. I am sure it is unique..." />
+		<string id="rf_third_quest_scholar_dialog_6" text="{=rf_third_quest_scholar_dialog_6}And what do you want from me?" />
+		<string id="rf_third_quest_scholar_dialog_7" text="{=rf_third_quest_scholar_dialog_7}Well, if it interests you, I can offer it at an appealing price." />
+		<string id="rf_third_quest_scholar_dialog_8" text="{=rf_third_quest_scholar_dialog_8}I must see it first. Do you have it here?" />
+		<string id="rf_third_quest_scholar_dialog_9" text="{=rf_third_quest_scholar_dialog_9}Not here, but with my belongings. My caravan is stationed outside the city." />
+		<string id="rf_third_quest_scholar_dialog_10" text="{=rf_third_quest_scholar_dialog_10}Outside... hmm, perhaps we can go there another time..." />
+		<string id="rf_third_quest_scholar_dialog_11" text="{=rf_third_quest_scholar_dialog_11}Why not now?" />
+		<string id="rf_third_quest_scholar_dialog_12" text="{=rf_third_quest_scholar_dialog_12}Now? Why the rush?" />
 
-	<string id="rf_third_quest_scholar_dialog_13_persuade_1" text="{=rf_third_quest_scholar_dialog_13_persuade_1}Because there are other buyers awaiting my response." />
-	<string id="rf_third_quest_scholar_dialog_13_persuade_2" text="{=rf_third_quest_scholar_dialog_13_persuade_2}I must leave tomorrow to continue my travels." />
+		<string id="rf_third_quest_scholar_dialog_13_persuade_1" text="{=rf_third_quest_scholar_dialog_13_persuade_1}Because there are other buyers awaiting my response." />
+		<string id="rf_third_quest_scholar_dialog_13_persuade_2" text="{=rf_third_quest_scholar_dialog_13_persuade_2}I must leave tomorrow to continue my travels." />
 
-	<string id="rf_third_quest_scholar_dialog_persuasion_fail" text="{=rf_third_quest_scholar_dialog_persuasion_fail}That's too much rush for such a business. I need more time. Let's talk after you return to these parts." />
-	<string id="rf_third_quest_scholar_dialog_persuasion_success" text="{=rf_third_quest_scholar_dialog_persuasion_success}Okay, meet me in one day at Tasheba." />
+		<string id="rf_third_quest_scholar_dialog_persuasion_fail" text="{=rf_third_quest_scholar_dialog_persuasion_fail}That is too rushed for such business. I need more time. Let us talk again when you return to these parts." />
+		<string id="rf_third_quest_scholar_dialog_persuasion_success" text="{=rf_third_quest_scholar_dialog_persuasion_success}Okay, meet me in one day at Tasheba." />
 
-	<string id="rf_third_quest_scholar_dialog_2_1" text="{=rf_third_quest_scholar_dialog_2_1}So, did you bring the goods?" />
-	<string id="rf_third_quest_scholar_dialog_2_2" text="{=rf_third_quest_scholar_dialog_2_2}I brought something better, my blade." />
+		<string id="rf_third_quest_scholar_dialog_2_1" text="{=rf_third_quest_scholar_dialog_2_1}So, did you bring the goods?" />
+		<string id="rf_third_quest_scholar_dialog_2_2" text="{=rf_third_quest_scholar_dialog_2_2}I brought something better: my blade." />
 
-	<string id="rf_third_quest_anorit_dialog_2_1" text="{=rf_third_quest_anorit_dialog_2_1}You exceed my expectations. I see you may have a destiny for something greater. When we have answers, one of my messengers will contact you. Here is your reward." />
-	<string id="rf_third_quest_anorit_dialog_2_2" text="{=rf_third_quest_anorit_dialog_2_2}The relics turned out to be parts of a map. They point to a place somewhere in the winterlands. Owl believes it is near the village of Ismilkorg. I have organized an army to accompany you. Are you ready?" />
-	<string id="rf_third_quest_anorit_dialog_2_3" text="{=rf_third_quest_anorit_dialog_2_3}Yes. Let's do it!" />
-	<string id="rf_third_quest_anorit_dialog_2_4" text="{=rf_third_quest_anorit_dialog_2_4}No, I need more time." />
-	<string id="rf_third_quest_anorit_dialog_2_5" text="{=rf_third_quest_anorit_dialog_2_5}Come back to me when you are ready." />
+		<string id="rf_third_quest_anorit_dialog_2_1" text="{=rf_third_quest_anorit_dialog_2_1}You exceed my expectations. I see you may be destined for something greater. When we have answers, one of my messengers will contact you. Here is your reward." />
+		<string id="rf_third_quest_anorit_dialog_2_2" text="{=rf_third_quest_anorit_dialog_2_2}The relics turned out to be parts of a map. They point to a place somewhere in the winterlands. The Owl believes it is near the town of Nippura. I have organized an army to accompany you. Are you ready?" />
+		<string id="rf_third_quest_anorit_dialog_2_3" text="{=rf_third_quest_anorit_dialog_2_3}Yes. Let's do it!" />
+		<string id="rf_third_quest_anorit_dialog_2_4" text="{=rf_third_quest_anorit_dialog_2_4}No, I need more time." />
+		<string id="rf_third_quest_anorit_dialog_2_5" text="{=rf_third_quest_anorit_dialog_2_5}Come back to me when you are ready." />
 
-	<string id="rf_third_quest_boss_dialog_1" text="{=rf_third_quest_boss_dialog_1}What do you think you've gained by storming upon us? The gate is already open, and they roam the world freely. Your future is bleak." />
-	<string id="rf_third_quest_boss_dialog_2" text="{=rf_third_quest_boss_dialog_2}They? Who are you referring to?" />
-	<string id="rf_third_quest_boss_dialog_3" text="{=rf_third_quest_boss_dialog_3}You're naive. The time of reckoning is upon us. The dark lords shall bring our vengeance. Soon, you will understand." />
-	<string id="rf_third_quest_boss_dialog_4" text="{=rf_third_quest_boss_dialog_4}I've had enough of your ramblings. You'll pay for your crimes with your life." />
-	<string id="rf_third_quest_boss_dialog_5" text="{=rf_third_quest_boss_dialog_5}You'll have ample time to explain everything from the confines of a dungeon cell." />
-	<string id="rf_third_quest_boss_dialog_4_owl" text="{=rf_third_quest_boss_dialog_4_owl}My lord, it isn't worth it. We need him alive to reveal the truth about all of this. Please, let's bring him to face royal justice." />
+		<string id="rf_third_quest_boss_dialog_1" text="{=rf_third_quest_boss_dialog_1}What do you think you've gained by storming in here? The gate is already open, and they roam the world freely. Your future is bleak." />
+		<string id="rf_third_quest_boss_dialog_2" text="{=rf_third_quest_boss_dialog_2}They? Who are you referring to?" />
+		<string id="rf_third_quest_boss_dialog_3" text="{=rf_third_quest_boss_dialog_3}You're naive. The time of reckoning is upon us. The dark lords shall bring our vengeance. Soon, you will understand." />
+		<string id="rf_third_quest_boss_dialog_4" text="{=rf_third_quest_boss_dialog_4}I've had enough of your ramblings. You'll pay for your crimes with your life." />
+		<string id="rf_third_quest_boss_dialog_5" text="{=rf_third_quest_boss_dialog_5}You'll have ample time to explain everything from the confines of a dungeon cell." />
+		<string id="rf_third_quest_boss_dialog_4_owl" text="{=rf_third_quest_boss_dialog_4_owl}My lord, it isn't worth it. We need him alive to reveal the truth about all of this. Please, let's bring him to face royal justice." />
 
 
-	<string id="town_athas_quest_option" text="{=town_athas_quest_option}Try to persuade the scholar" />
+		<string id="town_athas_quest_option" text="{=town_athas_quest_option}Try to persuade the scholar" />
 
-	<string id="rf_quest_title_part_four" text="{=rf_quest_title_part_four}Realms Forgotten Quest: Part Four" />
+		<string id="rf_quest_title_part_four" text="{=rf_quest_title_part_four}Realms Forgotten Quest: Part Four" />
 
-	<string id="rf_fourth_quest_first_log" text="{=rf_fourth_quest_first_log}Take the hideout boss to the {LORD.LINK}." />
-	<string id="rf_fourth_quest_second_log" text="{=rf_fourth_quest_second_log}Go to the monastery and talk to the monks. It should be near the city of Nippura." />
-	<string id="rf_fourth_quest_third_log" text="{=rf_fourth_quest_third_log}Capture a hellbound outlaw to extract information." />
+		<string id="rf_fourth_quest_first_log" text="{=rf_fourth_quest_first_log}Take the hideout boss to {LORD.LINK}." />
+		<string id="rf_fourth_quest_second_log" text="{=rf_fourth_quest_second_log}Go to the monastery and talk to the monks. It should be near the city of Ural." />
+		<string id="rf_fourth_quest_third_log" text="{=rf_fourth_quest_third_log}Capture a hellbound outlaw to extract information." />
 
-	<string id="rf_fourth_quest_first_dialog_1" text="{=rf_fourth_quest_first_dialog_1}What was that? Not only are these lands plagued by rising undead, but now demons threaten the world of the living! We are damned..." />
-	<string id="rf_fourth_quest_first_dialog_2" text="{=rf_fourth_quest_first_dialog_2}We've survived this attack by sheer luck, or perhaps some force watches over us. We must find a way to confront this evil... but who are they?" />
-	<string id="rf_fourth_quest_first_dialog_3" text="{=rf_fourth_quest_first_dialog_3}Hmm... As I told you when we first met, I have tracked those black-robed cultists to the places where you retrieved the texts. The sigil they carry on their robes does not relate to any faction I know." />
-	<string id="rf_fourth_quest_first_dialog_4" text="{=rf_fourth_quest_first_dialog_4}Their leader spoke of avenging themselves... Could that be a clue?" />
-	<string id="rf_fourth_quest_first_dialog_5" text="{=rf_fourth_quest_first_dialog_5}It could be. We need more answers. Let us pick up their trail!" />
-	<string id="rf_fourth_quest_first_dialog_6" text="{=rf_fourth_quest_first_dialog_6}We could, but how far can we go, only the two of us? We need to alert all the Realms of the about this matter. I see no other way." />
-	<string id="rf_fourth_quest_first_dialog_7" text="{=rf_fourth_quest_first_dialog_7}Yes, but how? Reporting we have demons marching all around? Without any proof, we will be ridiculed!" />
-	<string id="rf_fourth_quest_first_dialog_8" text="{=rf_fourth_quest_first_dialog_8}True... capturing the undead worked to engage the Queen. We need to find a similar way to convince them." />
-	<string id="rf_fourth_quest_first_dialog_9" text="{=rf_fourth_quest_first_dialog_9}And not only the Realms of Men... If we are indeed to confront more of such creatures, we need to enlist all the kingdoms." />
-	<string id="rf_fourth_quest_first_dialog_10" text="{=rf_fourth_quest_first_dialog_10}So we need something bigger, something that will leave no doubt... we need to capture some of these evil beings. And for that we need more than just a few soldiers." />
-	<string id="rf_fourth_quest_first_dialog_11" text="{=rf_fourth_quest_first_dialog_11}Maybe stronger weapons?" />
-	<string id="rf_fourth_quest_first_dialog_12" text="{=rf_fourth_quest_first_dialog_12}What do you mean?" />
-	<string id="rf_fourth_quest_first_dialog_13" text="{=rf_fourth_quest_first_dialog_13}I've traveled far and wide, serving as a spy and messenger for Queen Rinaia. Once, I encountered a monastic order known for their expertise with concoctions and alchemy. The common folk claimed they were holy people... What if they were not holy but sorcerers?" />
-	<string id="rf_fourth_quest_first_dialog_14" text="{=rf_fourth_quest_first_dialog_14}Do you mean magic? Pursuing magic is under penalty of death." />
-	<string id="rf_fourth_quest_first_dialog_15" text="{=rf_fourth_quest_first_dialog_15}And yet, undead and demons? Do they make any more sense? They must be creatures born of magic, albeit a dark one... Magic or faith, holy men or sorcerers, what's the difference? The folk regard them as good. We have nothing to lose." />
-	<string id="rf_fourth_quest_first_dialog_16" text="{=rf_fourth_quest_first_dialog_16}I see... Where are we heading?" />
-	<string id="rf_fourth_quest_first_dialog_17" text="{=rf_fourth_quest_first_dialog_17}We need to travel to the city of Nippura. In the hills, we will find a monastery." />
+		<string id="rf_fourth_quest_first_dialog_1" text="{=rf_fourth_quest_first_dialog_1}What was that?! Not only are these lands plagued by the rising undead, but now demons! We are damned..." />
+		<string id="rf_fourth_quest_first_dialog_2" text="{=rf_fourth_quest_first_dialog_2}We've survived this attack by sheer luck, or perhaps some force watches over us. We must find a way to confront this evil... but who are they?" />
+		<string id="rf_fourth_quest_first_dialog_3" text="{=rf_fourth_quest_first_dialog_3}Hmm... As I told you when we first met, I tracked those black-robed cultists to the places where you retrieved the texts. The sigil they bear on their robes does not relate to any faction I know." />
+		<string id="rf_fourth_quest_first_dialog_4" text="{=rf_fourth_quest_first_dialog_4}Their leader spoke of avenging themselves... Could that be a clue?" />
+		<string id="rf_fourth_quest_first_dialog_5" text="{=rf_fourth_quest_first_dialog_5}It could be. We need more answers. Let us pick up their trail!" />
+		<string id="rf_fourth_quest_first_dialog_6" text="{=rf_fourth_quest_first_dialog_6}We could, but how far can we get, just the two of us? We need to alert all the Realms about this matter. I see no other way." />
+		<string id="rf_fourth_quest_first_dialog_7" text="{=rf_fourth_quest_first_dialog_7}Yes, but how? Report that we have demons marching all around? Without proof, we will be ridiculed!" />
+		<string id="rf_fourth_quest_first_dialog_8" text="{=rf_fourth_quest_first_dialog_8}True... capturing the undead worked to engage the Queen. We need to find a similar way to convince the others." />
+		<string id="rf_fourth_quest_first_dialog_9" text="{=rf_fourth_quest_first_dialog_9}And not only the Realms of Men... If we are indeed to confront more of such creatures, we need to enlist all the kingdoms." />
+		<string id="rf_fourth_quest_first_dialog_10" text="{=rf_fourth_quest_first_dialog_10}So we need something bigger, something that will leave no doubt... we need to capture one of these evil beings. And for that, we need more than just a few soldiers." />
+		<string id="rf_fourth_quest_first_dialog_11" text="{=rf_fourth_quest_first_dialog_11}Maybe stronger weapons?" />
+		<string id="rf_fourth_quest_first_dialog_12" text="{=rf_fourth_quest_first_dialog_12}What do you mean?" />
+		<string id="rf_fourth_quest_first_dialog_13" text="{=rf_fourth_quest_first_dialog_13}I have traveled far and wide, serving as a spy and messenger for Queen Rinaia. Once, I encountered a monastic order known for their expertise with concoctions and alchemy. The common folk claimed they were holy people... What if they were not merely holy, but sorcerers?" />
+		<string id="rf_fourth_quest_first_dialog_14" text="{=rf_fourth_quest_first_dialog_14}Do you mean magic? Pursuing magic is punishable by death." />
+		<string id="rf_fourth_quest_first_dialog_15" text="{=rf_fourth_quest_first_dialog_15}And yet, we face undead and demons. Do they make any more sense? They must be creatures born of magic, albeit a dark form of it... Magic or faith, holy men or sorcerers, what is the difference now? The folk regard them as good. We have nothing to lose." />
+		<string id="rf_fourth_quest_first_dialog_16" text="{=rf_fourth_quest_first_dialog_16}I see... Where are we heading?" />
+		<string id="rf_fourth_quest_first_dialog_17" text="{=rf_fourth_quest_first_dialog_17}We need to travel to the city of Ural. In the nearby hills, we will find a monastery." />
 
-	<string id="rf_fourth_quest_monk_dialog_1" text="{=rf_fourth_quest_monk_dialog_1}Excuse me, sir. We've heard a lot about your deeds from the folk around these parts. They claim you are holy men..." />
-	<string id="rf_fourth_quest_monk_dialog_2" text="{=rf_fourth_quest_monk_dialog_2}Good day, brother. Those are kind words, but we are no holy people, only dedicated hermits. How can we serve you?" />
-	<string id="rf_fourth_quest_monk_dialog_3" text="{=rf_fourth_quest_monk_dialog_3}What we have to say may be hard to believe... We recently faced an enemy with an otherworldly nature. Knowing this probably wouldn't reach the ears of lords, we had no choice but to seek counsel from those who walk the path of knowledge." />
-	<string id="rf_fourth_quest_monk_dialog_4" text="{=rf_fourth_quest_monk_dialog_4}Hmm, I see. To what otherworldly nature are you referring?" />
-	<string id="rf_fourth_quest_monk_dialog_5" text="{=rf_fourth_quest_monk_dialog_5}Beings not from this world... Demons." />
-	<string id="rf_fourth_quest_monk_dialog_6" text="{=rf_fourth_quest_monk_dialog_6}Demons?... The common folk have a plethora of them. But I see enough seriousness in your gaze to believe you are not speaking out of imagination." />
-	<string id="rf_fourth_quest_monk_dialog_7" text="{=rf_fourth_quest_monk_dialog_7}Absolutely not, sir. We barely escaped with our lives." />
-	<string id="rf_fourth_quest_monk_dialog_8" text="{=rf_fourth_quest_monk_dialog_8}I see...i must bring your claim to our council, but surelly they will ask for more proof." />
-	<string id="rf_fourth_quest_monk_dialog_9" text="{=rf_fourth_quest_monk_dialog_9}We found this object in one of their hideouts. Take it." />
+		<string id="rf_fourth_quest_monk_dialog_1" text="{=rf_fourth_quest_monk_dialog_1}Excuse me, sir. We've heard much about your deeds from the folk around these parts. They claim you are holy men..." />
+		<string id="rf_fourth_quest_monk_dialog_2" text="{=rf_fourth_quest_monk_dialog_2}Good day, brother. Those are kind words, but we are no holy people, only dedicated hermits. How can we serve you?" />
+		<string id="rf_fourth_quest_monk_dialog_3" text="{=rf_fourth_quest_monk_dialog_3}What we have to say may be hard to believe... We recently faced an enemy of an otherworldly nature. Knowing our claims probably wouldn't reach the ears of lords, we had no choice but to seek counsel from those who walk the path of knowledge." />
+		<string id="rf_fourth_quest_monk_dialog_4" text="{=rf_fourth_quest_monk_dialog_4}Hmm, I see. To what otherworldly nature are you referring?" />
+		<string id="rf_fourth_quest_monk_dialog_5" text="{=rf_fourth_quest_monk_dialog_5}Beings not from this world... Demons." />
+		<string id="rf_fourth_quest_monk_dialog_6" text="{=rf_fourth_quest_monk_dialog_6}Demons?... The common folk speak of a plethora of such things. But I see enough seriousness in your gaze to believe you are not merely speaking out of imagination." />
+		<string id="rf_fourth_quest_monk_dialog_7" text="{=rf_fourth_quest_monk_dialog_7}Absolutely not, sir. We barely escaped with our lives." />
+		<string id="rf_fourth_quest_monk_dialog_8" text="{=rf_fourth_quest_monk_dialog_8}I see... I must bring your claim before our council, but surely they will ask for proof." />
+		<string id="rf_fourth_quest_monk_dialog_9" text="{=rf_fourth_quest_monk_dialog_9}We found this object in one of their hideouts. Take it." />
 
-	<string id="rf_fourth_quest_monk_dialog_10" text="{=rf_fourth_quest_monk_dialog_10}How should I name you, sir?" />
-	<string id="rf_fourth_quest_monk_dialog_11" text="{=rf_fourth_quest_monk_dialog_11}My name is {PLAYER.LINK}." />
-	<string id="rf_fourth_quest_monk_dialog_12" text="{=rf_fourth_quest_monk_dialog_12}The artifact you brought is very rare. I am certain you do not know what it refers to. In the old era, there was a knowledgeable civilization in Aeurth, long before the Elveans. Many of our scholars searches for clues of their past and have found very little, apart from some rare sites, mostly scattered ruins." />
-	<string id="rf_fourth_quest_monk_dialog_13" text="{=rf_fourth_quest_monk_dialog_13}That stone tablet seems to describe instructions, but we need more time to understand it. Our order is interested in their knowledge of nature and the movement of the stars. Maybe that can bring us closer." />
-	<string id="rf_fourth_quest_monk_dialog_14" text="{=rf_fourth_quest_monk_dialog_14}How did they disappear, leaving so little behind?" />
-	<string id="rf_fourth_quest_monk_dialog_15" text="{=rf_fourth_quest_monk_dialog_15}That's something that still puzzles us. Where did you find this artifact?" />
-	<string id="rf_fourth_quest_monk_dialog_16" text="{=rf_fourth_quest_monk_dialog_16}It is a long story, but to make it short, we were on an official mission. We did not expect to encounter supernatural creatures, much less fight demons. We pursued them and found out they are many. I fear this is a threat to everyone, everywhere!" />
-	<string id="rf_fourth_quest_monk_dialog_17" text="{=rf_fourth_quest_monk_dialog_17}The existence of the undead has been known for several years, but the force behind them remains a mystery. The news of demons makes it worse..." />
-	<string id="rf_fourth_quest_monk_dialog_18" text="{=rf_fourth_quest_monk_dialog_18}That's what brought us here, hoping to find help to defeat them." />
-	<string id="rf_fourth_quest_monk_dialog_19" text="{=rf_fourth_quest_monk_dialog_19}We are not only an order of monks but a military one as well. As alchemists, we possess weapons that can help. We will send you some of our men." />
+		<string id="rf_fourth_quest_monk_dialog_10" text="{=rf_fourth_quest_monk_dialog_10}How should I name you, sir?" />
+		<string id="rf_fourth_quest_monk_dialog_11" text="{=rf_fourth_quest_monk_dialog_11}My name is {PLAYER.LINK}." />
+		<string id="rf_fourth_quest_monk_dialog_12" text="{=rf_fourth_quest_monk_dialog_12}The artifact you brought is very rare. I am certain you do not know what it pertains to. In an ancient era, long before the Elveans, there was a knowledgeable civilization in Aeurth. Many of our scholars search for clues about their past but have found very little, apart from some rare sites – mostly scattered ruins." />
+		<string id="rf_fourth_quest_monk_dialog_13" text="{=rf_fourth_quest_monk_dialog_13}That stone tablet seems to describe instructions, but we need more time to understand it. Our order is interested in their knowledge of nature and the movement of the stars. Perhaps studying it can bring us closer to understanding." />
+		<string id="rf_fourth_quest_monk_dialog_14" text="{=rf_fourth_quest_monk_dialog_14}How did they disappear, leaving so little behind?" />
+		<string id="rf_fourth_quest_monk_dialog_15" text="{=rf_fourth_quest_monk_dialog_15}That is something that still puzzles us. Where did you find this artifact?" />
+		<string id="rf_fourth_quest_monk_dialog_16" text="{=rf_fourth_quest_monk_dialog_16}It is a long story, but to keep it brief, we were on an official mission. We did not expect to encounter supernatural creatures, much less fight demons. We pursued them and discovered there are many. I fear this is a threat to everyone, everywhere!" />
+		<string id="rf_fourth_quest_monk_dialog_17" text="{=rf_fourth_quest_monk_dialog_17}The existence of the undead has been known for several years, but the force behind them remains a mystery. The news of demons makes matters worse..." />
+		<string id="rf_fourth_quest_monk_dialog_18" text="{=rf_fourth_quest_monk_dialog_18}That is what brought us here, hoping to find help to defeat them." />
+		<string id="rf_fourth_quest_monk_dialog_19" text="{=rf_fourth_quest_monk_dialog_19}We are not only an order of monks but a military one as well. As alchemists, we possess weapons that may help. We will lend you some of our men." />
 
-	<string id="rf_fourth_quest_owl_dialog_1" text="{=rf_fourth_quest_owl_dialog_1}You know, inside that mountain, I found something... I've been keeping it hidden." />
-	<string id="rf_fourth_quest_owl_dialog_2" text="{=rf_fourth_quest_owl_dialog_2}Hidden? What did you find?" />
-	<string id="rf_fourth_quest_owl_dialog_3" text="{=rf_fourth_quest_owl_dialog_3}I kept it hidden because I am not sure what it is. But after that attack, we were lucky I didn't lose it... It looked important, so I hid it." />
-	<string id="rf_fourth_quest_owl_dialog_4" text="{=rf_fourth_quest_owl_dialog_4}It is a kind of stone tablet with inscriptions... Do you have any idea what it is?" />
-	<string id="rf_fourth_quest_owl_dialog_5" text="{=rf_fourth_quest_owl_dialog_5}No clue. But it felt... significant. I think you should have it. After all, we wouldn't have made it out without you." />
+		<string id="rf_fourth_quest_owl_dialog_1" text="{=rf_fourth_quest_owl_dialog_1}You know, inside that mountain hideout, I found something... I have been keeping it hidden." />
+		<string id="rf_fourth_quest_owl_dialog_2" text="{=rf_fourth_quest_owl_dialog_2}Hidden? What did you find?" />
+		<string id="rf_fourth_quest_owl_dialog_3" text="{=rf_fourth_quest_owl_dialog_3}I kept it hidden because I am not sure what it is. But after that attack... we were lucky I didn't lose it... It looked important, so I hid it." />
+		<string id="rf_fourth_quest_owl_dialog_4" text="{=rf_fourth_quest_owl_dialog_4}It is a kind of stone tablet with inscriptions... Do you have any idea what it is?" />
+		<string id="rf_fourth_quest_owl_dialog_5" text="{=rf_fourth_quest_owl_dialog_5}No clue. But it felt... significant. I think you should have it. After all, we wouldn't have made it out without you." />
 
-	<string id="rf_fourth_quest_hellbound_dialog_1" text="{=rf_fourth_quest_hellbound_dialog_1}Who are you? What do you want?" />
-	<string id="rf_fourth_quest_hellbound_dialog_2" text="{=rf_fourth_quest_hellbound_dialog_2}We are the voice of the past, the whispers of the dead under the snow." />
-	<string id="rf_fourth_quest_hellbound_dialog_player_1" text="{=rf_fourth_quest_hellbound_dialog_player_1}What is your agenda? Such answers give me nothing. I want to know for whom you're fighting for!" />
-	<string id="rf_fourth_quest_hellbound_dialog_npc_1" text="{=rf_fourth_quest_hellbound_dialog_npc_1}I already said. We are nothing but the shadows of days gone. The ghosts that came to claim vengeance." />
-	<string id="rf_fourth_quest_hellbound_dialog_player_1_wrong" text="{=rf_fourth_quest_hellbound_dialog_player_1_wrong}I advise you to speak, or your mouth will be shut forever." />
-	<string id="rf_fourth_quest_hellbound_dialog_npc_1_wrong" text="{=rf_fourth_quest_hellbound_dialog_npc_1_wrong}Hahaha, do you think I fear pain? Your days are numbered." />
-	<string id="rf_fourth_quest_hellbound_dialog_player_2" text="{=rf_fourth_quest_hellbound_dialog_player_2}I fight under no banner; I am the master of my destiny. If your cause is fair, I may follow." />
-	<string id="rf_fourth_quest_hellbound_dialog_npc_2" text="{=rf_fourth_quest_hellbound_dialog_npc_2}Ah, so you promise... The land you stand on drunk the blood of the our early brothers and sisters. For thousands of years, their bodies have been imprisoned under the ice, their souls crying out for revenge. That is our cause. To bring justice to the usurpers." />
-	<string id="rf_fourth_quest_hellbound_dialog_player_2_wrong" text="{=rf_fourth_quest_hellbound_dialog_player_2_wrong}Whatever your cause is, it dwells in dark magic. The creatures you summon will bring only misery and destruction. Reveal your plans, or I will extract them with pain." />
-	<string id="rf_fourth_quest_hellbound_dialog_npc_2_wrong" text="{=rf_fourth_quest_hellbound_dialog_npc_2_wrong}Hahaha, do you think I fear pain? The pain that will be unleashed upon the world is beyond your comprehension." />
-	<string id="rf_fourth_quest_hellbound_dialog_player_5_success" text="{=rf_fourth_quest_hellbound_dialog_player_5_success}Who are the usurpers?" />
-	<string id="rf_fourth_quest_hellbound_dialog_npc_5_success" text="{=rf_fourth_quest_hellbound_dialog_npc_5_success}You know nothing of this world. Those who call themselves the firstborn, who pretend to be the carriers of light and good. Their forefathers were assassins, erasing thousands of lives to steal a land that did not belong to them. But that's enough, I have nothing else to say. The dawn of time is upon us." />
+		<string id="rf_fourth_quest_hellbound_dialog_1" text="{=rf_fourth_quest_hellbound_dialog_1}Who are you? What do you want?" />
+		<string id="rf_fourth_quest_hellbound_dialog_2" text="{=rf_fourth_quest_hellbound_dialog_2}We are the voice of the past, the whispers of the dead beneath the snow." />
+		<string id="rf_fourth_quest_hellbound_dialog_player_1" text="{=rf_fourth_quest_hellbound_dialog_player_1}What is your agenda? Such answers tell me nothing. I want to know who you're fighting for!" />
+		<string id="rf_fourth_quest_hellbound_dialog_npc_1" text="{=rf_fourth_quest_hellbound_dialog_npc_1}I already told you. We are nothing but the shadows of days gone by. The ghosts that came to claim vengeance." />
+		<string id="rf_fourth_quest_hellbound_dialog_player_1_wrong" text="{=rf_fourth_quest_hellbound_dialog_player_1_wrong}I advise you to speak, or your mouth will be silenced forever." />
+		<string id="rf_fourth_quest_hellbound_dialog_npc_1_wrong" text="{=rf_fourth_quest_hellbound_dialog_npc_1_wrong}Hahaha! Do you think I fear pain? Your days are numbered." />
+		<string id="rf_fourth_quest_hellbound_dialog_player_2" text="{=rf_fourth_quest_hellbound_dialog_player_2}I fight under no banner; I am the master of my destiny. If your cause is just, I may follow." />
+		<string id="rf_fourth_quest_hellbound_dialog_npc_2" text="{=rf_fourth_quest_hellbound_dialog_npc_2}Ah, so you make promises... The land you stand on drank the blood of our early brothers and sisters. For thousands of years, their bodies have been imprisoned under the ice, their souls crying out for revenge. That is our cause: to bring justice to the usurpers." />
+		<string id="rf_fourth_quest_hellbound_dialog_player_2_wrong" text="{=rf_fourth_quest_hellbound_dialog_player_2_wrong}Whatever your cause, it dwells in dark magic. The creatures you summon will bring only misery and destruction. Reveal your plans, or I will extract them through pain." />
+		<string id="rf_fourth_quest_hellbound_dialog_npc_2_wrong" text="{=rf_fourth_quest_hellbound_dialog_npc_2_wrong}Hahaha! Do you think I fear pain? The pain that will be unleashed upon the world is beyond your comprehension." />
+		<string id="rf_fourth_quest_hellbound_dialog_player_5_success" text="{=rf_fourth_quest_hellbound_dialog_player_5_success}Who are the usurpers?" />
+		<string id="rf_fourth_quest_hellbound_dialog_npc_5_success" text="{=rf_fourth_quest_hellbound_dialog_npc_5_success}You know nothing of this world. Those who call themselves the Firstborn, who pretend to be the carriers of light and good... their forefathers were assassins, erasing thousands of lives to steal a land that did not belong to them. But that is enough; I have nothing more to say. The dawn of a new time is upon us." />
 
-	<string id="rf_quest_title_part_five" text="{=rf_quest_title_part_five}Realms Forgotten Quest: Part Five" />
+		<string id="rf_quest_title_part_five" text="{=rf_quest_title_part_five}Realms Forgotten Quest: Part Five" />
 
-	<string id="rf_fifth_quest_first_dialog_1" text="We should bring this one to someone who can loosen his tongue." />
-	<string id="rf_fifth_quest_first_dialog_2" text="Aye, I have relied on certain recipes to retrieve information before, things a spy must have up his sleeve." />
-	<string id="rf_fifth_quest_first_dialog_3" text="And can you do that now?" />
-	<string id="rf_fifth_quest_first_dialog_4" text="I cannot make it myself, but the monks for sure. Lets bring him to the monastery" />
+		<string id="rf_fifth_quest_first_dialog_1" text="{=rf_fifth_quest_first_dialog_1}We should bring this one to someone who can loosen his tongue." />
+		<string id="rf_fifth_quest_first_dialog_2" text="{=rf_fifth_quest_first_dialog_2}Aye, I have relied on certain recipes to retrieve information before – things a spy must have up his sleeve." />
+		<string id="rf_fifth_quest_first_dialog_3" text="{=rf_fifth_quest_first_dialog_3}And can you do that now?" />
+		<string id="rf_fifth_quest_first_dialog_4" text="{=rf_fifth_quest_first_dialog_4}I cannot make it myself, but the monks surely can. Let's bring him to the monastery." />
 
-	<string id="rf_fifth_quest_second_dialog_1" text="We've captured this one, but we've gleaned nothing from him. Might you have a method?" />
-	<string id="rf_fifth_quest_second_dialog_2" text="Aye, we do. We needn't force his tongue, but a concoction or two will loosen his lips and reveal his thoughts." />
-	<string id="rf_fifth_quest_second_dialog_3" text="He revealed things but not as much as I desire. The undead, they are indeed the warriors who perished in the war with the elveans. They were known as the Vortiaks. However, this prisoner is not serving the undead. They serve different masters." />
-	<string id="rf_fifth_quest_second_dialog_4" text="And who are these masters?" />
-	<string id="rf_fifth_quest_second_dialog_5" text="The names he whispered carry the weight of ancient power, tied closely to the Old Gods. In the old era, the concepts of good and evil were not as clear-cut as we think. Instead, they perceived the universe through the lens of negative and positive forces, both essential to the delicate equilibrium of the world. In this manner, the ancient priests nurtured a pantheon divided between gods of creation and gods of destruction. I am led to believe they are trying to bring those latter forces to wreak havoc upon the world." />
-	<string id="rf_fifth_quest_second_dialog_6" text="That doesn't sound very good... So, this sect is trying to bring those gods into our world?" />
-	<string id="rf_fifth_quest_second_dialog_7" text="Not the gods themselves, but their servants." />
-	<string id="rf_fifth_quest_second_dialog_8" text="Demons?" />
-	<string id="rf_fifth_quest_second_dialog_9" text="You could call them Argothes, or the shadows of many faces." />
-	<string id="rf_fifth_quest_second_dialog_10" text="For what purpose do they want to bring those creatures into our world?" />
-	<string id="rf_fifth_quest_second_dialog_11" text="To cleanse? The Argothes are the embodiment of destruction, the necessary stage before anything new can be reborn." />
-	<string id="rf_fifth_quest_second_dialog_12" text="These Vortiaks, when did they actually exist?" />
-	<string id="rf_fifth_quest_second_dialog_13" text="According to Elvean, their ancestors arrived around 2000 years ago. If they faced war, than i suppose that is the time." />
-	<string id="rf_fifth_quest_second_dialog_14" text="That's impossible... a bloodline preserved for so long?" />
-	<string id="rf_fifth_quest_second_dialog_15" text="Not as impossible as you might think. Our order has already lasted 400 years." />
-	<string id="rf_fifth_quest_second_dialog_16" text="Hmm... and what now?" />
-	<string id="rf_fifth_quest_second_dialog_17" text="It is up to you... If the those cultists are indeed so powerful, as you've already witnessed, and 'demons' are running wild, they need to be stopped." />
-	<string id="rf_fifth_quest_second_dialog_18" text="How can I stop such a supernatural force?" />
-	<string id="rf_fifth_quest_second_dialog_19" text="I don't know. What I do know is that the time of the Vortiaks was known as the Era of the Dragon's Moon. Under that moon, magic was alive, and the world was populated with wondrous beasts. At that time, it was used to create relics where magic could be stored. Our order has found some of these relics, and we have learned much from them to enhance our healing arts. We believe that those relics have also taken the form of weapons. Beneath the snow and ice, where we see only cold, lie the ruins and old palaces of the Vortiaks, unknown to men." />
-	<string id="rf_fifth_quest_second_dialog_20" text="We need more than that to begin with!" />
-	<string id="rf_fifth_quest_second_dialog_21" text="I think I know a place where you could start." />
-	<string id="rf_fifth_quest_second_dialog_22" text="And where is that?" />
-	<string id="rf_fifth_quest_second_dialog_23" text="A place where, long ago, when I was a motivated treasure seeker, I hadn't had the chance to return." />
-	<string id="rf_fifth_quest_second_dialog_24" text="I see, even if I find a weapon there, I don’t think that will be enough. We need all the armies of the world if we are to face such power." />
-	<string id="rf_fifth_quest_second_dialog_25" text="Yes, you're right. But maybe in possession of something from the old world, we could have the attention we need." />
-	<string id="rf_fifth_quest_second_dialog_26" text="Maybe... I see no other choice." />
+		<string id="rf_fifth_quest_second_dialog_1" text="{=rf_fifth_quest_second_dialog_1}We've captured this one, but we've gleaned nothing from him. Might you have a method?" />
+		<string id="rf_fifth_quest_second_dialog_2" text="{=rf_fifth_quest_second_dialog_2}Aye, we do. We need not force his tongue; a concoction or two will loosen his lips and reveal his thoughts." />
+		<string id="rf_fifth_quest_second_dialog_3" text="{=rf_fifth_quest_second_dialog_3}He revealed things, but not as much as I desired. The undead... they are indeed the warriors who perished in the war with the Elveans. They were known as the Vortiaks. However, this prisoner is not serving the undead. He serves different masters." />
+		<string id="rf_fifth_quest_second_dialog_4" text="{=rf_fifth_quest_second_dialog_4}And who are these masters?" />
+		<string id="rf_fifth_quest_second_dialog_5" text="{=rf_fifth_quest_second_dialog_5}The names he whispered carry the weight of ancient power, tied closely to the Old Gods. In that ancient era, the concepts of good and evil were not as clear-cut as we might think. Instead, they perceived the universe through the lens of negative and positive forces, both essential to the delicate equilibrium of the world. In this manner, the ancient priests served a pantheon divided between gods of creation and gods of destruction. I am led to believe these cultists are trying to bring the latter forces to wreak havoc upon the world." />
+		<string id="rf_fifth_quest_second_dialog_6" text="{=rf_fifth_quest_second_dialog_6}That doesn't sound very good... So, this sect is trying to bring those gods into our world?" />
+		<string id="rf_fifth_quest_second_dialog_7" text="{=rf_fifth_quest_second_dialog_7}Not the gods themselves, but their servants." />
+		<string id="rf_fifth_quest_second_dialog_8" text="{=rf_fifth_quest_second_dialog_8}Demons?" />
+		<string id="rf_fifth_quest_second_dialog_9" text="{=rf_fifth_quest_second_dialog_9}You could call them Argothes, or the Shadows of Many Faces." />
+		<string id="rf_fifth_quest_second_dialog_10" text="{=rf_fifth_quest_second_dialog_10}For what purpose do they want to bring those creatures into our world?" />
+		<string id="rf_fifth_quest_second_dialog_11" text="{=rf_fifth_quest_second_dialog_11}To cleanse? The Argothes are the embodiment of destruction – the necessary stage before anything new can be reborn." />
+		<string id="rf_fifth_quest_second_dialog_12" text="{=rf_fifth_quest_second_dialog_12}These Vortiaks, when did they actually exist?" />
+		<string id="rf_fifth_quest_second_dialog_13" text="{=rf_fifth_quest_second_dialog_13}According to the Elveans, their ancestors arrived around 2000 years ago. If they faced war, then I suppose that is the time." />
+		<string id="rf_fifth_quest_second_dialog_14" text="{=rf_fifth_quest_second_dialog_14}That's impossible... a bloodline preserved for so long?" />
+		<string id="rf_fifth_quest_second_dialog_15" text="{=rf_fifth_quest_second_dialog_15}Not as impossible as you might think. Our order has already lasted 400 years." />
+		<string id="rf_fifth_quest_second_dialog_16" text="{=rf_fifth_quest_second_dialog_16}Hmm... and what now?" />
+		<string id="rf_fifth_quest_second_dialog_17" text="{=rf_fifth_quest_second_dialog_17}It is up to you... If these cultists are indeed as powerful as you have witnessed, and 'demons' are running wild, they need to be stopped." />
+		<string id="rf_fifth_quest_second_dialog_18" text="{=rf_fifth_quest_second_dialog_18}How can I stop such a supernatural force?" />
+		<string id="rf_fifth_quest_second_dialog_19" text="{=rf_fifth_quest_second_dialog_19}I do not know. What I do know is that the time of the Vortiaks was known as the Era of the Dragon's Moon. Under that moon, magic was alive, and the world was populated with wondrous beasts. Magic was used then to create relics where power could be stored. Our order has found some of these relics, and we have learned much from them to enhance our healing arts. We believe such relics also took the form of weapons. Beneath the snow and ice, where we see only cold, lie the ruins and ancient palaces of the Vortiaks, unknown to most." />
+		<string id="rf_fifth_quest_second_dialog_20" text="{=rf_fifth_quest_second_dialog_20}We need more than that to begin with!" />
+		<string id="rf_fifth_quest_second_dialog_21" text="{=rf_fifth_quest_second_dialog_21}I believe I know a place where you could start." />
+		<string id="rf_fifth_quest_second_dialog_22" text="{=rf_fifth_quest_second_dialog_22}And where is that?" />
+		<string id="rf_fifth_quest_second_dialog_23" text="{=rf_fifth_quest_second_dialog_23}A place where, long ago, when I was a more motivated treasure seeker, I never had the chance to return." />
+		<string id="rf_fifth_quest_second_dialog_24" text="{=rf_fifth_quest_second_dialog_24}I see. Even if I find a weapon there, I don’t think that will be enough. We need all the armies of the world if we are to face such power." />
+		<string id="rf_fifth_quest_second_dialog_25" text="{=rf_fifth_quest_second_dialog_25}Yes, you're right. But perhaps in possession of something from the old world, we could gain the attention we need." />
+		<string id="rf_fifth_quest_second_dialog_26" text="{=rf_fifth_quest_second_dialog_26}Maybe... I see no other choice." />
 
-	<string id="rf_fifth_quest_nasorian_king_dialog_1" text="For what reason dost thou intrude upon the lands of the Nasorians, stranger? Speak swiftly and with purpose." />
-	<string id="rf_fifth_quest_nasorian_king_dialog_2" text="Hail, Your Majesty. We bring dire tidings. We have faced adversaries beyond mortal ken, beings not bound by this world. We are convinced they muster their forces, a threat to all life." />
-	<string id="rf_fifth_quest_nasorian_king_dialog_3" text="Haha, a tale as peculiar as any... And what power could challenge the might of the Nasorians?" />
-	<string id="rf_fifth_quest_nasorian_king_dialog_4_1" text="With respect, Your Majesty, demons, creatures of darkness." />
-	<string id="rf_fifth_quest_nasorian_king_dialog_4_2" text="There is a power that can challenge all the Realms of the world together, and that's no joke." />
-	<string id="rf_fifth_quest_nasorian_king_dialog_5" text="Hahahahha... that is all I need to hear. Amidst the enemies that challenge the strength of the Nasorians, now we must confront unearthly malevolence." />
-	<string id="rf_fifth_quest_nasorian_king_dialog_6" text="With respect, Your Majesty, what we speak is true... and we believe they may be kin to ancient adversaries of the Elveans, a folk once known as the Vortiaks." />
-	<string id="rf_fifth_quest_nasorian_king_dialog_7" text="Vortiaks? Are you creating all of this to play a game, stranger? If so that may cost your head!" />
-	<string id="rf_fifth_quest_nasorian_king_dialog_answer_1" text="Nay, Your Majesty, we have sought counsel from the wise, who vouch for our claims. It is not only I who saw it." />
-	<string id="rf_fifth_quest_nasorian_king_dialog_answer_2_wrong" text="Your Majesty, we possess an artifact rare, which may prove we are based in facts." />
-	<string id="rf_fifth_quest_nasorian_king_dialog_reply_1" text="And where are these wise men now? The Nasorians value strength and action. Why hath this threat not been brought before me?" />
-	<string id="rf_fifth_quest_nasorian_king_dialog_reply_2" text="Indeed? And where might this artifact be found?" />
-	<string id="rf_fifth_quest_nasorian_king_dialog_answer_3" text="They reside far from here, Your Majesty, individuals who possess knowledge from distant lands." />
-	<string id="rf_fifth_quest_nasorian_king_dialog_answer_4" text="Behold, Your Majesty, a blade I unearthed from the depths of a mountain, guarded by the most formidable of creatures." />
-	<string id="rf_fifth_quest_nasorian_king_dialog_reply_3" text="Do these individuals speak with the stars? I should have thee removed for bringing such folly to my presence. Depart, or face my wrath!" />
-	<string id="rf_fifth_quest_nasorian_king_dialog_reply_4" text="It is a beautifull blade indeed... But it holds no significance to the me. If thou seek to sway my will, you need to prove yourself the warrior you claim to be." />
-	<string id="rf_fifth_quest_nasorian_king_dialog_9" text="And how should i proceed, Your Majesty?" />
-	<string id="rf_fifth_quest_nasorian_king_dialog_10" text="Bring me the head of this evil. Or one of flesh and bone I can see for myself!" />
+		<string id="rf_fifth_quest_nasorian_king_dialog_1" text="{=rf_fifth_quest_nasorian_king_dialog_1}For what reason dost thou intrude upon the lands of the Nasorians, stranger? Speak swiftly and with purpose." />
+		<string id="rf_fifth_quest_nasorian_king_dialog_2" text="{=rf_fifth_quest_nasorian_king_dialog_2}Hail, Your Majesty. We bring dire tidings. We have faced adversaries beyond mortal ken – beings not bound by this world. We are convinced they are mustering their forces, posing a threat to all life." />
+		<string id="rf_fifth_quest_nasorian_king_dialog_3" text="{=rf_fifth_quest_nasorian_king_dialog_3}Haha! A tale as peculiar as any... And what power could possibly challenge the might of the Nasorians?" />
+		<string id="rf_fifth_quest_nasorian_king_dialog_4_1" text="{=rf_fifth_quest_nasorian_king_dialog_4_1}With respect, Your Majesty, demons, creatures of darkness." />
+		<string id="rf_fifth_quest_nasorian_king_dialog_4_2" text="{=rf_fifth_quest_nasorian_king_dialog_4_2}There is a power that can challenge all the Realms of the world together, and that's no joke." />
+		<string id="rf_fifth_quest_nasorian_king_dialog_5" text="{=rf_fifth_quest_nasorian_king_dialog_5}Hahahaha! That is all I needed to hear. Amidst the enemies that challenge the strength of the Nasorians, now we must confront unearthly malevolence?" />
+		<string id="rf_fifth_quest_nasorian_king_dialog_6" text="{=rf_fifth_quest_nasorian_king_dialog_6}With respect, Your Majesty, what we speak is true... and we believe they may be kin to ancient adversaries of the Elveans – a folk once known as the Vortiaks." />
+		<string id="rf_fifth_quest_nasorian_king_dialog_7" text="{=rf_fifth_quest_nasorian_king_dialog_7}Vortiaks? Art thou creating all of this to play a game, stranger? If so, that may cost thee thy head!" />
+		<string id="rf_fifth_quest_nasorian_king_dialog_answer_1" text="{=rf_fifth_quest_nasorian_king_dialog_answer_1}Nay, Your Majesty. We have sought counsel from the wise, who vouch for our claims. It was not only I who witnessed it." />
+		<string id="rf_fifth_quest_nasorian_king_dialog_answer_2_wrong" text="{=rf_fifth_quest_nasorian_king_dialog_answer_2_wrong}Your Majesty, we possess a rare artifact, which may prove we speak the truth." />
+		<string id="rf_fifth_quest_nasorian_king_dialog_reply_1" text="{=rf_fifth_quest_nasorian_king_dialog_reply_1}And where are these wise men now? The Nasorians value strength and action. Why hath this threat not been brought before me ere now?" />
+		<string id="rf_fifth_quest_nasorian_king_dialog_reply_2" text="{=rf_fifth_quest_nasorian_king_dialog_reply_2}Indeed? And where might this artifact be found?" />
+		<string id="rf_fifth_quest_nasorian_king_dialog_answer_3" text="{=rf_fifth_quest_nasorian_king_dialog_answer_3}They reside far from here, Your Majesty, individuals who possess knowledge from distant lands." />
+		<string id="rf_fifth_quest_nasorian_king_dialog_answer_4" text="{=rf_fifth_quest_nasorian_king_dialog_answer_4}Behold, Your Majesty! A blade I unearthed from the depths of a mountain, guarded by the most formidable creatures." />
+		<string id="rf_fifth_quest_nasorian_king_dialog_reply_3" text="{=rf_fifth_quest_nasorian_king_dialog_reply_3}Do these individuals speak with the stars? I should have thee removed for bringing such folly before me. Depart, or face my wrath!" />
+		<string id="rf_fifth_quest_nasorian_king_dialog_reply_4" text="{=rf_fifth_quest_nasorian_king_dialog_reply_4}It is a beautiful blade indeed... But it holds no significance to me. If thou seekest to sway my will, thou needest prove thyself the warrior thou claimest to be." />
+		<string id="rf_fifth_quest_nasorian_king_dialog_9" text="{=rf_fifth_quest_nasorian_king_dialog_9}And how should I proceed, Your Majesty?" />
+		<string id="rf_fifth_quest_nasorian_king_dialog_10" text="{=rf_fifth_quest_nasorian_king_dialog_10}Bring me the head of one of these evil beings. Or capture one of flesh and bone that I might see for myself!" />
 
-	<string id="rf_fifth_quest_third_dialog_1" text="And now, what we do?" />
-	<string id="rf_fifth_quest_third_dialog_2" text="I feel a strange power coming from this lance. If what we have been told holds true,that in the days of yore, the Elveans and the Vortiaks waged dire war, we should seek audience with the Elvean king. But we must tread with care..." />
-	<string id="rf_fifth_quest_third_dialog_3" text="It rings true, and I sense the lurking danger. What if this tale is not meant to be unveiled? It could bring doom upon us." />
-	<string id="rf_fifth_quest_third_dialog_4" text="'Tis a risk we must brave." />
+		<string id="rf_fifth_quest_third_dialog_1" text="{=rf_fifth_quest_third_dialog_1}And now, what shall we do?" />
+		<string id="rf_fifth_quest_third_dialog_2" text="{=rf_fifth_quest_third_dialog_2}I feel a strange power coming from this lance. If what we have been told holds true – that in the days of yore, the Elveans and the Vortiaks waged a dire war – then we should seek an audience with the Elvean king. But we must tread carefully..." />
+		<string id="rf_fifth_quest_third_dialog_3" text="{=rf_fifth_quest_third_dialog_3}It rings true, and I sense lurking danger. What if this tale is not meant to be revealed? It could bring doom upon us." />
+		<string id="rf_fifth_quest_third_dialog_4" text="{=rf_fifth_quest_third_dialog_4}'Tis a risk we must brave." />
 
-	<string id="rf_fifth_quest_belvor_king_dialog_1" text="For what reason do you dare cross my path, stranger? It had better be good." />
-	<string id="rf_fifth_quest_belvor_king_dialog_2" text="Hail, Your Majesty. We bring dire tidings. We have faced foes beyond mortal ken, beings not of this world. We are convinced they gather their forces, a threat to all life." />
-	<string id="rf_fifth_quest_belvor_king_dialog_3" text="Haha, a tale as strange as any. And what manner of power could challenge my rule?" />
-	<string id="rf_fifth_quest_belvor_king_dialog_4" text="With respect, Your Majesty, demons, evil of darkness." />
-	<string id="rf_fifth_quest_belvor_king_dialog_5" text="Hahahahha... that is all I need to hear. Amidst wars aplenty, now I must contend with unearthly malice." />
-	<string id="rf_fifth_quest_belvor_king_dialog_6" text="With respect, Your Majesty, what we speak is true... and we believe they may be kin to ancient adversaries of the Elveans, a folk once known as 'the Vortiaks'." />
-	<string id="rf_fifth_quest_belvor_king_dialog_7" text="Watch thy tongue, stranger, lest thou spout blasphemies that may cost your life!" />
-	<string id="rf_fifth_quest_belvor_king_dialog_7_1" text="Nay, Your Majesty, i mean no offense. we have sought counsel from the learned, who vouch for our claims!" />
-	<string id="rf_fifth_quest_belvor_king_dialog_7_2" text="Your Majesty, we possess an artifact rare, which may illuminate my words." />
-	<string id="rf_fifth_quest_belvor_king_dialog_8_1" text="And where are these learned folk now? The wisest sages of Aeurth reside within my domain. If thats true i wonder why has this threat not been brought before me?" />
-	<string id="rf_fifth_quest_belvor_king_dialog_8_2" text="Indeed? And where might this artifact be found?" />
-	<string id="rf_fifth_quest_belvor_king_dialog_9_1" text="They dwell afar, Your Majesty, members of an order who shun worldly affairs. Yet they hold ancient wisdom." />
-	<string id="rf_fifth_quest_belvor_king_dialog_9_2" text="Behold, Your Majesty, a blade that almost cost my life to retrieve." />
-	<string id="rf_fifth_quest_belvor_king_dialog_10_1" text="Dost thou claim these sages commune with the dead? I should have thee removed for bringing such folly to my presence. Depart, or face imprisonment!" />
-	<string id="rf_fifth_quest_belvor_king_dialog_10_2" text="What trickery is this? That blade means naught to me! If thou seek to sway my heart by presenting a gift, thou must bring forth a treasure dear to the Realms."/>
-	<string id="rf_fifth_quest_belvor_king_dialog_11" text="And what would that be, milord?"/>
-	<string id="rf_fifth_quest_belvor_king_dialog_12" text="A real relic to our people, the shield of King Ulvor!"/>
+		<string id="rf_fifth_quest_belvor_king_dialog_1" text="{=rf_fifth_quest_belvor_king_dialog_1}For what reason do you dare cross my path, stranger? It had better be good." />
+		<string id="rf_fifth_quest_belvor_king_dialog_2" text="{=rf_fifth_quest_belvor_king_dialog_2}Hail, Your Majesty. We bring dire tidings. We have faced foes beyond mortal ken – beings not of this world. We are convinced they gather their forces, posing a threat to all life." />
+		<string id="rf_fifth_quest_belvor_king_dialog_3" text="{=rf_fifth_quest_belvor_king_dialog_3}Haha! A tale as strange as any. And what manner of power could possibly challenge my rule?" />
+		<string id="rf_fifth_quest_belvor_king_dialog_4" text="{=rf_fifth_quest_belvor_king_dialog_4}With respect, Your Majesty, demons, evil spawned from darkness." />
+		<string id="rf_fifth_quest_belvor_king_dialog_5" text="{=rf_fifth_quest_belvor_king_dialog_5}Hahahaha! That is all I needed to hear. Amidst wars aplenty, now I must contend with unearthly malice?" />
+		<string id="rf_fifth_quest_belvor_king_dialog_6" text="{=rf_fifth_quest_belvor_king_dialog_6}With respect, Your Majesty, what we speak is true... and we believe they may be kin to ancient adversaries of the Elveans – a folk once known as the Vortiaks." />
+		<string id="rf_fifth_quest_belvor_king_dialog_7" text="{=rf_fifth_quest_belvor_king_dialog_7}Watch thy tongue, stranger, lest thou spout blasphemies that may cost thee thy life!" />
+		<string id="rf_fifth_quest_belvor_king_dialog_7_1" text="{=rf_fifth_quest_belvor_king_dialog_7_1}Nay, Your Majesty, I mean no offense. We have sought counsel from the learned, who vouch for our claims!" />
+		<string id="rf_fifth_quest_belvor_king_dialog_7_2" text="{=rf_fifth_quest_belvor_king_dialog_7_2}Your Majesty, we possess a rare artifact, which may illuminate my words." />
+		<string id="rf_fifth_quest_belvor_king_dialog_8_1" text="{=rf_fifth_quest_belvor_king_dialog_8_1}And where are these learned folk now? The wisest sages of Aeurth reside within my domain. If that is true, I wonder why this threat has not been brought before me?" />
+		<string id="rf_fifth_quest_belvor_king_dialog_8_2" text="{=rf_fifth_quest_belvor_king_dialog_8_2}Indeed? And where might this artifact be found?" />
+		<string id="rf_fifth_quest_belvor_king_dialog_9_1" text="{=rf_fifth_quest_belvor_king_dialog_9_1}They dwell afar, Your Majesty, members of an order who shun worldly affairs. Yet they hold ancient wisdom." />
+		<string id="rf_fifth_quest_belvor_king_dialog_9_2" text="{=rf_fifth_quest_belvor_king_dialog_9_2}Behold, Your Majesty! A blade that nearly cost me my life to retrieve." />
+		<string id="rf_fifth_quest_belvor_king_dialog_10_1" text="{=rf_fifth_quest_belvor_king_dialog_10_1}Dost thou claim these sages commune with the dead? I should have thee removed for bringing such folly to my presence. Depart, or face imprisonment!" />
+		<string id="rf_fifth_quest_belvor_king_dialog_10_2" text="{=rf_fifth_quest_belvor_king_dialog_10_2}What trickery is this? That blade means naught to me! If thou seekest to sway my heart by presenting a gift, thou must bring forth a treasure truly dear to the Realms of Men." />
+		<string id="rf_fifth_quest_belvor_king_dialog_11" text="{=rf_fifth_quest_belvor_king_dialog_11}And what might that be, milord?" />
+		<string id="rf_fifth_quest_belvor_king_dialog_12" text="{=rf_fifth_quest_belvor_king_dialog_12}A real relic to our people: the shield of King Ulvor!" />
 
-	<string id="rf_fifth_quest_owl_treasure_1" text="If we are to unearth a relic of significance to the king, one thought strikes me—I must seek out an acquaintance of mine."/>
-	<string id="rf_fifth_quest_owl_treasure_2" text="And who, is this acquaintance?"/>
-	<string id="rf_fifth_quest_owl_treasure_3" text="When we first crossed paths, I spoke with a that misterious figure who professes to trade in relics and enchanted items... It seems an obvious lead, does it not?"/>
-	<string id="rf_fifth_quest_owl_treasure_4" text="Indeed, it does. Do you believe we shall find him there once more?"/>
-	<string id="rf_fifth_quest_owl_treasure_5" text="I do."/>
-	<string id="rf_fifth_quest_vendor_treasure_1" text="Greetings, traveler. How may I be of service to you?"/>
-	<string id="rf_fifth_quest_vendor_treasure_2" text="We seek a particular item, a task suited to your reputed skills. We are in search of King Ulvor's shield."/>
-	<string id="rf_fifth_quest_vendor_treasure_3" text="Ah, the shield... Your fortune is as double-edged as an elvean blade. I did possess that relic, once, but it has since passed into the hands of nobility—delivered to the Khan of the AllKhuur as a gift for his coming of age."/>
-	<string id="rf_fifth_quest_vendor_treasure_4" text="Why bestow it upon him? Why not King Belvor?"/>
-	<string id="rf_fifth_quest_vendor_treasure_5" text="The ways of the Khuurens are enigmatic, steeped in spirits and ancient rites. What the Khan intends for that relic is beyond my ken. Perhaps he seeks dominion over the Realms of Men? That is all I know."/>
-	<string id="rf_fifth_quest_owl_treasure_1_1" text="The Khans of the AllKhuur hold a sacred tradition, celebrating their birthdays at their hallowed temple by the great lake. If we are to begin our search, it must be there."/>
-	<string id="rf_fifth_quest_owl_treasure_1_2" text="Yet, I fear that temple will be heavily guarded. Another battle may be inevitable."/>
-	<string id="rf_fifth_quest_owl_treasure_1_3" text="Or perhaps we might slip inside unnoticed, pilfer the relic, and make our escape."/>
-	<string id="rf_fifth_quest_owl_treasure_1_4" text="Let us hope it is so."/>
+		<string id="rf_fifth_quest_owl_treasure_1" text="{=rf_fifth_quest_owl_treasure_1}If we are to unearth a relic of significance to the king, one thought strikes me—I must seek out an acquaintance of mine." />
+		<string id="rf_fifth_quest_owl_treasure_2" text="{=rf_fifth_quest_owl_treasure_2}And who is this acquaintance?" />
+		<string id="rf_fifth_quest_owl_treasure_3" text="{=rf_fifth_quest_owl_treasure_3}When we first crossed paths, I spoke with that mysterious figure who professes to trade in relics and enchanted items... It seems the obvious lead, does it not?" />
+		<string id="rf_fifth_quest_owl_treasure_4" text="{=rf_fifth_quest_owl_treasure_4}Indeed, it does. Do you believe we shall find him there once more?" />
+		<string id="rf_fifth_quest_owl_treasure_5" text="{=rf_fifth_quest_owl_treasure_5}I do." />
+		<string id="rf_fifth_quest_vendor_treasure_1" text="{=rf_fifth_quest_vendor_treasure_1}Greetings, traveler. How may I be of service to you?" />
+		<string id="rf_fifth_quest_vendor_treasure_2" text="{=rf_fifth_quest_vendor_treasure_2}We seek a particular item, a task suited to your reputed skills. We are in search of King Ulvor's shield." />
+		<string id="rf_fifth_quest_vendor_treasure_3" text="{=rf_fifth_quest_vendor_treasure_3}Ah, the shield... Your fortune is as double-edged as an Elvean blade. I did possess that relic once, but it has since passed into the hands of nobility – delivered to the Khan of the AllKhuur as a gift for his coming of age." />
+		<string id="rf_fifth_quest_vendor_treasure_4" text="{=rf_fifth_quest_vendor_treasure_4}Why bestow it upon him? Why not King Belvor?" />
+		<string id="rf_fifth_quest_vendor_treasure_5" text="{=rf_fifth_quest_vendor_treasure_5}The ways of the Khuurens are enigmatic, steeped in spirits and ancient rites. What the Khan intends for that relic is beyond my ken. Perhaps he seeks dominion over the Realms of Men? That is all I know." />
+		<string id="rf_fifth_quest_owl_treasure_1_1" text="{=rf_fifth_quest_owl_treasure_1_1}The Khans of the AllKhuur hold a sacred tradition, celebrating their coming of age at their hallowed temple by the great lake. If we are to begin our search, it must be there." />
+		<string id="rf_fifth_quest_owl_treasure_1_2" text="{=rf_fifth_quest_owl_treasure_1_2}Yet, I fear that temple will be heavily guarded. Another battle may be inevitable." />
+		<string id="rf_fifth_quest_owl_treasure_1_3" text="{=rf_fifth_quest_owl_treasure_1_3}Or perhaps we might slip inside unnoticed, pilfer the relic, and make our escape." />
+		<string id="rf_fifth_quest_owl_treasure_1_4" text="{=rf_fifth_quest_owl_treasure_1_4}Let us hope it is so." />
 
-	<string id="rf_fifth_quest_elvean_king_dialog_1" text="For what cause you intrude upon my realm, stranger? The matter must be of grave import."/>
-	<string id="rf_fifth_quest_elvean_king_dialog_2" text="Hail, Milord. We bring dire news. We have encountered foes beyond mortal understanding, creatures not of this world. We fear they are amassing an army to challenge all living things."/>
-	<string id="rf_fifth_quest_elvean_king_dialog_3" text="Haha, a curious tale indeed... And what force might stand against my host?"/>
-	<string id="rf_fifth_quest_elvean_king_dialog_4" text="With all respect, Milord, demons, spawns of darkness…"/>
-	<string id="rf_fifth_quest_elvean_king_dialog_5" text="Hahahaha... as if my current wars were not enough, now I must contend with supernatural malice…"/>
-	<string id="rf_fifth_quest_elvean_king_dialog_6" text="With all respect, Milord, what we speak is true... we believe these creatures are kin to the ancient enemies of the Elveans, known as 'the Vortiaks'..."/>
-	<string id="rf_fifth_quest_elvean_king_dialog_7" text="Tread carefully, stranger, lest thy words of blasphemy cost thee thy head!"/>
-	<string id="rf_fifth_quest_elvean_king_dialog_answer_1" text="Nay, Milord, we have sought the counsel of sages who can attest to our claims!"/>
-	<string id="rf_fifth_quest_elvean_king_dialog_answer_2" text="Milord, we possess an artifact that may illuminate this dark menace."/>
-	<string id="rf_fifth_quest_elvean_king_dialog_reply_1" text="And where be these sages now? The wisest scholars of Aeurth reside within the High Kingdom's temples. Why hath this threat not reached my ears?"/>
-	<string id="rf_fifth_quest_elvean_king_dialog_reply_2" text="Indeed? And where might this artifact be found?"/>
-	<string id="rf_fifth_quest_elvean_king_dialog_answer_3_wrong" text="They dwell far from here, Milord, members of an order that eschews the world’s affairs. Yet their knowledge is ancient."/>
-	<string id="rf_fifth_quest_elvean_king_dialog_answer_4" text="Behold, Milord, a blade unearthed from the depths of a mountain, guarded by the strangest of beasts…"/>
-	<string id="rf_fifth_quest_elvean_king_dialog_reply_3" text="Dost thou claim these sages commune with the dead...? I should have thy tongue torn out for such folly. Begone, or face imprisonment!"/>
-	<string id="rf_fifth_quest_elvean_king_dialog_reply_4" text="What sorcery is this? That blade belongs to mine ancestors! How came it into thy possession?"/>
-	<string id="rf_fifth_quest_elvean_king_dialog_answer_5_wrong" text="As thou commandest, Milord, I shall depart forthwith."/>
-	<string id="rf_fifth_quest_elvean_king_dialog_answer_6" text="Through battle and perseverance against these creatures, it came to me. I believe it is vital in our struggle against this evil!"/>
-	<string id="rf_fifth_quest_elvean_king_dialog_8" text="That blade is a relic of our kin. If it has found its way to you, our ancestors must have deemed it so and blessed thee. Given this evil's strength, you shalt have our forces at your side, when the time comes. Until them, you can keep that weapon."/>
-	<string id="rf_fifth_quest_elvean_king_dialog_9" text="I shall undertake the mission to rally support from other sovereigns."/>
-	<string id="rf_fifth_quest_elvean_king_dialog_10" text="May our ancestors guide thee on thy path!"/>
+		<string id="rf_fifth_quest_elvean_king_dialog_1" text="{=rf_fifth_quest_elvean_king_dialog_1}For what cause dost thou intrude upon my realm, stranger? The matter must be of grave import." />
+		<string id="rf_fifth_quest_elvean_king_dialog_2" text="{=rf_fifth_quest_elvean_king_dialog_2}Hail, Milord. We bring dire news. We have encountered foes beyond mortal understanding – creatures not of this world. We fear they are amassing an army to challenge all living things." />
+		<string id="rf_fifth_quest_elvean_king_dialog_3" text="{=rf_fifth_quest_elvean_king_dialog_3}Haha! A curious tale indeed... And what force might stand against my host?" />
+		<string id="rf_fifth_quest_elvean_king_dialog_4" text="{=rf_fifth_quest_elvean_king_dialog_4}With all respect, Milord, demons, spawns of darkness…" />
+		<string id="rf_fifth_quest_elvean_king_dialog_5" text="{=rf_fifth_quest_elvean_king_dialog_5}Hahahaha... As if my current wars were not enough, now I must contend with supernatural malice?" />
+		<string id="rf_fifth_quest_elvean_king_dialog_6" text="{=rf_fifth_quest_elvean_king_dialog_6}With all respect, Milord, what we speak is true... and we believe these creatures are kin to the ancient enemies of the Elveans – a folk known as the Vortiaks." />
+		<string id="rf_fifth_quest_elvean_king_dialog_7" text="{=rf_fifth_quest_elvean_king_dialog_7}Tread carefully, stranger, lest thy words of blasphemy cost thee thy head!" />
+		<string id="rf_fifth_quest_elvean_king_dialog_answer_1" text="{=rf_fifth_quest_elvean_king_dialog_answer_1}Nay, Milord! We have sought the counsel of sages who can attest to our claims!" />
+		<string id="rf_fifth_quest_elvean_king_dialog_answer_2" text="{=rf_fifth_quest_elvean_king_dialog_answer_2}Milord, we possess an artifact that may illuminate this dark menace." />
+		<string id="rf_fifth_quest_elvean_king_dialog_reply_1" text="{=rf_fifth_quest_elvean_king_dialog_reply_1}And where be these sages now? The wisest scholars of Aeurth reside within the High Kingdom's temples. Why hath this threat not reached my ears?" />
+		<string id="rf_fifth_quest_elvean_king_dialog_reply_2" text="{=rf_fifth_quest_elvean_king_dialog_reply_2}Indeed? And where might this artifact be found?" />
+		<string id="rf_fifth_quest_elvean_king_dialog_answer_3_wrong" text="{=rf_fifth_quest_elvean_king_dialog_answer_3_wrong}They dwell far from here, Milord, members of an order that eschews the world’s affairs. Yet their knowledge is ancient." />
+		<string id="rf_fifth_quest_elvean_king_dialog_answer_4" text="{=rf_fifth_quest_elvean_king_dialog_answer_4}Behold, Milord! A blade unearthed from the depths of a mountain, guarded by the strangest of beasts…" />
+		<string id="rf_fifth_quest_elvean_king_dialog_reply_3" text="{=rf_fifth_quest_elvean_king_dialog_reply_3}Dost thou claim these sages commune with the dead...? I should have thy tongue torn out for such folly. Begone, or face imprisonment!" />
+		<string id="rf_fifth_quest_elvean_king_dialog_reply_4" text="{=rf_fifth_quest_elvean_king_dialog_reply_4}What sorcery is this?! That blade belongs to mine ancestors! How came it into thy possession?" />
+		<string id="rf_fifth_quest_elvean_king_dialog_answer_5_wrong" text="{=rf_fifth_quest_elvean_king_dialog_answer_5_wrong}As thou commandest, Milord, I shall depart forthwith." />
+		<string id="rf_fifth_quest_elvean_king_dialog_answer_6" text="{=rf_fifth_quest_elvean_king_dialog_answer_6}Through battle and perseverance against these creatures, it came to me. I believe it is vital in our struggle against this evil!" />
+		<string id="rf_fifth_quest_elvean_king_dialog_8" text="{=rf_fifth_quest_elvean_king_dialog_8}That blade is a relic of our kin. If it has found its way to thee, our ancestors must have deemed it so and blessed thee. Given this evil's strength, thou shalt have our forces at thy side when the time comes. Until then, thou mayest keep that weapon." />
+		<string id="rf_fifth_quest_elvean_king_dialog_9" text="{=rf_fifth_quest_elvean_king_dialog_9}I shall undertake the mission to rally support from other sovereigns." />
+		<string id="rf_fifth_quest_elvean_king_dialog_10" text="{=rf_fifth_quest_elvean_king_dialog_10}May our ancestors guide thee on thy path!" />
 
-	<string id="rf_fifth_quest_fail_dialog_1" text="We must not falter. Let us seek out the King of Men, King Belvor II."/>
-	<string id="rf_fifth_quest_fourth_dialog_1" text="And now, where shall we journey?"/>
-	<string id="rf_fifth_quest_fourth_dialog_2" text="I feel a strange power, almost sentient... If the old tales hold any truth, the Elveans and the Vortiaks once waged a terrible war. We must seek an audience with King Belvor II. Yet we must be cautious; who knows what dangers lie in wait..."/>
-	<string id="rf_fifth_quest_fourth_dialog_3" text="It does seem true, and I sense imminent peril. What if this secret is meant to remain hidden? It could spell our doom..."/>
-	<string id="rf_fifth_quest_fourth_dialog_4" text="'Tis a risk we must take."/>
-	<string id="rf_fifth_quest_elvean_fail_owl" text="Alas, our plea has fallen on deaf ears. The Elveans will not join our cause. We must seek aid elsewhere."/>
-	<string id="rf_fifth_quest_belvor_fail_owl" text="The King of Men remains unconvinced. We must look to other allies."/>
-	<string id="rf_fifth_quest_nasorian_fail_owl" text="The Nasorians have rejected our entreaty. We must find another way."/>
-	<string id="rf_fifth_quest_fifth_dialog_1" text="Time slips away, and I fear the demons grow stronger. Can we afford to spend more time persuading the other kings? What if they all demand proof of our claims?"/>
-	<string id="rf_fifth_quest_fifth_dialog_2" text="That is likely... We need to muster forces by other means, be it mercenaries or persuaded prisoners. What matters is that we must bring down one of the lords of this evil and present him as a captive to the other kings."/>
-	<string id="rf_fifth_quest_fifth_dialog_3" text="That seems the most direct path we can take. May the gods be with us."/>
-	<string id="rf_fifth_quest_treasure_fight_1" text="What are you doing? This is a sacred relic! Return it at once!"/>
-	<string id="rf_fifth_quest_treasure_fight_2" text="Make me."/>
-	<string id="rf_fifth_quest_deliver_treasure_1" text="Here is the relic you requested."/>
-	<string id="rf_fifth_quest_deliver_treasure_2" text="I reward you with some of my soldiers."/>
-	<string id="rf_fifth_quest_deliver_nelrog_1" text="Here is the Nelrog you asked for."/>
-	<string id="rf_fifth_quest_deliver_nelrog_2" text="Splendid."/>
-	<string id="rf_fifth_quest_first_objective" text="Return to the monastery and speak with the monk."/>
-	<string id="rf_fifth_quest_second_objective" text="Find the mystical weapon on the frozen island to the north."/>
-	<string id="rf_fifth_quest_third_objective" text="Speak with the Elvean King."/>
-	<string id="rf_fifth_quest_fourth_objective" text="Speak with the King of the Realms of Men."/>
-	<string id="rf_fifth_quest_fifth_objective" text="Consult the magic seller for clues about the treasure."/>
-	<string id="rf_fifth_quest_sixth_objective" text="Go to the temple indicated by Owl to retrieve the treasure and deliver it to the King of the Realms of Men. The temple should be near {CLOSEST_SETTLEMENT}."/>
-	<string id="rf_fifth_quest_seventh_objective" text="Speak with the Nasorian King."/>
-	<string id="rf_fifth_quest_eighth_objective" text="Deliver one Nelrog to the Nasorian King."/>
-	<string id="rf_fifth_quest_ninth_objective" text="Capture a lord and deliver him to the King of Al Khuur."/>
+		<string id="rf_fifth_quest_fail_dialog_1" text="{=rf_fifth_quest_fail_dialog_1}We must not falter. Let us seek out the King of Men, King Belvor II." />
+		<string id="rf_fifth_quest_fourth_dialog_1" text="{=rf_fifth_quest_fourth_dialog_1}And now, where shall we journey?" />
+		<string id="rf_fifth_quest_fourth_dialog_2" text="{=rf_fifth_quest_fourth_dialog_2}I feel a strange power, almost sentient... If the old tales hold any truth, the Elveans and the Vortiaks once waged a terrible war. We must seek an audience with King Belvor II. Yet we must be cautious; who knows what dangers lie in wait..." />
+		<string id="rf_fifth_quest_fourth_dialog_3" text="{=rf_fifth_quest_fourth_dialog_3}It does seem true, and I sense imminent peril. What if this secret is meant to remain hidden? It could spell our doom..." />
+		<string id="rf_fifth_quest_fourth_dialog_4" text="{=rf_fifth_quest_fourth_dialog_4}'Tis a risk we must take." />
+		<string id="rf_fifth_quest_elvean_fail_owl" text="{=rf_fifth_quest_elvean_fail_owl}Alas, our plea has fallen on deaf ears. The Elveans will not join our cause. We must seek aid elsewhere." />
+		<string id="rf_fifth_quest_belvor_fail_owl" text="{=rf_fifth_quest_belvor_fail_owl}The King of Men remains unconvinced. We must look to other allies." />
+		<string id="rf_fifth_quest_nasorian_fail_owl" text="{=rf_fifth_quest_nasorian_fail_owl}The Nasorians have rejected our entreaty. We must find another way." />
+		<string id="rf_fifth_quest_fifth_dialog_1" text="{=rf_fifth_quest_fifth_dialog_1}Time slips away, and I fear the demons grow stronger. Can we afford to spend more time persuading the other kings? What if they all demand proof of our claims?" />
+		<string id="rf_fifth_quest_fifth_dialog_2" text="{=rf_fifth_quest_fifth_dialog_2}That is likely... We need to muster forces by other means, be it mercenaries or persuaded prisoners. What matters is that we must defeat one of the lords of this evil and present him as a captive to the other kings." />
+		<string id="rf_fifth_quest_fifth_dialog_3" text="{=rf_fifth_quest_fifth_dialog_3}That seems the most direct path we can take. May the gods be with us." />
+		<string id="rf_fifth_quest_treasure_fight_1" text="{=rf_fifth_quest_treasure_fight_1}What are you doing?! This is a sacred relic! Return it at once!" />
+		<string id="rf_fifth_quest_treasure_fight_2" text="{=rf_fifth_quest_treasure_fight_2}Make me." />
+		<string id="rf_fifth_quest_deliver_treasure_1" text="{=rf_fifth_quest_deliver_treasure_1}Here is the relic you requested." />
+		<string id="rf_fifth_quest_deliver_treasure_2" text="{=rf_fifth_quest_deliver_treasure_2}I reward you with some of my soldiers." />
+		<string id="rf_fifth_quest_deliver_nelrog_1" text="{=rf_fifth_quest_deliver_nelrog_1}Here is the Nelrog you asked for." />
+		<string id="rf_fifth_quest_deliver_nelrog_2" text="{=rf_fifth_quest_deliver_nelrog_2}Splendid." />
+		<string id="rf_fifth_quest_first_objective" text="{=rf_fifth_quest_first_objective}Return to the monastery and speak with the monk." />
+		<string id="rf_fifth_quest_second_objective" text="{=rf_fifth_quest_second_objective}Find the mystical weapon on the frozen island to the north." />
+		<string id="rf_fifth_quest_third_objective" text="{=rf_fifth_quest_third_objective}Speak with the Elvean King." />
+		<string id="rf_fifth_quest_fourth_objective" text="{=rf_fifth_quest_fourth_objective}Speak with the King of the Realms of Men." />
+		<string id="rf_fifth_quest_fifth_objective" text="{=rf_fifth_quest_fifth_objective}Consult the magic seller for clues about the treasure." />
+		<string id="rf_fifth_quest_sixth_objective" text="{=rf_fifth_quest_sixth_objective}Go to the temple indicated by the Owl to retrieve the treasure and deliver it to the King of the Realms of Men. The temple should be near {CLOSEST_SETTLEMENT}." />
+		<string id="rf_fifth_quest_seventh_objective" text="{=rf_fifth_quest_seventh_objective}Speak with the Nasorian King." />
+		<string id="rf_fifth_quest_eighth_objective" text="{=rf_fifth_quest_eighth_objective}Deliver one Nelrog to the Nasorian King." />
+		<string id="rf_fifth_quest_ninth_objective" text="{=rf_fifth_quest_ninth_objective}Capture a demon lord and deliver him to the King of Al Khuur." />
 
-	<string id="rf_owl_tavern_default" text="{=rf_owl_tavern_default}What?" />
-	<string id="rf_leave" text="{=rf_leave}Leave" />
-	<string id="rf_last_quest_notification" text="{=rf_last_quest_notification}Continues in the next update..." />
-	<string id="rf_leave" text="{=rf_leave}Leave" />
-	<string id="rf_event" text="{=rf_event}Event" />
-	<string id="rf_influence" text="{=rf_influence}Your influence has decreased." />
-	<string id="rf_ok" text="{=rf_ok}Ok." />
-	<string id="rf_greetings" text="{=rf_greetings}Greetings." />
-	<string id="rf_i_agree" text="{=rf_i_agree}I agree." />
-	<string id="rf_sixth_quest_title" text="Peace and Death"/>
-	<string id="rf_sixth_quest_first_objective" text="World peace declared."/>
-	<string id="rf_sixth_quest_second_objective" text="Talk to the Dreadking."/>
-	<string id="rf_sixth_quest_third_objective" text="Hunt the demon lords."/>
-	<string id="rf_fifth_quest_defeat_devil_parties_log" text="Defeat the Devils."/>
-	<string id="rf_fifth_quest_defeat_devil_parties_task" text="Defeat devils' parties progression."/>
-	<string id="rf_sixth_quest_defeat_demon_lord_parties_log" text="Defeat the Demon Lords."/>
-	<string id="rf_sixth_quest_defeat_demon_lord_parties_task" text="Defeat demon lords' progression."/>
-	<string id="rf_sixth_quest_first_dialog_1" text="Our scouts bring good news. King Belvor, the High King, the Khan, and the Nasorian Emir have sealed peace. Unfortunately, the other realms remain silent."/>
-	<string id="rf_sixth_quest_first_dialog_2" text="I had not expected peace at all. At least half the world now heeds our warnings."/>
-	<string id="rf_sixth_quest_first_dialog_3" text="The Athasian Pharun seem oblivious to this evil. Their power grows daily, and more hordes are seen."/>
-	<string id="rf_sixth_quest_first_dialog_4" text="The Pharun are twisted souls... some say they live for centuries. Whatever the truth, we have survived thus far, and this is the first time other kingdoms have joined our cause."/>
-	<string id="rf_sixth_quest_first_dialog_5" text="Yes, we have endured more than expected together. It is time you learn more of my past. I serve neither Queen Rinaia nor the Anorite lord. My great-grandfather was a scholar, one of the founders of the Celestial Alchemists. In his travels for rare materials, he discovered ancient ruins and texts that obsessed him. This obsession led him to dark arts..."/>
-	<string id="rf_sixth_quest_first_dialog_6" text="Hmmm..."/>
-	<string id="rf_sixth_quest_first_dialog_7" text="My father left us before I came of age. After my mother's death, I sought my family's past and my father's fate. That led me to the black-robed cult and their hideouts. I offered my findings to the queen, hoping she would invest in uncovering their secrets. That is when you entered the scene. It took nearly my whole life to reach the point to be at that tavern where we first met."/>
-	<string id="rf_sixth_quest_first_dialog_8" text="Were you responsible for my imprisonment?"/>
-	<string id="rf_sixth_quest_first_dialog_9" text="Yes... I had to. I needed you out of the way to research those maps. What if my father is part of this? What if this cult is my legacy?"/>
-	<string id="rf_sixth_quest_first_dialog_10" text="I should break your nose here and now, but the past is done. You have proven yourself a brave warrior. We have much to do, and I have one idea left. We must face the King of the Dead."/>
-	<string id="rf_sixth_quest_first_dialog_11" text="The Dreadking? Why?"/>
-	<string id="rf_sixth_quest_first_dialog_12" text="If anything can turn the tide of this war, it is him. Who better to face the powers of hell than the dead themselves? We must convince him to join our cause."/>
-	<string id="rf_sixth_quest_lord_dialog_1" text="Stranger, do you know you risk your head approaching me?"/>
-	<string id="rf_sixth_quest_lord_dialog_2" text="Yes, Milord, your reputation precedes you. But the matter I bring has already risked my life many times, and I am willing to sacrifice it if necessary. I bring news of a dark power invading our world and I believe you hold your land dear."/>
-	<string id="rf_sixth_quest_lord_dialog_3" text="Do you know you speak to death itself? What dark powers should I fear? These demons? Yes, I fight them, but only because they attack my people. I believe they are sent to cleanse Aeurth of the usurpers, the parasites who have taken hold of it."/>
-	<string id="rf_sixth_quest_lord_dialog_4" text="Pardon my ignorance, Milord, but I do not grasp your meaning."/>
-	<string id="rf_sixth_quest_lord_dialog_5" text="Our folk, buried under the snow, defeated by invaders who poisoned our sacred garden. They seized a place our people revered, where the life force of the world was balanced. They planted their seeds there, and from it, that Tree grew. It drains the world's vitality, empowering them with magic and longevity. Somehow, the world's spirits do not let our souls rest. The reason is clear: the extermination of the Elveans."/>
-	<string id="rf_sixth_quest_lord_dialog_6" text="Milord, I now know the tragic history of your people. But I believe this evil will destroy everything we hold dear, leaving no memory of anything. Is there nothing you wish to see flourish in this world?"/>
-	<string id="rf_sixth_quest_lord_dialog_7" text="Clever and honest words... Yes, memories are all we have. But our people are gone; nothing remains to flourish. We are here to avenge our ancestors so we can rest in peace."/>
-	<string id="rf_sixth_quest_lord_dialog_8" text="What if some of the Vortiak bloodline still exists? A descendant of the past, living among us all these years?"/>
-	<string id="rf_sixth_quest_lord_dialog_9" text="That is impossible..."/>
-	<string id="rf_sixth_quest_lord_dialog_10" text="Yes, Milord, it is true. And he stands beside me. I believe his ancestors brought this evil to avenge your people. But they became corrupted and lost their way. We must defeat this evil to bring their souls to light!"/>
-	<string id="rf_sixth_quest_lord_dialog_11" text="If that is true, and our legacy continues, we shall find peace at last. If not, your head will hang at my Hall's door, and your soul will never find peace."/>
-	<string id="rf_sixth_quest_lord_dialog_12" text="Please, Milord, all I ask is a chance. Make peace with the others so we can fight this evil together."/>
-	<string id="rf_sixth_quest_lord_dialog_13" text="Hmmm... Aye, I am convinced. I will hold peace until this evil is vanquished. If you are lying, I will hunt you myself."/>
-	<string id="rf_sixth_quest_lord_dialog_14" text="Thank you, Milord. I will not disappoint you. One more thing. I ask for some of your army. With your forces, I will hunt down the Lords of this evil."/>
-	<string id="rf_sixth_quest_lord_dialog_15" text="You are insolent, but brave. I shall lend you an army."/>
+		<string id="rf_owl_tavern_default" text="{=rf_owl_tavern_default}What?" />
+		<string id="rf_leave" text="{=rf_leave}Leave" />
+		<string id="rf_last_quest_notification" text="{=rf_last_quest_notification}Continues in the next update..." />
+		<!-- <string id="rf_leave" text="{=rf_leave}Leave" /> -->
+		<!-- Duplicate ID -->
+		<string id="rf_event" text="{=rf_event}Event" />
+		<string id="rf_influence" text="{=rf_influence}Your influence has decreased." />
+		<string id="rf_ok" text="{=rf_ok}Ok." />
+		<string id="rf_greetings" text="{=rf_greetings}Greetings." />
+		<string id="rf_i_agree" text="{=rf_i_agree}I agree." />
+		<string id="rf_sixth_quest_title" text="{=rf_sixth_quest_title}Peace and Death"/>
+		<string id="rf_sixth_quest_first_objective" text="{=rf_sixth_quest_first_objective}World peace declared."/>
+		<string id="rf_sixth_quest_second_objective" text="{=rf_sixth_quest_second_objective}Talk to the Dreadking."/>
+		<string id="rf_sixth_quest_third_objective" text="{=rf_sixth_quest_third_objective}Hunt the demon lords."/>
+		<string id="rf_fifth_quest_defeat_devil_parties_log" text="{=rf_fifth_quest_defeat_devil_parties_log}Defeat the Devils."/>
+		<string id="rf_fifth_quest_defeat_devil_parties_task" text="{=rf_fifth_quest_defeat_devil_parties_task}Defeat devils' parties progression."/>
+		<string id="rf_sixth_quest_defeat_demon_lord_parties_log" text="{=rf_sixth_quest_defeat_demon_lord_parties_log}Defeat the Demon Lords."/>
+		<string id="rf_sixth_quest_defeat_demon_lord_parties_task" text="{=rf_sixth_quest_defeat_demon_lord_parties_task}Defeat demon lords' progression."/>
+		<string id="rf_sixth_quest_first_dialog_1" text="{=rf_sixth_quest_first_dialog_1}Our scouts bring good news. King Belvor, the High King, the Khan, and the Nasorian Emir have agreed to peace among themselves. Unfortunately, the other realms remain silent."/>
+		<string id="rf_sixth_quest_first_dialog_2" text="{=rf_sixth_quest_first_dialog_2}I had not expected peace at all. At least half the world now heeds our warnings."/>
+		<string id="rf_sixth_quest_first_dialog_3" text="{=rf_sixth_quest_first_dialog_3}The Athasian Pharun seem oblivious to this evil. The enemy's power grows daily, and more of their hordes are seen."/>
+		<string id="rf_sixth_quest_first_dialog_4" text="{=rf_sixth_quest_first_dialog_4}The Pharun are twisted souls... some say they live for centuries. Whatever the truth, we have survived thus far, and this is the first time that other kingdoms have joined our cause."/>
+		<string id="rf_sixth_quest_first_dialog_5" text="{=rf_sixth_quest_first_dialog_5}Yes, we have endured more than I expected together. It is time you learned more of my past. I serve neither Queen Rinaia nor the Anorite lord. My great-grandfather was a scholar, one of the founders of the Celestial Alchemists. In his travels for rare materials, he discovered ancient ruins and texts that consumed him. This obsession led him to the dark arts..."/>
+		<string id="rf_sixth_quest_first_dialog_6" text="{=rf_sixth_quest_first_dialog_6}Hmm..."/>
+		<string id="rf_sixth_quest_first_dialog_7" text="{=rf_sixth_quest_first_dialog_7}My father left us before I came of age. After my mother's death, I searched for my family's past and my father's fate. That search led me to the black-robed cult and their hideouts. I offered my findings to the Queen, hoping she would invest resources in uncovering their secrets. That is when you entered the scene. It took nearly my whole life to reach the point of being in that tavern where we first met."/>
+		<string id="rf_sixth_quest_first_dialog_8" text="{=rf_sixth_quest_first_dialog_8}Were you responsible for my imprisonment?"/>
+		<string id="rf_sixth_quest_first_dialog_9" text="{=rf_sixth_quest_first_dialog_9}Yes... I had to. I needed you out of the way so I could research those maps myself. What if my father is part of this? What if this cult is my legacy?"/>
+		<string id="rf_sixth_quest_first_dialog_10" text="{=rf_sixth_quest_first_dialog_10}I should break your nose here and now, but the past is past. You have proven yourself a brave warrior. We have much to do, and I have one idea left: we must seek out the King of the Dead."/>
+		<string id="rf_sixth_quest_first_dialog_11" text="{=rf_sixth_quest_first_dialog_11}The Dreadking? Why?"/>
+		<string id="rf_sixth_quest_first_dialog_12" text="{=rf_sixth_quest_first_dialog_12}If anyone can turn the tide of this war, it is him. Who better to face the powers of hell than the dead themselves? We must convince him to join our cause."/>
+		<string id="rf_sixth_quest_lord_dialog_1" text="{=rf_sixth_quest_lord_dialog_1}Stranger, dost thou know thou riskest thy head approaching me?"/>
+		<string id="rf_sixth_quest_lord_dialog_2" text="{=rf_sixth_quest_lord_dialog_2}Yes, Milord, your reputation precedes you. But the matter I bring forth has already risked my life many times, and I am willing to sacrifice it if necessary. I bring news of a dark power invading our world, and I believe even you hold your land dear."/>
+		<string id="rf_sixth_quest_lord_dialog_3" text="{=rf_sixth_quest_lord_dialog_3}Do you know you speak to Death itself? What dark powers should I fear? These demons? Yes, I fight them, but only because they attack my people. I believe they are sent to cleanse Aeurth of the usurpers – the parasites who have taken hold of it."/>
+		<string id="rf_sixth_quest_lord_dialog_4" text="{=rf_sixth_quest_lord_dialog_4}Pardon my ignorance, Milord, but I do not grasp your meaning."/>
+		<string id="rf_sixth_quest_lord_dialog_5" text="{=rf_sixth_quest_lord_dialog_5}Our folk lie buried under the snow, defeated by invaders who poisoned our sacred garden. They seized a place our people revered, where the life force of the world was balanced. They planted their seeds there, and from it, that Tree grew. It drains the world's vitality, empowering them with magic and longevity. Somehow, the spirits of this world do not let our souls rest. The path to peace is clear: the extermination of the Elveans."/>
+		<string id="rf_sixth_quest_lord_dialog_6" text="{=rf_sixth_quest_lord_dialog_6}Milord, I now understand the tragic history of your people. But I believe this evil will destroy everything held dear, leaving no memory behind. Is there nothing you wish to see flourish in this world?"/>
+		<string id="rf_sixth_quest_lord_dialog_7" text="{=rf_sixth_quest_lord_dialog_7}Clever and honest words... Yes, memories are all we truly have. But our people are gone; nothing remains to flourish. We are here only to avenge our ancestors so that we might finally rest in peace."/>
+		<string id="rf_sixth_quest_lord_dialog_8" text="{=rf_sixth_quest_lord_dialog_8}What if some of the Vortiak bloodline still exists? A descendant of the past, living among us all these years?"/>
+		<string id="rf_sixth_quest_lord_dialog_9" text="{=rf_sixth_quest_lord_dialog_9}That is impossible..."/>
+		<string id="rf_sixth_quest_lord_dialog_10" text="{=rf_sixth_quest_lord_dialog_10}Yes, Milord, it is true. And he stands beside me now. I believe his ancestors summoned this evil to avenge your people, but they became corrupted and lost their way. We must defeat this evil to bring their souls to peace!"/>
+		<string id="rf_sixth_quest_lord_dialog_11" text="{=rf_sixth_quest_lord_dialog_11}If that is true, and our legacy continues, then perhaps we shall find peace at last. If not, your head will hang at my hall's door, and your soul will never know peace."/>
+		<string id="rf_sixth_quest_lord_dialog_12" text="{=rf_sixth_quest_lord_dialog_12}Please, Milord, all I ask is a chance. Make peace with the others so we can fight this evil together."/>
+		<string id="rf_sixth_quest_lord_dialog_13" text="{=rf_sixth_quest_lord_dialog_13}Hmmm... Aye, I am convinced. I shall hold peace until this evil is vanquished. If you lie, I will hunt you down myself."/>
+		<string id="rf_sixth_quest_lord_dialog_14" text="{=rf_sixth_quest_lord_dialog_14}Thank you, Milord. I shall not disappoint you. One more thing: I ask for some of your army. With your forces, I shall hunt down the lords of this evil."/>
+		<string id="rf_sixth_quest_lord_dialog_15" text="{=rf_sixth_quest_lord_dialog_15}You are insolent but brave. I shall lend you an army."/>
 
-	<string id="rf_sixth_quest_second_dialog_1" text="What was that? What...what have you done? You've placed our heads at his mercy with a lie?"/>
-	<string id="rf_sixth_quest_second_dialog_2" text="What face is that? How can you be so certain what i say it's a lie? I've pondered this tale since the beginning, and your recent revelation about your past was the missing piece. The monk at the monastery suggested there must be a reason for those cultists to embrace such evil. And for me no more obvious than they be the descendents from the Vortiaks. What sort of people would invoke the old gods of that extinct civilization if not for a compelling reason? Only those connected to them by blood."/>
-	<string id="rf_sixth_quest_second_dialog_3" text="I...I don't know what to say."/>
-	<string id="rf_sixth_quest_second_dialog_4" text="I am certain all answers will reveal themselves. I feel we will encounter your father, or someone related to him and your ancestors. But first, we must vanquish this evil. We need to hunt down the leaders of these armies and cut them down."/>
-	<string id="rf_sixth_quest_second_dialog_5" text="I am...a bit lost now."/>
-	<string id="rf_sixth_quest_second_dialog_6" text="Steady yourself. One step at a time. Let's finish them!"/>
-	<string id="rf_sixth_quest_after_demon_lords_defeated_owl_dialog_1" text="I can scarcely believe what has transpired! We vanquished those fiends! By the gods, that blade you wield must hail from another realm!"/>
-	<string id="rf_sixth_quest_after_demon_lords_defeated_owl_dialog_2" text="Indeed, it feels like a miracle... yet I dare not declare this war over. We must ensure not a single demon remains. Messengers must be dispatched to the kings, gathering all knowledge about the unseen threats."/>
-	<string id="rf_sixth_quest_after_demon_lords_defeated_owl_dialog_3" text="Indeed, we need to known in what state the kings banners are."/>
-	<string id="rf_sixth_quest_after_demon_lords_defeated_owl_dialog_4" text="But remember, we must also hunt down the Cultists and uncover the fate of your father."/>
-	<string id="rf_sixth_quest_after_demon_lords_defeated_owl_dialog_5" text="Damn it... I nearly forgot about that. Aye, I cannot escape my destiny. Let us proceed."/>
-</strings>
+		<string id="rf_sixth_quest_second_dialog_1" text="{=rf_sixth_quest_second_dialog_1}What was that?! What... what have you done? You have placed our heads at his mercy with a lie?"/>
+		<string id="rf_sixth_quest_second_dialog_2" text="{=rf_sixth_quest_second_dialog_2}Why that face? How can you be so certain that what I said is a lie? I have pondered this tale since the beginning, and your recent revelation about your past was the missing piece. The monk at the monastery suggested there must be a reason for those cultists to embrace such evil. To me, none is more obvious than that they are the descendants of the Vortiaks. What sort of people would invoke the old gods of that extinct civilization if not for a compelling reason? Only those connected to them by blood."/>
+		<string id="rf_sixth_quest_second_dialog_3" text="{=rf_sixth_quest_second_dialog_3}I...I don't know what to say."/>
+		<string id="rf_sixth_quest_second_dialog_4" text="{=rf_sixth_quest_second_dialog_4}I am certain all answers will reveal themselves in time. I feel we will encounter your father, or someone related to him and your ancestors. But first, we must vanquish this evil. We need to hunt down the leaders of these armies and eliminate them."/>
+		<string id="rf_sixth_quest_second_dialog_5" text="{=rf_sixth_quest_second_dialog_5}I am...a bit lost now."/>
+		<string id="rf_sixth_quest_second_dialog_6" text="{=rf_sixth_quest_second_dialog_6}Steady yourself. One step at a time. Let us finish them!"/>
+		<string id="rf_sixth_quest_after_demon_lords_defeated_owl_dialog_1" text="{=rf_sixth_quest_after_demon_lords_defeated_owl_dialog_1}I can scarcely believe what has transpired! We vanquished those fiends! By the gods, that blade you wield... it must hail from another realm!"/>
+		<string id="rf_sixth_quest_after_demon_lords_defeated_owl_dialog_2" text="{=rf_sixth_quest_after_demon_lords_defeated_owl_dialog_2}Indeed, it feels like a miracle... yet I dare not declare this war over. We must ensure not a single demon remains. Messengers must be dispatched to the kings to gather all available knowledge about these unseen threats."/>
+		<string id="rf_sixth_quest_after_demon_lords_defeated_owl_dialog_3" text="{=rf_sixth_quest_after_demon_lords_defeated_owl_dialog_3}Indeed. We need to know the state of the kings' banners."/>
+		<string id="rf_sixth_quest_after_demon_lords_defeated_owl_dialog_4" text="{=rf_sixth_quest_after_demon_lords_defeated_owl_dialog_4}But remember, we must also hunt down the Cultists and uncover the fate of your father."/>
+		<string id="rf_sixth_quest_after_demon_lords_defeated_owl_dialog_5" text="{=rf_sixth_quest_after_demon_lords_defeated_owl_dialog_5}Damn it... I nearly forgot about that. Aye, I cannot escape my destiny. Let us proceed."/>
+
+		<string id="rf_seventh_quest_title" text="{=rf_seventh_quest_title}Realms Forgotten Quest: Part Seven" />
+		<string id="rf_seventh_quest_druid_dialog_1" text="{=rf_seventh_quest_druid_dialog_1}I had to leave the temple and meet you here to avoid risking my neck. I am a priestess of the Tree, and my concern is with the natural world, not the petty ambitions of kings. We carry the past, the oral traditions of the Elveans. We know that our ancestors have a dark stain, intentionally left out of memory. They waged war against an ancient people to take hold of a magical stretch of land where the First Tree stands today. I am sure that after thousands of years, this past is returning to haunt us, and I do not want to see our Tree pay the price."/>
+		<string id="rf_seventh_quest_druid_dialog_2" text="{=rf_seventh_quest_druid_dialog_2}We have already gone very far in this battle, and what you say resonates with all the information we have gathered. But I believe this evil will go beyond just harming your beloved Tree; it threatens all peoples in Aeurth. Whatever the Elveans did in the past, now is not the time to delve into it. We need to stop this evil, but we do not know where to find its source."/>
+		<string id="rf_seventh_quest_druid_dialog_3" text="{=rf_seventh_quest_druid_dialog_3}You should go and ask for a parley with the Dugrast King. The Dugrast are older than memory; they have existed since ancient times."/>
+		<string id="rf_seventh_quest_druid_dialog_4" text="{=rf_seventh_quest_druid_dialog_4}Aye, that was the piece of this puzzle we were missing. Perhaps they know where we can find the roots of this evil to cut it out for good."/>
+		<string id="rf_seventh_quest_druid_dialog_5" text="{=rf_seventh_quest_druid_dialog_5}For my part, I will provide you with the Guards of the Tree to help with your mission. May the old gods protect you."/>
+		<string id="rf_seventh_quest_druid_dialog_6" text="{=rf_seventh_quest_druid_dialog_6}I appreciate that. It is a great help. Thank you and farewell."/>
+
+		<string id="rf_seventh_quest_druid_objective" text="{=rf_seventh_quest_druid_objective}Go to the First Tree." />
+		<string id="rf_seventh_quest_travel_log" text="{=rf_seventh_quest_travel_log}You have to talk to the Priestess at the First Tree Temple" />
+		<string id="rf_seventh_quest_travel_task" text="{=rf_seventh_quest_travel_task}Talk to the Priestess at the First Tree Temple" />
+
+		<string id="rf_seventh_quest_dwarf_king_objective" text="{=rf_seventh_quest_dwarf_king_objective}Meet the Dugrast King" />
+		<!-- Removed "Dwarf King Objective:" as it seemed redundant with the text -->
+
+		<string id="rf_seventh_quest_interceptor_defeated_log" text="{=rf_seventh_quest_interceptor_defeated_log}You have defeated the Vortiak Army" />
+
+		<string id="rf_seventh_quest_necromancer_dialog_1" text="{=rf_seventh_quest_necromancer_dialog_1}So, we meet again... We will inevitably fight if you insist on staying on the side of 'reason'." />
+		<string id="rf_seventh_quest_necromancer_dialog_2" text="{=rf_seventh_quest_necromancer_dialog_2}What reason can justify bringing chaos and destruction to innocent people?" />
+		<string id="rf_seventh_quest_necromancer_dialog_3" text="{=rf_seventh_quest_necromancer_dialog_3}We bring justice, and justice demands its price. Those lives are a sacrifice for a greater good. This world is drowning in misery and war; we seek to cleanse it and bring about a new time of harmony and balance. But to cleanse the world, we must be fierce and impartial. Unfortunately, the innocent pay for the deeds of their lords." />
+		<string id="rf_seventh_quest_necromancer_dialog_4" text="{=rf_seventh_quest_necromancer_dialog_4}That is where you are wrong. No justice is fair when innocents pay. If you once had a righteous path, you have lost it, and I am here to stop you. Moreover, you fight against one of your own kin. Beside me stands a descendant of the Vortiak bloodline." />
+		<string id="rf_seventh_quest_necromancer_dialog_5" text="{=rf_seventh_quest_necromancer_dialog_5}What?! How could you possibly know that?!" />
+		<string id="rf_seventh_quest_necromancer_dialog_6" text="{=rf_seventh_quest_necromancer_dialog_6}Because his father joined you, to defend your cause. What reason would he have, if not to protect his own people?" />
+		<!-- <string id="rf_seventh_quest_necromancer_dialog_7" text="{=rf_seventh_quest_necromancer_dialog_7}What reason can you provide by bringing chaoes and destruction to innocent people?" /> -->
+		<!-- Duplicate ID/Intent of dialog_2 -->
+		<string id="rf_seventh_quest_necromancer_dialog_8" text="{=rf_seventh_quest_necromancer_dialog_8}Ahhh... looking closely now, I can see his father's face in his. His father was a knowledgeable man and gave his life in sacrifice to the old gods so the armies of the other plane would join us! You should follow the bravery of your father, lad, and join your people!" />
+		<string id="rf_seventh_quest_necromancer_dialog_9" text="{=rf_seventh_quest_necromancer_dialog_9}What will join you is my blade in your head, bastard! Prepare to die!" />
+
+		<string id="rf_seventh_quest_necromancer_dialog_2_1" text="{=rf_seventh_quest_necromancer_dialog_2_1}Reason? Do you have a reason beyond murder?" />
+		<string id="rf_seventh_quest_necromancer_dialog_3_1" text="{=rf_seventh_quest_necromancer_dialog_3_1}We bring justice to my people. They tried to protect the most important place in this world, where the life force that maintains harmony flows. There, at the heart of Aeurth, the usurpers planted their Tree. And right now, its roots drain the life force of the land to feed their children with immortality." />
+		<string id="rf_seventh_quest_necromancer_dialog_4_1" text="{=rf_seventh_quest_necromancer_dialog_4_1}That sounds like nonsense... but I have heard of the Vortiak war. How can you prove you were innocent?" />
+		<string id="rf_seventh_quest_necromancer_dialog_5_1" text="{=rf_seventh_quest_necromancer_dialog_5_1}If, in the comfort of your home, you suddenly saw an army taking your land by force, would you be innocent or guilty? My people were guardians of an eternal spring, and those usurpers only wanted its power. We never used it because we knew the balance of the world depended on it. Join us, and let us destroy those whose lies corrupt our world." />
+
+		<string id="rf_seventh_quest_owl_dialog_1" text="{=rf_seventh_quest_owl_dialog_1}Now that we are close to putting an end to this madness, I have to confess I have doubts about which path to take. My father gave his life for the Vortiaks' cause... He was a distant man but an honourable one. I start to think that their cause might be true and that we are actually being deceived by appearances. What if the real evil hides behind the fair faces of the Elveans? And what if those demons are actually a force of justice? Should we actually join the Vortiaks' cause? I leave it to your judgment to decide." />
+		<string id="rf_seventh_quest_owl_dialog_2" text="{=rf_seventh_quest_owl_dialog_2}No, do not let yourself feel guilty about it! You have seen the monstrosities they brought into our world. If their cause was once just, it has been lost to madness!" />
+		<string id="rf_seventh_quest_owl_dialog_3" text="{=rf_seventh_quest_owl_dialog_3}I do not feel guilty... actually, I feel some part of me belongs to their cause. My father was an honourable man..." />
+		<string id="rf_seventh_quest_owl_dialog_4" text="{=rf_seventh_quest_owl_dialog_4}But to give his life to bring monsters into the world? Monsters that do not differentiate between the innocent and the guilty? There is no honour in that." />
+		<string id="rf_seventh_quest_owl_dialog_5" text="{=rf_seventh_quest_owl_dialog_5}A poor destiny met my father in the end... But I am relieved to finally know his fate. In his honour, let us finish these bastards, once and for all!" />
+		<string id="rf_seventh_quest_owl_dialog_6" text="{=rf_seventh_quest_owl_dialog_6}That's the spirit, my friend! Let's bring justice!" />
+
+		<string id="rf_seventh_quest_owl_dialog_7" text="{=rf_seventh_quest_owl_dialog_7}You are probably right. We know the Elvean folk hide many secrets, and after all these events, we see they hide the true past of their people behind a fabricated story..." />
+		<string id="rf_seventh_quest_owl_dialog_8" text="{=rf_seventh_quest_owl_dialog_8}Aye... and the priestess herself, so desperate to protect her Tree... maybe that is really what is going on – this Tree drains the power of the world to give their people longevity and an advantage over all of us..." />
+		<string id="rf_seventh_quest_owl_dialog_9" text="{=rf_seventh_quest_owl_dialog_9}The Dugrast King confirmed the Vortiaks were the original owners of those lands... their cause seems just." />
+		<string id="rf_seventh_quest_owl_dialog_10" text="{=rf_seventh_quest_owl_dialog_10}Aye, but he also said their hearts were corrupted by the spirits of the mountain in their search for power. Even if i believe what is left from your people deserves justice, those monsters dont make a distinction between the innocent..." />
+		<string id="rf_seventh_quest_owl_dialog_11" text="{=rf_seventh_quest_owl_dialog_11}If you found a power so great that it could bring the dead back to life and help you avenge your people, wouldn't you use it? Let us take the right side this time and bring justice!" />
+		<string id="rf_seventh_quest_owl_dialog_11_b" text="{=rf_seventh_quest_owl_dialog_11_b}Sure, but i dont see my father behind that. I dont think he gave his life willingly to bring demons to our world. We can decide if the Dreadrealms deserve their justice later. But for now, lets finish this evil once and for all!" />
+
+		<string id="rf_seventh_quest_owl_log" text="{=rf_seventh_quest_owl_log}Talk to the Owl" />
+
+		<string id="rf_seventh_quest_lair_log" text="{=rf_seventh_quest_lair_log}Find the Vortiak Lair." />
+		<string id="rf_seventh_quest_lair_task" text="{=rf_seventh_quest_lair_task}Destroy the Vortiaks." />
+
+		<string id="rf_seventh_quest_boss_log" text="{=rf_seventh_quest_boss_log}Find the Vortiak Priestess" />
+		<string id="rf_seventh_quest_boss_task" text="{=rf_seventh_quest_boss_task}Go to the Vortiak Temple and defeat the Priestess" />
+
+		<string id="rf_seventh_quest_elven_destruction_log" text="{=rf_seventh_quest_elven_destruction_log}Defeat the Elveans." />
+		<string id="rf_seventh_quest_elven_destruction_task" text="{=rf_seventh_quest_elven_destruction_task}Destroy the High Kingdom of the Elveans." />
+
+		<!-- <string id="rf_seventh_quest_priestess_army_log" text="{=1asd23}Stop the Priestess!" /> -->
+		<!-- Duplicate ID, replaced by seventhquest_log_priestess below -->
+		<!-- <string id="rf_seventh_quest_priestess_army_task" text="{=2bsf24}The Evil Witch has escaped and is gathering the last of her army. You must find her near the Ruined Temple and defeat her once and for all." /> -->
+		<!-- Duplicate ID, replaced by seventhquest_task_priestess below -->
+
+		<!-- Evil Witch Post-Battle Dialogue -->
+		<string id="rf_seventh_quest_witch_final_1" text="{=witch_final_1}You think this ends with me bleeding on the floor?" />
+		<string id="rf_seventh_quest_witch_final_2" text="{=witch_final_2}You’ve lost, Witch. This land will be free of your poison." />
+		<string id="rf_seventh_quest_witch_final_3" text="{=witch_final_3}Foolish mortal. You have only shattered the vessel. The storm is still coming." />
+		<string id="rf_seventh_quest_witch_final_4" text="{=witch_final_4}We will face whatever comes. And we will win." />
+		<string id="rf_seventh_quest_witch_final_5" text="{=witch_final_5}Then prepare your grave, champion. My children are not finished yet..." />
+
+		<string id="rf_seventh_quest_witch_final_6" text="{=witch_final_6}So you persist in this foolishness?" />
+		<string id="rf_seventh_quest_witch_final_7" text="{=witch_final_7}I will give you one last chance to say what you must, before I take your head off." />
+		<string id="rf_seventh_quest_witch_final_8" text="{=witch_final_8}I am the soul of the world, woven into every stone and root. I carry all the memories since the earliest forms of life first sprouted from the earth, yet you still dare to deny me? Have you never questioned the lies spun by the Elvish descendants to claim authority over the history of the world? They pose as defenders of good against evil, but they ravaged, killed, and nearly wiped out those who once protected nature against true corruption. They planted their Tree atop the most sacred of all places, where the energy that binds the world together flows strongest... That is why they live longer than any mortal, why they wield such power – but at the cost of life itself. Together, we shall tear down the false gods and shatter the Tree’s deceitful power. Stand with me, and reshape this broken world!" />
+		<string id="rf_seventh_quest_witch_final_9" text="{=witch_final_9}I see... I have walked a long and weary road to reach this point. Your words hold true significance. Yet I do not agree with your methods. If I decide to battle them to expose their lies, I will do so, but by my own means. For now, I will have to send you back from whence you came!" />
+		<string id="rf_seventh_quest_witch_final_10" text="{=witch_final_10}Then prepare your grave, champion." />
+
+
+		<string id="rf_seventh_quest_witch_final_11" text="{=witch_final_11}You are the fool, not seeing that you have already lost." />
+		<string id="rf_seventh_quest_witch_final_12" text="{=witch_final_12}You are blind. I am made from the soul of the world; I am inside everything. You cannot destroy me. You should ride beside me and help defeat those who prey upon life like parasites. Join me, and let us destroy that Tree!" />
+		<string id="rf_seventh_quest_witch_final_13" text="{=witch_final_13}Your words are empty. You are going to die." />
+		<string id="rf_seventh_quest_witch_final_14" text="{=witch_final_14}Then prepare your grave, champion." />
+
+
+		<string id="rf_seventh_quest_priestess_army_log" text="{=seventhquest_log_priestess}Defeat the final army of the Priestess." />
+		<string id="rf_seventh_quest_priestess_army_task" text="{=seventhquest_task_priestess}The Priestess has returned with a final force. She teleported herself with an army around the Nippura capital!" />
+		<string id="rf_seventh_quest_completed_log" text="{=rf_quest7_log_complete}The final battle is over. As only you and the Owl noticed a new creature emerging from what was once before the witch´s body, you decided to keep that in secret. For now you all is needed is peace. With it a new age begins — for better or worse." />
+
+		<string id="rf_seventh_quest_outro" text="{=rf_seventh_quest_outro}The First Tree Priestess send you an messenger, asking for your presence." />
+	</strings>

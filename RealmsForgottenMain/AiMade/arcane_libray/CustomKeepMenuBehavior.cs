@@ -109,7 +109,7 @@ namespace RealmsForgotten.AiMade.arcane_libray
                     .InitialPosition(spawnPosition) // Set the spawn position
                     .InitialDirection(spawnDirection) // Set the spawn direction based on the spawn point
                     .NoHorses(true) // Ensure the player spawns without a horse
-                    .Controller(Agent.ControllerType.Player) // Ensures the player controls this agent
+                    .Controller(AgentControllerType.Player) // Ensures the player controls this agent
                     .Equipment(playerEquipment); // Use the player's current equipment or fallback
 
                 // Spawn the player agent in the mission
@@ -126,7 +126,7 @@ namespace RealmsForgotten.AiMade.arcane_libray
         }
 
 
-        public class CustomMissionLogic : MissionLogic
+        public class CustomMissionLogic : TaleWorlds.MountAndBlade.MissionLogic
         {
             // This method is called every mission tick (frame update) while the mission is active.
             public override void OnMissionTick(float dt)

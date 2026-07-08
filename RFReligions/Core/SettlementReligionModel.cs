@@ -44,23 +44,31 @@ public class SettlementReligionModel
     }
 
 
-    public void DailyReligionDevotion(float val)
+    public void DailyReligionDevotion(float _)
     {
-        float num = val / _religiousValues.Count;
-        RFReligions key = CalculateMainReligion();
-        RFReligions key2 = key;
-        _religiousValues[key2] += val * (MBRandom.RandomInt(0, 100) > 80 ? -1 : 1);
-        List<RFReligions> keys = _religiousValues.Keys.ToList();
-        foreach (RFReligions religion in keys)
-            if (religion != key)
-            {
-                _religiousValues[religion] += num * (MBRandom.RandomInt(0, 100) > 80 ? -1 : 1);
-            }
+        // Fallback to 100 if Town is null (just in case)
+        float prosperity = subject?.Town?.Prosperity ?? 100f;
 
-            //(from x in _religiousValues
-            // orderby x.Value
-            // select x).Reverse();
+        // Scale devotion gain/loss with prosperity
+        float mainBoost = 0.002f * prosperity;  // e.g. 200 prosperity = +0.4 devotion/day
+        float decayRate = 0.001f * prosperity;  // e.g. 200 prosperity = -0.2 decay/day
+
+        RFReligions mainReligion = CalculateMainReligion();
+
+        foreach (var religion in _religiousValues.Keys.ToList())
+        {
+            if (religion == mainReligion)
+            {
+                _religiousValues[religion] += mainBoost;
+            }
+            else
+            {
+                _religiousValues[religion] = Math.Max(0f, _religiousValues[religion] - decayRate);
+
+            }
+        }
     }
+
 
 
     public float GetMainReligionRatio()
@@ -109,6 +117,15 @@ public class SettlementReligionModel
         //    orderby x.Value
         //    select x).Reverse();
     }
+
+    public float GetDevotionToReligion(RFReligions rel)
+    {
+        if (_religiousValues.TryGetValue(rel, out var val))
+            return val;
+
+        return 0f;
+    }
+
 
     public void ResetReligionDevotion(RFReligions rel)
     {

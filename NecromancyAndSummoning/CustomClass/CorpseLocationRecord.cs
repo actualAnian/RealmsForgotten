@@ -2,7 +2,7 @@
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 
-namespace RealmsForgotten.NecromancyAndSummoning.CustomClass
+namespace NecromancyAndSummoning.CustomClass
 {
 	// Token: 0x02000010 RID: 16
 	internal class CorpseLocationRecord

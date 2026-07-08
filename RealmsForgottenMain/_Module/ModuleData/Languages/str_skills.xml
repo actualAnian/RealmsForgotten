@@ -6,6 +6,8 @@
   <strings>
 	<string id="discipline" text="Discipline" />
 	<string id="discipline_desc" text="Discipline is the ability to refine your skill in certain skills which require practice or focus." />
+	<string id="seafaring" text="Seafaring" />
+	<string id="seafaring_desc" text="Seafaring is the ability to command, navigate, and fight effectively at sea." />
 	
 	
     <string id="faith" text="Faith" />

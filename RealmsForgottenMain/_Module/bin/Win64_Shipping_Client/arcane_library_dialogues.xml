@@ -1,0 +1,26 @@
+<Dialogues>
+    <!-- Greeting dialogue -->
+    <String id="arcane_library_greeting">Welcome to the Arcane Library, traveler. What brings you to this place of knowledge?</String>
+
+    <!-- Player asks a question -->
+    <String id="arcane_library_ask_question">I seek knowledge of the ancient arcane arts.</String>
+
+    <!-- NPC's response -->
+    <String id="arcane_library_response">The knowledge you seek is not easily found, but I may be able to guide you. Choose your path wisely.</String>
+
+    <!-- Player choices -->
+    <String id="arcane_library_story_1">Tell me about the ancient scrolls of the mystics.</String>
+    <String id="arcane_library_story_1_part_1">The mystics, long forgotten by many, preserved their knowledge in sacred scrolls hidden across the lands.</String>
+    <String id="arcane_library_story_1_part_2">These scrolls are said to contain spells that could alter the very fabric of reality.</String>
+
+    <String id="arcane_library_story_2">What do you know of the forbidden tomes?</String>
+    <String id="arcane_library_story_2_part_1">The forbidden tomes were locked away for a reason. Many who sought their power were consumed by the very magic they hoped to wield.</String>
+    <String id="arcane_library_story_2_part_2">Only a few brave souls dare to even speak of their existence, let alone seek them out.</String>
+
+    <!-- Story ending -->
+    <String id="arcane_library_story_end">That is all I can share for now, traveler. Be careful as you tread these dangerous paths.</String>
+
+    <!-- End conversation -->
+    <String id="arcane_library_end">Thank you for your wisdom. I will return when I am ready to continue my journey.</String>
+    
+</Dialogues>

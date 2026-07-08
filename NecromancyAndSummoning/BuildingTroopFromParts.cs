@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using RealmsForgotten.NecromancyAndSummoning.CustomClass;
+using NecromancyAndSummoning.CustomClass;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.MapEvents;
-using TaleWorlds.CampaignSystem.Overlay;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Core;
@@ -13,7 +12,7 @@ using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.ObjectSystem;
 
-namespace RealmsForgotten.NecromancyAndSummoning
+namespace NecromancyAndSummoning
 {
 	// Token: 0x02000002 RID: 2
 	internal class BuildingTroopFromParts
@@ -47,10 +46,10 @@ namespace RealmsForgotten.NecromancyAndSummoning
 				{
 					mapEventSide = playerMapEvent.DefenderSide;
 				}
-				bool flag3 = mapEventSide.Casualties > 0;
+				bool flag3 = mapEventSide.TroopCasualties > 0;
 				if (flag3)
 				{
-					return BuildingTroopFromParts.random.Next(mapEventSide.Casualties);
+					return BuildingTroopFromParts.random.Next(mapEventSide.TroopCasualties);
 				}
 			}
 			return 0;
@@ -95,7 +94,7 @@ namespace RealmsForgotten.NecromancyAndSummoning
 				campaignGameStarter.AddGameMenu("necromancy_menu", "{=necromancy_menu}Necromancy Menu\n{bone_info}", delegate(MenuCallbackArgs args)
 				{
 					BuildingTroopFromParts.UpdateTextVariables();
-				}, GameOverlays.MenuOverlayType.SettlementWithBoth, GameMenu.MenuFlags.None, null);
+				}, GameMenu.MenuOverlayType.SettlementWithBoth, GameMenu.MenuFlags.None, null);
 				campaignGameStarter.AddGameMenuOption("necromancy_menu", "necromancy_menu_leave", "{=necromancy_menu_leave}Leave", delegate(MenuCallbackArgs args)
 				{
 					args.optionLeaveType = GameMenuOption.LeaveType.Trade;

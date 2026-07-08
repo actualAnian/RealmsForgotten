@@ -6,6 +6,7 @@ using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
+using TaleWorlds.Core.ImageIdentifiers;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.ObjectSystem;
@@ -48,6 +49,8 @@ namespace RealmsForgotten.AiMade
                 { "west_realm", new List<string> { "legion_of_the_betrayed_tier_1", "hidden_hand_tier_1", "embers_of_flame_tier_1", "eleftheroi_tier_1" } },
                 { "south_realm", new List<string> { "legion_of_the_betrayed_tier_1", "hidden_hand_tier_1", "embers_of_flame_tier_1", "eleftheroi_tier_1" } },
                 { "dwarf", new List<string> { "forest_people_tier_1" } },
+                { "wulf", new List<string> { "wulfhart_merc_tier_1" } },
+                { "urkhai", new List<string> { "grymloc_raiders_bandit" } },
             };
         }
 
@@ -77,7 +80,7 @@ namespace RealmsForgotten.AiMade
                 List<string> troopIds = cultureTroopMap[cultureId];
                 List<CharacterObject> troops = troopIds.Select(MBObjectManager.Instance.GetObject<CharacterObject>).ToList();
                 string title = new TextObject("Hire Mercenaries", null).ToString();
-                List<InquiryElement> options = troops.Select(troop => new InquiryElement(troop, troop.Name.ToString(), new ImageIdentifier(CharacterCode.CreateFrom(troop)))).ToList();
+                List<InquiryElement> options = troops.Select(troop => new InquiryElement(troop, troop.Name.ToString(), new CharacterImageIdentifier(CharacterCode.CreateFrom(troop)))).ToList();
                 MBInformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(title, string.Empty, options, true, 1, 1, GameTexts.FindText("str_done", null).ToString(), GameTexts.FindText("str_cancel", null).ToString(), elements => OnMercenaryTypeSelected(elements), null, "", false), false, false);
             }
             else

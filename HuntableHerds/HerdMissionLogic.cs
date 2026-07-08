@@ -13,10 +13,11 @@ using RealmsForgotten.HuntableHerds.AgentComponents;
 using RealmsForgotten.HuntableHerds.Models;
 using TaleWorlds.Engine;
 using RealmsForgotten.HuntableHerds.Extensions;
+using Helpers;
 
 namespace RealmsForgotten.HuntableHerds
 {
-    public class HerdMissionLogic : MissionLogic {
+    public class HerdMissionLogic : TaleWorlds.MountAndBlade.MissionLogic {
         private Dictionary<Agent, HerdAgentComponent> animals = new();
 
         private bool isRandomScene = true;
@@ -78,7 +79,7 @@ namespace RealmsForgotten.HuntableHerds
                 return;
             }
 
-            InventoryManager.OpenScreenAsReceiveItems(fullItemRoster, new TextObject("Loot"), () => {
+            InventoryScreenHelper.OpenScreenAsReceiveItems(fullItemRoster, new TextObject("Loot"), () => {
                 foreach (HerdAgentComponent component in huntableAgentsLooted)
                     component.ClearItemDrops();
             });
@@ -95,7 +96,7 @@ namespace RealmsForgotten.HuntableHerds
             Vec2 vec = matrixFrame.rotation.f.AsVec2;
             vec = vec.Normalized();
 
-            AgentBuildData agentBuildData2 = agentBuildData.InitialDirection(vec).CivilianEquipment(false).NoHorses(false).NoWeapons(false).ClothingColor1(base.Mission.PlayerTeam.Color).ClothingColor2(base.Mission.PlayerTeam.Color2).TroopOrigin(new PartyAgentOrigin(PartyBase.MainParty, playerCharacter, -1, default(UniqueTroopDescriptor), false)).MountKey(MountCreationKey.GetRandomMountKeyString(playerCharacter.Equipment[EquipmentIndex.ArmorItemEndSlot].Item, playerCharacter.GetMountKeySeed())).Controller(Agent.ControllerType.Player);
+            AgentBuildData agentBuildData2 = agentBuildData.InitialDirection(vec).CivilianEquipment(false).NoHorses(false).NoWeapons(false).ClothingColor1(base.Mission.PlayerTeam.Color).ClothingColor2(base.Mission.PlayerTeam.Color2).TroopOrigin(new PartyAgentOrigin(PartyBase.MainParty, playerCharacter, -1, default(UniqueTroopDescriptor), false)).MountKey(MountCreationKey.GetRandomMountKeyString(playerCharacter.Equipment[EquipmentIndex.ArmorItemEndSlot].Item, playerCharacter.GetMountKeySeed())).Controller(AgentControllerType.Player);
             Hero heroObject = playerCharacter.HeroObject;
 
             if (((heroObject != null) ? heroObject.ClanBanner : null) != null) {

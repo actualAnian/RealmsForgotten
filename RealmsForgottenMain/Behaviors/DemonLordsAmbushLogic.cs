@@ -9,7 +9,7 @@ using TaleWorlds.Core;
 
 namespace RealmsForgotten.Models
 {
-    internal class DemonLordsAmbushLogic : MissionLogic
+    internal class DemonLordsAmbushLogic : TaleWorlds.MountAndBlade.MissionLogic
     {
         private HashSet<int> targetRaceIds;
         private int halfGiantRaceId;

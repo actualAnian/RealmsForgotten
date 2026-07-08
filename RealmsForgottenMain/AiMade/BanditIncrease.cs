@@ -37,7 +37,7 @@ namespace RealmsForgotten.AiMade
                 if (!flag3)
                 {
                     this._stayTimers.Remove(party);
-                    SetPartyAiAction.GetActionForPatrollingAroundSettlement(party, party.CurrentSettlement);
+                    SetPartyAiAction.GetActionForPatrollingAroundSettlement(party, party.CurrentSettlement, MobileParty.NavigationType.Default, false, false);
                 }
             }
         }

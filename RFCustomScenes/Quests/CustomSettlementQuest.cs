@@ -1,15 +1,12 @@
 ﻿using RealmsForgotten.RFCustomSettlements;
-using SandBox.BoardGames.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Core;
-using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
@@ -205,8 +202,7 @@ namespace RFCustomSettlements.Quests
             }
         }
         public override TextObject Title => new(_title);
-        public override bool IsSpecialQuest => true;
-
+        public override string SpecialQuestType => "CustomSettlementQuest";
         public override bool IsRemainingTimeHidden => true;
 
         protected override void HourlyTick() {}

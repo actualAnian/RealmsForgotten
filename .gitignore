@@ -22,10 +22,16 @@ RFSmithing/bin
 RFSmithing/obj
 Marching/bin
 Marching/obj
-BehaviorTrees/
-BehaviorTreeWrapper/
+RF_XmlValidator/bin
+RF_XmlValidator/obj
 packages
 fixCode.py
 .idea
 .vs
 .vscode
+RFCustomScenes/BehaviorTrees/
+
+# RF_AIDialog build artifacts
+RF_AIDialog/bin
+RF_AIDialog/obj
+RF_AIDialog/ai_config.local.json

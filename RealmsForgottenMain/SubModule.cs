@@ -1,34 +1,50 @@
 using HarmonyLib;
+using MCM.Abstractions.Attributes;
+using Newtonsoft.Json.Linq;
+using RealmsForgotten.AiMade;
+using RealmsForgotten.AiMade.StrategicIntrigue.SaveSystem;
+using RealmsForgotten.Behaviors;
+using RealmsForgotten.Career;
+using RealmsForgotten.Career.Ability;
+using RealmsForgotten.Career.Logic;
+using RealmsForgotten.CharacterCreation;
+using RealmsForgotten.CustomBandits;
+using RealmsForgotten.CustomSkills;
+using RealmsForgotten.LegendaryTroops;
 using RealmsForgotten.Managers;
+using RealmsForgotten.Models;
+using RealmsForgotten.Patches;
+using RealmsForgotten.Quest;
+using RealmsForgotten.Quest.FourthUpdate;
+using RealmsForgotten.RFCustomBandits;
+using RealmsForgotten.RFCustomHorses;
+using RealmsForgotten.RFEffects;
+using RealmsForgotten.RFMissionLogic;
+using RealmsForgotten.UI;
+using RealmsForgotten.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Xml;
-using RealmsForgotten.Behaviors;
-using RealmsForgotten.CustomSkills;
-using RealmsForgotten.Models;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.CampaignBehaviors;
+using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.CampaignSystem.ViewModelCollection;
+using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 using TaleWorlds.Core;
+using TaleWorlds.Engine.GauntletUI;
+using TaleWorlds.InputSystem;
+using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.ModuleManager;
 using TaleWorlds.MountAndBlade;
-using System.Reflection;
-using MCM.Abstractions.Attributes;
-using TaleWorlds.Engine.GauntletUI;
-using Module = TaleWorlds.MountAndBlade.Module;
-using Newtonsoft.Json.Linq;
-using RealmsForgotten.AiMade;
-using RealmsForgotten.Quest;
-using RealmsForgotten.Patches;
-using RealmsForgotten.RFCustomHorses;
-using TaleWorlds.InputSystem;
-using TaleWorlds.Library;
-using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.MountAndBlade.ComponentInterfaces;
-using RealmsForgotten.AiMade.Patches;
+using Module = TaleWorlds.MountAndBlade.Module;
 
 namespace RealmsForgotten
 {
@@ -61,11 +77,12 @@ namespace RealmsForgotten
             "sturgia",
             "vlandia"
         };
-        
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
+            RFLogger.Log($"[Lifecycle] RealmsForgotten.SubModule.OnGameStart | gameType={game.GameType?.GetType().FullName ?? "null"} | starter={gameStarterObject?.GetType().FullName ?? "null"}");
             if (gameStarterObject is CampaignGameStarter campaignGameStarter)
             {
+                campaignGameStarter.AddBehavior(new CampaignHealthChecker());
                 campaignGameStarter.AddBehavior(new BaseGameDebugCampaignBehavior());
                 campaignGameStarter.AddBehavior(new RFEnchantmentVendorBehavior());
                 //Faith bhv comes before cultures bhv
@@ -73,52 +90,63 @@ namespace RealmsForgotten
                 campaignGameStarter.AddBehavior(new CulturesCampaignBehavior());
                 
                 campaignGameStarter.AddBehavior(RFHorseSpawningCampaignBehavior.Instance);
-                
+                campaignGameStarter.AddBehavior(new RFCareerCampaignBehavior());
+
+                campaignGameStarter.AddBehavior(new SlaversRosterBehavior());
+                campaignGameStarter.AddBehavior(new AiSlaversPatrollingBehavior());
+                campaignGameStarter.AddBehavior(new RFLegendaryTroopsPlayerVisitTownCampaignBehavior());
+                campaignGameStarter.AddBehavior(new RFLegendaryTroopsNotableBehaviors());
+                campaignGameStarter.AddBehavior(new RFLegendaryTroopsAIRecruitment());
+
                 campaignGameStarter.AddModel(new RFAgentApplyDamageModel(campaignGameStarter.GetExistingModel<AgentApplyDamageModel>()));
                 campaignGameStarter.AddModel(new RFBuildingConstructionModel(campaignGameStarter.GetExistingModel<BuildingConstructionModel>()));
                 campaignGameStarter.AddModel(new RFCombatXpModel(campaignGameStarter.GetExistingModel<CombatXpModel>()));
                 campaignGameStarter.AddModel(new RFDefaultCharacterDevelopmentModel(campaignGameStarter.GetExistingModel<CharacterDevelopmentModel>()));
                 campaignGameStarter.AddModel(new RFPartyMoraleModel(campaignGameStarter.GetExistingModel<PartyMoraleModel>()));
                 campaignGameStarter.AddModel(new RFPartySpeedCalculatingModel(campaignGameStarter.GetExistingModel<PartySpeedModel>()));
+                campaignGameStarter.AddModel(new RFCharacterStatsModel(campaignGameStarter.GetExistingModel<CharacterStatsModel>()));
+                campaignGameStarter.AddModel(new RFPartyHealingModel(campaignGameStarter.GetExistingModel<PartyHealingModel>()));
+                campaignGameStarter.AddModel(new RFClanPoliticsModel(campaignGameStarter.GetExistingModel<ClanPoliticsModel>()));
                 campaignGameStarter.AddModel(new RFPrisonerRecruitmentCalculationModel(campaignGameStarter.GetExistingModel<PrisonerRecruitmentCalculationModel>()));
                 campaignGameStarter.AddModel(new RFRaidModel(campaignGameStarter.GetExistingModel<RaidModel>()));
                 campaignGameStarter.AddModel(new RFVolunteerModel(campaignGameStarter.GetExistingModel<VolunteerModel>()));
                 campaignGameStarter.AddModel(new RFWageModel(campaignGameStarter.GetExistingModel<PartyWageModel>()));
                 campaignGameStarter.AddModel(new RFBattleCaptainModel(campaignGameStarter.GetExistingModel<BattleCaptainModel>()));
                 campaignGameStarter.AddModel(new RFInventoryCapacityModel(campaignGameStarter.GetExistingModel<InventoryCapacityModel>()));
-                campaignGameStarter.AddModel(new RFRaceSpeedBonusModel(campaignGameStarter.GetExistingModel<PartySpeedModel>()));
                 campaignGameStarter.AddModel(new RFBanditDensityModel(campaignGameStarter.GetExistingModel<BanditDensityModel>()));
+                campaignGameStarter.AddModel(new RFClanFinanceModel(campaignGameStarter.GetExistingModel<ClanFinanceModel>()));
+                campaignGameStarter.AddModel(new RFMapVisibilityModel(campaignGameStarter.GetExistingModel<MapVisibilityModel>()));
+                campaignGameStarter.AddModel(new RFPartySizeLimitModel(campaignGameStarter.GetExistingModel<PartySizeLimitModel>()));
+                campaignGameStarter.AddModel(new RFClanTierModel());
+                campaignGameStarter.AddModel(new RFStrikeMagnitudeModel());
+                campaignGameStarter.AddModel(new RFSettlementValueModel(campaignGameStarter.GetExistingModel<SettlementValueModel>()));
 
-                
                 new RFAttributes().Initialize();
                 new RFSkills().Initialize();
                 new RFSkillEffects().InitializeAll();
                 new RFPerks().Initialize();
-                
-                AiSubModule.AddCampaignBehaviors(campaignGameStarter);
-                AiSubModule.InitializeCareerSystem();
 
-                QuestSubModule.AddQuestBehaviors((CampaignGameStarter)gameStarterObject);
+                AiSubModule.AddCampaignBehaviors(campaignGameStarter);
 
                 ReadConfigFile();
             }
-            if (CustomSettings.Instance != null)
+            if (RFSettings.Instance != null)
                 CheckInvalidKeys();
         }
 
         private void CheckInvalidKeys()
         {
             string[] keys = Enum.GetNames(typeof(InputKey));
-            foreach (var property in AccessTools.GetDeclaredProperties(typeof(CustomSettings)))
+            foreach (var property in AccessTools.GetDeclaredProperties(typeof(ICustomSettingsProvider)))
                 if (Attribute.GetCustomAttribute(property, typeof(SettingPropertyGroupAttribute))
                     is SettingPropertyGroupAttribute keyAttribute && keyAttribute.GroupName.Contains("KeyMapping"))
                 {
-                    if (property.GetValue(CustomSettings.Instance) is string key)
+                    if (property.GetValue(RFSettings.Instance) is string key)
                     {
                         bool valid = false;
                         if (key.Length == 1 && keys.Contains(key.ToUpper()))
                         {
-                            property.SetValue(CustomSettings.Instance, key.ToUpper());
+                            property.SetValue(RFSettings.Instance, key.ToUpper());
                             key = key.ToUpper();
                             valid = true;
                         }
@@ -130,7 +158,7 @@ namespace RealmsForgotten
                             
                             InformationManager.ShowInquiry(new InquiryData("Error", $"Invalid key at {property.Name}, setting to default ({defaultKey.DefaultValue})", true,
                                 false, GameTexts.FindText("str_done").ToString(), "", null, null), true);
-                            property.SetValue(CustomSettings.Instance, defaultKey.DefaultValue);
+                            property.SetValue(RFSettings.Instance, defaultKey.DefaultValue);
                         }
 
                         if (valid)
@@ -147,7 +175,17 @@ namespace RealmsForgotten
         {
             if (mission != null)
             {
-                if ((mission.Mode == MissionMode.Battle || mission.Mode == MissionMode.StartUp) && mission.CombatType != Mission.MissionCombatType.ArenaCombat)
+                //temp
+                if (mission.SceneName == "witch_lair_inside_final")
+                    mission.AddMissionBehavior(new WingedWitchFinalMissionLogic());
+                if (mission.SceneName == "witch_lair_canyon")
+                    mission.AddMissionBehavior(new WitchCanyonMissionLogic());
+                //
+                mission.AddMissionBehavior(new SpawnAgentMissionLogic());
+                mission.AddMissionBehavior(new DeferredMissionDamageBehavior());
+                mission.AddMissionBehavior(new AbilityManagerMissionLogic());
+                mission.AddMissionBehavior(new AbilityHUDMissionView());
+                if (mission.Mode == MissionMode.Battle && mission.CombatType != Mission.MissionCombatType.ArenaCombat)
                 {
                     mission.AddMissionBehavior(new RFEnchantedWeaponsMissionBehavior());
                     mission.AddMissionBehavior(new NecromancerStaffMissionBehavior());
@@ -155,9 +193,7 @@ namespace RealmsForgotten
                     mission.AddMissionBehavior(new DemonLordsAmbushLogic());
                     mission.AddMissionBehavior(new GandalfStaffMissionBehavior());
                 }
-
                 mission.AddMissionBehavior(new SpellAmmoMissionBehavior());
-
 
                 if (Campaign.Current != null)
                 {
@@ -166,22 +202,51 @@ namespace RealmsForgotten
                     if (!elixir.IsEmpty || !berserker.IsEmpty)
                         mission.AddMissionBehavior(new PotionsMissionBehavior(elixir, berserker));
                 }
-                
                 mission.AddMissionBehavior(new HealOnKillMissionBehavior());
+            }
+            if (Game.Current.GameType is Campaign)
+            {
+                mission.AddMissionBehavior(new CareerPerkMissionBehavior());
+            }
+            mission.AddMissionBehavior(new MagicEffectsBehavior());
+            mission.AddMissionBehavior(new WeaponParticlesBehavior());
+            mission.AddMissionBehavior(new MeteorMissionLogic());
+        }
+        public override void BeginGameStart(Game game)
+        {
+            if (game.GameType is Campaign campaign)
+            {
+                game.ObjectManager.RegisterType<CareerObject>("Career", "Careers", 103U, true);
+                game.ObjectManager.RegisterType<CareerChoiceObject>("CareerChoice", "CareerChoices", 104U, true);
+                game.ObjectManager.RegisterType<CareerChoiceGroupObject>("CareerChoiceGroup", "CareerChoiceGroups", 105U, true);
 
-                mission.AddMissionBehavior(new HealOnKillMissionBehavior()); // Add this line
+                _ = new RFCareers();
+                _ = new RFCareerChoiceGroups();
+                _ = new RFCareerChoices();
+
+                //campaign start
+                CampaignGameStarter starter = campaign.SandBoxManager.GameStarter;
+                starter.RemoveBehaviors<CharacterCreationCampaignBehavior>();
+                starter.AddBehavior(new RFCharacterCreationCampaignBehavior());
             }
         }
         protected override void OnBeforeInitialModuleScreenSetAsRoot() { }
         public override void OnGameInitializationFinished(Game game)
         {
             base.OnGameInitializationFinished(game);
+            RFLogger.Log($"[Lifecycle] RealmsForgotten.SubModule.OnGameInitializationFinished | gameType={game.GameType?.GetType().FullName ?? "null"}");
+
             //Globals.SetRacesIds();
             if (!manualPatchesHaveFired)
             {
                 manualPatchesHaveFired = true;
                 RunManualPatches();
+                if (Globals.IsWarSailsLoaded) RunWarSailsPatches();
+
             }
+
+            FieldInfo field = AccessTools.Field(typeof(CampaignUIHelper), "_skillSortIndices");
+            field?.SetValue(null, Globals.SkillsOrderInCharacterDeveloper);
         }
         private void RunManualPatches()
         {
@@ -191,9 +256,25 @@ namespace RealmsForgotten
 #pragma warning restore BHA0003 // Type was not found
             harmony.Patch(originalMethod, transpiler: new HarmonyMethod(typeof(PartyVMPatch), nameof(PartyVMPatch.PartyVMPopulatePartyListLabelPatch)));
             //          harmony.Patch(beardGetterMethod, transpiler: new HarmonyMethod(typeof(PartyVMPatch), nameof(PartyVMPatch.PartyVMPopulatePartyListLabelPatch)));
+            // run manually to remove broken bones when viewing characters
+            MethodInfo ammoMethod = AccessTools.Method("Agent:OnWeaponAmmoReload");
+            MethodInfo damageInfo = AccessTools.Method("Agent:HandleBlow");
+            harmony.Patch(ammoMethod, prefix: new HarmonyMethod(typeof(RFSpellAmmo), nameof(RFSpellAmmo.OnWeaponAmmoReloadPatch)));
+            harmony.Patch(damageInfo, prefix: new HarmonyMethod(typeof(DamagePatch), nameof(DamagePatch.PreHandleBlow)));
 
             QuestPatches.PatchAll();
 
+
+            var target = AccessTools.Method(typeof(BanditSpawnCampaignBehavior), "IsLooterFaction", new Type[] { typeof(IFaction) });
+            harmony.Patch(target, prefix: new HarmonyMethod(typeof(BanditSpawnPatch), nameof(BanditSpawnPatch.Prefix)));
+            var hideoutMenuInit = AccessTools.Method(typeof(HideoutCampaignBehavior), "game_menu_hideout_place_on_init");
+            var hideoutSendTroops = AccessTools.Method(typeof(HideoutCampaignBehavior), "game_menu_send_troops_hideout_on_condition");
+            var hideoutSneakIn = AccessTools.Method(typeof(HideoutCampaignBehavior), "game_menu_hideout_sneak_in_on_condition");
+            var hideoutAssault = AccessTools.Method(typeof(HideoutCampaignBehavior), "game_menu_assault_hideout_parties_on_condition");
+            harmony.Patch(hideoutMenuInit, postfix: new HarmonyMethod(typeof(GameMenuPatches), nameof(GameMenuPatches.HideoutInitPostfix)));
+            harmony.Patch(hideoutSendTroops, postfix: new HarmonyMethod(typeof(GameMenuPatches), nameof(GameMenuPatches.SendTroopsPostfix)));
+            harmony.Patch(hideoutSneakIn, postfix: new HarmonyMethod(typeof(GameMenuPatches), nameof(GameMenuPatches.SneakInPostfix)));
+            harmony.Patch(hideoutAssault, postfix: new HarmonyMethod(typeof(GameMenuPatches), nameof(GameMenuPatches.AssaultHideoutPostfix)));
         }
 
         private void RemoveSandboxAndStoryOptions()
@@ -208,21 +289,34 @@ namespace RealmsForgotten
         }
         protected override void OnSubModuleLoad()
         {
-            //var types = Globals.realmsForgottenAssembly.GetTypes().ToList();
-            //var patch = types.Where(t => t is FaceGenPatch);
             base.OnSubModuleLoad();
+            Assembly asm = typeof(SubModule).Assembly;
+            RFLogger.Log($"[Lifecycle] RealmsForgotten.SubModule.OnSubModuleLoad | asm={asm.Location} | version={asm.GetName().Version} | lastWrite={File.GetLastWriteTime(asm.Location):O}");
+            RFLogger.Log($"[Lifecycle] SaveableTypeDefiners present | main={typeof(SaveDefiner).FullName} | ai={typeof(CustomSaveableTypeDefiner).FullName} | intrigue={typeof(StrategicIntrigueTypeDefiner).FullName} | quest={typeof(QuestTypeDefiner).FullName}");
+            ViewModelExtensionManager.Initialize(); //has to happen before harmony PatchAll
             harmony.PatchAll();
+
 
             TextObject coreContentDisabledReason = new("Disabled during installation.", null);
             UIConfig.DoNotUseGeneratedPrefabs = true;
             
             RemoveSandboxAndStoryOptions();
-
+            bool hasRFWarsails = Globals.IsUsingRFWarsailsModule;
             Module.CurrentModule.AddInitialStateOption(
                 new InitialStateOption("RF", name: new TextObject("Realms Forgotten", null), 3,
                 () => MBGameManager.StartNewGame(new RFCampaignManager()),
-                () => (Module.CurrentModule.IsOnlyCoreContentEnabled, coreContentDisabledReason))
-            );
+                () =>
+                {
+                    if (Globals.IsWarSailsLoaded && !hasRFWarsails) return (true, new("{=rf_start_remove_warsails}You have war sails enabled but your RF version is not warsails compatible"));
+                    if (!Globals.IsWarSailsLoaded && hasRFWarsails) return (true, new("{=rf_start_add_warsails}You don't have war sails enabled but your RF version IS ONLY warsails compatible"));
+                    return (Module.CurrentModule.IsOnlyCoreContentEnabled, coreContentDisabledReason);
+                }, null, null)
+               );
+
+            foreach (var method in AccessTools.GetDeclaredMethods(typeof(WeaponEffectConsequences)).Where(x => x.IsPublic))
+            {
+                WeaponEffectConsequences.Methods.Add(method.Name, (VictimAgentConsequence)method.CreateDelegate(typeof(VictimAgentConsequence)));
+            }
         }
         public static Dictionary<string, int> undeadRespawnConfig { get; private set; }
         private void ReadConfigFile()
@@ -252,28 +346,55 @@ namespace RealmsForgotten
                 Console.WriteLine("Error in undead_respawn_config.json");
             }
         }
-
         public override void OnGameLoaded(Game game, object initializerObject)
         {
+
             base.OnGameLoaded(game, initializerObject);
-            QuestSubModule.OnGameLoaded(game, initializerObject);
+            RFLogger.Log($"[Lifecycle] RealmsForgotten.SubModule.OnGameLoaded begin | gameType={game.GameType?.GetType().FullName ?? "null"} | initializer={initializerObject?.GetType().FullName ?? "null"}");
 
             if (initializerObject is CampaignGameStarter campaignGameStarter)
             {
+                QuestSubModule.OnGameLoaded(campaignGameStarter);
                 RFAgentStatCalculateModel rfAgentStatCalculateModel = new RFAgentStatCalculateModel(campaignGameStarter.GetExistingModel<AgentStatCalculateModel>());
                 campaignGameStarter.AddModel(rfAgentStatCalculateModel);
                 
                 AccessTools.Property(typeof(MissionGameModels), "AgentStatCalculateModel").SetValue(MissionGameModels.Current, rfAgentStatCalculateModel);
             }
 
+            RFLogger.Log("[Lifecycle] RealmsForgotten.SubModule.OnGameLoaded end");
         }
 
         public override void OnNewGameCreated(Game game, object initializerObject)
         {
+            //var a = Settlement.All;
+            //int b = 4;
+            //List<string> withBrokenFaces = new();
+            //foreach (Settlement settlement in a)
+            //{
+            //    if (!settlement.GatePosition.Face.IsValid())
+            //        withBrokenFaces.Add(settlement.StringId);
+            //}
             base.OnNewGameCreated(game, initializerObject);
-            QuestSubModule.OnNewGameCreated(game, initializerObject);
+            RFLogger.Log($"[Lifecycle] RealmsForgotten.SubModule.OnNewGameCreated | initializer={initializerObject?.GetType().FullName ?? "null"}");
+            QuestSubModule.OnNewGameCreated((CampaignGameStarter)initializerObject);
         }
-
+        private void RunWarSailsPatches()
+        {
+            try
+            {
+                var navalTarget = AccessTools.Method("NavalDLC.GameComponents.NavalDLCBanditDensityModel:IsPositionInsideNavalSafeZone");
+                harmony.Patch(navalTarget, prefix: new HarmonyMethod(typeof(NavalDLCBanditDensityModel_IsPositionInsideNavalSafeZone_Patch), nameof(NavalDLCBanditDensityModel_IsPositionInsideNavalSafeZone_Patch.Prefix)));
+                var cacheTarget = AccessTools.Method("SandBox.View.Map.SettlementPositionScript:RegisterNavigationCachesOnGameLoad");
+                harmony.Patch(cacheTarget, prefix: new HarmonyMethod(typeof(RealmsForgotten.WarSailsPatches.FillMissingCachesPatch), nameof(WarSailsPatches.FillMissingCachesPatch.Prefix)));
+                
+                var pirateTarget = AccessTools.Method("NavalDLC.View.NavalMapSceneWrapper:InitializePirateSpawnPoints");
+                harmony.Patch(pirateTarget, prefix: new HarmonyMethod(typeof(InitializePirateSpawnPointsPatch), nameof(InitializePirateSpawnPointsPatch.Prefix)));
+            }
+            catch (Exception ex)
+            {
+                RFLogger.Log($"[WarSailsPatches] Error applying patches: {ex}");
+            }
+        }
         protected override void InitializeGameStarter(Game game, IGameStarter starterObject)
         {
             base.InitializeGameStarter(game, starterObject);
@@ -323,17 +444,17 @@ namespace RealmsForgotten
             }
         }
 
-        //Map border crash fix
-        [HarmonyPatch(typeof(DefaultMapWeatherModel), "GetWeatherEventInPosition")]
-        class ArrangeDestructedMeshesPatch
-        {
-            [HarmonyFinalizer]
-#pragma warning disable IDE0051 // Remove unused private members
-            static Exception Finalizer(Exception __exception, DefaultMapWeatherModel __instance)
-#pragma warning restore IDE0051 // Remove unused private members
-            {
-                return null;
-            }
-        }
+//        //Map border crash fix
+//        [HarmonyPatch(typeof(DefaultMapWeatherModel), "GetWeatherEventInPosition")]
+//        class ArrangeDestructedMeshesPatch
+//        {
+//            [HarmonyFinalizer]
+//#pragma warning disable IDE0051 // Remove unused private members
+//            static Exception Finalizer(Exception __exception, DefaultMapWeatherModel __instance)
+//#pragma warning restore IDE0051 // Remove unused private members
+//            {
+//                return null;
+//            }
+//        }
     }
 }

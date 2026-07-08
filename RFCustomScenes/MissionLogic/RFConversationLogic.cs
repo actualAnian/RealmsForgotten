@@ -16,7 +16,7 @@ namespace RFCustomSettlements
         {
             listOfTalkableNpcs.Add(NpcId);
         }
-        public override void OnAgentInteraction(Agent userAgent, Agent agent)
+        public override void OnAgentInteraction(Agent userAgent, Agent agent, sbyte agentBoneIndex)
         {
             if (Campaign.Current.GameMode == CampaignGameMode.Campaign)
             {
@@ -37,7 +37,6 @@ namespace RFCustomSettlements
             ConversationManager = Campaign.Current.ConversationManager;
             ConversationManager.SetupAndStartMissionConversation(agent, base.Mission.MainAgent, setActionsInstantly);
             ConversationManager.ConversationEnd += this.OnConversationEnd;
-            //_conversationStarted = true;
             foreach (IAgent agent2 in this.ConversationManager.ConversationAgents)
             {
                 Agent agent3 = (Agent)agent2;
@@ -67,8 +66,8 @@ namespace RFCustomSettlements
                 Agent.Main.AgentVisuals.SetClothComponentKeepStateOfAllMeshes(false);
                 Agent.Main.MountAgent?.AgentVisuals.SetVisible(true);
             }
-            base.Mission.MainAgentServer.Controller = Agent.ControllerType.Player;
-            ConversationManager.ConversationEnd -= this.OnConversationEnd;
+			base.Mission.MainAgentServer.Controller = AgentControllerType.Player;
+			this.ConversationManager.ConversationEnd -= this.OnConversationEnd;
         }
         public override bool IsThereAgentAction(Agent userAgent, Agent otherAgent)
         {

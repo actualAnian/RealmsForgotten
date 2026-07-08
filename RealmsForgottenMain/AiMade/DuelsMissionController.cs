@@ -5,7 +5,7 @@ using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.AiMade;
 
-public class DuelMissionController : MissionLogic
+public class DuelMissionController : TaleWorlds.MountAndBlade.MissionLogic
 {
     private Agent playerAgent, opponentAgent;
     private bool duelEnded = false;

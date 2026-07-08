@@ -192,8 +192,8 @@ namespace RealmsForgotten.AiMade.Religions
             var productionModel = Campaign.Current.Models.VillageProductionCalculatorModel as DefaultVillageProductionCalculatorModel;
             if (productionModel != null)
             {
-                var hearthChange = productionModel.CalculateDailyProductionAmount(village, new ItemObject());
-                village.Hearth += hearthChange * (1 + bonus - penalty);
+                ExplainedNumber hearthChange = productionModel.CalculateDailyProductionAmount(village, new ItemObject());
+                village.Hearth += hearthChange.ResultNumber * (1 + bonus - penalty);
             }
         }
 

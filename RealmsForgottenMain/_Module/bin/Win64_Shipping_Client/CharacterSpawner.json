@@ -1,0 +1,25 @@
+{
+  "Items": [
+    {
+      "Race": "dwarf",
+      "Horizontal": 0,
+      "Vertical": 0,
+      "Zoom": 0,
+      "Mount": false
+    },
+    {
+      "Race": "dwarf",
+      "Horizontal": 0,
+      "Vertical": -1,
+      "Zoom": 0,
+      "Mount": true
+    },
+    {
+      "Race": "half_giant",
+      "Horizontal": 0,
+      "Vertical": 0,
+      "Zoom": 0,
+      "Mount": false
+    }
+  ]
+}

@@ -16,6 +16,8 @@ using TaleWorlds.CampaignSystem.AgentOrigins;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using TaleWorlds.CampaignSystem.ViewModelCollection;
+using TaleWorlds.CampaignSystem.CharacterDevelopment;
 
 namespace RealmsForgotten.AiMade
 {
@@ -24,7 +26,7 @@ namespace RealmsForgotten.AiMade
         public static float PowerBalanceArmy(MobileParty party, BattleSideEnum battleSide)
         {
             MapEvent.PlayerMapEvent.RecalculateStrengthOfSides();
-            float totalStrength = party.Army.TotalStrength;
+            float totalStrength = party.Army.EstimatedStrength;
             float num = MapEvent.PlayerMapEvent.StrengthOfSide[1];
             float num2 = MapEvent.PlayerMapEvent.StrengthOfSide[0];
             if (battleSide == BattleSideEnum.Attacker)
@@ -49,7 +51,7 @@ namespace RealmsForgotten.AiMade
         public static float PowerBalance(MobileParty party, BattleSideEnum battleSide)
         {
             MapEvent.PlayerMapEvent.RecalculateStrengthOfSides();
-            float totalStrength = party.Party.TotalStrength;
+            float totalStrength = party.Party.EstimatedStrength;
             float num = MapEvent.PlayerMapEvent.StrengthOfSide[1];
             float num2 = MapEvent.PlayerMapEvent.StrengthOfSide[0];
             if (battleSide == BattleSideEnum.Attacker)
@@ -106,12 +108,9 @@ namespace RealmsForgotten.AiMade
             if (party.LeaderHero != null)
             {
                 relation = (int)party.LeaderHero.GetRelationWithPlayer();
-                if (party.LeaderHero.GetHeroTraits() != null)
-                {
-                    mercy = party.LeaderHero.GetHeroTraits().Mercy;
-                    calculating = party.LeaderHero.GetHeroTraits().Calculating;
-                    valor = party.LeaderHero.GetHeroTraits().Valor;
-                }
+                mercy = party.LeaderHero.GetTraitLevel(DefaultTraits.Mercy);
+                calculating = party.LeaderHero.GetTraitLevel(DefaultTraits.Calculating);
+                valor = party.LeaderHero.GetTraitLevel(DefaultTraits.Valor);
             }
 
             if (party.Army != null)
@@ -228,12 +227,9 @@ namespace RealmsForgotten.AiMade
             if (party.LeaderHero != null)
             {
                 relation = (int)party.LeaderHero.GetRelationWithPlayer();
-                if (party.LeaderHero.GetHeroTraits() != null)
-                {
-                    mercy = party.LeaderHero.GetHeroTraits().Mercy;
-                    calculating = party.LeaderHero.GetHeroTraits().Calculating;
-                    valor = party.LeaderHero.GetHeroTraits().Valor;
-                }
+                mercy = party.LeaderHero.GetTraitLevel(DefaultTraits.Mercy);
+                calculating = party.LeaderHero.GetTraitLevel(DefaultTraits.Calculating);
+                valor = party.LeaderHero.GetTraitLevel(DefaultTraits.Valor);
             }
 
             if (PlayerEncounter.EncounteredMobileParty == null || PlayerEncounter.EncounteredMobileParty.Owner == null || PlayerEncounter.EncounteredMobileParty.LeaderHero == null || party.Owner == null || party.LeaderHero == null)
@@ -417,7 +413,7 @@ namespace RealmsForgotten.AiMade
             Unknown
         }
 
-        public class ADODReinforcementsRunner : MissionLogic
+        public class ADODReinforcementsRunner : TaleWorlds.MountAndBlade.MissionLogic
         {
             public void RelationFilter(MobileParty party)
             {
@@ -509,8 +505,7 @@ namespace RealmsForgotten.AiMade
                     bool autoDetectRBM = false;
                     if (autoDetectRBM)
                     {
-                        ModuleManager moduleManager = new ModuleManager();
-                        if (moduleManager.ModuleNames.Contains("RBM"))
+                        if (Utilities.GetModulesNames().Contains("RBM"))
                         {
                             timerset = 1;
                         }
@@ -641,7 +636,7 @@ namespace RealmsForgotten.AiMade
                                     }
                                     if (partiesTimerDic.Count != 0)
                                     {
-                                        missionSidesBoth = typeof(MissionAgentSpawnLogic).GetField("_missionSides", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(Mission.GetMissionBehavior<MissionAgentSpawnLogic>()) as IEnumerable;
+                                        missionSidesBoth = typeof(DefaultBattleMissionAgentSpawnLogic).GetField("_missionSides", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(Mission.GetMissionBehavior<DefaultBattleMissionAgentSpawnLogic>()) as IEnumerable;
                                         timerStart = true;
                                     }
                                 }
@@ -789,14 +784,14 @@ namespace RealmsForgotten.AiMade
                             foreach (MobileParty mobileParty2 in list)
                             {
                                 mobileParty2.MapEventSide = PlayerEncounter.EncounteredBattle.AttackerSide;
-                                mobileParty2.Position2D = Campaign.Current.MainParty.Position2D;
+                                mobileParty2.Position = Campaign.Current.MainParty.Position;
                             }
                             MapEvent.PlayerMapEvent.RecalculateStrengthOfSides();
                         }
                         else
                         {
                             party.MapEventSide = PlayerEncounter.EncounteredBattle.AttackerSide;
-                            party.Position2D = Campaign.Current.MainParty.Position2D;
+                            party.Position = Campaign.Current.MainParty.Position;
                             MapEvent.PlayerMapEvent.RecalculateStrengthOfSides();
                             foreach (TroopRosterElement troopRosterElement2 in party.MemberRoster.GetTroopRoster())
                             {
@@ -832,14 +827,14 @@ namespace RealmsForgotten.AiMade
                             foreach (MobileParty mobileParty4 in list2)
                             {
                                 mobileParty4.MapEventSide = PlayerEncounter.EncounteredBattle.DefenderSide;
-                                mobileParty4.Position2D = Campaign.Current.MainParty.Position2D;
+                                mobileParty4.Position = Campaign.Current.MainParty.Position;
                             }
                             MapEvent.PlayerMapEvent.RecalculateStrengthOfSides();
                         }
                         else
                         {
                             party.MapEventSide = PlayerEncounter.EncounteredBattle.DefenderSide;
-                            party.Position2D = Campaign.Current.MainParty.Position2D;
+                            party.Position = Campaign.Current.MainParty.Position;
                             MapEvent.PlayerMapEvent.RecalculateStrengthOfSides();
                             foreach (TroopRosterElement troopRosterElement4 in party.MemberRoster.GetTroopRoster())
                             {
@@ -880,7 +875,7 @@ namespace RealmsForgotten.AiMade
                             foreach (MobileParty mobileParty6 in list3)
                             {
                                 mobileParty6.MapEventSide = PlayerEncounter.EncounteredBattle.DefenderSide;
-                                mobileParty6.Position2D = Campaign.Current.MainParty.Position2D;
+                                mobileParty6.Position = Campaign.Current.MainParty.Position;
                             }
                             MapEvent.PlayerMapEvent.RecalculateStrengthOfSides();
                         }
@@ -891,7 +886,7 @@ namespace RealmsForgotten.AiMade
                                 return;
                             }
                             party.MapEventSide = PlayerEncounter.EncounteredBattle.DefenderSide;
-                            party.Position2D = Campaign.Current.MainParty.Position2D;
+                            party.Position = Campaign.Current.MainParty.Position;
                             MapEvent.PlayerMapEvent.RecalculateStrengthOfSides();
                             foreach (TroopRosterElement troopRosterElement6 in party.MemberRoster.GetTroopRoster())
                             {
@@ -927,7 +922,7 @@ namespace RealmsForgotten.AiMade
                             foreach (MobileParty mobileParty8 in list4)
                             {
                                 mobileParty8.MapEventSide = PlayerEncounter.EncounteredBattle.AttackerSide;
-                                mobileParty8.Position2D = Campaign.Current.MainParty.Position2D;
+                                mobileParty8.Position = Campaign.Current.MainParty.Position;
                             }
                             MapEvent.PlayerMapEvent.RecalculateStrengthOfSides();
                         }
@@ -938,7 +933,7 @@ namespace RealmsForgotten.AiMade
                                 return;
                             }
                             party.MapEventSide = PlayerEncounter.EncounteredBattle.AttackerSide;
-                            party.Position2D = Campaign.Current.MainParty.Position2D;
+                            party.Position = Campaign.Current.MainParty.Position;
                             MapEvent.PlayerMapEvent.RecalculateStrengthOfSides();
                             foreach (TroopRosterElement troopRosterElement8 in party.MemberRoster.GetTroopRoster())
                             {
@@ -997,15 +992,9 @@ namespace RealmsForgotten.AiMade
                                 true, true,
                                 0,
                                 originBase.Troop.DefaultFormationGroup,
-                                true, false, false,
-                                Mission.Current.GetFormationSpawnPosition(
-                                    (BattleSideEnum)side,
-                                    originBase.Troop.DefaultFormationClass,
-                                    true).ToVec3(0.0f),
-                                Mission.Current.GetFormationSpawnPosition(
-                                    (BattleSideEnum)side,
-                                    originBase.Troop.DefaultFormationClass,
-                                    true),
+                                true, false,
+                                Mission.Current.GetFormationSpawnPosition(Mission.Current.PlayerTeam, originBase.Troop.DefaultFormationClass).ToVec3(0.0f),
+                                Mission.Current.GetFormationSpawnPosition(Mission.Current.PlayerTeam, originBase.Troop.DefaultFormationClass),
                                 null,
                                 null,
                                 FormationClass.NumberOfAllFormations,

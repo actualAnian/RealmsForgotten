@@ -8,13 +8,15 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.Core;
+using RealmsForgotten.Career;
+using TaleWorlds.Library;
 
 namespace RealmsForgotten.Models
 {
     internal class RFPrisonerRecruitmentCalculationModel : DefaultPrisonerRecruitmentCalculationModel
     {
         private PrisonerRecruitmentCalculationModel _previousModel;
-        
+        public static bool DebugMode = false;
         public RFPrisonerRecruitmentCalculationModel(PrisonerRecruitmentCalculationModel previousModel)
         {
             _previousModel = previousModel;
@@ -29,13 +31,25 @@ namespace RealmsForgotten.Models
         public override int GetPrisonerRecruitmentMoraleEffect(PartyBase party, CharacterObject character, int num)
         {
             int baseNumber = _previousModel.GetPrisonerRecruitmentMoraleEffect(party, character, num);
+
             if (character.Occupation == Occupation.Bandit && character.Culture.StringId == "sea_raiders" &&
                 party.Owner?.CharacterObject.Race == FaceGen.GetRaceOrDefault("undead"))
                 return 0;
+
             if (character.Occupation == Occupation.Bandit && party.Owner?.Culture.StringId == "aqarun")
                 return 0;
+
+            if (character.Occupation == Occupation.Bandit
+                && party == PartyBase.MainParty
+                && PlayerCareerExtension.PlayerCareerInfo != null
+                && PlayerCareerExtension.PlayerCareerInfo.CareerID == "mercenary")
+            {
+                return 0;
+            }
+
             return baseNumber;
         }
+
         public override bool ShouldPartyRecruitPrisoners(PartyBase party)
         {
             bool baseBool = _previousModel.ShouldPartyRecruitPrisoners(party);

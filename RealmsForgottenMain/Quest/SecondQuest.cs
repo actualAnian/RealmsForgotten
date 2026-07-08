@@ -1,51 +1,29 @@
-﻿using System;
-using System.Collections;
+﻿using RealmsForgotten.Quest.MissionBehaviors;
+using RealmsForgotten.Quest.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using HarmonyLib;
-using Helpers;
-using RealmsForgotten.Quest.SecondUpdate;
-using SandBox.Issues.IssueQuestTasks;
-using StoryMode.Quests.PlayerClanQuests;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.AgentOrigins;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
-using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.Conversation;
 using TaleWorlds.CampaignSystem.Encounters;
-using TaleWorlds.CampaignSystem.Extensions;
 using TaleWorlds.CampaignSystem.GameMenus;
-using TaleWorlds.CampaignSystem.Inventory;
-using TaleWorlds.CampaignSystem.Issues;
-using TaleWorlds.CampaignSystem.LogEntries;
 using TaleWorlds.CampaignSystem.MapEvents;
-using TaleWorlds.CampaignSystem.Overlay;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Party.PartyComponents;
 using TaleWorlds.CampaignSystem.Roster;
-using TaleWorlds.CampaignSystem.SceneInformationPopupTypes;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.Settlements.Locations;
-using TaleWorlds.CampaignSystem.ViewModelCollection.ArmyManagement;
-using TaleWorlds.CampaignSystem.ViewModelCollection.Inventory;
 using TaleWorlds.Core;
-using TaleWorlds.Core.ViewModelCollection;
-using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
-using TaleWorlds.MountAndBlade.GauntletUI.Widgets.Inventory;
 using TaleWorlds.ObjectSystem;
 using TaleWorlds.SaveSystem;
-using static TaleWorlds.CampaignSystem.Issues.IssueBase;
-using FaceGen = TaleWorlds.Core.FaceGen;
 using static RealmsForgotten.Quest.QuestLibrary;
-using RealmsForgotten.Quest.UI;
-using RealmsForgotten.Quest.MissionBehaviors;
+using FaceGen = TaleWorlds.Core.FaceGen;
 
 namespace RealmsForgotten.Quest
 {
@@ -95,16 +73,8 @@ namespace RealmsForgotten.Quest
 
                     mission.AddMissionBehavior(new FindRelicsHideoutMissionBehavior(findMapJournalLog));
             });
-
-            CampaignEvents.OnSettlementLeftEvent.AddNonSerializedListener(this,
-                (mobileParty, settlement) =>
-                {
-                    if (mobileParty.LeaderHero == Hero.MainHero && settlement.StringId == "town_B4" && escapedPrison)
-                        SaveCurrentQuestCampaignBehavior.Instance.SaveQuestState("queen");
-                });
             RegisterQuestEvents(this);
         }
-
         private void OnSettlementEntered(MobileParty mobileParty, Settlement settlement, Hero hero)
         {
             if (_isPlayerInOwlArmy && mobileParty == MobileParty.MainParty && settlement == mobileParty.Army.AiBehaviorObject)
@@ -115,13 +85,17 @@ namespace RealmsForgotten.Quest
                 ConversationCharacterData playerData = new(CharacterObject.PlayerCharacter, PartyBase.MainParty);
                 ConversationCharacterData anoritData = new(AnoritLord.CharacterObject, AnoritLord.PartyBelongedTo?.Party);
                 Campaign.Current.ConversationManager.OpenMapConversation(playerData, anoritData);
-
-
                 _isPlayerInOwlArmy = false;
                 MobileParty.MainParty.IgnoreByOtherPartiesTill(CampaignTime.Now);
                 QuestPatches.AvoidDisbanding = false;
-
-
+            }
+            if (mobileParty == MobileParty.MainParty && QuestHelperCampaignBehavior.IsInHideoutForQuest2())
+            {
+                while (settlement.Hideout.GetDefenderParties(MapEvent.BattleTypes.Hideout).Sum(p => p.MemberRoster.TotalManCount) < 60)
+                {
+                    var behavior = Campaign.Current.GetCampaignBehavior<BanditSpawnCampaignBehavior>();
+                    behavior.AddBanditToHideout(settlement.Hideout);
+                }
             }
         }
 
@@ -176,11 +150,13 @@ namespace RealmsForgotten.Quest
                 }
             }
         }
-
+        protected void AddGameMenus(CampaignGameStarter campaignGameStarter)
+        {
+        }
         public override TextObject Title => GameTexts.FindText("rf_second_quest_title");
 
         public override bool IsRemainingTimeHidden => true;
-        public override bool IsSpecialQuest => true;
+        public override string SpecialQuestType => "RfMainQuest";
 
         protected override void InitializeQuestOnGameLoad()
         {
@@ -209,9 +185,7 @@ namespace RealmsForgotten.Quest
         private static LocationCharacter CreateTheOwl(CultureObject culture, LocationCharacter.CharacterRelations relation)
         {
             CharacterObject @object = MBObjectManager.Instance.GetObject<CharacterObject>(TheOwlId);
-
             Campaign.Current.Models.AgeModel.GetAgeLimitForLocation(@object, out int minValue, out int maxValue, "");
-
             Monster monsterWithSuffix = FaceGen.GetMonsterWithSuffix(@object.Race, "_settlement");
             AgentData agentData = new AgentData(new SimpleAgentOrigin(@object, -1, null, default(UniqueTroopDescriptor))).Monster(monsterWithSuffix).Age((int)@object.Age).BodyProperties(@object.GetBodyProperties(@object.Equipment, 0));
             var owl = new LocationCharacter(agentData, SandBoxManager.Instance.AgentBehaviorManager.AddWandererBehaviors, "sp_tavern_townsman", true, relation, null, true, false, null, false, false, false);
@@ -241,7 +215,6 @@ namespace RealmsForgotten.Quest
 
         public static void OpenPrisonBreak()
         {
-
             Settlement settlement = Settlement.Find("town_B4");
             PlayerEncounter.Start();
             EnterSettlementAction.ApplyForParty(MobileParty.MainParty, settlement);
@@ -262,9 +235,9 @@ namespace RealmsForgotten.Quest
 
             if (owlParty == null)
             {
-                owlParty = LordPartyComponent.CreateLordParty("the_owl_party", TheOwl, Vec2.Zero, 0f,
+                owlParty = LordPartyComponent.CreateLordParty("the_owl_party", TheOwl, CampaignVec2.Zero, 0f,
                     QuestGiver.HomeSettlement, TheOwl);
-                owlParty.InitializeMobilePartyAtPosition(QuestGiver.Culture.DefaultPartyTemplate, MobileParty.MainParty.Position2D);
+                owlParty.InitializeMobilePartyAtPosition(QuestGiver.Culture.DefaultPartyTemplate, new(MobileParty.MainParty.GetPosition2D, !MobileParty.MainParty.IsCurrentlyAtSea));
             }
 
             owlParty.Army = new Army(QuestGiver.Clan.Kingdom, owlParty, Army.ArmyTypes.Patrolling);
@@ -274,8 +247,7 @@ namespace RealmsForgotten.Quest
             MobileParty.MainParty.Army.AddPartyToMergedParties(MobileParty.MainParty);
 
             MobileParty.MainParty.Army.AiBehaviorObject = settlement;
-            MobileParty.MainParty.Army.AIBehavior = Army.AIBehaviorFlags.GoToSettlement;
-            MobileParty.MainParty.Army.LeaderParty.Ai.SetMoveGoToSettlement(settlement);
+            MobileParty.MainParty.Army.LeaderParty.SetMoveGoToSettlement(settlement, MobileParty.NavigationType.All, false);
 
             MobileParty.MainParty.Army.LeaderParty.Ai.SetDoNotMakeNewDecisions(true);
 
@@ -298,8 +270,8 @@ namespace RealmsForgotten.Quest
             else
             {
                 owlParty = LordPartyComponent.CreateLordParty("owl_party", Hero.OneToOneConversationHero,
-                    MobileParty.MainParty.Position2D, 1f, QuestGiver.HomeSettlement, Hero.OneToOneConversationHero);
-                owlParty.InitializeMobilePartyAroundPosition(TroopRoster.CreateDummyTroopRoster(), TroopRoster.CreateDummyTroopRoster(), MobileParty.MainParty.Position2D, 1f);
+                    new(MobileParty.MainParty.GetPosition2D, !MobileParty.MainParty.IsCurrentlyAtSea), 1f, QuestGiver.HomeSettlement, Hero.OneToOneConversationHero);
+                owlParty.InitializeMobilePartyAroundPosition(TroopRoster.CreateDummyTroopRoster(), TroopRoster.CreateDummyTroopRoster(), new(MobileParty.MainParty.GetPosition2D, !MobileParty.MainParty.IsCurrentlyAtSea), 1f);
             }
 
             CreateOwlArmy(owlParty);
@@ -377,9 +349,9 @@ namespace RealmsForgotten.Quest
                     Clan clan = Clan.FindFirst(x => x.StringId == "clan_empire_north_7");
 
                     mobileParty = MobileParty.All.FirstOrDefault(x => x?.StringId == "owl_party") ?? LordPartyComponent.CreateLordParty("owl_party", TheOwl,
-                        MobileParty.MainParty.Position2D, 1f, QuestGiver.HomeSettlement, TheOwl);
+                        new(MobileParty.MainParty.GetPosition2D, !MobileParty.MainParty.IsCurrentlyAtSea), 1f, QuestGiver.HomeSettlement, TheOwl);
 
-                    mobileParty.InitializeMobilePartyAroundPosition(QuestGiver.Clan.DefaultPartyTemplate, MobileParty.MainParty.Position2D, 1f, 0, 80);
+                    mobileParty.InitializeMobilePartyAroundPosition(QuestGiver.Clan.DefaultPartyTemplate, new(MobileParty.MainParty.GetPosition2D, !MobileParty.MainParty.IsCurrentlyAtSea), 1f, 0);
                     mobileParty.StringId = "owl_party";
                 }
 
@@ -392,7 +364,7 @@ namespace RealmsForgotten.Quest
             {
                 escapedPrison = true;
 
-                QuestUIManager.ShowNotification(GameTexts.FindText("rf_kidnapped_text").ToString(), OpenPrisonBreak, true, "prisoner_image");
+                QuestUIManager.ShowNotification(GameTexts.FindText("rf_kidnapped_text").ToString(), () => { SaveCurrentQuestCampaignBehavior.Instance.SaveQuestState("queen"); }, true, "prisoner_image");
 
                 anoritLordConversationTime = CampaignTime.Never;
             }

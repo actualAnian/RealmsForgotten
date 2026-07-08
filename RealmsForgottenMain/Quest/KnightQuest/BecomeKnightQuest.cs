@@ -90,7 +90,7 @@ namespace RealmsForgotten.Quest.KnightQuest
                 _beMercenaryLog?.UpdateCurrentProgress(1);
             }
         }
-        public override bool IsSpecialQuest => true;
+        public override string SpecialQuestType => "RfKnightQuest";
 
         public override TextObject Title => new("Become a Knight");
 

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Party.PartyComponents;
 using TaleWorlds.CampaignSystem.Party;
@@ -10,7 +7,6 @@ using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
-using TaleWorlds.Localization;
 using HarmonyLib;
 using TaleWorlds.Library;
 
@@ -26,20 +22,18 @@ namespace RealmsForgotten.Quest
                 Clan clan = Clan.All.Find(x => x.StringId == "mountain_bandits");
                 for (int i = 0; i <= 2; i++)
                 {
-                    MobileParty bandits = BanditPartyComponent.CreateBanditParty("bandits_quest_" + i, clan, hideout, i == 2 ? true : false);
-                    bandits.InitializeMobilePartyAtPosition(clan.DefaultPartyTemplate, hideout.Settlement.Position2D);
-                    bandits.Ai.SetMoveGoToSettlement(hideout.Settlement);
-                    bandits.Ai.RecalculateShortTermAi();
+                    PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("looters_template");
+                    MobileParty bandits = BanditPartyComponent.CreateBanditParty("bandits_quest_\" + i", clan, hideout, i == 2, looterTemplate, hideout.Settlement.Position); //@TODO
+                    bandits.InitializeMobilePartyAtPosition(clan.DefaultPartyTemplate, hideout.Settlement.Position);
+                    bandits.SetMoveGoToSettlement(hideout.Settlement, MobileParty.NavigationType.All, false);
+                    bandits.RecalculateShortTermBehavior();
                     EnterSettlementAction.ApplyForParty(bandits, hideout.Settlement);
                 }
                 AccessTools.Field(typeof(Hideout), "_nextPossibleAttackTime").SetValue(hideout, CampaignTime.Now);
 
                 hideout.IsSpotted = true;
-
-
             }
             hideout.Settlement.IsVisible = true;
-
         }
         public static void RegisterQuestEvents(object obj)
         {

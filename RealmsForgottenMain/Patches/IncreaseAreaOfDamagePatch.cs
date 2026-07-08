@@ -1,10 +1,6 @@
 ﻿using HarmonyLib;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using RealmsForgotten.CustomSkills;
 using TaleWorlds.CampaignSystem;
 using static TaleWorlds.MountAndBlade.Mission;
@@ -18,9 +14,20 @@ namespace RealmsForgotten.Patches
     [HarmonyPatch(typeof(Mission), "MissileAreaDamageCallback")]
     public static class IncreaseAreaOfDamagePatch
     {
+        private readonly record struct DeferredAreaDamageBlow(
+            Agent Attacker,
+            Agent Victim,
+            Blow SourceBlow,
+            Blow Blow,
+            AttackCollisionData CollisionData,
+            MissionWeapon AttackerWeapon,
+            CombatLogData CombatLog);
+
         private static FieldInfo _attackBlockedWithShield =
             AccessTools.Field(typeof(AttackCollisionData), "_attackBlockedWithShield");
-        private static CombatLogData GetAttackCollisionResults(Agent attackerAgent, Agent victimAgent, GameEntity hitObject, float momentumRemaining, in MissionWeapon attackerWeapon, bool crushedThrough, bool cancelDamage, bool crushedThroughWithoutAgentCollision, ref AttackCollisionData attackCollisionData, out WeaponComponentData shieldOnBack, out CombatLogData combatLog)
+        private static readonly List<DeferredAreaDamageBlow> PendingAreaDamageBlows = new();
+        private static readonly object Sync = new();
+        private static CombatLogData GetAttackCollisionResults(Agent attackerAgent, Agent victimAgent, WeakGameEntity hitObject, float momentumRemaining, in MissionWeapon attackerWeapon, bool crushedThrough, bool cancelDamage, bool crushedThroughWithoutAgentCollision, ref AttackCollisionData attackCollisionData, out WeaponComponentData shieldOnBack, out CombatLogData combatLog)
         {
             AttackInformation attackInformation = new AttackInformation(attackerAgent, victimAgent, hitObject, in attackCollisionData, in attackerWeapon);
 
@@ -31,11 +38,11 @@ namespace RealmsForgotten.Patches
             attackCollisionData = (AttackCollisionData)checkShieldCollisionData;
             
             shieldOnBack = attackInformation.ShieldOnBack;
-            MissionCombatMechanicsHelper.GetAttackCollisionResults(in attackInformation, crushedThrough, momentumRemaining, in attackerWeapon, cancelDamage, ref attackCollisionData, out combatLog, out var _);
+            MissionCombatMechanicsHelper.GetAttackCollisionResults(in attackInformation, crushedThrough, momentumRemaining, cancelDamage, ref attackCollisionData, out combatLog, out var _);
             float num = attackCollisionData.InflictedDamage;
             if (num > 0f)
             {
-                float num2 = MissionGameModels.Current.AgentApplyDamageModel.CalculateDamage(in attackInformation, in attackCollisionData, in attackerWeapon, num);
+                float num2 = MissionGameModels.Current.AgentApplyDamageModel.CalculateDamage(in attackInformation, in attackCollisionData, num);
                 combatLog.ModifiedDamage = MathF.Round(num2 - num);
                 attackCollisionData.InflictedDamage = MathF.Round(num2);
             }
@@ -67,7 +74,7 @@ namespace RealmsForgotten.Patches
             if (!crushedThroughWithoutAgentCollision)
             {
                 combatLog.BodyPartHit = attackCollisionData.VictimHitBodyPart;
-                combatLog.IsVictimEntity = hitObject != null;
+                //combatLog.IsVictimEntity = hitObject != null; @TODO
             }
 
             return combatLog;
@@ -76,6 +83,43 @@ namespace RealmsForgotten.Patches
         public static float isWand = 0f;
         public static Blow CurrentBlow;
         private static MethodInfo RegisterBlow = AccessTools.Method(typeof(Mission), "RegisterBlow");
+
+        public static void ProcessPendingAreaDamage(Mission mission)
+        {
+            if (mission == null)
+                return;
+
+            List<DeferredAreaDamageBlow> queued;
+            lock (Sync)
+            {
+                if (PendingAreaDamageBlows.Count == 0)
+                    return;
+
+                queued = new List<DeferredAreaDamageBlow>(PendingAreaDamageBlows);
+                PendingAreaDamageBlows.Clear();
+            }
+
+            foreach (DeferredAreaDamageBlow entry in queued)
+            {
+                if (entry.Attacker == null || entry.Victim == null || !entry.Victim.IsActive())
+                    continue;
+
+                CurrentBlow = entry.SourceBlow;
+                RegisterBlow.Invoke(mission, new object[] { entry.Attacker, entry.Victim, null, entry.Blow, entry.CollisionData, entry.AttackerWeapon, entry.CombatLog });
+                CurrentBlow = default;
+            }
+        }
+
+        public static void ClearPendingAreaDamage()
+        {
+            lock (Sync)
+            {
+                PendingAreaDamageBlows.Clear();
+            }
+
+            CurrentBlow = default;
+            isWand = 0f;
+        }
 
 
         [HarmonyPrefix]
@@ -165,11 +209,11 @@ namespace RealmsForgotten.Patches
                         attackCollisionData.SetCollisionBoneIndexForAreaDamage(collisionBoneIndexForAreaDamage);
 
                         Dictionary<int, Missile> ____missiles =
-                            (Dictionary<int, Missile>)AccessTools.Field(typeof(Mission), "_missiles").GetValue(__instance);
+                            (Dictionary<int, Missile>)AccessTools.Field(typeof(Mission), "_missilesDictionary").GetValue(__instance);
                         MissionWeapon attackerWeapon = ____missiles[attackCollisionData.AffectorWeaponSlotOrMissileIndex].Weapon;
 
 
-                        GetAttackCollisionResults(shooterAgent, item, null, 1f, in attackerWeapon, crushedThrough: false, cancelDamage: false, crushedThroughWithoutAgentCollision: false, ref attackCollisionData, out var _, out var combatLog);
+                        GetAttackCollisionResults(shooterAgent, item, default, 1f, in attackerWeapon, crushedThrough: false, cancelDamage: false, crushedThroughWithoutAgentCollision: false, ref attackCollisionData, out var _, out var combatLog);
                         b.BaseMagnitude = attackCollisionData.BaseMagnitude;
                         b.MovementSpeedDamageModifier = attackCollisionData.MovementSpeedDamageModifier;
                         b.InflictedDamage = attackCollisionData.InflictedDamage;
@@ -182,10 +226,17 @@ namespace RealmsForgotten.Patches
 
                         b.BoneIndex = item.GetRandomPairOfRealBloodBurstBoneIndices().Item1;
 
-                        CurrentBlow = blowInput;
-
-                        RegisterBlow.Invoke(__instance, new object[] { (object)shooterAgent, (object)item, (object)null, (object)b, (object)attackCollisionData, (object)attackerWeapon, (object)combatLog });
-                        CurrentBlow = default;
+                        lock (Sync)
+                        {
+                            PendingAreaDamageBlows.Add(new DeferredAreaDamageBlow(
+                                shooterAgent,
+                                item,
+                                blowInput,
+                                b,
+                                attackCollisionData,
+                                attackerWeapon,
+                                combatLog));
+                        }
                     }
                 }
                 isWand = 0f;

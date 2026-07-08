@@ -3,7 +3,6 @@ using Helpers;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.GameMenus;
-using TaleWorlds.CampaignSystem.Overlay;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Localization;
@@ -29,7 +28,7 @@ namespace RealmsForgotten.AiMade
             {
                 GameMenu.SwitchToMenu("town_maesters_tower");
             }, false, 4, false);
-            campaignGameStarter.AddGameMenu("town_maesters_tower", "You arrive at the Phisician's Tower. As you enter the Tower you see him reading a scroll.", new OnInitDelegate(town_maesters_tower_on_init), GameOverlays.MenuOverlayType.SettlementWithBoth, GameMenu.MenuFlags.None, null);
+            campaignGameStarter.AddGameMenu("town_maesters_tower", "You arrive at the Phisician's Tower. As you enter the Tower you see him reading a scroll.", new OnInitDelegate(town_maesters_tower_on_init), GameMenu.MenuOverlayType.SettlementWithBoth, GameMenu.MenuFlags.None, null);
 
             campaignGameStarter.AddGameMenuOption("town_maesters_tower", "town_maesters_tower_self_heal", "{=ADODHEALTREATED}Get treated by the Phisician. ({HEAL_SELF_AMOUNT}{GOLD_ICON})", new GameMenuOption.OnConditionDelegate(player_needs_heal_on_condition), delegate (MenuCallbackArgs x)
             {
@@ -51,7 +50,7 @@ namespace RealmsForgotten.AiMade
         private bool game_menu_go_to_maesters_tower_on_condition(MenuCallbackArgs args)
         {
             args.optionLeaveType = GameMenuOption.LeaveType.Submenu;
-            return MenuHelper.SetOptionProperties(args, true, false, TextObject.Empty);
+            return MenuHelper.SetOptionProperties(args, true, false, null);
         }
         private void town_maesters_tower_on_init(MenuCallbackArgs args)
         {

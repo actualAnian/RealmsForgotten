@@ -16,7 +16,7 @@ namespace RealmsForgotten.HuntableHerds.AgentComponents
             ;
         }
 
-        public override void OnTickAsAI(float dt)
+        public override void OnTick(float dt)
         {
             if (Agent.Main == null)
                 return;
@@ -24,8 +24,7 @@ namespace RealmsForgotten.HuntableHerds.AgentComponents
             HuntableAITick(dt);
         }
         public virtual void HuntableAITick(float dt) { }
-
-        public override void OnHit(Agent affectorAgent, int damage, in MissionWeapon affectorWeapon)
+        public override void OnHit(Agent affectorAgent, int damage, in MissionWeapon affectorWeapon, in Blow b, in AttackCollisionData collisionData)
         {
             if (!HerdBuildData.CurrentHerdBuildData.FleeOnAttacked || affectorAgent == null || affectorAgent == Agent)
                 return;
@@ -34,7 +33,7 @@ namespace RealmsForgotten.HuntableHerds.AgentComponents
         }
         public void SetMoveToPosition(WorldPosition position, bool addHumanLikeDelay = false, Agent.AIScriptedFrameFlags flags = Agent.AIScriptedFrameFlags.None)
         {
-            this.Agent.SetScriptedPosition(ref position, addHumanLikeDelay, flags);
+            Agent.SetScriptedPosition(ref position, addHumanLikeDelay, flags);
         }
 
         public void GoToPositionOppositeFromOtherAgent(Agent otherAgent)

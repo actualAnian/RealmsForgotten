@@ -6,15 +6,29 @@ using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-namespace RealmsForgotten.HuntableHerds.AgentComponents {
-    public class AggressiveHerdAgentComponent : HerdAgentComponent {
+namespace RealmsForgotten.HuntableHerds.AgentComponents
+{
+    public class AggressiveHerdAgentComponent : HerdAgentComponent
+    {
         private float _attackTimer = 0f;
         private float _aggroTimer = 0f;
 
-        public AggressiveHerdAgentComponent(Agent agent) : base(agent) {
+
+        public static readonly ActionIndexCache[] plagueRatAttack = new ActionIndexCache[]
+                {
+            ActionIndexCache.Create("act_rat_attack_1"),
+            ActionIndexCache.Create("act_rat_attack_2"),
+            ActionIndexCache.Create("act_rat_attack_3"),
+            ActionIndexCache.Create("act_rat_attack_4"),
+            ActionIndexCache.Create("act_rat_attack_6"),
+                };
+
+        public AggressiveHerdAgentComponent(Agent agent) : base(agent)
+        {
         }
 
-        public override void HuntableAITick(float dt) {
+        public override void HuntableAITick(float dt)
+        {
             Agent mainAgent = Agent.Main;
 
             if (_attackTimer > 0f)
@@ -22,23 +36,28 @@ namespace RealmsForgotten.HuntableHerds.AgentComponents {
             else if (_attackTimer < 0f)
                 _attackTimer = 0f;
 
-            if (Agent.CanSeeOtherAgent(mainAgent, HerdBuildData.CurrentHerdBuildData.SightRange)) {
+            if (Agent.CanSeeOtherAgent(mainAgent, HerdBuildData.CurrentHerdBuildData.SightRange))
+            {
                 _aggroTimer = 15f;
             }
-            else {
+            else
+            {
                 if (_aggroTimer > 0f)
                     _aggroTimer -= dt;
             }
 
-            if (_aggroTimer > 0f) {
+            if (_aggroTimer > 0f)
+            {
                 TickIsAggroed(dt, mainAgent);
             }
-            else if (_aggroTimer < 0f) {
+            else if (_aggroTimer < 0f)
+            {
                 _aggroTimer = 0f;
             }
         }
 
-        private void TickIsAggroed(float dt, Agent mainAgent) {
+        private void TickIsAggroed(float dt, Agent mainAgent)
+        {
             Agent.SetMaximumSpeedLimit(HerdBuildData.CurrentHerdBuildData.MaxSpeed, false);
             if (_attackTimer <= 1f)
                 SetMoveToPosition(mainAgent.Position.ToWorldPosition(), false, Agent.AIScriptedFrameFlags.NeverSlowDown);
@@ -48,7 +67,8 @@ namespace RealmsForgotten.HuntableHerds.AgentComponents {
                 AttackAgent(victim);
         }
 
-        private void AttackAgent(Agent otherAgent) {
+        private void AttackAgent(Agent otherAgent)
+        {
             _attackTimer = 5f;
             Vec3 nextPosition = Agent.Mission.GetTrueRandomPositionAroundPoint(otherAgent.Position, 10f, 50f, true);
             SetMoveToPosition(nextPosition.ToWorldPosition(), false, Agent.AIScriptedFrameFlags.NeverSlowDown);
@@ -74,10 +94,16 @@ namespace RealmsForgotten.HuntableHerds.AgentComponents {
             sbyte mainHandItemBoneIndex = Agent.Monster.MainHandItemBoneIndex;
             AttackCollisionData attackCollisionDataForDebugPurpose = AttackCollisionData.GetAttackCollisionDataForDebugPurpose(isBlocked, false, false, true, false, false, false, false, false, false, false, false, isBlocked ? CombatCollisionResult.Blocked : CombatCollisionResult.StrikeAgent, -1, 0, 2, blow.BoneIndex, BoneBodyPartType.Head, mainHandItemBoneIndex, Agent.UsageDirection.AttackLeft, -1, CombatHitResultFlags.NormalHit, 0.5f, 1f, 0f, 0f, 0f, 0f, 0f, 0f, Vec3.Up, blow.Direction, blow.GlobalPosition, Vec3.Zero, Vec3.Zero, otherAgent.Velocity, Vec3.Up);
 
+            if (Agent.Monster.StringId == "rat" && !Agent.GetCurrentAction(0).GetName().Contains("attack"))
+            {
+                Agent.SetActionChannel(0, plagueRatAttack[MBRandom.RandomInt(plagueRatAttack.Length)], true);
+            }
+
             otherAgent.RegisterBlow(blow, attackCollisionDataForDebugPurpose);
         }
 
-        private bool GetWithinAttackRangeOfAgent(Agent otherAgent) {
+        private bool GetWithinAttackRangeOfAgent(Agent otherAgent)
+        {
             if (otherAgent.Position.Distance(Agent.Position) < HerdBuildData.CurrentHerdBuildData.HitboxRange)
                 return true;
             return false;

@@ -25,7 +25,7 @@ namespace RealmsForgotten.AiMade
         private static readonly TextObject DeclineText = new TextObject("{=Decline}IGNORE");
 
         private static GauntletLayer _gauntletLayer;
-        private static GauntletMovie _gauntletMovie;
+        private static GauntletMovieIdentifier _gauntletMovie;
         private static YourPopupVM _popupVM;
 
         public override void RegisterEvents()
@@ -105,7 +105,7 @@ namespace RealmsForgotten.AiMade
         {
             if (_gauntletLayer == null)
             {
-                _gauntletLayer = new GauntletLayer(1000, "GauntletLayer", false);
+                _gauntletLayer = new GauntletLayer("GauntletLayer", 1000, false);
             }
             if (_popupVM == null)
             {
@@ -118,7 +118,7 @@ namespace RealmsForgotten.AiMade
 
             try
             {
-                _gauntletMovie = (GauntletMovie)_gauntletLayer.LoadMovie("YourPopupXMLFileName", _popupVM);
+                _gauntletMovie = _gauntletLayer.LoadMovie("YourPopupXMLFileName", _popupVM);
             }
             catch (Exception e)
             {

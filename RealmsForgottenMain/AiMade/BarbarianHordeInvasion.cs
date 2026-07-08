@@ -10,6 +10,7 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
+using Helpers;
 
 namespace RealmsForgotten.AiMade
 {
@@ -66,7 +67,7 @@ namespace RealmsForgotten.AiMade
 
         private void SpawnBanditParties()
         {
-            cumulativeGrowth += GrowthFactor; // Increase the growth factor by 10% each time
+            cumulativeGrowth += GrowthFactor;
 
             if (towns == null || !towns.Any())
             {
@@ -74,21 +75,26 @@ namespace RealmsForgotten.AiMade
                 return;
             }
 
-            // Randomly select a town for bandit spawning
+            // Select a random town
             Random rnd = new Random();
             Settlement settlement = towns[rnd.Next(towns.Count)];
+
+            // Now you can safely check the hideout
+            if (settlement.Hideout == null)
+            {
+                InformationManager.DisplayMessage(new InformationMessage($"No hideout near {settlement.Name}. Cannot spawn horde here.", Colors.Yellow));
+                return;
+            }
 
             if (settlement != null)
             {
                 var banditParty = CreateBanditParty(settlement);
                 if (banditParty != null)
                 {
-                    banditParty.Position2D = settlement.Position2D;
                     if (banditParty.Ai != null)
                     {
                         EngageNearbyEnemies(banditParty);
                     }
-                    // Print a message that the bandit party has been spawned
                     InformationManager.DisplayMessage(new InformationMessage($"A Nomadic Horde party has been seen near {settlement.Name}."));
                 }
             }
@@ -103,7 +109,8 @@ namespace RealmsForgotten.AiMade
                 return null;
             }
 
-            MobileParty banditParty = BanditPartyComponent.CreateBanditParty(banditClan.StringId, banditClan, settlement.Hideout, true);
+            var hideout = SettlementHelper.FindNearestHideoutToSettlement(settlement, MobileParty.NavigationType.All);
+            MobileParty banditParty = BanditPartyComponent.CreateBanditParty(banditClan.StringId, banditClan, hideout, true, null, settlement.Position);
             if (banditParty == null)
             {
                 InformationManager.DisplayMessage(new InformationMessage("ERROR: Failed to create bandit party.", Colors.Red));
@@ -126,8 +133,8 @@ namespace RealmsForgotten.AiMade
                 troopRoster.AddToCounts(troop, adjustedNumber);
             }
 
-            banditParty.InitializeMobilePartyAroundPosition(troopRoster, TroopRoster.CreateDummyTroopRoster(), settlement.Position2D, 50f, 10f);
-            banditParty.SetCustomName(new TextObject("Barbaric Horde"));
+            banditParty.InitializeMobilePartyAroundPosition(troopRoster, TroopRoster.CreateDummyTroopRoster(), settlement.Position, 50f, 10f);
+            banditParty.Party.SetCustomName(new TextObject("Barbaric Horde"));
             banditParty.Aggressiveness = 10f;
 
             return banditParty;
@@ -151,13 +158,13 @@ namespace RealmsForgotten.AiMade
             // Get nearby enemy parties and set them as targets
             List<MobileParty> nearbyEnemyParties = MobileParty.All
                 .Where(p => (p.IsLordParty || IsVillagerParty(p) || p.IsCaravan || p.IsBandit) && p.MapFaction.IsAtWarWith(banditParty.MapFaction))
-                .OrderBy(p => p.Position2D.DistanceSquared(banditParty.Position2D))
+                .OrderBy(p => p.Position.DistanceSquared(banditParty.Position))
                 .ToList();
 
             if (nearbyEnemyParties.Count > 0)
             {
                 MobileParty target = nearbyEnemyParties.First();
-                banditParty.Ai.SetMoveEngageParty(target);
+                banditParty.SetMoveEngageParty(target, MobileParty.NavigationType.Default);
             }
         }
 

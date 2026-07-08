@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
-using RFCustomSettlements;
+using RealmsForgotten.Career;
+using RealmsForgotten.RFCustomSettlements;
 using RFCustomSettlements.Dialogues;
 using RFCustomSettlements.Patches;
 using RFCustomSettlements.Quests;
@@ -9,7 +10,7 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
-namespace RealmsForgotten.RFCustomSettlements
+namespace RFCustomSettlements
 {
     public class SubModule : MBSubModuleBase
     {
@@ -24,12 +25,9 @@ namespace RealmsForgotten.RFCustomSettlements
             QuestDataLoader.LoadQuestData();
             DialogueParser.Deserialize();
         }
-        protected override void OnSubModuleUnloaded()
+        public override void BeginGameStart(Game game)
         {
-            base.OnSubModuleUnloaded();
-        }
-        protected override void OnBeforeInitialModuleScreenSetAsRoot()
-        {
+            game.ObjectManager.RegisterType<CareerChoiceObject>("Components", "RFCustomSettlement", 104U, true);
         }
         public override void OnAfterGameInitializationFinished(Game game, object obj)
         {
@@ -56,10 +54,9 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             var onFocusGained = AccessTools.Method("AgentInteractionInterfaceVM:OnFocusGained");
             var original = AccessTools.Method("MissionMainAgentInteractionComponent:FocusTick");
-            harmony.Patch(original, transpiler: new HarmonyMethod(typeof(MissionMainAgentInteractionComponentFocusTickPatch), nameof(MissionMainAgentInteractionComponentFocusTickPatch.FocusTickPatch)));
+            //harmony.Patch(original, transpiler: new HarmonyMethod(typeof(MissionMainAgentInteractionComponentFocusTickPatch), nameof(MissionMainAgentInteractionComponentFocusTickPatch.FocusTickPatch)));// no longer needed after 1.3
             harmony.Patch(onFocusGained, transpiler: new HarmonyMethod(typeof(AgentInteractionInterfaceVMOnFocusGainedPatch), nameof(AgentInteractionInterfaceVMOnFocusGainedPatch.OnFocusGainedPatch)));
         }
-
         protected override void OnGameStart(Game game, IGameStarter starterObject)
         {
             if (starterObject is CampaignGameStarter starter)
@@ -68,6 +65,10 @@ namespace RealmsForgotten.RFCustomSettlements
                 starter.AddBehavior(new ArenaCampaignBehavior());
                 starter.AddBehavior(new CustomSettlementQuestSync());
             }
+        }
+        public override void OnMissionBehaviorInitialize(Mission mission)
+        {
+            mission.AddMissionBehavior(new TestMissionLogic());
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using TaleWorlds.Core;
+using TaleWorlds.Core.ViewModelCollection.ImageIdentifiers;
 using TaleWorlds.Core.ViewModelCollection.Information;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
@@ -14,7 +15,7 @@ namespace RealmsForgotten.Smithing.ViewModels
         private string _resourceMaterialTypeAsStr;
         private HintViewModel _resourceHint;
 
-        private ImageIdentifierVM _imageIdentifier;
+        private ItemImageIdentifierVM _imageIdentifier;
 
         public ExtraMaterialItemVM(ExtraCraftingMaterials material, ItemObject resourceItem, int amount, int changeAmount = 0)
         {
@@ -27,7 +28,7 @@ namespace RealmsForgotten.Smithing.ViewModels
             ResourceMaterialTypeAsStr = ResourceMaterial.ToString();
             ResourceChangeAmount = changeAmount;
 
-            ImageIdentifier = new ImageIdentifierVM(ResourceItem);
+            ImageIdentifier = new ItemImageIdentifierVM(ResourceItem);
         }
 
         public ItemObject ResourceItem { get; private set; }
@@ -78,7 +79,7 @@ namespace RealmsForgotten.Smithing.ViewModels
         }
 
         [DataSourceProperty]
-        public ImageIdentifierVM ImageIdentifier
+        public ItemImageIdentifierVM ImageIdentifier
         {
             get => _imageIdentifier;
             set => SetField(ref _imageIdentifier, value, nameof(ImageIdentifier));

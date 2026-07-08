@@ -7,7 +7,7 @@ namespace RealmsForgotten.AiMade.Models
     public static class DemonRaceDamageModel
     {
         // List of race IDs that will use the custom damage model
-        private static readonly HashSet<string> customRaceIds = new HashSet<string> { "tlachiquiy", "shaitan", "thog", "kharach", "brute" };
+        private static readonly HashSet<string> customRaceIds = new HashSet<string> { "tlachiquiy", "shaitan", "thog", "kharach", "brute", "balrog" };
 
         // Override the method responsible for calculating damage
         public static void CalculateDamage(Agent attacker, in MissionWeapon weapon, ref float resultValue)

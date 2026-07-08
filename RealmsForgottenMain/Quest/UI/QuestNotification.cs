@@ -50,7 +50,7 @@ namespace RealmsForgotten.Quest.UI
 
         void IGameStateListener.OnActivate()
         {
-            _layer = new GauntletLayer(1, "GauntletLayer", true);
+            _layer = new GauntletLayer("GauntletLayer", 1, true);
             _dataSource = new QuestNotificationVm(questNotificationState);
             _layer.LoadMovie(questNotificationState.HaveImage ? "RFNotificationWithImage" : "RFNotification", _dataSource);
             _layer.Input.RegisterHotKeyCategory(HotKeyManager.GetCategory("PartyHotKeyCategory"));

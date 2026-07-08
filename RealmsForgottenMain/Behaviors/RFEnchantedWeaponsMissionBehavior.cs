@@ -1,19 +1,13 @@
-﻿using HarmonyLib;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using RealmsForgotten.Utility;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using RealmsForgotten.CustomSkills;
-using RealmsForgotten.Patches;
-using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.Localization;
+using RealmsForgotten.Patches;
 
 namespace RealmsForgotten.Behaviors
 {
@@ -147,8 +141,6 @@ namespace RealmsForgotten.Behaviors
                         AttackCollisionData collisionData = attackCollisionData;
                         Blow blow1 = blow;
                         IncreaseAreaOfDamagePatch.isWand = areaFactor;
-
-
                         IncreaseAreaOfDamagePatch.Prefix(ref collisionData, ref blow1, affectedAgent, affectorAgent, false, Mission.Current);
                     }
                 }

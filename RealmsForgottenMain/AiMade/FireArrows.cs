@@ -44,7 +44,7 @@ namespace RealmsForgotten.AiMade
                 string itemId = weapon.Item.StringId;
                 if (_fireArrowItemIds.Contains(itemId))
                 {
-                    Mission.Missile missile = Mission.Current.Missiles.LastOrDefault(m => m.ShooterAgent == shooterAgent && m.Weapon.Item.StringId == itemId);
+                    Mission.Missile missile = Mission.Current.MissilesList.LastOrDefault(m => m.ShooterAgent == shooterAgent && m.Weapon.Item.StringId == itemId);
                     if (missile != null)
                     {
                         ApplyFireEffectToMissile(missile);

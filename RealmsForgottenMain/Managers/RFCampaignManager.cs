@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterCreationContent;
@@ -11,6 +12,7 @@ using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.ModuleManager;
 using TaleWorlds.MountAndBlade;
+using TaleWorlds.ObjectSystem;
 using TaleWorlds.SaveSystem.Load;
 
 namespace RealmsForgotten.Managers
@@ -19,6 +21,7 @@ namespace RealmsForgotten.Managers
     {
         private readonly bool _loadingSavedGame;
         private LoadResult _loadedGameResult;
+        private Game _loadedGame;
 
         public RFCampaignManager()
         {
@@ -70,35 +73,48 @@ namespace RealmsForgotten.Managers
                         {
                             MBDebug.Print("Initializing new game begin...", 0, Debug.DebugColor.White, 17592186044416UL);
                             Campaign campaign = new(CampaignGameMode.Campaign);
-                            Game.CreateGame(campaign, this);
+                            _loadedGame = Game.CreateGame(campaign, this);
                             campaign.SetLoadingParameters(Campaign.GameLoadingType.NewCampaign);
                             MBDebug.Print("Initializing new game end...", 0, Debug.DebugColor.White, 17592186044416UL);
                         }
                         else
                         {
                             MBDebug.Print("Initializing saved game begin...", 0, Debug.DebugColor.White, 17592186044416UL);
-                            ((Campaign)Game.LoadSaveGame(_loadedGameResult, this).GameType).SetLoadingParameters(Campaign.GameLoadingType.SavedCampaign);
+                            _loadedGame = Game.LoadSaveGame(_loadedGameResult, this);
+                            ((Campaign)_loadedGame.GameType).SetLoadingParameters(Campaign.GameLoadingType.SavedCampaign);
                             _loadedGameResult = null;
                             Common.MemoryCleanupGC(false);
                             MBDebug.Print("Initializing saved game end...", 0, Debug.DebugColor.White, 17592186044416UL);
                         }
-                        Game.Current.DoLoading();
+                        (_loadedGame ?? Game.Current)?.DoLoading();
                         nextStep = GameManagerLoadingSteps.PostInitializeFourthState;
                         return;
                     }
                 case GameManagerLoadingSteps.PostInitializeFourthState:
                     {
-                        bool submodulesLoaded = true;
-                        foreach (MBSubModuleBase mbsubModuleBase in TaleWorlds.MountAndBlade.Module.CurrentModule.SubModules)
+                        Game activeGame = _loadedGame ?? Game.Current;
+                        if (activeGame == null)
                         {
-                            submodulesLoaded = submodulesLoaded && mbsubModuleBase.DoLoading(Game.Current);
+                            throw new InvalidOperationException("RFCampaignManager.PostInitializeFourthState reached with no active Game instance.");
+                        }
+                        bool submodulesLoaded = true;
+                        foreach (MBSubModuleBase mbsubModuleBase in TaleWorlds.MountAndBlade.Module.CurrentModule.CollectSubModules())
+                        {
+                            submodulesLoaded = submodulesLoaded && mbsubModuleBase.DoLoading(activeGame);
                         }
                         nextStep = submodulesLoaded ? GameManagerLoadingSteps.FinishLoadingFifthStep : GameManagerLoadingSteps.PostInitializeFourthState;
                         return;
                     }
                 case GameManagerLoadingSteps.FinishLoadingFifthStep:
-                    nextStep = Game.Current.DoLoading() ? GameManagerLoadingSteps.None : GameManagerLoadingSteps.FinishLoadingFifthStep;
-                    return;
+                    {
+                        Game activeGame = _loadedGame ?? Game.Current;
+                        if (activeGame == null)
+                        {
+                            throw new InvalidOperationException("RFCampaignManager.FinishLoadingFifthStep reached with no active Game instance.");
+                        }
+                        nextStep = activeGame.DoLoading() ? GameManagerLoadingSteps.None : GameManagerLoadingSteps.FinishLoadingFifthStep;
+                        return;
+                    }
                 default:
                     return;
             }
@@ -106,7 +122,7 @@ namespace RealmsForgotten.Managers
 
         public override void OnLoadFinished()
         {
-            if (!this._loadingSavedGame)
+            if (!_loadingSavedGame)
             {
                 MBDebug.Print("Switching to menu window...", 0, Debug.DebugColor.White, 17592186044416UL);
 
@@ -117,8 +133,8 @@ namespace RealmsForgotten.Managers
                 string videoPath = str + "RF_lore_intro_b.ivf";
                 string audioPath = str + "RF_lore_intro_b.ogg";
                 state.SetStartingParameters(videoPath, audioPath, subtitleFileBasePath);
-                state.SetOnVideoFinisedDelegate(new Action(this.LaunchSandboxCharacterCreation));
-                Game.Current.GameStateManager.CleanAndPushState((GameState)state);
+                state.SetOnVideoFinisedDelegate(new Action(LaunchSandboxCharacterCreation));
+                Game.Current.GameStateManager.CleanAndPushState(state);
 
             }
             else
@@ -141,17 +157,18 @@ namespace RealmsForgotten.Managers
                 }
                 CampaignEventDispatcher.Instance.OnGameLoadFinished();
             }
-            base.IsLoaded = true;
+            IsLoaded = true;
         }
 
         private void LaunchSandboxCharacterCreation()
         {
-            CharacterCreationState gameState = Game.Current.GameStateManager.CreateState<CharacterCreationState>(new RFCharacterCreationContent());
-            Game.Current.GameStateManager.CleanAndPushState(gameState);
+            CharacterCreationState gameState = Game.Current.GameStateManager.CreateState<CharacterCreationState>();
+            Game.Current.GameStateManager.CleanAndPushState(gameState, 0);
         }
 
         public override void OnAfterCampaignStart(Game game)
         {
         }
+
     }
 }

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PsaiProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <InitialExportDirectory>D:\PSAI\Assets\Resources</InitialExportDirectory>
+  <SerializedByProtocolVersion>1.0</SerializedByProtocolVersion>
+  <Properties>
+    <WarningThresholdPreBeatMillis>1500</WarningThresholdPreBeatMillis>
+    <DefaultCalculatePostAndPrebeatLengthBasedOnBeats>false</DefaultCalculatePostAndPrebeatLengthBasedOnBeats>
+    <DefaultSegmentSuitabilites>3</DefaultSegmentSuitabilites>
+    <ForceFullRebuild>false</ForceFullRebuild>
+    <VolumeBoost>0</VolumeBoost>
+    <ExportSoundQualityInPercent>100</ExportSoundQualityInPercent>
+    <DefaultPrebeats>1</DefaultPrebeats>
+    <DefaultPostbeats>4</DefaultPostbeats>
+    <DefaultBpm>100</DefaultBpm>
+    <DefaultPrebeatLengthInSamples>1000</DefaultPrebeatLengthInSamples>
+    <DefaultPostbeatLengthInSamples>3000</DefaultPostbeatLengthInSamples>
+  </Properties>
+  <Themes>
+        <!-- RF themes -->
+      <Theme>
+      <Name>RF test</Name>
+      <Id>41</Id>
+      <ThemeTypeInt>7</ThemeTypeInt>
+      <Serialization_ManuallyBlockedThemeIds />
+      <IntensityAfterRest>0.5</IntensityAfterRest>
+      <MusicPhaseSecondsAfterRest>60</MusicPhaseSecondsAfterRest>
+      <MusicPhaseSecondsGeneral>60</MusicPhaseSecondsGeneral>
+      <RestSecondsMin>30</RestSecondsMin>
+      <RestSecondsMax>60</RestSecondsMax>
+      <FadeoutMs>20</FadeoutMs>
+      <Priority>1</Priority>
+      <WeightingSwitchGroups>0.5</WeightingSwitchGroups>
+      <WeightingIntensityVsVariance>0.5</WeightingIntensityVsVariance>
+      <WeightingLowPlaycountVsRandom>0</WeightingLowPlaycountVsRandom>
+      <Groups>
+        <Group>
+          <Name>default group</Name>
+          <Segments>
+            <Segment>
+              <Name>rf_song</Name>
+              <Id>500</Id>
+              <IsAutomaticBridgeSegment>false</IsAutomaticBridgeSegment>
+              <Intensity>0.5</Intensity>
+              <IsUsableAtStart>true</IsUsableAtStart>
+              <IsUsableInMiddle>true</IsUsableInMiddle>
+              <IsUsableAtEnd>true</IsUsableAtEnd>
+              <AudioData>
+                <_prebeatLengthInSamplesEnteredManually>1750</_prebeatLengthInSamplesEnteredManually>
+                <_postbeatLengthInSamplesEnteredManually>127834</_postbeatLengthInSamplesEnteredManually>
+                <Path>song.wav</Path>
+                <Bpm>100</Bpm>
+                <PreBeats>1</PreBeats>
+                <PostBeats>4</PostBeats>
+                <CalculatePostAndPrebeatLengthBasedOnBeats>false</CalculatePostAndPrebeatLengthBasedOnBeats>
+                <PreBeatLengthInSamples>1750</PreBeatLengthInSamples>
+                <PostBeatLengthInSamples>127834</PostBeatLengthInSamples>
+                <TotalLengthInSamples>5316588</TotalLengthInSamples>
+                <SampleRate>44100</SampleRate>
+              </AudioData>
+              <CalculatePostAndPrebeatLengthBasedOnBeats>false</CalculatePostAndPrebeatLengthBasedOnBeats>
+              <PreBeatLengthInSamples>1750</PreBeatLengthInSamples>
+              <PostBeatLengthInSamples>127834</PostBeatLengthInSamples>
+              <PreBeats>1</PreBeats>
+              <PostBeats>4</PostBeats>
+              <Bpm>100</Bpm>
+              <SampleRate>44100</SampleRate>
+              <BitsPerSample>16</BitsPerSample>
+              <ThemeId>41</ThemeId>
+              <Serialization_ManuallyBlockedSegmentIds />
+              <Serialization_ManuallyLinkedSegmentIds />
+              <DefaultCompatibiltyAsFollower>allowed_implicitly</DefaultCompatibiltyAsFollower>
+            </Segment>
+          </Segments>
+          <Description />
+          <Serialization_Id>10</Serialization_Id>
+          <Serialization_ManuallyBlockedGroupIds />
+          <Serialization_ManuallyLinkedGroupIds />
+          <Serialization_ManualBridgeSegmentIds />
+        </Group>
+      </Groups>
+    </Theme>
+
+	  <Theme>
+		  <Name>RF_stealth</Name>
+		  <Id>42</Id>
+		  <ThemeTypeInt>7</ThemeTypeInt>
+		  <Serialization_ManuallyBlockedThemeIds />
+		  <IntensityAfterRest>0.5</IntensityAfterRest>
+		  <MusicPhaseSecondsAfterRest>60</MusicPhaseSecondsAfterRest>
+		  <MusicPhaseSecondsGeneral>60</MusicPhaseSecondsGeneral>
+		  <RestSecondsMin>30</RestSecondsMin>
+		  <RestSecondsMax>60</RestSecondsMax>
+		  <FadeoutMs>20</FadeoutMs>
+		  <Priority>1</Priority>
+		  <WeightingSwitchGroups>0.5</WeightingSwitchGroups>
+		  <WeightingIntensityVsVariance>0.5</WeightingIntensityVsVariance>
+		  <WeightingLowPlaycountVsRandom>0</WeightingLowPlaycountVsRandom>
+		  <Groups>
+			  <Group>
+				  <Name>default group</Name>
+				  <Segments>
+					  <Segment>
+						  <Name>stealth</Name>
+						  <Id>501</Id>
+						  <IsAutomaticBridgeSegment>false</IsAutomaticBridgeSegment>
+						  <Intensity>0.5</Intensity>
+						  <IsUsableAtStart>true</IsUsableAtStart>
+						  <IsUsableInMiddle>true</IsUsableInMiddle>
+						  <IsUsableAtEnd>true</IsUsableAtEnd>
+						  <AudioData>
+							  <_prebeatLengthInSamplesEnteredManually>1750</_prebeatLengthInSamplesEnteredManually>
+							  <_postbeatLengthInSamplesEnteredManually>127834</_postbeatLengthInSamplesEnteredManually>
+							  <Path>stealth.ogg</Path>
+							  <Bpm>100</Bpm>
+							  <PreBeats>1</PreBeats>
+							  <PostBeats>4</PostBeats>
+							  <CalculatePostAndPrebeatLengthBasedOnBeats>false</CalculatePostAndPrebeatLengthBasedOnBeats>
+							  <PreBeatLengthInSamples>1750</PreBeatLengthInSamples>
+							  <PostBeatLengthInSamples>127834</PostBeatLengthInSamples>
+							  <TotalLengthInSamples>5316588</TotalLengthInSamples>
+							  <SampleRate>44100</SampleRate>
+						  </AudioData>
+						  <CalculatePostAndPrebeatLengthBasedOnBeats>false</CalculatePostAndPrebeatLengthBasedOnBeats>
+						  <PreBeatLengthInSamples>1750</PreBeatLengthInSamples>
+						  <PostBeatLengthInSamples>127834</PostBeatLengthInSamples>
+						  <PreBeats>1</PreBeats>
+						  <PostBeats>4</PostBeats>
+						  <Bpm>100</Bpm>
+						  <SampleRate>44100</SampleRate>
+						  <BitsPerSample>16</BitsPerSample>
+						  <ThemeId>42</ThemeId>
+						  <Serialization_ManuallyBlockedSegmentIds />
+						  <Serialization_ManuallyLinkedSegmentIds />
+						  <DefaultCompatibiltyAsFollower>allowed_implicitly</DefaultCompatibiltyAsFollower>
+					  </Segment>
+				  </Segments>
+				  <Description />
+				  <Serialization_Id>10</Serialization_Id>
+				  <Serialization_ManuallyBlockedGroupIds />
+				  <Serialization_ManuallyLinkedGroupIds />
+				  <Serialization_ManualBridgeSegmentIds />
+			  </Group>
+		  </Groups>
+	  </Theme>
+
+	  <Theme>
+		  <Name>RF_action</Name>
+		  <Id>43</Id>
+		  <ThemeTypeInt>7</ThemeTypeInt>
+		  <Serialization_ManuallyBlockedThemeIds />
+		  <IntensityAfterRest>0.5</IntensityAfterRest>
+		  <MusicPhaseSecondsAfterRest>60</MusicPhaseSecondsAfterRest>
+		  <MusicPhaseSecondsGeneral>60</MusicPhaseSecondsGeneral>
+		  <RestSecondsMin>30</RestSecondsMin>
+		  <RestSecondsMax>60</RestSecondsMax>
+		  <FadeoutMs>20</FadeoutMs>
+		  <Priority>1</Priority>
+		  <WeightingSwitchGroups>0.5</WeightingSwitchGroups>
+		  <WeightingIntensityVsVariance>0.5</WeightingIntensityVsVariance>
+		  <WeightingLowPlaycountVsRandom>0</WeightingLowPlaycountVsRandom>
+		  <Groups>
+			  <Group>
+				  <Name>default group</Name>
+				  <Segments>
+					  <Segment>
+						  <Name>action</Name>
+						  <Id>502</Id>
+						  <IsAutomaticBridgeSegment>false</IsAutomaticBridgeSegment>
+						  <Intensity>0.5</Intensity>
+						  <IsUsableAtStart>true</IsUsableAtStart>
+						  <IsUsableInMiddle>true</IsUsableInMiddle>
+						  <IsUsableAtEnd>true</IsUsableAtEnd>
+						  <AudioData>
+							  <_prebeatLengthInSamplesEnteredManually>1750</_prebeatLengthInSamplesEnteredManually>
+							  <_postbeatLengthInSamplesEnteredManually>127834</_postbeatLengthInSamplesEnteredManually>
+							  <Path>action.ogg</Path>
+							  <Bpm>100</Bpm>
+							  <PreBeats>1</PreBeats>
+							  <PostBeats>4</PostBeats>
+							  <CalculatePostAndPrebeatLengthBasedOnBeats>false</CalculatePostAndPrebeatLengthBasedOnBeats>
+							  <PreBeatLengthInSamples>1750</PreBeatLengthInSamples>
+							  <PostBeatLengthInSamples>127834</PostBeatLengthInSamples>
+							  <TotalLengthInSamples>5316588</TotalLengthInSamples>
+							  <SampleRate>44100</SampleRate>
+						  </AudioData>
+						  <CalculatePostAndPrebeatLengthBasedOnBeats>false</CalculatePostAndPrebeatLengthBasedOnBeats>
+						  <PreBeatLengthInSamples>1750</PreBeatLengthInSamples>
+						  <PostBeatLengthInSamples>127834</PostBeatLengthInSamples>
+						  <PreBeats>1</PreBeats>
+						  <PostBeats>4</PostBeats>
+						  <Bpm>100</Bpm>
+						  <SampleRate>44100</SampleRate>
+						  <BitsPerSample>16</BitsPerSample>
+						  <ThemeId>43</ThemeId>
+						  <Serialization_ManuallyBlockedSegmentIds />
+						  <Serialization_ManuallyLinkedSegmentIds />
+						  <DefaultCompatibiltyAsFollower>allowed_implicitly</DefaultCompatibiltyAsFollower>
+					  </Segment>
+				  </Segments>
+				  <Description />
+				  <Serialization_Id>10</Serialization_Id>
+				  <Serialization_ManuallyBlockedGroupIds />
+				  <Serialization_ManuallyLinkedGroupIds />
+				  <Serialization_ManualBridgeSegmentIds />
+			  </Group>
+		  </Groups>
+	  </Theme>
+	  
+  </Themes>
+</PsaiProject>

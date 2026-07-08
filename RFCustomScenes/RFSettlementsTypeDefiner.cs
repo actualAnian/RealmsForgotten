@@ -1,6 +1,7 @@
 ﻿using RFCustomSettlements.Quests;
 using System;
 using System.Collections.Generic;
+using TaleWorlds.Library;
 using TaleWorlds.SaveSystem;
 using static RealmsForgotten.RFCustomSettlements.ArenaSettlementStateHandler;
 using static RFCustomSettlements.Quests.CustomSettlementQuestSync;
@@ -22,6 +23,7 @@ namespace RealmsForgotten.RFCustomSettlements
             ConstructContainerDefinition(typeof(Dictionary<string, int>));
             ConstructContainerDefinition(typeof(Dictionary<string, CustomSettlementQuestData>));
             ConstructContainerDefinition(typeof(List<RFCustomSettlement>));
+            ConstructContainerDefinition(typeof(Dictionary<string, List<Vec3>>));
         }
     }
 }

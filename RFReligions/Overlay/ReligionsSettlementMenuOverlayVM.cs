@@ -1,5 +1,5 @@
 ﻿using RealmsForgotten.RFReligions.Helper;
-using TaleWorlds.CampaignSystem.Overlay;
+using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.ViewModelCollection.GameMenu.Overlay;
 using TaleWorlds.Core.ViewModelCollection.Information;
@@ -12,7 +12,7 @@ public class ReligionsSettlementMenuOverlayVM : SettlementMenuOverlayVM
     private string _religionLbl;
     private BasicTooltipViewModel _religionHint;
 
-    public ReligionsSettlementMenuOverlayVM(GameOverlays.MenuOverlayType type) : base(type)
+    public ReligionsSettlementMenuOverlayVM(GameMenu.MenuOverlayType type) : base(type)
     {
         if (Settlement.CurrentSettlement?.IsTown == true)
             ReligionHint =

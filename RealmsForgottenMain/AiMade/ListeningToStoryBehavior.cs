@@ -35,13 +35,14 @@ namespace RealmsForgotten.AiMade
         private static readonly TextObject DeclineText = new TextObject("{=Decline}IGNORE");
 
         private static GauntletLayer _gauntletLayer;
-        private static GauntletMovie _gauntletMovie;
+        private static GauntletMovieIdentifier _gauntletMovie;
         private static YourPopupVM _popupVM;
 
         private CampaignTime _lastStoryTime;
         private CampaignTime _gameStartTime;
-        private const int StoryCooldownDays = 30;
+        private const int StoryCooldownDays = 100;
 
+        private bool _hasFinishedStory = false;
         public override void RegisterEvents()
         {
             CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, OnNewGameCreated);
@@ -53,6 +54,7 @@ namespace RealmsForgotten.AiMade
         {
             dataStore.SyncData("last_story_time", ref _lastStoryTime);
             dataStore.SyncData("game_start_time", ref _gameStartTime);
+            dataStore.SyncData("has_finished_story", ref _hasFinishedStory);
         }
 
         private void OnNewGameCreated(CampaignGameStarter campaignGameStarter)
@@ -74,6 +76,9 @@ namespace RealmsForgotten.AiMade
 
         private void OnHourlyTick()
         {
+            if (_hasFinishedStory)
+                return; // ✅ Player already finished the story. Never trigger again.
+
             if (CampaignTime.Now > _gameStartTime + CampaignTime.Days(30) &&
                 (_lastStoryTime == null || CampaignTime.Now > _lastStoryTime + CampaignTime.Days(StoryCooldownDays)))
             {
@@ -140,6 +145,7 @@ namespace RealmsForgotten.AiMade
 
         private void EndStory()
         {
+            _hasFinishedStory = true; // ✅ Mark story as completed forever
             InformationManager.DisplayMessage(new InformationMessage("YOU HAVE FINISHED LISTENING TO THE STORY.", Colors.Green));
             DeletePopupVMLayer();
         }
@@ -148,7 +154,7 @@ namespace RealmsForgotten.AiMade
         {
             if (_gauntletLayer == null)
             {
-                _gauntletLayer = new GauntletLayer(1000, "GauntletLayer", false);
+                _gauntletLayer = new GauntletLayer("GauntletLayer", 1000, false);
             }
             if (_popupVM == null)
             {
@@ -161,7 +167,7 @@ namespace RealmsForgotten.AiMade
 
             try
             {
-                _gauntletMovie = (GauntletMovie)_gauntletLayer.LoadMovie("YourPopupXMLFileName", _popupVM);
+                _gauntletMovie = _gauntletLayer.LoadMovie("YourPopupXMLFileName", _popupVM);
             }
             catch (Exception e)
             {

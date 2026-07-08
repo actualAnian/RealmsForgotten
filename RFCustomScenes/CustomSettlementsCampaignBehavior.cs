@@ -6,9 +6,9 @@ using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameMenus;
-using TaleWorlds.CampaignSystem.Overlay;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.SaveSystem;
 
@@ -23,6 +23,19 @@ namespace RealmsForgotten.RFCustomSettlements
         [SaveableField(1)]
         private static Dictionary<string, int> _dialogueStates = new();
         public static Dictionary<string, int> DialogueStates { get { return _dialogueStates; } }
+
+        [SaveableField(2)]
+        private static Dictionary<string, List<Vec3>> _explorationSettlementsPickedObjects = new();
+        public List<Vec3> GetPickedObjectsFromScene(string sceneName)
+        {
+            if (!_explorationSettlementsPickedObjects.ContainsKey(sceneName))
+                _explorationSettlementsPickedObjects[sceneName] = new ();
+            return _explorationSettlementsPickedObjects[sceneName];
+        }
+        public void SetExplorationSceneObjectAsPicked(string sceneName, Vec3 objectPosition)
+        {
+            _explorationSettlementsPickedObjects[sceneName].Add(objectPosition);
+        }
         public CustomSettlementsCampaignBehavior()
         {
             _dialogueStates = new();
@@ -34,11 +47,6 @@ namespace RealmsForgotten.RFCustomSettlements
             CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.FillSettlementList));
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnSessionLaunched));
             CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.FillSettlementList));
-            CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, () => {
-                int a = 5;
-                //test = new CustomSettlementQuest("test_1", () => { return false; });
-                
-            });
         }
 
         private void OnSessionLaunched(CampaignGameStarter starter)
@@ -73,12 +81,12 @@ namespace RealmsForgotten.RFCustomSettlements
 
         private void AddGameMenus(CampaignGameStarter starter)
         {
-            starter.AddGameMenu("rf_settlement_start", "{=!}{RF_SETTLEMENT_MAIN_TEXT}", new OnInitDelegate(this.game_menu_rf_settlement_start_on_init), GameOverlays.MenuOverlayType.None, GameMenu.MenuFlags.None, null);
+            starter.AddGameMenu("rf_settlement_start", "{=!}{RF_SETTLEMENT_MAIN_TEXT}", new OnInitDelegate(this.game_menu_rf_settlement_start_on_init), GameMenu.MenuOverlayType.None, GameMenu.MenuFlags.None, null);
             starter.AddGameMenuOption("rf_settlement_start", "start", "{=!}{RF_SETTLEMENT_EXPLORE_TEXT}", new GameMenuOption.OnConditionDelegate(this.game_menu_rf_settlement_start_on_condition), new GameMenuOption.OnConsequenceDelegate(this.game_menu_rf_settlement_start_on_consequence), false, -1, false);
             starter.AddGameMenuOption("rf_settlement_start", "wait", "{=!}{RF_SETTLEMENT_WAIT_START_TEXT}", new GameMenuOption.OnConditionDelegate(this.game_menu_rf_settlement_wait_on_condition), new GameMenuOption.OnConsequenceDelegate(this.game_menu_rf_settlement_wait_on_consequence), false, -1, false);
 
             starter.AddGameMenuOption("rf_settlement_start", "leave", "{=3sRdGQou}Leave", new GameMenuOption.OnConditionDelegate(this.leave_on_condition), new GameMenuOption.OnConsequenceDelegate(this.game_menu_leave_on_consequence), true, -1, false);
-            starter.AddWaitGameMenu("rf_settlement_wait_menu", "{=!}{RF_SETTLEMENT_WAIT_TEXT}", delegate (MenuCallbackArgs args) { if (currentSettlement == null) return; currentSettlement.StateHandler.OnSettlementWaitInit(args); args.MenuContext.GameMenu.StartWait(); }, new OnConditionDelegate(this.wait_menu_on_condition), new OnConsequenceDelegate(this.wait_menu_on_consequence), new OnTickDelegate(this.game_menu_wait_till_can_enter_menu_on_tick), GameMenu.MenuAndOptionType.WaitMenuShowOnlyProgressOption, GameOverlays.MenuOverlayType.None, 0, GameMenu.MenuFlags.None, null);
+            starter.AddWaitGameMenu("rf_settlement_wait_menu", "{=!}{RF_SETTLEMENT_WAIT_TEXT}", delegate (MenuCallbackArgs args) { if (currentSettlement == null) return; currentSettlement.StateHandler.OnSettlementWaitInit(args); args.MenuContext.GameMenu.StartWait(); }, new OnConditionDelegate(this.wait_menu_on_condition), new OnConsequenceDelegate(this.wait_menu_on_consequence), new OnTickDelegate(this.game_menu_wait_till_can_enter_menu_on_tick), GameMenu.MenuAndOptionType.WaitMenuShowOnlyProgressOption, GameMenu.MenuOverlayType.None, 0, GameMenu.MenuFlags.None, null);
             starter.AddGameMenuOption("rf_settlement_wait_menu", "leave", "{=3sRdGQou}Leave", new GameMenuOption.OnConditionDelegate(this.leave_on_condition), new GameMenuOption.OnConsequenceDelegate(this.game_menu_leave_on_consequence), true, -1, false);
         }
 
@@ -149,8 +157,8 @@ namespace RealmsForgotten.RFCustomSettlements
             if (!currentSettlement.StateHandler.IsInitialized())
                 try
                 {
-                    if (CustomSettlementBuildData.allCustomSettlementBuildDatas.ContainsKey(currentSettlement.CustomScene))
-                        currentSettlement.StateHandler.InitHandler(CustomSettlementBuildData.allCustomSettlementBuildDatas[currentSettlement.CustomScene]);
+                    if (CustomSettlementBuildData.AllCustomSettlementBuildDatas.ContainsKey(currentSettlement.CustomScene))
+                        currentSettlement.StateHandler.InitHandler(CustomSettlementBuildData.AllCustomSettlementBuildDatas[currentSettlement.CustomScene]);
                 }
                 catch(Exception)
                 {
@@ -165,13 +173,14 @@ namespace RealmsForgotten.RFCustomSettlements
         public override void SyncData(IDataStore dataStore)
         {
             dataStore.SyncData("custSetDialStates", ref _dialogueStates);
+            dataStore.SyncData("explSetObjects", ref _explorationSettlementsPickedObjects);
             if (dataStore.IsSaving)
             {
                 customSettlementComponents = (from Settlement settlement in customSettlements
                                               select (RFCustomSettlement)settlement.SettlementComponent).ToList();
             }
             if(customSettlementComponents != null)
-                dataStore.SyncData<List<RFCustomSettlement>>("ruinComponents", ref customSettlementComponents);
+                dataStore.SyncData("ruinComponents", ref customSettlementComponents);
         }
     }
 }
