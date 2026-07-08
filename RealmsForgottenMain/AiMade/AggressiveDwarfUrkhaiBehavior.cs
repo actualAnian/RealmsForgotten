@@ -13,7 +13,7 @@ namespace RealmsForgotten.AiMade
 
         public override void SyncData(IDataStore dataStore)
         {
-            // Nothing to sync for now
+            // Nothing to sync for now.
         }
 
         private void OnWeeklyTick()
@@ -33,7 +33,7 @@ namespace RealmsForgotten.AiMade
         {
             dwarfKingdom = Kingdom.All.FirstOrDefault(k => k.StringId == "dwarf_kingdom");
             urkhaiKingdom = Kingdom.All.FirstOrDefault(k => k.StringId == "urkhai_kingdom");
-            return dwarfKingdom != null && urkhaiKingdom != null;
+            return dwarfKingdom != null && urkhaiKingdom != null && !dwarfKingdom.IsEliminated && !urkhaiKingdom.IsEliminated;
         }
     }
 }

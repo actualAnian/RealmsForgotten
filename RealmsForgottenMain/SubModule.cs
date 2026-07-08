@@ -3,12 +3,12 @@ using Bannerlord.UIExtenderEx;
 using MCM.Abstractions.Attributes;
 using Newtonsoft.Json.Linq;
 using RealmsForgotten.AiMade;
+using RealmsForgotten.AiMade.StrategicIntrigue.SaveSystem;
 using RealmsForgotten.Behaviors;
 using RealmsForgotten.Career;
 using RealmsForgotten.Career.Ability;
 using RealmsForgotten.Career.Logic;
 using RealmsForgotten.CharacterCreation;
-using RealmsForgotten.AiMade.StrategicIntrigue.SaveSystem;
 using RealmsForgotten.CustomBandits;
 using RealmsForgotten.CustomSkills;
 using RealmsForgotten.LegendaryTroops;
@@ -24,6 +24,7 @@ using RealmsForgotten.RFMissionLogic;
 using RealmsForgotten.UI;
 using RealmsForgotten.WarSailsPatches;
 using RF_BattleAI;
+using RealmsForgotten.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -36,6 +37,7 @@ using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.CampaignSystem.ViewModelCollection;
 using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
@@ -85,6 +87,7 @@ namespace RealmsForgotten
             RFLogger.Log($"[Lifecycle] RealmsForgotten.SubModule.OnGameStart | gameType={game.GameType?.GetType().FullName ?? "null"} | starter={gameStarterObject?.GetType().FullName ?? "null"}");
             if (gameStarterObject is CampaignGameStarter campaignGameStarter)
             {
+                campaignGameStarter.AddBehavior(new CampaignHealthChecker());
                 campaignGameStarter.AddBehavior(new BaseGameDebugCampaignBehavior());
                 campaignGameStarter.AddBehavior(new RFEnchantmentVendorBehavior());
                 //Faith bhv comes before cultures bhv
@@ -327,6 +330,9 @@ namespace RealmsForgotten
                 // OptionalNavalStartupPatchBootstrap (plus the attribute scan for
                 // FillMissingCachesPatch); re-applying them here ran every prefix twice.
             }
+
+            FieldInfo field = AccessTools.Field(typeof(CampaignUIHelper), "_skillSortIndices");
+            field?.SetValue(null, Globals.SkillsOrderInCharacterDeveloper);
         }
         private void PatchOrWarn(MethodInfo? original, string targetName, HarmonyMethod? prefix = null, HarmonyMethod? postfix = null, HarmonyMethod? transpiler = null)
         {
@@ -409,12 +415,17 @@ namespace RealmsForgotten
             UIConfig.DoNotUseGeneratedPrefabs = true;
             
             RemoveSandboxAndStoryOptions();
-
+            bool hasRFWarsails = Globals.IsUsingRFWarsailsModule;
             Module.CurrentModule.AddInitialStateOption(
                 new InitialStateOption("RF", name: new TextObject("Realms Forgotten", null), 3,
                 () => MBGameManager.StartNewGame(new RFCampaignManager()),
-                () => (Module.CurrentModule.IsOnlyCoreContentEnabled, coreContentDisabledReason))
-            );
+                () =>
+                {
+                    if (Globals.IsWarSailsLoaded && !hasRFWarsails) return (true, new("{=rf_start_remove_warsails}You have war sails enabled but your RF version is not warsails compatible"));
+                    if (!Globals.IsWarSailsLoaded && hasRFWarsails) return (true, new("{=rf_start_add_warsails}You don't have war sails enabled but your RF version IS ONLY warsails compatible"));
+                    return (Module.CurrentModule.IsOnlyCoreContentEnabled, coreContentDisabledReason);
+                }, null, null)
+               );
 
             foreach (var method in AccessTools.GetDeclaredMethods(typeof(WeaponEffectConsequences)).Where(x => x.IsPublic))
             {

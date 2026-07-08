@@ -188,6 +188,13 @@ namespace RealmsForgotten.Quest
                     InitializeHideoutIfNeeded(questHideout);
                 }
             }
+            private Hero CreateNewHeroForAlchemistsParty()
+            {
+                var character = CharacterObject.FindFirst(c => c.StringId.Contains("spc_hidden_hand_leader"));
+                var clan = Clan.FindFirst(c => c.StringId == "hidden_hand");
+                var newHero = HeroCreator.CreateSpecialHero(character, null, clan, null, 30);
+                return newHero;
+            }
             private void MakePartyEngage(PartyBase party)
             {
                 if (!_hiddenHandSpawned
@@ -195,7 +202,11 @@ namespace RealmsForgotten.Quest
                 {
                     AddLog(GameTexts.FindText("rf_first_quest_objective_4"));
                     Clan clan = Clan.FindFirst(x => x.StringId == "hidden_hand");
-                    Hero hero = clan.Heroes.GetRandomElement();
+                    Hero hero;
+                    if (clan.AliveLords.Count > 0)
+                        hero = clan.AliveLords.GetRandomElement();
+                    else 
+                        hero = CreateNewHeroForAlchemistsParty();
                     MobileParty hiddenHandParty = MobileParty.AllLordParties.FirstOrDefault(x => x.ActualClan == clan) ?? LordPartyComponent.CreateLordParty("attacker_party_quest", hero, MobileParty.MainParty.Position, 1f, QuestQueen.HomeSettlement, hero);
                     hiddenHandParty.StringId = "attacker_party_quest";
                     hiddenHandParty.InitializeMobilePartyAroundPosition(clan.DefaultPartyTemplate, MobileParty.MainParty.Position, 40);

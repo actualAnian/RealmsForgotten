@@ -55,7 +55,8 @@ public static class IntrigueOperationResolver
                         false,
                         breakOutcome));
                     operation.Status = IntrigueOperationStatus.Resolved;
-                    operations.RemoveAt(i);
+                    if (operations.Count > i) // operation has already been removed if clan changed kingdom
+                        operations.RemoveAt(i);
                     continue;
             }
 
@@ -79,9 +80,7 @@ public static class IntrigueOperationResolver
                 }
             }
             else
-            {
                 operation.Status = IntrigueOperationStatus.Resolved;
-            }
 
             state.ClampValues();
             resolutions.Add(new IntrigueOperationResolution(

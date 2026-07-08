@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TaleWorlds.CampaignSystem;
+﻿using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.Core;
-using TaleWorlds.MountAndBlade;
 
 namespace RealmsForgotten.CustomSkills
 {
@@ -133,7 +127,7 @@ namespace RealmsForgotten.CustomSkills
                 PartyRole.Personal, 1.5f, EffectIncrementType.AddFactor);
 
             _initiatesTalisman.Initialize("{=arcane_perk_title.3}Initiates Talisman", RFSkills.Arcane, 100, _initiatesStaff,
-                "{=arcane_perk_desc.3}Augments the effectiveness your magic damage by x1.2.",
+                "{=arcane_perk_desc.3}Augments the effectiveness of your magic damage by x1.2 times",
                 PartyRole.Personal, 1.2f, EffectIncrementType.AddFactor);
 
             _initiatesStaff.Initialize("{=arcane_perk_title.4}Initiates Staff", RFSkills.Arcane, 100, _initiatesTalisman,
