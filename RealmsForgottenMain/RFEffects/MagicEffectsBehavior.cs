@@ -173,6 +173,11 @@ namespace RealmsForgotten.RFEffects
             {
                 RFUtility.ModifyCharacterSkillAttribute(agentEffectData.Agent.Character, DefaultSkills.Athletics, agentEffectData.Agent.Character.GetSkillValue(DefaultSkills.Athletics) / 3);
             }
+            // Damage modifiers are keyed by Agent.Index, which is only meaningful inside
+            // this mission — the model lives for the whole campaign, so effects still
+            // active at mission end would otherwise carry over to unrelated agents that
+            // reuse the same index in the next mission.
+            RFAgentApplyDamageModel.Instance?.ModifiedDamageAgents.Clear();
         }
 
         private Blow CreateBlow(Agent victim, int damage, int attackerId)

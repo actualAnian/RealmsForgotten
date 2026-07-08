@@ -20,6 +20,7 @@ public sealed class TacticRefusedFlank : TacticComponent
     private Formation? _supportInfantry;
     private int _cachedAiControlledFormationCount;
     private RefusedFlankState? _lastState;
+    private readonly HysteresisGate _counterPowerGate = HysteresisGate.RisesAbove(1f);
     private bool _refuseLeftFlank;
 
     public TacticRefusedFlank(Team team)
@@ -175,7 +176,7 @@ public sealed class TacticRefusedFlank : TacticComponent
             return RefusedFlankState.RefuseAndAnchor;
         }
 
-        if (distanceSquared > 1024f || powerRatio < 1f)
+        if (distanceSquared > 1024f || !_counterPowerGate.Evaluate(powerRatio))
         {
             return RefusedFlankState.HoldAndPressure;
         }

@@ -40,6 +40,9 @@ internal static class BattleAICavalryStabilizer
     private const float MinimumRegroupSeconds = 2f;
     private const float MaximumRegroupSeconds = 7f;
     private const float RegroupCooldownSeconds = 7f;
+    private const float StuckRegroupRetryCooldownSeconds = 2.5f;
+    private const float BoggedDownSpeed = 1.2f;
+    private const float BehindEnemyRegroupLateralFactor = 1.4f;
     private const float RegroupEnemyDistance = 30f;
     private const float RegroupForwardOverrun = 26f;
     private const float LocalPowerLossRatio = 0.85f;
@@ -157,7 +160,20 @@ internal static class BattleAICavalryStabilizer
                     continue;
                 }
 
-                EndRegroup(formation, mission.CurrentTime, "complete");
+                // If the regroup timed out while still far from the rally point,
+                // the formation is probably wedged in the melee — retry soon
+                // instead of leaving it unassisted for the full cooldown.
+                float regroupCooldown = RegroupCooldownSeconds;
+                if (ActiveRegroups.TryGetValue(formation, out RegroupState? endedRegroup))
+                {
+                    Vec2 rallyPoint = GetRegroupPoint(formation, anchor, enemyFormation, endedRegroup.Side);
+                    if (formation.CachedMedianPosition.AsVec2.Distance(rallyPoint) > RegroupReadyRadius * 2f)
+                    {
+                        regroupCooldown = StuckRegroupRetryCooldownSeconds;
+                    }
+                }
+
+                EndRegroup(formation, mission.CurrentTime, "complete", applyCooldown: true, cooldownSeconds: regroupCooldown);
                 ReleaseOverride(formation, "committed");
                 continue;
             }
@@ -264,7 +280,8 @@ internal static class BattleAICavalryStabilizer
         BehaviorComponent? activeBehavior = cavalry.AI?.ActiveBehavior;
         if (activeBehavior is not BehaviorFlank
             && activeBehavior is not BehaviorProtectFlank
-            && activeBehavior is not BehaviorTacticalCharge)
+            && activeBehavior is not BehaviorTacticalCharge
+            && activeBehavior is not BehaviorCharge)
         {
             reason = "other-behavior";
             return false;
@@ -370,15 +387,21 @@ internal static class BattleAICavalryStabilizer
         bool trappedByHeavyInfantry = localEnemy.QuerySystem.IsInfantryFormation
             && enemyPower >= cavalryPower * InfantryTrapPowerRatio
             && localEnemy.CountOfUnits >= cavalry.CountOfUnits * InfantryTrapUnitRatio;
+        // Grinding at power parity inside an infantry mass never trips the
+        // disadvantage triggers — detect it by the horses barely moving while
+        // in melee contact with infantry.
+        bool boggedDown = localEnemy.QuerySystem.IsInfantryFormation
+            && localEnemyDistance <= CloseCombatDistance
+            && cavalry.CachedMovementSpeed < BoggedDownSpeed;
 
-        if (!localPowerDisadvantage && !localUnitDisadvantage && !underRangedPressure && !overextended && !trappedByHeavyInfantry)
+        if (!localPowerDisadvantage && !localUnitDisadvantage && !underRangedPressure && !overextended && !trappedByHeavyInfantry && !boggedDown)
         {
             reason = "no-trigger";
             return false;
         }
 
         reason =
-            $"enemy={DescribeFormationType(localEnemy)} dist={localEnemyDistance:F1} power={cavalryPower:F1}/{enemyPower:F1} units={cavalry.CountOfUnits}/{localEnemy.CountOfUnits} ranged={underRangedPressure} overextended={overextended} infantryTrap={trappedByHeavyInfantry}";
+            $"enemy={DescribeFormationType(localEnemy)} dist={localEnemyDistance:F1} power={cavalryPower:F1}/{enemyPower:F1} units={cavalry.CountOfUnits}/{localEnemy.CountOfUnits} ranged={underRangedPressure} overextended={overextended} infantryTrap={trappedByHeavyInfantry} bogged={boggedDown}";
         return true;
     }
 
@@ -390,7 +413,7 @@ internal static class BattleAICavalryStabilizer
             return false;
         }
 
-        Vec2 regroupPoint = GetRegroupPoint(anchor, enemyFormation, regroupState.Side);
+        Vec2 regroupPoint = GetRegroupPoint(cavalry, anchor, enemyFormation, regroupState.Side);
         float distanceToRegroupPoint = cavalry.CachedMedianPosition.AsVec2.Distance(regroupPoint);
         float elapsed = mission.CurrentTime - regroupState.StartedAt;
 
@@ -468,7 +491,7 @@ internal static class BattleAICavalryStabilizer
         behavior.AnchorFormation = anchor;
         behavior.FlankSide = side;
         behavior.ForwardOffset = 0f;
-        behavior.LateralDistance = RegroupLateralDistance;
+        behavior.LateralDistance = GetRegroupLateralDistance(cavalry, anchor, enemyFormation);
         behavior.RearOffset = RegroupRearOffset;
         behavior.OuterArcLateralDistance = 0f;
         behavior.OuterArcRearOffset = 0f;
@@ -505,7 +528,7 @@ internal static class BattleAICavalryStabilizer
         }
     }
 
-    private static void EndRegroup(Formation? cavalry, float currentTime, string reason, bool applyCooldown = true)
+    private static void EndRegroup(Formation? cavalry, float currentTime, string reason, bool applyCooldown = true, float cooldownSeconds = RegroupCooldownSeconds)
     {
         if (cavalry == null || !ActiveRegroups.Remove(cavalry))
         {
@@ -514,7 +537,7 @@ internal static class BattleAICavalryStabilizer
 
         if (applyCooldown)
         {
-            RegroupCooldowns[cavalry] = currentTime + RegroupCooldownSeconds;
+            RegroupCooldowns[cavalry] = currentTime + cooldownSeconds;
         }
         else
         {
@@ -698,9 +721,29 @@ internal static class BattleAICavalryStabilizer
         return forwardDepth >= RegroupForwardOverrun && lateralDistance <= RegroupLateralDistance * 0.9f;
     }
 
-    private static Vec2 GetRegroupPoint(Formation anchor, Formation enemyFormation, FormationAI.BehaviorSide side)
+    private static float GetRegroupLateralDistance(Formation cavalry, Formation anchor, Formation enemyFormation)
     {
-        return BehaviorCavalryReposition.ComputeAssemblyPoint(anchor, enemyFormation, side, RegroupLateralDistance, RegroupRearOffset);
+        Vec2 anchorPosition = anchor.CachedMedianPosition.AsVec2;
+        Vec2 enemyPosition = enemyFormation.CachedMedianPosition.AsVec2;
+        Vec2 directionToEnemy = enemyPosition.IsValid ? (enemyPosition - anchorPosition).Normalized() : anchor.Direction;
+        if (!directionToEnemy.IsValid)
+        {
+            return RegroupLateralDistance;
+        }
+
+        // Cavalry that overran past the enemy line must swing wide on the way
+        // back — a straight path to the rally point behind the anchor runs
+        // through the infantry mass it just escaped from.
+        float enemyDepth = anchorPosition.Distance(enemyPosition);
+        float cavalryDepth = Vec2.DotProduct(cavalry.CachedMedianPosition.AsVec2 - anchorPosition, directionToEnemy);
+        return cavalryDepth > enemyDepth
+            ? RegroupLateralDistance * BehindEnemyRegroupLateralFactor
+            : RegroupLateralDistance;
+    }
+
+    private static Vec2 GetRegroupPoint(Formation cavalry, Formation anchor, Formation enemyFormation, FormationAI.BehaviorSide side)
+    {
+        return BehaviorCavalryReposition.ComputeAssemblyPoint(anchor, enemyFormation, side, GetRegroupLateralDistance(cavalry, anchor, enemyFormation), RegroupRearOffset);
     }
 
     private static bool IsEligibleCavalry(Formation formation)

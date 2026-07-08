@@ -36,7 +36,10 @@ namespace RealmsForgotten.AiMade.Patches
                     ));
                     count++;
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    TaleWorlds.Library.Debug.Print($"[RF] AgentVisualsDataMonsterFix: failed to patch {m.Name}: {ex.Message}");
+                }
             }
 
             return count;
@@ -57,7 +60,10 @@ namespace RealmsForgotten.AiMade.Patches
 
                 __result = ApplyMonster(__result, monster);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                TaleWorlds.Library.Debug.Print($"[RF] AgentVisualsDataMonsterFix: postfix failed, agent keeps default monster: {ex.Message}");
+            }
         }
 
         private static Monster TryGetMonster(object character)

@@ -97,6 +97,7 @@ namespace RealmsForgotten
 
                 campaignGameStarter.AddBehavior(new SlaversRosterBehavior());
                 campaignGameStarter.AddBehavior(new AiSlaversPatrollingBehavior());
+                campaignGameStarter.AddBehavior(new RealmsForgotten.WorldState.Refugees.RefugeeCampaignBehavior());
                 campaignGameStarter.AddBehavior(new RFLegendaryTroopsPlayerVisitTownCampaignBehavior());
                 campaignGameStarter.AddBehavior(new RFLegendaryTroopsNotableBehaviors());
                 campaignGameStarter.AddBehavior(new RFLegendaryTroopsAIRecruitment());
@@ -314,9 +315,27 @@ namespace RealmsForgotten
             if (!manualPatchesHaveFired)
             {
                 manualPatchesHaveFired = true;
-                RunManualPatches();
-                if (Globals.IsWarSailsLoaded) RunWarSailsPatches();
+                try
+                {
+                    RunManualPatches();
+                }
+                catch (Exception ex)
+                {
+                    Debug.Print($"[RF] RunManualPatches failed; continuing without the remaining manual patches: {ex}");
+                }
+                // War Sails patches are applied once in OnSubModuleLoad via
+                // OptionalNavalStartupPatchBootstrap (plus the attribute scan for
+                // FillMissingCachesPatch); re-applying them here ran every prefix twice.
             }
+        }
+        private void PatchOrWarn(MethodInfo? original, string targetName, HarmonyMethod? prefix = null, HarmonyMethod? postfix = null, HarmonyMethod? transpiler = null)
+        {
+            if (original == null)
+            {
+                Debug.Print($"[RF] WARNING: patch target '{targetName}' not found (game update?); skipping this patch.");
+                return;
+            }
+            harmony.Patch(original, prefix, postfix, transpiler);
         }
         private void RunManualPatches()
         {
@@ -324,27 +343,27 @@ namespace RealmsForgotten
             MethodInfo originalMethod = AccessTools.Method("PartyVM:PopulatePartyListLabel");
             //            MethodInfo beardGetterMethod = AccessTools.Method("FaceGenVM:UpdateRaceAndGenderBasedResources");
 #pragma warning restore BHA0003 // Type was not found
-            harmony.Patch(originalMethod, transpiler: new HarmonyMethod(typeof(PartyVMPatch), nameof(PartyVMPatch.PartyVMPopulatePartyListLabelPatch)));
+            PatchOrWarn(originalMethod, "PartyVM:PopulatePartyListLabel", transpiler: new HarmonyMethod(typeof(PartyVMPatch), nameof(PartyVMPatch.PartyVMPopulatePartyListLabelPatch)));
             //          harmony.Patch(beardGetterMethod, transpiler: new HarmonyMethod(typeof(PartyVMPatch), nameof(PartyVMPatch.PartyVMPopulatePartyListLabelPatch)));
             // run manually to remove broken bones when viewing characters
             MethodInfo ammoMethod = AccessTools.Method("Agent:OnWeaponAmmoReload");
             MethodInfo damageInfo = AccessTools.Method("Agent:HandleBlow");
-            harmony.Patch(ammoMethod, prefix: new HarmonyMethod(typeof(RFSpellAmmo), nameof(RFSpellAmmo.OnWeaponAmmoReloadPatch)));
-            harmony.Patch(damageInfo, prefix: new HarmonyMethod(typeof(DamagePatch), nameof(DamagePatch.PreHandleBlow)));
+            PatchOrWarn(ammoMethod, "Agent:OnWeaponAmmoReload", prefix: new HarmonyMethod(typeof(RFSpellAmmo), nameof(RFSpellAmmo.OnWeaponAmmoReloadPatch)));
+            PatchOrWarn(damageInfo, "Agent:HandleBlow", prefix: new HarmonyMethod(typeof(DamagePatch), nameof(DamagePatch.PreHandleBlow)));
 
             QuestPatches.PatchAll();
 
 
             var target = AccessTools.Method(typeof(BanditSpawnCampaignBehavior), "IsLooterFaction", new Type[] { typeof(IFaction) });
-            harmony.Patch(target, prefix: new HarmonyMethod(typeof(BanditSpawnPatch), nameof(BanditSpawnPatch.Prefix)));
+            PatchOrWarn(target, "BanditSpawnCampaignBehavior:IsLooterFaction", prefix: new HarmonyMethod(typeof(BanditSpawnPatch), nameof(BanditSpawnPatch.Prefix)));
             var hideoutMenuInit = AccessTools.Method(typeof(HideoutCampaignBehavior), "game_menu_hideout_place_on_init");
             var hideoutSendTroops = AccessTools.Method(typeof(HideoutCampaignBehavior), "game_menu_send_troops_hideout_on_condition");
             var hideoutSneakIn = AccessTools.Method(typeof(HideoutCampaignBehavior), "game_menu_hideout_sneak_in_on_condition");
             var hideoutAssault = AccessTools.Method(typeof(HideoutCampaignBehavior), "game_menu_assault_hideout_parties_on_condition");
-            harmony.Patch(hideoutMenuInit, postfix: new HarmonyMethod(typeof(GameMenuPatches), nameof(GameMenuPatches.HideoutInitPostfix)));
-            harmony.Patch(hideoutSendTroops, postfix: new HarmonyMethod(typeof(GameMenuPatches), nameof(GameMenuPatches.SendTroopsPostfix)));
-            harmony.Patch(hideoutSneakIn, postfix: new HarmonyMethod(typeof(GameMenuPatches), nameof(GameMenuPatches.SneakInPostfix)));
-            harmony.Patch(hideoutAssault, postfix: new HarmonyMethod(typeof(GameMenuPatches), nameof(GameMenuPatches.AssaultHideoutPostfix)));
+            PatchOrWarn(hideoutMenuInit, "HideoutCampaignBehavior:game_menu_hideout_place_on_init", postfix: new HarmonyMethod(typeof(GameMenuPatches), nameof(GameMenuPatches.HideoutInitPostfix)));
+            PatchOrWarn(hideoutSendTroops, "HideoutCampaignBehavior:game_menu_send_troops_hideout_on_condition", postfix: new HarmonyMethod(typeof(GameMenuPatches), nameof(GameMenuPatches.SendTroopsPostfix)));
+            PatchOrWarn(hideoutSneakIn, "HideoutCampaignBehavior:game_menu_hideout_sneak_in_on_condition", postfix: new HarmonyMethod(typeof(GameMenuPatches), nameof(GameMenuPatches.SneakInPostfix)));
+            PatchOrWarn(hideoutAssault, "HideoutCampaignBehavior:game_menu_assault_hideout_parties_on_condition", postfix: new HarmonyMethod(typeof(GameMenuPatches), nameof(GameMenuPatches.AssaultHideoutPostfix)));
 
             MethodInfo characterDeveloperInit = AccessTools.Method(typeof(CharacterDeveloperHeroItemVM), "InitializeCharacter");
             if (characterDeveloperInit != null)
@@ -469,23 +488,6 @@ namespace RealmsForgotten
             base.OnNewGameCreated(game, initializerObject);
             RFLogger.Log($"[Lifecycle] RealmsForgotten.SubModule.OnNewGameCreated | initializer={initializerObject?.GetType().FullName ?? "null"}");
             QuestSubModule.OnNewGameCreated((CampaignGameStarter)initializerObject);
-        }
-        private void RunWarSailsPatches()
-        {
-            try
-            {
-                var navalTarget = AccessTools.Method("NavalDLC.GameComponents.NavalDLCBanditDensityModel:IsPositionInsideNavalSafeZone");
-                harmony.Patch(navalTarget, prefix: new HarmonyMethod(typeof(NavalDLCBanditDensityModel_IsPositionInsideNavalSafeZone_Patch), nameof(NavalDLCBanditDensityModel_IsPositionInsideNavalSafeZone_Patch.Prefix)));
-                var cacheTarget = AccessTools.Method("SandBox.View.Map.SettlementPositionScript:RegisterNavigationCachesOnGameLoad");
-                harmony.Patch(cacheTarget, prefix: new HarmonyMethod(typeof(RealmsForgotten.WarSailsPatches.FillMissingCachesPatch), nameof(WarSailsPatches.FillMissingCachesPatch.Prefix)));
-                
-                var pirateTarget = AccessTools.Method("NavalDLC.View.NavalMapSceneWrapper:InitializePirateSpawnPoints");
-                harmony.Patch(pirateTarget, prefix: new HarmonyMethod(typeof(InitializePirateSpawnPointsPatch), nameof(InitializePirateSpawnPointsPatch.Prefix)));
-            }
-            catch (Exception ex)
-            {
-                RFLogger.Log($"[WarSailsPatches] Error applying patches: {ex}");
-            }
         }
         protected override void InitializeGameStarter(Game game, IGameStarter starterObject)
         {

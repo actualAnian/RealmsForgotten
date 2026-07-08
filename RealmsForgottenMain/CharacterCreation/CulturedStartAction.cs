@@ -76,10 +76,9 @@ namespace RealmsForgotten.CharacterCreation
                         break;
 
                     case StartType.Usurper:
-                        Settlement settlement = mainHero.Clan.Kingdom.Settlements.GetRandomElementWithPredicate(s => s.IsCastle);
-                        ChangeOwnerOfSettlementAction.ApplyByDefault(mainHero, settlement);
-                        Campaign.Current.KingdomManager.CreateKingdom(mainHero.Clan.Name, mainHero.Clan.InformalName, mainHero.Clan.Culture, mainHero.Clan);
-                        mainHero.Clan.Influence = 50;
+                        // Shown to the player as the "Cleric" start: no castle and no
+                        // kingdom — gold, troops, companions and skills come from
+                        // CustomStartData like every other start.
                         break;
 
                     case StartType.Outlaw:

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RF_BattleAI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a3f892a570176f815df1ceea0dc951ab436c5116")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5ad8ca4e12836fb9ec46b70d101b740fe57fceb2")]
 [assembly: System.Reflection.AssemblyProductAttribute("RF_BattleAI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RF_BattleAI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

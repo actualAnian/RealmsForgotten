@@ -35,3 +35,9 @@ RFCustomScenes/BehaviorTrees/
 RF_AIDialog/bin
 RF_AIDialog/obj
 RF_AIDialog/ai_config.local.json
+*.key
+_dead_code_archive/
+
+# RF_Settlers build artifacts
+RF_Settlers/bin
+RF_Settlers/obj

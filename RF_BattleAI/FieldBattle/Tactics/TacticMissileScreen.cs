@@ -21,6 +21,7 @@ public sealed class TacticMissileScreen : TacticComponent
     private Formation? _supportArchers;
     private int _cachedAiControlledFormationCount;
     private MissileScreenState? _lastState;
+    private readonly HysteresisGate _fallBackPowerGate = HysteresisGate.RisesAbove(0.75f);
 
     public TacticMissileScreen(Team team)
         : base(team)
@@ -193,7 +194,7 @@ public sealed class TacticMissileScreen : TacticComponent
             return MissileScreenState.SetLine;
         }
 
-        if (distanceSquared > 1600f && powerRatio >= 0.75f)
+        if (distanceSquared > 1600f && _fallBackPowerGate.Evaluate(powerRatio))
         {
             return MissileScreenState.FireAndFallBack;
         }

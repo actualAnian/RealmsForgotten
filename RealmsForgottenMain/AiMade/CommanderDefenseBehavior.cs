@@ -58,7 +58,7 @@ namespace RealmsForgotten.AiMade
 
             // probe (instrumentação)
             try { RFSiegeTransitionProbe.PatchOnce(); }
-            catch { }
+            catch (Exception ex) { TaleWorlds.Library.Debug.Print($"[RF] CommanderDefense: siege probe patch failed: {ex.Message}"); }
 
             Trace("RegisterEvents OK");
         }

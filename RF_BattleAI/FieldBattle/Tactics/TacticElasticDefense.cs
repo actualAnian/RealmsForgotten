@@ -21,6 +21,7 @@ public sealed class TacticElasticDefense : TacticComponent
     private Formation? _supportInfantry;
 
     private int _cachedAiControlledFormationCount;
+    private readonly HysteresisGate _yieldPowerGate = HysteresisGate.FallsBelow(0.82f);
     private bool? _lastFallbackState;
     private ElasticDefenseProfile? _lastProfile;
 
@@ -116,7 +117,7 @@ public sealed class TacticElasticDefense : TacticComponent
         float distanceSquared = _mainInfantry.CachedMedianPosition.AsVec2.DistanceSquared(
             _mainInfantry.CachedClosestEnemyFormation.Formation.CachedMedianPosition.AsVec2);
 
-        return distanceSquared < 900f || base.Team.QuerySystem.RemainingPowerRatio < 0.82f;
+        return distanceSquared < 900f || _yieldPowerGate.Evaluate(base.Team.QuerySystem.RemainingPowerRatio);
     }
 
     private WorldPosition GetDefensivePosition(Formation formation)

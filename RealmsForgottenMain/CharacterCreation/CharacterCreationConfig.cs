@@ -179,7 +179,7 @@ namespace RealmsForgotten.CharacterCreation
                 ["empire"] = "vassal_realms_start",
                 ["khuzait"] = "vassal_allkhuur_start",
                 ["sturgia"] = "vassal_vortiak_start",
-                ["nord"] = "player_char_creation_nord_infantry_{sex}",
+                ["nord"] = "nord_vassal_ursurper_{sex}",
                 ["battania"] = "vassal_elvean_start",
                 ["vlandia"] = "vassal_nasoria_start",
                 ["giant"] = "vassal_giant_start",
@@ -190,6 +190,7 @@ namespace RealmsForgotten.CharacterCreation
                 ["dwarf"] = "vassal_vortiak_start",
                 ["urkhai"] = "vassal_urkhai_start",
                 ["wulf"] = "vassal_wulf_start",
+
             }
         };
         public static readonly Dictionary<(string Culture, StartType StartOption), List<TroopSpawnInfo>> CultureStartTypeToTroops = new()

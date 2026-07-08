@@ -14,6 +14,7 @@ public sealed class TacticReserveCounterattack : TacticComponent
 
     private int _cachedAiControlledFormationCount;
     private bool? _lastCommittedState;
+    private readonly HysteresisGate _commitPowerGate = HysteresisGate.FallsBelow(0.85f);
 
     public TacticReserveCounterattack(Team team)
         : base(team)
@@ -112,7 +113,7 @@ public sealed class TacticReserveCounterattack : TacticComponent
         float distanceSquared = _mainInfantry.CachedMedianPosition.AsVec2.DistanceSquared(
             _mainInfantry.CachedClosestEnemyFormation.Formation.CachedMedianPosition.AsVec2);
 
-        return distanceSquared < 1600f || base.Team.QuerySystem.RemainingPowerRatio < 0.85f;
+        return distanceSquared < 1600f || _commitPowerGate.Evaluate(base.Team.QuerySystem.RemainingPowerRatio);
     }
 
     private WorldPosition GetDefensivePosition(Formation formation)

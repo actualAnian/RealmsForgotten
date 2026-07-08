@@ -93,6 +93,15 @@
       </Tags>
     </SubModule>
     <SubModule>
+      <Name value="RF_Settlers" />
+      <DLLName value="RF_Settlers.dll" />
+      <SubModuleClassType value="RF_Settlers.SubModule" />
+      <Tags>
+        <Tag key="DedicatedServerType" value="none" />
+        <Tag key="IsNoRenderModeElement" value="false" />
+      </Tags>
+    </SubModule>
+    <SubModule>
       <Name value="MCMv5" />
       <DLLName value="MCMv5.dll" />
       <SubModuleClassType value="MCM.MCMSubModule" />

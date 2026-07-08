@@ -36,6 +36,8 @@ public sealed class TacticHammerAndAnvil : TacticComponent
     private Formation? _supportInfantry;
     private int _cachedAiControlledFormationCount;
     private HammerBattleState? _lastState;
+    private readonly HysteresisGate _commitPowerGate = HysteresisGate.RisesAbove(0.95f);
+    private readonly HysteresisGate _weakPowerGate = HysteresisGate.FallsBelow(0.8f);
     private bool _deploymentPhaseFinished;
 
     public TacticHammerAndAnvil(Team team)
@@ -210,6 +212,14 @@ public sealed class TacticHammerAndAnvil : TacticComponent
         bool anyCavalryReady = IsAnyCavalryReady();
         bool manualHammerOverride = BattleAITacticController.HasManualDoctrineOverride(base.Team, nameof(TacticHammerAndAnvil));
 
+        // Full disengagement (~1.5x the anvil distance, ≈220m): reopen the
+        // deployment gate so the anvil can re-anchor instead of the one-way
+        // flag keeping SetAnvil unreachable for the rest of the battle.
+        if (_deploymentPhaseFinished && distanceSquared > SetAnvilDistanceSquared * 1.5f)
+        {
+            _deploymentPhaseFinished = false;
+        }
+
         if (!_deploymentPhaseFinished)
         {
             if (distanceSquared > SetAnvilDistanceSquared)
@@ -240,12 +250,12 @@ public sealed class TacticHammerAndAnvil : TacticComponent
             return HammerBattleState.CavalryReposition;
         }
 
-        if (powerRatio >= 0.95f && distanceSquared <= HammerCommitDistanceSquared)
+        if (_commitPowerGate.Evaluate(powerRatio) && distanceSquared <= HammerCommitDistanceSquared)
         {
             return HammerBattleState.SwingFlanks;
         }
 
-        if (powerRatio < 0.8f && distanceSquared > 2500f)
+        if (_weakPowerGate.Evaluate(powerRatio) && distanceSquared > 2500f)
         {
             return HammerBattleState.FixEnemy;
         }

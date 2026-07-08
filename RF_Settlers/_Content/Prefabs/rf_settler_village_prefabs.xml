@@ -1,0 +1,467 @@
+<!-- Map-icon prefabs for settler villages (RF_Settlers phase C).
+     One entry per base culture using that culture's vanilla village meshes
+     (village_<culture>_1/2/3); the engine's level mask shows level_1 while
+     hearth < 200, level_2 < 600, level_3 above — so a new settler village
+     starts small and grows with its hearth, like any other village.
+     For RF custom cultures add a "rf_settler_village_icon_<culture_id>"
+     entry with that culture's meshes — the code tries the culture variant
+     first and falls back to the generic (empire) icon.
+     Deploy into Modules/RealmsForgotten/Prefabs/. -->
+<prefabs>
+	<game_entity name="rf_settler_village_icon" mobility="1" template_type="Village">
+		<tags>
+			<tag name="village" />
+		</tags>
+		<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="1.000, 1.000, 1.000" />
+		<scripts>
+			<script name="Town Entity Manager">
+				<variables>
+					<variable name="Override Factor Color" value="false" />
+					<variable name="Factor Color" value="1.000, 1.000, 1.000, 1.000" />
+				</variables>
+			</script>
+		</scripts>
+		<children>
+		<game_entity name="rf_settler_village_icon_l1" mobility="1">
+			<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="0.400, 0.400, 0.400" />
+			<components>
+				<meta_mesh_component name="village_empire_1" />
+			</components>
+			<levels>
+				<level name="level_1" />
+				<level name="civilian" />
+				<level name="siege" />
+			</levels>
+		</game_entity>
+		<game_entity name="rf_settler_village_icon_l2" mobility="1">
+			<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="0.400, 0.400, 0.400" />
+			<components>
+				<meta_mesh_component name="village_empire_2" />
+			</components>
+			<levels>
+				<level name="level_2" />
+				<level name="civilian" />
+				<level name="siege" />
+			</levels>
+		</game_entity>
+		<game_entity name="rf_settler_village_icon_l3" mobility="1">
+			<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="0.400, 0.400, 0.400" />
+			<components>
+				<meta_mesh_component name="village_empire_3" />
+			</components>
+			<levels>
+				<level name="level_3" />
+				<level name="civilian" />
+				<level name="siege" />
+			</levels>
+		</game_entity>
+			<game_entity name="_bo" mobility="1">
+				<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 1.500" scale="4.200, 4.200, 4.200" />
+				<physics shape="bo_barrier_sphere">
+					<body_flags>
+						<body_flag name="only_collide_with_raycast" />
+					</body_flags>
+				</physics>
+			</game_entity>
+		</children>
+	</game_entity>
+	<game_entity name="rf_settler_village_icon_empire" mobility="1" template_type="Village">
+		<tags>
+			<tag name="village" />
+		</tags>
+		<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="1.000, 1.000, 1.000" />
+		<scripts>
+			<script name="Town Entity Manager">
+				<variables>
+					<variable name="Override Factor Color" value="false" />
+					<variable name="Factor Color" value="1.000, 1.000, 1.000, 1.000" />
+				</variables>
+			</script>
+		</scripts>
+		<children>
+		<game_entity name="rf_settler_village_icon_empire_l1" mobility="1">
+			<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="0.400, 0.400, 0.400" />
+			<components>
+				<meta_mesh_component name="village_empire_1" />
+			</components>
+			<levels>
+				<level name="level_1" />
+				<level name="civilian" />
+				<level name="siege" />
+			</levels>
+		</game_entity>
+		<game_entity name="rf_settler_village_icon_empire_l2" mobility="1">
+			<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="0.400, 0.400, 0.400" />
+			<components>
+				<meta_mesh_component name="village_empire_2" />
+			</components>
+			<levels>
+				<level name="level_2" />
+				<level name="civilian" />
+				<level name="siege" />
+			</levels>
+		</game_entity>
+		<game_entity name="rf_settler_village_icon_empire_l3" mobility="1">
+			<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="0.400, 0.400, 0.400" />
+			<components>
+				<meta_mesh_component name="village_empire_3" />
+			</components>
+			<levels>
+				<level name="level_3" />
+				<level name="civilian" />
+				<level name="siege" />
+			</levels>
+		</game_entity>
+			<game_entity name="_bo" mobility="1">
+				<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 1.500" scale="4.200, 4.200, 4.200" />
+				<physics shape="bo_barrier_sphere">
+					<body_flags>
+						<body_flag name="only_collide_with_raycast" />
+					</body_flags>
+				</physics>
+			</game_entity>
+		</children>
+	</game_entity>
+	<game_entity name="rf_settler_village_icon_battania" mobility="1" template_type="Village">
+		<tags>
+			<tag name="village" />
+		</tags>
+		<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="1.000, 1.000, 1.000" />
+		<scripts>
+			<script name="Town Entity Manager">
+				<variables>
+					<variable name="Override Factor Color" value="false" />
+					<variable name="Factor Color" value="1.000, 1.000, 1.000, 1.000" />
+				</variables>
+			</script>
+		</scripts>
+		<children>
+		<game_entity name="rf_settler_village_icon_battania_l1" mobility="1">
+			<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="0.400, 0.400, 0.400" />
+			<components>
+				<meta_mesh_component name="village_battania_1" />
+			</components>
+			<levels>
+				<level name="level_1" />
+				<level name="civilian" />
+				<level name="siege" />
+			</levels>
+		</game_entity>
+		<game_entity name="rf_settler_village_icon_battania_l2" mobility="1">
+			<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="0.400, 0.400, 0.400" />
+			<components>
+				<meta_mesh_component name="village_battania_2" />
+			</components>
+			<levels>
+				<level name="level_2" />
+				<level name="civilian" />
+				<level name="siege" />
+			</levels>
+		</game_entity>
+		<game_entity name="rf_settler_village_icon_battania_l3" mobility="1">
+			<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="0.400, 0.400, 0.400" />
+			<components>
+				<meta_mesh_component name="village_battania_3" />
+			</components>
+			<levels>
+				<level name="level_3" />
+				<level name="civilian" />
+				<level name="siege" />
+			</levels>
+		</game_entity>
+			<game_entity name="_bo" mobility="1">
+				<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 1.500" scale="4.200, 4.200, 4.200" />
+				<physics shape="bo_barrier_sphere">
+					<body_flags>
+						<body_flag name="only_collide_with_raycast" />
+					</body_flags>
+				</physics>
+			</game_entity>
+		</children>
+	</game_entity>
+	<game_entity name="rf_settler_village_icon_sturgia" mobility="1" template_type="Village">
+		<tags>
+			<tag name="village" />
+		</tags>
+		<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="1.000, 1.000, 1.000" />
+		<scripts>
+			<script name="Town Entity Manager">
+				<variables>
+					<variable name="Override Factor Color" value="false" />
+					<variable name="Factor Color" value="1.000, 1.000, 1.000, 1.000" />
+				</variables>
+			</script>
+		</scripts>
+		<children>
+		<game_entity name="rf_settler_village_icon_sturgia_l1" mobility="1">
+			<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="0.400, 0.400, 0.400" />
+			<components>
+				<meta_mesh_component name="village_sturgia_1" />
+			</components>
+			<levels>
+				<level name="level_1" />
+				<level name="civilian" />
+				<level name="siege" />
+			</levels>
+		</game_entity>
+		<game_entity name="rf_settler_village_icon_sturgia_l2" mobility="1">
+			<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="0.400, 0.400, 0.400" />
+			<components>
+				<meta_mesh_component name="village_sturgia_2" />
+			</components>
+			<levels>
+				<level name="level_2" />
+				<level name="civilian" />
+				<level name="siege" />
+			</levels>
+		</game_entity>
+		<game_entity name="rf_settler_village_icon_sturgia_l3" mobility="1">
+			<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="0.400, 0.400, 0.400" />
+			<components>
+				<meta_mesh_component name="village_sturgia_3" />
+			</components>
+			<levels>
+				<level name="level_3" />
+				<level name="civilian" />
+				<level name="siege" />
+			</levels>
+		</game_entity>
+			<game_entity name="_bo" mobility="1">
+				<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 1.500" scale="4.200, 4.200, 4.200" />
+				<physics shape="bo_barrier_sphere">
+					<body_flags>
+						<body_flag name="only_collide_with_raycast" />
+					</body_flags>
+				</physics>
+			</game_entity>
+		</children>
+	</game_entity>
+	<game_entity name="rf_settler_village_icon_aserai" mobility="1" template_type="Village">
+		<tags>
+			<tag name="village" />
+		</tags>
+		<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="1.000, 1.000, 1.000" />
+		<scripts>
+			<script name="Town Entity Manager">
+				<variables>
+					<variable name="Override Factor Color" value="false" />
+					<variable name="Factor Color" value="1.000, 1.000, 1.000, 1.000" />
+				</variables>
+			</script>
+		</scripts>
+		<children>
+		<game_entity name="rf_settler_village_icon_aserai_l1" mobility="1">
+			<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="0.400, 0.400, 0.400" />
+			<components>
+				<meta_mesh_component name="village_aserai_1" />
+			</components>
+			<levels>
+				<level name="level_1" />
+				<level name="civilian" />
+				<level name="siege" />
+			</levels>
+		</game_entity>
+		<game_entity name="rf_settler_village_icon_aserai_l2" mobility="1">
+			<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="0.400, 0.400, 0.400" />
+			<components>
+				<meta_mesh_component name="village_aserai_2" />
+			</components>
+			<levels>
+				<level name="level_2" />
+				<level name="civilian" />
+				<level name="siege" />
+			</levels>
+		</game_entity>
+		<game_entity name="rf_settler_village_icon_aserai_l3" mobility="1">
+			<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="0.400, 0.400, 0.400" />
+			<components>
+				<meta_mesh_component name="village_aserai_3" />
+			</components>
+			<levels>
+				<level name="level_3" />
+				<level name="civilian" />
+				<level name="siege" />
+			</levels>
+		</game_entity>
+			<game_entity name="_bo" mobility="1">
+				<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 1.500" scale="4.200, 4.200, 4.200" />
+				<physics shape="bo_barrier_sphere">
+					<body_flags>
+						<body_flag name="only_collide_with_raycast" />
+					</body_flags>
+				</physics>
+			</game_entity>
+		</children>
+	</game_entity>
+	<game_entity name="rf_settler_village_icon_khuzait" mobility="1" template_type="Village">
+		<tags>
+			<tag name="village" />
+		</tags>
+		<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="1.000, 1.000, 1.000" />
+		<scripts>
+			<script name="Town Entity Manager">
+				<variables>
+					<variable name="Override Factor Color" value="false" />
+					<variable name="Factor Color" value="1.000, 1.000, 1.000, 1.000" />
+				</variables>
+			</script>
+		</scripts>
+		<children>
+		<game_entity name="rf_settler_village_icon_khuzait_l1" mobility="1">
+			<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="0.400, 0.400, 0.400" />
+			<components>
+				<meta_mesh_component name="village_khuzait_1" />
+			</components>
+			<levels>
+				<level name="level_1" />
+				<level name="civilian" />
+				<level name="siege" />
+			</levels>
+		</game_entity>
+		<game_entity name="rf_settler_village_icon_khuzait_l2" mobility="1">
+			<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="0.400, 0.400, 0.400" />
+			<components>
+				<meta_mesh_component name="village_khuzait_2" />
+			</components>
+			<levels>
+				<level name="level_2" />
+				<level name="civilian" />
+				<level name="siege" />
+			</levels>
+		</game_entity>
+		<game_entity name="rf_settler_village_icon_khuzait_l3" mobility="1">
+			<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="0.400, 0.400, 0.400" />
+			<components>
+				<meta_mesh_component name="village_khuzait_3" />
+			</components>
+			<levels>
+				<level name="level_3" />
+				<level name="civilian" />
+				<level name="siege" />
+			</levels>
+		</game_entity>
+			<game_entity name="_bo" mobility="1">
+				<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 1.500" scale="4.200, 4.200, 4.200" />
+				<physics shape="bo_barrier_sphere">
+					<body_flags>
+						<body_flag name="only_collide_with_raycast" />
+					</body_flags>
+				</physics>
+			</game_entity>
+		</children>
+	</game_entity>
+	<game_entity name="rf_settler_village_icon_vlandia" mobility="1" template_type="Village">
+		<tags>
+			<tag name="village" />
+		</tags>
+		<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="1.000, 1.000, 1.000" />
+		<scripts>
+			<script name="Town Entity Manager">
+				<variables>
+					<variable name="Override Factor Color" value="false" />
+					<variable name="Factor Color" value="1.000, 1.000, 1.000, 1.000" />
+				</variables>
+			</script>
+		</scripts>
+		<children>
+		<game_entity name="rf_settler_village_icon_vlandia_l1" mobility="1">
+			<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="0.400, 0.400, 0.400" />
+			<components>
+				<meta_mesh_component name="village_vlandia_1" />
+			</components>
+			<levels>
+				<level name="level_1" />
+				<level name="civilian" />
+				<level name="siege" />
+			</levels>
+		</game_entity>
+		<game_entity name="rf_settler_village_icon_vlandia_l2" mobility="1">
+			<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="0.400, 0.400, 0.400" />
+			<components>
+				<meta_mesh_component name="village_vlandia_2" />
+			</components>
+			<levels>
+				<level name="level_2" />
+				<level name="civilian" />
+				<level name="siege" />
+			</levels>
+		</game_entity>
+		<game_entity name="rf_settler_village_icon_vlandia_l3" mobility="1">
+			<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="0.400, 0.400, 0.400" />
+			<components>
+				<meta_mesh_component name="village_vlandia_3" />
+			</components>
+			<levels>
+				<level name="level_3" />
+				<level name="civilian" />
+				<level name="siege" />
+			</levels>
+		</game_entity>
+			<game_entity name="_bo" mobility="1">
+				<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 1.500" scale="4.200, 4.200, 4.200" />
+				<physics shape="bo_barrier_sphere">
+					<body_flags>
+						<body_flag name="only_collide_with_raycast" />
+					</body_flags>
+				</physics>
+			</game_entity>
+		</children>
+	</game_entity>
+	<game_entity name="rf_settler_village_icon_nord" mobility="1" template_type="Village">
+		<tags>
+			<tag name="village" />
+		</tags>
+		<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="1.000, 1.000, 1.000" />
+		<scripts>
+			<script name="Town Entity Manager">
+				<variables>
+					<variable name="Override Factor Color" value="false" />
+					<variable name="Factor Color" value="1.000, 1.000, 1.000, 1.000" />
+				</variables>
+			</script>
+		</scripts>
+		<children>
+		<game_entity name="rf_settler_village_icon_nord_l1" mobility="1">
+			<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="0.400, 0.400, 0.400" />
+			<components>
+				<meta_mesh_component name="village_nord_1" />
+			</components>
+			<levels>
+				<level name="level_1" />
+				<level name="civilian" />
+				<level name="siege" />
+			</levels>
+		</game_entity>
+		<game_entity name="rf_settler_village_icon_nord_l2" mobility="1">
+			<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="0.400, 0.400, 0.400" />
+			<components>
+				<meta_mesh_component name="village_nord_2" />
+			</components>
+			<levels>
+				<level name="level_2" />
+				<level name="civilian" />
+				<level name="siege" />
+			</levels>
+		</game_entity>
+		<game_entity name="rf_settler_village_icon_nord_l3" mobility="1">
+			<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="0.400, 0.400, 0.400" />
+			<components>
+				<meta_mesh_component name="village_nord_3" />
+			</components>
+			<levels>
+				<level name="level_3" />
+				<level name="civilian" />
+				<level name="siege" />
+			</levels>
+		</game_entity>
+			<game_entity name="_bo" mobility="1">
+				<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 1.500" scale="4.200, 4.200, 4.200" />
+				<physics shape="bo_barrier_sphere">
+					<body_flags>
+						<body_flag name="only_collide_with_raycast" />
+					</body_flags>
+				</physics>
+			</game_entity>
+		</children>
+	</game_entity>
+</prefabs>

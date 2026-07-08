@@ -8,6 +8,7 @@ using RealmsForgotten.RFReligions.Models;
 using RFReligions.Behavior;
 using System.Reflection;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.Core;
 using TaleWorlds.InputSystem;
 using TaleWorlds.MountAndBlade;
@@ -33,9 +34,9 @@ public class SubModule : MBSubModuleBase
             campaignGameStarter.AddBehavior(new ReligiousWarBehavior());
             campaignGameStarter.AddBehavior(new CrusadeBehavior());
 
-            campaignGameStarter.AddModel(new ReligionPartyMoraleModel());
-            campaignGameStarter.AddModel(new ReligionSettlementLoyaltyModel());
-            campaignGameStarter.AddModel(new ReligionPartySpeedModel());
+            campaignGameStarter.AddModel(new ReligionPartyMoraleModel(campaignGameStarter.GetExistingModel<PartyMoraleModel>()));
+            campaignGameStarter.AddModel(new ReligionSettlementLoyaltyModel(campaignGameStarter.GetExistingModel<SettlementLoyaltyModel>()));
+            campaignGameStarter.AddModel(new ReligionPartySpeedModel(campaignGameStarter.GetExistingModel<PartySpeedModel>()));
         }
     }
     Harmony harmony = new("com.realmsforgotten.religion");

@@ -261,6 +261,10 @@ namespace RF_AIDialog
                 List<AIMessageRecord> history = AIMessageStore.GetThreadMessages(inboundMessage.ThreadId, 8);
                 int replyArrivalDay = currentDay + outboundDelay + returnDelay;
                 string prompt = LetterPromptBuilder.BuildReplyPrompt(sender, context, replyText.Trim(), history);
+                // Capture on the game thread: if the player loads another campaign while
+                // the LLM call is in flight, stamping Campaign.Current inside the task
+                // would tag this old-campaign letter with the new campaign's key.
+                string campaignKey = Campaign.Current?.UniqueGameId ?? "";
 
                 _ = Task.Run(async () =>
                 {
@@ -296,7 +300,7 @@ namespace RF_AIDialog
                             ArrivalDay = replyArrivalDay,
                             ParentMessageId = playerMessage.MessageId,
                             MessageText = parsed.MessageText.Trim(),
-                            CampaignKey = Campaign.Current?.UniqueGameId ?? "",
+                            CampaignKey = campaignKey,
                             CreatedUtc = DateTime.UtcNow.ToString("o")
                         };
 

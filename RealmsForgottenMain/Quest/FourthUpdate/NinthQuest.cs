@@ -669,7 +669,10 @@ namespace RealmsForgotten.Quest.FourthUpdate
                     {
                         gsm.PopState(); // fecha o vídeo, volta pro MapState
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        TaleWorlds.Library.Debug.Print($"[RF] NinthQuest: PopState after final cutscene failed (video state may linger): {ex}");
+                    }
 
                     _pendingFinalizeAfterVideo = true; // marca para finalizar quest no Tick
                 });

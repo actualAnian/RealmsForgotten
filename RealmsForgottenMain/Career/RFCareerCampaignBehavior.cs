@@ -30,7 +30,13 @@ namespace RealmsForgotten.Career
 
         public static RFCareerCampaignBehavior Instance
         {
-            get { instance ??= new RFCareerCampaignBehavior(); return instance; }
+            get
+            {
+                // Prefer the behavior registered with the running campaign; a bare
+                // "new" here would create an orphan that never receives SyncData.
+                instance ??= Campaign.Current?.GetCampaignBehavior<RFCareerCampaignBehavior>() ?? new RFCareerCampaignBehavior();
+                return instance;
+            }
         }
 
         public override void RegisterEvents()
@@ -204,7 +210,7 @@ namespace RealmsForgotten.Career
                     if (wounded <= 0) continue;
 
                     int toHeal = MathF.Min(wounded, healCount);
-                    try { roster.SetElementWoundedNumber(i, MathF.Max(0, wounded - toHeal)); } catch { }
+                    try { roster.SetElementWoundedNumber(i, MathF.Max(0, wounded - toHeal)); } catch (Exception ex) { TaleWorlds.Library.Debug.Print($"[RF] Career heal: SetElementWoundedNumber failed at index {i}: {ex.Message}"); }
                     healCount -= toHeal;
                 }
             }
@@ -295,7 +301,7 @@ namespace RealmsForgotten.Career
                                 int wounded = list[i].WoundedNumber;
                                 if (wounded <= 0) continue;
                                 int toHeal = TaleWorlds.Library.MathF.Min(wounded, heal);
-                                try { roster.SetElementWoundedNumber(i, TaleWorlds.Library.MathF.Max(0, wounded - toHeal)); } catch { }
+                                try { roster.SetElementWoundedNumber(i, TaleWorlds.Library.MathF.Max(0, wounded - toHeal)); } catch (Exception ex) { TaleWorlds.Library.Debug.Print($"[RF] Career heal: SetElementWoundedNumber failed at index {i}: {ex.Message}"); }
                                 heal -= toHeal;
                             }
                         }
@@ -354,7 +360,7 @@ namespace RealmsForgotten.Career
                                     continue;
 
                                 int toHeal = TaleWorlds.Library.MathF.Min(wounded, heal);
-                                try { roster.SetElementWoundedNumber(i, TaleWorlds.Library.MathF.Max(0, wounded - toHeal)); } catch { }
+                                try { roster.SetElementWoundedNumber(i, TaleWorlds.Library.MathF.Max(0, wounded - toHeal)); } catch (Exception ex) { TaleWorlds.Library.Debug.Print($"[RF] Career heal: SetElementWoundedNumber failed at index {i}: {ex.Message}"); }
                                 heal -= toHeal;
                             }
                         }

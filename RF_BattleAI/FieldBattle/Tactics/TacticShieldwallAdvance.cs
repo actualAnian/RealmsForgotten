@@ -21,6 +21,7 @@ public sealed class TacticShieldwallAdvance : TacticComponent
     private Formation? _supportInfantry;
     private int _cachedAiControlledFormationCount;
     private ShieldwallBattleState? _lastState;
+    private readonly HysteresisGate _pressPowerGate = HysteresisGate.RisesAbove(0.9f);
 
     public TacticShieldwallAdvance(Team team)
         : base(team)
@@ -184,7 +185,7 @@ public sealed class TacticShieldwallAdvance : TacticComponent
             return ShieldwallBattleState.FormShieldwall;
         }
 
-        if (distanceSquared > 1225f && powerRatio >= 0.9f)
+        if (distanceSquared > 1225f && _pressPowerGate.Evaluate(powerRatio))
         {
             return ShieldwallBattleState.PressAdvance;
         }
@@ -243,12 +244,23 @@ public sealed class TacticShieldwallAdvance : TacticComponent
             || enemyImpactTime <= repositionTime + safetyMargin;
     }
 
+    private Formation? _cachedNearestEnemyCavalry;
+    private float _nearestEnemyCavalryCacheExpiry = float.MinValue;
+
     private Formation? FindNearestEnemyCavalry(Formation anchor)
     {
         Mission? mission = Mission.Current;
         if (mission == null)
         {
             return null;
+        }
+
+        // Scanning every enemy formation each TickOccasionally is O(teams x
+        // formations); cavalry doesn't change identity that fast — cache for 2s.
+        if (mission.CurrentTime < _nearestEnemyCavalryCacheExpiry
+            && (_cachedNearestEnemyCavalry == null || _cachedNearestEnemyCavalry.CountOfUnits > 0))
+        {
+            return _cachedNearestEnemyCavalry;
         }
 
         Formation? best = null;
@@ -281,6 +293,8 @@ public sealed class TacticShieldwallAdvance : TacticComponent
             }
         }
 
+        _cachedNearestEnemyCavalry = best;
+        _nearestEnemyCavalryCacheExpiry = mission.CurrentTime + 2f;
         return best;
     }
 

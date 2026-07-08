@@ -59,9 +59,26 @@ public sealed class RFWarSystemDiplomacyModel : DiplomacyModel
     public override int GetCharmExperienceFromRelationGain(Hero hero, float val, ChangeRelationAction.ChangeRelationDetail detail) => _baseModel.GetCharmExperienceFromRelationGain(hero, val, detail);
     public override float GetClanStrength(Clan clan) => _baseModel.GetClanStrength(clan);
     public override int GetDailyTributeToPay(Clan factionToPay, Clan factionToReceive, out int tributeDurationInDays) => _baseModel.GetDailyTributeToPay(factionToPay, factionToReceive, out tributeDurationInDays);
-    public override int GetEffectiveRelation(Hero h1, Hero h2) => _baseModel.GetEffectiveRelation(h1, h2);
+    // Null guards: vanilla's CalculatePartyInfluenceCost passes a null
+    // party.LeaderHero straight into GetRelation when an army contains a
+    // momentarily leaderless party (leader died/captured before the army
+    // reacts), and DefaultDiplomacyModel dereferences hero.Clan without
+    // checking. 0 = "no relation", the same value vanilla returns when an
+    // effective hero cannot be resolved.
+    public override int GetEffectiveRelation(Hero h1, Hero h2)
+        => h1 == null || h2 == null ? 0 : _baseModel.GetEffectiveRelation(h1, h2);
     public override float GetHeroCommandingStrengthForClan(Hero hero) => _baseModel.GetHeroCommandingStrengthForClan(hero);
-    public override void GetHeroesForEffectiveRelation(Hero h1, Hero h2, out Hero e1, out Hero e2) => _baseModel.GetHeroesForEffectiveRelation(h1, h2, out e1, out e2);
+    public override void GetHeroesForEffectiveRelation(Hero h1, Hero h2, out Hero e1, out Hero e2)
+    {
+        if (h1 == null || h2 == null)
+        {
+            e1 = h1;
+            e2 = h2;
+            return;
+        }
+
+        _baseModel.GetHeroesForEffectiveRelation(h1, h2, out e1, out e2);
+    }
     public override float GetHeroGoverningStrengthForClan(Hero hero) => _baseModel.GetHeroGoverningStrengthForClan(hero);
     public override float GetHourlyInfluenceAwardForBeingArmyMember(MobileParty p) => _baseModel.GetHourlyInfluenceAwardForBeingArmyMember(p);
     public override float GetHourlyInfluenceAwardForBesiegingEnemyFortification(MobileParty p) => _baseModel.GetHourlyInfluenceAwardForBesiegingEnemyFortification(p);

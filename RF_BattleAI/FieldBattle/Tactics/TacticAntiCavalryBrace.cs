@@ -20,6 +20,7 @@ public sealed class TacticAntiCavalryBrace : TacticComponent
     private Formation? _supportInfantry;
     private int _cachedAiControlledFormationCount;
     private AntiCavalryState? _lastState;
+    private readonly HysteresisGate _counterPowerGate = HysteresisGate.RisesAbove(1f);
     private bool _hasAppliedInfantryFilter;
 
     public TacticAntiCavalryBrace(Team team)
@@ -211,7 +212,7 @@ public sealed class TacticAntiCavalryBrace : TacticComponent
             return AntiCavalryState.Brace;
         }
 
-        if (distanceSquared > 1024f || powerRatio < 1f)
+        if (distanceSquared > 1024f || !_counterPowerGate.Evaluate(powerRatio))
         {
             return AntiCavalryState.Hold;
         }

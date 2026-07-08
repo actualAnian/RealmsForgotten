@@ -66,9 +66,14 @@ namespace RealmsForgotten.Models
         }
         public override ExplainedNumber CalculateFinalSpeed(MobileParty mobileParty, ExplainedNumber finalSpeed)
         {
-            ExplainedNumber value = base.CalculateFinalSpeed(mobileParty, finalSpeed);
+            ExplainedNumber value = _previousModel.CalculateFinalSpeed(mobileParty, finalSpeed);
             if (mobileParty == MobileParty.MainParty && mobileParty.LeaderHero != null && mobileParty.LeaderHero == Hero.MainHero)
                 CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.PartyMovementSpeed);
+
+            float untrainedFactor = WorldState.Refugees.RefugeeCampaignBehavior.GetUntrainedSpeedFactor(mobileParty);
+            if (untrainedFactor < 0f)
+                value.AddFactor(untrainedFactor, new TextObject("{=rf_untrained_refugees}Untrained refugees"));
+
             return value;
         }
     }

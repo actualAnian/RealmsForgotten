@@ -2,6 +2,8 @@ using RF_BattleAI.FieldBattle.Behaviors;
 using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.Core;
+using TaleWorlds.Engine;
+using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
 namespace RF_BattleAI.FieldBattle.Tactics;
@@ -17,6 +19,7 @@ public sealed class TacticCannaeEnvelopment : TacticComponent
 
     private Formation? _supportInfantry;
     private int _cachedAiControlledFormationCount;
+    private readonly HysteresisGate _closeTrapPowerGate = HysteresisGate.RisesAbove(0.95f);
     private CannaeBattleState? _lastState;
 
     public TacticCannaeEnvelopment(Team team)
@@ -175,7 +178,11 @@ public sealed class TacticCannaeEnvelopment : TacticComponent
             return CannaeBattleState.DrawCenter;
         }
 
-        if (distanceSquared > 784f || powerRatio < 0.95f)
+        // Close the pocket unconditionally once the enemy is fully inside (<=20m);
+        // between 20m and 28m still require near-full strength. Requiring
+        // power >= 0.95 at melee range meant the envelopment almost never fired,
+        // because by then casualties had already pushed the ratio below the gate.
+        if (distanceSquared > 784f || (!_closeTrapPowerGate.Evaluate(powerRatio) && distanceSquared > 400f))
         {
             return CannaeBattleState.HoldPocket;
         }
@@ -194,6 +201,18 @@ public sealed class TacticCannaeEnvelopment : TacticComponent
         return anchor.CachedMedianPosition.AsVec2.DistanceSquared(anchor.CachedClosestEnemyFormation.Formation.CachedMedianPosition.AsVec2);
     }
 
+    private WorldPosition GetTerrainAdjustedDefensePosition(Formation formation)
+    {
+        Vec2 enemyPosition = formation.CachedClosestEnemyFormation?.Formation.CachedMedianPosition.AsVec2
+            ?? base.Team.QuerySystem.AverageEnemyPosition;
+        return BattleAITerrainAnalyzer.CreateTerrainAdjustedPosition(
+            formation,
+            formation.CachedMedianPosition.AsVec2,
+            enemyPosition,
+            BattleAITerrainPreference.DefensiveHighGround,
+            searchRadius: 14f);
+    }
+
     private void ApplyDrawCenter()
     {
         if (_mainInfantry != null)
@@ -207,7 +226,7 @@ public sealed class TacticCannaeEnvelopment : TacticComponent
         {
             _supportInfantry.AI.ResetBehaviorWeights();
             SetDefaultBehaviorWeights(_supportInfantry);
-            _supportInfantry.AI.SetBehaviorWeight<BehaviorDefend>(1.2f).DefensePosition = _supportInfantry.CachedMedianPosition;
+            _supportInfantry.AI.SetBehaviorWeight<BehaviorDefend>(1.2f).DefensePosition = GetTerrainAdjustedDefensePosition(_supportInfantry);
             if (_mainInfantry != null)
             {
                 _supportInfantry.AI.SetBehaviorWeight<BehaviorMaintainReserve>(1f).AnchorFormation = _mainInfantry;
@@ -224,7 +243,7 @@ public sealed class TacticCannaeEnvelopment : TacticComponent
         {
             _mainInfantry.AI.ResetBehaviorWeights();
             SetDefaultBehaviorWeights(_mainInfantry);
-            _mainInfantry.AI.SetBehaviorWeight<BehaviorDefend>(1.1f).DefensePosition = _mainInfantry.CachedMedianPosition;
+            _mainInfantry.AI.SetBehaviorWeight<BehaviorDefend>(1.1f).DefensePosition = GetTerrainAdjustedDefensePosition(_mainInfantry);
             _mainInfantry.AI.SetBehaviorWeight<BehaviorAdvance>(0.6f);
         }
 

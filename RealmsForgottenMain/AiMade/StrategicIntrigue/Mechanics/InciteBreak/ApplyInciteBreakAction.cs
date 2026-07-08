@@ -74,7 +74,10 @@ public static class ApplyInciteBreakAction
                 if (!originKingdom.IsAtWarWith(sponsorKingdom))
                     RFWarExternalIntentApi.ReinforceStrategicIntrigueWar(originKingdom, sponsorKingdom, null);
             }
-            catch { }
+            catch (System.Exception ex)
+            {
+                TaleWorlds.Library.Debug.Print($"[RF] InciteBreak: war declaration between {originKingdom?.Name} and {sponsorKingdom?.Name} failed: {ex}");
+            }
 
             // ── Relation cascade: every lord in the betrayed kingdom
             //    reviles the deserter personally ────────────────────────────
@@ -93,7 +96,10 @@ public static class ApplyInciteBreakAction
                     }
                 }
             }
-            catch { }
+            catch (System.Exception ex)
+            {
+                TaleWorlds.Library.Debug.Print($"[RF] InciteBreak: relation cascade for {targetClan?.Name} failed: {ex}");
+            }
 
             // ── Intrigue cascade on remaining clans ───────────────────────
             // The precedent shakes loyalty across the kingdom: ambition rises,
@@ -110,7 +116,10 @@ public static class ApplyInciteBreakAction
                     cs.ClampValues();
                 }
             }
-            catch { }
+            catch (System.Exception ex)
+            {
+                TaleWorlds.Library.Debug.Print($"[RF] InciteBreak: intrigue cascade on {originKingdom?.Name} clans failed: {ex}");
+            }
 
             // ── Intrigue state adjustments ────────────────────────────────
             if (originKingdomState != null)

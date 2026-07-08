@@ -478,7 +478,10 @@ namespace RealmsForgotten.Chamberlain
                     return sort != 0 ? sort : string.Compare(e2.DefaultFormationClass.ToString(), e.DefaultFormationClass.ToString());
                 });
             }
-            catch { }
+            catch (Exception ex)
+            {
+                TaleWorlds.Library.Debug.Print($"[RF] Chamberlain: troop list sort failed, showing unsorted: {ex.Message}");
+            }
             return list;
         }
         private List<ItemObject> GetItemPool()

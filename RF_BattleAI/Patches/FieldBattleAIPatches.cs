@@ -42,6 +42,42 @@ internal static class FieldBattleBehaviorRegistrar
             formation.AI.AddAiBehavior(new BehaviorCavalryBreakthrough(formation));
             BattleAIDebug.BehaviorRegistered(formation, nameof(BehaviorCavalryBreakthrough));
         }
+
+        if (formation.AI.GetBehavior<BehaviorRearPincer>() == null)
+        {
+            formation.AI.AddAiBehavior(new BehaviorRearPincer(formation));
+            BattleAIDebug.BehaviorRegistered(formation, nameof(BehaviorRearPincer));
+        }
+
+        if (formation.AI.GetBehavior<BehaviorBaitLure>() == null)
+        {
+            formation.AI.AddAiBehavior(new BehaviorBaitLure(formation));
+            BattleAIDebug.BehaviorRegistered(formation, nameof(BehaviorBaitLure));
+        }
+
+        if (formation.AI.GetBehavior<BehaviorDirectedCharge>() == null)
+        {
+            formation.AI.AddAiBehavior(new BehaviorDirectedCharge(formation));
+            BattleAIDebug.BehaviorRegistered(formation, nameof(BehaviorDirectedCharge));
+        }
+
+        if (formation.AI.GetBehavior<BehaviorSwatPursuers>() == null)
+        {
+            formation.AI.AddAiBehavior(new BehaviorSwatPursuers(formation));
+            BattleAIDebug.BehaviorRegistered(formation, nameof(BehaviorSwatPursuers));
+        }
+
+        if (formation.AI.GetBehavior<BehaviorMountedFiringArc>() == null)
+        {
+            formation.AI.AddAiBehavior(new BehaviorMountedFiringArc(formation));
+            BattleAIDebug.BehaviorRegistered(formation, nameof(BehaviorMountedFiringArc));
+        }
+
+        if (formation.AI.GetBehavior<BehaviorCavalryWaveCharge>() == null)
+        {
+            formation.AI.AddAiBehavior(new BehaviorCavalryWaveCharge(formation));
+            BattleAIDebug.BehaviorRegistered(formation, nameof(BehaviorCavalryWaveCharge));
+        }
     }
 }
 
@@ -82,6 +118,7 @@ internal static class MissionState_OnTick_BattleAIPlayerHotkeysPatch
     private static void Postfix()
     {
         BattleAIPlayerHotkeyController.Tick();
+        PlayerSpearFormationSplitter.Tick();
         BattleAICavalryStabilizer.Tick();
         BattleAIAdaptiveMemory.Tick();
         BattleAIFormationCaptainTuner.Tick();

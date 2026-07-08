@@ -2,6 +2,8 @@ using RF_BattleAI.FieldBattle.Behaviors;
 using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.Core;
+using TaleWorlds.Engine;
+using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
 namespace RF_BattleAI.FieldBattle.Tactics;
@@ -18,6 +20,7 @@ public sealed class TacticObliqueOrder : TacticComponent
     private Formation? _supportInfantry;
     private int _cachedAiControlledFormationCount;
     private ObliqueBattleState? _lastState;
+    private readonly HysteresisGate _advancePowerGate = HysteresisGate.RisesAbove(0.9f);
     private bool _favorLeftWing;
 
     public TacticObliqueOrder(Team team)
@@ -173,7 +176,7 @@ public sealed class TacticObliqueOrder : TacticComponent
             return ObliqueBattleState.RefusedWing;
         }
 
-        if (distanceSquared > 1024f && powerRatio >= 0.9f)
+        if (distanceSquared > 1024f && _advancePowerGate.Evaluate(powerRatio))
         {
             return ObliqueBattleState.WeightedAdvance;
         }
@@ -190,6 +193,18 @@ public sealed class TacticObliqueOrder : TacticComponent
         }
 
         return anchor.CachedMedianPosition.AsVec2.DistanceSquared(anchor.CachedClosestEnemyFormation.Formation.CachedMedianPosition.AsVec2);
+    }
+
+    private WorldPosition GetTerrainAdjustedDefensePosition(Formation formation)
+    {
+        Vec2 enemyPosition = formation.CachedClosestEnemyFormation?.Formation.CachedMedianPosition.AsVec2
+            ?? base.Team.QuerySystem.AverageEnemyPosition;
+        return BattleAITerrainAnalyzer.CreateTerrainAdjustedPosition(
+            formation,
+            formation.CachedMedianPosition.AsVec2,
+            enemyPosition,
+            BattleAITerrainPreference.DefensiveHighGround,
+            searchRadius: 14f);
     }
 
     private bool ShouldFavorLeftWing()
@@ -246,7 +261,7 @@ public sealed class TacticObliqueOrder : TacticComponent
             _mainInfantry.AI.SetBehaviorWeight<BehaviorAdvance>(mainAdvanceWeight);
             if (mainDefendWeight > 0f)
             {
-                _mainInfantry.AI.SetBehaviorWeight<BehaviorDefend>(mainDefendWeight).DefensePosition = _mainInfantry.CachedMedianPosition;
+                _mainInfantry.AI.SetBehaviorWeight<BehaviorDefend>(mainDefendWeight).DefensePosition = GetTerrainAdjustedDefensePosition(_mainInfantry);
             }
             else
             {

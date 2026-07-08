@@ -118,11 +118,18 @@ namespace RealmsForgotten.Quest.AI_Quest
 
     internal class CustomQuestTemplateSaveDefiner : SaveableTypeDefiner
     {
-        public CustomQuestTemplateSaveDefiner() : base(12345678) { }
+        // 585245000 is reserved for this definer; it must never collide with the other
+        // RF definers (see AUDIT_REPORT.md §2.4) nor change once a save contains CustomQuestTemplate.
+        public CustomQuestTemplateSaveDefiner() : base(585245000) { }
 
         protected override void DefineClassTypes()
         {
             AddClassDefinition(typeof(CustomQuestTemplate), 1);
+            // Registered pre-emptively: MagicItemQuestBehavior is not added to the
+            // campaign yet, but an unregistered QuestBase crashes the save the
+            // moment someone wires it up, so reserve the ids now.
+            AddClassDefinition(typeof(MagicItemQuestBehavior), 2);
+            AddClassDefinition(typeof(MagicItemQuestBehavior.MagicItemQuest), 3);
         }
 
         protected override void DefineContainerDefinitions()

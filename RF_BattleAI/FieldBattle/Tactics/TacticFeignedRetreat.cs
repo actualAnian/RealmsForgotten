@@ -18,6 +18,8 @@ public sealed class TacticFeignedRetreat : TacticComponent
     private Formation? _supportInfantry;
     private int _cachedAiControlledFormationCount;
     private FeignedRetreatState? _lastState;
+    private readonly HysteresisGate _strongPowerGate = HysteresisGate.RisesAbove(1f);
+    private readonly HysteresisGate _strikePowerGate = HysteresisGate.RisesAbove(0.95f);
 
     public TacticFeignedRetreat(Team team)
         : base(team)
@@ -168,7 +170,7 @@ public sealed class TacticFeignedRetreat : TacticComponent
         float distanceSquared = GetEngagementDistanceSquared();
         float powerRatio = base.Team.QuerySystem.RemainingPowerRatio;
 
-        if (distanceSquared > 2500f || powerRatio < 1f)
+        if (distanceSquared > 2500f || !_strongPowerGate.Evaluate(powerRatio))
         {
             return FeignedRetreatState.HarassAndWithdraw;
         }
@@ -178,7 +180,7 @@ public sealed class TacticFeignedRetreat : TacticComponent
             return FeignedRetreatState.LureEnemy;
         }
 
-        return powerRatio >= 0.95f
+        return _strikePowerGate.Evaluate(powerRatio)
             ? FeignedRetreatState.TurnAndStrike
             : FeignedRetreatState.LureEnemy;
     }

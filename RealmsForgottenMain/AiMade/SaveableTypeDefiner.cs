@@ -8,7 +8,6 @@ using RealmsForgotten.AiMade.Managers.RealmsForgotten.AiMade.Managers;
 using RealmsForgotten.AiMade.MercenaryFaction;
 using RealmsForgotten.AiMade.Models;
 using RealmsForgotten.AiMade.Patches;
-using RealmsForgotten.AiMade.Religions;
 using RealmsForgotten.AiMade.RF_Diplomacy;
 using RealmsForgotten.AiMade.TradePact;
 using RealmsForgotten.AiMade.Village_Inn_Quests;
@@ -32,7 +31,6 @@ namespace RealmsForgotten.AiMade
             ConstructContainerDefinition(typeof(Dictionary<string, ExampleConfig>));
             ConstructContainerDefinition(typeof(Dictionary<Hero, float>));
             ConstructContainerDefinition(typeof(List<Hero>));
-            ConstructContainerDefinition(typeof(Dictionary<Hero, ReligionObject>));
             ConstructContainerDefinition(typeof(Dictionary<Clan, List<string>>));
             ConstructContainerDefinition(typeof(Dictionary<CultureObject, List<string>>));
             ConstructContainerDefinition(typeof(Dictionary<string, List<string>>));
@@ -69,16 +67,16 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(TavernRecruitmentBehavior), 11);
             AddClassDefinition(typeof(CultureAppropriateTroopsBehavior), 12);
             AddClassDefinition(typeof(HouseTroopsTownsBehavior), 13);
-            AddClassDefinition(typeof(RecruitPrisonersMissionBehavior), 14);
             AddClassDefinition(typeof(BanditDefeatChivalryBehavior), 17);
-            AddClassDefinition(typeof(ReligionObject), 19);
+            // Ids 14, 19, 28 and 33 belonged to the decommissioned AiMade.Religions
+            // system (RecruitPrisonersMissionBehavior, ReligionObject, PietyManager,
+            // ReligionsManager) — never instantiated, so no save contains them.
+            // Do NOT reuse these ids.
             AddClassDefinition(typeof(ADODInnBehavior), 20);
             AddClassDefinition(typeof(DivineShieldStateBehavior), 24);
             AddClassDefinition(typeof(DivineShieldMissionBehavior), 25);
             AddClassDefinition(typeof(BanditConversionManager), 26);
             AddClassDefinition(typeof(BanditConversionEvent), 27);
-            AddClassDefinition(typeof(PietyManager), 28);
-            AddClassDefinition(typeof(ReligionsManager), 33);
             AddClassDefinition(typeof(BattleCryStateBehavior), 34);
             AddClassDefinition(typeof(BanditPartyGrowthBehavior), 35);
             AddClassDefinition(typeof(AggressiveSturgiaBehavior), 36);
@@ -135,6 +133,10 @@ namespace RealmsForgotten.AiMade
             AddClassDefinition(typeof(MilitaryAidDiplomacyBehavior), 97);
             AddClassDefinition(typeof(MilitaryAidRequest), 98);
             AddClassDefinition(typeof(SecretWarCompactRequest), 99);
+            // Registered pre-emptively: this quest exists in code but is not
+            // started anywhere yet. An unregistered QuestBase crashes the save
+            // the moment someone wires it up, so reserve its id now.
+            AddClassDefinition(typeof(AIQuest.SimpleNpcQuest), 100);
         }
     }
 }

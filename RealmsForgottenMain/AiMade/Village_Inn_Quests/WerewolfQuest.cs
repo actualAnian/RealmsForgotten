@@ -108,7 +108,17 @@ namespace RealmsForgotten.AiMade.Village_Inn_Quests
 
                 AddLog(new TextObject("{=rf_werewolf_started}The duel against the werewolf has begun."));
             }
-            catch { }
+            catch (System.Exception ex)
+            {
+                TaleWorlds.Library.Debug.Print($"[RF] WerewolfQuest: failed to start werewolf battle: {ex}");
+                // Error path only: give the player their party back so a failed
+                // mission launch doesn't leave the main party with a lone hero.
+                if (_backupRoster != null)
+                {
+                    MobileParty.MainParty.MemberRoster.Clear();
+                    MobileParty.MainParty.MemberRoster.Add(_backupRoster);
+                }
+            }
         }
 
         private void OnMapEventEnded(MapEvent mapEvent)

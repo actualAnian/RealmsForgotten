@@ -16,6 +16,14 @@ public sealed class BehaviorFallbackLine : BehaviorComponent
 
     public float LateralOffset { get; set; }
 
+    // How close the enemy must get to the held line before we take another
+    // step back. Without holding a line, the fallback target is recomputed
+    // from our own moving median every tick and the withdrawal becomes an
+    // endless treadmill the enemy can never catch.
+    public float StepTriggerDistance { get; set; } = 30f;
+
+    private Vec2 _heldFallbackPosition = Vec2.Invalid;
+
     public BehaviorFallbackLine(Formation formation)
         : base(formation)
     {
@@ -49,6 +57,14 @@ public sealed class BehaviorFallbackLine : BehaviorComponent
         Vec2 enemyPosition = anchor.CachedClosestEnemyFormation?.Formation.CachedMedianPosition.AsVec2
             ?? base.Formation.Team.QuerySystem.AverageEnemyPosition;
 
+        // Stepped withdrawal: keep ordering the formation to the line it already
+        // holds; only pick a new line once the enemy has closed in on this one.
+        if (_heldFallbackPosition.IsValid && enemyPosition.IsValid
+            && enemyPosition.DistanceSquared(_heldFallbackPosition) > StepTriggerDistance * StepTriggerDistance)
+        {
+            return;
+        }
+
         Vec2 fallbackDirection = anchorPosition.IsValid && enemyPosition.IsValid
             ? (anchorPosition - enemyPosition).Normalized()
             : (-base.Formation.Direction).Normalized();
@@ -72,6 +88,8 @@ public sealed class BehaviorFallbackLine : BehaviorComponent
 
             fallbackPosition += lateralDirection * LateralOffset;
         }
+
+        _heldFallbackPosition = fallbackPosition;
 
         WorldPosition targetPosition = BattleAITerrainAnalyzer.CreateTerrainAdjustedPosition(
             base.Formation,

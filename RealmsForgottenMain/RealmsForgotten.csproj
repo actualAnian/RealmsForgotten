@@ -91,9 +91,6 @@
 			<HintPath>%(Identity)</HintPath>
 			<Private>False</Private>
 		</Reference>
-		<Compile Remove="AiMade\Stealth\**" />
-		<EmbeddedResource Remove="AiMade\Stealth\**" />
-		<None Remove="AiMade\Stealth\**" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Bannerlord.UIExtenderEx" Version="2.13.2" />
@@ -104,12 +101,6 @@
         <PackageReference Include="Harmony.Extensions" Version="3.2.0.77" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
         <PackageReference Include="BUTR.Harmony.Analyzer" Version="1.0.1.50" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
 	    <PackageReference Include="DynamicExpresso.Core" PrivateAssets="all" Version="2.19.3" />
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Remove="AiMade\Career\InitializeMercenaryContracts.cs" />
-        <Compile Remove="AiMade\Career\ContractNotificationBehavior.cs" />
-        <Compile Remove="AiMade\Career\MercenaryContractManager.cs" />
-        <Compile Remove="AiMade\Career\ContractorBehavior.cs" />
     </ItemGroup>
     <ItemGroup>
         <Folder Include="AiMade\TroopUnlocker\" />

@@ -21,6 +21,8 @@ public sealed class TacticInfantryWaves : TacticComponent
     private Formation? _secondWaveInfantry;
     private int _cachedAiControlledFormationCount;
     private InfantryWavesState? _lastState;
+    private readonly HysteresisGate _firstWavePowerGate = HysteresisGate.RisesAbove(0.75f);
+    private readonly HysteresisGate _secondWavePowerGate = HysteresisGate.RisesAbove(0.65f);
 
     public TacticInfantryWaves(Team team)
         : base(team)
@@ -96,7 +98,10 @@ public sealed class TacticInfantryWaves : TacticComponent
             return true;
         }
 
-        if (_secondWaveInfantry == null || _secondWaveInfantry.CountOfUnits <= 0 || !_secondWaveInfantry.QuerySystem.IsInfantryFormation)
+        // A missing second wave is a valid (degraded) configuration — the Apply*
+        // methods all tolerate it. Only re-manage when a wave we HAD became invalid,
+        // otherwise single-infantry armies trigger a reapply loop every tick.
+        if (_secondWaveInfantry != null && (_secondWaveInfantry.CountOfUnits <= 0 || !_secondWaveInfantry.QuerySystem.IsInfantryFormation))
         {
             return true;
         }
@@ -152,6 +157,15 @@ public sealed class TacticInfantryWaves : TacticComponent
     protected override float GetTacticWeight()
     {
         BattleAIFormationComposition composition = BattleAIFormationCompositionHelper.FromTeam(base.Team);
+
+        // Waves need a second echelon. With a single infantry formation the tactic
+        // still runs (degraded), but auto-selection should prefer single-line
+        // tactics; manual override (+100) remains available.
+        if (composition.InfantryFormationCount < 2)
+        {
+            return BattleAITacticController.ApplyManualWeightBonus(base.Team, nameof(TacticInfantryWaves), 0.05f);
+        }
+
         float score = 0.12f;
 
         if (composition.InfantryRatio > 0.55f)
@@ -192,12 +206,12 @@ public sealed class TacticInfantryWaves : TacticComponent
             return InfantryWavesState.FormWaves;
         }
 
-        if (distanceSquared > 2500f && powerRatio >= 0.75f)
+        if (distanceSquared > 2500f && _firstWavePowerGate.Evaluate(powerRatio))
         {
             return InfantryWavesState.FirstWave;
         }
 
-        if (distanceSquared > 900f && powerRatio >= 0.65f)
+        if (distanceSquared > 900f && _secondWavePowerGate.Evaluate(powerRatio))
         {
             return InfantryWavesState.SecondWave;
         }
