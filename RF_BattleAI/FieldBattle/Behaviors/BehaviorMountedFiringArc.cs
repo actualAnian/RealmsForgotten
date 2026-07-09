@@ -31,6 +31,8 @@ public sealed class BehaviorMountedFiringArc : BehaviorComponent
     /// <summary>Sweep speed, radians per second of oscillation phase.</summary>
     public float SweepSpeed { get; set; } = 0.25f;
 
+    public bool PreferFullOrbit { get; set; }
+
     public BehaviorMountedFiringArc(Formation formation)
         : base(formation)
     {
@@ -73,18 +75,16 @@ public sealed class BehaviorMountedFiringArc : BehaviorComponent
             return;
         }
 
-        // Oscillating sweep along the arc; the whole formation rides the arc
-        // as a moving firing line.
-        float phase = MathF.Sin((Mission.Current?.CurrentTime ?? 0f) * SweepSpeed) * ArcHalfWidthRadians;
+        Mission? mission = Mission.Current;
+        float phase = PreferFullOrbit
+            ? (mission?.CurrentTime ?? 0f) * SweepSpeed
+            : MathF.Sin((mission?.CurrentTime ?? 0f) * SweepSpeed) * ArcHalfWidthRadians;
         Vec2 arcPoint = targetPosition
             + Vec2.FromRotation(openDirection.RotationInRadians + phase) * ArcRadius;
 
-        // Never sweep out of the map: rotate the arc point back toward the
-        // open bearing until it is inside (same recipe as the bait's flight).
-        Mission? mission = Mission.Current;
-        for (int attempt = 1; attempt <= 5 && mission != null && !mission.IsPositionInsideBoundaries(arcPoint); attempt++)
+        for (int attempt = 1; attempt <= 8 && mission != null && !mission.IsPositionInsideBoundaries(arcPoint); attempt++)
         {
-            float shrunkPhase = phase * (1f - attempt * 0.25f);
+            float shrunkPhase = PreferFullOrbit ? phase + attempt * 0.7f : phase * (1f - attempt * 0.2f);
             arcPoint = targetPosition
                 + Vec2.FromRotation(openDirection.RotationInRadians + shrunkPhase) * ArcRadius;
         }

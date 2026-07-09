@@ -471,9 +471,10 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
             BehaviorMountedFiringArc arc = _rangedCavalry.AI.SetBehaviorWeight<BehaviorMountedFiringArc>(10f);
             arc.TargetEnemyFormation = target;
             arc.OpenSideDirection = openDirection;
+            arc.PreferFullOrbit = true;
+            arc.SweepSpeed = 0.38f;
         }
 
-        float laneSign = 1f;
         foreach (Formation? cavalry in new[] { _leftCavalry, _rightCavalry })
         {
             if (cavalry == null)
@@ -482,11 +483,9 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
             }
 
             cavalry.AI.ResetBehaviorWeights();
-            BehaviorCavalryWaveCharge wave = cavalry.AI.SetBehaviorWeight<BehaviorCavalryWaveCharge>(10f);
-            wave.TargetEnemyFormation = target;
-            wave.OpenSideDirection = openDirection;
-            wave.LaneSign = laneSign;
-            laneSign = -laneSign;
+            SetDefaultBehaviorWeights(cavalry);
+            cavalry.AI.SetBehaviorWeight<BehaviorFlank>(1.1f);
+            cavalry.AI.SetBehaviorWeight<BehaviorDirectedCharge>(1.6f).TargetEnemyFormation = target;
         }
 
         // Foot troops keep conventional pressure so the mounted arms have an
