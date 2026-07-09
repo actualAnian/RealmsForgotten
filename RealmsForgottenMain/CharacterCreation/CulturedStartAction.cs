@@ -72,7 +72,7 @@ namespace RealmsForgotten.CharacterCreation
                     case StartType.Knight:
                         CharacterRelationManager.SetHeroRelation(mainHero, kingdom.RulingClan.Leader, 20);
                         ChangeKingdomAction.ApplyByJoinToKingdom(mainHero.Clan, kingdom, default, false);
-                        mainHero.Clan.Influence = 100;
+                        mainHero.Clan.Influence = 500;
                         break;
 
                     case StartType.Usurper:

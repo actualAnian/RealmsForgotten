@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.SaveSystem;
 
 namespace RealmsForgotten
@@ -15,11 +14,6 @@ namespace RealmsForgotten
         {
             CampaignEvents.OnBeforeSaveEvent.AddNonSerializedListener(this, new Action(this.OnSave));
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnSessionStart));
-            CampaignEvents.TickEvent.AddNonSerializedListener(this, TickEvent);
-        }
-
-        private void TickEvent(float obj)
-        {
         }
 
         private void OnSessionStart(CampaignGameStarter obj)
