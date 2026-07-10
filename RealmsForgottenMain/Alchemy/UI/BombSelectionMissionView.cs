@@ -10,8 +10,8 @@ namespace RealmsForgotten.Alchemy.UI
     [DefaultView]
     public class BombSelectionMissionView : MissionView
     {
-        private BombSelectorVM _bombSelectorVM;
-        private GauntletLayer _gauntletLayer;
+        private BombSelectorVM? _bombSelectorVM;
+        private GauntletLayer? _gauntletLayer;
 
         public override void OnBehaviorInitialize()
         {
@@ -23,14 +23,16 @@ namespace RealmsForgotten.Alchemy.UI
         }
         private void HandleVisibility()
         {
-            if (!_bombSelectorVM.IsVisible &&
+            if (_bombSelectorVM != null && 
+                !_bombSelectorVM.IsVisible &&
                 Mission.InputManager.IsKeyPressed(InputKey.H))
             {
                 _bombSelectorVM.IsVisible = true;
                 return;
             }
 
-            if (_bombSelectorVM.IsVisible &&
+            if (_bombSelectorVM != null &&
+                _bombSelectorVM.IsVisible &&
                 Mission.InputManager.IsKeyPressed(InputKey.Escape))
             {
                 _bombSelectorVM.IsVisible = false;
@@ -38,6 +40,7 @@ namespace RealmsForgotten.Alchemy.UI
         }
         private void SynchronizeBombs()
         {
+            if (_bombSelectorVM == null) return;
             var playerBombs = PlayerBombManager.Instance.PlayerBombs;
 
             foreach (var bomb in playerBombs)
@@ -62,7 +65,7 @@ namespace RealmsForgotten.Alchemy.UI
             for (int i = bombsToRemove.Count - 1; i >= 0; i--)
             {
                 BombItemVM? bomb = bombsToRemove[i];
-                _bombSelectorVM.Bombs.Remove(bomb);
+                _bombSelectorVM?.Bombs.Remove(bomb);
             }
         }
         public override void OnMissionTick(float dt)

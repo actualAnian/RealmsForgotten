@@ -1,28 +1,20 @@
-using TaleWorlds.Core;
 using TaleWorlds.Library;
-using TaleWorlds.Localization;
 
 namespace RealmsForgotten.Alchemy.UI
 {
     public class BombSelectorVM : ViewModel
     {
         private MBBindingList<BombItemVM> _bombs;
-        private bool _hasBombs;
-        private string _titleText;
-        private string _closeButtonText;
         private BombItemVM? _selectedItem;
         private bool _isVisible;
 
         public BombSelectorVM()
         {
             _bombs = new MBBindingList<BombItemVM>();
-            _titleText = new TextObject("{=alch_bomb_sel_title}Select Alchemical Bomb").ToString();
-            _closeButtonText = GameTexts.FindText("str_done").ToString();
         }
         public void AddBombItem(BombItemVM bombItem)
         {
             _bombs.Add(bombItem);
-            HasBombs = _bombs.Count > 0;
         }
         public void DecrementBombAmount(BombItemVM bomb)
         {
@@ -32,7 +24,6 @@ namespace RealmsForgotten.Alchemy.UI
                 if (bomb.Amount == "0")
                 {
                     _bombs.Remove(bomb);
-                    HasBombs = _bombs.Count > 0;
                 }
             }
         }
@@ -50,49 +41,6 @@ namespace RealmsForgotten.Alchemy.UI
                 }
             }
         }
-
-        [DataSourceProperty]
-        public bool HasBombs
-        {
-            get => _hasBombs;
-            set
-            {
-                if (_hasBombs != value)
-                {
-                    _hasBombs = value;
-                    OnPropertyChangedWithValue(value, nameof(HasBombs));
-                }
-            }
-        }
-
-        [DataSourceProperty]
-        public string TitleText
-        {
-            get => _titleText;
-            set
-            {
-                if (_titleText != value)
-                {
-                    _titleText = value;
-                    OnPropertyChangedWithValue(value, nameof(TitleText));
-                }
-            }
-        }
-
-        [DataSourceProperty]
-        public string CloseButtonText
-        {
-            get => _closeButtonText;
-            set
-            {
-                if (_closeButtonText != value)
-                {
-                    _closeButtonText = value;
-                    OnPropertyChangedWithValue(value, nameof(CloseButtonText));
-                }
-            }
-        }
-
         [DataSourceProperty]
         public bool IsVisible
         {
@@ -124,6 +72,7 @@ namespace RealmsForgotten.Alchemy.UI
                 bomb.IsSelected = bomb == item;
 
             SelectedItem = item;
+            PlayerBombManager.Instance.SetBombToNewType(item.StringId);
         }
 
         public void ExecuteClose()

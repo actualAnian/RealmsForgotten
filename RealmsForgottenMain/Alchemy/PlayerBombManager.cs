@@ -56,25 +56,33 @@ namespace RealmsForgotten.Alchemy
             if (PlayerBombs[bomb] == 0)
             {
                 PlayerBombs.Remove(bomb);
+                // the player needs to have his equipment switched to another available bomb at least on next tick to prevent an engine crash
                 setNewPlayerBombType = true;
-                //if (PlayerBombs.Count != 0)
-                //{
-                //    var nextBomb = PlayerBombs.First();
-                //    Agent.Main.SetWeaponAmountInSlot(bombWeaponIndex, 1, false);
-                //    var bombMissionWeapon = new MissionWeapon(nextBomb.Key.Item, null, null)
-                //    {
-                //        Amount = (short)nextBomb.Value
-                //    };
-                //    //Agent.Main.ammo(bombWeaponIndex, 1, false);
-                //    Agent.Main.EquipWeaponWithNewEntity(bombWeaponIndex, ref bombMissionWeapon);
-                //}
             }
         }
-        public void SetBombToNewType(BombDefinition bomb, EquipmentIndex index = EquipmentIndex.None)
+        public void SetBombToNewType(BombDefinition bomb, EquipmentIndex index)
         {
             if (!PlayerBombs.ContainsKey(bomb)) return;
-            var aa = PlayerBombs.First(b => b.Key == bomb);
+            var bombKeyValuePair = PlayerBombs.First(b => b.Key == bomb);
             
+            SetBombToNewTypeInternal(bombKeyValuePair, index);
+        }
+        public void SetBombToNewType()
+        {
+            if (PlayerBombs.Count == 0) return;
+            
+            var bombKey = PlayerBombs.First();
+            SetBombToNewTypeInternal(bombKey);
+        }
+        public void SetBombToNewType(string bombStringId)
+        {
+            var bombKey = PlayerBombs.FirstOrDefault(bp => bp.Key.Item.StringId == bombStringId);
+            if (bombKey.Equals(default(KeyValuePair<BombDefinition, int>)))
+                return;
+            SetBombToNewTypeInternal(bombKey);
+        }
+        private void SetBombToNewTypeInternal(KeyValuePair<BombDefinition, int> nextBomb, EquipmentIndex index = EquipmentIndex.None)
+        {
             if (index == EquipmentIndex.None)
                 for (int i = 0; i < 4; i++)
                     if (Agent.Main.Equipment[i].Item == null)
@@ -82,30 +90,11 @@ namespace RealmsForgotten.Alchemy
                         index = (EquipmentIndex)i;
                         break;
                     }
-            var bombMissionWeapon = new MissionWeapon(aa.Key.Item, null, null)
-            {
-                Amount = (short)aa.Value
-            };
-            Agent.Main.EquipWeaponWithNewEntity(index, ref bombMissionWeapon);
-        }
-        public void SetBombToNewType()
-        {
-            if (PlayerBombs.Count == 0) return;
-            
-            var nextBomb = PlayerBombs.First();
-            EquipmentIndex index = EquipmentIndex.Weapon0;
-            for (int i = 0; i < 4; i++)
-                if (Agent.Main.Equipment[i].Item == null || BaseBombDefinitions.IsAlchemicalBomb(Agent.Main.Equipment[i].Item))
-                {
-                    index = (EquipmentIndex)i;
-                    break;
-                }
             var bombMissionWeapon = new MissionWeapon(nextBomb.Key.Item, null, null)
             {
                 Amount = (short)nextBomb.Value
             };
             Agent.Main.EquipWeaponWithNewEntity(index, ref bombMissionWeapon);
         }
-
     }
 }

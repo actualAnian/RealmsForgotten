@@ -1,7 +1,6 @@
 using System;
 using TaleWorlds.GauntletUI;
 using TaleWorlds.GauntletUI.BaseTypes;
-using TaleWorlds.Library;
 
 namespace RealmsForgotten.Alchemy.UI
 {
@@ -30,7 +29,6 @@ namespace RealmsForgotten.Alchemy.UI
 
         private void OnBoolPropertyChanged(PropertyOwnerObject widget, string propertyName, bool value)
         {
-            InformationManager.DisplayMessage(new("selected!"));
             if (propertyName == "IsSelected")
             {
                 if (value)
