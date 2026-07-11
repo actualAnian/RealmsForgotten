@@ -91,7 +91,7 @@ namespace RealmsForgotten.RFCustomSettlements
                 TroopRoster strongestAndPriorTroops = MobilePartyHelper.GetStrongestAndPriorTroops(MobileParty.MainParty, playerMaximumTroopCount, true);
                 troopRoster.Add(strongestAndPriorTroops);
                 Campaign campaign = Campaign.Current;
-                args.MenuContext.OpenTroopSelection(MobileParty.MainParty.MemberRoster, troopRoster, new Func<CharacterObject, bool>(this.CanChangeStatusOfTroop), new Action<TroopRoster>(this.OnTroopRosterManageDone), playerMaximumTroopCount, 1);
+                args.MenuContext.OpenTroopSelection(MobileParty.MainParty.MemberRoster, troopRoster, null, new Func<CharacterObject, bool>(this.CanChangeStatusOfTroop), new Action<TroopRoster>(this.OnTroopRosterManageDone), playerMaximumTroopCount, 1);
             }
             catch
             {

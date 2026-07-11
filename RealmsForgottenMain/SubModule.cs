@@ -1,6 +1,7 @@
-using HarmonyLib;
 using Bannerlord.UIExtenderEx;
+using HarmonyLib;
 using MCM.Abstractions.Attributes;
+using NavalDLC.GauntletUI;
 using Newtonsoft.Json.Linq;
 using RealmsForgotten.AiMade;
 using RealmsForgotten.AiMade.StrategicIntrigue.SaveSystem;
@@ -22,9 +23,9 @@ using RealmsForgotten.RFCustomHorses;
 using RealmsForgotten.RFEffects;
 using RealmsForgotten.RFMissionLogic;
 using RealmsForgotten.UI;
+using RealmsForgotten.Utility;
 using RealmsForgotten.WarSailsPatches;
 using RF_BattleAI;
-using RealmsForgotten.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -318,17 +319,9 @@ namespace RealmsForgotten
             if (!manualPatchesHaveFired)
             {
                 manualPatchesHaveFired = true;
-                try
-                {
-                    RunManualPatches();
-                }
-                catch (Exception ex)
-                {
-                    Debug.Print($"[RF] RunManualPatches failed; continuing without the remaining manual patches: {ex}");
-                }
-                // War Sails patches are applied once in OnSubModuleLoad via
-                // OptionalNavalStartupPatchBootstrap (plus the attribute scan for
-                // FillMissingCachesPatch); re-applying them here ran every prefix twice.
+                RunManualPatches();
+                if (Globals.IsWarSailsLoaded)
+                    WarSailsPatchRegister.Apply(harmony);
             }
 
             FieldInfo field = AccessTools.Field(typeof(CampaignUIHelper), "_skillSortIndices");
@@ -359,7 +352,6 @@ namespace RealmsForgotten
 
             QuestPatches.PatchAll();
 
-
             var target = AccessTools.Method(typeof(BanditSpawnCampaignBehavior), "IsLooterFaction", new Type[] { typeof(IFaction) });
             PatchOrWarn(target, "BanditSpawnCampaignBehavior:IsLooterFaction", prefix: new HarmonyMethod(typeof(BanditSpawnPatch), nameof(BanditSpawnPatch.Prefix)));
             var hideoutMenuInit = AccessTools.Method(typeof(HideoutCampaignBehavior), "game_menu_hideout_place_on_init");
@@ -388,12 +380,15 @@ namespace RealmsForgotten
                 Module.CurrentModule.AddInitialStateOption(initialStateOption);
             }
         }
+
         protected override void OnSubModuleLoad()
         {
-            base.OnSubModuleLoad();
+            if (Globals.IsWarSailsLoaded)
+                WarSailsPatchRegister.RemoveWarsailsUI(Module.CurrentModule);
             Assembly asm = typeof(SubModule).Assembly;
             RFLogger.Log($"[Lifecycle] RealmsForgotten.SubModule.OnSubModuleLoad | asm={asm.Location} | version={asm.GetName().Version} | lastWrite={File.GetLastWriteTime(asm.Location):O}");
             RFLogger.Log($"[Lifecycle] SaveableTypeDefiners present | main={typeof(SaveDefiner).FullName} | ai={typeof(CustomSaveableTypeDefiner).FullName} | intrigue={typeof(StrategicIntrigueTypeDefiner).FullName} | quest={typeof(QuestTypeDefiner).FullName}");
+            // PatchAll has been removed as of v13, its still called in RealmsForgotten.AiMade.AiSubModule !!! make sure it runs
             ViewModelExtensionManager.Initialize(); //has to happen before harmony PatchAll
             try
             {
@@ -407,9 +402,7 @@ namespace RealmsForgotten
                 RFLogger.Log($"[Lifecycle] UIExtender registration failed in RealmsForgotten.SubModule: {ex}");
             }
             ApplyUncategorizedHarmonyPatchesSafely();
-            OptionalNavalStartupPatchBootstrap.Apply(harmony);
             BattleAIBootstrap.Initialize();
-
 
             TextObject coreContentDisabledReason = new("Disabled during installation.", null);
             UIConfig.DoNotUseGeneratedPrefabs = true;

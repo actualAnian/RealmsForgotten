@@ -1,18 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
 using HarmonyLib;
 using RealmsForgotten.CustomSkills;
-using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.Extensions;
-using TaleWorlds.CampaignSystem.ViewModelCollection.Education;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
-using TaleWorlds.Localization;
 
 namespace RealmsForgotten.Patches;
 
@@ -56,7 +48,6 @@ public static class FixPickAll2
         if (result)
         {
             __result.Remove(RFAttributes.Discipline);
-            __result.Remove(RFAttributes.Seafaring);
         }
     }
 }
