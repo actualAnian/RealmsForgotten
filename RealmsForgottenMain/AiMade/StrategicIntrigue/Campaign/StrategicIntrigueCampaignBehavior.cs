@@ -3681,6 +3681,24 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
             kingdomState.ClampValues();
         }
     }
+    private static void HandlePartyOfDissident(Hero dissident)
+    {
+        var party = dissident.PartyBelongedTo;
+        party.RemovePartyLeader();
+        party.MemberRoster.RemoveTroop(dissident.CharacterObject, 1);
+        Hero? heroToAdd;
+        if (party.Owner.IsAlive && party.Owner.PartyBelongedTo == null && !party.Owner.IsPrisoner)
+            heroToAdd = party.Owner;
+        else heroToAdd = party.Owner.Clan.AliveLords.FirstOrDefault(l => l.PartyBelongedTo == null && !l.IsPrisoner && !l.IsChild);
+        if (heroToAdd == null)
+            DestroyPartyAction.Apply(null, party);
+        else
+        {
+            AddHeroToPartyAction.Apply(heroToAdd, party);
+            party.ChangePartyLeader(heroToAdd);
+            party.LordPartyComponent.ClearCachedName();
+        }
+    }
 
     private CrackdownPunishmentOutcome ApplyCrackdownPunishment(
         Kingdom kingdom,
@@ -3708,23 +3726,7 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
             && dissident.IsAlive
             && !dissident.IsChild)
         {
-            if (dissident.PartyBelongedTo != null)
-            {
-                var party = dissident.PartyBelongedTo;
-                party.RemovePartyLeader();
-                party.MemberRoster.RemoveTroop(dissident.CharacterObject, 1);
-                Hero? heroToAdd;
-                if (party.Owner.IsAlive && party.Owner.PartyBelongedTo == null && !party.Owner.IsPrisoner)
-                    heroToAdd = party.Owner;
-                else heroToAdd = party.Owner.Clan.AliveLords.FirstOrDefault(l => l.PartyBelongedTo == null && !l.IsPrisoner);
-                if (heroToAdd == null) DisbandPartyAction.StartDisband(party);
-                else
-                {
-                    AddHeroToPartyAction.Apply(heroToAdd, party);
-                    party.ChangePartyLeader(heroToAdd);
-                    party.LordPartyComponent.ClearCachedName();
-                }
-            }
+            var dissidentParty = dissident.PartyBelongedTo;
             KillCharacterAction.ApplyByExecution(dissident, ruler, showNotification: true, isForced: true);
             threatenedState.Dissidence = 0f;
             threatenedState.TrustToPlayer = 0f;
@@ -3772,7 +3774,7 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
         }
 
         if (dissident.PartyBelongedTo != null)
-            DisbandPartyAction.StartDisband(dissident.PartyBelongedTo);
+            HandlePartyOfDissident(dissident);
         TakePrisonerAction.Apply(capturerParty, dissident);
         return true;
     }

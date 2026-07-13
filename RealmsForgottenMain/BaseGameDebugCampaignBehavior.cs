@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.CampaignSystem.Extensions;
+using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.Core;
 using TaleWorlds.SaveSystem;
+using static TaleWorlds.CampaignSystem.CampaignBehaviors.LordConversationsCampaignBehavior;
 
 namespace RealmsForgotten
 {
@@ -15,11 +21,6 @@ namespace RealmsForgotten
         {
             CampaignEvents.OnBeforeSaveEvent.AddNonSerializedListener(this, new Action(this.OnSave));
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnSessionStart));
-            CampaignEvents.TickEvent.AddNonSerializedListener(this, TickEvent);
-        }
-
-        private void TickEvent(float obj)
-        {
         }
 
         private void OnSessionStart(CampaignGameStarter obj)
