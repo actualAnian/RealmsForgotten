@@ -59,7 +59,7 @@ namespace RealmsForgotten.Career.CareerPointsSystem
             if (details != QuestBase.QuestCompleteDetails.Success) return;
             foreach (string questBehavior in goodQuestBehaviors)
             {
-                if (quest.Title.Value.Contains(questBehavior))
+                if (QuestTitleContains(quest, questBehavior))
                 {
                     AwardDeedsPoints(20);
                     InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=rf_career_deeds_gained}You gain 20 deeds points!").ToString(), new Color(0, 255, 0)));
@@ -68,7 +68,7 @@ namespace RealmsForgotten.Career.CareerPointsSystem
             }
             foreach (string questBehavior in badQuestBehaviors)
             {
-                if (quest.Title.Value.Contains(questBehavior))
+                if (QuestTitleContains(quest, questBehavior))
                 {
                     AwardDeedsPoints(-20);
                     InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=rf_career_deeds_lost}You lose 20 deeds points for your disgusting actions!").ToString(), new Color(255, 0, 0)));
@@ -87,10 +87,16 @@ namespace RealmsForgotten.Career.CareerPointsSystem
             "Needs Help With Brigands", //MerchantNeedsHelpWithOutlawsIssueQuestBehavior
             "Caravan Ambush", //CaravanAmbushIssueBehavior
             "Needs Grain Seeds", //HeadmanNeedsGrainIssueBehavior
+            "Needs Draught Animals",
             "Extortion by Deserters ", //ExtortionByDesertersIssueBehavior
             "Smugglers of ", //SmugglersIssueBehavior
             "Bandit Base Near", //NearbyBanditBaseIssueBehavior
             "Needs Tools", //VillageNeedsToolsIssueBehavior
+            "Family Feud",
+            "Deliver the Herd",
+            "Inn and Out",
+            "Prodigal Son",
+            "Artisan Can't Sell",
         };
 
         static readonly List<string> badQuestBehaviors = new()
@@ -108,7 +114,12 @@ namespace RealmsForgotten.Career.CareerPointsSystem
 
         public override string Description => new TextObject("{=rf_pointsystem_deeds}You gain deeds points by defeating bandit parties, destroying hideouts, helping caravans, villagers in battle, completing good quests, you also lose points through completing bad quests. Every 50 points gives 1 perk point. Your current deeds: ").ToString() + deedsPoints;
 
-        private void AwardDeedsPoints(int points)
+        private static bool QuestTitleContains(QuestBase quest, string text)
+        {
+            return quest.Title.Value.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        public void AwardDeedsPoints(int points)
         {
             if (pointsForPerk <= 0) return;
 

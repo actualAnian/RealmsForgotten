@@ -10,6 +10,8 @@ namespace RealmsForgotten.Smithing
 
         private bool _defaultSmeltingModel = false;
 
+        private float _smeltingYieldModifier = 1f;
+
         private bool _allowSmeltingOtherItems = true;
 
         private int _skillOverDifficultyBeforeNoPenalty = 25;
@@ -258,6 +260,21 @@ namespace RealmsForgotten.Smithing
                 if (value != _defaultSmeltingModel)
                 {
                     _defaultSmeltingModel = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        [SettingPropertyFloatingInteger("{=rfsmithing_mcm_smelting_yield_modifier}Smelting metal yield modifier", 0.1f, 3f, "x0.00", Order = 3, HintText = "{=rfsmithing_mcm_smelting_yield_modifier_description}Scales the per-weapon metal cap when smelting (only when 'Use Vanilla smelting calculations' is OFF). x1.00 = default caps (dagger 1 / 1H 2 / 2H 3); lower tightens the economy, higher loosens it. Never yields more than the item actually smelts down to.", RequireRestart = false)]
+        [SettingPropertyGroup("RFSmithing/Behaviours")]
+        public float SmeltingYieldModifier
+        {
+            get => _smeltingYieldModifier;
+            set
+            {
+                if (value != _smeltingYieldModifier)
+                {
+                    _smeltingYieldModifier = value;
                     OnPropertyChanged();
                 }
             }

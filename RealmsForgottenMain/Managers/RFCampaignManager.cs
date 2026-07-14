@@ -69,7 +69,7 @@ namespace RealmsForgotten.Managers
                 case GameManagerLoadingSteps.SecondInitializeThirdState:
                     {
                         MBGlobals.InitializeReferences();
-                        if (!_loadingSavedGame)
+                        if (_loadedGame == null && !_loadingSavedGame)
                         {
                             MBDebug.Print("Initializing new game begin...", 0, Debug.DebugColor.White, 17592186044416UL);
                             Campaign campaign = new(CampaignGameMode.Campaign);
@@ -77,7 +77,7 @@ namespace RealmsForgotten.Managers
                             campaign.SetLoadingParameters(Campaign.GameLoadingType.NewCampaign);
                             MBDebug.Print("Initializing new game end...", 0, Debug.DebugColor.White, 17592186044416UL);
                         }
-                        else
+                        else if (_loadedGame == null)
                         {
                             MBDebug.Print("Initializing saved game begin...", 0, Debug.DebugColor.White, 17592186044416UL);
                             _loadedGame = Game.LoadSaveGame(_loadedGameResult, this);
@@ -86,8 +86,12 @@ namespace RealmsForgotten.Managers
                             Common.MemoryCleanupGC(false);
                             MBDebug.Print("Initializing saved game end...", 0, Debug.DebugColor.White, 17592186044416UL);
                         }
-                        (_loadedGame ?? Game.Current)?.DoLoading();
-                        nextStep = GameManagerLoadingSteps.PostInitializeFourthState;
+                        Game activeGame = _loadedGame ?? Game.Current;
+                        if (activeGame == null)
+                        {
+                            throw new InvalidOperationException("RFCampaignManager.SecondInitializeThirdState reached with no active Game instance.");
+                        }
+                        nextStep = activeGame.DoLoading() ? GameManagerLoadingSteps.PostInitializeFourthState : GameManagerLoadingSteps.SecondInitializeThirdState;
                         return;
                     }
                 case GameManagerLoadingSteps.PostInitializeFourthState:
@@ -107,12 +111,7 @@ namespace RealmsForgotten.Managers
                     }
                 case GameManagerLoadingSteps.FinishLoadingFifthStep:
                     {
-                        Game activeGame = _loadedGame ?? Game.Current;
-                        if (activeGame == null)
-                        {
-                            throw new InvalidOperationException("RFCampaignManager.FinishLoadingFifthStep reached with no active Game instance.");
-                        }
-                        nextStep = activeGame.DoLoading() ? GameManagerLoadingSteps.None : GameManagerLoadingSteps.FinishLoadingFifthStep;
+                        nextStep = GameManagerLoadingSteps.None;
                         return;
                     }
                 default:

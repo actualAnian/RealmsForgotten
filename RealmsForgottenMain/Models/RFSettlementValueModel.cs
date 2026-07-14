@@ -32,8 +32,8 @@ namespace RealmsForgotten.Models
         {
             if (clan.Culture?.StringId == "mage")
             {
-                Settlement settlement = Settlement.All.First(s => s.Culture.StringId == "mage");
-                if (settlement != null) return settlement;        
+                Settlement settlement = Settlement.All.FirstOrDefault(s => s.Culture?.StringId == "mage");
+                if (settlement != null) return settlement;
             } 
             return _previousModel.FindMostSuitableHomeSettlement(clan);
         }

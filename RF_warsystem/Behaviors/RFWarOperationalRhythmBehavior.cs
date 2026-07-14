@@ -497,7 +497,7 @@ public sealed class RFWarOperationalRhythmBehavior : CampaignBehaviorBase
 
     private static float GetCurrentDay()
     {
-        return (float)CampaignTime.Now.ElapsedDaysUntilNow;
+        return (float)CampaignTime.Now.ToDays;
     }
 
     private static float GetReadiness(Kingdom kingdom)

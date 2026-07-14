@@ -26,6 +26,13 @@ namespace RF_AIDialog
         private void OnGameLoadFinished()
         {
             AIMessageStore.EnsureInitialized();
+
+            // Expire any Drafting records left stuck by a crash/close during
+            // letter generation — otherwise they count as open initiative
+            // threads forever and permanently block new letters. (D3)
+            int expired = AIMessageStore.ExpireStaleDrafts();
+            if (expired > 0)
+                RFAIDebug.Log($"AIMessageBehavior: expired {expired} stale draft(s) on load.");
         }
 
         private void OnDailyTick()

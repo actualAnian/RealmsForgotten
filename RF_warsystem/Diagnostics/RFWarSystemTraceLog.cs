@@ -193,7 +193,7 @@ internal static class RFWarSystemTargetTraceCollector
         }
 
         string key = $"{RFWarSystemTraceLog.FormatParty(mobileParty)}::{missionType}";
-        float currentDay = (float)CampaignTime.Now.ElapsedDaysUntilNow;
+        float currentDay = (float)CampaignTime.Now.ToDays;
         Kingdom? kingdom = mobileParty.MapFaction as Kingdom;
         Kingdom? focusedEnemy = kingdom != null ? Behaviors.RFWarCampaignDirectorBehavior.GetPrimaryEnemy(kingdom) : null;
         float campaignLock = kingdom != null && focusedEnemy != null

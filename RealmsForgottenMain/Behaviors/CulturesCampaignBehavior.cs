@@ -16,9 +16,11 @@ namespace RealmsForgotten.Behaviors;
 
 internal class MercenaryData
 {
+    [SaveableField(1)]
     public int Amount;
+    [SaveableField(2)]
     public CampaignTime NextReset = CampaignTime.Now;
-    
+
     public MercenaryData(int newAmount, int limit = 1000)
     {
         ResetSoldiers(newAmount, limit);
@@ -174,11 +176,13 @@ internal class CulturesCampaignBehavior : CampaignBehaviorBase
 
     private void KhuzaitBonus(Settlement settlement)
     {
-        if ((settlement.IsTown || settlement.IsCastle) && settlement.Owner.Culture.StringId == khuzaitId && settlement.Party.PrisonRoster.TotalRegulars > 0 && settlement.MilitiaPartyComponent != null)
+        if ((settlement.IsTown || settlement.IsCastle) && settlement.OwnerClan?.Culture?.StringId == khuzaitId && settlement.Party.PrisonRoster.TotalRegulars > 0 && settlement.MilitiaPartyComponent != null)
         {
             foreach (FlattenedTroopRosterElement troopRosterElement in settlement.Party.PrisonRoster.ToFlattenedRoster())
             {
-                if (troopRosterElement.Troop.IsHero) return;
+                // continue, not return: a single hero prisoner must not abort the
+                // whole day's conversion of the remaining regular prisoners.
+                if (troopRosterElement.Troop.IsHero) continue;
                 if (MBRandom.RandomFloat < 0.15f)
                 {
                     settlement.Party.PrisonRoster.RemoveTroop(troopRosterElement.Troop);
@@ -195,6 +199,11 @@ internal class CulturesCampaignBehavior : CampaignBehaviorBase
             List<MapEventParty> parties = mapEvent.Winner.Parties;
             foreach (MapEventParty party in parties)
             {
+                // Owner is null for militia (PartyOwner => Settlement.OwnerClan.Leader,
+                // which can be null) — skip rather than NRE.
+                if (party.Party.Owner == null)
+                    continue;
+
                 //Calculation to take a number between 0.15 and 0.5 based on the level of the party owner
                 float probability = 0.15f + (0.50f - 0.15f) * (party.Party.Owner.Level - 0f) / (63 - 0f);
                 if (MBRandom.RandomFloat > probability)
@@ -238,7 +247,14 @@ internal class CulturesCampaignBehavior : CampaignBehaviorBase
     }
     public override void SyncData(IDataStore dataStore)
     {
-
+        // These were only marked [SaveableField] (inert on a behavior) with an
+        // EMPTY SyncData, so the mercenary stock/cooldown reset every load — a
+        // reload-to-refresh exploit. Persist them via SyncData (the definer now
+        // registers MercenaryData + the container).
+        dataStore.SyncData("rf_townSlaveSoldiersData", ref townSlaveSoldiersData);
+        dataStore.SyncData("rf_townMonkWarriorsData", ref townMonkWarriorsData);
+        townSlaveSoldiersData ??= new();
+        townMonkWarriorsData ??= new();
     }
 }
 

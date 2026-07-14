@@ -58,7 +58,21 @@ namespace RealmsForgotten.HuntableHerds.Models
             string assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string xmlFileName = Path.Combine(assemblyFolder, "hunting_herds.xml");
 
-            XElement huntingHerds = XElement.Load(xmlFileName);
+            // Missing/malformed XML must not CTD at boot (this runs from
+            // OnBeforeInitialModuleScreenSetAsRoot). Leave the herd list empty.
+            if (!File.Exists(xmlFileName))
+                return;
+
+            XElement huntingHerds;
+            try
+            {
+                huntingHerds = XElement.Load(xmlFileName);
+            }
+            catch (Exception ex)
+            {
+                TaleWorlds.Library.Debug.Print($"[HuntableHerds] Failed to load hunting_herds.xml: {ex.Message}");
+                return;
+            }
 
             foreach (XElement element in huntingHerds.Descendants("Herd")) {
                 string notifMessage = element.Element("notifMessage").Value;

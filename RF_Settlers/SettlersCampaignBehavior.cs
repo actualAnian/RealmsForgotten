@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Helpers;
+using System.Globalization;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Conversation;
@@ -80,6 +81,13 @@ namespace RF_Settlers
             if (party?.StringId != null && PlannedRemovals.Remove(party.StringId))
             {
                 return;
+            }
+
+            // A camp razed by enemies must NOT still materialize into a village:
+            // drop any pending (not-yet-founded) record tied to this camp.
+            if (party?.PartyComponent is SettlerCampComponent && party.StringId != null)
+            {
+                _villageRecords.RemoveAll(r => !r.Established && r.CampPartyId == party.StringId);
             }
 
             string what = party?.PartyComponent switch
@@ -192,7 +200,7 @@ namespace RF_Settlers
             AddMilitiaEscort(members, kingdom);
 
             MobileParty party = MobileParty.CreateParty(
-                $"rf_settlers_{kingdom.StringId}_{CampaignTime.Now.ToMilliseconds}",
+                $"rf_settlers_{kingdom.StringId}_{((long)CampaignTime.Now.ToMilliseconds).ToString(CultureInfo.InvariantCulture)}",
                 new SettlerPartyComponent(kingdom, originTown, target));
             party.ActualClan = kingdom.RulingClan;
             party.InitializeMobilePartyAroundPosition(
@@ -326,7 +334,7 @@ namespace RF_Settlers
             DestroyPartyAction.Apply(null, settlerParty);
 
             MobileParty camp = MobileParty.CreateParty(
-                $"rf_settler_camp_{kingdom.StringId}_{CampaignTime.Now.ToMilliseconds}",
+                $"rf_settler_camp_{kingdom.StringId}_{((long)CampaignTime.Now.ToMilliseconds).ToString(CultureInfo.InvariantCulture)}",
                 new SettlerCampComponent(kingdom, component.OriginTown, population * 3f));
             camp.ActualClan = kingdom.RulingClan;
             camp.InitializeMobilePartyAroundPosition(
@@ -414,7 +422,7 @@ namespace RF_Settlers
             string displayName = nameTemplate.ToString();
 
             Vec2 position = new(camp.Position.X, camp.Position.Y);
-            if (!SettlementXmlFactory.TryBuildVillageXml(kingdom, position, bound, stringId, displayName, out string xml))
+            if (!SettlementXmlFactory.TryBuildVillageXml(kingdom, position, bound, stringId, displayName, out string xml, out string villageTypeId))
             {
                 return false;
             }
@@ -427,10 +435,11 @@ namespace RF_Settlers
                 PrefabId = "rf_settler_village_icon_" + (kingdom.Culture?.StringId ?? "generic"),
                 CampPartyId = camp.StringId,
                 KingdomId = kingdom.StringId,
-                Established = false
+                Established = false,
+                VillageTypeId = villageTypeId
             };
             _villageRecords.Add(record);
-            Patches.SettlersMapScenePatch.RegisterVillagePrefab(record.StringId, record.PrefabId);
+            Patches.SettlersMapScenePatch.RegisterVillagePrefab(record.StringId, record.PrefabId, record.VillageTypeId);
 
             // Found the village RIGHT NOW, before the player's eyes. If the
             // live path cannot run at this moment, the record stays pending:

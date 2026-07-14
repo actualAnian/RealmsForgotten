@@ -24,7 +24,10 @@ namespace RFCustomSettlements
             { 
                 if(_arenaSettlementStateHandler == null)
                 {
-                    _arenaSettlementStateHandler = (ArenaSettlementStateHandler)(arenaSettlement?.SettlementComponent as RFCustomSettlement).StateHandler;
+                    // Fully null-safe: the `?.` on arenaSettlement did NOT guard
+                    // the final `.StateHandler`, so with no arena settlement on
+                    // the map this threw NRE (e.g. on save).
+                    _arenaSettlementStateHandler = (arenaSettlement?.SettlementComponent as RFCustomSettlement)?.StateHandler as ArenaSettlementStateHandler;
                 }
                 return _arenaSettlementStateHandler;
             }
@@ -157,11 +160,18 @@ namespace RFCustomSettlements
         public override void SyncData(IDataStore dataStore)
         {
             if(dataStore.IsSaving)
-            { 
-                currentArenaState = ArenaSettlementStateHandler.currentState;
-                if (ArenaSettlementStateHandler.currentChallenge != null)
-                    currentChallengeToSync = ArenaSettlementStateHandler.currentChallenge.ChallengeName;
-                isWaiting = ArenaSettlementStateHandler.hasToWait;
+            {
+                // The getter can now return null (no arena settlement on the
+                // map) — snapshot only when a handler exists, else keep the
+                // last-known static values.
+                var handler = ArenaSettlementStateHandler;
+                if (handler != null)
+                {
+                    currentArenaState = handler.currentState;
+                    if (handler.currentChallenge != null)
+                        currentChallengeToSync = handler.currentChallenge.ChallengeName;
+                    isWaiting = handler.hasToWait;
+                }
             }
             dataStore.SyncData("current_arena_state", ref currentArenaState);
             dataStore.SyncData("current_challenge_name", ref currentChallengeToSync);

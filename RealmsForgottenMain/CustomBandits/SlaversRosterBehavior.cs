@@ -100,6 +100,14 @@ namespace RealmsForgotten.CustomBandits
 #pragma warning restore IDE1006 // Naming Styles
         public void DailyTick()
         {
+            // The counters were only ever incremented on spawn and never
+            // decremented on death (and are saved), so 1 - Log(n, max)
+            // eventually went <= 0 and slaver spawning stopped FOREVER. Clamp
+            // to the live slaver-party count so destroyed parties free slots.
+            int liveSlaverParties = MobileParty.All.CountQ(p => p.IsSlaverParty());
+            currentNoSmallSlaverParties = Math.Min(currentNoSmallSlaverParties, liveSlaverParties);
+            currentNoBigSlaverParties = Math.Min(currentNoBigSlaverParties, liveSlaverParties);
+
             var random = new Random();
             if (1-MathF.Log(currentNoSmallSlaverParties, maxNumberOfSmallSlaverParties) > random.NextDouble())
                 SpawnSmallSlaverParty();

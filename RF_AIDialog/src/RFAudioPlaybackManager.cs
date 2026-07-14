@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Reflection;
 using System.Threading;
@@ -26,6 +27,23 @@ namespace RF_AIDialog
         private bool _disposed;
 
         public static RFAudioPlaybackManager Instance => _lazy.Value;
+
+        // Facial animation / lip-sync are ENGINE calls (SetAgentFacialAnimation)
+        // that must run on the main thread — but playback start (TTS Task) and
+        // stop (NAudio PlaybackStopped) fire on background threads. Marshal them
+        // through this queue, drained by PumpMainThread() from OnApplicationTick.
+        private static readonly ConcurrentQueue<Action> MainThreadActions = new ConcurrentQueue<Action>();
+
+        private static void RunOnMainThread(Action action) => MainThreadActions.Enqueue(action);
+
+        public static void PumpMainThread()
+        {
+            while (MainThreadActions.TryDequeue(out Action action))
+            {
+                try { action(); }
+                catch (Exception ex) { RFAIDebug.Log($"RFAudioPlaybackManager main-thread pump: {ex.GetType().Name}: {ex.Message}"); }
+            }
+        }
 
         private RFAudioPlaybackManager() { }
 
@@ -98,7 +116,14 @@ namespace RF_AIDialog
                     _source = source;
                 }
 
-                TryStartFacialAnimationForCurrentConversation();
+                // Marshal the facial-animation START to the main thread; guard
+                // against a stale generation (playback already replaced/stopped).
+                int startGeneration = generation;
+                RunOnMainThread(() =>
+                {
+                    if (!_disposed && _generation == startGeneration)
+                        TryStartFacialAnimationForCurrentConversation();
+                });
                 player.Play();
                 RFAIDebug.Log($"RFAudioPlaybackManager started playback gen={generation} reason={reason}");
             }
@@ -138,9 +163,12 @@ namespace RF_AIDialog
             }
 
             if (facialAnimationActive)
-                StopFacialAnimation(facialAgent);
+            {
+                Agent? agentToStop = facialAgent;
+                RunOnMainThread(() => StopFacialAnimation(agentToStop));
+            }
             if (mapFacialAnimationActive)
-                MapConversationLipSyncBridge.StopTalking();
+                RunOnMainThread(() => MapConversationLipSyncBridge.StopTalking());
 
             try { player?.Stop(); } catch { }
             try { player?.Dispose(); } catch { }
@@ -178,9 +206,12 @@ namespace RF_AIDialog
             }
 
             if (facialAnimationActive)
-                StopFacialAnimation(facialAgent);
+            {
+                Agent? agentToStop = facialAgent;
+                RunOnMainThread(() => StopFacialAnimation(agentToStop));
+            }
             if (mapFacialAnimationActive)
-                MapConversationLipSyncBridge.StopTalking();
+                RunOnMainThread(() => MapConversationLipSyncBridge.StopTalking());
 
             try { player?.Dispose(); } catch { }
             try { reader?.Dispose(); } catch { }

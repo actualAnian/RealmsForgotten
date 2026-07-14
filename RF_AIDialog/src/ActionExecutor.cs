@@ -99,6 +99,9 @@ namespace RF_AIDialog
 
         private static void GiveGold(Hero npc, int amount)
         {
+            // Clamp to MaxGoldTransfer — the LLM must not be coaxed into
+            // draining an NPC's entire treasury in a single action.
+            amount = Math.Min(amount, MaxGoldTransfer);
             if (amount <= 0 || npc.Gold < amount) return;
             npc.ChangeHeroGold(-amount);
             Hero.MainHero.ChangeHeroGold(amount);
@@ -108,6 +111,8 @@ namespace RF_AIDialog
 
         private static void TakeGold(Hero npc, int amount)
         {
+            // Clamp to MaxGoldTransfer — cap how much the player can be made to pay.
+            amount = Math.Min(amount, MaxGoldTransfer);
             if (amount <= 0) return;
             if (Hero.MainHero.Gold < amount)
             {

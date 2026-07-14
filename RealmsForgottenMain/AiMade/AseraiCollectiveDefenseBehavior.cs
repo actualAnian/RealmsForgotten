@@ -74,8 +74,19 @@ namespace RealmsForgotten.AiMade
 
                     if (primaryThreatenedRealm != null)
                     {
+                        // Silent, mechanical part: keep the war-director pressure
+                        // refreshed every day.
                         RFWarExternalIntentApi.ReinforceCollectiveDefense(attacker, primaryThreatenedRealm, threatenedAserai);
-                        RallyAseraiRealmsAgainst(attacker, primaryThreatenedRealm);
+
+                        // The full rally (peace steps + on-screen "the Athas
+                        // kingdoms unite" message) is cooldown-gated — without
+                        // this it re-ran EVERY day of an ongoing war and spammed
+                        // the screen as if the behavior kept restarting.
+                        if (!IsOnDefenseCooldown(attacker))
+                        {
+                            RallyAseraiRealmsAgainst(attacker, primaryThreatenedRealm);
+                            _lastDefenseCoalition[attacker.StringId] = CampaignTime.Now;
+                        }
                     }
                 }
             }

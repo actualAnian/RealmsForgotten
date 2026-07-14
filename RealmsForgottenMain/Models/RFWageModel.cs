@@ -20,11 +20,11 @@ namespace RealmsForgotten.Models
         }
         public override int GetCharacterWage(CharacterObject character)
         {
-            return base.GetCharacterWage(character) * (character.IsGiant() ? Globals.GiantsCostMult : 1);
+            return _previousModel.GetCharacterWage(character) * (character.IsGiant() ? Globals.GiantsCostMult : 1);
         }
         public override ExplainedNumber GetTroopRecruitmentCost(CharacterObject troop, Hero buyerHero, bool withoutItemCost = false)
         {
-            ExplainedNumber baseValue = base.GetTroopRecruitmentCost(troop, buyerHero, withoutItemCost);
+            ExplainedNumber baseValue = _previousModel.GetTroopRecruitmentCost(troop, buyerHero, withoutItemCost);
             if (buyerHero == null)
                 return baseValue;
             if (buyerHero.Culture.StringId == "vlandia" && troop.Occupation == Occupation.Mercenary)
@@ -45,7 +45,7 @@ namespace RealmsForgotten.Models
                 return new ExplainedNumber(0f, includeDescriptions);
             }
             
-            ExplainedNumber value = base.GetTotalWage(mobileParty, troopRoster, includeDescriptions);
+            ExplainedNumber value = _previousModel.GetTotalWage(mobileParty, troopRoster, includeDescriptions);
             if (mobileParty != MobileParty.MainParty) return value;
             var career = PlayerCareerExtension.GetCareer();
             if (career == null) return value;

@@ -14,7 +14,30 @@ internal static class RFWarExternalFrontContext
     private static readonly Dictionary<string, FrontEntry> AlignmentWarPressureByPair = new(StringComparer.Ordinal);
     private static readonly Dictionary<string, SacredTargetEntry> SacredTargetByPair = new(StringComparer.Ordinal);
 
+    // True only while the quest-driven global alignment war is active (pushed by
+    // RealmsForgotten AlignmentWarBehavior via RFWarExternalIntentApi). While
+    // false, the war director must NOT treat good/evil culture sides as strategic
+    // blocs — otherwise the alignment war effectively starts on day 1.
+    internal static bool AlignmentDoctrineActive;
+
     private const float FrontClusterDistanceSquared = 32400f;
+
+    /// <summary>
+    /// Clears all cross-campaign static state. The dictionaries are keyed by
+    /// kingdom StringId, which is identical across saves, so without this a
+    /// second campaign in the same session inherits the first's holy-war /
+    /// collective-defense / sacred-target pressures. Call on new game / load.
+    /// </summary>
+    public static void Reset()
+    {
+        TargetPriorityByKey.Clear();
+        EnemyPriorityByKey.Clear();
+        HolyWarPressureByPair.Clear();
+        CollectiveDefensePressureByPair.Clear();
+        AlignmentWarPressureByPair.Clear();
+        SacredTargetByPair.Clear();
+        AlignmentDoctrineActive = false;
+    }
 
     public static void ReinforceTarget(Kingdom kingdom, Settlement settlement, float priority, float durationDays)
     {
@@ -249,7 +272,7 @@ internal static class RFWarExternalFrontContext
 
     private static float GetCurrentDay()
     {
-        return (float)CampaignTime.Now.ElapsedDaysUntilNow;
+        return (float)CampaignTime.Now.ToDays;
     }
 
     private struct FrontEntry

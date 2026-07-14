@@ -17,7 +17,7 @@ namespace RealmsForgotten.Models
 
         public override ExplainedNumber MaxHitpoints(CharacterObject character, bool includeDescriptions = false)
         {
-            ExplainedNumber value = base.MaxHitpoints(character, includeDescriptions);
+            ExplainedNumber value = baseModel.MaxHitpoints(character, includeDescriptions);
             if (character.IsHero && character.HeroObject != Hero.MainHero && character.HeroObject.PartyBelongedTo == MobileParty.MainParty)
                 CareerHelper.ApplyBasicCareerPassives(ref value, PassiveEffectType.CompanionHealth);
             if (CharacterObject.PlayerCharacter != null &&  character.HeroObject == Hero.MainHero) 

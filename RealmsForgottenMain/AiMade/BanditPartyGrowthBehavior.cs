@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,7 +30,7 @@ namespace RealmsForgotten.Behaviors
 
         private void OnDailyTick()
         {
-            int currentDay = CampaignTime.Now.GetDayOfYear;
+            int currentDay = (int)CampaignTime.Now.ToDays;
             if (_lastUpdateDay < 0)
             {
                 _lastUpdateDay = currentDay;

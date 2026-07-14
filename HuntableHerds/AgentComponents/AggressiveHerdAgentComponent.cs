@@ -36,7 +36,7 @@ namespace RealmsForgotten.HuntableHerds.AgentComponents
             else if (_attackTimer < 0f)
                 _attackTimer = 0f;
 
-            if (Agent.CanSeeOtherAgent(mainAgent, HerdBuildData.CurrentHerdBuildData.SightRange))
+            if (Agent.CanSeeOtherAgent(mainAgent, distance: HerdBuildData.CurrentHerdBuildData.SightRange))
             {
                 _aggroTimer = 15f;
             }

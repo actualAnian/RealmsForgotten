@@ -2596,7 +2596,10 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
         float averageStrength = GetAverageClanStrength(kingdom);
         float averageInfluence = kingdom.Clans.Average(x => x.Influence);
         float averageFiefs = kingdom.Clans.Average(x => (float)x.Fiefs.Count());
-        int relationToRuler = clan.Leader.GetRelation(kingdom.RulingClan.Leader);
+        // RulingClan.Leader can be null during a regency / leader-death window.
+        int relationToRuler = (kingdom.RulingClan?.Leader != null && clan.Leader != null)
+            ? clan.Leader.GetRelation(kingdom.RulingClan.Leader)
+            : 0;
 
         float baseFiefGrievance = 0f;
         if (clan.Fiefs.Count() == 0)
@@ -3880,7 +3883,10 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
 
         if (clan?.Leader != null && kingdom?.RulingClan?.Leader != null && clan != kingdom.RulingClan)
         {
-            int relationToRuler = clan.Leader.GetRelation(kingdom.RulingClan.Leader);
+            // RulingClan.Leader can be null during a regency / leader-death window.
+        int relationToRuler = (kingdom.RulingClan?.Leader != null && clan.Leader != null)
+            ? clan.Leader.GetRelation(kingdom.RulingClan.Leader)
+            : 0;
             if (relationToRuler < -10)
             {
                 reasons.Add(("personal hostility toward the ruler", -relationToRuler));

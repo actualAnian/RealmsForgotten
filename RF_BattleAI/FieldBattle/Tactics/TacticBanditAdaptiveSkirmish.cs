@@ -16,7 +16,8 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
         HarassingAdvance,
         AggressiveRush,
         SpringTheTrap,
-        MountedOnslaught
+        MountedOnslaught,
+        Rout
     }
 
     private const float TrapEngageDistance = 75f;
@@ -38,6 +39,18 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
     private const float PursuerSenseRadius = 75f;
     private const float PursuerMainBodyFarDistance = 150f;
     private const float PursuerParityRatio = 1.05f;
+    // Per-group caught logic: a group with the enemy this close cannot outrun
+    // it — fleeing means dying with its back turned; it turns and fights. A
+    // MOUNTED chaser catches infantry from much farther out (distance is
+    // scaled), because feet never outrun horses.
+    private const float CaughtEnterDistance = 30f;
+    private const float CaughtExitBand = 18f;
+    private const float MountedChaserDistanceScale = 0.55f;
+    // Bandit hearts: they break and run off the field when bloodied without
+    // hope — no fighting to the last man.
+    private const float RoutCasualtiesAlone = 0.55f;
+    private const float RoutCasualtiesWhenOutmatched = 0.35f;
+    private const float RoutOutmatchedRatio = 0.5f;
 
     private readonly bool _isBanditTeam;
     private Formation? _supportInfantry;
@@ -67,6 +80,14 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
     // suppressed (telemetry showed superior all-mounted bandits ending the
     // battle in a defensive ball at the enemy's corner).
     private readonly HysteresisGate _dominantGate = HysteresisGate.RisesAbove(1.1f, 0.1f);
+    // Per-group CAUGHT gates — distance hysteresis (enter ≤30m, exit ≥48m).
+    // The old global 25m check had no band: bandits flip-flopped every tick
+    // between standing and skirmishing right in the enemy's face, and one
+    // caught group dragged the FREE group into CorneredStand with it.
+    private readonly HysteresisGate _mainCaughtGate = HysteresisGate.FallsBelow(CaughtEnterDistance, CaughtExitBand);
+    private readonly HysteresisGate _supportCaughtGate = HysteresisGate.FallsBelow(CaughtEnterDistance, CaughtExitBand);
+    private bool _routed;
+    private int _initialTroopCount;
     private readonly MBList<Agent> _pursuerBuffer = new();
     private float _mainPursuerPower;
     private int _mainPursuerCount;
@@ -179,6 +200,14 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
             IsTacticReapplyNeeded = false;
         }
 
+        if (_initialTroopCount <= 0)
+        {
+            foreach (Formation formation in FormationsIncludingEmpty)
+            {
+                _initialTroopCount += formation.CountOfUnits;
+            }
+        }
+
         UpdatePursuerSensors();
         BanditBattleState state = EvaluateState();
         if (_lastState != state)
@@ -204,13 +233,25 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
             case BanditBattleState.MountedOnslaught:
                 ApplyMountedOnslaught();
                 break;
+            case BanditBattleState.Rout:
+                ApplyRout();
+                break;
             default:
                 ApplyHarassingAdvance();
                 break;
         }
 
+        int troopsNow = 0;
+        foreach (Formation formation in FormationsIncludingEmpty)
+        {
+            troopsNow += formation.CountOfUnits;
+        }
+
+        float casualtyFraction = _initialTroopCount > 0 ? 1f - troopsNow / (float)_initialTroopCount : 0f;
         BanditTrapTelemetry.LogDecision(
-            base.Team, state.ToString(), _mainInfantry, _supportInfantry,
+            base.Team,
+            $"{state} pw={base.Team.QuerySystem.RemainingPowerRatio:F2} cas={casualtyFraction:P0}",
+            _mainInfantry, _supportInfantry,
             state == BanditBattleState.SpringTheTrap ? _trapChaser : _lastChaser,
             $"bait={_lastBaitDecision} striker={_lastSupportDecision}",
             _lastChaserToBait, _lastPowerFavorable,
@@ -248,13 +289,31 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
     private BanditBattleState EvaluateState()
     {
         float powerRatio = base.Team.QuerySystem.RemainingPowerRatio;
-        float engagementDistanceSquared = GetEngagementDistanceSquared();
         bool isDominant = _dominantGate.Evaluate(powerRatio);
-        bool isCornered = engagementDistanceSquared < 625f || (engagementDistanceSquared < 1225f && powerRatio < 1.05f);
+        bool isWeak = _weakGate.Evaluate(powerRatio);
 
-        // Superior bandits at contact range are PRESSING, not cornered —
-        // CorneredStand is for the weak who got caught.
-        if (isCornered && !isDominant)
+        // Broken men do not rally: the rout is a one-way latch.
+        if (_routed)
+        {
+            return BanditBattleState.Rout;
+        }
+
+        if (isWeak && ShouldRout(powerRatio))
+        {
+            _routed = true;
+            _trapSprungUntil = float.MinValue;
+            return BanditBattleState.Rout;
+        }
+
+        float engagementDistanceSquared = GetEngagementDistanceSquared();
+
+        // Global CorneredStand only remains for the EVEN fight at contact
+        // range. Dominant bandits press (never cower); weak bandits handle
+        // being caught PER GROUP inside CautiousSkirmish — the old global
+        // check froze the free group whenever its partner was caught, and its
+        // bare 25m threshold flip-flopped against CautiousSkirmish every tick.
+        bool isCornered = engagementDistanceSquared < 625f || (engagementDistanceSquared < 1225f && powerRatio < 1.05f);
+        if (isCornered && !isDominant && !isWeak)
         {
             _trapSprungUntil = float.MinValue;
             return BanditBattleState.CorneredStand;
@@ -266,7 +325,7 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
             return BanditBattleState.SpringTheTrap;
         }
 
-        if (_weakGate.Evaluate(powerRatio))
+        if (isWeak)
         {
             // The bait only works if it eventually snaps shut: once a striker
             // sits behind the pursuing enemy, turn and strike from both sides.
@@ -276,10 +335,6 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
                 return BanditBattleState.SpringTheTrap;
             }
 
-            // Telemetry showed the old withdraw cap forced half the battle into
-            // a standing CorneredStand — with continuous flight the ONLY reason
-            // to stand is being genuinely caught (isCornered above, which also
-            // covers being pressed against the map edge).
             return BanditBattleState.CautiousSkirmish;
         }
 
@@ -296,6 +351,43 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
         }
 
         return BanditBattleState.HarassingAdvance;
+    }
+
+    /// <summary>Bandits break when bloodied without hope: over half the band
+    /// down, or a third down while clearly outmatched. Fresh bands never rout
+    /// — they still believe in the trap.</summary>
+    private bool ShouldRout(float powerRatio)
+    {
+        if (_initialTroopCount <= 0)
+        {
+            return false;
+        }
+
+        int currentTroops = 0;
+        foreach (Formation formation in FormationsIncludingEmpty)
+        {
+            currentTroops += formation.CountOfUnits;
+        }
+
+        float casualties = 1f - currentTroops / (float)_initialTroopCount;
+        return casualties >= RoutCasualtiesAlone
+            || (casualties >= RoutCasualtiesWhenOutmatched && powerRatio <= RoutOutmatchedRatio);
+    }
+
+    private void ApplyRout()
+    {
+        _lastBaitDecision = "ROUT";
+        _lastSupportDecision = "ROUT";
+        foreach (Formation formation in FormationsIncludingEmpty)
+        {
+            if (formation.CountOfUnits <= 0 || !formation.IsAIControlled)
+            {
+                continue;
+            }
+
+            formation.AI.ResetBehaviorWeights();
+            formation.AI.SetBehaviorWeight<TaleWorlds.MountAndBlade.BehaviorRetreat>(10f);
+        }
     }
 
     /// <summary>Mounted doctrine applies when the band is mostly on horseback
@@ -577,6 +669,21 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
         bool baitNeedsHelp = baitSwats && baitPower < baitPursuerPower * PursuerParityRatio;
         bool strikerNeedsHelp = strikerSwats && strikerPower < strikerPursuerPower * PursuerParityRatio;
 
+        // CAUGHT — decided PER GROUP with distance hysteresis: at this range
+        // the group cannot outrun its chaser (mounted chasers "reach" much
+        // farther), so fleeing means dying with its back turned. It turns and
+        // fights; the free partner rescues only when the fight is winnable —
+        // otherwise it keeps running (bandits abandon their fellows).
+        Formation? strikerChaser = strikerGroup != null ? FindNearestEnemyTo(strikerGroup, enemies) : null;
+        HysteresisGate baitCaughtGate = _supportIsBait ? _supportCaughtGate : _mainCaughtGate;
+        HysteresisGate strikerCaughtGate = _supportIsBait ? _mainCaughtGate : _supportCaughtGate;
+        float baitChaserDistance = _supportIsBait ? enemyToSupport : enemyToMain;
+        float strikerChaserDistance = _supportIsBait ? enemyToMain : enemyToSupport;
+        bool baitCaught = baitGroup != null && baitChaser != null
+            && baitCaughtGate.Evaluate(EffectiveChaseDistance(baitChaserDistance, baitChaser));
+        bool strikerCaught = strikerGroup != null && strikerChaser != null
+            && strikerCaughtGate.Evaluate(EffectiveChaseDistance(strikerChaserDistance, strikerChaser));
+
         if (baitGroup != null)
         {
             // Telemetry proved vanilla behaviors (Charge/Defend/PullBack) were
@@ -593,10 +700,24 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
                 baitGroup.AI.SetBehaviorWeight<BehaviorSwatPursuers>(10f).AllyFormation = null;
                 _lastBaitDecision = $"swatPursuers:n{baitPursuerCount}";
             }
+            else if (baitCaught)
+            {
+                // Pinned: turn and bite instead of dying with the back turned.
+                baitGroup.AI.SetBehaviorWeight<BehaviorTacticalCharge>(10f);
+                _lastBaitDecision = $"caughtFight:F{(int)baitChaser.FormationIndex}";
+            }
             else if (strikerNeedsHelp && strikerGroup != null && baitPursuerCount == 0 && baitMainBodyFar)
             {
                 baitGroup.AI.SetBehaviorWeight<BehaviorSwatPursuers>(10f).AllyFormation = strikerGroup;
                 _lastBaitDecision = "convergeAid";
+            }
+            else if (strikerCaught && strikerChaser != null && IsTrapPowerFavorable(strikerChaser, enemies))
+            {
+                // Partner pinned and the fight is winnable: fall on the
+                // catcher's rear together instead of leaving him to die.
+                BehaviorDirectedCharge rescue = baitGroup.AI.SetBehaviorWeight<BehaviorDirectedCharge>(10f);
+                rescue.TargetEnemyFormation = strikerChaser;
+                _lastBaitDecision = $"rescue:F{(int)strikerChaser.FormationIndex}";
             }
             else if (baitPrey != null)
             {
@@ -631,10 +752,21 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
                     strikerGroup.AI.SetBehaviorWeight<BehaviorSwatPursuers>(10f).AllyFormation = null;
                     _lastSupportDecision = $"{RolePrefix()}swatPursuers:n{strikerPursuerCount}";
                 }
+                else if (strikerCaught)
+                {
+                    strikerGroup.AI.SetBehaviorWeight<BehaviorTacticalCharge>(10f);
+                    _lastSupportDecision = $"{RolePrefix()}caughtFight:F{(int)strikerChaser.FormationIndex}";
+                }
                 else if (baitNeedsHelp && strikerPursuerCount == 0 && strikerMainBodyFar)
                 {
                     strikerGroup.AI.SetBehaviorWeight<BehaviorSwatPursuers>(10f).AllyFormation = baitGroup;
                     _lastSupportDecision = $"{RolePrefix()}convergeAid";
+                }
+                else if (baitCaught && baitChaser != null && _lastPowerFavorable)
+                {
+                    BehaviorDirectedCharge rescue = strikerGroup.AI.SetBehaviorWeight<BehaviorDirectedCharge>(10f);
+                    rescue.TargetEnemyFormation = baitChaser;
+                    _lastSupportDecision = $"{RolePrefix()}rescue:F{(int)baitChaser.FormationIndex}";
                 }
                 else if (prey != null)
                 {
@@ -672,13 +804,19 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
                 strikerGroup.AI.Side = strikerGroupSide;
                 _lastSupportDecision = $"{RolePrefix()}swatPursuers:n{strikerPursuerCount}";
             }
+            else if (strikerCaught)
+            {
+                strikerGroup.AI.SetBehaviorWeight<BehaviorTacticalCharge>(10f);
+                strikerGroup.AI.Side = strikerGroupSide;
+                _lastSupportDecision = $"{RolePrefix()}caughtFight:F{(int)strikerChaser.FormationIndex}";
+            }
             else
             {
                 // Cavalry handles the striking: the second infantry line also
                 // flees continuously to its own side.
                 BehaviorBaitLure flee = strikerGroup.AI.SetBehaviorWeight<BehaviorBaitLure>(10f);
                 flee.FlankSide = strikerGroupSide;
-                flee.TargetEnemyFormation = FindNearestEnemyTo(strikerGroup, enemies);
+                flee.TargetEnemyFormation = strikerChaser;
                 strikerGroup.AI.Side = strikerGroupSide;
             }
         }
@@ -713,6 +851,15 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
         }
 
         return result;
+    }
+
+    /// <summary>Feet never outrun horses: a mounted chaser "catches" infantry
+    /// from much farther out, so its distance is shrunk before the caught
+    /// gate — 55m of closing cavalry equals ~30m of closing infantry.</summary>
+    private static float EffectiveChaseDistance(float distance, Formation chaser)
+    {
+        bool mounted = chaser.QuerySystem.IsCavalryFormation || chaser.QuerySystem.IsRangedCavalryFormation;
+        return mounted ? distance * MountedChaserDistanceScale : distance;
     }
 
     private static Formation? FindNearestEnemyTo(Formation formation, List<Formation> enemies)

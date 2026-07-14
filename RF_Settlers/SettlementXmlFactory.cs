@@ -32,9 +32,11 @@ namespace RF_Settlers
             Settlement bound,
             string stringId,
             string displayName,
-            out string xml)
+            out string xml,
+            out string villageTypeId)
         {
             xml = null;
+            villageTypeId = null;
             try
             {
                 XmlNode donor = PickDonorVillage(kingdom?.Culture?.StringId);
@@ -62,6 +64,23 @@ namespace RF_Settlers
                 SetAttribute(village, "id", "village_comp_" + stringId);
                 SetAttribute(village, "bound", "Settlement." + bound.StringId);
                 SetAttribute(village, "hearth", StartingHearth.ToString("F0", CultureInfo.InvariantCulture));
+
+                // Deliberate village type by TERRAIN (fishing by water, mines in
+                // mountains...) instead of the random donor's type. On failure
+                // the donor's own (always valid) type stays in place.
+                string pickedType = SettlerVillageTypePicker.Pick(position);
+                if (pickedType != null)
+                {
+                    SetAttribute(village, "village_type", "VillageType." + pickedType);
+                    villageTypeId = pickedType;
+                }
+                else
+                {
+                    string donorType = village.Attributes?["village_type"]?.Value;
+                    villageTypeId = donorType != null && donorType.StartsWith("VillageType.", StringComparison.Ordinal)
+                        ? donorType.Substring("VillageType.".Length)
+                        : null;
+                }
 
                 xml = "<Settlements>" + clone.OuterXml + "</Settlements>";
                 return true;

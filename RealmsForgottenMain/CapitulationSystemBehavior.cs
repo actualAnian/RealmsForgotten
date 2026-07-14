@@ -17,6 +17,14 @@ namespace RealmsForgotten
 {
     public class CapitulationSystemBehavior : CampaignBehaviorBase
     {
+        /// <summary>
+        /// External exemption hook (set via reflection by RF_Homesteads'
+        /// nomad-kingdom feature). A kingdom for which this returns true is
+        /// never pressured into capitulation — a nomad kingdom has 0 fiefs BY
+        /// DESIGN and would otherwise be permanently eligible (fiefs <= 2).
+        /// </summary>
+        public static Func<Kingdom, bool> IsKingdomExemptFromCapitulation;
+
         private const int CapitulationAuditMaxLines = 120;
         private static int _remainingAuditLines = CapitulationAuditMaxLines;
         private Dictionary<Kingdom, CampaignTime> _lastCapitulation = new Dictionary<Kingdom, CampaignTime>();
@@ -136,6 +144,12 @@ namespace RealmsForgotten
 
         private bool ShouldCapitulate(Kingdom weak, Kingdom strong)
         {
+            if (IsKingdomExemptFromCapitulation?.Invoke(weak) == true)
+            {
+                ClearCapitulationPressure(weak, strong);
+                return false;
+            }
+
             int weakFiefs = weak.Fiefs.Count();
             float strengthRatio = strong.CurrentTotalStrength / (weak.CurrentTotalStrength + 1f);
             float requiredStrengthRatio = weakFiefs <= 1
@@ -335,6 +349,11 @@ namespace RealmsForgotten
 
         private void ShowPlayerSurrenderInquiry(Kingdom playerKingdom, Kingdom victor)
         {
+            // victor.Leader (the winning kingdom's ruler) can be null during a
+            // regency/leader-death window — only the weak side was guarded before.
+            if (victor?.Leader == null)
+                return;
+
             TextObject title = new TextObject("Demand for Surrender");
             TextObject text = new TextObject(
                 "{VICTOR_LEADER} of {VICTOR_KINGDOM} demands your unconditional surrender. " +
@@ -406,6 +425,10 @@ namespace RealmsForgotten
 
         private void ApplyCapitulation(Kingdom weak, Kingdom strong)
         {
+            // Both leaders must exist for the tribute transfer.
+            if (weak?.Leader == null || strong?.Leader == null)
+                return;
+
             int tribute = MBRandom.RandomInt(3000, 8000);
 
             InformationManager.DisplayMessage(new InformationMessage(

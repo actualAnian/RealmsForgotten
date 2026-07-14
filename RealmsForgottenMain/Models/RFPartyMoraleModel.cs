@@ -87,13 +87,10 @@ namespace RealmsForgotten.Models
                 // Urkhai Presence Effect
                 if (HasUrkhaiTroops(party))
                 {
-                    baseNumber.AddFactor(-0.15f, new TextObject("{=urkhai_fear}Enemy Morale Reduced by Urkhai Presence"));
-
-                    // Display the message to the player
-                    if (party.IsMainParty)
-                    {
-                        InformationManager.DisplayMessage(new InformationMessage("Enemy morale reduced by Urkhai presence!"));
-                    }
+                    baseNumber.AddFactor(-0.15f, new TextObject("{=urkhai_fear}Morale Reduced by Urkhai Presence"));
+                    // (Removed the InformationManager.DisplayMessage here:
+                    // GetEffectivePartyMorale is called constantly by UI/ticks,
+                    // so it spammed the on-screen log every frame.)
                 }
             }
             catch (Exception e)

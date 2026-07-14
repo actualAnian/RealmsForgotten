@@ -250,99 +250,110 @@ public class CraftingMixin : BaseViewModelMixin<CraftingVM>
     public void ExecuteMainActionRFSmithing()
     {
         IsMainActionExecuting = true;
-        if (ViewModel is null)
+        // try/finally so IsMainActionExecuting is ALWAYS reset — the early
+        // returns below (null ViewModel, refine/smelt mode, no materials/energy,
+        // no item) previously left the flag stuck true and wedged the UI.
+        try
         {
-            return;
-        }
-
-        if (ViewModel.IsInRefinementMode || ViewModel.IsInSmeltingMode)
-        {
-            ViewModel.ExecuteMainAction();
-            return;
-        }
-
-        var craftingBehavior = Campaign.Current.GetCampaignBehavior<ICraftingCampaignBehavior>();
-        var smithingModel = Campaign.Current.Models.SmithingModel as RFSmithingModel;
-        var hero = ViewModel.CurrentCraftingHero.Hero;
-        bool noMaterialsRequired = Settings.Instance?.NoMaterialsRequired ?? false;
-        bool noStaminaRequired = Settings.Instance?.NoStaminaRequired ?? false;
-        bool noSkillRequired = Settings.Instance?.NoSkillRequired ?? false;
-
-        if (smithingModel is null)
-        {
-            throw new InvalidOperationException("RFSmithing's SmithingModel is null.");
-        }
-
-        int energyCostForSmithing = 0;
-        if (!IsInArmorMode)
-        {
-            float botchChance;
-            float randomFloat = MBRandom.RandomFloat;
-            int difficulty;
-            if (CraftingVm.WeaponDesign.IsInOrderMode)
-            {
-                difficulty = CraftingVm.WeaponDesign.CurrentOrderDifficulty;
-            }
-            else
-            {
-                difficulty = CraftingVm.WeaponDesign.CurrentDifficulty;
-            }
-            botchChance = smithingModel.CalculateBotchingChance(CraftingVm.CurrentCraftingHero.Hero, difficulty);
-            if (randomFloat < botchChance)
-            {
-                SpendMaterials(_crafting.CurrentWeaponDesign);
-                MBInformationManager.AddQuickInformation(new TextObject("{=A15k4LQS}{HERO} has botched {ITEM}!")
-                        .SetTextVariable("HERO", hero.Name)
-                        .SetTextVariable("ITEM", _crafting.CraftedWeaponName),
-                    2000, null, null, "event:/ui/notification/relation");
-
-                energyCostForSmithing = smithingModel.GetEnergyCostForSmithing(_crafting.GetCurrentCraftedItemObject(), hero) / 2;
-                UpdateStamina(craftingBehavior, hero, energyCostForSmithing);
-            }
-            else
-            {
-                CraftingVm.ExecuteMainAction();
-            }
-        }
-        else
-        {
-            if (!HaveMaterialsNeeded() || (!HaveEnergy(hero) && !noStaminaRequired))
+            if (ViewModel is null)
             {
                 return;
             }
-            var difficulty = noSkillRequired ? 0 : ArmorCrafting.CurrentItem?.Difficulty ?? 0;
-            float botchChance = smithingModel.CalculateBotchingChance(hero, difficulty);
-            var item = ArmorCrafting.CurrentItem.Item;
-            energyCostForSmithing = noStaminaRequired ? 0 : smithingModel.GetEnergyCostForArmor(item, hero);
 
-            if (!noMaterialsRequired)
-                SpendMaterials();
-
-            if (MBRandom.RandomFloat < botchChance)
+            if (ViewModel.IsInRefinementMode || ViewModel.IsInSmeltingMode)
             {
-                /*
-                 * Crafting is botched, materials spent, item not crafted
-                 */
-                MBInformationManager.AddQuickInformation(new TextObject("{=A15k4LQS}{HERO} has botched {ITEM}!")
-                        .SetTextVariable("HERO", hero.Name)
-                        .SetTextVariable("ITEM", item.Name),
-                    0, null, null, "event:/ui/notification/relation");
+                ViewModel.ExecuteMainAction();
+                return;
+            }
 
-                energyCostForSmithing /= 2;
+            var craftingBehavior = Campaign.Current.GetCampaignBehavior<ICraftingCampaignBehavior>();
+            var smithingModel = Campaign.Current.Models.SmithingModel as RFSmithingModel;
+            var hero = ViewModel.CurrentCraftingHero.Hero;
+            bool noMaterialsRequired = Settings.Instance?.NoMaterialsRequired ?? false;
+            bool noStaminaRequired = Settings.Instance?.NoStaminaRequired ?? false;
+            bool noSkillRequired = Settings.Instance?.NoSkillRequired ?? false;
+
+            if (smithingModel is null)
+            {
+                throw new InvalidOperationException("RFSmithing's SmithingModel is null.");
+            }
+
+            int energyCostForSmithing = 0;
+            if (!IsInArmorMode)
+            {
+                float botchChance;
+                float randomFloat = MBRandom.RandomFloat;
+                int difficulty;
+                if (CraftingVm.WeaponDesign.IsInOrderMode)
+                {
+                    difficulty = CraftingVm.WeaponDesign.CurrentOrderDifficulty;
+                }
+                else
+                {
+                    difficulty = CraftingVm.WeaponDesign.CurrentDifficulty;
+                }
+                botchChance = smithingModel.CalculateBotchingChance(CraftingVm.CurrentCraftingHero.Hero, difficulty);
+                if (randomFloat < botchChance)
+                {
+                    SpendMaterials(_crafting.CurrentWeaponDesign);
+                    MBInformationManager.AddQuickInformation(new TextObject("{=A15k4LQS}{HERO} has botched {ITEM}!")
+                            .SetTextVariable("HERO", hero.Name)
+                            .SetTextVariable("ITEM", _crafting.CraftedWeaponName),
+                        2000, null, null, "event:/ui/notification/relation");
+
+                    // Charge half stamina on botch. The shared UpdateStamina at
+                    // the end applies energyCostForSmithing once — do NOT charge
+                    // here as well (that double-charged the weapon-botch path).
+                    energyCostForSmithing = smithingModel.GetEnergyCostForSmithing(_crafting.GetCurrentCraftedItemObject(), hero) / 2;
+                }
+                else
+                {
+                    CraftingVm.ExecuteMainAction();
+                }
             }
             else
             {
-                CraftItem(smithingModel, hero, item);
+                if (!HaveMaterialsNeeded() || (!HaveEnergy(hero) && !noStaminaRequired))
+                {
+                    return;
+                }
+                var difficulty = noSkillRequired ? 0 : ArmorCrafting.CurrentItem?.Difficulty ?? 0;
+                float botchChance = smithingModel.CalculateBotchingChance(hero, difficulty);
+                var item = ArmorCrafting.CurrentItem?.Item;
+                if (item == null) return; // nothing selected (e.g. filter emptied the list)
+                energyCostForSmithing = noStaminaRequired ? 0 : smithingModel.GetEnergyCostForArmor(item, hero);
+
+                if (!noMaterialsRequired)
+                    SpendMaterials();
+
+                if (MBRandom.RandomFloat < botchChance)
+                {
+                    /*
+                     * Crafting is botched, materials spent, item not crafted
+                     */
+                    MBInformationManager.AddQuickInformation(new TextObject("{=A15k4LQS}{HERO} has botched {ITEM}!")
+                            .SetTextVariable("HERO", hero.Name)
+                            .SetTextVariable("ITEM", item.Name),
+                        0, null, null, "event:/ui/notification/relation");
+
+                    energyCostForSmithing /= 2;
+                }
+                else
+                {
+                    CraftItem(smithingModel, hero, item);
+                }
+
+                UpdateXp(smithingModel, hero, item);
+                ArmorCrafting.UpdateCraftingHero(hero);
             }
 
-            UpdateXp(smithingModel, hero, item);
-            ArmorCrafting.UpdateCraftingHero(hero);
+            UpdateStamina(craftingBehavior, hero, energyCostForSmithing);
+            UpdateAll();
         }
-
-        UpdateStamina(craftingBehavior, hero, energyCostForSmithing);
-        UpdateAll();
-
-        IsMainActionExecuting = false;
+        finally
+        {
+            IsMainActionExecuting = false;
+        }
     }
 
     [DataSourceMethod]
@@ -466,8 +477,8 @@ public class CraftingMixin : BaseViewModelMixin<CraftingVM>
 
         if (IsInArmorMode && baseSmithingModel is RFSmithingModel smithingModel)
         {
-            var item = ArmorCrafting.CurrentItem.Item;
-            result = smithingModel.GetEnergyCostForArmor(item, hero);
+            var item = ArmorCrafting.CurrentItem?.Item;
+            result = item == null ? 0 : smithingModel.GetEnergyCostForArmor(item, hero);
         }
         else
         {
@@ -604,8 +615,18 @@ public class CraftingMixin : BaseViewModelMixin<CraftingVM>
         var craftingBehavior = Campaign.Current.GetCampaignBehavior<ICraftingCampaignBehavior>();
         var hero = ViewModel.CurrentCraftingHero.Hero;
         bool noStaminaRequired = Settings.Instance?.NoStaminaRequired ?? false;
-        ViewModel.IsMainActionEnabled = true;
-        if (!HaveEnergy(hero) && !noStaminaRequired)
+        // Only armor mode has its own enable logic to assert. In weapon/smelt/
+        // refine modes, forcing true here wiped ALL vanilla blocks (locked
+        // pieces, invalid orders, no item selected) — let vanilla's result stand.
+        if (IsInArmorMode)
+        {
+            ViewModel.IsMainActionEnabled = true;
+        }
+        // The stamina gate uses the SMITHING energy cost — only meaningful for
+        // weapon/armor smithing. In smelt/refine modes it wrongly disabled the
+        // action with a forging cost; let vanilla's own enable logic stand.
+        bool isSmeltOrRefine = ViewModel.IsInSmeltingMode || ViewModel.IsInRefinementMode;
+        if (!isSmeltOrRefine && !HaveEnergy(hero) && !noStaminaRequired)
         {
             var stamina = craftingBehavior.GetHeroCraftingStamina(hero);
             var requiredStamina = GetRequiredEnergy(hero);

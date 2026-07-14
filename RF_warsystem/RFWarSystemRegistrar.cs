@@ -11,6 +11,11 @@ public static class RFWarSystemRegistrar
 {
     public static void RegisterBehaviors(CampaignGameStarter campaignGameStarter)
     {
+        // Clear cross-campaign static caches before wiring a (possibly new)
+        // campaign's behaviors — the front-context dictionaries are keyed by
+        // kingdom StringId and would otherwise leak between campaigns.
+        RF_warsystem.Logic.RFWarExternalFrontContext.Reset();
+
         campaignGameStarter.AddBehavior(new RFWarStrategicMemoryBehavior());
         campaignGameStarter.AddBehavior(new RFWarCoalitionRoleBehavior());
         campaignGameStarter.AddBehavior(new RFWarOperationalRhythmBehavior());

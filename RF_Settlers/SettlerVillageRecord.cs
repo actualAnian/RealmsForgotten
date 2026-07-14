@@ -32,5 +32,12 @@ namespace RF_Settlers
 
         [SaveableField(7)]
         public bool Established;
+
+        /// <summary>VillageType stringId picked by terrain at founding (e.g.
+        /// "fisherman", "iron_mine"). Drives production, nameplate icon and the
+        /// map-icon mesh. May be null on records from older saves — those keep
+        /// the donor village's type.</summary>
+        [SaveableField(8)]
+        public string VillageTypeId;
     }
 }

@@ -36,15 +36,18 @@ namespace RealmsForgotten.Models
         public override MBReadOnlyList<(ItemObject, float)> GetCommonLootItemScores()
         {
             MBReadOnlyList<(ItemObject, float)> baseValue = _previousModel.GetCommonLootItemScores();
-            if (baseValue == null || baseValue.Count < 1 || currentRaidParty.Owner?.Culture.StringId != "giant")
+            if (baseValue == null || baseValue.Count < 1 || currentRaidParty?.Owner?.Culture?.StringId != "giant")
                 return baseValue;
+            // Return a NEW list — baseValue is the vanilla model's cached
+            // _commonLootItems (built once). Mutating it in place inflated the
+            // scores +25% COMPOUND and permanently for every faction's raids.
+            var scaled = new System.Collections.Generic.List<(ItemObject, float)>(baseValue.Count);
             for (int i = 0; i < baseValue.Count; i++)
             {
-                (ItemObject, float) tuple = (baseValue[i].Item1, ((25f / 100f) * baseValue[i].Item2) + baseValue[i].Item2);
-                baseValue[i] = tuple;
+                scaled.Add((baseValue[i].Item1, baseValue[i].Item2 * 1.25f));
             }
 
-            return baseValue;
+            return new MBReadOnlyList<(ItemObject, float)>(scaled);
         }
 
         public override ExplainedNumber CalculateHitDamage(MapEventSide attackerSide, float settlementHitPoints)

@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,6 +17,9 @@ using System.Reflection;
 
 namespace RealmsForgotten.AiMade.Patches
 {
+    // A/B test 2026-07-13: disabling this did NOT fix the folded characters —
+    // the patch is exonerated as the fold cause and re-enabled (it covers the
+    // custom-race facegen pose demand).
     [HarmonyPatch(typeof(BodyGeneratorView), "RefreshCharacterEntityAux")]
     public class RefreshCharacterEntityAuxPatch
     {

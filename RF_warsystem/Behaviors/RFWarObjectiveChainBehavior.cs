@@ -696,7 +696,7 @@ public sealed class RFWarObjectiveChainBehavior : CampaignBehaviorBase
 
     private static float GetCurrentDay()
     {
-        return (float)CampaignTime.Now.ElapsedDaysUntilNow;
+        return (float)CampaignTime.Now.ToDays;
     }
 
     private static float ClampSigned(float value)

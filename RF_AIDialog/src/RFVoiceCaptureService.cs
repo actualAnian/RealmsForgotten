@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading;
 using NAudio.Wave;
 
 namespace RF_AIDialog
@@ -11,6 +12,15 @@ namespace RF_AIDialog
         private MemoryStream? _memoryStream;
         private bool _isRecording;
 
+        // NAudio's StopRecording() is asynchronous: RecordingStopped fires on a
+        // separate thread. We capture the finished bytes inside that event and
+        // hand them back through _capturedAudio, signalling _stoppedSignal so
+        // StopRecording() can return complete, non-disposed audio. Reading
+        // _memoryStream directly from StopRecording() raced the writer disposal
+        // and produced ObjectDisposedException / truncated clips.
+        private byte[] _capturedAudio = Array.Empty<byte>();
+        private readonly ManualResetEventSlim _stoppedSignal = new ManualResetEventSlim(false);
+
         public bool IsRecording => _isRecording;
 
         public void StartRecording()
@@ -20,6 +30,8 @@ namespace RF_AIDialog
 
             try
             {
+                _capturedAudio = Array.Empty<byte>();
+                _stoppedSignal.Reset();
                 _memoryStream = new MemoryStream();
                 _waveIn = new WaveInEvent
                 {
@@ -45,11 +57,18 @@ namespace RF_AIDialog
             if (!_isRecording)
                 return Array.Empty<byte>();
 
-            _waveIn?.StopRecording();
             _isRecording = false;
 
-            _writer?.Flush();
-            return _memoryStream?.ToArray() ?? Array.Empty<byte>();
+            var waveIn = _waveIn;
+            if (waveIn == null)
+                return _capturedAudio;
+
+            // Trigger the async stop and wait for OnRecordingStopped to flush the
+            // writer and capture the bytes (bounded wait so a stuck device can't
+            // hang the UI thread).
+            waveIn.StopRecording();
+            _stoppedSignal.Wait(TimeSpan.FromSeconds(2));
+            return _capturedAudio;
         }
 
         private void OnDataAvailable(object? sender, WaveInEventArgs e)
@@ -70,10 +89,25 @@ namespace RF_AIDialog
             if (e.Exception != null)
                 RFAIDebug.Log($"RFVoiceCaptureService.OnRecordingStopped failed: {e.Exception.GetType().Name}: {e.Exception.Message}");
 
-            _waveIn?.Dispose();
-            _waveIn = null;
-            _writer?.Dispose();
-            _writer = null;
+            try
+            {
+                // Disposing the writer flushes the final WAV header into the
+                // MemoryStream. MemoryStream.ToArray() is valid even after the
+                // writer has closed the underlying stream, so capture here.
+                _writer?.Dispose();
+                _writer = null;
+                _capturedAudio = _memoryStream?.ToArray() ?? Array.Empty<byte>();
+            }
+            catch (Exception ex)
+            {
+                RFAIDebug.Log($"RFVoiceCaptureService.OnRecordingStopped capture failed: {ex.GetType().Name}: {ex.Message}");
+            }
+            finally
+            {
+                _waveIn?.Dispose();
+                _waveIn = null;
+                _stoppedSignal.Set();
+            }
         }
 
         public void Dispose()

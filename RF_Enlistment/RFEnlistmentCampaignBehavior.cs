@@ -794,7 +794,11 @@ public sealed class RFEnlistmentCampaignBehavior : CampaignBehaviorBase
             ShowMessage("Your enlistment contract has expired. You can renew it in any town or castle.");
         }
 
-        if (ResolveCommander() == null)
+        // ResolveCommander uses Hero.FindFirst, which returns DEAD heroes too
+        // (MEGA_010:241373) — so a fallen commander is not null and the service
+        // would never close. Treat dead/removed the same as unavailable.
+        Hero? currentCommander = ResolveCommander();
+        if (currentCommander == null || currentCommander.IsDead)
         {
             ShowMessage("Your commanding lord is no longer available. Your service record has been closed.");
             ReleasePlayerFromCommanderDuty();
@@ -1166,8 +1170,25 @@ public sealed class RFEnlistmentCampaignBehavior : CampaignBehaviorBase
 
         Hero? commander = ResolveCommander();
         MobileParty? commanderParty = commander?.PartyBelongedTo;
-        if (commanderParty == null || !commanderParty.IsActive)
+        if (commander == null || commander.IsDead || commanderParty == null)
         {
+            // The commander (or their party) no longer exists. Simply returning
+            // here left the player frozen in the wait menu with an orphaned
+            // camera — close the service, restore the player's own party and
+            // leave the menu.
+            ShowMessage("Your commanding lord is no longer available. Your service record has been closed.");
+            ReleasePlayerFromCommanderDuty();
+            _serviceRecord.Clear();
+            if (Campaign.Current?.CurrentMenuContext?.GameMenu?.StringId == ServiceWaitMenuId)
+            {
+                GameMenu.ExitToLast();
+            }
+            return;
+        }
+
+        if (!commanderParty.IsActive)
+        {
+            // Transient (e.g. commander temporarily inside a settlement) — wait.
             return;
         }
 
@@ -6197,6 +6218,19 @@ public sealed class RFEnlistmentCampaignBehavior : CampaignBehaviorBase
     private bool TryAttachPlayerToCommanderDuty(bool showFeedback)
     {
         TraceEnlistmentState("TryAttachPlayerToCommanderDutyStart", $"showFeedback={showFeedback}");
+
+        // Never touch the main party while the player is a prisoner. Vanilla
+        // deactivates/hides MainParty during captivity (StartCaptivityInternal);
+        // reactivating/teleporting it here (or swapping the captivity menu for
+        // the service wait menu) corrupts the capture state — free escape,
+        // phantom party on the map. Keep the pending flag so the service
+        // resumes automatically once captivity ends.
+        if (Hero.MainHero != null && Hero.MainHero.IsPrisoner)
+        {
+            TraceEnlistmentState("TryAttachPlayerToCommanderDutyAbort", "Player is a prisoner; deferring attachment.");
+            return false;
+        }
+
         if (!_serviceRecord.IsEnlisted)
         {
             _pendingCommanderAttachment = false;

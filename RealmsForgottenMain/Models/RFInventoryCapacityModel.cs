@@ -43,15 +43,18 @@ namespace RealmsForgotten.Models
                 }
             }
 
-            // Check if any of the troops in the party have the specific item equipped
-            foreach (TroopRosterElement troop in mobileParty.MemberRoster.GetTroopRoster())
+            // Only scan troop equipment for the MAIN party — this ran the full
+            // roster ×4 equipment slots for EVERY party each capacity query
+            // (hot path), and only the player's inventory capacity matters here.
+            if (mobileParty.IsMainParty)
             {
-                // Check each individual troop's equipment
-                Equipment troopEquipment = troop.Character.Equipment;
-                if (HasSpecificItemEquipped(troopEquipment))
+                foreach (TroopRosterElement troop in mobileParty.MemberRoster.GetTroopRoster())
                 {
-                    // Increase inventory capacity by a set amount for each troop that has the specific item equipped
-                    result.Add(20, description: new TaleWorlds.Localization.TextObject("Bonus from troop equipped item"));
+                    Equipment troopEquipment = troop.Character.Equipment;
+                    if (HasSpecificItemEquipped(troopEquipment))
+                    {
+                        result.Add(20, description: new TaleWorlds.Localization.TextObject("Bonus from troop equipped item"));
+                    }
                 }
             }
 

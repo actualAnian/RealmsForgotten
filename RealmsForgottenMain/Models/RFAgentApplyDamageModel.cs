@@ -99,7 +99,7 @@ namespace RealmsForgotten.Models
                         attackerCharacterObject.HeroObject?.AddSkillXp(RFSkills.Alchemy, xpAmount.ResultNumber);
                     }
                 }
-                else if (weapon.CurrentUsageItem.WeaponClass == WeaponClass.Cartridge)
+                else if (weapon.CurrentUsageItem.WeaponClass == WeaponClass.Cartridge && attackerCharacterObject != null)
                 {
                     float DamageFactor = attackerCharacterObject.GetPerkValue(RFPerks.Arcane.NeophytesTalisman) ? RFPerks.Arcane.NeophytesTalisman.PrimaryBonus :
                         (attackerCharacterObject.GetPerkValue(RFPerks.Arcane.InitiatesTalisman) ? RFPerks.Arcane.InitiatesTalisman.PrimaryBonus :
@@ -109,7 +109,7 @@ namespace RealmsForgotten.Models
                         baseNumber *= DamageFactor;
                 }
 
-                CrusaderDamageModel.CalculateDamage(attackedCharacterObject, attackedCharacterObject, ref baseNumber);
+                CrusaderDamageModel.CalculateDamage(attackerCharacterObject, attackedCharacterObject, ref baseNumber);
 
                 if (attackerCharacterObject == Hero.MainHero.CharacterObject)
                     CareerLogic.ApplyExtraShieldDamage(weapon);
@@ -143,7 +143,11 @@ namespace RealmsForgotten.Models
         {
             if (attackInformation.VictimAgent == null) return baseNumber;
             MissionWeapon weapon = attackInformation.AttackerWeapon;
-            BasicCharacterObject attackerCharacter = attackInformation.VictimAgent.Character;
+            // ATTACKER's race amplifies the attacker's damage — this was reading
+            // VictimAgent.Character for both, so a giant/balrog/special-race
+            // VICTIM (not attacker) was granting the bonus. The null-guard below
+            // covers a null AttackerAgent (unarmed/environmental hits).
+            BasicCharacterObject attackerCharacter = attackInformation.AttackerAgent?.Character;
             BasicCharacterObject victimCharacter = attackInformation.VictimAgent.Character;
             if (attackerCharacter == null || victimCharacter == null || weapon.Item == null) return baseNumber;
             if (weapon.Item.ItemType == ItemObject.ItemTypeEnum.Polearm ||
@@ -157,12 +161,12 @@ namespace RealmsForgotten.Models
                 }
 
                 // If attacker is one of the standard races, increase damage by 30%
-                if (standardRaces.Contains(attackInformation.AttackerAgent.Character.Race))
+                if (standardRaces.Contains(attackerCharacter.Race))
                 {
                     baseNumber += ((30f / 100f) * baseNumber);
                 }
                 // If attacker is one of the special races, increase damage by 80%
-                if (specialRaces.Contains(attackInformation.AttackerAgent.Character.Race))
+                if (specialRaces.Contains(attackerCharacter.Race))
                 {
                     baseNumber += ((80f / 100f) * baseNumber);
                 }
@@ -255,7 +259,10 @@ namespace RealmsForgotten.Models
 
             }
             float finalDamage = CalculateRaceDamageReduction(in attackInformation, baseDamage);
-            _baseModel.ApplyDamageReductions(in attackInformation, in collisionData, finalDamage);
+            // Chain the base model's result — perk/banner reductions and the War
+            // Sails naval reductions were being discarded (only the race
+            // reduction survived).
+            finalDamage = _baseModel.ApplyDamageReductions(in attackInformation, in collisionData, finalDamage);
             return finalDamage;
         }
         public override void DecideMissileWeaponFlags(Agent attackerAgent, in MissionWeapon missileWeapon, ref WeaponFlags missileWeaponFlags) => _baseModel.DecideMissileWeaponFlags(attackerAgent, in missileWeapon, ref missileWeaponFlags);

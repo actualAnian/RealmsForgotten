@@ -65,6 +65,18 @@ internal class ClericConversionDialogueBehavior : CampaignBehaviorBase
             null,
             () => _persuasionTask.Options.ElementAt(0));
 
+        dialogFlow.AddPlayerLine(
+            "rf_cleric_conversion_option_1b",
+            "rf_cleric_conversion_options_1",
+            "rf_cleric_conversion_outcome_1",
+            "{=!}{RF_CLERIC_CONVERT_ATTEMPT_1B}",
+            () => SetPersuasionOptionText(1, "RF_CLERIC_CONVERT_ATTEMPT_1B"),
+            () => BlockPersuasionOption(1),
+            this,
+            100,
+            null,
+            () => _persuasionTask.Options.ElementAt(1));
+
         dialogFlow.AddDialogLine(
             "rf_cleric_conversion_stage_2",
             "rf_cleric_conversion_outcome_1",
@@ -88,12 +100,24 @@ internal class ClericConversionDialogueBehavior : CampaignBehaviorBase
             "rf_cleric_conversion_options_2",
             "rf_cleric_conversion_outcome_2",
             "{=!}{RF_CLERIC_CONVERT_ATTEMPT_2}",
-            () => SetPersuasionOptionText(1, "RF_CLERIC_CONVERT_ATTEMPT_2"),
-            () => BlockPersuasionOption(1),
+            () => SetPersuasionOptionText(2, "RF_CLERIC_CONVERT_ATTEMPT_2"),
+            () => BlockPersuasionOption(2),
             this,
             100,
             null,
-            () => _persuasionTask.Options.ElementAt(1));
+            () => _persuasionTask.Options.ElementAt(2));
+
+        dialogFlow.AddPlayerLine(
+            "rf_cleric_conversion_option_2b",
+            "rf_cleric_conversion_options_2",
+            "rf_cleric_conversion_outcome_2",
+            "{=!}{RF_CLERIC_CONVERT_ATTEMPT_2B}",
+            () => SetPersuasionOptionText(3, "RF_CLERIC_CONVERT_ATTEMPT_2B"),
+            () => BlockPersuasionOption(3),
+            this,
+            100,
+            null,
+            () => _persuasionTask.Options.ElementAt(3));
 
         dialogFlow.AddDialogLine(
             "rf_cleric_conversion_stage_3",
@@ -118,12 +142,25 @@ internal class ClericConversionDialogueBehavior : CampaignBehaviorBase
             "rf_cleric_conversion_options_3",
             "rf_cleric_conversion_outcome_3",
             "{=!}{RF_CLERIC_CONVERT_ATTEMPT_3}",
-            () => SetPersuasionOptionText(2, "RF_CLERIC_CONVERT_ATTEMPT_3"),
-            () => BlockPersuasionOption(2),
+            () => SetPersuasionOptionText(4, "RF_CLERIC_CONVERT_ATTEMPT_3"),
+            () => BlockPersuasionOption(4),
             this,
             100,
             null,
-            () => _persuasionTask.Options.ElementAt(2));
+            () => _persuasionTask.Options.ElementAt(4));
+
+        dialogFlow.AddPlayerLine(
+            "rf_cleric_conversion_option_3b",
+            "rf_cleric_conversion_options_3",
+            "rf_cleric_conversion_outcome_3",
+            "{=!}{RF_CLERIC_CONVERT_ATTEMPT_3B}",
+            () => SetPersuasionOptionText(5, "RF_CLERIC_CONVERT_ATTEMPT_3B"),
+            () => BlockPersuasionOption(5),
+            this,
+            100,
+            null,
+            () => _persuasionTask.Options.ElementAt(5));
+
 
         dialogFlow.AddDialogLine(
             "rf_cleric_conversion_success",
@@ -252,12 +289,48 @@ internal class ClericConversionDialogueBehavior : CampaignBehaviorBase
             false));
 
         persuasionTask.AddOptionToTask(new PersuasionOptionArgs(
+            DefaultSkills.Charm,
+            DefaultTraits.Calculating,
+            TraitEffect.Positive,
+            strength,
+            false,
+            new TextObject("Argue that shared faith brings peace between houses and safer roads for their people."),
+            null,
+            false,
+            false,
+            false));
+
+        persuasionTask.AddOptionToTask(new PersuasionOptionArgs(
             RFSkills.Faith,
             DefaultTraits.Generosity,
             TraitEffect.Positive,
             strength,
             false,
             new TextObject("Offer guidance, protection, and a place among the faithful."),
+            null,
+            false,
+            false,
+            false));
+
+        persuasionTask.AddOptionToTask(new PersuasionOptionArgs(
+            DefaultSkills.Charm,
+            DefaultTraits.Honor,
+            TraitEffect.Positive,
+            strength,
+            false,
+            new TextObject("Call on their honor: a ruler should seek truth even when tradition resists it."),
+            null,
+            false,
+            false,
+            false));
+
+        persuasionTask.AddOptionToTask(new PersuasionOptionArgs(
+            RFSkills.Faith,
+            DefaultTraits.Mercy,
+            TraitEffect.Positive,
+            strength,
+            false,
+            new TextObject("Promise that the new faith will temper judgment with mercy, not merely demand obedience."),
             null,
             false,
             false,

@@ -18,7 +18,7 @@ namespace RealmsForgotten.HuntableHerds
                 return _instance;
             }
         }
-        public float DailyChanceOfSpottingHerd { get; } = 0.0f; //0.3f; 
+        public float DailyChanceOfSpottingHerd { get; } = 0.3f; // was 0.0f — herd spotting was fully disabled
         public bool CrouchNeededEnabled { get;} = true;
     }
 }

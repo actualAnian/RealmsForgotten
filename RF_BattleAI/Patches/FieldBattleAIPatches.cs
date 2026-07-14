@@ -78,6 +78,14 @@ internal static class FieldBattleBehaviorRegistrar
             formation.AI.AddAiBehavior(new BehaviorCavalryWaveCharge(formation));
             BattleAIDebug.BehaviorRegistered(formation, nameof(BehaviorCavalryWaveCharge));
         }
+
+        // Vanilla behavior, but not part of every formation's default set —
+        // the bandit rout needs it present before SetBehaviorWeight<T>.
+        if (formation.AI.GetBehavior<BehaviorRetreat>() == null)
+        {
+            formation.AI.AddAiBehavior(new BehaviorRetreat(formation));
+            BattleAIDebug.BehaviorRegistered(formation, nameof(BehaviorRetreat));
+        }
     }
 }
 
@@ -117,11 +125,13 @@ internal static class MissionState_OnTick_BattleAIPlayerHotkeysPatch
 {
     private static void Postfix()
     {
+        BattleAITacticController.TickPostSpawnDoctrineReapply();
         BattleAIPlayerHotkeyController.Tick();
         PlayerSpearFormationSplitter.Tick();
         BattleAICavalryStabilizer.Tick();
         BattleAIAdaptiveMemory.Tick();
         BattleAIFormationCaptainTuner.Tick();
         BattleAIRuntimeTracer.Tick();
+        BattleAITacticTelemetry.Tick();
     }
 }

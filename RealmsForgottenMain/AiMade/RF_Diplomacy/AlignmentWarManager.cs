@@ -25,6 +25,10 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
         private void SyncRuntimeState()
         {
             IsActive = _warStarted || _savedIsActive;
+            // Keep the war director in sync: good/evil only act as strategic
+            // blocs (same-side protection, coalition convergence) while the
+            // quest-driven alignment war is actually active.
+            RFWarExternalIntentApi.SetAlignmentDoctrineActive(IsActive);
         }
 
         public void EndWar()
@@ -34,6 +38,7 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
             _savedIsActive = false;
             _goodKingdomIds.Clear();
             _evilKingdomIds.Clear();
+            RFWarExternalIntentApi.SetAlignmentDoctrineActive(false);
         }
         public override void RegisterEvents()
         {
@@ -78,6 +83,7 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
             IsActive = true;
             _warStarted = true;
             _savedIsActive = true;
+            RFWarExternalIntentApi.SetAlignmentDoctrineActive(true);
 
             _goodKingdomIds.Clear();
             _evilKingdomIds.Clear();

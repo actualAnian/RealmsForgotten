@@ -20,6 +20,13 @@ namespace RealmsForgotten.HuntableHerds
     public class HerdMissionLogic : TaleWorlds.MountAndBlade.MissionLogic {
         private Dictionary<Agent, HerdAgentComponent> animals = new();
 
+        // Hold Left Alt to track the herd: glowing contour on every animal,
+        // visible through terrain/trees (same engine highlight battles use).
+        // Orange = alive prey, green = carcass ready to loot (Q).
+        private bool _trackingActive;
+        private const uint TrackAliveColor = 0xFFFF8C1A;
+        private const uint TrackDeadColor = 0xFF66FF66;
+
         private bool isRandomScene = true;
         private List<Vec3> playerSpawnPositions = new();
         private List<Vec3> animalSpawnPositions = new();
@@ -42,11 +49,14 @@ namespace RealmsForgotten.HuntableHerds
             }
             SpawnPlayer();
             SubModule.PrintDebugMessage("Press Q nearby slain animals to skin and loot them!");
+            SubModule.PrintDebugMessage("Hold Left Alt to track the herd (orange = alive, green = ready to loot).");
         }
 
         public override void OnMissionTick(float dt) {
             if (Agent.Main == null)
                 return;
+
+            UpdateHuntTracking();
 
             if (Input.IsKeyPressed(InputKey.Q))
                 LootArea(10f);
@@ -56,6 +66,46 @@ namespace RealmsForgotten.HuntableHerds
 
             Vec3 position = isRandomScene ? Mission.Current.GetTrueRandomPositionAroundPoint(Agent.Main.Position, 20f, 500f) : GetRandomSpawnPosition(animalSpawnPositions);
             SpawnAnimalToHunt(position);
+        }
+
+        public override void OnAgentDeleted(Agent affectedAgent) {
+            // Prune deleted agents so LootArea/OnMissionTick never dereference a
+            // freed native Agent (invalid native access on long hunts) and the
+            // herd-size count stays accurate. Deletion happens after the corpse
+            // is cleaned up, so looting of slain-but-present animals is unaffected.
+            if (affectedAgent != null)
+                animals.Remove(affectedAgent);
+        }
+
+        public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow) {
+            // Animal died while tracking was held: refresh its contour to the
+            // "ready to loot" color.
+            if (_trackingActive && affectedAgent != null && animals.ContainsKey(affectedAgent))
+                SetTrackContour(affectedAgent, true);
+        }
+
+        private void UpdateHuntTracking() {
+            bool track = Input.IsKeyDown(InputKey.LeftAlt);
+            if (track == _trackingActive)
+                return;
+
+            _trackingActive = track;
+            foreach (KeyValuePair<Agent, HerdAgentComponent> pair in animals)
+                SetTrackContour(pair.Key, track);
+        }
+
+        private static void SetTrackContour(Agent agent, bool on) {
+            try {
+                var entity = agent?.AgentVisuals?.GetEntity();
+                if (entity == null)
+                    return;
+                uint color = agent.IsActive() ? TrackAliveColor : TrackDeadColor;
+                entity.SetContourColor(on ? color : (uint?)null, true);
+            }
+            catch {
+                // A despawning agent's visuals can vanish between the null check
+                // and the native call — losing one outline is fine.
+            }
         }
 
         private void LootArea(float maxDistance) {
@@ -125,6 +175,11 @@ namespace RealmsForgotten.HuntableHerds
             agent.AddComponent(huntAgentComponent);
 
             animals.Add(agent, huntAgentComponent);
+
+            // Animals that spawn while the player is already holding the track
+            // key get their outline immediately.
+            if (_trackingActive)
+                SetTrackContour(agent, true);
 
             for (int i = 0; i < 3; i++) {
                 agent.AgentVisuals.GetSkeleton().TickAnimations(0.1f, agent.AgentVisuals.GetGlobalFrame(), true);

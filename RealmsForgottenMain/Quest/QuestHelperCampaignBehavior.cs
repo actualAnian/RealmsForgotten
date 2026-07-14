@@ -43,7 +43,7 @@ namespace RealmsForgotten.Quest
                 {
                     foreach (KeyValuePair<ITrackableCampaignObject, List<QuestBase>> obj in Campaign.Current.QuestManager.TrackedObjects)
                     {
-                        if (obj.Value[0].StringId == "rf_queen_quest"
+                        if (obj.Value.Count > 0 && obj.Value[0].StringId == "rf_queen_quest"
                             && obj.Key is Settlement sett
                             && sett.StringId == Settlement.CurrentSettlement.StringId)
                             return true;
@@ -65,7 +65,7 @@ namespace RealmsForgotten.Quest
             TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
             TroopRoster strongestAndPriorTroops = MobilePartyHelper.GetStrongestAndPriorTroops(MobileParty.MainParty, _maxTroopCountInHideout, true);
             troopRoster.Add(strongestAndPriorTroops);
-            args.MenuContext.OpenTroopSelection(MobileParty.MainParty.MemberRoster, troopRoster, null, new Func<CharacterObject, bool>(CanChangeStatusOfTroop), new Action<TroopRoster>(OnTroopRosterManageDone), _maxTroopCountInHideout, 1);
+            args.MenuContext.OpenTroopSelection(MobileParty.MainParty.MemberRoster, troopRoster, new Func<CharacterObject, bool>(CanChangeStatusOfTroop), new Action<TroopRoster>(OnTroopRosterManageDone), _maxTroopCountInHideout, 1);
         }
         private void OnTroopRosterManageDone(TroopRoster roster)
         {

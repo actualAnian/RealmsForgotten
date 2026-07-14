@@ -21,6 +21,29 @@ namespace RF_AIDialog
         private string? _pendingAutoSendShout;
         private string? _pendingInfoMessage;
         private string? _pendingErrorMessage;
+        // Set from the async continuation (thread pool); consumed on the MAIN
+        // thread in FlushPendingResults. Applying battle orders (SetOrder) and
+        // reply messages directly in the continuation mutated mission
+        // formations off-thread, racing with the mission tick.
+        private PendingBattleResult? _pendingBattleResult;
+
+        private sealed class PendingBattleResult
+        {
+            public readonly Mission Mission;
+            public readonly BattleShoutResponse Parsed;
+            public readonly string Shout;
+            public readonly Agent[] Allies;
+            public readonly Agent[] Enemies;
+
+            public PendingBattleResult(Mission mission, BattleShoutResponse parsed, string shout, Agent[] allies, Agent[] enemies)
+            {
+                Mission = mission;
+                Parsed = parsed;
+                Shout = shout;
+                Allies = allies;
+                Enemies = enemies;
+            }
+        }
 
         public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;
 
@@ -100,6 +123,19 @@ namespace RF_AIDialog
                 _pendingAutoSendShout = null;
                 ShowShoutMessage("[SHOUT]", "Player", cleaned, Color.FromUint(0xFF_66_AA_FFu));
                 _ = HandleShoutAsync(cleaned);
+            }
+
+            // Battle orders + replies applied here on the MAIN thread.
+            PendingBattleResult? result = _pendingBattleResult;
+            if (result != null)
+            {
+                _pendingBattleResult = null;
+                if (result.Mission == Mission && Mission != null)
+                {
+                    ApplyBattleOrders(result.Mission, result.Parsed, result.Shout);
+                    ScheduleReplies(result.Allies, result.Parsed.AllyReplies, true);
+                    ScheduleReplies(result.Enemies, result.Parsed.EnemyReplies, false);
+                }
             }
         }
 
@@ -248,10 +284,9 @@ namespace RF_AIDialog
                 if (parsed == null)
                     return;
 
-                Mission.Current?.CurrentTime.ToString();
-                ApplyBattleOrders(mission, parsed, shout);
-                ScheduleReplies(nearbyAllies, parsed.AllyReplies, true);
-                ScheduleReplies(nearbyEnemies, parsed.EnemyReplies, false);
+                // Hand off to the main thread — do NOT touch mission state here
+                // (this continuation runs on the thread pool after ConfigureAwait).
+                _pendingBattleResult = new PendingBattleResult(mission, parsed, shout, nearbyAllies, nearbyEnemies);
             }
             catch (Exception ex)
             {

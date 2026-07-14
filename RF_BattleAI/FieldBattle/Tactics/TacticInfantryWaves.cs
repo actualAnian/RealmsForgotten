@@ -206,14 +206,21 @@ public sealed class TacticInfantryWaves : TacticComponent
             return InfantryWavesState.FormWaves;
         }
 
-        if (distanceSquared > 2500f && _firstWavePowerGate.Evaluate(powerRatio))
+        // A FAILED power gate means "too weak to commit at this range" — hold at
+        // the MORE DEFENSIVE state, never fall through to the more aggressive
+        // one (the old `&&` chain made a weak army escalate to FullCommit).
+        if (distanceSquared > 2500f)
         {
-            return InfantryWavesState.FirstWave;
+            return _firstWavePowerGate.Evaluate(powerRatio)
+                ? InfantryWavesState.FirstWave
+                : InfantryWavesState.FormWaves;
         }
 
-        if (distanceSquared > 900f && _secondWavePowerGate.Evaluate(powerRatio))
+        if (distanceSquared > 900f)
         {
-            return InfantryWavesState.SecondWave;
+            return _secondWavePowerGate.Evaluate(powerRatio)
+                ? InfantryWavesState.SecondWave
+                : InfantryWavesState.FirstWave;
         }
 
         return InfantryWavesState.FullCommit;

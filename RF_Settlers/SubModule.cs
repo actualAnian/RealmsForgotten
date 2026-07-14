@@ -65,7 +65,15 @@ namespace RF_Settlers
                 }
                 catch (Exception exception)
                 {
-                    Debug.Print($"[RF_Settlers] Village XML injection failed for {record?.StringId}: {exception}");
+                    // A failed injection for an Established=true record leaves the
+                    // save with unresolved references and can crash later with no
+                    // trace. Make the failure loud instead of swallowing it.
+                    string msg = $"[RF_Settlers] Village XML injection FAILED for {record?.StringId}: {exception}";
+                    Debug.Print(msg);
+                    SettlersLog.Write(msg);
+                    InformationManager.DisplayMessage(new InformationMessage(
+                        $"[RF_Settlers] Failed to load settler village '{record?.StringId}' — save may be inconsistent (see SettlersLog).",
+                        Colors.Red));
                 }
             }
         }
@@ -90,7 +98,7 @@ namespace RF_Settlers
                 MBObjectManager.Instance.LoadXml(document);
             }
 
-            Patches.SettlersMapScenePatch.RegisterVillagePrefab(record.StringId, record.PrefabId);
+            Patches.SettlersMapScenePatch.RegisterVillagePrefab(record.StringId, record.PrefabId, record.VillageTypeId);
         }
         public override void OnGameInitializationFinished(Game game)
         {

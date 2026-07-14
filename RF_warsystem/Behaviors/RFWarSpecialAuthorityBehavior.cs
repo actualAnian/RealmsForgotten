@@ -83,7 +83,11 @@ public sealed class RFWarSpecialAuthorityBehavior : CampaignBehaviorBase
         float now = GetCurrentDay();
         List<string> expired = new();
 
-        foreach (KeyValuePair<string, PendingSpecialWarRequest> pair in _pendingWarsByPair)
+        // Snapshot: DeclareWarAction / TryPromoteSpecialWarProposal fire the
+        // WarDeclared event synchronously, whose OnWarDeclared handler removes
+        // from _pendingWarsByPair — iterating the live dict would throw
+        // InvalidOperationException (only reachable now that GetCurrentDay works).
+        foreach (KeyValuePair<string, PendingSpecialWarRequest> pair in _pendingWarsByPair.ToList())
         {
             string key = pair.Key;
             PendingSpecialWarRequest request = pair.Value;
@@ -146,7 +150,9 @@ public sealed class RFWarSpecialAuthorityBehavior : CampaignBehaviorBase
         float now = GetCurrentDay();
         List<string> expired = new();
 
-        foreach (KeyValuePair<string, PendingSpecialPeaceRequest> pair in _pendingPeacesByPair)
+        // Snapshot: MakePeaceAction fires OnMakePeace synchronously, which
+        // removes from _pendingPeacesByPair during this enumeration.
+        foreach (KeyValuePair<string, PendingSpecialPeaceRequest> pair in _pendingPeacesByPair.ToList())
         {
             string key = pair.Key;
             PendingSpecialPeaceRequest request = pair.Value;
@@ -399,7 +405,7 @@ public sealed class RFWarSpecialAuthorityBehavior : CampaignBehaviorBase
 
     private static float GetCurrentDay()
     {
-        return (float)CampaignTime.Now.ElapsedDaysUntilNow;
+        return (float)CampaignTime.Now.ToDays;
     }
 
     private static string GetPairKey(Kingdom attacker, Kingdom defender)

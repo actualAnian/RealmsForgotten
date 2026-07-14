@@ -10,6 +10,18 @@ namespace RF_warsystem;
 
 public static class RFWarExternalIntentApi
 {
+    /// <summary>
+    /// Tells the war director whether the quest-driven global alignment war is
+    /// active. While false, the director must not treat good/evil culture sides
+    /// as strategic blocs (no same-side peer treatment, no alignment-based
+    /// coalition convergence) — otherwise the alignment war starts on day 1.
+    /// Pushed by RealmsForgotten AlignmentWarBehavior on start/end/load.
+    /// </summary>
+    public static void SetAlignmentDoctrineActive(bool active)
+    {
+        RFWarExternalFrontContext.AlignmentDoctrineActive = active;
+    }
+
     public static void ReinforceEnduringRivalryWar(Kingdom attacker, Kingdom defender)
     {
         if (attacker == null || defender == null || attacker == defender || attacker.IsEliminated || defender.IsEliminated)

@@ -31,6 +31,9 @@ namespace RFCustomSettlements
         }
         public override void OnAfterGameInitializationFinished(Game game, object obj)
         {
+            // customSettlements is only populated for campaign games; in Custom
+            // Battle / non-campaign it is null → guard before iterating.
+            if (Campaign.Current != null && CustomSettlementsCampaignBehavior.customSettlements != null)
             foreach (Settlement settlement in CustomSettlementsCampaignBehavior.customSettlements)
             {
                 RFCustomSettlement settlementComponent = (RFCustomSettlement)settlement.SettlementComponent;

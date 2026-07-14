@@ -150,10 +150,14 @@ namespace RealmsForgotten.Patches
                     CharacterObject shooterAgentCharacterObject = shooterAgent.Character as CharacterObject;
                     if (shooterAgentCharacterObject != null)
                     {
+                        // Check the DEDICATION perks (matching the bonuses applied),
+                        // not the Luck perks; and default to 1f when the hero has
+                        // none — the old `: 0` multiplied the radius to ZERO,
+                        // deleting all area damage (incl. vanilla) for a perk-less hero.
                         float factor = shooterAgentCharacterObject.GetPerkValue(RFPerks.Alchemy.NovicesDedication) ? RFPerks.Alchemy.NovicesDedication.PrimaryBonus :
-                            (shooterAgentCharacterObject.GetPerkValue(RFPerks.Alchemy.ApprenticesLuck) ? RFPerks.Alchemy.ApprenticesDedication.PrimaryBonus :
-                                (shooterAgentCharacterObject.GetPerkValue(RFPerks.Alchemy.AdeptsLuck) ? RFPerks.Alchemy.AdeptsDedication.PrimaryBonus :
-                                    (shooterAgentCharacterObject.GetPerkValue(RFPerks.Alchemy.MastersLuck) ? RFPerks.Alchemy.MastersDedication.PrimaryBonus : 0)));
+                            (shooterAgentCharacterObject.GetPerkValue(RFPerks.Alchemy.ApprenticesDedication) ? RFPerks.Alchemy.ApprenticesDedication.PrimaryBonus :
+                                (shooterAgentCharacterObject.GetPerkValue(RFPerks.Alchemy.AdeptsDedication) ? RFPerks.Alchemy.AdeptsDedication.PrimaryBonus :
+                                    (shooterAgentCharacterObject.GetPerkValue(RFPerks.Alchemy.MastersDedication) ? RFPerks.Alchemy.MastersDedication.PrimaryBonus : 1f)));
                         num *= factor;
                     }
                 }

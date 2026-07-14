@@ -437,7 +437,7 @@ public sealed class RFWarTheaterBehavior : CampaignBehaviorBase
 
     private static float GetCurrentDay()
     {
-        return (float)CampaignTime.Now.ElapsedDaysUntilNow;
+        return (float)CampaignTime.Now.ToDays;
     }
 
     private static string GetPairKey(Kingdom kingdom, Kingdom enemy)

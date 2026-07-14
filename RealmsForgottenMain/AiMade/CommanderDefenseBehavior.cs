@@ -16,7 +16,7 @@ namespace RealmsForgotten.AiMade
     public class CommanderDefenseBehavior : CampaignBehaviorBase
     {
         // ====== CONFIG ======
-        private const bool DEBUG_TRACE = true;          // mostra na tela (InformationManager)
+        private const bool DEBUG_TRACE = false;          // mostra na tela (InformationManager) — off em produção
         private const float FarDistanceThreshold = 30f; // seu limite original
         private const float MaxWaitSeconds = 30f;
 
@@ -181,11 +181,10 @@ namespace RealmsForgotten.AiMade
             // Fluxo vanilla: entrar no settlement e deixar o menu do cerco criar a batalha ao clicar Attack.
             try
             {
-                // Teleport defensivo SEM Vec2 (resolve mismatch de estado)
-                Trace("Calling EnterSettlementAction.ApplyForParty...");
-                EnterSettlementAction.ApplyForParty(MobileParty.MainParty, _targetCastleToEnter);
-
-
+                // Teleport defensivo SEM Vec2 (resolve mismatch de estado).
+                // (Was calling EnterSettlementAction TWICE in a row — the second
+                // call with the party already inside could double-fire encounter
+                // logic.)
                 Trace("Calling EnterSettlementAction.ApplyForParty...");
                 RFLogger.Log($"[Campaign] About to EnterSettlementAction: {_targetCastleToEnter.Name}");
 

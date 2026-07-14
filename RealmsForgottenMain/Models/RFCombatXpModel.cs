@@ -16,7 +16,9 @@ namespace RealmsForgotten.Models
         public override SkillObject GetSkillForWeapon(WeaponComponentData weapon, bool isSiegeEngineHit)
         {
             SkillObject baseValue = _previousModel.GetSkillForWeapon(weapon, isSiegeEngineHit);
-            if (weapon.WeaponClass == WeaponClass.Musket || weapon.WeaponClass == WeaponClass.Cartridge || weapon.WeaponClass == WeaponClass.Pistol)
+            // weapon is null for unarmed/siege hits (vanilla handles it) — guard
+            // before dereferencing WeaponClass.
+            if (weapon != null && (weapon.WeaponClass == WeaponClass.Musket || weapon.WeaponClass == WeaponClass.Cartridge || weapon.WeaponClass == WeaponClass.Pistol))
                 baseValue = RFSkills.Arcane;
             return baseValue;
         }

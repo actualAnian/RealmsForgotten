@@ -185,9 +185,13 @@ public sealed class TacticShieldwallAdvance : TacticComponent
             return ShieldwallBattleState.FormShieldwall;
         }
 
-        if (distanceSquared > 1225f && _pressPowerGate.Evaluate(powerRatio))
+        // Failed power gate → hold the shieldwall, do not fall through to
+        // FinalPush; the final push is reserved for actual contact range.
+        if (distanceSquared > 1225f)
         {
-            return ShieldwallBattleState.PressAdvance;
+            return _pressPowerGate.Evaluate(powerRatio)
+                ? ShieldwallBattleState.PressAdvance
+                : ShieldwallBattleState.FormShieldwall;
         }
 
         return ShieldwallBattleState.FinalPush;

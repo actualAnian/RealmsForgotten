@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -59,9 +59,13 @@ namespace RealmsForgotten.AiMade
 
         private void CheckAndSpawnBanditParties()
         {
-            if (CampaignTime.Now.GetDayOfYear % SpawnIntervalDays == 0)
+            // GetDayOfYear wraps at the 84-day year end (spawned ~1x/year or
+            // all hordes together on day 0); use absolute days vs lastSpawnDay.
+            int currentDay = (int)CampaignTime.Now.ToDays;
+            if (currentDay - lastSpawnDay >= SpawnIntervalDays)
             {
                 SpawnBanditParties();
+                lastSpawnDay = currentDay;
             }
         }
 
@@ -79,13 +83,9 @@ namespace RealmsForgotten.AiMade
             Random rnd = new Random();
             Settlement settlement = towns[rnd.Next(towns.Count)];
 
-            // Now you can safely check the hideout
-            if (settlement.Hideout == null)
-            {
-                InformationManager.DisplayMessage(new InformationMessage($"No hideout near {settlement.Name}. Cannot spawn horde here.", Colors.Yellow));
-                return;
-            }
-
+            // (Removed a dead `settlement.Hideout == null` check: Hideout is
+            // always null for a TOWN, so it aborted every spawn. CreateBanditParty
+            // resolves the nearest real hideout via FindNearestHideoutToSettlement.)
             if (settlement != null)
             {
                 var banditParty = CreateBanditParty(settlement);

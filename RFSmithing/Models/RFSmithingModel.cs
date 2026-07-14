@@ -94,9 +94,26 @@ namespace RealmsForgotten.Smithing.Models
                 }
             }
 
-            if (ArmorCraftingVM.ItemTypeIsWeapon(ArmorCraftingVM.GetItemType(item)))
+            // Check item.ItemType directly instead of GetItemType: with
+            // AllowCraftingNormalWeapons OFF (the default) GetItemType returns
+            // Invalid for weapons, so ItemTypeIsWeapon was always false and the
+            // metal cap never applied (and armor logic ran on weapons).
+            bool isMeltableWeapon = item.WeaponComponent != null
+                && (item.ItemType == ItemObject.ItemTypeEnum.OneHandedWeapon
+                    || item.ItemType == ItemObject.ItemTypeEnum.TwoHandedWeapon
+                    || item.ItemType == ItemObject.ItemTypeEnum.Polearm
+                    || item.ItemType == ItemObject.ItemTypeEnum.Thrown);
+            if (isMeltableWeapon)
             {
                 var metalCap = GetMetalMax(item.WeaponComponent.PrimaryWeapon.WeaponClass);
+                // MCM-tunable: scale the per-weapon cap so the smelting economy
+                // can be balanced in-game without editing GetMetalMax. Clamped to
+                // a minimum of 1 so a real weapon never smelts to zero metal.
+                if (metalCap > 0)
+                {
+                    float yieldModifier = Settings.Instance?.SmeltingYieldModifier ?? 1f;
+                    metalCap = Math.Max(1, (int)Math.Round(metalCap * yieldModifier));
+                }
                 if (metalCount > 0 && metalCap > 0)
                 {
                     while (metalCount > metalCap)

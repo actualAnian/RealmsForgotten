@@ -156,7 +156,10 @@ namespace RF_AIDialog
                     (m.State == AIMessageState.Drafting ||
                      m.State == AIMessageState.InTransit ||
                      m.State == AIMessageState.Arrived ||
-                     m.State == AIMessageState.Read));
+                     // Read only counts as open while it still awaits a reply.
+                     // A read-and-done letter (RequiresReply=false) is terminal;
+                     // treating it as open permanently blocked new letters.
+                     (m.State == AIMessageState.Read && m.RequiresReply)));
             }
         }
 
@@ -177,7 +180,9 @@ namespace RF_AIDialog
                     (m.State == AIMessageState.Drafting ||
                      m.State == AIMessageState.InTransit ||
                      m.State == AIMessageState.Arrived ||
-                     m.State == AIMessageState.Read));
+                     // Read only counts as open while it still awaits a reply
+                     // (see HasOpenInitiativeThreadForSender).
+                     (m.State == AIMessageState.Read && m.RequiresReply)));
             }
         }
 
@@ -285,6 +290,35 @@ namespace RF_AIDialog
                 m.State = AIMessageState.Ignored;
                 m.LastReminderDay = currentDay;
             });
+        }
+
+        /// <summary>
+        /// Marks every Drafting record as Failed. A Drafting record that
+        /// survived to disk means the async generation task never completed
+        /// (game closed/crashed mid-generation); left as Drafting it counts as
+        /// an open initiative thread forever and blocks all new letters.
+        /// Call once on game load. Returns how many were expired.
+        /// </summary>
+        public static int ExpireStaleDrafts()
+        {
+            lock (_lock)
+            {
+                var data = ReadUnsafe();
+                int count = 0;
+                foreach (var m in data.Messages)
+                {
+                    if (m.State == AIMessageState.Drafting)
+                    {
+                        m.State = AIMessageState.Failed;
+                        count++;
+                    }
+                }
+
+                if (count > 0)
+                    WriteUnsafe(data);
+
+                return count;
+            }
         }
 
         private static void UpdateMessage(string messageId, Action<AIMessageRecord> mutator)

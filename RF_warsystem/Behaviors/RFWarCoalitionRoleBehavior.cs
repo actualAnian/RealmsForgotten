@@ -511,7 +511,7 @@ public sealed class RFWarCoalitionRoleBehavior : CampaignBehaviorBase
 
     private static float GetCurrentDay()
     {
-        return (float)CampaignTime.Now.ElapsedDaysUntilNow;
+        return (float)CampaignTime.Now.ToDays;
     }
 
     private static float GetReadiness(Kingdom kingdom)
@@ -822,6 +822,13 @@ public sealed class RFWarCoalitionRoleBehavior : CampaignBehaviorBase
 
     private static bool IsAlignmentFriendlyPair(string? leftCultureId, string? rightCultureId)
     {
+        // Good/evil sides only count as friendly blocs after the quest-driven
+        // global alignment war starts (see RFWarExternalIntentApi.SetAlignmentDoctrineActive).
+        if (!Logic.RFWarExternalFrontContext.AlignmentDoctrineActive)
+        {
+            return false;
+        }
+
         return IsGoodCulture(leftCultureId) && IsGoodCulture(rightCultureId)
             || IsEvilCulture(leftCultureId) && IsEvilCulture(rightCultureId);
     }

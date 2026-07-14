@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -61,9 +61,13 @@ namespace RealmsForgotten.AiMade
 
         private void CheckAndSpawnBanditParties()
         {
-            if (CampaignTime.Now.GetDayOfYear % SpawnIntervalDays == 0)
+            // GetDayOfYear wraps at the 84-day year end (spawned ~1x/year or
+            // all hordes together on day 0); use absolute days vs lastSpawnDay.
+            int currentDay = (int)CampaignTime.Now.ToDays;
+            if (currentDay - lastSpawnDay >= SpawnIntervalDays)
             {
                 SpawnBanditParties();
+                lastSpawnDay = currentDay;
             }
         }
 

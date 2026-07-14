@@ -123,7 +123,7 @@ namespace RealmsForgotten.Models
         public override float GetEffectiveMaxHealth(Agent agent)
         {
             if (agent == null) return 0;
-            ExplainedNumber explainedNumber = new ExplainedNumber(base.GetEffectiveMaxHealth(agent));
+            ExplainedNumber explainedNumber = new ExplainedNumber(_previousModel.GetEffectiveMaxHealth(agent));
             if (agent.IsMount && agent.RiderAgent != null && agent.RiderAgent.IsHero && agent.RiderAgent == Agent.Main)
                 CareerHelper.ApplyBasicCareerPassives(ref explainedNumber, PassiveEffectType.HorseHealth);
             return explainedNumber.ResultNumber;
