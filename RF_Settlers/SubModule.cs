@@ -106,9 +106,18 @@ namespace RF_Settlers
         }
         private static void RunManualPatches()
         {
+            // Applied LATE on purpose: patching MobilePartyVisual (the class
+            // that builds the skeletal humanoid map figures) during module
+            // load corrupts agent poses game-wide ("human bullet"/folded
+            // characters) — confirmed by both devs independently.
             var original = AccessTools.Method(typeof(MobilePartyVisual), "AddMobileIconComponents");
+            if (original == null)
+            {
+                Debug.Print("[RF_Settlers] MobilePartyVisual.AddMobileIconComponents not found (game update?); settler camp tent icon patch skipped.");
+                return;
+            }
             var prefix = AccessTools.Method(typeof(Patches.SettlerCampVisualPatch), nameof(Patches.SettlerCampVisualPatch.Prefix));
-            harmony.Patch(original, prefix);
+            harmony.Patch(original, new HarmonyMethod(prefix));
         }
     }
 }

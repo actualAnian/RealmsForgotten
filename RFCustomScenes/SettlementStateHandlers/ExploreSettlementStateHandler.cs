@@ -91,12 +91,40 @@ namespace RealmsForgotten.RFCustomSettlements
                 TroopRoster strongestAndPriorTroops = MobilePartyHelper.GetStrongestAndPriorTroops(MobileParty.MainParty, playerMaximumTroopCount, true);
                 troopRoster.Add(strongestAndPriorTroops);
                 Campaign campaign = Campaign.Current;
-                args.MenuContext.OpenTroopSelection(MobileParty.MainParty.MemberRoster, troopRoster, null, new Func<CharacterObject, bool>(this.CanChangeStatusOfTroop), new Action<TroopRoster>(this.OnTroopRosterManageDone), playerMaximumTroopCount, 1);
+                OpenTroopSelectionCompat(args.MenuContext, MobileParty.MainParty.MemberRoster, troopRoster, this.CanChangeStatusOfTroop, this.OnTroopRosterManageDone, playerMaximumTroopCount, 1);
             }
             catch
             {
                 RealmsForgotten.HuntableHerds.SubModule.PrintDebugMessage($"error in the settlement_bandits.xml, couldn't find {currentSettlement.CustomScene}");
             }
+        }
+
+        // OpenTroopSelection's signature differs between the game versions the
+        // two devs run (6 params on 1.4.7, 7 on the newer build, 8 with a
+        // trailing bool on others). A compile-time call breaks whichever
+        // machine doesn't match, so resolve the overload at runtime instead.
+        private static void OpenTroopSelectionCompat(TaleWorlds.CampaignSystem.GameState.MenuContext menuContext, TroopRoster fullRoster, TroopRoster initialSelections, Func<CharacterObject, bool> canChangeStatusOfTroop, Action<TroopRoster> onDone, int maxSelectableTroopCount, int minSelectableTroopCount)
+        {
+            System.Reflection.MethodInfo method = menuContext.GetType().GetMethod("OpenTroopSelection");
+            if (method == null)
+            {
+                TaleWorlds.Library.Debug.Print("[RF] OpenTroopSelectionCompat: method not found on MenuContext.");
+                return;
+            }
+            int count = method.GetParameters().Length;
+            object[] invokeArgs = count switch
+            {
+                6 => new object[] { fullRoster, initialSelections, canChangeStatusOfTroop, onDone, maxSelectableTroopCount, minSelectableTroopCount },
+                7 => new object[] { fullRoster, initialSelections, null, canChangeStatusOfTroop, onDone, maxSelectableTroopCount, minSelectableTroopCount },
+                8 => new object[] { fullRoster, initialSelections, null, canChangeStatusOfTroop, onDone, maxSelectableTroopCount, minSelectableTroopCount, false },
+                _ => null,
+            };
+            if (invokeArgs == null)
+            {
+                TaleWorlds.Library.Debug.Print($"[RF] OpenTroopSelectionCompat: unrecognized OpenTroopSelection signature with {count} parameters.");
+                return;
+            }
+            method.Invoke(menuContext, invokeArgs);
         }
         private void OnTroopRosterManageDone(TroopRoster roster)
         {
