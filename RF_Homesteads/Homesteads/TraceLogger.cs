@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using MCM.Abstractions.Base.Global;
 
@@ -48,10 +49,40 @@ internal static class TraceLogger
 		Write("Session", reason);
 	}
 
-	public static void Write(string source, string message)
+	private static bool mcmUnavailable;
+
+	// MCM access lives in its own non-inlined method: if the MCM assembly is
+	// missing or binary-incompatible, the JIT failure surfaces HERE at the
+	// call site and is caught, instead of crashing every caller of Write
+	// (PatchClassSafe logs from its catch handler — an unguarded throw there
+	// escapes the handler and kills the game).
+	[MethodImpl(MethodImplOptions.NoInlining)]
+	private static bool ReadDebugLoggingSetting()
 	{
 		MCMSettings? instance = GlobalSettings<MCMSettings>.Instance;
-		if (instance == null || !instance.EnableDebugLogging)
+		return instance != null && instance.EnableDebugLogging;
+	}
+
+	private static bool IsDebugLoggingEnabled()
+	{
+		if (mcmUnavailable)
+		{
+			return false;
+		}
+		try
+		{
+			return ReadDebugLoggingSetting();
+		}
+		catch
+		{
+			mcmUnavailable = true;
+			return false;
+		}
+	}
+
+	public static void Write(string source, string message)
+	{
+		if (!IsDebugLoggingEnabled())
 		{
 			return;
 		}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using Homesteads.Models;
 using MCM.Abstractions.Base.Global;
@@ -347,14 +348,33 @@ public static class Utils
 
 	public static void PrintDebugMessage(string str, float r = 255f, float g = 255f, float b = 255f)
 	{
-		MCMSettings? instance = GlobalSettings<MCMSettings>.Instance;
-		if (instance != null && instance.EnableDebugLogging)
+		// Guarded MCM access: a missing/incompatible MCM assembly must degrade
+		// to "no debug message", never throw — this is called from catch
+		// handlers (e.g. HomesteadsReloaded.PatchClassSafe) where an escaping
+		// exception crashes the game.
+		bool enabled;
+		try
+		{
+			enabled = ReadDebugLoggingSetting();
+		}
+		catch
+		{
+			return;
+		}
+		if (enabled)
 		{
 			float red = r / 255f;
 			float green = g / 255f;
 			float blue = b / 255f;
 			InformationManager.DisplayMessage(new InformationMessage(str, new Color(red, green, blue)));
 		}
+	}
+
+	[MethodImpl(MethodImplOptions.NoInlining)]
+	private static bool ReadDebugLoggingSetting()
+	{
+		MCMSettings? instance = GlobalSettings<MCMSettings>.Instance;
+		return instance != null && instance.EnableDebugLogging;
 	}
 
 	private static string GetHeroPropertiesHint(Hero hero)

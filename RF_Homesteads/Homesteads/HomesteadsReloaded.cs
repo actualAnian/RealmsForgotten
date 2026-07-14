@@ -267,8 +267,17 @@ public class HomesteadsReloaded : MBSubModuleBase
 		}
 		catch (Exception ex)
 		{
-			TraceLogger.Write("HomesteadsReloaded", $"Failed to patch {patchType.Name}: {ex}");
-			Utils.PrintDebugMessage(ModName + ": Failed to patch " + patchType.Name + ": " + ex.Message, 255f, 80f, 80f);
+			// A patch failure must never take the game down — and neither may
+			// the LOGGING of that failure. An exception escaping this handler
+			// crashes with the frame right here (seen on a dev machine).
+			try
+			{
+				TraceLogger.Write("HomesteadsReloaded", $"Failed to patch {patchType.Name}: {ex}");
+				Utils.PrintDebugMessage(ModName + ": Failed to patch " + patchType.Name + ": " + ex.Message, 255f, 80f, 80f);
+			}
+			catch
+			{
+			}
 		}
 	}
 }
