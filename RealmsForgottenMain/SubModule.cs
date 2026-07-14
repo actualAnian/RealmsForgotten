@@ -1,6 +1,7 @@
-using HarmonyLib;
 using Bannerlord.UIExtenderEx;
+using HarmonyLib;
 using MCM.Abstractions.Attributes;
+using NavalDLC.GauntletUI;
 using Newtonsoft.Json.Linq;
 using RealmsForgotten.AiMade;
 using RealmsForgotten.AiMade.StrategicIntrigue.SaveSystem;
@@ -22,9 +23,9 @@ using RealmsForgotten.RFCustomHorses;
 using RealmsForgotten.RFEffects;
 using RealmsForgotten.RFMissionLogic;
 using RealmsForgotten.UI;
+using RealmsForgotten.Utility;
 using RealmsForgotten.WarSailsPatches;
 using RF_BattleAI;
-using RealmsForgotten.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -343,7 +344,7 @@ namespace RealmsForgotten
                     Debug.Print($"[RF] RunManualPatches failed; continuing without the remaining manual patches: {ex}");
                 }
                 // War Sails patches are applied once in OnSubModuleLoad via
-                // OptionalNavalStartupPatchBootstrap (plus the attribute scan for
+                // WarSailsPatchRegister.Apply (plus the attribute scan for
                 // FillMissingCachesPatch); re-applying them here ran every prefix twice.
             }
 
@@ -375,7 +376,6 @@ namespace RealmsForgotten
 
             QuestPatches.PatchAll();
 
-
             var target = AccessTools.Method(typeof(BanditSpawnCampaignBehavior), "IsLooterFaction", new Type[] { typeof(IFaction) });
             PatchOrWarn(target, "BanditSpawnCampaignBehavior:IsLooterFaction", prefix: new HarmonyMethod(typeof(BanditSpawnPatch), nameof(BanditSpawnPatch.Prefix)));
             var hideoutMenuInit = AccessTools.Method(typeof(HideoutCampaignBehavior), "game_menu_hideout_place_on_init");
@@ -404,12 +404,15 @@ namespace RealmsForgotten
                 Module.CurrentModule.AddInitialStateOption(initialStateOption);
             }
         }
+
         protected override void OnSubModuleLoad()
         {
-            base.OnSubModuleLoad();
+            if (Globals.IsWarSailsLoaded)
+                WarSailsPatchRegister.RemoveWarsailsUI(Module.CurrentModule);
             Assembly asm = typeof(SubModule).Assembly;
             RFLogger.Log($"[Lifecycle] RealmsForgotten.SubModule.OnSubModuleLoad | asm={asm.Location} | version={asm.GetName().Version} | lastWrite={File.GetLastWriteTime(asm.Location):O}");
             RFLogger.Log($"[Lifecycle] SaveableTypeDefiners present | main={typeof(SaveDefiner).FullName} | ai={typeof(CustomSaveableTypeDefiner).FullName} | intrigue={typeof(StrategicIntrigueTypeDefiner).FullName} | quest={typeof(QuestTypeDefiner).FullName}");
+            // PatchAll has been removed as of v13, its still called in RealmsForgotten.AiMade.AiSubModule !!! make sure it runs
             ViewModelExtensionManager.Initialize(); //has to happen before harmony PatchAll
             try
             {
@@ -422,13 +425,12 @@ namespace RealmsForgotten
             {
                 RFLogger.Log($"[Lifecycle] UIExtender registration failed in RealmsForgotten.SubModule: {ex}");
             }
-            // HUMAN-BULLET BISECT: both early patch appliers introduced on
-            // 2026-06-27 are moved out of OnSubModuleLoad — the uncategorized
-            // sweep is disabled for this test and BattleAIBootstrap now runs in
-            // OnGameInitializationFinished (missions only exist after campaign
-            // init, so battle AI patches lose nothing by applying late).
-            OptionalNavalStartupPatchBootstrap.Apply(harmony);
-
+            // The uncategorized attribute sweep and BattleAIBootstrap were moved
+            // out of OnSubModuleLoad to OnGameInitializationFinished (patching
+            // engine classes early can corrupt native bindings; missions only
+            // exist after campaign init, so battle AI patches lose nothing by
+            // applying late). Only the naval startup patches must stay early.
+            WarSailsPatchRegister.Apply(harmony);
 
             TextObject coreContentDisabledReason = new("Disabled during installation.", null);
             UIConfig.DoNotUseGeneratedPrefabs = true;

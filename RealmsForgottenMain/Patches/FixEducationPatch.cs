@@ -1,18 +1,11 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
 using HarmonyLib;
 using RealmsForgotten.CustomSkills;
-using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.Extensions;
-using TaleWorlds.CampaignSystem.ViewModelCollection.Education;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
-using TaleWorlds.Localization;
 
 namespace RealmsForgotten.Patches;
 
@@ -59,7 +52,7 @@ public static class FixPickAll2
         {
             // Filtered copy — never mutate the live Attributes.All list.
             __result = new MBReadOnlyList<CharacterAttribute>(__result.Where(a =>
-                a != RFAttributes.Discipline && a != RFAttributes.Seafaring));
+                a != RFAttributes.Discipline));
         }
     }
 }
