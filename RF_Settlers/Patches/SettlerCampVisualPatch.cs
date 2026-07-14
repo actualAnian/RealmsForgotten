@@ -13,10 +13,9 @@ namespace RF_Settlers.Patches
     /// flag included) — until a custom camp icon is authored. Caravans on the
     /// road keep the normal party figures.
     /// </summary>
-    [HarmonyPatch(typeof(MobilePartyVisual), "AddMobileIconComponents")]
     public static class SettlerCampVisualPatch
     {
-        private static bool Prefix(
+        public static bool Prefix(
             MobilePartyVisual __instance,
             PartyBase party,
             ref bool clearBannerComponentCache,

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
-using RealmsForgotten.AiMade;
 using RealmsForgotten.AiMade.StrategicIntrigue.Core;
 using RealmsForgotten.AiMade.StrategicIntrigue.Mechanics.ClanAlignment;
 using RealmsForgotten.AiMade.StrategicIntrigue.Mechanics.InciteBreak;
@@ -13,7 +12,6 @@ using RealmsForgotten.AiMade.StrategicIntrigue.SaveSystem;
 using RF_warsystem;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
-using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.Election;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.MapEvents;
@@ -22,7 +20,6 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
-using TaleWorlds.SaveSystem;
 
 namespace RealmsForgotten.AiMade.StrategicIntrigue.Campaign;
 
@@ -3690,6 +3687,24 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
             kingdomState.ClampValues();
         }
     }
+    private static void HandlePartyOfDissident(Hero dissident)
+    {
+        var party = dissident.PartyBelongedTo;
+        party.RemovePartyLeader();
+        party.MemberRoster.RemoveTroop(dissident.CharacterObject, 1);
+        Hero? heroToAdd;
+        if (party.Owner.IsAlive && party.Owner.PartyBelongedTo == null && !party.Owner.IsPrisoner)
+            heroToAdd = party.Owner;
+        else heroToAdd = party.Owner.Clan.AliveLords.FirstOrDefault(l => l.PartyBelongedTo == null && !l.IsPrisoner && !l.IsChild);
+        if (heroToAdd == null)
+            DestroyPartyAction.Apply(null, party);
+        else
+        {
+            AddHeroToPartyAction.Apply(heroToAdd, party);
+            party.ChangePartyLeader(heroToAdd);
+            party.LordPartyComponent.ClearCachedName();
+        }
+    }
 
     private CrackdownPunishmentOutcome ApplyCrackdownPunishment(
         Kingdom kingdom,
@@ -3717,23 +3732,6 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
             && !dissident.IsChild
             && CanApplyIntrigueExecution(kingdom, threatenedClan))
         {
-            if (dissident.PartyBelongedTo != null)
-            {
-                var party = dissident.PartyBelongedTo;
-                party.RemovePartyLeader();
-                party.MemberRoster.RemoveTroop(dissident.CharacterObject, 1);
-                Hero? heroToAdd;
-                if (party.Owner.IsAlive && party.Owner.PartyBelongedTo == null && !party.Owner.IsPrisoner)
-                    heroToAdd = party.Owner;
-                else heroToAdd = party.Owner.Clan.AliveLords.FirstOrDefault(l => l.PartyBelongedTo == null && !l.IsPrisoner);
-                if (heroToAdd == null) DisbandPartyAction.StartDisband(party);
-                else
-                {
-                    AddHeroToPartyAction.Apply(heroToAdd, party);
-                    party.ChangePartyLeader(heroToAdd);
-                    party.LordPartyComponent.ClearCachedName();
-                }
-            }
             KillCharacterAction.ApplyByExecution(dissident, ruler, showNotification: true, isForced: true);
             _lastIntrigueExecutionAt = CampaignTime.Now;
             ApplyPostCrackdownStabilization(threatenedState, CrackdownPunishmentOutcome.Execution);
@@ -3843,7 +3841,7 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
         }
 
         if (dissident.PartyBelongedTo != null)
-            DisbandPartyAction.StartDisband(dissident.PartyBelongedTo);
+            HandlePartyOfDissident(dissident);
         TakePrisonerAction.Apply(capturerParty, dissident);
         return true;
     }

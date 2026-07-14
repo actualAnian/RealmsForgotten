@@ -1,6 +1,7 @@
+using HarmonyLib;
+using SandBox.View.Map.Visuals;
 using System;
 using System.Xml;
-using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
@@ -13,23 +14,18 @@ namespace RF_Settlers
     public class SubModule : MBSubModuleBase
     {
         private bool _harmonyApplied;
-
-        protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
+        static Harmony harmony = new("rf.settlers");
+        bool _manualPatchApplied = false;
+        protected override void OnSubModuleLoad()
         {
-            base.OnGameStart(game, gameStarterObject);
-            // Harmony application is LATE by design (was OnSubModuleLoad).
-            // SettlerCampVisualPatch targets MobilePartyVisual — the class that
-            // builds the skeletal humanoid map figures — and patching it during
-            // module load is the known "human bullet" trigger (Anian fixed his
-            // fold by touching this same patch; the original Homesteads author
-            // ships his MobilePartyVisual patch permanently disabled). All
-            // RF_Settlers patch targets only run on the campaign map, so
-            // nothing is lost by applying here.
             if (!_harmonyApplied)
             {
                 _harmonyApplied = true;
-                new Harmony("rf.settlers").PatchAll(typeof(SubModule).Assembly);
+                harmony.PatchAll(typeof(SubModule).Assembly);
             }
+        }
+        protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
+        {
             if (gameStarterObject is CampaignGameStarter campaignGameStarter)
             {
                 campaignGameStarter.AddBehavior(new SettlersCampaignBehavior());
@@ -99,6 +95,20 @@ namespace RF_Settlers
             }
 
             Patches.SettlersMapScenePatch.RegisterVillagePrefab(record.StringId, record.PrefabId, record.VillageTypeId);
+        }
+        public override void OnGameInitializationFinished(Game game)
+        {
+            if (!_manualPatchApplied)
+            {
+                _manualPatchApplied = true;
+                RunManualPatches();
+            }
+        }
+        private static void RunManualPatches()
+        {
+            var original = AccessTools.Method(typeof(MobilePartyVisual), "AddMobileIconComponents");
+            var prefix = AccessTools.Method(typeof(Patches.SettlerCampVisualPatch), nameof(Patches.SettlerCampVisualPatch.Prefix));
+            harmony.Patch(original, prefix);
         }
     }
 }
