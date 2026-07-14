@@ -117,6 +117,7 @@ namespace RealmsForgotten.AiMade
 
             // Add troops directly to the party's MemberRoster instead of creating a separate one
             var banditTroops = GetBanditTroops();
+            var tempRoster = TroopRoster.CreateDummyTroopRoster();
             foreach (var banditTroop in banditTroops)
             {
                 CharacterObject troop = CharacterObject.Find(banditTroop.Character.StringId);
@@ -127,10 +128,10 @@ namespace RealmsForgotten.AiMade
                 }
 
                 int adjustedNumber = (int)(banditTroop.Number * cumulativeGrowth);
-                banditParty.MemberRoster.AddToCounts(troop, adjustedNumber);
+                tempRoster.AddToCounts(troop, adjustedNumber);
             }
 
-            banditParty.InitializeMobilePartyAroundPosition(banditParty.MemberRoster, banditParty.PrisonRoster, settlement.Position, 1f);
+            banditParty.InitializeMobilePartyAroundPosition(tempRoster, banditParty.PrisonRoster, settlement.Position, 1f);
             banditParty.Party.SetCustomName(new TextObject("Nasorian Horde"));
             banditParty.Aggressiveness = 10f;
 
