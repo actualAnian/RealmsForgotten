@@ -1,0 +1,39 @@
+<!-- Homestead → settlement TOWN template (Empire). Modeled on BannerlordPlayerSettlement's per-culture
+     templates: placeholders are substituted at build time, and Locations point at NATIVE empire scenes so no
+     scene authoring is needed. Add castle/village + other cultures alongside this once the town path is proven.
+     Placeholders: {{ID}} {{PLAYER_CLAN}} {{PLAYER_CULTURE}} {{POS_X}} {{POS_Y}} {{G_POS_X}} {{G_POS_Y}} -->
+<Settlements>
+  <Settlement id="{{ID}}" name="{{NAME}}" owner="Faction.{{PLAYER_CLAN}}" posX="{{POS_X}}" posY="{{POS_Y}}" culture="Culture.{{PLAYER_CULTURE}}" gate_posX="{{G_POS_X}}" gate_posY="{{G_POS_Y}}" template_type="Town" template_variant="1">
+    <Components>
+      <Town id="{{ID}}_town_comp" is_castle="false" background_crop_position="0.0" background_mesh="menu_empire_3" wait_mesh="wait_empire_town" gate_rotation="{{G_ROT}}" prosperity="3000">
+        <Buildings>
+          <Building id="building_settlement_fortifications" level="1" />
+          <Building id="building_settlement_barracks" level="1" />
+          <Building id="building_settlement_training_fields" level="1" />
+          <Building id="building_settlement_tax_office" level="1" />
+          <Building id="building_settlement_marketplace" level="1" />
+          <Building id="building_settlement_warehouse" level="1" />
+          <Building id="building_settlement_mason" level="1" />
+          <Building id="building_settlement_waterworks" level="1" />
+          <Building id="building_settlement_roads_and_paths" level="1" />
+        </Buildings>
+      </Town>
+    </Components>
+    <Locations complex_template="LocationComplexTemplate.town_complex">
+      <Location id="center" scene_name="empire_town_g" scene_name_1="empire_town_g" scene_name_2="empire_town_g" scene_name_3="empire_town_g" />
+      <Location id="arena" scene_name="arena_empire_a" />
+      <Location id="tavern" scene_name="empire_house_c_tavern_a" />
+      <Location id="lordshall" scene_name_1="empire_castle_keep_a_l1_interior" scene_name_2="empire_castle_keep_a_l2_interior" scene_name_3="empire_castle_keep_a_l3_interior" />
+      <Location id="prison" scene_name="empire_dungeon_stealth" />
+      <Location id="house_1" scene_name="empire_house_d_interior_house" />
+      <Location id="house_2" scene_name="empire_house_d_interior_house" />
+      <Location id="house_3" scene_name="empire_house_d_interior_house" />
+      <Location id="alley" />
+    </Locations>
+    <CommonAreas>
+      <Area type="Backstreet" name="{=a0MVffcN}Backstreet" />
+      <Area type="Clearing" name="{=LWHIVshb}Clearing" />
+      <Area type="Waterfront" name="{=Rr1cy5Sk}Waterfront" />
+    </CommonAreas>
+  </Settlement>
+</Settlements>

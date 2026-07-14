@@ -1,0 +1,388 @@
+<?xml version='1.0' encoding='utf-8'?>
+<prefabs>
+  <!-- Baked skirmish map (converted from builder export homestead_skirmish_map), used for the Arms
+       Master's practice matches (1v1 and 5v5), both at the homestead and once upgraded to a
+       settlement. Player/enemy spawn points and the spectator ring are tagged invisible
+       points; the grandstands and campfires are native-instantiated (own visual/collision —
+       the campfire brings its own baked light+fire+sound); the plank walls are invisible
+       collision-only boundary rails.
+       world_anchor (built on mp_sergeant_map_001): 247.549, 283.431, 27.292
+       The skirmish loader instantiates this root AT that anchor so it fits the terrain. -->
+  <game_entity name="homestead_skirmish_map" old_prefab_name="">
+    <transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000"/>
+    <children>
+      <game_entity name="empire_hippodrome_grandstand_d" old_prefab_name="">
+        <transform position="17.237, -8.849, -0.742" rotation_euler="0.000, 0.000, 1.131"/>
+        <tags><tag name="homestead_skirmish_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_grandstand_d" old_prefab_name="">
+        <transform position="-17.766, 7.775, -0.656" rotation_euler="0.000, 0.000, -2.004"/>
+        <tags><tag name="homestead_skirmish_prop"/></tags>
+      </game_entity>
+      <game_entity name="homestead_skirmish_player_spawn" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_player"/><tag name="sp_skirmish_player_000"/></tags>
+        <transform position="5.358, 10.993, -0.656" rotation_euler="0.000, 0.000, -2.004"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_player_spawn" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_player"/><tag name="sp_skirmish_player_001"/></tags>
+        <transform position="4.803, 12.375, -0.656" rotation_euler="0.000, 0.000, -2.004"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_player_spawn" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_player"/><tag name="sp_skirmish_player_002"/></tags>
+        <transform position="6.613, 11.448, -0.656" rotation_euler="0.000, 0.000, -2.004"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_player_spawn" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_player"/><tag name="sp_skirmish_player_003"/></tags>
+        <transform position="4.705, 13.802, -0.656" rotation_euler="0.000, 0.000, -2.004"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_player_spawn" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_player"/><tag name="sp_skirmish_player_004"/></tags>
+        <transform position="8.045, 12.800, -0.656" rotation_euler="0.000, 0.000, -2.004"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_enemy_spawn" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_enemy"/><tag name="sp_skirmish_enemy_000"/></tags>
+        <transform position="-5.375, -11.106, -0.656" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_enemy_spawn" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_enemy"/><tag name="sp_skirmish_enemy_001"/></tags>
+        <transform position="-6.638, -10.662, -0.656" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_enemy_spawn" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_enemy"/><tag name="sp_skirmish_enemy_002"/></tags>
+        <transform position="-4.817, -12.373, -0.656" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_enemy_spawn" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_enemy"/><tag name="sp_skirmish_enemy_003"/></tags>
+        <transform position="-7.852, -11.236, -0.656" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_enemy_spawn" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_enemy"/><tag name="sp_skirmish_enemy_004"/></tags>
+        <transform position="-4.577, -13.827, -0.656" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-22.546, 1.130, 2.609" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-22.209, 2.039, 2.616" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-21.812, 2.817, 2.624" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-21.359, 3.769, 2.635" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-20.686, 4.722, 2.659" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-20.214, 5.738, 2.670" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-19.816, 6.736, 2.677" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-19.246, 7.844, 2.680" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-18.552, 9.157, 2.591" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-17.704, 10.862, 2.591" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-17.010, 12.258, 2.592" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-15.935, 14.128, 2.591" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-15.098, 15.704, 2.591" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-3.191, 23.852, 2.586" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-1.869, 24.210, 2.593" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-0.540, 23.977, 2.592" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="0.470, 24.082, 2.593" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="1.537, 24.044, 2.593" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="2.728, 23.778, 2.591" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="4.167, 23.615, 2.594" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="15.948, 18.358, 2.596" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="17.283, 17.496, 2.595" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="18.318, 16.153, 2.595" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="19.050, 14.985, 2.593" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="19.850, 13.896, 2.594" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="20.561, 12.939, 2.595" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="21.338, 11.647, 2.595" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="21.579, -1.757, 2.561" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="21.105, -3.274, 2.562" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="20.242, -4.887, 2.586" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="19.749, -6.273, 2.591" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="19.247, -7.692, 2.594" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="18.800, -9.171, 2.679" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="18.166, -10.569, 2.679" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="17.501, -11.742, 2.679" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="16.908, -13.022, 2.679" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="16.358, -13.998, 2.679" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="15.801, -15.134, 2.679" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="15.132, -16.189, 2.678" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="14.393, -17.361, 2.677" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="3.207, -24.503, 2.672" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="2.070, -24.812, 2.678" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="0.468, -25.091, 2.679" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-1.386, -25.250, 2.680" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-3.193, -24.900, 2.679" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-15.964, -19.019, 2.679" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-17.629, -17.311, 2.676" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-18.971, -15.869, 2.677" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-20.286, -14.122, 2.677" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-21.207, -12.525, 2.677" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-21.712, -11.422, 2.677" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-11.830, -21.166, 7.011" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-8.712, -23.413, 7.021" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-7.339, -24.443, 6.697" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="-13.609, -21.547, 6.770" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="7.023, 23.099, 6.629" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="8.356, 21.717, 6.928" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="11.659, 20.272, 6.932" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_audience" old_prefab_name="" mobility="1">
+        <tags><tag name="sp_skirmish_audience"/></tags>
+        <transform position="13.512, 20.123, 6.684" rotation_euler="0.000, 0.000, -0.703"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_barrier" old_prefab_name="">
+        <transform position="-22.227, -4.818, 2.670" rotation_euler="0.000, 0.000, -1.504"/>
+        <physics shape="bo_castle_plank_wall_a"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_barrier" old_prefab_name="">
+        <transform position="-8.966, 20.865, -0.458" rotation_euler="0.000, 0.000, -2.654"/>
+        <physics shape="bo_castle_plank_wall_a"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_barrier" old_prefab_name="">
+        <transform position="22.500, 4.455, 0.203" rotation_euler="0.000, 0.000, -1.520"/>
+        <physics shape="bo_castle_plank_wall_a"/>
+      </game_entity>
+      <game_entity name="homestead_skirmish_barrier" old_prefab_name="">
+        <transform position="9.280, -21.785, 0.245" rotation_euler="0.000, 0.000, -2.604"/>
+        <physics shape="bo_castle_plank_wall_a"/>
+      </game_entity>
+      <game_entity name="homestead_campfire" old_prefab_name="">
+        <transform position="21.373, 2.072, 0.209" rotation_euler="0.000, 0.000, -2.604"/>
+        <tags><tag name="homestead_skirmish_prop"/></tags>
+      </game_entity>
+      <game_entity name="homestead_campfire" old_prefab_name="">
+        <transform position="21.114, 5.878, 0.209" rotation_euler="0.000, 0.000, -2.604"/>
+        <tags><tag name="homestead_skirmish_prop"/></tags>
+      </game_entity>
+      <game_entity name="homestead_campfire" old_prefab_name="">
+        <transform position="9.668, -19.758, 0.209" rotation_euler="0.000, 0.000, -2.604"/>
+        <tags><tag name="homestead_skirmish_prop"/></tags>
+      </game_entity>
+      <game_entity name="homestead_campfire" old_prefab_name="">
+        <transform position="7.043, -21.290, 0.209" rotation_euler="0.000, 0.000, -2.604"/>
+        <tags><tag name="homestead_skirmish_prop"/></tags>
+      </game_entity>
+      <game_entity name="homestead_campfire" old_prefab_name="">
+        <transform position="-8.453, -21.561, 0.209" rotation_euler="0.000, 0.000, -2.604"/>
+        <tags><tag name="homestead_skirmish_prop"/></tags>
+      </game_entity>
+      <game_entity name="homestead_campfire" old_prefab_name="">
+        <transform position="-11.537, -20.236, 0.209" rotation_euler="0.000, 0.000, -2.604"/>
+        <tags><tag name="homestead_skirmish_prop"/></tags>
+      </game_entity>
+      <game_entity name="homestead_campfire" old_prefab_name="">
+        <transform position="-20.555, -5.938, 0.209" rotation_euler="0.000, 0.000, -2.604"/>
+        <tags><tag name="homestead_skirmish_prop"/></tags>
+      </game_entity>
+      <game_entity name="homestead_campfire" old_prefab_name="">
+        <transform position="-20.728, -2.937, 0.209" rotation_euler="0.000, 0.000, -2.604"/>
+        <tags><tag name="homestead_skirmish_prop"/></tags>
+      </game_entity>
+      <game_entity name="homestead_campfire" old_prefab_name="">
+        <transform position="-9.916, 17.276, 0.209" rotation_euler="0.000, 0.000, -2.604"/>
+        <tags><tag name="homestead_skirmish_prop"/></tags>
+      </game_entity>
+      <game_entity name="homestead_campfire" old_prefab_name="">
+        <transform position="-7.284, 18.739, 0.209" rotation_euler="0.000, 0.000, -2.604"/>
+        <tags><tag name="homestead_skirmish_prop"/></tags>
+      </game_entity>
+      <game_entity name="homestead_campfire" old_prefab_name="">
+        <transform position="7.636, 18.928, 0.209" rotation_euler="0.000, 0.000, -2.604"/>
+        <tags><tag name="homestead_skirmish_prop"/></tags>
+      </game_entity>
+      <game_entity name="homestead_campfire" old_prefab_name="">
+        <transform position="10.190, 17.905, 0.209" rotation_euler="0.000, 0.000, -2.604"/>
+        <tags><tag name="homestead_skirmish_prop"/></tags>
+      </game_entity>
+      <game_entity name="homestead_campfire" old_prefab_name="">
+        <transform position="-15.755, 6.720, 0.209" rotation_euler="0.000, 0.000, -2.604"/>
+        <tags><tag name="homestead_skirmish_prop"/></tags>
+      </game_entity>
+      <game_entity name="homestead_campfire" old_prefab_name="">
+        <transform position="15.803, -10.636, 0.209" rotation_euler="0.000, 0.000, -2.604"/>
+        <tags><tag name="homestead_skirmish_prop"/></tags>
+      </game_entity>
+      <game_entity name="homestead_campfire" old_prefab_name="">
+        <transform position="8.990, 23.980, 6.935" rotation_euler="0.000, 0.000, -2.604"/>
+        <tags><tag name="homestead_skirmish_prop"/></tags>
+      </game_entity>
+      <game_entity name="homestead_campfire" old_prefab_name="">
+        <transform position="12.466, 22.167, 6.935" rotation_euler="0.000, 0.000, -2.604"/>
+        <tags><tag name="homestead_skirmish_prop"/></tags>
+      </game_entity>
+      <game_entity name="homestead_campfire" old_prefab_name="">
+        <transform position="-13.408, -24.103, 7.021" rotation_euler="0.000, 0.000, -2.604"/>
+        <tags><tag name="homestead_skirmish_prop"/></tags>
+      </game_entity>
+      <game_entity name="homestead_campfire" old_prefab_name="">
+        <transform position="-9.870, -25.748, 7.021" rotation_euler="0.000, 0.000, -2.604"/>
+        <tags><tag name="homestead_skirmish_prop"/></tags>
+      </game_entity>
+    </children>
+  </game_entity>
+</prefabs>

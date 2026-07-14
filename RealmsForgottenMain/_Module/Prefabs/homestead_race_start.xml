@@ -1,0 +1,19 @@
+<prefabs>
+  <!-- Race Start/Finish marker.  One per track.  Invisible during play, shown red while editing
+       (handled by the nav-marker visibility system).  The race mission reads its world position by
+       prefab name to place the start line / detect lap completion. -->
+  <game_entity name="homestead_race_start" old_prefab_name="">
+    <transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="1.000, 1.000, 1.000"/>
+    <components>
+      <meta_mesh_component name="flag_pole_big"/>
+    </components>
+    <children>
+      <game_entity name="homestead_race_start_cloth" old_prefab_name="">
+        <transform position="0.000, 0.290, 3.576" rotation_euler="0.000, 0.000, 3.141" scale="1.322, 1.322, 1.322"/>
+        <components>
+          <meta_mesh_component name="flag_stand_cloth"/>
+        </components>
+      </game_entity>
+    </children>
+  </game_entity>
+</prefabs>

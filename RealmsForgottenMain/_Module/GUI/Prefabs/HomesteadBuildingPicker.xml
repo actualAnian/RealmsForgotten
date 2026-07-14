@@ -1,0 +1,267 @@
+<Prefab>
+  <Constants>
+  </Constants>
+
+  <Window>
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+      <Children>
+
+        <!-- Dim backdrop -->
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                Sprite="BlankWhiteSquare_9" Color="#000000FF" AlphaFactor="0.55" />
+
+        <!-- Main panel -->
+        <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="980" SuggestedHeight="640"
+                     HorizontalAlignment="Center" VerticalAlignment="Center"
+                     Brush="Frame1Brush" RenderLate="true">
+          <Children>
+            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                       LayoutImp.LayoutMethod="VerticalTopToBottom"
+                       MarginLeft="24" MarginRight="24" MarginTop="18" MarginBottom="18">
+              <Children>
+
+                <!-- ── Category carousel:  <  prev   CURRENT   next  >  ─────────────────────── -->
+                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="44"
+                           LayoutImp.LayoutMethod="HorizontalLeftToRight" HorizontalAlignment="Center"
+                           MarginBottom="8">
+                  <Children>
+                    <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="42" SuggestedHeight="38"
+                                  VerticalAlignment="Center" Brush="Creation.NumericLeftArrow" Command.Click="ExecutePrev" />
+                    <!-- previous category (dimmed preview) -->
+                    <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="200"
+                                VerticalAlignment="Center" Text="@PrevCategoryName"
+                                Brush.FontSize="17" Brush.FontColor="#777777FF"
+                                Brush.TextHorizontalAlignment="Right" Brush.TextVerticalAlignment="Center" MarginRight="14" />
+                    <!-- current category (highlighted) -->
+                    <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="300"
+                                VerticalAlignment="Center" Text="@CategoryName"
+                                Brush.FontSize="30" Brush.FontColor="#C7900AFF"
+                                Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Center" />
+                    <!-- next category (dimmed preview) -->
+                    <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="200"
+                                VerticalAlignment="Center" Text="@NextCategoryName"
+                                Brush.FontSize="17" Brush.FontColor="#777777FF"
+                                Brush.TextHorizontalAlignment="Left" Brush.TextVerticalAlignment="Center" MarginLeft="14" />
+                    <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="42" SuggestedHeight="38"
+                                  VerticalAlignment="Center" Brush="Creation.NumericRightArrow" Command.Click="ExecuteNext" />
+                  </Children>
+                </ListPanel>
+
+                <!-- ── Category page: column headers + scrollable tier-grouped list + detail ── -->
+                <ListPanel IsVisible="@IsCategoryTab" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                           LayoutImp.LayoutMethod="HorizontalLeftToRight">
+                  <Children>
+
+                    <!-- Left column: headers + list -->
+                    <ListPanel WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="440"
+                               LayoutImp.LayoutMethod="VerticalTopToBottom" MarginRight="16">
+                      <Children>
+
+                        <!-- Column headers -->
+                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="22"
+                                   LayoutImp.LayoutMethod="HorizontalLeftToRight" MarginLeft="12" MarginRight="22" MarginBottom="2">
+                          <Children>
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                        Text="@ColumnBuildingText" Brush.FontSize="15" Brush.FontColor="#999999FF"
+                                        Brush.TextVerticalAlignment="Center" Brush.TextHorizontalAlignment="Left" />
+                            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="70"
+                                        Text="@ColumnPointsText" Brush.FontSize="15" Brush.FontColor="#999999FF"
+                                        Brush.TextVerticalAlignment="Center" Brush.TextHorizontalAlignment="Right" />
+                          </Children>
+                        </ListPanel>
+
+                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+                          <Children>
+                            <ScrollablePanel Id="ScrollablePanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                             AutoHideScrollBars="true" ClipRect="ClipRect" InnerPanel="ClipRect\GroupList"
+                                             VerticalScrollbar="..\VerticalScrollbar">
+                              <Children>
+                                <Widget Id="ClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+                                  <Children>
+                                    <!-- Outer list: one entry per Tier group -->
+                                    <ListPanel DataSource="{TierGroups}" Id="GroupList" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                               LayoutImp.LayoutMethod="VerticalTopToBottom" MarginRight="10">
+                                      <ItemTemplate>
+                                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                                   LayoutImp.LayoutMethod="VerticalTopToBottom" MarginBottom="6">
+                                          <Children>
+                                            <!-- Tier header -->
+                                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="26"
+                                                        Text="@HeaderText" Brush.FontSize="18" Brush.FontColor="#C7900AFF"
+                                                        Brush.TextVerticalAlignment="Center" Brush.TextHorizontalAlignment="Left"
+                                                        MarginLeft="4" MarginTop="4" />
+                                            <!-- Cards in this tier -->
+                                            <ListPanel DataSource="{Cards}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                                       LayoutImp.LayoutMethod="VerticalTopToBottom">
+                                              <ItemTemplate>
+                                                <ButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="30"
+                                                              IsSelected="@IsSelected" IsEnabled="@IsEnabled"
+                                                              Command.Click="ExecuteSelect" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
+                                                  <Children>
+                                                    <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                                               LayoutImp.LayoutMethod="HorizontalLeftToRight" MarginLeft="12" MarginRight="12">
+                                                      <Children>
+                                                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                                                    Text="@Name" Brush.FontSize="18" Brush.FontColor="@NameColorText"
+                                                                    Brush.TextVerticalAlignment="Center" Brush.TextHorizontalAlignment="Left" />
+                                                        <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="70"
+                                                                    Text="@BuildPointsText" Brush.FontSize="17" Brush.FontColor="@PointsColorText"
+                                                                    Brush.TextVerticalAlignment="Center" Brush.TextHorizontalAlignment="Right" />
+                                                      </Children>
+                                                    </ListPanel>
+                                                  </Children>
+                                                </ButtonWidget>
+                                              </ItemTemplate>
+                                            </ListPanel>
+                                          </Children>
+                                        </ListPanel>
+                                      </ItemTemplate>
+                                    </ListPanel>
+                                  </Children>
+                                </Widget>
+                              </Children>
+                            </ScrollablePanel>
+                            <ScrollbarWidget Id="VerticalScrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="8"
+                                             HorizontalAlignment="Right" VerticalAlignment="Top" MarginTop="4" MarginBottom="4"
+                                             AlignmentAxis="Vertical" Handle="VerticalScrollbarHandle" MaxValue="100" MinValue="0">
+                              <Children>
+                                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="4"
+                                        HorizontalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#5a4033FF" AlphaFactor="0.2" />
+                                <ImageWidget Id="VerticalScrollbarHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                             SuggestedHeight="10" SuggestedWidth="8" HorizontalAlignment="Center"
+                                             Brush="FaceGen.Scrollbar.Handle" />
+                              </Children>
+                            </ScrollbarWidget>
+                          </Children>
+                        </Widget>
+
+                      </Children>
+                    </ListPanel>
+
+                    <!-- Right column: detail panel -->
+                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+                      <Children>
+                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                   LayoutImp.LayoutMethod="VerticalTopToBottom" IsVisible="@HasSelection">
+                          <Children>
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                        Text="@DetailName" Brush.FontSize="26" Brush.FontColor="#C7900AFF"
+                                        Brush.TextHorizontalAlignment="Left" MarginBottom="4" />
+                            <!-- Build status: green "Ready to build." or red "Need: ..." -->
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                        Text="@BuildStatusText" Brush.FontSize="17" Brush.FontColor="@BuildStatusColor"
+                                        Brush.TextHorizontalAlignment="Left" MarginBottom="6" />
+                            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+                              <Children>
+                                <ScrollablePanel Id="DetailScrollablePanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                                 AutoHideScrollBars="true" ClipRect="DetailClipRect" InnerPanel="DetailClipRect\DetailStack"
+                                                 VerticalScrollbar="..\DetailVerticalScrollbar">
+                                  <Children>
+                                    <Widget Id="DetailClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+                                      <Children>
+                                        <ListPanel Id="DetailStack" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                                   LayoutImp.LayoutMethod="VerticalTopToBottom" MarginRight="10">
+                                          <Children>
+                                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                                        Text="@DetailDescription" Brush.FontSize="16" Brush.FontColor="#DDDDDDFF"
+                                                        Brush.TextHorizontalAlignment="Left" />
+                                          </Children>
+                                        </ListPanel>
+                                      </Children>
+                                    </Widget>
+                                  </Children>
+                                </ScrollablePanel>
+                                <ScrollbarWidget Id="DetailVerticalScrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="8"
+                                                 HorizontalAlignment="Right" VerticalAlignment="Top" MarginTop="4" MarginBottom="4"
+                                                 AlignmentAxis="Vertical" Handle="DetailScrollbarHandle" MaxValue="100" MinValue="0">
+                                  <Children>
+                                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="4"
+                                            HorizontalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#5a4033FF" AlphaFactor="0.2" />
+                                    <ImageWidget Id="DetailScrollbarHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                                 SuggestedHeight="10" SuggestedWidth="8" HorizontalAlignment="Center"
+                                                 Brush="FaceGen.Scrollbar.Handle" />
+                                  </Children>
+                                </ScrollbarWidget>
+                              </Children>
+                            </Widget>
+                          </Children>
+                        </ListPanel>
+                      </Children>
+                    </Widget>
+
+                  </Children>
+                </ListPanel>
+
+                <!-- ── Controls page: read-only bindings table ─────────────────────────────── -->
+                <Widget IsVisible="@IsControlsTab" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+                  <Children>
+                    <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                               LayoutImp.LayoutMethod="VerticalTopToBottom">
+                      <Children>
+                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="26"
+                                   LayoutImp.LayoutMethod="HorizontalLeftToRight" MarginBottom="4">
+                          <Children>
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                        Text="{=homestead_picker_ctrl_col_action}Action" Brush.FontSize="17" Brush.FontColor="#999999FF" />
+                            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="220"
+                                        Text="{=homestead_picker_ctrl_col_keyboard}Keyboard" Brush.FontSize="17" Brush.FontColor="#999999FF" />
+                            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="220"
+                                        Text="{=homestead_picker_ctrl_col_controller}Controller" Brush.FontSize="17" Brush.FontColor="#999999FF" />
+                          </Children>
+                        </ListPanel>
+                        <ListPanel DataSource="{BindingRows}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                   LayoutImp.LayoutMethod="VerticalTopToBottom">
+                          <ItemTemplate>
+                            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="28"
+                                       LayoutImp.LayoutMethod="HorizontalLeftToRight">
+                              <Children>
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                            Text="@ActionName" Brush.FontSize="16" Brush.TextVerticalAlignment="Center" />
+                                <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="220"
+                                            Text="@KeyboardKey" Brush.FontSize="16" Brush.FontColor="#9FD8FFFF" Brush.TextVerticalAlignment="Center" />
+                                <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="220"
+                                            Text="@ControllerButton" Brush.FontSize="16" Brush.FontColor="#B9FF9FFF" Brush.TextVerticalAlignment="Center" />
+                              </Children>
+                            </ListPanel>
+                          </ItemTemplate>
+                        </ListPanel>
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="14"
+                                    Text="@ControlsFooterText" Brush.FontSize="15" Brush.FontColor="#888888FF" />
+                      </Children>
+                    </ListPanel>
+                  </Children>
+                </Widget>
+
+                <!-- ── Confirm / Cancel ─────────────────────────────────────────────────────── -->
+                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="50"
+                           LayoutImp.LayoutMethod="HorizontalLeftToRight" HorizontalAlignment="Center" MarginTop="10">
+                  <Children>
+                    <ButtonWidget IsVisible="@IsCategoryTab" IsEnabled="@CanBuildSelection" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                  SuggestedWidth="200" SuggestedHeight="42" MarginRight="14" Brush="Button" Command.Click="ExecuteConfirm"
+                                  DoNotPassEventsToChildren="true">
+                      <Children>
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                    Text="@ConfirmButtonText" Brush.FontSize="19"
+                                    Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Center" />
+                      </Children>
+                    </ButtonWidget>
+                    <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="200" SuggestedHeight="42"
+                                  Brush="Button" Command.Click="ExecuteClose" DoNotPassEventsToChildren="true">
+                      <Children>
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                    Text="@CancelButtonText" Brush.FontSize="19"
+                                    Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Center" />
+                      </Children>
+                    </ButtonWidget>
+                  </Children>
+                </ListPanel>
+
+              </Children>
+            </ListPanel>
+          </Children>
+        </BrushWidget>
+
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

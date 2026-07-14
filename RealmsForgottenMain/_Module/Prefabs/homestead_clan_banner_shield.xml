@@ -1,0 +1,16 @@
+<prefabs>
+  <game_entity name="homestead_clan_banner_shield" old_prefab_name="">
+    <transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="1.000, 1.000, 1.000"/>
+    <children>
+      <game_entity name="homestead_clan_banner_shield_mesh" old_prefab_name="">
+        <transform position="0.000, 0.000, 1.000" rotation_euler="0.000, 1.571, 0.000" scale="1.000, 1.000, 1.000"/>
+        <tags>
+          <tag name="hsr_clan_banner_cloth"/>
+        </tags>
+        <components>
+          <meta_mesh_component name="sturgia_shield_a"/>
+        </components>
+      </game_entity>
+    </children>
+  </game_entity>
+</prefabs>

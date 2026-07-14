@@ -1,0 +1,2360 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Placeables>
+  <Placeable>
+    <menuCategory>Misc</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_herohangout_name}Hero Hangout</displayName>
+    <description>{=homestead_placeable_herohangout_desc}The homestead's leader, your spouse, some companions, and guards will spawn here.</description>
+    <prefabName>homestead_hero_hangout</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>2</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+  
+  <Placeable>
+    <menuCategory>Housing</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_bigtent_name}Big Tent</displayName>
+    <description>{=homestead_placeable_bigtent_desc}big rectangle place to stay.</description>
+    <prefabName>homestead_tent_big</prefabName>
+    <buildPointsRequired>3</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>6</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>3</amount>
+      </Item>
+      <Item>
+        <name>linen</name>
+        <amount>20</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+  
+  <Placeable>
+    <menuCategory>Housing</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_vlandiantentsmall_name}Vlandian Tent Small</displayName>
+    <description>{=homestead_placeable_vlandiantentsmall_desc}small tent thing. still cozy.</description>
+    <prefabName>homestead_vlandian_tent_small</prefabName>
+    <buildPointsRequired>1</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>2</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>1</amount>
+      </Item>
+      <Item>
+        <name>linen</name>
+        <amount>3</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+  
+  <Placeable>
+    <menuCategory>Housing</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_vlandiantent_name}Vlandian Tent</displayName>
+    <description>{=homestead_placeable_vlandiantent_desc}Big tent thing. Kind of cozy.</description>
+    <prefabName>homestead_vlandian_tent</prefabName>
+    <buildPointsRequired>3</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>5</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>3</amount>
+      </Item>
+      <Item>
+        <name>linen</name>
+        <amount>16</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+  
+  <Placeable>
+    <menuCategory>Housing</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_khuzaityurt_name}Khuzait Yurt</displayName>
+    <description>{=homestead_placeable_khuzaityurt_desc}Big tent thing. Kind of cozy.</description>
+    <prefabName>homestead_khuzait_yurt</prefabName>
+    <buildPointsRequired>3</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>5</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>3</amount>
+      </Item>
+      <Item>
+        <name>hides</name>
+        <amount>20</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+  
+  <Placeable>
+    <menuCategory>Leisure</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_musiciantent_name}Musician Tent</displayName>
+    <description>{=homestead_placeable_musiciantent_desc}good tunes.</description>
+    <prefabName>homestead_musician_tent</prefabName>
+    <buildPointsRequired>3</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>6</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>1</amount>
+      </Item>
+      <Item>
+        <name>linen</name>
+        <amount>3</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+  
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_butcherstent_name}Butcher's Tent</displayName>
+    <description>{=homestead_placeable_butcherstent_desc}Produces meat or hides from animals and productivity in your homestead.</description>
+    <prefabName>homestead_butchers_tent</prefabName>
+    <buildPointsRequired>3</buildPointsRequired>
+    <productivityIncrease>2</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ProduceItems>
+      <ProduceItem>
+        <name>meat|hides</name>
+        <amount>4</amount>
+        <dailyChance>1.00</dailyChance>
+        <RequiredItems>
+          <RequiredItem>
+            <name>cow</name>
+            <amount>1</amount>
+          </RequiredItem>
+        </RequiredItems>
+      </ProduceItem>
+      <ProduceItem>
+        <name>meat|hides</name>
+        <amount>3</amount>
+        <dailyChance>1.00</dailyChance>
+        <RequiredItems>
+          <RequiredItem>
+            <name>hog|sheep</name>
+            <amount>1</amount>
+          </RequiredItem>
+        </RequiredItems>
+      </ProduceItem>
+      <ProduceItem>
+        <name>meat</name>
+        <amount>1</amount>
+        <dailyChance>1.00</dailyChance>
+        <RequiredItems>
+          <RequiredItem>
+            <name>chicken</name>
+            <amount>1</amount>
+          </RequiredItem>
+        </RequiredItems>
+      </ProduceItem>
+    </ProduceItems>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>6</amount>
+      </Item>
+      <Item>
+        <name>hides</name>
+        <amount>10</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+  
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_hogfarm_name}Hog Farm</displayName>
+    <description>{=homestead_placeable_hogfarm_desc}Produces hogs and productivity in your homestead.</description>
+    <prefabName>homestead_hog_farm</prefabName>
+    <buildPointsRequired>3</buildPointsRequired>
+    <productivityIncrease>2</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ProduceItems>
+      <ProduceItem>
+        <name>meat</name>
+        <amount>1</amount>
+        <dailyChance>1.00</dailyChance>
+      </ProduceItem>
+      <ProduceItem>
+        <name>hog</name>
+        <amount>1</amount>
+        <dailyChance>0.33</dailyChance>
+      </ProduceItem>
+    </ProduceItems>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>10</amount>
+      </Item>
+      <Item>
+        <name>hog</name>
+        <amount>4</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+  
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_chickencoop_name}Chicken Coop</displayName>
+    <description>{=homestead_placeable_chickencoop_desc}A small henhouse. Your resident flock provides a steady daily supply of meat from eggs and culled birds.</description>
+    <prefabName>homestead_chicken_coop</prefabName>
+    <buildPointsRequired>3</buildPointsRequired>
+    <productivityIncrease>2</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ProduceItems>
+      <ProduceItem>
+        <name>meat</name>
+        <amount>1</amount>
+        <dailyChance>1.00</dailyChance>
+      </ProduceItem>
+      <ProduceItem>
+        <name>chicken</name>
+        <amount>1</amount>
+        <dailyChance>0.33</dailyChance>
+      </ProduceItem>
+    </ProduceItems>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>8</amount>
+      </Item>
+      <Item>
+        <name>grain</name>
+        <amount>4</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_sheepfarm_name}Sheep Farm</displayName>
+    <description>{=homestead_placeable_sheepfarm_desc}Produces meat, sheep, wool, and productivity in your homestead.</description>
+    <prefabName>homestead_sheep_farm</prefabName>
+    <buildPointsRequired>3</buildPointsRequired>
+    <productivityIncrease>2</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ProduceItems>
+      <ProduceItem>
+        <name>wool</name>
+        <amount>1</amount>
+        <dailyChance>1.00</dailyChance>
+      </ProduceItem>
+      <ProduceItem>
+        <name>sheep</name>
+        <amount>1</amount>
+        <dailyChance>0.33</dailyChance>
+      </ProduceItem>
+    </ProduceItems>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>10</amount>
+      </Item>
+      <Item>
+        <name>sheep</name>
+        <amount>4</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+  
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_well_name}Well</displayName>
+    <description>{=homestead_placeable_well_desc}well is good. good well.</description>
+    <prefabName>homestead_well</prefabName>
+    <buildPointsRequired>1</buildPointsRequired>
+    <productivityIncrease>1</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>clay</name>
+        <amount>20</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+  
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_flaxfarm_name}Flax Farm</displayName>
+    <description>{=homestead_placeable_flaxfarm_desc}Produces flax and productivity in your homestead.</description>
+    <prefabName>homestead_flax_farm</prefabName>
+    <buildPointsRequired>3</buildPointsRequired>
+    <productivityIncrease>3</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ProduceItems>
+      <ProduceItem>
+        <name>flax</name>
+        <amount>3</amount>
+        <dailyChance>1.00</dailyChance>
+      </ProduceItem>
+    </ProduceItems>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>10</amount>
+      </Item>
+      <Item>
+        <name>flax</name>
+        <amount>5</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_grapefarm_name}Grape Farm</displayName>
+    <description>{=homestead_placeable_grapefarm_desc}A small vineyard producing fresh grapes daily.</description>
+    <prefabName>homestead_grape_farm</prefabName>
+    <buildPointsRequired>3</buildPointsRequired>
+    <productivityIncrease>2</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>1</leisureIncrease>
+    <ProduceItems>
+      <ProduceItem>
+        <name>grape</name>
+        <amount>3</amount>
+        <dailyChance>1.00</dailyChance>
+      </ProduceItem>
+    </ProduceItems>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>10</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+  
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_flaxweaver_name}Flax Weaver</displayName>
+    <description>{=homestead_placeable_flaxweaver_desc}Converts flax into linen using a loom and spinning wheel. Requires flax in the homestead inventory.</description>
+    <prefabName>homestead_flax_weaver</prefabName>
+    <buildPointsRequired>2</buildPointsRequired>
+    <productivityIncrease>2</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ProduceItems>
+	<ProduceItem>
+        <name>linen</name>
+        <amount>3</amount>
+        <dailyChance>1.00</dailyChance>
+        <RequiredItems>
+          <RequiredItem>
+            <name>flax</name>
+            <amount>3</amount>
+          </RequiredItem>
+        </RequiredItems>
+      </ProduceItem>
+    </ProduceItems>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>8</amount>
+      </Item>
+      <Item>
+        <name>tools</name>
+        <amount>1</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+	
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_grainfarm_name}Grain Farm</displayName>
+    <description>{=homestead_placeable_grainfarm_desc}Produces grain and productivity in your homestead.</description>
+    <prefabName>homestead_grain_farm</prefabName>
+    <buildPointsRequired>3</buildPointsRequired>
+    <productivityIncrease>3</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ProduceItems>
+      <ProduceItem>
+        <name>grain</name>
+        <amount>3</amount>
+        <dailyChance>1.00</dailyChance>
+      </ProduceItem>
+    </ProduceItems>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>10</amount>
+      </Item>
+      <Item>
+        <name>grain</name>
+        <amount>5</amount>
+      </Item>
+    </ItemRequirements>
+  
+  </Placeable>
+    <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_claygatherer_name}Clay Gatherer</displayName>
+    <description>{=homestead_placeable_claygatherer_desc}A clay pit with pickaxes for gathering clay from the earth.</description>
+    <prefabName>homestead_clay_gatherer</prefabName>
+    <buildPointsRequired>2</buildPointsRequired>
+    <productivityIncrease>2</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ProduceItems>
+      <ProduceItem>
+        <name>clay</name>
+        <amount>3</amount>
+        <dailyChance>1.00</dailyChance>
+      </ProduceItem>
+    </ProduceItems>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>8</amount>
+      </Item>
+      <Item>
+        <name>tools</name>
+        <amount>1</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable> 
+  
+  <Placeable>
+    <menuCategory>Light</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_standingtorch_name}Standing Torch</displayName>
+    <description>{=homestead_placeable_generallight_desc}Light source.</description>
+    <prefabName>torch_long_d2</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>1</amount>
+      </Item>
+      <Item>
+        <name>charcoal</name>
+        <amount>1</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+  
+  <Placeable>
+    <menuCategory>Misc</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_prisoncage_name}Prison Cage</displayName>
+    <description>{=homestead_placeable_prisoncage_desc}A wooden holding cage for keeping up to 2 prisoners contained inside the homestead.</description>
+    <prefabName>homestead_cage_wooden</prefabName>
+    <buildPointsRequired>1</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>4</amount>
+      </Item>
+      <Item>
+        <name>tools</name>
+        <amount>1</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Misc</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_dirtmound_name}Dirt Mound</displayName>
+    <description>{=homestead_placeable_dirtmound_desc}A small mound of raised earth. Purely decorative.</description>
+    <prefabName>homestead_native_dirt_mound</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Misc</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_buildingplot_name}Large Building Plot</displayName>
+    <description>{=homestead_placeable_buildingplot_desc}A wide, flat earthen pad. Purely a foundation — lay it down to give yourself a level surface to place other buildings on.</description>
+    <prefabName>homestead_large_building_plot</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Light</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_shorttorch_name}Short Torch</displayName>
+    <description>{=homestead_placeable_generallight_desc}Light source.</description>
+    <prefabName>torch_short_a</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item><name>hardwood</name><amount>1</amount></Item>
+      <Item><name>charcoal</name><amount>1</amount></Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Light</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_tablecandle_name}Table Candle</displayName>
+    <description>{=homestead_placeable_generallight_desc}Light source.</description>
+    <prefabName>torch_table_a_fire</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item><name>charcoal</name><amount>1</amount></Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Light</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_walltorch_name}Wall Torch</displayName>
+    <description>{=homestead_placeable_generallight_desc}Light source.</description>
+    <prefabName>torch_wall_b</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item><name>hardwood</name><amount>1</amount></Item>
+      <Item><name>charcoal</name><amount>1</amount></Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Misc</menuCategory>
+    <tierRequired>2</tierRequired>
+    <displayName>{=homestead_placeable_guardhouse_name}Guardhouse</displayName>
+    <description>{=homestead_placeable_guardhouse_desc}A guarded holding yard for keeping up to 10 prisoners contained inside a higher-tier homestead.</description>
+    <prefabName>homestead_prison_guardhouse</prefabName>
+    <buildPointsRequired>4</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>14</amount>
+      </Item>
+      <Item>
+        <name>tools</name>
+        <amount>2</amount>
+      </Item>
+      <Item>
+        <name>linen</name>
+        <amount>10</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Misc</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_archerytarget_name}Archery Target</displayName>
+    <description>{=homestead_placeable_decorative_desc}Decorative.</description>
+    <prefabName>archery_target</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>2</amount>
+      </Item>
+      <Item>
+        <name>linen</name>
+        <amount>4</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+  
+  <Placeable>
+    <menuCategory>Misc</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_barnfencea_name}Barn Fence A</displayName>
+    <description>{=homestead_placeable_decorative_desc}Decorative.</description>
+    <prefabName>homestead_native_fence_a</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>2</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+  
+  <Placeable>
+    <menuCategory>Misc</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_barnfenceb_name}Barn Fence B</displayName>
+    <description>{=homestead_placeable_decorative_desc}Decorative.</description>
+    <prefabName>homestead_native_fence_b</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>2</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+  
+  <Placeable>
+    <menuCategory>Misc</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_barnfencec_name}Barn Fence C</displayName>
+    <description>{=homestead_placeable_decorative_desc}Decorative.</description>
+    <prefabName>homestead_native_fence_c</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>2</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+  
+  <Placeable>
+    <menuCategory>Misc</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_barnfenced_name}Barn Fence D</displayName>
+    <description>{=homestead_placeable_decorative_desc}Decorative.</description>
+    <prefabName>homestead_native_fence_d</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>2</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+  
+  <Placeable>
+    <menuCategory>Misc</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_barnfencee_name}Barn Fence E</displayName>
+    <description>{=homestead_placeable_decorative_desc}Decorative.</description>
+    <prefabName>homestead_native_fence_e</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>2</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Misc</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_empirefencea_name}Empire Fence A</displayName>
+    <description>{=homestead_placeable_decorative_desc}Decorative.</description>
+    <prefabName>homestead_native_empire_fence_a</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>2</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Misc</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_empirefenceb_name}Empire Fence B</displayName>
+    <description>{=homestead_placeable_decorative_desc}Decorative.</description>
+    <prefabName>homestead_native_empire_fence_b</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>2</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Misc</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_arabianfence_name}Aserai Arena Fence</displayName>
+    <description>{=homestead_placeable_decorative_desc}Decorative.</description>
+    <prefabName>homestead_native_arabian_fence</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>2</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Misc</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_genericfencef_name}Simple Fence F</displayName>
+    <description>{=homestead_placeable_decorative_desc}Decorative.</description>
+    <prefabName>homestead_native_generic_fence_f</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>2</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Misc</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_genericfenceg_name}Stone Fence G</displayName>
+    <description>{=homestead_placeable_decorative_desc}Decorative.</description>
+    <prefabName>homestead_native_generic_fence_g</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>2</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Misc</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_platformfencea_name}Platform Fence A</displayName>
+    <description>{=homestead_placeable_decorative_desc}Decorative.</description>
+    <prefabName>homestead_native_platform_fence_a</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>2</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Misc</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_platformfenceb_name}Platform Fence B</displayName>
+    <description>{=homestead_placeable_decorative_desc}Decorative.</description>
+    <prefabName>homestead_native_platform_fence_b</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>2</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_supplywagon_name}Supply Wagon</displayName>
+    <description>{=homestead_placeable_supplywagon_desc}A sturdy wagon for hauling camp supplies and materials.</description>
+    <prefabName>homestead_native_supply_wagon</prefabName>
+    <buildPointsRequired>2</buildPointsRequired>
+    <productivityIncrease>1</productivityIncrease>
+    <spaceIncrease>1</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>4</amount>
+      </Item>
+      <Item>
+        <name>tools</name>
+        <amount>1</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_worktable_name}Work Table</displayName>
+    <description>{=homestead_placeable_worktable_desc}A large table for sorting, cutting, and camp work.</description>
+    <prefabName>homestead_native_work_table</prefabName>
+    <buildPointsRequired>1</buildPointsRequired>
+    <productivityIncrease>1</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>3</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_butchertable_name}Cutting Table</displayName>
+    <description>{=homestead_placeable_butchertable_desc}A smaller utility table for food prep and rough camp work.</description>
+    <prefabName>homestead_native_cutting_table</prefabName>
+    <buildPointsRequired>1</buildPointsRequired>
+    <productivityIncrease>1</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>2</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Leisure</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_logbench_name}Log Bench</displayName>
+    <description>{=homestead_placeable_logbench_desc}A simple bench that makes the camp feel a bit more lived in.</description>
+    <prefabName>homestead_native_log_bench</prefabName>
+    <buildPointsRequired>1</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>2</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>1</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Housing</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_markettent_name}Market Tent</displayName>
+    <description>{=homestead_placeable_markettent_desc}A light street tent that works well as a cheap sleeping shelter.</description>
+    <prefabName>homestead_native_market_tent</prefabName>
+    <buildPointsRequired>2</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>3</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>2</amount>
+      </Item>
+      <Item>
+        <name>linen</name>
+        <amount>8</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Housing</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_paintedtent_name}Painted Tent</displayName>
+    <description>{=homestead_placeable_paintedtent_desc}A painted canvas tent that adds shelter and a little style.</description>
+    <prefabName>homestead_native_painted_tent</prefabName>
+    <buildPointsRequired>2</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>3</spaceIncrease>
+    <leisureIncrease>2</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>2</amount>
+      </Item>
+      <Item>
+        <name>linen</name>
+        <amount>10</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Housing</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_canopy_name}Canopy Tent</displayName>
+    <description>{=homestead_placeable_canopy_desc}A compact canopy that gives a little extra covered space.</description>
+    <prefabName>homestead_native_canopy_tent</prefabName>
+    <buildPointsRequired>1</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>2</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>1</amount>
+      </Item>
+      <Item>
+        <name>linen</name>
+        <amount>5</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Housing</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_desertshelter_name}Desert Shelter</displayName>
+    <description>{=homestead_placeable_desertshelter_desc}A larger desert-style shelter with enough room for a small family.</description>
+    <prefabName>homestead_native_desert_shelter</prefabName>
+    <buildPointsRequired>3</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>5</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>3</amount>
+      </Item>
+      <Item>
+        <name>linen</name>
+        <amount>12</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_lumberjackcamp_name}Lumberjack Camp</displayName>
+    <description>{=homestead_placeable_lumberjackcamp_desc}A rough timber camp with work space and stacked logs. Adds productivity and gives workers a place to gather.</description>
+    <prefabName>homestead_lumberjack_camp</prefabName>
+    <buildPointsRequired>2</buildPointsRequired>
+    <productivityIncrease>1</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ProduceItems>
+      <ProduceItem>
+        <name>hardwood</name>
+        <amount>3</amount>
+        <dailyChance>1.00</dailyChance>
+      </ProduceItem>
+    </ProduceItems>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>8</amount>
+      </Item>
+      <Item>
+        <name>tools</name>
+        <amount>1</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Leisure</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_campfire_name}Campfire</displayName>
+    <description>{=homestead_placeable_campfire_desc}A small communal fire that adds leisure and gives people somewhere to stand around.</description>
+    <prefabName>homestead_campfire</prefabName>
+    <buildPointsRequired>1</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>3</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>2</amount>
+      </Item>
+      <Item>
+        <name>charcoal</name>
+        <amount>1</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Leisure</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_tablebenches_name}Table with Benches</displayName>
+    <description>{=homestead_placeable_tablebenches_desc}A shared table with two benches. Adds leisure and provides sitting spots for homestead residents.</description>
+    <prefabName>homestead_table_with_benches</prefabName>
+    <buildPointsRequired>1</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>3</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>4</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Leisure</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_fieldkitchen_name}Field Kitchen</displayName>
+    <description>{=homestead_placeable_fieldkitchen_desc}A bustling cooking camp with stoves, pots, and prep tables. Adds leisure and a little space, and its hot meals draw folk in — boosting hearth growth in the villages your homestead recruits from.</description>
+    <prefabName>homestead_field_kitchen</prefabName>
+    <buildPointsRequired>2</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>1</spaceIncrease>
+    <leisureIncrease>3</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>8</amount>
+      </Item>
+      <Item>
+        <name>linen</name>
+        <amount>4</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+  <Placeable>
+    <menuCategory>Housing</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_aseraitent_name}Aserai Street Tent</displayName>
+    <description>{=homestead_placeable_aseraitent_desc}A compact Aserai tent that adds a little sheltered living space.</description>
+    <prefabName>homestead_native_aserai_tent</prefabName>
+    <buildPointsRequired>2</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>3</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item><name>hardwood</name><amount>2</amount></Item>
+      <Item><name>linen</name><amount>8</amount></Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Housing</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_battaniatent_name}Battanian Street Tent</displayName>
+    <description>{=homestead_placeable_battaniatent_desc}A Battanian shelter that adds covered sleeping space and visual variety.</description>
+    <prefabName>homestead_native_battania_tent</prefabName>
+    <buildPointsRequired>2</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>3</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item><name>hardwood</name><amount>2</amount></Item>
+      <Item><name>hides</name><amount>8</amount></Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Housing</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_khuzaittent_name}Khuzait Tent</displayName>
+    <description>{=homestead_placeable_khuzaittent_desc}A steppe-style Khuzait tent with enough space for a growing homestead.</description>
+    <prefabName>homestead_native_khuzait_tent</prefabName>
+    <buildPointsRequired>3</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>5</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item><name>hardwood</name><amount>3</amount></Item>
+      <Item><name>hides</name><amount>14</amount></Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Housing</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_sturgiatent_name}Sturgian Village Tent</displayName>
+    <description>{=homestead_placeable_sturgiatent_desc}A sturdy northern tent that gives the homestead more room and a rough frontier feel.</description>
+    <prefabName>homestead_native_sturgia_tent</prefabName>
+    <buildPointsRequired>3</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>5</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item><name>hardwood</name><amount>4</amount></Item>
+      <Item><name>linen</name><amount>10</amount></Item>
+      <Item><name>hides</name><amount>4</amount></Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_handcart_name}Hand Cart</displayName>
+    <description>{=homestead_placeable_handcart_desc}A small cart for moving supplies around the homestead.</description>
+    <prefabName>homestead_native_hand_cart</prefabName>
+    <buildPointsRequired>1</buildPointsRequired>
+    <productivityIncrease>1</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item><name>hardwood</name><amount>3</amount></Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_cattlepen_name}Cattle Pen</displayName>
+    <description>{=homestead_placeable_cattlepen_desc}A simple livestock pen. Produces hides daily and occasionally breeds a cow. Adds productivity.</description>
+    <prefabName>homestead_cattle_pen</prefabName>
+    <buildPointsRequired>3</buildPointsRequired>
+    <productivityIncrease>2</productivityIncrease>
+    <spaceIncrease>1</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ProduceItems>
+      <ProduceItem>
+        <name>hides</name>
+        <amount>1</amount>
+        <dailyChance>1.00</dailyChance>
+      </ProduceItem>
+      <ProduceItem>
+        <name>cow</name>
+        <amount>1</amount>
+        <dailyChance>0.33</dailyChance>
+      </ProduceItem>
+    </ProduceItems>
+    <ItemRequirements>
+      <Item><name>hardwood</name><amount>8</amount></Item>
+      <Item><name>tools</name><amount>1</amount></Item>
+      <Item><name>grain</name><amount>6</amount></Item>
+      <Item><name>cow</name><amount>2</amount></Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Misc</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_winecart_name}Empty Trade Cart</displayName>
+    <description>{=homestead_placeable_winecart_desc}A decorative empty trade cart for making the homestead look more lived in.</description>
+    <prefabName>homestead_native_wine_cart</prefabName>
+    <buildPointsRequired>1</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item><name>hardwood</name><amount>2</amount></Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_horsepaddock_name}Horse Paddock</displayName>
+    <description>{=homestead_placeable_horsepaddock_desc}A small horse area with barriers and a trough. Adds productivity and a little extra working space.</description>
+    <prefabName>homestead_native_horse_paddock</prefabName>
+    <buildPointsRequired>3</buildPointsRequired>
+    <productivityIncrease>2</productivityIncrease>
+    <spaceIncrease>1</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item><name>hardwood</name><amount>8</amount></Item>
+      <Item><name>tools</name><amount>1</amount></Item>
+      <Item><name>grain</name><amount>6</amount></Item>
+      <Item><name>sumpter_horse</name><amount>1</amount></Item>
+    </ItemRequirements>
+  </Placeable>
+  <Placeable>
+    <menuCategory>Housing</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_empiretenta_name}Empire Street Tent A</displayName>
+    <description>{=homestead_placeable_empiretenta_desc}An Empire street tent that adds covered space and visual variety.</description>
+    <prefabName>homestead_native_empire_tent_02</prefabName>
+    <buildPointsRequired>2</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>3</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>2</amount></Item><Item><name>linen</name><amount>8</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Housing</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_empiretentb_name}Empire Street Tent B</displayName>
+    <description>{=homestead_placeable_empiretentb_desc}A second Empire tent style for compact housing.</description>
+    <prefabName>homestead_native_empire_tent_03</prefabName>
+    <buildPointsRequired>2</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>3</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>2</amount></Item><Item><name>linen</name><amount>8</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Housing</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_empiretentc_name}Empire Street Tent C</displayName>
+    <description>{=homestead_placeable_empiretentc_desc}A larger Empire canopy tent for sheltered homestead living.</description>
+    <prefabName>homestead_native_empire_tent_04</prefabName>
+    <buildPointsRequired>2</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>3</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>2</amount></Item><Item><name>linen</name><amount>8</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Housing</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_khuzaittentb_name}Khuzait Tent B</displayName>
+    <description>{=homestead_placeable_khuzaittentb_desc}A second Khuzait tent style for steppe-flavored housing.</description>
+    <prefabName>homestead_native_khuzait_tent_b</prefabName>
+    <buildPointsRequired>3</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>5</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>3</amount></Item><Item><name>hides</name><amount>14</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Housing</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_khuzaitinteriorb_name}Khuzait Interior Tent B</displayName>
+    <description>{=homestead_placeable_khuzaitinteriorb_desc}A roomy Khuzait interior tent suitable for a larger household.</description>
+    <prefabName>homestead_native_khuzait_interior_tent_b</prefabName>
+    <buildPointsRequired>3</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>5</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>4</amount></Item><Item><name>hides</name><amount>18</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Housing</menuCategory>
+    <tierRequired>2</tierRequired>
+    <displayName>{=homestead_placeable_grandbazaartent_name}Khuzait Grand Bazaar Tent</displayName>
+    <description>{=homestead_placeable_grandbazaartent_desc}A large decorative market tent that adds space and a little prestige.</description>
+    <prefabName>homestead_native_khuzait_grandbazaar_tent</prefabName>
+    <buildPointsRequired>4</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>6</spaceIncrease>
+    <leisureIncrease>2</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>5</amount></Item><Item><name>linen</name><amount>18</amount></Item><Item><name>hides</name><amount>8</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Misc</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_barrelstack_name}Barrel Stack</displayName>
+    <description>{=homestead_placeable_barrelstack_desc}A decorative stack of storage barrels.</description>
+    <prefabName>homestead_native_barrel_stack</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>2</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_storagecorner_name}Storage Corner</displayName>
+    <description>{=homestead_placeable_storagecorner_desc}A small cluster of barrels, buckets, and pottery for keeping supplies organized.</description>
+    <prefabName>homestead_native_storage_corner</prefabName>
+    <buildPointsRequired>1</buildPointsRequired>
+    <productivityIncrease>1</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>3</amount></Item><Item><name>pottery</name><amount>1</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Leisure</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_taverntable_name}Tavern Table</displayName>
+    <description>{=homestead_placeable_taverntable_desc}A dressed table with mugs, plates, and bowls. Adds leisure without needing tiny clutter placement.</description>
+    <prefabName>homestead_native_tavern_table</prefabName>
+    <buildPointsRequired>1</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>3</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>3</amount></Item><Item><name>pottery</name><amount>1</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_decoratedworktable_name}Decorated Work Table</displayName>
+    <description>{=homestead_placeable_decoratedworktable_desc}A work table dressed with useful camp clutter.</description>
+    <prefabName>homestead_native_decorated_work_table</prefabName>
+    <buildPointsRequired>1</buildPointsRequired>
+    <productivityIncrease>1</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>3</amount></Item><Item><name>pottery</name><amount>1</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_haycart_name}Hay Cart</displayName>
+    <description>{=homestead_placeable_haycart_desc}A hay cart for animal feed and supply hauling.</description>
+    <prefabName>homestead_native_hay_cart</prefabName>
+    <buildPointsRequired>2</buildPointsRequired>
+    <productivityIncrease>1</productivityIncrease>
+    <spaceIncrease>1</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>4</amount></Item><Item><name>grain</name><amount>4</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_watertrough_name}Water Trough</displayName>
+    <description>{=homestead_placeable_watertrough_desc}A simple trough for animals and camp water.</description>
+    <prefabName>homestead_native_water_trough</prefabName>
+    <buildPointsRequired>1</buildPointsRequired>
+    <productivityIncrease>1</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>2</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_hitchingpost_name}Horse Hitching Post</displayName>
+    <description>{=homestead_placeable_hitchingpost_desc}A small horse hitching area for travel and pack animals.</description>
+    <prefabName>homestead_native_hitching_post</prefabName>
+    <buildPointsRequired>2</buildPointsRequired>
+    <productivityIncrease>1</productivityIncrease>
+    <spaceIncrease>1</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>5</amount></Item><Item><name>sumpter_horse</name><amount>1</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Misc</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_flowerpottery_name}Flower and Pottery Decor</displayName>
+    <description>{=homestead_placeable_flowerpottery_desc}A decorative cluster of flowers and pottery for visual appeal.</description>
+    <prefabName>homestead_native_flower_pottery_decor</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>pottery</name><amount>1</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Defense</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_arrowbarrel_name}Arrow Barrel</displayName>
+    <description>{=homestead_placeable_arrowbarrel_desc}A siege arrow barrel. In battle, it should let defenders with bows or crossbows refill arrows and bolts.</description>
+    <prefabName>arrow_barrel</prefabName>
+    <buildPointsRequired>1</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>3</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Light</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_clanbanner_name}Clan Banner</displayName>
+    <description>{=homestead_placeable_clanbanner_desc}A large banner bearing your clan's colors and device, flying proudly over the homestead.</description>
+    <prefabName>homestead_clan_banner_flag</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>linen</name><amount>1</amount></Item><Item><name>hardwood</name><amount>1</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Light</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_clanbannerpole_name}Clan Banner (Pole)</displayName>
+    <description>{=homestead_placeable_clanbannerpole_desc}A clan banner mounted on a standing flagpole.</description>
+    <prefabName>homestead_clan_banner_flagpole</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>linen</name><amount>1</amount></Item><Item><name>hardwood</name><amount>1</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Light</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_clanshield_name}Clan Shield</displayName>
+    <description>{=homestead_placeable_clanshield_desc}A decorative shield bearing your clan's device, mounted for display.</description>
+    <prefabName>homestead_clan_banner_shield</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>linen</name><amount>1</amount></Item><Item><name>hardwood</name><amount>1</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Defense</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_warbanner_name}War Banner</displayName>
+    <description>{=homestead_placeable_warbanner_desc}A battlefield banner for rallying defenders. During homestead battles, friendly troops near it gain morale and slowly recover health.</description>
+    <prefabName>homestead_war_banner_big</prefabName>
+    <buildPointsRequired>1</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <maxBuildCount>1</maxBuildCount>
+    <ItemRequirements><Item><name>hardwood</name><amount>2</amount></Item><Item><name>linen</name><amount>2</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Defense</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_trainingfield_name}Training Field</displayName>
+    <description>{=homestead_placeable_trainingfield_desc}A small drill yard where the garrison trains daily. Adds training XP to regular troops and upgrades eligible troops using stored homestead gold and stash items.</description>
+    <prefabName>homestead_training_field</prefabName>
+    <buildPointsRequired>4</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <maxBuildCount>1</maxBuildCount>
+    <ItemRequirements><Item><name>hardwood</name><amount>12</amount></Item><Item><name>tools</name><amount>2</amount></Item><Item><name>linen</name><amount>4</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Leisure</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_medicaltent_name}Medical Tent</displayName>
+    <description>{=homestead_placeable_medicaltent_desc}A staffed recovery tent with beds and basic treatment supplies. Improves morale, speeds wounded recovery, and helps offset AI Influence disease morale penalties when that mod is active.</description>
+    <prefabName>homestead_medical_tent</prefabName>
+    <buildPointsRequired>4</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>1</spaceIncrease>
+    <leisureIncrease>3</leisureIncrease>
+    <medicalCareIncrease>2</medicalCareIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>6</amount></Item><Item><name>linen</name><amount>10</amount></Item><Item><name>hides</name><amount>4</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Defense</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_ballista_name}Defender Ballista</displayName>
+    <description>{=homestead_placeable_ballista_desc}A native siege ballista. In homestead attack battles, it should be usable like the defender ballistas in siege scenes.</description>
+    <prefabName>ballista_b</prefabName>
+    <buildPointsRequired>1</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>12</amount></Item><Item><name>tools</name><amount>2</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Defense</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_sturgiastakes_name}Defensive Stakes</displayName>
+    <description>{=homestead_placeable_sturgiastakes_desc}A low line of sharp wooden stakes for slowing cavalry and shaping the approach to the homestead.</description>
+    <prefabName>sturgia_arena_stakes_a</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>6</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Defense</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_plankwalla_name}Plank Wall A</displayName>
+    <description>{=homestead_placeable_plankwalla_desc}A rough wooden wall section for quick field defenses.</description>
+    <prefabName>castle_plank_wall_a</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>8</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Defense</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_plankwallc_name}Plank Wall C</displayName>
+    <description>{=homestead_placeable_plankwallc_desc}A heavier rough plank wall section for blocking approaches.</description>
+    <prefabName>castle_plank_wall_c</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>8</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Defense</menuCategory>
+    <tierRequired>2</tierRequired>
+    <displayName>{=homestead_placeable_siegebarricadea_name}Siege Barricade A</displayName>
+    <description>{=homestead_placeable_siegebarricadea_desc}A larger siege barricade group for creating a real defensive line.</description>
+    <prefabName>siege_barricade_group_a</prefabName>
+    <buildPointsRequired>1</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>12</amount></Item><Item><name>tools</name><amount>1</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Defense</menuCategory>
+    <tierRequired>2</tierRequired>
+    <displayName>{=homestead_placeable_siegebarricadeb_name}Siege Barricade B</displayName>
+    <description>{=homestead_placeable_siegebarricadeb_desc}A wagon-and-plank barricade group for larger homestead defenses.</description>
+    <prefabName>siege_barricade_group_b</prefabName>
+    <buildPointsRequired>1</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>12</amount></Item><Item><name>tools</name><amount>1</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Defense</menuCategory>
+    <tierRequired>2</tierRequired>
+    <displayName>{=homestead_placeable_battaniaplatform_name}Raised Fighting Platform</displayName>
+    <description>{=homestead_placeable_battaniaplatform_desc}A raised wooden platform useful for archers or siege weapons.</description>
+    <prefabName>battania_platform_a</prefabName>
+    <buildPointsRequired>5</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>14</amount></Item><Item><name>tools</name><amount>2</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Defense</menuCategory>
+    <tierRequired>2</tierRequired>
+    <displayName>{=homestead_placeable_woodenplatform2_name}Large Wooden Platform</displayName>
+    <description>{=homestead_placeable_woodenplatform2_desc}A large standalone wooden platform for elevated defense placement.</description>
+    <prefabName>wooden_platform_2_a</prefabName>
+    <buildPointsRequired>5</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>14</amount></Item><Item><name>tools</name><amount>2</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Defense</menuCategory>
+    <tierRequired>2</tierRequired>
+    <displayName>{=homestead_placeable_stonewall_name}Stone Wall Segment</displayName>
+    <description>{=homestead_placeable_stonewall_desc}A larger stone wall segment for sturdier defensive cover.</description>
+    <prefabName>homestead_stonewall_2b3_scaled</prefabName>
+    <buildPointsRequired>1</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>1</amount></Item><Item><name>clay</name><amount>4</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Defense</menuCategory>
+    <tierRequired>3</tierRequired>
+    <displayName>{=homestead_placeable_battaniawall_name}Tall Defensive Wall</displayName>
+    <description>{=homestead_placeable_battaniawall_desc}A tall Battanian-style wall segment for late homestead defenses.</description>
+    <prefabName>battania_castle_wall_c</prefabName>
+    <buildPointsRequired>1</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>18</amount></Item><Item><name>tools</name><amount>3</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>3</tierRequired>
+    <displayName>{=homestead_placeable_smithy_name}Smithy</displayName>
+    <description>{=homestead_placeable_smithy_desc}A working smithy. Produces one set of tools daily.</description>
+    <prefabName>homestead_smithy</prefabName>
+    <buildPointsRequired>4</buildPointsRequired>
+    <productivityIncrease>2</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <maxBuildCount>1</maxBuildCount>
+    <ProduceItems>
+      <ProduceItem>
+        <name>tools</name>
+        <amount>1</amount>
+        <dailyChance>1.0</dailyChance>
+      </ProduceItem>
+    </ProduceItems>
+    <ItemRequirements><Item><name>hardwood</name><amount>12</amount></Item><Item><name>tools</name><amount>3</amount></Item><Item><name>iron</name><amount>8</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>3</tierRequired>
+    <displayName>{=homestead_placeable_stables_name}Horse Stable</displayName>
+    <description>{=homestead_placeable_stables_desc}A stable for raising and keeping horses. Gather a founding herd to attract a Stable Master, who will breed mounts and arrange horse races.</description>
+    <prefabName>homestead_stables</prefabName>
+    <buildPointsRequired>4</buildPointsRequired>
+    <productivityIncrease>2</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>2</leisureIncrease>
+    <maxBuildCount>1</maxBuildCount>
+    <ProduceItems>
+      <ProduceItem>
+        <name>mule|sumpter_horse</name>
+        <amount>1</amount>
+        <dailyChance>0.3</dailyChance>
+      </ProduceItem>
+    </ProduceItems>
+    <ItemRequirements><Item><name>hardwood</name><amount>14</amount></Item><Item><name>tools</name><amount>3</amount></Item><Item><name>iron</name><amount>4</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Defense</menuCategory>
+    <tierRequired>3</tierRequired>
+    <displayName>{=homestead_placeable_watchtower_name}Watchtower</displayName>
+    <description>{=homestead_placeable_watchtower_desc}An elevated watchtower that improves your homestead's defensive posture.</description>
+    <prefabName>homestead_watchtower</prefabName>
+    <buildPointsRequired>2</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>10</amount></Item><Item><name>tools</name><amount>2</amount></Item><Item><name>clay</name><amount>8</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Housing</menuCategory>
+    <tierRequired>3</tierRequired>
+    <displayName>{=homestead_placeable_storehouse_name}Storehouse</displayName>
+    <description>{=homestead_placeable_storehouse_desc}A large barn-style storehouse. Provides substantial troop space for a growing homestead.</description>
+    <prefabName>european_village_barn_a</prefabName>
+    <buildPointsRequired>4</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>6</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>16</amount></Item><Item><name>tools</name><amount>3</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Defense</menuCategory>
+    <tierRequired>3</tierRequired>
+    <displayName>{=homestead_placeable_castlewall_name}High Castle Wall</displayName>
+    <description>{=homestead_placeable_castlewall_desc}A heavy castle wall segment for fully developed homestead defenses.</description>
+    <prefabName>battania_castle_wall_a_l3</prefabName>
+    <buildPointsRequired>1</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>24</amount></Item><Item><name>clay</name><amount>16</amount></Item><Item><name>tools</name><amount>4</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Defense</menuCategory>
+    <tierRequired>3</tierRequired>
+    <displayName>{=homestead_placeable_gatehouse_name}Fortified Gatehouse</displayName>
+    <description>{=homestead_placeable_gatehouse_desc}A large gatehouse capstone for turning a mature homestead into a defensible strongpoint.</description>
+    <prefabName>battania_castle_gatehouse_a_l3</prefabName>
+    <buildPointsRequired>1</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>32</amount></Item><Item><name>clay</name><amount>24</amount></Item><Item><name>tools</name><amount>6</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Housing</menuCategory>
+    <tierRequired>3</tierRequired>
+    <displayName>{=homestead_placeable_commandpavilion_name}Command Pavilion</displayName>
+    <description>{=homestead_placeable_commandpavilion_desc}A large command tent for a settled homestead leader and their retinue.</description>
+    <prefabName>homestead_native_khuzait_grandbazaar_tent</prefabName>
+    <buildPointsRequired>8</buildPointsRequired>
+    <productivityIncrease>1</productivityIncrease>
+    <spaceIncrease>10</spaceIncrease>
+    <leisureIncrease>3</leisureIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>12</amount></Item><Item><name>linen</name><amount>30</amount></Item><Item><name>hides</name><amount>12</amount></Item><Item><name>tools</name><amount>2</amount></Item></ItemRequirements>
+  </Placeable>
+
+
+  <Placeable>
+    <menuCategory>Leisure</menuCategory>
+    <tierRequired>3</tierRequired>
+    <displayName>{=homestead_placeable_mastermedical_name}Master Medical Pavilion</displayName>
+    <description>{=homestead_placeable_mastermedical_desc}An expanded physician's tent that improves care, recovery, and morale in a large homestead.</description>
+    <prefabName>homestead_medical_tent</prefabName>
+    <buildPointsRequired>7</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>2</spaceIncrease>
+    <leisureIncrease>5</leisureIncrease>
+    <medicalCareIncrease>4</medicalCareIncrease>
+    <ItemRequirements><Item><name>hardwood</name><amount>12</amount></Item><Item><name>linen</name><amount>24</amount></Item><Item><name>hides</name><amount>8</amount></Item><Item><name>tools</name><amount>2</amount></Item></ItemRequirements>
+  </Placeable>
+
+  <!-- ═══════════════════════════════════════════════════════
+       STAIRS — MISC CATEGORY (T0, 0 BP, free-place scenery)
+       Both have has_steps physics: agents walk up them properly.
+       wooden_platform_stairs_a  = lighter timber frame
+       wooden_platform_2_stairs_a = heavier timber frame
+       ═══════════════════════════════════════════════════════ -->
+
+  <Placeable>
+    <menuCategory>Misc</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_woodenstairs_name}Wooden Stairs</displayName>
+    <description>{=homestead_placeable_woodenstairs_desc}A set of walkable wooden stairs. Use them to connect platforms, walls, or elevated terrain to ground level.</description>
+    <prefabName>wooden_platform_stairs_a</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item><name>hardwood</name><amount>4</amount></Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Misc</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_heavywoodenstairs_name}Heavy Wooden Stairs</displayName>
+    <description>{=homestead_placeable_heavywoodenstairs_desc}A sturdier, wider staircase built from heavy timber. Pairs well with the large wooden platforms and castle walls.</description>
+    <prefabName>wooden_platform_2_stairs_a</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item><name>hardwood</name><amount>6</amount></Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <!-- ═══════════════════════════════════════════════════════
+       WALKWAYS & RAMPS — DEFENSE CATEGORY
+       All native props_archhitectural.xml assets with confirmed
+       physics. Tier 1 for the ladder (cheap early access),
+       Tier 2 for ramps/platforms/railings (matches existing walls).
+       ═══════════════════════════════════════════════════════ -->
+
+  <!-- Ladder — T1: decorative/utility vertical access, lives in Misc -->
+  <Placeable>
+    <menuCategory>Misc</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_woodenladder_name}Wooden Ladder</displayName>
+    <description>{=homestead_placeable_woodenladder_desc}A simple wooden ladder for climbing to elevated positions. Build early to give defenders access to any raised ground.</description>
+    <prefabName>wooden_platform_ladder_a</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item><name>hardwood</name><amount>4</amount></Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <!-- Platform sections — T2: flat walkway building blocks -->
+  <Placeable>
+    <menuCategory>Defense</menuCategory>
+    <tierRequired>2</tierRequired>
+    <displayName>{=homestead_placeable_smallplatform_name}Small Plank Platform</displayName>
+    <description>{=homestead_placeable_smallplatform_desc}A compact elevated platform section. Stack with ramps and railings to build custom wall walks and fighting positions.</description>
+    <prefabName>wooden_platform_a</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item><name>hardwood</name><amount>4</amount></Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Defense</menuCategory>
+    <tierRequired>2</tierRequired>
+    <displayName>{=homestead_placeable_platformplank_name}Platform Plank</displayName>
+    <description>{=homestead_placeable_platformplank_desc}A single narrow plank for bridging gaps or extending a walkway. The basic unit of any wall walk or catwalk.</description>
+    <prefabName>wooden_platform_plank_a</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item><name>hardwood</name><amount>3</amount></Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <!-- Additional wall variant — T2: fills gap between wall A and C -->
+  <Placeable>
+    <menuCategory>Defense</menuCategory>
+    <tierRequired>2</tierRequired>
+    <displayName>{=homestead_placeable_plankwallb_name}Plank Wall B</displayName>
+    <description>{=homestead_placeable_plankwallb_desc}A medium-height plank wall section. Fills the gap between the light and heavy wall variants for a consistent defensive perimeter.</description>
+    <prefabName>castle_plank_wall_b</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item><name>hardwood</name><amount>8</amount></Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <!-- ═══════════════════════════════════════════════════════
+       NEW PRODUCTIVITY CHAIN BUILDINGS
+       Note: Iron Mine, Salt Works, Silver Mine currently share
+       prefab visuals with existing buildings as placeholders.
+       Custom prefabs are recommended before final release.
+       ═══════════════════════════════════════════════════════ -->
+
+  <!-- TIER 1 — Iron Mine
+       Produces iron passively so the Smithy (T3) can run without
+       constant market trips. 75% daily chance keeps supply tight
+       enough to reward building multiples later. -->
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_ironmine_name}Iron Mine</displayName>
+    <description>{=homestead_placeable_ironmine_desc}A crude mine shaft that extracts iron ore from the earth. Stockpile iron early so your Smithy never sits idle.</description>
+    <prefabName>homestead_iron_mine</prefabName>
+    <buildPointsRequired>3</buildPointsRequired>
+    <productivityIncrease>2</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ProduceItems>
+      <ProduceItem>
+        <name>iron</name>
+        <amount>1</amount>
+        <dailyChance>0.75</dailyChance>
+      </ProduceItem>
+    </ProduceItems>
+    <ItemRequirements>
+      <Item><name>hardwood</name><amount>10</amount></Item>
+      <Item><name>tools</name><amount>2</amount></Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <!-- TIER 1 — Fishery
+       Uses the native hut_c_fishing prefab (confirmed physics).
+       Provides a steady food/trade supply on its own chain, separate
+       from the livestock path. -->
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_fishery_name}Fishery</displayName>
+    <description>{=homestead_placeable_fishery_desc}A small fishing hut with nets and barrels. Provides a reliable daily catch to feed the homestead or sell at market.</description>
+    <prefabName>hut_c_fishing</prefabName>
+    <buildPointsRequired>3</buildPointsRequired>
+    <productivityIncrease>2</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ProduceItems>
+      <ProduceItem>
+        <name>fish</name>
+        <amount>2</amount>
+        <dailyChance>1.00</dailyChance>
+      </ProduceItem>
+    </ProduceItems>
+    <ItemRequirements>
+      <Item><name>hardwood</name><amount>6</amount></Item>
+      <Item><name>tools</name><amount>2</amount></Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <!-- TIER 1 — Salt Works
+       Salt is a valuable trade good. Uses the well prefab to represent
+       a brine spring or shallow evaporation basin. -->
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_saltworks_name}Salt Works</displayName>
+    <description>{=homestead_placeable_saltworks_desc}A brine spring and evaporation setup that draws salt from the ground. Salt trades well and preserves food for the long march.</description>
+    <prefabName>arabian_fountain_a</prefabName>
+    <buildPointsRequired>2</buildPointsRequired>
+    <productivityIncrease>2</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ProduceItems>
+      <ProduceItem>
+        <name>salt</name>
+        <amount>2</amount>
+        <dailyChance>1.00</dailyChance>
+      </ProduceItem>
+    </ProduceItems>
+    <ItemRequirements>
+      <Item><name>hardwood</name><amount>6</amount></Item>
+      <Item><name>clay</name><amount>10</amount></Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <!-- TIER 2 — Pottery Kiln
+       Closes the Clay Gatherer loop: 3 clay in → 2 pottery out.
+       One Clay Gatherer (3/day) feeds exactly one Kiln.
+       Pottery is required by 9 existing placeables, so self-production
+       cuts market dependence significantly.
+       Prefab: fish_smoker_b (stone fire pit, closest kiln visual). -->
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>2</tierRequired>
+    <displayName>{=homestead_placeable_potterykiln_name}Pottery Kiln</displayName>
+    <description>{=homestead_placeable_potterykiln_desc}A stone-built firing kiln that turns raw clay into finished pottery. Requires clay in the homestead stash. Pairs well with a Clay Gatherer.</description>
+    <prefabName>homestead_pottery_kiln</prefabName>
+    <buildPointsRequired>3</buildPointsRequired>
+    <productivityIncrease>3</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ProduceItems>
+      <ProduceItem>
+        <name>pottery</name>
+        <amount>2</amount>
+        <dailyChance>1.00</dailyChance>
+        <RequiredItems>
+          <RequiredItem>
+            <name>clay</name>
+            <amount>3</amount>
+          </RequiredItem>
+        </RequiredItems>
+      </ProduceItem>
+    </ProduceItems>
+    <ItemRequirements>
+      <Item><name>hardwood</name><amount>8</amount></Item>
+      <Item><name>tools</name><amount>1</amount></Item>
+      <Item><name>clay</name><amount>8</amount></Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <!-- TIER 3 — Silver Mine
+       High-value ore extraction. Silver is a prized trade good and
+       feeds the Tier 3 Jeweler's Workshop chain.
+       Prefab: shares clay_gatherer visual for now — custom prefab recommended. -->
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>3</tierRequired>
+    <displayName>{=homestead_placeable_silvermine_name}Silver Mine</displayName>
+    <description>{=homestead_placeable_silvermine_desc}A deep shaft mine that yields raw silver ore. Prized for trade on its own, or refined further by a skilled jeweler.</description>
+    <prefabName>homestead_silver_mine</prefabName>
+    <buildPointsRequired>4</buildPointsRequired>
+    <productivityIncrease>3</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ProduceItems>
+      <ProduceItem>
+        <name>silver</name>
+        <amount>2</amount>
+        <dailyChance>1.00</dailyChance>
+      </ProduceItem>
+    </ProduceItems>
+    <ItemRequirements>
+      <Item><name>hardwood</name><amount>12</amount></Item>
+      <Item><name>tools</name><amount>4</amount></Item>
+      <Item><name>clay</name><amount>8</amount></Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <!-- TIER 3 — Jeweler's Workshop
+       End-game luxury chain closer. Converts 3 silver + 1 tools per day
+       into 1 velvet (the highest-value native trade good).
+       Net value: velvet >> 3 silver, rewarding the full mine→workshop chain. -->
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>3</tierRequired>
+    <displayName>{=homestead_placeable_jewelersworkshop_name}Jeweler's Workshop</displayName>
+    <description>{=homestead_placeable_jewelersworkshop_desc}An artisan's bench where skilled craftspeople refine raw silver into fine ornamental goods and luxury wares. Requires silver and tools from the homestead stash.</description>
+    <prefabName>homestead_silversmith</prefabName>
+    <buildPointsRequired>5</buildPointsRequired>
+    <productivityIncrease>4</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ProduceItems>
+      <ProduceItem>
+        <name>jewelry</name>
+        <amount>1</amount>
+        <dailyChance>1.00</dailyChance>
+        <RequiredItems>
+          <RequiredItem>
+            <name>silver</name>
+            <amount>3</amount>
+          </RequiredItem>
+          <RequiredItem>
+            <name>tools</name>
+            <amount>1</amount>
+          </RequiredItem>
+        </RequiredItems>
+      </ProduceItem>
+    </ProduceItems>
+    <ItemRequirements>
+      <Item><name>hardwood</name><amount>8</amount></Item>
+      <Item><name>tools</name><amount>4</amount></Item>
+      <Item><name>pottery</name><amount>4</amount></Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <!-- TIER 2 — Brewery
+       Mirrors the vanilla brewery workshop: converts grain into beer.
+       Uses the Pictish town house D (pict_town_house_d) as building visual. -->
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>2</tierRequired>
+    <displayName>{=homestead_placeable_brewery_name}Brewery</displayName>
+    <description>{=homestead_placeable_brewery_desc}A working brewery that ferments grain into beer. Beer sells well in any town and keeps your garrison in good spirits. Requires grain in the homestead stash.</description>
+    <prefabName>pict_town_house_d</prefabName>
+    <buildPointsRequired>3</buildPointsRequired>
+    <productivityIncrease>2</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>1</leisureIncrease>
+    <ProduceItems>
+      <ProduceItem>
+        <name>beer</name>
+        <amount>2</amount>
+        <dailyChance>1.00</dailyChance>
+        <RequiredItems>
+          <RequiredItem>
+            <name>grain</name>
+            <amount>2</amount>
+          </RequiredItem>
+        </RequiredItems>
+      </ProduceItem>
+    </ProduceItems>
+    <ItemRequirements>
+      <Item><name>hardwood</name><amount>6</amount></Item>
+      <Item><name>tools</name><amount>2</amount></Item>
+      <Item><name>pottery</name><amount>4</amount></Item>
+    </ItemRequirements>
+  </Placeable>
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>2</tierRequired>
+    <displayName>{=homestead_placeable_winery_name}Winery</displayName>
+    <description>{=homestead_placeable_winery_desc}A facility to press and ferment grapes into wine. Requires grapes in the homestead stash.</description>
+    <prefabName>homestead_winery</prefabName>
+    <buildPointsRequired>3</buildPointsRequired>
+    <productivityIncrease>3</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>1</leisureIncrease>
+    <ProduceItems>
+      <ProduceItem>
+        <name>wine</name>
+        <amount>2</amount>
+        <dailyChance>1.00</dailyChance>
+        <RequiredItems>
+          <RequiredItem>
+            <name>grape</name>
+            <amount>3</amount>
+          </RequiredItem>
+        </RequiredItems>
+      </ProduceItem>
+    </ProduceItems>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>8</amount>
+      </Item>
+      <Item>
+        <name>tools</name>
+        <amount>2</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+
+  <!-- ── Navigation ─────────────────────────────────────────────────────────── -->
+
+  <Placeable>
+    <menuCategory>Navigation</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_navpoint_name}Nav Point</displayName>
+    <description>{=homestead_placeable_navpoint_desc}A flagpole that marks a preferred routing corridor for your troops during battle. Place these in open passages around walls and buildings to guide allies around obstacles more reliably. Hidden during battle by default (toggle in MCM).</description>
+    <prefabName>homestead_nav_point</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+  </Placeable>
+
+  <!-- ── NPC Points (build-mode-only markers; an NPC spawns here doing the tagged action) ───
+       All reuse the flagpole_b_ground visual, tinted per group, and are hidden during normal
+       walk-around (visible only while editing). The <npcAction> is the looping animation played
+       at the point ("WORKER"/"STAND" are code sentinels); tune the act_ strings here without a
+       recompile if any needs adjusting. <npcColor> is any plain_* material (green/red/yellow/blue
+       confirmed working). The flag's facing = the NPC's facing/sitting direction. -->
+
+  <Placeable>
+    <menuCategory>Navigation</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_npc_guard_name}NPC Point: Guard / Stand</displayName>
+    <description>{=homestead_placeable_npc_guard_desc}An NPC stands watch here, facing the flag's direction. Blue. Visible only in build mode.</description>
+    <prefabName>flagpole_b_ground</prefabName>
+    <npcAction>STAND</npcAction>
+    <npcColor>plain_blue</npcColor>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Navigation</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_npc_worker_name}NPC Point: Worker</displayName>
+    <description>{=homestead_placeable_npc_worker_desc}An NPC works here, cycling through farm/craft chores (digging, scything, washing, etc.). Green. Visible only in build mode.</description>
+    <prefabName>flagpole_b_ground</prefabName>
+    <npcAction>WORKER</npcAction>
+    <npcColor>plain_green</npcColor>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Navigation</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_npc_onlooker_name}NPC Point: Onlooker</displayName>
+    <description>{=homestead_placeable_npc_onlooker_desc}An NPC watches and cheers here, facing the flag's direction. Yellow. Visible only in build mode.</description>
+    <prefabName>flagpole_b_ground</prefabName>
+    <npcAction>act_cheer_1</npcAction>
+    <npcColor>plain_yellow</npcColor>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Navigation</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_npc_musician_name}NPC Point: Musician</displayName>
+    <description>{=homestead_placeable_npc_musician_desc}An NPC plays music here, facing the flag's direction. Yellow. Visible only in build mode.</description>
+    <prefabName>flagpole_b_ground</prefabName>
+    <npcAction>act_musician_idle_stand_active</npcAction>
+    <npcColor>plain_yellow</npcColor>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Navigation</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_npc_sit_name}NPC Point: Sit</displayName>
+    <description>{=homestead_placeable_npc_sit_desc}An NPC sits on the ground here, facing the flag's direction. Red. Best placed near a fire, table, or bench. Visible only in build mode.</description>
+    <prefabName>flagpole_b_ground</prefabName>
+    <npcAction>act_conversation_sit_floor_loop</npcAction>
+    <npcColor>plain_red</npcColor>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Navigation</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_npc_lay_name}NPC Point: Rest on Ground</displayName>
+    <description>{=homestead_placeable_npc_lay_desc}An NPC rests seated on the ground here, facing the flag's direction. Red. Best placed near a fire or bedroll. Visible only in build mode.</description>
+    <prefabName>flagpole_b_ground</prefabName>
+    <npcAction>act_sit_idle_on_floor_2</npcAction>
+    <npcColor>plain_red</npcColor>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Navigation</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_racestart_name}Race Start/Finish</displayName>
+    <description>{=homestead_placeable_racestart_desc}Marks the start and finish line of a horse-race track. Place exactly one per track.</description>
+    <prefabName>homestead_race_start</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Navigation</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_racegate_name}Race Gate</displayName>
+    <description>{=homestead_placeable_racegate_desc}A checkpoint gate for a horse-race track. Place several around the loop; racers must pass each in order.</description>
+    <prefabName>homestead_race_gate</prefabName>
+    <buildPointsRequired>0</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+  </Placeable>
+
+
+
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>0</tierRequired>
+    <displayName>{=homestead_placeable_dogkennel_name}Dog Kennel</displayName>
+    <description>{=homestead_placeable_dogkennel_desc}A simple shelter that attracts stray dogs. Provides homestead defense.</description>
+    <prefabName>homestead_dog_kennel</prefabName>
+    <buildPointsRequired>1</buildPointsRequired>
+    <productivityIncrease>1</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>2</leisureIncrease>
+    <ProduceItems>
+      <ProduceItem>
+        <name>dog</name>
+        <amount>1</amount>
+        <dailyChance>1.00</dailyChance>
+      </ProduceItem>
+    </ProduceItems>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>5</amount>
+      </Item>
+      <Item>
+        <name>meat</name>
+        <amount>2</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Productivity</menuCategory>
+    <tierRequired>2</tierRequired>
+    <displayName>{=homestead_placeable_market_name}Market</displayName>
+    <description>{=homestead_placeable_market_desc}A bustling marketplace where merchants sell their wares, increasing the homestead's productivity and wealth.</description>
+    <prefabName>homestead_market</prefabName>
+    <buildPointsRequired>3</buildPointsRequired>
+    <productivityIncrease>2</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>0</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>10</amount>
+      </Item>
+      <Item>
+        <name>linen</name>
+        <amount>10</amount>
+      </Item>
+      <Item>
+        <name>hides</name>
+        <amount>10</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Leisure</menuCategory>
+    <tierRequired>1</tierRequired>
+    <displayName>{=homestead_placeable_ambassadorhall_name}Ambassador's Hall</displayName>
+    <description>{=homestead_placeable_ambassadorhall_desc}A dignified hall for receiving guests and conducting diplomacy. Your Ambassador will work to improve relations with nearby lords, settlement notables, and visiting caravans.</description>
+    <prefabName>homestead_ambasador_hall</prefabName>
+    <buildPointsRequired>3</buildPointsRequired>
+    <productivityIncrease>1</productivityIncrease>
+    <spaceIncrease>0</spaceIncrease>
+    <leisureIncrease>2</leisureIncrease>
+    <ItemRequirements>
+      <Item>
+        <name>clay</name>
+        <amount>5</amount>
+      </Item>
+      <Item>
+        <name>hardwood</name>
+        <amount>5</amount>
+      </Item>
+      <Item>
+        <name>tools</name>
+        <amount>3</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+
+  <Placeable>
+    <menuCategory>Leisure</menuCategory>
+    <tierRequired>2</tierRequired>
+    <displayName>{=homestead_placeable_tavern_name}Tavern</displayName>
+    <description>{=homestead_placeable_tavern_desc}A sprawling barn-and-courtyard tavern managed by your Tavern Keeper. Increases leisure for the garrison and draws travellers to the homestead. The Tavern Keeper spawns inside — speaking to them from the homestead menu will bring you inside as well.</description>
+    <prefabName>homestead_tavern</prefabName>
+    <buildPointsRequired>4</buildPointsRequired>
+    <productivityIncrease>0</productivityIncrease>
+    <spaceIncrease>2</spaceIncrease>
+    <leisureIncrease>2</leisureIncrease>
+    <maxBuildCount>1</maxBuildCount>
+    <ItemRequirements>
+      <Item>
+        <name>hardwood</name>
+        <amount>15</amount>
+      </Item>
+      <Item>
+        <name>linen</name>
+        <amount>8</amount>
+      </Item>
+      <Item>
+        <name>tools</name>
+        <amount>4</amount>
+      </Item>
+    </ItemRequirements>
+  </Placeable>
+</Placeables>

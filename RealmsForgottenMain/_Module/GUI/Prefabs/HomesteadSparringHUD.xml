@@ -1,0 +1,140 @@
+<Prefab>
+  <Constants>
+  </Constants>
+
+  <Window>
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+      <Children>
+
+        <!-- ═════════════════════════════════════════════════════════
+             Port of the proven BloodGamesHUD.xml (our Blood Games mod) for the
+             homestead sparring matches — upper-left combatant stats panel.
+
+             Health colour brackets (inline Brush.FontColor #RRGGBBAA):
+               ≥ 80 %  — white   (default, no override)
+               31-79 % — yellow  #FFD700FF
+                1-30 % — orange  #FF8000FF
+                   0 % — red     #C70A0AFF
+             ═════════════════════════════════════════════════════ -->
+        <BrushWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                     HorizontalAlignment="Left" VerticalAlignment="Top"
+                     MarginLeft="60" MarginTop="60"
+                     Brush="Frame1Brush" RenderLate="true">
+          <Children>
+            <ListPanel WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren"
+                       SuggestedWidth="810"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                       LayoutImp.LayoutMethod="VerticalTopToBottom"
+                       MarginLeft="22" MarginRight="22" MarginTop="14" MarginBottom="14">
+              <Children>
+
+                <!-- 1. TITLE -->
+                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                            HorizontalAlignment="Center"
+                            Text="@TitleText"
+                            Brush.FontSize="46"
+                            Brush.FontColor="#C7900AFF"
+                            Brush.TextHorizontalAlignment="Center" />
+
+                <!-- 2. Separator -->
+                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                            HorizontalAlignment="Center"
+                            Text="—————————————————————————————————————————————————"
+                            Brush.FontSize="16"
+                            Brush.TextHorizontalAlignment="Center" />
+
+                <!-- 3. Current Match heading -->
+                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                            HorizontalAlignment="Center"
+                            Text="@CurrentMatchLabel"
+                            Brush.FontSize="24"
+                            Brush.TextHorizontalAlignment="Center" />
+
+                <!-- 4. Two-column combatant layout -->
+                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                           HorizontalAlignment="Center" VerticalAlignment="Top"
+                           LayoutImp.LayoutMethod="HorizontalLeftToRight">
+                  <Children>
+
+                    <!-- Left column: Your Side -->
+                    <ListPanel WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren"
+                               SuggestedWidth="395" MarginRight="10"
+                               LayoutImp.LayoutMethod="VerticalTopToBottom">
+                      <Children>
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                    Text="@PlayerTeamLabel"
+                                    Brush.FontSize="22"
+                                    Brush.TextHorizontalAlignment="Center" />
+                        <!-- ≥ 80 % — white (default) -->
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                    Text="@PlayerWhiteText"
+                                    Brush.FontSize="18"
+                                    Brush.TextHorizontalAlignment="Left" />
+                        <!-- 31–79 % — yellow -->
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                    Text="@PlayerYellowText"
+                                    Brush.FontSize="18"
+                                    Brush.FontColor="#FFD700FF"
+                                    Brush.TextHorizontalAlignment="Left" />
+                        <!-- 1–30 % — orange -->
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                    Text="@PlayerOrangeText"
+                                    Brush.FontSize="18"
+                                    Brush.FontColor="#FF8000FF"
+                                    Brush.TextHorizontalAlignment="Left" />
+                        <!-- 0 % / KO — red -->
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                    Text="@PlayerKOText"
+                                    Brush.FontSize="18"
+                                    Brush.FontColor="#C70A0AFF"
+                                    Brush.TextHorizontalAlignment="Left" />
+                      </Children>
+                    </ListPanel>
+
+                    <!-- Right column: Homestead side -->
+                    <ListPanel WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren"
+                               SuggestedWidth="395"
+                               LayoutImp.LayoutMethod="VerticalTopToBottom">
+                      <Children>
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                    Text="@EnemyTeamLabel"
+                                    Brush.FontSize="22"
+                                    Brush.TextHorizontalAlignment="Center" />
+                        <!-- ≥ 80 % — white (default) -->
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                    Text="@EnemyWhiteText"
+                                    Brush.FontSize="18"
+                                    Brush.TextHorizontalAlignment="Left" />
+                        <!-- 31–79 % — yellow -->
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                    Text="@EnemyYellowText"
+                                    Brush.FontSize="18"
+                                    Brush.FontColor="#FFD700FF"
+                                    Brush.TextHorizontalAlignment="Left" />
+                        <!-- 1–30 % — orange -->
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                    Text="@EnemyOrangeText"
+                                    Brush.FontSize="18"
+                                    Brush.FontColor="#FF8000FF"
+                                    Brush.TextHorizontalAlignment="Left" />
+                        <!-- 0 % / KO — red -->
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                    Text="@EnemyKOText"
+                                    Brush.FontSize="18"
+                                    Brush.FontColor="#C70A0AFF"
+                                    Brush.TextHorizontalAlignment="Left" />
+                      </Children>
+                    </ListPanel>
+
+                  </Children>
+                </ListPanel>
+
+              </Children>
+            </ListPanel>
+          </Children>
+        </BrushWidget>
+
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

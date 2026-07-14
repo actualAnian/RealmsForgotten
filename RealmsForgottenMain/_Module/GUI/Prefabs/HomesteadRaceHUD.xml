@@ -1,0 +1,107 @@
+<Prefab>
+  <Constants>
+  </Constants>
+
+  <Window>
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+      <Children>
+
+        <!-- Big centred countdown ("3/2/1/Go!"), driven by the mission clock so it lines up exactly with
+             the movement release.  Empty string when not counting. -->
+        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                    HorizontalAlignment="Center" VerticalAlignment="Center" MarginBottom="120"
+                    Text="@CountdownText"
+                    Brush.FontSize="160"
+                    Brush.FontColor="#FFD050FF"
+                    Brush.TextHorizontalAlignment="Center" />
+
+        <!-- Off-track recovery prompt (empty unless the player has fallen off the track). -->
+        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                    HorizontalAlignment="Center" VerticalAlignment="Center" MarginTop="160"
+                    Text="@PromptText"
+                    Brush.FontSize="34"
+                    Brush.FontColor="#FF5050FF"
+                    Brush.TextHorizontalAlignment="Center" />
+
+        <!-- Top-right race-progress panel: a title and one text blob of per-racer bars,
+             built by RaceProgressView's VM (monospace block bars). -->
+        <BrushWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                     HorizontalAlignment="Right" VerticalAlignment="Top"
+                     MarginRight="40" MarginTop="60"
+                     Brush="Frame1Brush" RenderLate="true">
+          <Children>
+            <ListPanel WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren"
+                       SuggestedWidth="500"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                       LayoutImp.LayoutMethod="VerticalTopToBottom"
+                       MarginLeft="18" MarginRight="18" MarginTop="12" MarginBottom="12">
+              <Children>
+
+                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                            HorizontalAlignment="Center"
+                            Text="@TitleText"
+                            Brush.FontSize="30"
+                            Brush.FontColor="#C7900AFF"
+                            Brush.TextHorizontalAlignment="Center" />
+
+                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                           HorizontalAlignment="Left" DataSource="{Bars}"
+                           LayoutImp.LayoutMethod="VerticalTopToBottom">
+                  <ItemTemplate>
+                    <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="26"
+                               LayoutImp.LayoutMethod="HorizontalLeftToRight" MarginTop="2" MarginBottom="2">
+                      <Children>
+                        <!-- spur-status dot: green=ready, blue=spurring, red=winded, orange=cooldown -->
+                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="75" SuggestedHeight="22"
+                                VerticalAlignment="Center" MarginRight="6"
+                                Sprite="BlankWhiteSquare_9" Color="@SpurColor">
+                          <Children>
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                        Text="@SpurText"
+                                        Brush.Font="GauntletTextFont"
+                                        Brush.FontSize="17" Brush.FontColor="#000000FF"
+                                        Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Center" />
+                          </Children>
+                        </Widget>
+                        <!-- bar track (dark) with a colour-coded fill (width bound to progress) -->
+                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="110" SuggestedHeight="16"
+                                VerticalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#1A1A1AFF">
+                          <Children>
+                            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent"
+                                    SuggestedWidth="@FillWidth" HorizontalAlignment="Left"
+                                    Sprite="BlankWhiteSquare_9" Color="@BarColor" />
+                          </Children>
+                        </Widget>
+                        <!-- label: "27%  Kyle" or "1st  Kyle" -->
+                        <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="200"
+                                    MarginLeft="8" Text="@LabelText"
+                                    Brush.FontSize="20" Brush.TextVerticalAlignment="Center"
+                                    Brush.TextHorizontalAlignment="Left" />
+                        <!-- current speed, e.g. "6.2 m/s", on the right -->
+                        <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="80"
+                                    MarginLeft="8" Text="@SpeedText"
+                                    Brush.FontSize="18" Brush.FontColor="#9FD8FFFF"
+                                    Brush.TextVerticalAlignment="Center"
+                                    Brush.TextHorizontalAlignment="Right" />
+                      </Children>
+                    </ListPanel>
+                  </ItemTemplate>
+                </ListPanel>
+
+                <!-- Spur status (ready / spurring / winded / cooldown), right under the progress bars. -->
+                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                            HorizontalAlignment="Center" MarginTop="6"
+                            Text="@BoostText"
+                            Brush.FontSize="22"
+                            Brush.FontColor="#7FE0FFFF"
+                            Brush.TextHorizontalAlignment="Center" />
+
+              </Children>
+            </ListPanel>
+          </Children>
+        </BrushWidget>
+
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

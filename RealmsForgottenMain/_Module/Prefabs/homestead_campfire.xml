@@ -1,0 +1,80 @@
+<prefabs>
+  <game_entity name="homestead_campfire" old_prefab_name="">
+    <children>
+      <game_entity name="camp_torch" old_prefab_name="">
+        <flags>
+          <flag name="not_affected_by_season" value="true"/>
+        </flags>
+        <transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000"/>
+        <physics shape="bo_torch_outdoors_a"/>
+        <components>
+          <meta_mesh_component name="torch_outdoors_a"/>
+        </components>
+      </game_entity>
+      <game_entity name="campfire_light" old_prefab_name="">
+        <flags>
+          <flag name="not_affected_by_season" value="true"/>
+        </flags>
+        <transform position="0.000, 0.000, 0.550" rotation_euler="0.000, 0.000, 0.000"/>
+        <components>
+          <light_component color="1.000, 0.596, 0.243" intensity="180.000" radius="9.000" flicker_interval="0.400" flicker_magnitude="2.000" shadow="1" shadow_size_multiplier="1" shadow_radius="5.000"/>
+        </components>
+      </game_entity>
+      <game_entity name="campfire_sound" old_prefab_name="">
+        <scripts>
+          <script name="AmbientSoundEmitter">
+            <variables>
+              <variable name="Event Path" value="event:/mission/ambient/detail/fire/fire_small"/>
+              <variable name="Play On Startup" value="true"/>
+              <variable name="Is Static" value="false"/>
+              <variable name="Override Sound" value="false"/>
+              <variable name="Overrided Max Distance" value="20.000000"/>
+              <variable name="Overrided Min Distance" value="1.000000"/>
+              <variable name="Sound Preset" value="Speakers"/>
+              <variable name="Is Master Sound" value="false"/>
+              <variable name="Is Master Supressor" value="false"/>
+              <variable name="Is Triggered" value="false"/>
+              <variable name="Trigger Shape" value="Sphere"/>
+            </variables>
+          </script>
+        </scripts>
+      </game_entity>
+      <game_entity name="sp_campfire_stand_a" old_prefab_name="" mobility="1">
+        <visibility_masks>
+          <visibility_mask name="visible_only_when_editing" value="true"/>
+        </visibility_masks>
+        <tags>
+          <tag name="spawnpoint_homestead_npc"/>
+        </tags>
+        <transform position="1.250, 0.000, 0.000" rotation_euler="0.000, 0.000, 1.571"/>
+        <components>
+          <meta_mesh_component name="arrow_new_icon"/>
+        </components>
+      </game_entity>
+      <game_entity name="sp_campfire_stand_b" old_prefab_name="" mobility="1">
+        <visibility_masks>
+          <visibility_mask name="visible_only_when_editing" value="true"/>
+        </visibility_masks>
+        <tags>
+          <tag name="spawnpoint_homestead_npc"/>
+        </tags>
+        <transform position="-1.250, 0.000, 0.000" rotation_euler="0.000, 0.000, -1.571"/>
+        <components>
+          <meta_mesh_component name="arrow_new_icon"/>
+        </components>
+      </game_entity>
+      <game_entity name="sp_campfire_stand_c" old_prefab_name="" mobility="1">
+        <visibility_masks>
+          <visibility_mask name="visible_only_when_editing" value="true"/>
+        </visibility_masks>
+        <tags>
+          <tag name="spawnpoint_homestead_npc"/>
+        </tags>
+        <transform position="0.000, 1.250, 0.000" rotation_euler="0.000, 0.000, 3.142"/>
+        <components>
+          <meta_mesh_component name="arrow_new_icon"/>
+        </components>
+      </game_entity>
+    </children>
+  </game_entity>
+</prefabs>

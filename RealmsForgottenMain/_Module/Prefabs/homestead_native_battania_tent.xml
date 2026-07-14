@@ -1,0 +1,8 @@
+<prefabs>
+  <game_entity name="homestead_native_battania_tent" old_prefab_name="">
+    <physics shape="bo_battania_street_tent_a" override_material="wood"/>
+    <components>
+      <meta_mesh_component name="battania_street_tent_a"/>
+    </components>
+  </game_entity>
+</prefabs>

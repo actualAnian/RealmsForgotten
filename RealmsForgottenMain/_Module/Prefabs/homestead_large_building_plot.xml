@@ -1,0 +1,58 @@
+<prefabs>
+  <!-- Large Building Plot: a wide, flat, dirt-look pad meant as a level foundation to drop other buildings
+       onto. Physics is co-located ON the scaled entity so COLLISION scales with the visual (like
+       homestead_native_dirt_mound), NOT split onto an unscaled root (like homestead_stonewall_2b3_scaled).
+
+       Layers:
+         1. building_plot_surface — an INVISIBLE flat collision plate (bo_castle_plank_wall_c) that gives a
+            genuinely FLAT central pad to rest buildings/agents on. It MUST stay INSIDE the dirt visual
+            footprint — it's invisible, so any part of it beyond the dirt is collision you hit in empty air.
+            The dirt blocks' own bo_cliff_soil_a collision (a matched proxy at the same transform as the
+            mesh) already handles the sloped sides + top and CANNOT stick out past the visual, so the plate
+            only needs to cover the middle.
+         2. building_plot_dirt_{a,b,c} — ONE dirt block (3 copies, 120 deg apart, for a round footprint), tall
+            enough that its flat crown meets the plate at the top while its body extends well DOWN so a raised
+            plot fills into the terrain instead of looking hollow.
+
+       FIXED 2026-07-11: the plate was scale 5.0 vs the dirt's 2.1 — a wrong "plate ~2.35x dirt" assumption
+       about the base mesh sizes; the two base meshes are actually similar-sized, so 5.0 made the invisible
+       plate ~2.4x wider than the dirt and its edges collided in mid-air all around the mound (and inflated
+       the selection bounds). Plate X/Y dropped to 1.8 so it sits comfortably inside the rounded dirt.
+
+       TWEAK IN THE BUILDER:
+         * PAD SIZE -> building_plot_surface scale X,Y. Keep it <= the dirt so it never poke past the visual;
+                       raise toward ~2.0 for a bigger flat pad, lower if corners clip past the rounded dirt.
+         * MOUND    -> dirt scale X,Y (footprint) and scale Z + position Z together (height; lower position by
+                       the same growth so the crown stays at the plate).
+         * TOP      -> building_plot_surface position Z should sit at the dirt crown. -->
+  <game_entity name="homestead_large_building_plot" old_prefab_name="">
+    <children>
+      <game_entity name="building_plot_surface" old_prefab_name="">
+        <transform position="0.000, 0.000, 0.400" rotation_euler="0.000, 0.000, 0.000" scale="1.800, 1.800, 0.200"/>
+        <physics shape="bo_castle_plank_wall_c" override_material="default"/>
+      </game_entity>
+
+      <game_entity name="building_plot_dirt_a" old_prefab_name="">
+        <transform position="0.000, 0.000, -1.600" rotation_euler="0.000, 0.000, 0.000" scale="2.100, 2.100, 1.500"/>
+        <components>
+          <meta_mesh_component name="cliff_soil_a"/>
+        </components>
+        <physics shape="bo_cliff_soil_a" override_material="default"/>
+      </game_entity>
+      <game_entity name="building_plot_dirt_b" old_prefab_name="">
+        <transform position="0.000, 0.000, -1.600" rotation_euler="0.000, 0.000, 2.094" scale="2.100, 2.100, 1.500"/>
+        <components>
+          <meta_mesh_component name="cliff_soil_a"/>
+        </components>
+        <physics shape="bo_cliff_soil_a" override_material="default"/>
+      </game_entity>
+      <game_entity name="building_plot_dirt_c" old_prefab_name="">
+        <transform position="0.000, 0.000, -1.600" rotation_euler="0.000, 0.000, 4.189" scale="2.100, 2.100, 1.500"/>
+        <components>
+          <meta_mesh_component name="cliff_soil_a"/>
+        </components>
+        <physics shape="bo_cliff_soil_a" override_material="default"/>
+      </game_entity>
+    </children>
+  </game_entity>
+</prefabs>

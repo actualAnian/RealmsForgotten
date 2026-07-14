@@ -1,0 +1,8 @@
+<prefabs>
+  <game_entity name="homestead_native_wine_cart" old_prefab_name="">
+    <physics shape="bo_winery_wine_cart_empty" override_material="wood"/>
+    <components>
+      <meta_mesh_component name="winery_wine_cart_empty"/>
+    </components>
+  </game_entity>
+</prefabs>

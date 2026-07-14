@@ -1,0 +1,34 @@
+<prefabs>
+  <game_entity name="homestead_native_horse_paddock" old_prefab_name="">
+    <children>
+      <game_entity name="horse_barrier_left" old_prefab_name="">
+        <transform position="0.000, -1.250, 0.000" rotation_euler="0.000, 0.000, 0.000"/>
+        <physics shape="bo_horse_barrier_a" override_material="wood"/>
+        <components>
+          <meta_mesh_component name="horse_barrier_a"/>
+        </components>
+      </game_entity>
+      <game_entity name="horse_barrier_right" old_prefab_name="">
+        <transform position="0.000, 1.250, 0.000" rotation_euler="0.000, 0.000, 3.142"/>
+        <physics shape="bo_horse_barrier_a" override_material="wood"/>
+        <components>
+          <meta_mesh_component name="horse_barrier_a"/>
+        </components>
+      </game_entity>
+      <game_entity name="horse_trough" old_prefab_name="">
+        <transform position="-1.350, 0.000, 0.000" rotation_euler="0.000, 0.000, 1.571"/>
+        <physics shape="bo_bd_trough_a" override_material="wood"/>
+        <components>
+          <meta_mesh_component name="bd_trough_a"/>
+        </components>
+      </game_entity>
+      <game_entity name="merchant_horse" old_prefab_name="">
+        <transform position="0.700, 0.000, 0.000" rotation_euler="0.000, 0.000, -1.571"/>
+        <physics shape="bo_shop_prop_merchanthorse_a"/>
+        <components>
+          <meta_mesh_component name="shop_prop_merchanthorse_a"/>
+        </components>
+      </game_entity>
+    </children>
+  </game_entity>
+</prefabs>

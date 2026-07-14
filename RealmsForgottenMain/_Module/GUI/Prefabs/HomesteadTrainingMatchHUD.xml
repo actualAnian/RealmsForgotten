@@ -1,0 +1,31 @@
+<Prefab>
+  <Constants/>
+  <Window>
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+      <Children>
+
+        <!-- Same proven-attribute set as HomesteadDogBanner.xml: Frame1Brush / RenderLate /
+             CoverChildren / alignments / margins / ListPanel StackLayout / TextWidget
+             Brush.FontSize / Text binding. Sits high on screen, above the dog banner slot. -->
+        <BrushWidget Brush="Frame1Brush" RenderLate="true"
+                     WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                     HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="40">
+          <Children>
+            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                       StackLayout.LayoutMethod="VerticalTopToBottom"
+                       MarginTop="12" MarginBottom="12" MarginLeft="35" MarginRight="35">
+              <Children>
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Brush.FontSize="28" Brush.TextHorizontalAlignment="Center"
+                            Text="@MatchText" />
+              </Children>
+            </ListPanel>
+          </Children>
+        </BrushWidget>
+
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

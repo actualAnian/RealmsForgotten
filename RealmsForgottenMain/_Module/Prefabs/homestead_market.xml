@@ -1,0 +1,485 @@
+<prefabs>
+  <game_entity name="homestead_market" old_prefab_name="">
+    <transform position="0.000, 0.000, 0.000" rotation_euler="0.000, -0.000, -0.000" />
+    <children>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="14.485, 5.457, 0.139" rotation_euler="0.000, -0.000, -0.953" />
+      <components><meta_mesh_component name="stonewall_2a1" /></components><physics shape="bo_stonewall_2a1" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="16.896, 2.143, 0.242" rotation_euler="0.000, -0.000, -0.896" />
+      <components><meta_mesh_component name="stonewall_2a1" /></components><physics shape="bo_stonewall_2a1" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="10.070, 9.158, 0.063" rotation_euler="0.000, -0.000, -0.401" />
+      <components><meta_mesh_component name="stonewall_2a1" /></components><physics shape="bo_stonewall_2a1" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="5.826, 11.041, -0.038" rotation_euler="0.000, -0.000, -0.417" />
+      <components><meta_mesh_component name="stonewall_2a1" /></components><physics shape="bo_stonewall_2a1" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.128, 11.635, -0.227" rotation_euler="0.000, 0.000, 0.257" />
+      <components><meta_mesh_component name="stonewall_2a1" /></components><physics shape="bo_stonewall_2a1" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.054, 10.445, -0.390" rotation_euler="0.000, 0.000, 0.235" />
+      <components><meta_mesh_component name="stonewall_2a1" /></components><physics shape="bo_stonewall_2a1" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-9.891, 7.285, -0.394" rotation_euler="0.000, 0.000, 0.957" />
+      <components><meta_mesh_component name="stonewall_2a1" /></components><physics shape="bo_stonewall_2a1" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-12.747, 1.988, -0.511" rotation_euler="0.000, 0.000, 1.232" />
+      <components><meta_mesh_component name="stonewall_2a1" /></components><physics shape="bo_stonewall_2a1" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-13.028, -3.925, -0.505" rotation_euler="-0.000, -0.000, 1.840" />
+      <components><meta_mesh_component name="stonewall_2a1" /></components><physics shape="bo_stonewall_2a1" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-10.585, -8.936, -0.327" rotation_euler="-0.000, -0.000, 2.185" />
+      <components><meta_mesh_component name="stonewall_2a1" /></components><physics shape="bo_stonewall_2a1" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-7.355, -13.384, -0.148" rotation_euler="-0.000, -0.000, 2.185" />
+      <components><meta_mesh_component name="stonewall_2a1" /></components><physics shape="bo_stonewall_2a1" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.110, -11.180, -0.134" rotation_euler="-0.000, -0.000, 2.175" />
+      <components><meta_mesh_component name="shop_prop_merchantleather_c" /></components><physics shape="bo_shop_prop_merchantleather_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.688, -8.834, -0.123" rotation_euler="-0.000, -0.000, 2.207" />
+      <components><meta_mesh_component name="shop_prop_merchantleather_c" /></components><physics shape="bo_shop_prop_merchantleather_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.971, -13.622, -0.131" rotation_euler="0.000, 0.000, 1.054" />
+      <components><meta_mesh_component name="shop_prop_merchantleather_c" /></components><physics shape="bo_shop_prop_merchantleather_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.545, -7.319, -0.133" rotation_euler="0.000, 0.000, 1.054" />
+      <components><meta_mesh_component name="shop_prop_merchantleather_b" /></components><physics shape="bo_shop_prop_merchantleather_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.519, -12.824, -0.091" rotation_euler="0.000, 0.000, 1.504" />
+      <components><meta_mesh_component name="shop_prop_merchantleather_b" /></components><physics shape="bo_shop_prop_merchantleather_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.565, -10.510, -0.044" rotation_euler="-0.000, -0.000, 2.032" />
+      <components><meta_mesh_component name="shop_prop_merchantleather_b" /></components><physics shape="bo_shop_prop_merchantleather_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.879, -10.088, 0.051" rotation_euler="-0.000, -0.000, 2.032" />
+      <components><meta_mesh_component name="merchandise_hides_a" /></components><physics shape="bo_merchandise_hides_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.709, -10.646, -0.089" rotation_euler="-0.000, -0.000, 2.032" />
+      <components><meta_mesh_component name="merchandise_hides_a" /></components><physics shape="bo_merchandise_hides_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.561, -9.781, -0.092" rotation_euler="-0.000, -0.000, 2.384" />
+      <components><meta_mesh_component name="merchandise_hides_a" /></components><physics shape="bo_merchandise_hides_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.531, -10.792, -0.159" rotation_euler="-0.000, -0.000, 1.996" />
+      <components><meta_mesh_component name="bd_table_trunk_a" /></components><physics shape="bo_bd_table_trunk_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.531, -7.986, -0.226" rotation_euler="-0.000, -0.000, 2.991" />
+      <components><meta_mesh_component name="bd_table_trunk_a" /></components><physics shape="bo_bd_table_trunk_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-8.262, -1.830, -0.492" rotation_euler="0.000, -0.000, -2.560" />
+      <components><meta_mesh_component name="bd_table_trunk_a" /></components><physics shape="bo_bd_table_trunk_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.538, 0.810, -0.428" rotation_euler="0.000, -0.000, -1.837" />
+      <components><meta_mesh_component name="bd_table_trunk_a" /></components><physics shape="bo_bd_table_trunk_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-7.673, 3.864, -0.424" rotation_euler="0.000, -0.000, -0.864" />
+      <components><meta_mesh_component name="bd_table_trunk_a" /></components><physics shape="bo_bd_table_trunk_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.689, 6.161, -0.364" rotation_euler="0.000, -0.000, -0.850" />
+      <components><meta_mesh_component name="bd_table_trunk_a" /></components><physics shape="bo_bd_table_trunk_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.643, 4.982, -0.307" rotation_euler="0.000, 0.000, 0.094" />
+      <components><meta_mesh_component name="bd_table_trunk_a" /></components><physics shape="bo_bd_table_trunk_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="2.026, 6.799, -0.257" rotation_euler="0.000, 0.000, 1.120" />
+      <components><meta_mesh_component name="bd_table_trunk_a" /></components><physics shape="bo_bd_table_trunk_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="9.217, 4.738, -0.002" rotation_euler="-0.000, -0.000, 2.244" />
+      <components><meta_mesh_component name="bd_table_trunk_a" /></components><physics shape="bo_bd_table_trunk_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-9.428, -4.405, -1.285" rotation_euler="0.000, -0.000, -0.395" />
+      <components><meta_mesh_component name="bd_cloth_stick_10m" /></components><physics shape="bo_wooden_platform_plank_f_column" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-11.053, -2.008, -1.388" rotation_euler="0.000, -0.000, -1.154" />
+      <components><meta_mesh_component name="bd_cloth_stick_10m" /></components><physics shape="bo_wooden_platform_plank_f_column" override_material="wood" /></game_entity>
+      <game_entity name="nord_fire_place" old_prefab_name="">
+        <transform position="3.186, -3.052, -0.149" rotation_euler="0.000, -0.000, -2.556" />
+      </game_entity>
+      <game_entity name="burning_campfire_big" old_prefab_name="">
+        <transform position="2.766, -2.484, 0.576" rotation_euler="0.000, -0.000, -0.000" />
+      </game_entity>
+      <game_entity name="burning_campfire_big" old_prefab_name="">
+        <transform position="3.589, -2.766, 0.610" rotation_euler="0.000, -0.000, -0.000" />
+      </game_entity>
+      <game_entity name="burning_campfire_big" old_prefab_name="">
+        <transform position="2.875, -3.318, 0.590" rotation_euler="0.000, 0.000, 1.149" />
+      </game_entity>
+      <game_entity name="burning_campfire_big" old_prefab_name="">
+        <transform position="3.521, -3.658, 0.615" rotation_euler="-0.000, -0.000, 1.790" />
+      </game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.990, -11.655, -0.137" rotation_euler="0.000, 0.000, 1.053" />
+      <components><meta_mesh_component name="empire_street_tent_04" /></components><physics shape="bo_empire_street_tent_04" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="11.131, 5.083, 0.085" rotation_euler="0.000, 0.000, 0.700" />
+      <components><meta_mesh_component name="empire_street_tent_04" /></components><physics shape="bo_empire_street_tent_04" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.239, 6.640, -0.332" rotation_euler="0.000, -0.000, -3.095" />
+      <components><meta_mesh_component name="battania_street_tent_a" /></components><physics shape="bo_battania_street_tent_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-8.844, 0.867, -0.483" rotation_euler="0.000, -0.000, -1.727" />
+      <components><meta_mesh_component name="aserai_street_tent_a" /></components><physics shape="bo_aserai_street_tent_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-8.427, -3.850, -0.393" rotation_euler="0.000, -0.000, -0.000" />
+      <components><meta_mesh_component name="foods_basket_c" /></components><physics shape="bo_foods_basket_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-7.447, -3.033, -0.412" rotation_euler="0.000, -0.000, -0.974" />
+      <components><meta_mesh_component name="foods_basket_a" /></components><physics shape="bo_foods_basket_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-9.045, -2.074, 0.318" rotation_euler="0.000, -0.000, -0.974" />
+      <components><meta_mesh_component name="foods_basket_a" /></components><physics shape="bo_foods_basket_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.683, -0.185, -0.429" rotation_euler="0.000, 0.000, 0.147" />
+      <components><meta_mesh_component name="foods_basket_c" /></components><physics shape="bo_foods_basket_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.529, 2.232, 0.382" rotation_euler="0.000, 0.000, 0.147" />
+      <components><meta_mesh_component name="foods_basket_c" /></components><physics shape="bo_foods_basket_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-7.439, -1.389, 0.318" rotation_euler="0.000, 0.000, 0.754" />
+      <components><meta_mesh_component name="foods_basket_c" /></components><physics shape="bo_foods_basket_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="7.718, 6.503, -0.033" rotation_euler="0.000, 0.000, 1.313" />
+      <components><meta_mesh_component name="bd_broom_a" /></components><physics shape="bo_bd_barrel_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="13.151, 2.548, 0.094" rotation_euler="-0.000, -0.000, 1.802" />
+      <components><meta_mesh_component name="bd_fabric_a" /></components><physics shape="bo_bd_fabric_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="7.901, 7.520, -0.022" rotation_euler="0.000, -0.000, -0.088" />
+      <components><meta_mesh_component name="bd_barrel_b" /></components><physics shape="bo_bd_barrel_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="7.658, 8.404, -0.035" rotation_euler="0.000, 0.000, 0.456" />
+      <components><meta_mesh_component name="bd_barrel_b" /></components><physics shape="bo_bd_barrel_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="12.467, -1.408, 0.029" rotation_euler="0.000, -0.000, -1.012" />
+      <components><meta_mesh_component name="bd_table_d" /></components><physics shape="bo_bd_table_d" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="15.352, -2.236, 0.089" rotation_euler="-0.000, -0.000, 1.674" />
+      <components><meta_mesh_component name="bd_table_d" /></components><physics shape="bo_bd_table_d" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="18.067, -1.460, 0.228" rotation_euler="-0.000, -0.000, 2.277" />
+      <components><meta_mesh_component name="kitchen_mug_a" /></components><physics shape="bo_bd_table_d" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="9.767, 2.710, -0.013" rotation_euler="-0.000, -0.000, 2.555" />
+      <components><meta_mesh_component name="merchandise_wool" /></components><physics shape="bo_merchandise_wool" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="10.090, 2.078, -0.025" rotation_euler="-0.000, -0.000, 3.085" />
+      <components><meta_mesh_component name="merchandise_wool" /></components><physics shape="bo_merchandise_wool" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="7.942, 5.568, 0.808" rotation_euler="-0.000, -0.000, 3.085" />
+      <components><meta_mesh_component name="merchandise_cloth_b" /></components><physics shape="bo_merchandise_cloth_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="8.338, 5.311, 0.808" rotation_euler="0.000, -0.000, -3.033" />
+      <components><meta_mesh_component name="merchandise_cloth_b" /></components><physics shape="bo_merchandise_cloth_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="9.730, 3.767, 0.808" rotation_euler="-0.000, -0.000, 2.042" />
+      <components><meta_mesh_component name="merchandise_velvet" /></components><physics shape="bo_merchandise_velvet" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="9.792, 3.253, 0.808" rotation_euler="0.000, 0.000, 1.527" />
+      <components><meta_mesh_component name="merchandise_velvet" /></components><physics shape="bo_merchandise_velvet" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="9.833, 3.794, 0.976" rotation_euler="0.000, 0.000, 1.412" />
+      <components><meta_mesh_component name="merchandise_velvet" /></components><physics shape="bo_merchandise_velvet" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="9.009, 4.566, 0.808" rotation_euler="0.000, 0.000, 1.412" />
+      <components><meta_mesh_component name="merchandise_cloth_b" /></components><physics shape="bo_merchandise_cloth_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="9.107, 5.186, 0.808" rotation_euler="-0.000, -0.000, 2.045" />
+      <components><meta_mesh_component name="merchandise_cloth_b" /></components><physics shape="bo_merchandise_cloth_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.375, -14.866, -0.154" rotation_euler="-0.000, -0.000, 2.045" />
+      <components><meta_mesh_component name="merchandise_leather_a" /></components><physics shape="bo_merchandise_leather_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.832, -6.585, -0.255" rotation_euler="0.000, -0.000, -0.283" />
+      <components><meta_mesh_component name="merchandise_leather_b" /></components><physics shape="bo_merchandise_leather_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-7.378, -11.569, 0.852" rotation_euler="0.000, -0.000, -0.941" />
+      <components><meta_mesh_component name="merchandise_leather_c" /></components><physics shape="bo_merchandise_leather_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.316, -8.274, 0.584" rotation_euler="0.000, -0.000, -0.763" />
+      <components><meta_mesh_component name="shop_prop_merchantleather_b" /></components><physics shape="bo_shop_prop_merchantleather_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.134, -7.742, 0.584" rotation_euler="0.000, -0.000, -0.351" />
+      <components><meta_mesh_component name="shop_prop_merchantleather_b" /></components><physics shape="bo_shop_prop_merchantleather_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.929, -7.461, 0.584" rotation_euler="0.000, 0.000, 0.271" />
+      <components><meta_mesh_component name="shop_prop_merchantleather_b" /></components><physics shape="bo_shop_prop_merchantleather_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-7.216, -8.180, 0.584" rotation_euler="0.000, -0.000, -0.355" />
+      <components><meta_mesh_component name="shop_prop_merchantleather_b" /></components><physics shape="bo_shop_prop_merchantleather_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.966, -9.708, 0.650" rotation_euler="0.000, -0.000, -1.097" />
+      <components><meta_mesh_component name="shop_prop_merchantleather_c" /></components><physics shape="bo_shop_prop_merchantleather_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.762, 2.187, 0.382" rotation_euler="0.000, -0.000, -1.097" />
+      <components><meta_mesh_component name="foods_basket_apple" /></components><physics shape="bo_foods_basket_apple" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.449, 1.320, -0.400" rotation_euler="0.000, -0.000, -1.937" />
+      <components><meta_mesh_component name="foods_basket_apple" /></components><physics shape="bo_foods_basket_apple" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.068, 2.006, -0.393" rotation_euler="0.000, -0.000, -1.516" />
+      <components><meta_mesh_component name="foods_basket_apple" /></components><physics shape="bo_foods_basket_apple" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.521, 0.646, -0.403" rotation_euler="0.000, -0.000, -1.516" />
+      <components><meta_mesh_component name="foods_basket_apple" /></components><physics shape="bo_foods_basket_apple" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.288, 2.704, -0.396" rotation_euler="0.000, -0.000, -1.516" />
+      <components><meta_mesh_component name="foods_basket_apple" /></components><physics shape="bo_foods_basket_apple" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.018, 1.643, 0.382" rotation_euler="0.000, -0.000, -1.516" />
+      <components><meta_mesh_component name="foods_basket_apple" /></components><physics shape="bo_foods_basket_apple" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.448, -0.928, 0.382" rotation_euler="0.000, -0.000, -0.806" />
+      <components><meta_mesh_component name="foods_pumpkin_a" /></components><physics shape="bo_foods_pumpkin_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.345, -0.507, 0.382" rotation_euler="0.000, -0.000, -1.165" />
+      <components><meta_mesh_component name="foods_pumpkin_a" /></components><physics shape="bo_foods_pumpkin_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.595, -1.415, 0.318" rotation_euler="0.000, -0.000, -1.165" />
+      <components><meta_mesh_component name="foods_pumpkin_a" /></components><physics shape="bo_foods_pumpkin_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-7.852, 4.553, 0.386" rotation_euler="0.000, -0.000, -2.544" />
+      <components><meta_mesh_component name="foods_carrots_b" /></components><physics shape="bo_foods_cabbage_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.811, -1.998, -0.436" rotation_euler="-0.000, -0.000, 2.543" />
+      <components><meta_mesh_component name="foods_carrots_b" /></components><physics shape="bo_foods_cabbage_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.834, -0.056, 0.382" rotation_euler="0.000, -0.000, -2.253" />
+      <components><meta_mesh_component name="foods_orange_pile_a" /></components><physics shape="bo_foods_orange_pile_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-11.123, 1.094, -0.523" rotation_euler="0.000, -0.000, -1.860" />
+      <components><meta_mesh_component name="foods_orange_pile_a" /></components><physics shape="bo_foods_orange_pile_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.350, 4.667, -0.394" rotation_euler="-0.000, -0.000, 2.445" />
+      <components><meta_mesh_component name="foods_orange_pile_a" /></components><physics shape="bo_foods_orange_pile_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-9.356, 5.793, -1.718" rotation_euler="0.000, 0.000, 0.922" />
+      <components><meta_mesh_component name="bd_cloth_stick_10m" /></components><physics shape="bo_wooden_platform_plank_f_column" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="14.945, -0.381, 0.092" rotation_euler="-0.000, -0.000, 2.912" />
+      <components><meta_mesh_component name="empire_street_tent_03" /></components><physics shape="bo_empire_street_tent_02" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-7.973, -2.241, 0.318" rotation_euler="0.000, -0.000, -2.913" />
+      <components><meta_mesh_component name="merchandise_fish_c" /></components><physics shape="bo_merchandise_fish_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-9.248, -3.123, 0.318" rotation_euler="-0.000, -0.000, 2.960" />
+      <components><meta_mesh_component name="merchandise_fish_c" /></components><physics shape="bo_merchandise_fish_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.802, 0.651, -0.385" rotation_euler="-0.000, -0.000, 2.284" />
+      <components><meta_mesh_component name="merchandise_fish_c" /></components><physics shape="bo_merchandise_fish_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-7.226, -4.441, -0.343" rotation_euler="0.000, -0.000, -0.452" />
+      <components><meta_mesh_component name="bd_barrel_b" /></components><physics shape="bo_bd_barrel_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.657, -3.759, -0.358" rotation_euler="0.000, -0.000, -0.881" />
+      <components><meta_mesh_component name="bd_barrel_b" /></components><physics shape="bo_bd_barrel_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.432, -4.575, -0.306" rotation_euler="0.000, -0.000, -0.881" />
+      <components><meta_mesh_component name="bd_barrel_b" /></components><physics shape="bo_bd_barrel_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="4.680, 9.429, -0.114" rotation_euler="0.000, -0.000, -2.357" />
+      <components><meta_mesh_component name="rock_001" /></components><physics shape="bo_rock_001" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="4.601, 10.329, -0.120" rotation_euler="0.000, -0.000, -0.681" />
+      <components><meta_mesh_component name="rock_001" /></components><physics shape="bo_rock_001" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="2.580, 10.867, -0.164" rotation_euler="0.000, -0.000, -0.319" />
+      <components><meta_mesh_component name="rock_001" /></components><physics shape="bo_rock_001" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="1.586, 9.860, -0.195" rotation_euler="0.000, -0.000, -0.568" />
+      <components><meta_mesh_component name="rock_001" /></components><physics shape="bo_rock_001" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.388, 6.336, -0.370" rotation_euler="0.000, -0.000, -0.568" />
+      <components><meta_mesh_component name="bd_barrel_a" /></components><physics shape="bo_bd_barrel_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.345, 7.571, 0.446" rotation_euler="0.000, -0.000, -0.568" />
+      <components><meta_mesh_component name="bd_barrel_a" /></components><physics shape="bo_bd_barrel_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.741, 6.890, 0.446" rotation_euler="0.000, -0.000, -0.568" />
+      <components><meta_mesh_component name="bd_barrel_a" /></components><physics shape="bo_bd_barrel_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="3.785, 7.542, -0.168" rotation_euler="0.000, -0.000, -0.568" />
+      <components><meta_mesh_component name="bd_barrel_a" /></components><physics shape="bo_bd_barrel_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="4.657, 7.936, -0.136" rotation_euler="0.000, -0.000, -1.352" />
+      <components><meta_mesh_component name="bd_barrel_b" /></components><physics shape="bo_bd_barrel_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="2.040, 7.535, 0.553" rotation_euler="0.000, 0.000, 1.183" />
+      <components><meta_mesh_component name="bd_barrel_c" /></components><physics shape="bo_bd_barrel_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.129, 4.824, 0.503" rotation_euler="0.000, -0.000, -0.006" />
+      <components><meta_mesh_component name="bd_barrel_c" /></components><physics shape="bo_bd_barrel_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="6.219, 8.116, -0.091" rotation_euler="0.000, -0.000, -2.008" />
+      <components><meta_mesh_component name="shop_prop_merchantbeer_c" /></components><physics shape="bo_shop_prop_merchantwinery_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.194, 9.493, -0.319" rotation_euler="0.000, -0.000, -2.455" />
+      <components><meta_mesh_component name="shop_prop_merchantbeer_c" /></components><physics shape="bo_shop_prop_merchantwinery_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="2.164, 5.570, 0.553" rotation_euler="0.000, -0.000, -2.041" />
+      <components><meta_mesh_component name="shop_prop_merchantbeer_d" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.220, 4.657, 0.503" rotation_euler="0.000, -0.000, -3.015" />
+      <components><meta_mesh_component name="shop_prop_merchantbeer_d" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="3.656, 6.850, -0.189" rotation_euler="0.000, -0.000, -3.015" />
+      <components><meta_mesh_component name="shop_prop_merchantbeer_b" /></components><physics shape="bo_shop_prop_merchantbakery_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="4.699, 6.807, -0.156" rotation_euler="0.000, -0.000, -1.397" />
+      <components><meta_mesh_component name="shop_prop_merchantbeer_b" /></components><physics shape="bo_shop_prop_merchantbakery_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="2.751, 5.948, -0.226" rotation_euler="0.000, -0.000, -2.117" />
+      <components><meta_mesh_component name="shop_prop_merchantbeer_b" /></components><physics shape="bo_shop_prop_merchantbakery_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.085, 6.251, 0.446" rotation_euler="-0.000, -0.000, 3.016" />
+      <components><meta_mesh_component name="shop_prop_merchantbeer_b" /></components><physics shape="bo_shop_prop_merchantbakery_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.198, 5.701, 0.446" rotation_euler="0.000, -0.000, -3.003" />
+      <components><meta_mesh_component name="shop_prop_merchantbeer_b" /></components><physics shape="bo_shop_prop_merchantbakery_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.524, 5.485, -0.376" rotation_euler="-0.000, -0.000, 2.802" />
+      <components><meta_mesh_component name="shop_prop_merchantbeer_b" /></components><physics shape="bo_shop_prop_merchantbakery_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="14.863, -0.602, 0.090" rotation_euler="-0.000, -0.000, 3.038" />
+      <components><meta_mesh_component name="vlandia_bench_a" /></components><physics shape="bo_vlandia_bench_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.823, 7.056, -0.321" rotation_euler="0.000, -0.000, -3.084" />
+      <components><meta_mesh_component name="vlandia_bench_a" /></components><physics shape="bo_vlandia_bench_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-8.771, 1.109, -0.474" rotation_euler="0.000, -0.000, -1.819" />
+      <components><meta_mesh_component name="vlandia_bench_a" /></components><physics shape="bo_vlandia_bench_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.234, -10.865, -0.154" rotation_euler="0.000, -0.000, -1.159" />
+      <components><meta_mesh_component name="vlandia_bench_a" /></components><physics shape="bo_vlandia_bench_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="10.675, 5.823, 0.073" rotation_euler="0.000, -0.000, -0.891" />
+      <components><meta_mesh_component name="vlandia_bench_a" /></components><physics shape="bo_vlandia_bench_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="5.709, -6.969, -0.031" rotation_euler="0.000, -0.000, -0.295" />
+      <components><meta_mesh_component name="shop_prop_merchantweapons_shield_c" /></components><physics shape="bo_shop_prop_merchantweapons_melee_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="7.069, -3.718, -0.034" rotation_euler="0.000, -0.000, -1.377" />
+      <components><meta_mesh_component name="shop_prop_merchantweapons_melee_c" /></components><physics shape="bo_shop_prop_merchantweapons_melee_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="3.890, 0.386, -0.168" rotation_euler="0.000, -0.000, -0.748" />
+      <components><meta_mesh_component name="shop_prop_merchantweavery_velvet_c" /></components><physics shape="bo_shop_prop_merchantweavery_linen_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="7.538, 5.220, -0.068" rotation_euler="0.000, -0.000, -0.902" />
+      <components><meta_mesh_component name="shop_prop_merchantweavery_velvet_c" /></components><physics shape="bo_shop_prop_merchantweavery_linen_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="16.094, 0.900, 0.137" rotation_euler="0.000, -0.000, -3.094" />
+      <components><meta_mesh_component name="shop_prop_merchantpottery_c" /></components><physics shape="bo_shop_prop_merchantpottery_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="19.077, -3.495, 0.272" rotation_euler="0.000, 0.000, 1.526" />
+      <components><meta_mesh_component name="shop_prop_merchantpottery_c" /></components><physics shape="bo_shop_prop_merchantpottery_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="7.299, -13.050, -0.073" rotation_euler="-0.000, -0.000, 2.865" />
+      <components><meta_mesh_component name="shop_prop_merchantbakery_c" /></components><physics shape="bo_shop_prop_merchantbakery_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="9.488, -11.207, -0.017" rotation_euler="0.000, 0.000, 1.384" />
+      <components><meta_mesh_component name="shop_prop_merchantbakery_c" /></components><physics shape="bo_shop_prop_merchantbakery_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="6.866, -11.540, -0.084" rotation_euler="0.000, 0.000, 0.370" />
+      <components><meta_mesh_component name="empire_street_tent_03" /></components><physics shape="bo_empire_street_tent_02" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="7.078, -11.232, -0.079" rotation_euler="0.000, 0.000, 0.370" />
+      <components><meta_mesh_component name="bd_sturgian_chair_a" /></components><physics shape="bo_bd_sturgian_chair_a" override_material="wood" /><children><game_entity name="sp_chair_sit_auto" old_prefab_name="" mobility="1"><tags><tag name="sp_player_sit" /></tags><transform position="0.000, 0.000, 0.450" rotation_euler="0.000, 0.000, 0.000" /><scripts><script name="UsablePlace"><variables><variable name="PilotStandingPointTag" value="Pilot" /><variable name="AmmoPickUpTag" value="ammopickup" /><variable name="WaitStandingPointTag" value="Wait" /></variables></script></scripts><children><game_entity name="animation_point" old_prefab_name="" mobility="1"><visibility_masks><visibility_mask name="visible_only_when_editing" value="true" /></visibility_masks><scripts><script name="AnimationPoint"><variables><variable name="ArriveAction" value="act_sit_to_fence_front" /><variable name="LoopStartAction" value="act_sit_fence_front_loop" /><variable name="LeaveAction" value="act_sit_from_fence_front" /><variable name="GroupId" value="-1" /><variable name="MinUserToStartInteraction" value="1" /><variable name="ActivatePairs" value="false" /><variable name="MinWaitinSeconds" value="50.000" /><variable name="MaxWaitInSeconds" value="320.000" /><variable name="TranslateUser" value="true" /></variables></script></scripts></game_entity></children></game_entity></children></game_entity>
+    <game_entity name="sp_worker_spawn_1" old_prefab_name="" mobility="1">
+        <transform position="0.000, -1.000, 0.000" rotation_euler="0.000, 0.000, 0.000" />
+        <tags>
+          <tag name="spawnpoint_homestead_market_lady" />
+        </tags>
+        <scripts>
+          <script name="UsablePlace">
+            <variables>
+              <variable name="PilotStandingPointTag" value="Pilot" />
+              <variable name="AmmoPickUpTag" value="ammopickup" />
+              <variable name="WaitStandingPointTag" value="Wait" />
+              <variable name="NavMeshPrefabName" value="" />
+            </variables>
+          </script>
+        </scripts>
+        <children>
+          <game_entity name="animation_point" old_prefab_name="" mobility="1">
+            <scripts>
+              <script name="AnimationPoint">
+                <variables>
+                  <variable name="ArriveAction" value="" />
+                  <variable name="LoopStartAction" value="act_citizen_stall" />
+                  <variable name="PairLoopStartAction" value="" />
+                  <variable name="LeaveAction" value="" />
+                  <variable name="GroupId" value="-1" />
+                  <variable name="RightHandItem" value="" />
+                  <variable name="RightHandItemBone" value="ItemR" />
+                  <variable name="LeftHandItem" value="" />
+                  <variable name="LeftHandItemBone" value="ItemL" />
+                  <variable name="MinUserToStartInteraction" value="1" />
+                  <variable name="ActivatePairs" value="false" />
+                  <variable name="MinWaitinSeconds" value="50.000" />
+                  <variable name="MaxWaitInSeconds" value="320.000" />
+                  <variable name="ForwardDistanceToPivotPoint" value="0.000" />
+                  <variable name="SideDistanceToPivotPoint" value="0.000" />
+                  <variable name="KeepOldVisibility" value="false" />
+                  <variable name="AutoSheathWeapons" value="true" />
+                  <variable name="AutoEquipWeaponsOnUseStopped" value="false" />
+                  <variable name="AutoWieldWeapons" value="false" />
+                  <variable name="TranslateUser" value="true" />
+                  <variable name="HasRecentlyBeenRechecked" value="false" />
+                  <variable name="NavMeshPrefabName" value="" />
+                </variables>
+              </script>
+            </scripts>
+          </game_entity>
+        </children>
+      </game_entity><game_entity name="sp_worker_spawn_2" old_prefab_name="" mobility="1">
+        <transform position="1.500, 1.000, 0.000" rotation_euler="0.000, 0.000, 0.000" />
+        <tags>
+          <tag name="spawnpoint_homestead_npc" />
+        </tags>
+        <scripts>
+          <script name="UsablePlace">
+            <variables>
+              <variable name="PilotStandingPointTag" value="Pilot" />
+              <variable name="AmmoPickUpTag" value="ammopickup" />
+              <variable name="WaitStandingPointTag" value="Wait" />
+              <variable name="NavMeshPrefabName" value="" />
+            </variables>
+          </script>
+        </scripts>
+        <children>
+          <game_entity name="animation_point" old_prefab_name="" mobility="1">
+            <scripts>
+              <script name="AnimationPoint">
+                <variables>
+                  <variable name="ArriveAction" value="" />
+                  <variable name="LoopStartAction" value="act_citizen_stall" />
+                  <variable name="PairLoopStartAction" value="" />
+                  <variable name="LeaveAction" value="" />
+                  <variable name="GroupId" value="-1" />
+                  <variable name="RightHandItem" value="" />
+                  <variable name="RightHandItemBone" value="ItemR" />
+                  <variable name="LeftHandItem" value="" />
+                  <variable name="LeftHandItemBone" value="ItemL" />
+                  <variable name="MinUserToStartInteraction" value="1" />
+                  <variable name="ActivatePairs" value="false" />
+                  <variable name="MinWaitinSeconds" value="50.000" />
+                  <variable name="MaxWaitInSeconds" value="320.000" />
+                  <variable name="ForwardDistanceToPivotPoint" value="0.000" />
+                  <variable name="SideDistanceToPivotPoint" value="0.000" />
+                  <variable name="KeepOldVisibility" value="false" />
+                  <variable name="AutoSheathWeapons" value="true" />
+                  <variable name="AutoEquipWeaponsOnUseStopped" value="false" />
+                  <variable name="AutoWieldWeapons" value="false" />
+                  <variable name="TranslateUser" value="true" />
+                  <variable name="HasRecentlyBeenRechecked" value="false" />
+                  <variable name="NavMeshPrefabName" value="" />
+                </variables>
+              </script>
+            </scripts>
+          </game_entity>
+        </children>
+      </game_entity></children>
+  </game_entity>
+</prefabs>

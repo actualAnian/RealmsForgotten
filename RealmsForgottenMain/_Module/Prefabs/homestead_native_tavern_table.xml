@@ -1,0 +1,109 @@
+<prefabs>
+  <game_entity name="homestead_native_tavern_table" old_prefab_name="">
+    <children>
+      <game_entity name="table" old_prefab_name="">
+        <transform position="0.000, 0.000, 0.000"/>
+        <physics shape="bo_bd_table_b" override_material="wood"/>
+        <components><meta_mesh_component name="bd_table_b"/></components>
+      </game_entity>
+      <game_entity name="cloth" old_prefab_name="">
+        <transform position="0.050, 0.020, 0.800" rotation_euler="0.000, 0.000, 0.100"/>
+        <components><meta_mesh_component name="bd_cloth_on_table_a"/></components>
+      </game_entity>
+      <game_entity name="mug_a" old_prefab_name="">
+        <transform position="-0.320, -0.180, 0.845" rotation_euler="0.000, 0.000, 0.300"/>
+        <components><meta_mesh_component name="kitchen_mug_a"/></components>
+      </game_entity>
+      <game_entity name="mug_b" old_prefab_name="">
+        <transform position="0.360, 0.210, 0.845" rotation_euler="0.000, 0.000, -0.500"/>
+        <components><meta_mesh_component name="kitchen_mug_b"/></components>
+      </game_entity>
+      <game_entity name="plate_a" old_prefab_name="">
+        <transform position="0.100, -0.300, 0.845" rotation_euler="0.000, 0.000, 0.000"/>
+        <components><meta_mesh_component name="kitchen_plate_a"/></components>
+      </game_entity>
+      <game_entity name="bowl_a" old_prefab_name="">
+        <transform position="-0.100, 0.280, 0.845" rotation_euler="0.000, 0.000, 0.000"/>
+        <components><meta_mesh_component name="kitchen_bowl_b"/></components>
+      </game_entity>
+      <game_entity name="bench_left" old_prefab_name="">
+        <transform position="0.000, -0.900, 0.000" rotation_euler="0.000, 0.000, 1.571"/>
+        <physics shape="bo_log_bench_default_c" override_material="wood"/>
+        <components>
+          <meta_mesh_component name="log_bench_beech_c"/>
+        </components>
+      </game_entity>
+      <game_entity name="bench_right" old_prefab_name="">
+        <transform position="0.000, 0.900, 0.000" rotation_euler="0.000, 0.000, 1.571"/>
+        <physics shape="bo_log_bench_default_c" override_material="wood"/>
+        <components>
+          <meta_mesh_component name="log_bench_beech_c"/>
+        </components>
+      </game_entity>
+      <game_entity name="sp_table_sit_a" old_prefab_name="" mobility="1">
+        <tags>
+          <tag name="sp_player_sit"/>
+        </tags>
+        <transform position="-0.450, -0.900, 0.470" rotation_euler="0.000, 0.000, 0.000"/>
+        <scripts>
+          <script name="UsablePlace">
+            <variables>
+              <variable name="PilotStandingPointTag" value="Pilot"/>
+              <variable name="AmmoPickUpTag" value="ammopickup"/>
+              <variable name="WaitStandingPointTag" value="Wait"/>
+              <variable name="NavMeshPrefabName" value=""/>
+            </variables>
+          </script>
+        </scripts>
+        <children>
+          <game_entity name="animation_point" old_prefab_name="" mobility="1">
+            <scripts>
+              <script name="AnimationPoint">
+                <variables>
+                  <variable name="ArriveAction" value="act_sit_to_fence_front"/>
+                  <variable name="LoopStartAction" value="act_sit_fence_front_loop"/>
+                  <variable name="LeaveAction" value="act_sit_from_fence_front"/>
+                  <variable name="GroupId" value="-1"/>
+                  <variable name="MinUserToStartInteraction" value="1"/>
+                  <variable name="TranslateUser" value="true"/>
+                </variables>
+              </script>
+            </scripts>
+          </game_entity>
+        </children>
+      </game_entity>
+      <game_entity name="sp_table_sit_b" old_prefab_name="" mobility="1">
+        <tags>
+          <tag name="sp_player_sit"/>
+        </tags>
+        <transform position="0.450, 0.900, 0.470" rotation_euler="0.000, 0.000, 3.142"/>
+        <scripts>
+          <script name="UsablePlace">
+            <variables>
+              <variable name="PilotStandingPointTag" value="Pilot"/>
+              <variable name="AmmoPickUpTag" value="ammopickup"/>
+              <variable name="WaitStandingPointTag" value="Wait"/>
+              <variable name="NavMeshPrefabName" value=""/>
+            </variables>
+          </script>
+        </scripts>
+        <children>
+          <game_entity name="animation_point" old_prefab_name="" mobility="1">
+            <scripts>
+              <script name="AnimationPoint">
+                <variables>
+                  <variable name="ArriveAction" value="act_sit_to_fence_front"/>
+                  <variable name="LoopStartAction" value="act_sit_fence_front_loop"/>
+                  <variable name="LeaveAction" value="act_sit_from_fence_front"/>
+                  <variable name="GroupId" value="-1"/>
+                  <variable name="MinUserToStartInteraction" value="1"/>
+                  <variable name="TranslateUser" value="true"/>
+                </variables>
+              </script>
+            </scripts>
+          </game_entity>
+        </children>
+      </game_entity>
+    </children>
+  </game_entity>
+</prefabs>

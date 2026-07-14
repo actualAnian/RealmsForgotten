@@ -1,0 +1,111 @@
+<prefabs>
+  <game_entity name="homestead_lumberjack_camp" old_prefab_name="">
+    <children>
+      <game_entity name="lumberjack_wood_pile" old_prefab_name="">
+        <transform position="2.417, 0.245, -0.120" rotation_euler="0.000, 0.000, 0.906"/>
+        <components>
+          <meta_mesh_component name="merchandise_wood"/>
+        </components>
+      </game_entity>
+      <game_entity name="lumberjack_wood_heap_1" old_prefab_name="">
+        <transform position="-0.504, 0.580, -0.214" rotation_euler="0.000, 0.000, 0.000"/>
+        <components>
+          <meta_mesh_component name="bd_wood_heap_c"/>
+        </components>
+      </game_entity>
+      <game_entity name="lumberjack_wood_heap_2" old_prefab_name="">
+        <transform position="-2.261, 1.478, -0.048" rotation_euler="0.000, 0.000, 0.906"/>
+        <components>
+          <meta_mesh_component name="bd_wood_heap_c"/>
+        </components>
+      </game_entity>
+      <game_entity name="lumberjack_log_and_axe" old_prefab_name="">
+        <transform position="1.069, -1.077, -0.374" rotation_euler="0.000, 0.000, -0.004"/>
+        <components>
+          <meta_mesh_component name="bd_log_and_axe"/>
+        </components>
+      </game_entity>
+      <game_entity name="lumberjack_carpenter_bench" old_prefab_name="">
+        <transform position="-2.248, -2.152, -0.676" rotation_euler="0.000, 0.000, 2.172"/>
+        <components>
+          <meta_mesh_component name="shop_prop_merchantcarpenter_a"/>
+        </components>
+      </game_entity>
+      <game_entity name="lumberjack_shop_display" old_prefab_name="">
+        <transform position="1.443, 2.142, 1.013" rotation_euler="0.000, 0.000, 2.172"/>
+        <components>
+          <meta_mesh_component name="shop_prop_merchantcarpenter_d"/>
+        </components>
+      </game_entity>
+      <game_entity name="lumberjack_trunk_table" old_prefab_name="">
+        <transform position="1.440, 2.972, 0.203" rotation_euler="0.000, 0.000, 2.172"/>
+        <components>
+          <meta_mesh_component name="bd_table_trunk_a"/>
+        </components>
+      </game_entity>
+      <game_entity name="lumberjack_sawbench" old_prefab_name="">
+        <transform position="-1.357, -4.189, 0.216" rotation_euler="0.000, 0.000, 0.674"/>
+        <components>
+          <meta_mesh_component name="shop_prop_merchantcarpenter_e"/>
+        </components>
+      </game_entity>
+      <game_entity name="sp_lumberjack_npc_spawn" old_prefab_name="" mobility="1">
+        <transform position="1.069, -1.577, -0.374" rotation_euler="0.000, 0.000, 0.000"/>
+        <visibility_masks>
+          <visibility_mask name="visible_only_when_editing" value="true"/>
+        </visibility_masks>
+        <tags>
+          <tag name="spawnpoint_homestead_npc"/>
+        </tags>
+        <components>
+          <meta_mesh_component name="arrow_new_icon"/>
+        </components>
+        <scripts>
+          <script name="UsablePlace">
+            <variables>
+              <variable name="PilotStandingPointTag" value="Pilot"/>
+              <variable name="AmmoPickUpTag" value="ammopickup"/>
+              <variable name="WaitStandingPointTag" value="Wait"/>
+              <variable name="NavMeshPrefabName" value=""/>
+            </variables>
+          </script>
+        </scripts>
+        <children>
+          <game_entity name="animation_point" old_prefab_name="" mobility="1">
+            <visibility_masks>
+              <visibility_mask name="visible_only_when_editing" value="true"/>
+            </visibility_masks>
+            <scripts>
+              <script name="AnimationPoint">
+                <variables>
+                  <variable name="ArriveAction" value=""/>
+                  <variable name="LoopStartAction" value="act_npc_villager_working_while_stand"/>
+                  <variable name="PairLoopStartAction" value=""/>
+                  <variable name="LeaveAction" value=""/>
+                  <variable name="GroupId" value="-1"/>
+                  <variable name="RightHandItem" value=""/>
+                  <variable name="RightHandItemBone" value="ItemR"/>
+                  <variable name="LeftHandItem" value=""/>
+                  <variable name="LeftHandItemBone" value="ItemL"/>
+                  <variable name="MinUserToStartInteraction" value="1"/>
+                  <variable name="ActivatePairs" value="false"/>
+                  <variable name="MinWaitinSeconds" value="50.000"/>
+                  <variable name="MaxWaitInSeconds" value="320.000"/>
+                  <variable name="ForwardDistanceToPivotPoint" value="0.000"/>
+                  <variable name="SideDistanceToPivotPoint" value="0.000"/>
+                  <variable name="KeepOldVisibility" value="false"/>
+                  <variable name="AutoSheathWeapons" value="true"/>
+                  <variable name="AutoEquipWeaponsOnUseStopped" value="false"/>
+                  <variable name="AutoWieldWeapons" value="false"/>
+                  <variable name="TranslateUser" value="true"/>
+                  <variable name="HasRecentlyBeenRechecked" value="false"/>
+                  <variable name="NavMeshPrefabName" value=""/>
+                </variables>
+              </script>
+            </scripts>
+          </game_entity>
+        </children>
+      </game_entity>
+    </children>
+  </game_entity>
+</prefabs>

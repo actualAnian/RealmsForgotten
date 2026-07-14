@@ -1,0 +1,65 @@
+<prefabs>
+  <game_entity name="homestead_ambasador_hall" old_prefab_name="">
+    <transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" />
+    <children>
+
+      <!-- Main building: empire village house -->
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.124, 0.535, -3.945" rotation_euler="0.000, 0.000, -3.132" />
+        <components><meta_mesh_component name="empire_village_house_a" /></components>
+        <physics shape="bo_empire_village_house_a" />
+      </game_entity>
+
+      <!-- Flag pole -->
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-7.774, -0.299, 9.138" rotation_euler="0.000, 0.000, 1.667" />
+        <components><meta_mesh_component name="flag_pole_big" /></components>
+        <physics shape="bo_flag_pole_big" />
+      </game_entity>
+
+      <!-- Hanging cloth ropes (decorative, no physics) -->
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.702, -5.828, 5.287" rotation_euler="0.000, 0.000, -1.584" />
+        <components><meta_mesh_component name="bd_cloth_hanging_rope" /></components>
+      </game_entity>
+
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.778, 5.816, 5.298" rotation_euler="0.000, 0.000, -1.517" />
+        <components><meta_mesh_component name="bd_cloth_hanging_rope" /></components>
+      </game_entity>
+
+      <!-- Aserai stove props -->
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="7.260, -6.156, -3.945" rotation_euler="0.000, 0.000, -0.103" />
+        <components><meta_mesh_component name="tavern_aserai_stove_a" /></components>
+        <physics shape="bo_tavern_aserai_stove_a" />
+      </game_entity>
+
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="2.452, -6.261, -3.945" rotation_euler="0.000, 0.000, -0.103" />
+        <components><meta_mesh_component name="tavern_aserai_stove_a" /></components>
+        <physics shape="bo_tavern_aserai_stove_a" />
+      </game_entity>
+
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="4.557, 6.003, -3.945" rotation_euler="0.000, 0.000, -3.135" />
+        <components><meta_mesh_component name="tavern_aserai_stove_a" /></components>
+        <physics shape="bo_tavern_aserai_stove_a" />
+      </game_entity>
+
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.892, 6.191, -3.945" rotation_euler="0.000, 0.000, -3.135" />
+        <components><meta_mesh_component name="tavern_aserai_stove_a" /></components>
+        <physics shape="bo_tavern_aserai_stove_a" />
+      </game_entity>
+
+      <!-- Ambassador NPC spawn point — placed in front of the house entrance, on the courtyard
+           (Z kept at 0 / ground level; code also ground-snaps so he never spawns clipping the door). -->
+      <game_entity name="spawnpoint_homestead_ambassador" old_prefab_name="">
+        <transform position="0.000, -9.5, 0.000" rotation_euler="0.000, 0.000, 3.142" />
+        <tags><tag name="spawnpoint_homestead_ambassador" /></tags>
+      </game_entity>
+
+    </children>
+  </game_entity>
+</prefabs>
