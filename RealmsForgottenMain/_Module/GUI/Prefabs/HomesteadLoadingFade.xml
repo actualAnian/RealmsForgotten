@@ -1,0 +1,6 @@
+<Prefab>
+  <Window>
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+            Sprite="BlankWhiteSquare_9" Color="#000000FF" AlphaFactor="1.0" />
+  </Window>
+</Prefab>

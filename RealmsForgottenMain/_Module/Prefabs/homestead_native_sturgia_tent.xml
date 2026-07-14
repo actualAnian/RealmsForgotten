@@ -1,0 +1,8 @@
+<prefabs>
+  <game_entity name="homestead_native_sturgia_tent" old_prefab_name="">
+    <physics shape="bo_sturgia_village_tent_a"/>
+    <components>
+      <meta_mesh_component name="sturgia_village_tent_a"/>
+    </components>
+  </game_entity>
+</prefabs>

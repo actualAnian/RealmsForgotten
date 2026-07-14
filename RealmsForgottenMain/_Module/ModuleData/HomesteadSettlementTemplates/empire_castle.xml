@@ -1,0 +1,26 @@
+<Settlements>
+  <Settlement id="{{ID}}" name="{{NAME}}" owner="Faction.{{PLAYER_CLAN}}" posX="{{POS_X}}" posY="{{POS_Y}}" culture="Culture.{{PLAYER_CULTURE}}" gate_posX="{{G_POS_X}}" gate_posY="{{G_POS_Y}}" template_type="Castle" template_variant="1">
+    <Components>
+      <Town id="{{ID}}_castle_comp" is_castle="true" background_crop_position="0.0" background_mesh="menu_empire_1" wait_mesh="wait_empire_town" gate_rotation="{{G_ROT}}" prosperity="420">
+        <Buildings>
+          <Building id="building_castle_fortifications" level="1" />
+          <Building id="building_castle_barracks" level="1" />
+          <Building id="building_castle_training_fields" level="1" />
+          <Building id="building_castle_guard_house" level="1" />
+          <Building id="building_castle_siege_workshop" level="1" />
+          <Building id="building_castle_castallans_office" level="1" />
+          <Building id="building_castle_granary" level="1" />
+          <Building id="building_castle_craftmans_quarters" level="1" />
+          <Building id="building_castle_farmlands" level="1" />
+          <Building id="building_castle_mason" level="1" />
+          <Building id="building_castle_roads_and_paths" level="1" />
+        </Buildings>
+      </Town>
+    </Components>
+    <Locations complex_template="LocationComplexTemplate.castle_complex">
+      <Location id="center" scene_name="empire_siege_001" scene_name_1="empire_siege_001" scene_name_2="empire_siege_001" scene_name_3="empire_siege_001" />
+      <Location id="lordshall" scene_name_1="empire_castle_keep_a_l1_interior" scene_name_2="empire_castle_keep_a_l2_interior" scene_name_3="empire_castle_keep_a_l3_interior" />
+      <Location id="prison" scene_name="empire_dungeon_stealth" />
+    </Locations>
+  </Settlement>
+</Settlements>

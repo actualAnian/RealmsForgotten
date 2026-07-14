@@ -1,0 +1,8 @@
+<prefabs>
+  <game_entity name="homestead_native_desert_shelter" old_prefab_name="">
+    <physics shape="bo_tents_aserai_b"/>
+    <components>
+      <meta_mesh_component name="tents_aserai_b"/>
+    </components>
+  </game_entity>
+</prefabs>

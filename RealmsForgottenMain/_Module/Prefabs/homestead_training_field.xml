@@ -1,0 +1,433 @@
+<prefabs>
+  <game_entity name="homestead_training_field" old_prefab_name="">
+    <children>
+      <game_entity name="tf_fence_e_1" old_prefab_name="">
+        <transform position="-6.203, -4.697, -0.517" rotation_euler="0.000, 0.000, -0.086" />
+        <physics shape="bo_fence_e" override_material="wood" mass="1.000" />
+        <components>
+          <meta_mesh_component name="fence_e" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_fence_e_2" old_prefab_name="">
+        <transform position="0.193, -5.141, -0.544" rotation_euler="0.000, 0.000, -0.086" />
+        <physics shape="bo_fence_e" override_material="wood" mass="1.000" />
+        <components>
+          <meta_mesh_component name="fence_e" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_fence_e_3" old_prefab_name="">
+        <transform position="-8.903, -1.354, -0.517" rotation_euler="0.000, 0.000, -1.634" />
+        <physics shape="bo_fence_e" override_material="wood" mass="1.000" />
+        <components>
+          <meta_mesh_component name="fence_e" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_fence_f_1" old_prefab_name="">
+        <transform position="-8.795, 3.547, -0.488" rotation_euler="0.000, 0.000, -1.588" />
+        <physics shape="bo_fence_f" override_material="wood" mass="1.000" />
+        <components>
+          <meta_mesh_component name="fence_f" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_sword_heap_1" old_prefab_name="">
+        <transform position="0.223, -4.160, 0.293" rotation_euler="0.000, 0.000, -2.045" />
+        <components>
+          <meta_mesh_component name="weapon_heap_sword_a" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_trunk_table_1" old_prefab_name="">
+        <transform position="-6.270, 4.598, -0.467" rotation_euler="0.000, 0.000, 0.000" />
+        <physics shape="bo_bd_table_trunk_a" override_material="wood" />
+        <components>
+          <meta_mesh_component name="bd_table_trunk_a" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_trunk_table_2" old_prefab_name="">
+        <transform position="1.721, -4.050, -0.517" rotation_euler="0.000, 0.000, 3.035" />
+        <physics shape="bo_bd_table_trunk_a" override_material="wood" />
+        <components>
+          <meta_mesh_component name="bd_table_trunk_a" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_sword_heap_2" old_prefab_name="">
+        <transform position="0.546, -3.539, 0.293" rotation_euler="0.000, 0.000, 2.900" />
+        <components>
+          <meta_mesh_component name="weapon_heap_sword_a" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_axe_heap_1" old_prefab_name="">
+        <transform position="1.728, -3.475, 0.293" rotation_euler="0.000, 0.000, 3.035" />
+        <components>
+          <meta_mesh_component name="weapon_heap_axe_a" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_axe_heap_2" old_prefab_name="">
+        <transform position="1.950, -3.484, 0.293" rotation_euler="0.000, 0.000, -2.252" />
+        <components>
+          <meta_mesh_component name="weapon_heap_axe_a" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_battle_axe_1" old_prefab_name="">
+        <transform position="1.249, -3.579, 0.293" rotation_euler="0.000, 0.000, -2.252" />
+        <components>
+          <meta_mesh_component name="two_handed_battle_axe_e" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_battle_axe_2" old_prefab_name="">
+        <transform position="1.283, -3.624, 0.293" rotation_euler="0.000, 0.000, -3.091" />
+        <components>
+          <meta_mesh_component name="two_handed_battle_axe_e" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_battle_axe_3" old_prefab_name="">
+        <transform position="1.271, -3.929, 0.293" rotation_euler="0.000, 0.000, -2.391" />
+        <components>
+          <meta_mesh_component name="two_handed_battle_axe_e" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_hammer_1" old_prefab_name="">
+        <transform position="2.395, -3.879, 0.293" rotation_euler="0.000, 0.000, -2.391" />
+        <components>
+          <meta_mesh_component name="bd_hammer_a" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_hammer_a_1" old_prefab_name="">
+        <transform position="2.434, -4.289, 0.293" rotation_euler="0.000, 0.000, -2.391" />
+        <components>
+          <meta_mesh_component name="bd_hammer_a" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_melee_display" old_prefab_name="">
+        <transform position="-0.969, -3.729, -0.575" rotation_euler="0.000, 0.000, -1.666" />
+        <physics shape="bo_bd_table_e" override_material="wood" />
+        <components>
+          <meta_mesh_component name="shop_prop_merchantweapons_melee_c" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_ranged_display" old_prefab_name="">
+        <transform position="-2.713, 4.386, -0.427" rotation_euler="0.000, 0.000, 3.075" />
+        <physics shape="bo_bd_table_e" override_material="wood" />
+        <components>
+          <meta_mesh_component name="shop_prop_merchantweapons_ranged_c" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_shield_display" old_prefab_name="">
+        <transform position="4.628, -4.580, -0.485" rotation_euler="0.000, 0.000, -1.765" />
+        <physics shape="bo_bd_table_e" override_material="wood" />
+        <components>
+          <meta_mesh_component name="shop_prop_merchantweapons_shield_c" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_helmet_c_1" old_prefab_name="">
+        <transform position="3.303, -4.548, 0.293" rotation_euler="0.000, 0.000, -2.391" />
+        <components>
+          <meta_mesh_component name="armor_merchant_helmet_c" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_helmet_b_1" old_prefab_name="">
+        <transform position="3.463, -4.059, 0.293" rotation_euler="0.000, 0.000, -1.440" />
+        <components>
+          <meta_mesh_component name="armor_merchant_helmet_b" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_helmet_d_1" old_prefab_name="">
+        <transform position="2.911, -4.638, 0.293" rotation_euler="0.000, 0.000, -3.072" />
+        <components>
+          <meta_mesh_component name="armor_merchant_helmet_d" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_helmet_a_1" old_prefab_name="">
+        <transform position="2.542, -4.632, 0.293" rotation_euler="0.000, 0.000, -1.946" />
+        <components>
+          <meta_mesh_component name="armor_merchant_helmet_a" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_clothes_f_1" old_prefab_name="">
+        <transform position="2.974, -3.654, 0.293" rotation_euler="0.000, 0.000, -1.030" />
+        <components>
+          <meta_mesh_component name="armor_merchant_clothes_f" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_clothes_e_1" old_prefab_name="">
+        <transform position="2.966, -4.149, 0.293" rotation_euler="0.000, 0.000, 3.035" />
+        <components>
+          <meta_mesh_component name="armor_merchant_clothes_e" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_bow_heap_1" old_prefab_name="">
+        <transform position="-4.836, 4.878, 0.343" rotation_euler="0.000, 0.000, 0.000" />
+        <components>
+          <meta_mesh_component name="weapon_heap_bow_a" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_crossbow_heap_1" old_prefab_name="">
+        <transform position="-7.590, 5.016, 0.343" rotation_euler="0.000, 0.000, 1.270" />
+        <components>
+          <meta_mesh_component name="weapon_heap_crossbow_a" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_unstrung_bow_1" old_prefab_name="">
+        <transform position="-5.603, 5.038, 0.343" rotation_euler="0.000, 0.000, 1.270" />
+        <components>
+          <meta_mesh_component name="bd_bow_unstrung_a" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_arrow_heap_1" old_prefab_name="">
+        <transform position="-5.237, 4.087, 0.343" rotation_euler="0.000, 0.000, 1.270" />
+        <components>
+          <meta_mesh_component name="weapon_heap_arrow_a" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_arrow_heap_2" old_prefab_name="">
+        <transform position="-5.727, 4.313, 0.343" rotation_euler="0.000, 0.000, 2.223" />
+        <components>
+          <meta_mesh_component name="weapon_heap_arrow_a" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_arrow_barrel_1" old_prefab_name="">
+        <transform position="-4.097, 5.551, -0.427" rotation_euler="0.000, 0.000, 2.223" />
+        <physics shape="bo_arrow_barrel" override_material="wood" />
+        <components>
+          <meta_mesh_component name="arrow_barrel" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_arrow_barrel_2" old_prefab_name="">
+        <transform position="-3.418, 5.549, -0.427" rotation_euler="0.000, 0.000, 2.223" />
+        <physics shape="bo_arrow_barrel" override_material="wood" />
+        <components>
+          <meta_mesh_component name="arrow_barrel" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_target_board_1" old_prefab_name="">
+        <transform position="-7.431, -3.293, -0.517" rotation_euler="0.000, 0.000, 2.987" />
+        <physics shape="bo_bd_target_board" override_material="wood" />
+        <components>
+          <meta_mesh_component name="bd_target_board" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_target_board_2" old_prefab_name="">
+        <transform position="-5.694, -3.355, -0.517" rotation_euler="0.000, 0.000, 2.987" />
+        <physics shape="bo_bd_target_board" override_material="wood" />
+        <components>
+          <meta_mesh_component name="bd_target_board" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_target_board_3" old_prefab_name="">
+        <transform position="-4.186, -3.557, -0.548" rotation_euler="0.000, 0.000, 2.987" />
+        <physics shape="bo_bd_target_board" override_material="wood" />
+        <components>
+          <meta_mesh_component name="bd_target_board" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_barrel_1" old_prefab_name="">
+        <transform position="4.919, 4.604, -0.397" rotation_euler="0.000, 0.000, -0.068" />
+        <physics shape="bo_bd_barrel_c" override_material="wood" />
+        <components>
+          <meta_mesh_component name="bd_barrel_c" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_log_bench_1" old_prefab_name="">
+        <transform position="1.664, 4.960, -0.412" rotation_euler="0.000, 0.000, 1.503" />
+        <physics shape="bo_log_bench_default_c" override_material="wood" />
+        <components>
+          <meta_mesh_component name="log_bench_pine_c" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_trunk_table_3" old_prefab_name="">
+        <transform position="1.746, 3.646, -0.417" rotation_euler="0.000, 0.000, 3.046" />
+        <physics shape="bo_bd_table_trunk_a" override_material="wood" />
+        <components>
+          <meta_mesh_component name="bd_table_trunk_a" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_mead_cup_wood_a" old_prefab_name="">
+        <transform position="0.301, 4.407, 0.393" rotation_euler="0.000, 0.000, -2.648" />
+        <components>
+          <meta_mesh_component name="mead_cup_wooden_a" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_mead_cup_wood_b" old_prefab_name="">
+        <transform position="0.144, 3.133, 0.393" rotation_euler="0.000, 0.000, 0.708" />
+        <components>
+          <meta_mesh_component name="mead_cup_wooden_b" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_mead_cup_metal_1" old_prefab_name="">
+        <transform position="3.393, 2.828, 0.393" rotation_euler="0.000, 0.000, 0.708" />
+        <components>
+          <meta_mesh_component name="mead_cup_metal_c" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_mead_cup_metal_2" old_prefab_name="">
+        <transform position="2.417, 3.675, 0.393" rotation_euler="0.000, 0.000, 1.518" />
+        <components>
+          <meta_mesh_component name="mead_cup_metal_c" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_mead_cup_1" old_prefab_name="">
+        <transform position="1.791, 3.073, 0.393" rotation_euler="0.000, 0.000, 1.518" />
+        <components>
+          <meta_mesh_component name="mead_cup_wooden_a" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_clothes_c_1" old_prefab_name="">
+        <transform position="2.147, -4.703, 0.293" rotation_euler="0.000, 0.000, 1.518" />
+        <components>
+          <meta_mesh_component name="armor_merchant_clothes_c" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_epaulet_1" old_prefab_name="">
+        <transform position="2.971, 2.926, 0.393" rotation_euler="0.000, 0.000, 0.703" />
+        <components>
+          <meta_mesh_component name="armor_merchant_epaulet_a" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_clothes_a_1" old_prefab_name="">
+        <transform position="2.271, 3.102, 0.393" rotation_euler="0.000, 0.000, 1.234" />
+        <components>
+          <meta_mesh_component name="armor_merchant_clothes_a" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_clothes_a_2" old_prefab_name="">
+        <transform position="1.142, -4.423, 0.293" rotation_euler="0.000, 0.000, 2.134" />
+        <components>
+          <meta_mesh_component name="armor_merchant_clothes_a" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_helmet_c_2" old_prefab_name="">
+        <transform position="0.171, 3.434, 0.393" rotation_euler="0.000, 0.000, 0.762" />
+        <components>
+          <meta_mesh_component name="armor_merchant_helmet_c" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_sword_heap_3" old_prefab_name="">
+        <transform position="0.931, 3.349, 0.393" rotation_euler="0.000, 0.000, 0.762" />
+        <components>
+          <meta_mesh_component name="weapon_heap_sword_a" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_heater_shield_1" old_prefab_name="">
+        <transform position="3.472, 3.234, 0.393" rotation_euler="0.000, 0.000, 0.762" />
+        <components>
+          <meta_mesh_component name="heater_shield_e" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_sturgia_shield_1" old_prefab_name="">
+        <transform position="1.740, 3.803, 0.393" rotation_euler="0.000, 0.000, 0.985" />
+        <components>
+          <meta_mesh_component name="sturgia_shield_a" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_heater_shield_a_1" old_prefab_name="">
+        <transform position="5.339, -2.963, -0.505" rotation_euler="0.000, 0.000, 0.985" />
+        <components>
+          <meta_mesh_component name="heater_shield_a" />
+        </components>
+      </game_entity>
+      <game_entity name="tf_chair_1" old_prefab_name="">
+        <transform position="4.287, 3.073, -0.412" rotation_euler="0.000, 0.000, 0.985" />
+        <physics shape="bo_bd_chair_c" override_material="wood" />
+        <components>
+          <meta_mesh_component name="bd_chair_c" />
+        </components>
+      <children><game_entity name="sp_chair_sit_auto" old_prefab_name="" mobility="1"><tags><tag name="sp_player_sit" /></tags><transform position="0.000, 0.000, 0.450" rotation_euler="0.000, 0.000, 0.000" /><scripts><script name="UsablePlace"><variables><variable name="PilotStandingPointTag" value="Pilot" /><variable name="AmmoPickUpTag" value="ammopickup" /><variable name="WaitStandingPointTag" value="Wait" /></variables></script></scripts><children><game_entity name="animation_point" old_prefab_name="" mobility="1"><visibility_masks><visibility_mask name="visible_only_when_editing" value="true" /></visibility_masks><scripts><script name="AnimationPoint"><variables><variable name="ArriveAction" value="act_sit_to_fence_front" /><variable name="LoopStartAction" value="act_sit_fence_front_loop" /><variable name="LeaveAction" value="act_sit_from_fence_front" /><variable name="GroupId" value="-1" /><variable name="MinUserToStartInteraction" value="1" /><variable name="ActivatePairs" value="false" /><variable name="MinWaitinSeconds" value="50.000" /><variable name="MaxWaitInSeconds" value="320.000" /><variable name="TranslateUser" value="true" /></variables></script></scripts></game_entity></children></game_entity></children></game_entity>
+      <game_entity name="tf_chair_2" old_prefab_name="">
+        <transform position="1.945, 2.188, -0.468" rotation_euler="0.000, 0.000, 0.985" />
+        <physics shape="bo_bd_chair_c" override_material="wood" />
+        <components>
+          <meta_mesh_component name="bd_chair_c" />
+        </components>
+      <children><game_entity name="sp_chair_sit_auto" old_prefab_name="" mobility="1"><tags><tag name="sp_player_sit" /></tags><transform position="0.000, 0.000, 0.450" rotation_euler="0.000, 0.000, 0.000" /><scripts><script name="UsablePlace"><variables><variable name="PilotStandingPointTag" value="Pilot" /><variable name="AmmoPickUpTag" value="ammopickup" /><variable name="WaitStandingPointTag" value="Wait" /></variables></script></scripts><children><game_entity name="animation_point" old_prefab_name="" mobility="1"><visibility_masks><visibility_mask name="visible_only_when_editing" value="true" /></visibility_masks><scripts><script name="AnimationPoint"><variables><variable name="ArriveAction" value="act_sit_to_fence_front" /><variable name="LoopStartAction" value="act_sit_fence_front_loop" /><variable name="LeaveAction" value="act_sit_from_fence_front" /><variable name="GroupId" value="-1" /><variable name="MinUserToStartInteraction" value="1" /><variable name="ActivatePairs" value="false" /><variable name="MinWaitinSeconds" value="50.000" /><variable name="MaxWaitInSeconds" value="320.000" /><variable name="TranslateUser" value="true" /></variables></script></scripts></game_entity></children></game_entity></children></game_entity>
+      <game_entity name="tf_chair_3" old_prefab_name="">
+        <transform position="0.127, 2.434, -0.477" rotation_euler="0.000, 0.000, 0.985" />
+        <physics shape="bo_bd_chair_c" override_material="wood" />
+        <components>
+          <meta_mesh_component name="bd_chair_c" />
+        </components>
+      <children><game_entity name="sp_chair_sit_auto" old_prefab_name="" mobility="1"><tags><tag name="sp_player_sit" /></tags><transform position="0.000, 0.000, 0.450" rotation_euler="0.000, 0.000, 0.000" /><scripts><script name="UsablePlace"><variables><variable name="PilotStandingPointTag" value="Pilot" /><variable name="AmmoPickUpTag" value="ammopickup" /><variable name="WaitStandingPointTag" value="Wait" /></variables></script></scripts><children><game_entity name="animation_point" old_prefab_name="" mobility="1"><visibility_masks><visibility_mask name="visible_only_when_editing" value="true" /></visibility_masks><scripts><script name="AnimationPoint"><variables><variable name="ArriveAction" value="act_sit_to_fence_front" /><variable name="LoopStartAction" value="act_sit_fence_front_loop" /><variable name="LeaveAction" value="act_sit_from_fence_front" /><variable name="GroupId" value="-1" /><variable name="MinUserToStartInteraction" value="1" /><variable name="ActivatePairs" value="false" /><variable name="MinWaitinSeconds" value="50.000" /><variable name="MaxWaitInSeconds" value="320.000" /><variable name="TranslateUser" value="true" /></variables></script></scripts></game_entity></children></game_entity></children></game_entity>
+      <game_entity name="tf_chair_4" old_prefab_name="">
+        <transform position="0.561, -2.631, -0.547" rotation_euler="0.000, 0.000, 0.985" />
+        <physics shape="bo_bd_chair_c" override_material="wood" />
+        <components>
+          <meta_mesh_component name="bd_chair_c" />
+        </components>
+      <children><game_entity name="sp_chair_sit_auto" old_prefab_name="" mobility="1"><tags><tag name="sp_player_sit" /></tags><transform position="0.000, 0.000, 0.450" rotation_euler="0.000, 0.000, 0.000" /><scripts><script name="UsablePlace"><variables><variable name="PilotStandingPointTag" value="Pilot" /><variable name="AmmoPickUpTag" value="ammopickup" /><variable name="WaitStandingPointTag" value="Wait" /></variables></script></scripts><children><game_entity name="animation_point" old_prefab_name="" mobility="1"><visibility_masks><visibility_mask name="visible_only_when_editing" value="true" /></visibility_masks><scripts><script name="AnimationPoint"><variables><variable name="ArriveAction" value="act_sit_to_fence_front" /><variable name="LoopStartAction" value="act_sit_fence_front_loop" /><variable name="LeaveAction" value="act_sit_from_fence_front" /><variable name="GroupId" value="-1" /><variable name="MinUserToStartInteraction" value="1" /><variable name="ActivatePairs" value="false" /><variable name="MinWaitinSeconds" value="50.000" /><variable name="MaxWaitInSeconds" value="320.000" /><variable name="TranslateUser" value="true" /></variables></script></scripts></game_entity></children></game_entity></children></game_entity>
+      <game_entity name="tf_torch_1" old_prefab_name="">
+        <transform position="6.417, 3.279, -0.397" rotation_euler="0.000, 0.000, 0.985" />
+        <components>
+          <meta_mesh_component name="torch_outdoors_a" />
+        </components>
+        <scripts>
+          <script name="AmbientSoundEmitter">
+            <variables>
+              <variable name="Event Path" value="event:/mission/ambient/detail/fire/fire_small" />
+              <variable name="Play On Startup" value="true" />
+              <variable name="Is Static" value="false" />
+              <variable name="Override Sound" value="false" />
+              <variable name="Overrided Max Distance" value="20.000000" />
+              <variable name="Overrided Min Distance" value="1.000000" />
+              <variable name="Sound Preset" value="Speakers" />
+              <variable name="Is Master Sound" value="false" />
+              <variable name="Is Master Supressor" value="false" />
+              <variable name="Is Triggered" value="false" />
+              <variable name="Trigger Shape" value="Sphere" />
+            </variables>
+          </script>
+        </scripts>
+        <children>
+          <game_entity name="tf_torch_1_light" old_prefab_name="">
+            <flags>
+              <flag name="not_affected_by_season" value="true" />
+            </flags>
+            <transform position="0.000, 0.000, 0.550" rotation_euler="0.000, 0.000, 0.000" />
+            <components>
+              <light_component color="1.000, 0.596, 0.243" intensity="180.000" radius="9.000" flicker_interval="0.400" flicker_magnitude="2.000" shadow="1" shadow_size_multiplier="1" shadow_radius="5.000" />
+            </components>
+          </game_entity>
+          <game_entity name="tf_torch_1_particles" old_prefab_name="">
+            <flags>
+              <flag name="not_affected_by_season" value="true" />
+            </flags>
+            <transform position="0.000, 0.000, 0.550" rotation_euler="0.000, 0.000, 0.000" />
+            <components>
+              <particle_system_instanced_component>
+                <effect_ref base_effect="{4DF2A56D-207E-4A7D-BE16-C7321F819A38}" />
+              </particle_system_instanced_component>
+            </components>
+          </game_entity>
+        </children>
+      </game_entity>
+      <!-- Arms Master NPC spawn point — placed just outside the south fence, east of centre,
+           facing north into the training grounds so the NPC looks like they are overseeing drills. -->
+      <game_entity name="spawnpoint_homestead_arms_master" old_prefab_name="">
+        <transform position="3.000, -6.500, 0.000" rotation_euler="0.000, 0.000, 1.571" />
+        <tags><tag name="spawnpoint_homestead_arms_master" /></tags>
+      </game_entity>
+
+      <game_entity name="sp_training_spawn_1" old_prefab_name="" mobility="1">
+        <transform position="-3.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" />
+        <tags>
+          <tag name="spawnpoint_homestead_npc" />
+        </tags>
+      </game_entity>
+      <game_entity name="sp_training_spawn_2" old_prefab_name="" mobility="1">
+        <transform position="-4.000, 1.000, 0.000" rotation_euler="0.000, 0.000, 0.000" />
+        <tags>
+          <tag name="spawnpoint_homestead_npc" />
+        </tags>
+      </game_entity>
+      <game_entity name="sp_training_spawn_3" old_prefab_name="" mobility="1">
+        <transform position="-3.000, 2.000, 0.000" rotation_euler="0.000, 0.000, 0.000" />
+        <tags>
+          <tag name="spawnpoint_homestead_npc" />
+        </tags>
+      </game_entity>
+      <game_entity name="sp_training_spawn_4" old_prefab_name="" mobility="1">
+        <transform position="-2.000, 1.000, 0.000" rotation_euler="0.000, 0.000, 0.000" />
+        <tags>
+          <tag name="spawnpoint_homestead_npc" />
+        </tags>
+      </game_entity>
+    </children>
+  </game_entity>
+</prefabs>

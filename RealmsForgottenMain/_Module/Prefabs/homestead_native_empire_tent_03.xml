@@ -1,0 +1,8 @@
+<prefabs>
+  <game_entity name="homestead_native_empire_tent_03" old_prefab_name="">
+    <physics shape="bo_empire_street_tent_02"/>
+    <components>
+      <meta_mesh_component name="empire_street_tent_03"/>
+    </components>
+  </game_entity>
+</prefabs>

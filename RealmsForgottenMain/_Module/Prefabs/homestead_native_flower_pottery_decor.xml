@@ -1,0 +1,20 @@
+<prefabs>
+  <game_entity name="homestead_native_flower_pottery_decor" old_prefab_name="">
+    <children>
+      <game_entity name="flowerpot" old_prefab_name="">
+        <physics shape="bo_empire_garden_flowerpot_a"/>
+        <components><meta_mesh_component name="empire_garden_flowerpot_a"/></components>
+      </game_entity>
+      <game_entity name="pottery_a" old_prefab_name="">
+        <transform position="0.550, 0.250, 0.000" rotation_euler="0.000, 0.000, 0.400"/>
+        <physics shape="bo_empire_street_pottery_01"/>
+        <components><meta_mesh_component name="empire_street_pottery_01"/></components>
+      </game_entity>
+      <game_entity name="pottery_b" old_prefab_name="">
+        <transform position="-0.450, 0.350, 0.000" rotation_euler="0.000, 0.000, -0.700" scale="0.750, 0.750, 0.750"/>
+        <physics shape="bo_empire_street_pottery_01"/>
+        <components><meta_mesh_component name="empire_street_pottery_03"/></components>
+      </game_entity>
+    </children>
+  </game_entity>
+</prefabs>

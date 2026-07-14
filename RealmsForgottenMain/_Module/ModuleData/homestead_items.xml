@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Items>
+  <Item id="homestead_adopted_dog"
+        name="{=homestead_adopted_dog_name}Loyal Hound"
+        value="0"
+        is_merchandise="false"
+        item_category="goods"
+        type="Goods"
+        mesh="shop_prop_merchant_bag_a" />
+</Items>

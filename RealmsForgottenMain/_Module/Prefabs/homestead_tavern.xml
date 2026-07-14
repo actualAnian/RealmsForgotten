@@ -1,0 +1,198 @@
+<prefabs>
+  <game_entity name="homestead_tavern" old_prefab_name="">
+    <transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" />
+    <children>
+
+      <!-- Back half: hippodrome tower + roof -->
+      <game_entity name="ht_side_tower" old_prefab_name="">
+        <transform position="-0.867, 3.161, -0.325" rotation_euler="0.000, 0.000, 0.000" />
+        <physics shape="bo_empire_hippodrome_enterance_side_tower" />
+        <components><meta_mesh_component name="empire_hippodrome_enterance_side_tower" /></components>
+      </game_entity>
+
+      <game_entity name="ht_tower_roof" old_prefab_name="">
+        <transform position="-0.719, 10.813, -0.291" rotation_euler="0.000, 0.000, 0.000" />
+        <physics shape="bo_empire_wall_tower_roof_a" />
+        <components><meta_mesh_component name="empire_wall_tower_roof_a" /></components>
+      </game_entity>
+
+      <!-- Front barn wings flanking the entrance -->
+      <game_entity name="ht_barn_left" old_prefab_name="">
+        <transform position="-8.522, -4.784, 0.559" rotation_euler="0.000, 0.000, -1.616" />
+        <physics shape="bo_european_castle_barn_a_l3" />
+        <components><meta_mesh_component name="european_castle_barn_a_l3" /></components>
+      </game_entity>
+
+      <game_entity name="ht_barn_right" old_prefab_name="">
+        <transform position="2.793, -7.893, 0.559" rotation_euler="0.000, 0.000, 1.551" />
+        <physics shape="bo_european_castle_barn_a_l3" />
+        <components><meta_mesh_component name="european_castle_barn_a_l3" /></components>
+      </game_entity>
+
+
+      <!-- Horse statues flanking the entrance -->
+      <game_entity name="ht_statue_near" old_prefab_name="">
+        <transform position="3.798, -5.028, -0.199" rotation_euler="0.000, 0.000, -1.602" />
+        <physics shape="bo_empire_statue_horse" override_material="stone" />
+        <components><meta_mesh_component name="empire_statue_horse" /></components>
+      </game_entity>
+
+      <game_entity name="ht_statue_far" old_prefab_name="">
+        <transform position="3.677, -8.135, -0.199" rotation_euler="0.000, 0.000, -1.602" />
+        <physics shape="bo_empire_statue_horse" override_material="stone" />
+        <components><meta_mesh_component name="empire_statue_horse" /></components>
+      </game_entity>
+
+      <!-- Decorative hay carts -->
+      <game_entity name="ht_hay_cart_a" old_prefab_name="">
+        <transform position="2.363, 9.362, 0.035" rotation_euler="0.000, 0.000, 2.951" />
+        <physics shape="bo_bd_hay_cart_b" />
+        <components><meta_mesh_component name="bd_hay_cart_b" /></components>
+      </game_entity>
+
+      <game_entity name="ht_hay_cart_b" old_prefab_name="">
+        <transform position="-0.441, 9.781, 0.035" rotation_euler="0.000, 0.000, 2.951" />
+        <physics shape="bo_bd_hay_cart_b" />
+        <components><meta_mesh_component name="bd_hay_cart_b" /></components>
+      </game_entity>
+
+      <!-- Torches flanking the entrance -->
+      <game_entity name="tf_torch_1" old_prefab_name="">
+        <transform position="4.349, -0.610, 0.000" rotation_euler="0.000, 0.000, -1.601" />
+        <components>
+          <meta_mesh_component name="torch_outdoors_a" />
+        </components>
+        <scripts>
+          <script name="AmbientSoundEmitter">
+            <variables>
+              <variable name="Event Path" value="event:/mission/ambient/detail/fire/fire_small" />
+              <variable name="Play On Startup" value="true" />
+              <variable name="Is Static" value="false" />
+              <variable name="Override Sound" value="false" />
+              <variable name="Overrided Max Distance" value="20.000000" />
+              <variable name="Overrided Min Distance" value="1.000000" />
+              <variable name="Sound Preset" value="Speakers" />
+              <variable name="Is Master Sound" value="false" />
+              <variable name="Is Master Supressor" value="false" />
+              <variable name="Is Triggered" value="false" />
+              <variable name="Trigger Shape" value="Sphere" />
+            </variables>
+          </script>
+        </scripts>
+        <children>
+          <game_entity name="tf_torch_1_light" old_prefab_name="">
+            <flags>
+              <flag name="not_affected_by_season" value="true" />
+            </flags>
+            <transform position="0.000, 0.000, 0.550" rotation_euler="0.000, 0.000, 0.000" />
+            <components>
+              <light_component color="1.000, 0.596, 0.243" intensity="180.000" radius="9.000" flicker_interval="0.400" flicker_magnitude="2.000" shadow="1" shadow_size_multiplier="1" shadow_radius="5.000" />
+            </components>
+          </game_entity>
+          <game_entity name="tf_torch_1_particles" old_prefab_name="">
+            <flags>
+              <flag name="not_affected_by_season" value="true" />
+            </flags>
+            <transform position="0.000, 0.000, 0.550" rotation_euler="0.000, 0.000, 0.000" />
+            <components>
+              <particle_system_instanced_component>
+                <effect_ref base_effect="{4DF2A56D-207E-4A7D-BE16-C7321F819A38}" />
+              </particle_system_instanced_component>
+            </components>
+          </game_entity>
+        </children>
+      </game_entity>
+
+      <game_entity name="tf_torch_2" old_prefab_name="">
+        <transform position="-9.336, -1.159, 0.000" rotation_euler="0.000, 0.000, -1.601" />
+        <components>
+          <meta_mesh_component name="torch_outdoors_a" />
+        </components>
+        <scripts>
+          <script name="AmbientSoundEmitter">
+            <variables>
+              <variable name="Event Path" value="event:/mission/ambient/detail/fire/fire_small" />
+              <variable name="Play On Startup" value="true" />
+              <variable name="Is Static" value="false" />
+              <variable name="Override Sound" value="false" />
+              <variable name="Overrided Max Distance" value="20.000000" />
+              <variable name="Overrided Min Distance" value="1.000000" />
+              <variable name="Sound Preset" value="Speakers" />
+              <variable name="Is Master Sound" value="false" />
+              <variable name="Is Master Supressor" value="false" />
+              <variable name="Is Triggered" value="false" />
+              <variable name="Trigger Shape" value="Sphere" />
+            </variables>
+          </script>
+        </scripts>
+        <children>
+          <game_entity name="tf_torch_2_light" old_prefab_name="">
+            <flags>
+              <flag name="not_affected_by_season" value="true" />
+            </flags>
+            <transform position="0.000, 0.000, 0.550" rotation_euler="0.000, 0.000, 0.000" />
+            <components>
+              <light_component color="1.000, 0.596, 0.243" intensity="180.000" radius="9.000" flicker_interval="0.400" flicker_magnitude="2.000" shadow="1" shadow_size_multiplier="1" shadow_radius="5.000" />
+            </components>
+          </game_entity>
+          <game_entity name="tf_torch_2_particles" old_prefab_name="">
+            <flags>
+              <flag name="not_affected_by_season" value="true" />
+            </flags>
+            <transform position="0.000, 0.000, 0.550" rotation_euler="0.000, 0.000, 0.000" />
+            <components>
+              <particle_system_instanced_component>
+                <effect_ref base_effect="{4DF2A56D-207E-4A7D-BE16-C7321F819A38}" />
+              </particle_system_instanced_component>
+            </components>
+          </game_entity>
+        </children>
+      </game_entity>
+
+      <!-- Entrance marker: player is placed just outside this when returning from the interior.
+           Position is between the two horse statues, aligned with the barn door. -->
+      <game_entity name="spawnpoint_homestead_tavern_entrance" old_prefab_name="">
+        <transform position="4.905, -7.506, -0.196" rotation_euler="0.000, 0.000, 1.534" />
+        <tags><tag name="homestead_tavern_entrance" /></tags>
+      </game_entity>
+
+      <!-- Highlightable tavern door: stock PassageUsePoint (FocusableObjectType.Door) so the engine
+           renders the Alt door-icon.  IsMissionExit=true keeps it active off-settlement (no location
+           complex to resolve ToLocationId from).  HomesteadTavernPassagePatch postfixes OnUse for
+           the "homestead_tavern_door" tag and schedules the tavern interior instead of just ending. -->
+      <game_entity name="ht_barn_door" old_prefab_name="" mobility="1">
+        <transform position="2.95, -5.506, -1.600" rotation_euler="0.000, 0.000, 1.534" />
+        <physics shape="bo_arabian_castle_barn_door" />
+        <components><meta_mesh_component name="arabian_castle_barn_door" /></components>
+        <tags>
+          <tag name="homestead_tavern_door" />
+        </tags>
+        <scripts>
+          <script name="Passage">
+            <variables>
+              <variable name="PilotStandingPointTag" value="Pilot"/>
+            </variables>
+          </script>
+        </scripts>
+        <children>
+          <game_entity name="passage_use_point" old_prefab_name="" mobility="1">
+            <transform position="-1.000, -1.000, 2.700" rotation_euler="0.000, 0.000, 0.000" />
+            <physics shape="bo_barrier" />
+            <tags>
+              <tag name="Pilot"/>
+            </tags>
+            <scripts>
+              <script name="PassageUsePoint">
+                <variables>
+                  <variable name="ToLocationId" value="" />
+                  <variable name="IsMissionExit" value="true" />
+                </variables>
+              </script>
+            </scripts>
+          </game_entity>
+        </children>
+      </game_entity>
+
+    </children>
+  </game_entity>
+</prefabs>

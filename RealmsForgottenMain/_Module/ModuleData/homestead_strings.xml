@@ -1,0 +1,1228 @@
+<?xml version='1.0' encoding='utf-8'?>
+<base type="string">
+	<tags>
+		<tag language="English" />
+	</tags>
+	<strings>
+		<string id="homestead_gamemenu_visit_tavern" text="Visit the tavern" />
+		<string id="homestead_tavern_greeter_greeting" text="Welcome, {HONORIFIC}! The hearth's warm and the ale's poured. Shall I show you inside?" />
+		<string id="homestead_tavern_greeter_enter" text="Lead the way." />
+		<string id="homestead_tavern_greeter_leave" text="Not just now." />
+		<string id="hr_tavern_door_action" text="Enter the Tavern" />
+		<string id="hr_tavern_door_desc" text="Tavern" />
+		<string id="homestead_role_tavernkeeper" text="Tavern Keeper" />
+		<string id="hr_tavern_enter_hint" text="Press {KEY} to enter the tavern." />
+		<string id="hr_tavern_exit_hint" text="Press {KEY} to step back outside the tavern." />
+		<string id="hr_tavern_no_scene" text="There is no nearby tavern to model this one after." />
+		<string id="homestead_setup_new_dialog" text="We should set up a homestead here." />
+		<string id="homestead_teardown_homestead_dialog" text="Let's pack up the homestead and leave." />
+		<string id="homestead_change_leader_homestead_dialog" text="I'd like someone else to lead this homestead." />
+		<string id="homestead_ok" text="okie dokie" />
+		
+    <string id="homestead_gamemenu_main_fmt" text="You arrive at your homestead of {CURRENT_HOMESTEAD_NAME}. What would you like to do?" />
+    <string id="homestead_gamemenu_assign_leader" text="Assign leader" />
+		<string id="homestead_gamemenu_walk_around" text="Walk around" />
+		<string id="homestead_gamemenu_manage_homestead" text="Manage homestead" />
+		<string id="homestead_gamemenu_rename" text="Rename homestead" />
+		<string id="homestead_gamemenu_manage_garrison" text="Manage garrison" />
+		<string id="homestead_gamemenu_manage_stash" text="Manage food/stash" />
+		<string id="homestead_gamemenu_deposit_withdraw_gold" text="Deposit/withdraw gold" />
+		<string id="homestead_gamemenu_back" text="Back" />
+		<string id="homestead_gamemenu_wait" text="Wait here" />
+		<string id="homestead_gamemenu_waiting" text="Waiting..." />
+		<string id="homestead_gamemenu_stop_waiting" text="Stop waiting" />
+		<string id="homestead_gamemenu_leave" text="Leave" />
+		<string id="homestead_gamemenu_encounter_text" text="Your homestead is under attack!" />
+		<string id="homestead_gamemenu_encounter_fight" text="Fight!" />
+		<string id="homestead_gamemenu_encounter_parley" text="Parley" />
+		<string id="homestead_gamemenu_encounter_flee" text="Flee!" />
+    <string id="homestead_gamemenu_talk_leader_fmt" text="Talk to {CURRENT_HOMESTEAD_LEADER_NAME}" />
+    <string id="homestead_gamemenu_autorecruittoggle_fmt" text="Toggle auto recruit ({CURRENT_HOMESTEAD_AUTO_RECRUIT_STATE})" />
+    <string id="homestead_gamemenu_autopatrol_toggle_fmt" text="Toggle auto patrol ({CURRENT_HOMESTEAD_AUTO_PATROL_STATE})" />
+    <string id="homestead_gamemenu_caravantrade_toggle_fmt" text="Toggle caravan trading ({CURRENT_HOMESTEAD_CARAVAN_TRADE_STATE})" />
+    <string id="homestead_gamemenu_autofoodbuy_toggle_fmt" text="Toggle auto food buy ({CURRENT_HOMESTEAD_AUTO_FOOD_BUY_STATE})" />
+    <string id="homestead_gamemenu_pay_upgrade_fmt" text="Pay {CURRENT_HOMESTEAD_PAID_UPGRADE_COST} gold to upgrade to tier {CURRENT_HOMESTEAD_NEXT_TIER}" />
+		
+    <string id="homestead_state_enabled" text="Enabled" />
+    <string id="homestead_state_disabled" text="Disabled" />
+    <string id="homestead_autorecruittoggle_message" text="Auto recruit is now {AUTO_RECRUIT_STATE}." />
+    <string id="homestead_autopatrol_toggle_message" text="Auto patrol is now {AUTO_PATROL_STATE}." />
+    <string id="homestead_caravantrade_toggle_message" text="Caravan trading is now {CARAVAN_TRADE_STATE}." />
+    <string id="homestead_autofoodbuy_toggle_message" text="Auto food buy is now {AUTO_FOOD_BUY_STATE}." />
+    <string id="homestead_autofoodbuy_message" text="Homestead {HOMESTEAD_NAME} restocked food: {FOOD_LIST} (-{GOLD_SPENT} gold)." />
+    <string id="homestead_settlers_have_arrived_to_stay" text="{NUMBER_OF_SETTLERS} settlers have arrived to stay at your homestead of {HOMESTEAD_NAME}!" />
+    <string id="homestead_destroyed_leader_captured" text="Your homestead of {HOMESTEAD_NAME} has been abandoned after its leader was captured." />
+    <string id="homestead_destroyed_party_invalid" text="Your homestead of {HOMESTEAD_NAME} has been abandoned after its party was disbanded." />
+		
+    <string id="homestead_withdraw_gold_failreason" text="This homestead does not have that much gold stored!" />
+		<string id="homestead_deposit_gold_failreason" text="You do not have that much gold!" />
+    <string id="homestead_no_active_homestead_for_gold" text="No active homestead was found for this gold transfer." />
+    <string id="homestead_amount_entered_not_valid" text="Amount entered must be a valid number." />
+		
+    <string id="homestead_low_morale_warning" text="Your homestead of {HOMESTEAD_NAME} has low morale!" />
+		<string id="homestead_no_gold_stored_warning" text="Your homestead of {HOMESTEAD_NAME} is lacking gold!" />
+		
+    <string id="homestead_menu_info_title" text="Homestead of " />
+		<string id="homestead_menu_info_tier" text="Tier: {TIER_LEVEL}\n({TIER_PROGRESS_PERCENT}% to next tier!)" />
+		<string id="homestead_menu_info_tier_max" text="Tier: {TIER_LEVEL}" />
+		<string id="homestead_menu_info_tier_settlement" text="Tier: {TIER_LEVEL}&#10;({TIER_PROGRESS_PERCENT}% to settlement upgrade)" />
+		<string id="homestead_menu_info_tier_settlement_ready" text="Tier: {TIER_LEVEL} (ready to become a settlement)" />
+		<string id="homestead_menu_info_gold_stored" text="Gold Stored: {GOLD_STORED}" />
+		<string id="homestead_menu_info_productivity" text="Total Productivity: {TOTAL_PRODUCTIVITY}" />
+		<string id="homestead_menu_info_space" text="Extra Space: {EXTRA_SPACE}" />
+		<string id="homestead_menu_info_leisure" text="Total Leisure: {TOTAL_LEISURE}" />
+		<string id="homestead_menu_info_auto_recruit" text="Auto Recruit: {AUTO_RECRUIT_STATE}" />
+		<string id="homestead_menu_info_morale" text="Total Morale: {TOTAL_MORALE}" />
+    <string id="homestead_menu_info_garrison_limit" text="Garrison Limit: {GARRISON_LIMIT}" />
+    <string id="homestead_menu_info_medical_care" text="Medical Care: {TOTAL_MEDICAL_CARE}" />
+    <string id="homestead_menu_info_daily_gold_forecast" text="Expected Daily Gold: {DAILY_GOLD_MIN} to {DAILY_GOLD_MAX} (avg {DAILY_GOLD_AVG})" />
+    <string id="homestead_menu_info_morale_drift" text="Expected Morale Drift: {MORALE_DRIFT}/day" />
+    <string id="homestead_menu_info_stash" text="Stash: {STASH_USED}/{STASH_CAP} items" />
+    <string id="homestead_menu_info_production" text="Daily Production:\n" />
+    <string id="homestead_menu_info_none" text=" (none)" />
+    <string id="homestead_production_line_format" text="  {DISPLAY_NAME}: ~{EXPECTED_YIELD}/day" />
+    <string id="homestead_menu_info_master" text="{TITLE}{NAME} - {TIER}&#10;{SEPARATOR}&#10;{GOLD}&#10;{STASH}&#10;{PRODUCTION}&#10;{SEPARATOR}&#10;{PRODUCTIVITY}&#10;{SPACE}&#10;{LIMITS}&#10;{LEISURE}&#10;{MEDICAL}&#10;{FORECAST_GOLD}&#10;{FORECAST_MORALE}&#10;{MORALE}" />
+    
+    <string id="homestead_rename_title" text="Name Homestead" />
+    <string id="homestead_rename_text" text="What would you like to name this homestead?" />
+    
+    <string id="homestead_choose_new_leader" text="CHOOSE NEW HOMESTEAD LEADER" />
+    <string id="homestead_choose_new_leader_body" text="Choose a companion to lead the homestead." />
+    
+    <string id="homestead_goldchange_title" text="Deposit/Withdraw Gold" />
+    <string id="homestead_goldchange_text" text="Enter an amount to deposit or withdraw. A negative number means you will withdraw." />
+		
+    <string id="homestead_paid_upgrade_not_enough_gold" text="You need {GOLD_COST} gold to upgrade this homestead." />
+    <string id="homestead_paid_upgrade_success" text="Your homestead has been upgraded to tier {TIER_LEVEL}." />
+    <string id="homestead_player_cannot_lead" text="The player character cannot lead a homestead. Choose a companion instead." />
+    
+    <string id="homestead_gui_build_points" text="Build Points: " />
+    <string id="homestead_gui_productivity" text="Productivity: " />
+    <string id="homestead_gui_space" text="Extra Space: " />
+    <string id="homestead_gui_leisure" text="Leisure: " />
+    
+    <string id="homestead_current_placeable_build_limit" text="BUILD LIMIT: {BUILD_LIMIT}" />
+    <string id="homestead_current_placeable_produces" text="PRODUCES:" />
+    <string id="homestead_current_placeable_item_requirements" text="ITEMS REQUIRED:" />
+    <string id="homestead_current_placeable_needs" text=" NEEDS " />
+    <string id="homestead_current_placeable_or" text=" OR " />
+    
+    <string id="homestead_mission_start_reminder" text="Press {EDIT_MODE_KEY} to cycle through edit modes." />
+		<string id="homestead_new_player_spawn_set" text="New player spawn position set!" />
+		<string id="homestead_cancelled_edit_mode" text="You are no longer making any changes." />
+		<string id="homestead_entered_building_mode_dynamic" text="Building mode. {PLACE_KEY}: place. {LEFT_KEY}/{RIGHT_KEY}: cycle prefabs. {CATEGORY_KEY}: switch category. Scroll: object up/down. Hold RMB + mouse: rotate object. {ROTATE_TURN_LEFT_KEY}/{ROTATE_TURN_RIGHT_KEY}: rotate. {RESET_ROTATION_KEY}: reset orientation. {SNAP_KEY}: snap to ground. {HEIGHT_LOCK_KEY}: toggle height lock. WASD: pan camera flat. Hold Shift + WASD: fly in camera direction. Hold Shift + mouse: rotate camera. Space/Alt: camera up/down." />
+		<string id="homestead_entered_delete_mode" text="You are now in delete mode. Press F, by default, to delete the currently looked at entity." />
+		<string id="homestead_cannot_place_no_build_points" text="You cannot place this object! You need to upgrade your tier or remove other objects." />
+		<string id="homestead_cannot_place_lacking_items" text="You do not have the items required in your homestead's stash for this object!" />
+		<string id="homestead_cannot_place_build_limit" text="You cannot place any more of this object in this homestead." />
+    <string id="homestead_switched_building_mode_category" text="BUILD CATEGORY SWITCHED TO: {NEW_CATEGORY_NAME}" />
+  
+    <string id="homestead_tutorial_title" text="Homesteads Reloaded Tutorial" />
+    <string id="homestead_tutorial_launched_menu" text="Hello, you beautiful person. Welcome to Homesteads Reloaded! This tutorial will hopefully help you a little along this journey.&#10;To the left of this message box, you will see your homestead's game menu. The two most important options are 'Walk around' and 'Manage homestead'.&#10;Please click 'Manage homestead' to continue the tutorial, I won't pop up in 'Walk around' until you do. :)" />
+    <string id="homestead_tutorial_managing_homestead" text="Here you will find information about your homestead and some options to manage it. You might want to consider putting some starting food in the stash and depositing some gold.&#10;In the information box, you will find that homesteads operate based on 3 main components; space, productivity, and leisure.&#10;Space will increase the amount of troops you can have in your homestead.&#10;Productivity will increase the amount of gold your homestead generates, but it will decrease morale.&#10;Leisure does the opposite of productivity. It will decrease your gold made, but will increase the morale.&#10;You will also find that your homestead has a tier level at the top! Your homestead, at maximum, can be tier 4. Upgrading your tier is important to many different systems in homesteads.&#10;Upgrading your tier can be done by placing more troops in your homestead and assigning a leader with good Steward and Engineering skill.&#10;Let's go 'Walk around' a bit, yea? I'm feeling antsy :) also don't forget to store some gold and food before you leave!" />
+    <string id="homestead_tutorial_walk_around" text="Welcome to the site of your new homestead! Hopefully this is a good spot — but if not, walk around and find a better one. You can also pack up and move the whole homestead elsewhere on the campaign map by talking to the leader you assigned.&#10;Here's where the fun begins! Press {EDIT_MODE_KEY}, by default, to cycle through your edit modes (build, destroy, move, and template). Press {SPAWN_KEY} at any time to set your spawn position.&#10;While in build mode, press {CATEGORY_KEY} to switch building categories and {CYCLE_LEFT_KEY} / {CYCLE_RIGHT_KEY} to cycle through the buildings in the current category — watch the bottom-left for details on the highlighted building.&#10;Press {ROTATE_LEFT_KEY} / {ROTATE_RIGHT_KEY} to turn it, or hold the right mouse button and move the mouse to freely tilt and spin it. Scroll the mouse wheel to raise or lower it, {SNAP_KEY} snaps it to the ground, and {RESET_KEY} resets its orientation. When you're happy, press {PLACE_KEY} to place!&#10;Tip: build a Dog Kennel or a Market and you'll meet new faces — a Hound Master who can give you a loyal companion hound, and a Market Lady with trade tips." />
+    
+    <string id="homestead_placeable_herohangout_name" text="Hero Hangout" />
+    <string id="homestead_placeable_herohangout_desc" text="The homestead's leader, your spouse, some companions, and guards will spawn here." />
+    <string id="homestead_placeable_npc_guard_name" text="NPC Point: Guard / Stand" />
+    <string id="homestead_placeable_npc_guard_desc" text="An NPC stands watch here, facing the flag's direction. Blue. Visible only in build mode." />
+    <string id="homestead_placeable_npc_worker_name" text="NPC Point: Worker" />
+    <string id="homestead_placeable_npc_worker_desc" text="An NPC works here, cycling through farm/craft chores (digging, scything, washing, etc.). Green. Visible only in build mode." />
+    <string id="homestead_placeable_npc_onlooker_name" text="NPC Point: Onlooker" />
+    <string id="homestead_placeable_npc_onlooker_desc" text="An NPC watches and cheers here, facing the flag's direction. Yellow. Visible only in build mode." />
+    <string id="homestead_placeable_npc_musician_name" text="NPC Point: Musician" />
+    <string id="homestead_placeable_npc_musician_desc" text="An NPC plays music here, facing the flag's direction. Yellow. Visible only in build mode." />
+    <string id="homestead_placeable_npc_sit_name" text="NPC Point: Sit" />
+    <string id="homestead_placeable_npc_sit_desc" text="An NPC sits on the ground here, facing the flag's direction. Red. Best placed near a fire, table, or bench. Visible only in build mode." />
+    <string id="homestead_placeable_npc_lay_name" text="NPC Point: Rest on Ground" />
+    <string id="homestead_placeable_npc_lay_desc" text="An NPC rests seated on the ground here, facing the flag's direction. Red. Best placed near a fire or bedroll. Visible only in build mode." />
+    <string id="homestead_placeable_bigtent_name" text="Big Tent" />
+    <string id="homestead_placeable_bigtent_desc" text="big rectangle place to stay." />
+    <string id="homestead_placeable_vlandiantentsmall_name" text="Vlandian Tent Small" />
+    <string id="homestead_placeable_vlandiantentsmall_desc" text="small tent thing. still cozy." />
+    <string id="homestead_placeable_vlandiantent_name" text="Vlandian Tent" />
+    <string id="homestead_placeable_vlandiantent_desc" text="Big tent thing. Kind of cozy." />
+    <string id="homestead_placeable_khuzaityurt_name" text="Khuzait Yurt" />
+    <string id="homestead_placeable_khuzaityurt_desc" text="Big tent thing. Kind of cozy." />
+    <string id="homestead_placeable_musiciantent_name" text="Musician Tent" />
+    <string id="homestead_placeable_musiciantent_desc" text="good tunes." />
+    <string id="homestead_placeable_butcherstent_name" text="Butcher's Tent" />
+    <string id="homestead_placeable_butcherstent_desc" text="Produces meat or hides from animals and productivity in your homestead." />
+    <string id="homestead_placeable_hogfarm_name" text="Hog Farm" />
+    <string id="homestead_placeable_hogfarm_desc" text="Produces hogs and productivity in your homestead." />
+    <string id="homestead_placeable_sheepfarm_name" text="Sheep Farm" />
+    <string id="homestead_placeable_sheepfarm_desc" text="Produces meat, sheep, wool, and productivity in your homestead." />
+    <string id="homestead_placeable_well_name" text="Well" />
+    <string id="homestead_placeable_well_desc" text="well is good. good well." />
+    <string id="homestead_placeable_flaxfarm_name" text="Flax Farm" />
+    <string id="homestead_placeable_flaxfarm_desc" text="Produces flax and productivity in your homestead." />
+    <string id="homestead_placeable_grainfarm_name" text="Grain Farm" />
+    <string id="homestead_placeable_grainfarm_desc" text="Produces grain and productivity in your homestead." />
+    <string id="homestead_placeable_standingtorch_name" text="Standing Torch" />
+    <string id="homestead_placeable_shorttorch_name" text="Short Torch" />
+    <string id="homestead_placeable_tablecandle_name" text="Table Candle" />
+    <string id="homestead_placeable_walltorch_name" text="Wall Torch" />
+    <string id="homestead_placeable_prisoncage_name" text="Prison Cage" />
+    <string id="homestead_placeable_prisoncage_desc" text="A wooden holding cage for keeping up to 2 prisoners contained inside the homestead." />
+    <string id="homestead_placeable_guardhouse_name" text="Guardhouse" />
+    <string id="homestead_placeable_guardhouse_desc" text="A guarded holding yard for keeping up to 10 prisoners contained inside a higher-tier homestead." />
+    <string id="homestead_placeable_archerytarget_name" text="Archery Target" />
+    <string id="homestead_placeable_barnfencea_name" text="Barn Fence A" />
+    <string id="homestead_placeable_barnfenceb_name" text="Barn Fence B" />
+    <string id="homestead_placeable_barnfencec_name" text="Barn Fence C" />
+    <string id="homestead_placeable_barnfenced_name" text="Barn Fence D" />
+    <string id="homestead_placeable_barnfencee_name" text="Barn Fence E" />
+    <string id="homestead_placeable_empirefencea_name" text="Empire Fence A" />
+    <string id="homestead_placeable_empirefenceb_name" text="Empire Fence B" />
+    <string id="homestead_placeable_arabianfence_name" text="Aserai Arena Fence" />
+    <string id="homestead_placeable_oldfence_name" text="Old Rustic Fence" />
+    <string id="homestead_placeable_genericfencec_name" text="Simple Fence C" />
+    <string id="homestead_placeable_genericfencef_name" text="Simple Fence F" />
+    <string id="homestead_placeable_genericfenceg_name" text="Stone Fence G" />
+    <string id="homestead_placeable_genericfenceh_name" text="Simple Fence H" />
+    <string id="homestead_placeable_platformfencea_name" text="Platform Fence A" />
+    <string id="homestead_placeable_platformfenceb_name" text="Platform Fence B" />
+    <string id="homestead_placeable_supplywagon_name" text="Supply Wagon" />
+    <string id="homestead_placeable_supplywagon_desc" text="A sturdy wagon for hauling camp supplies and materials." />
+    <string id="homestead_placeable_worktable_name" text="Work Table" />
+    <string id="homestead_placeable_worktable_desc" text="A large table for sorting, cutting, and camp work." />
+    <string id="homestead_placeable_butchertable_name" text="Cutting Table" />
+    <string id="homestead_placeable_butchertable_desc" text="A smaller utility table for food prep and rough camp work." />
+    <string id="homestead_placeable_logbench_name" text="Log Bench" />
+    <string id="homestead_placeable_logbench_desc" text="A simple bench that makes the camp feel a bit more lived in." />
+    <string id="homestead_placeable_markettent_name" text="Market Tent" />
+    <string id="homestead_placeable_markettent_desc" text="A light street tent that works well as a cheap sleeping shelter." />
+    <string id="homestead_placeable_paintedtent_name" text="Painted Tent" />
+    <string id="homestead_placeable_paintedtent_desc" text="A painted canvas tent that adds shelter and a little style." />
+    <string id="homestead_placeable_canopy_name" text="Canopy Tent" />
+    <string id="homestead_placeable_canopy_desc" text="A compact canopy that gives a little extra covered space." />
+    <string id="homestead_placeable_desertshelter_name" text="Desert Shelter" />
+    <string id="homestead_placeable_desertshelter_desc" text="A larger desert-style shelter with enough room for a small family." />
+    <string id="homestead_placeable_aseraitent_name" text="Aserai Street Tent" />
+    <string id="homestead_placeable_aseraitent_desc" text="A compact Aserai tent that adds a little sheltered living space." />
+    <string id="homestead_placeable_battaniatent_name" text="Battanian Street Tent" />
+    <string id="homestead_placeable_battaniatent_desc" text="A Battanian shelter that adds covered sleeping space and visual variety." />
+    <string id="homestead_placeable_khuzaittent_name" text="Khuzait Tent" />
+    <string id="homestead_placeable_khuzaittent_desc" text="A steppe-style Khuzait tent with enough space for a growing homestead." />
+    <string id="homestead_placeable_sturgiatent_name" text="Sturgian Village Tent" />
+    <string id="homestead_placeable_sturgiatent_desc" text="A sturdy northern tent that gives the homestead more room and a rough frontier feel." />
+    <string id="homestead_placeable_handcart_name" text="Hand Cart" />
+    <string id="homestead_placeable_handcart_desc" text="A small cart for moving supplies around the homestead." />
+    <string id="homestead_placeable_winecart_name" text="Empty Trade Cart" />
+    <string id="homestead_placeable_winecart_desc" text="A decorative empty trade cart for making the homestead look more lived in." />
+    <string id="homestead_placeable_horsepaddock_name" text="Horse Paddock" />
+    <string id="homestead_placeable_horsepaddock_desc" text="A small horse area with barriers and a trough. Adds productivity and a little extra working space." />
+    <string id="homestead_placeable_cattlepen_name" text="Cattle Pen" />
+    <string id="homestead_placeable_cattlepen_desc" text="A simple livestock pen for dairy animals. Produces cheese or butter and adds productivity." />
+    <string id="homestead_placeable_empiretenta_name" text="Empire Street Tent A" />
+    <string id="homestead_placeable_empiretenta_desc" text="An Empire street tent that adds covered space and visual variety." />
+    <string id="homestead_placeable_empiretentb_name" text="Empire Street Tent B" />
+    <string id="homestead_placeable_empiretentb_desc" text="A second Empire tent style for compact housing." />
+    <string id="homestead_placeable_empiretentc_name" text="Empire Street Tent C" />
+    <string id="homestead_placeable_empiretentc_desc" text="A larger Empire canopy tent for sheltered homestead living." />
+    <string id="homestead_placeable_khuzaittentb_name" text="Khuzait Tent B" />
+    <string id="homestead_placeable_khuzaittentb_desc" text="A second Khuzait tent style for steppe-flavored housing." />
+    <string id="homestead_placeable_khuzaitinteriorb_name" text="Khuzait Interior Tent B" />
+    <string id="homestead_placeable_khuzaitinteriorb_desc" text="A roomy Khuzait interior tent suitable for a larger household." />
+    <string id="homestead_placeable_grandbazaartent_name" text="Khuzait Grand Bazaar Tent" />
+    <string id="homestead_placeable_grandbazaartent_desc" text="A large decorative market tent that adds space and a little prestige." />
+    <string id="homestead_placeable_barrelstack_name" text="Barrel Stack" />
+    <string id="homestead_placeable_barrelstack_desc" text="A decorative stack of storage barrels." />
+    <string id="homestead_placeable_storagecorner_name" text="Storage Corner" />
+    <string id="homestead_placeable_storagecorner_desc" text="A small cluster of barrels, buckets, and pottery for keeping supplies organized." />
+    <string id="homestead_placeable_taverntable_name" text="Tavern Table" />
+    <string id="homestead_placeable_taverntable_desc" text="A dressed table with mugs, plates, and bowls. Adds leisure without needing tiny clutter placement." />
+    <string id="homestead_placeable_decoratedworktable_name" text="Decorated Work Table" />
+    <string id="homestead_placeable_decoratedworktable_desc" text="A work table dressed with useful camp clutter." />
+    <string id="homestead_placeable_haycart_name" text="Hay Cart" />
+    <string id="homestead_placeable_haycart_desc" text="A hay cart for animal feed and supply hauling." />
+    <string id="homestead_placeable_watertrough_name" text="Water Trough" />
+    <string id="homestead_placeable_watertrough_desc" text="A simple trough for animals and camp water." />
+    <string id="homestead_placeable_hitchingpost_name" text="Horse Hitching Post" />
+    <string id="homestead_placeable_hitchingpost_desc" text="A small horse hitching area for travel and pack animals." />
+    <string id="homestead_placeable_flowerpottery_name" text="Flower and Pottery Decor" />
+    <string id="homestead_placeable_flowerpottery_desc" text="A decorative cluster of flowers and pottery for visual appeal." />
+    <string id="homestead_placeable_medicaltent_name" text="Medical Tent" />
+    <string id="homestead_placeable_medicaltent_desc" text="A staffed recovery tent with beds and basic treatment supplies. Improves morale, speeds wounded recovery, and helps offset AI Influence disease morale penalties when that mod is active." />
+    <string id="homestead_placeable_sturgiastakes_name" text="Defensive Stakes" />
+    <string id="homestead_placeable_sturgiastakes_desc" text="A low line of sharp wooden stakes for slowing cavalry and shaping the approach to the homestead." />
+    <string id="homestead_placeable_trainingfield_name" text="Training Field" />
+    <string id="homestead_placeable_trainingfield_desc" text="A small drill yard where the garrison trains daily. Adds training XP to regular troops and upgrades eligible troops using stored homestead gold and stash items." />
+    <string id="homestead_placeable_plankwalla_name" text="Plank Wall A" />
+    <string id="homestead_placeable_plankwalla_desc" text="A rough wooden wall section for quick field defenses." />
+    <string id="homestead_placeable_plankwallc_name" text="Plank Wall C" />
+    <string id="homestead_placeable_plankwallc_desc" text="A heavier rough plank wall section for blocking approaches." />
+    <string id="homestead_placeable_siegebarricadea_name" text="Siege Barricade A" />
+    <string id="homestead_placeable_siegebarricadea_desc" text="A larger siege barricade group for creating a real defensive line." />
+    <string id="homestead_placeable_siegebarricadeb_name" text="Siege Barricade B" />
+    <string id="homestead_placeable_siegebarricadeb_desc" text="A wagon-and-plank barricade group for larger homestead defenses." />
+    <string id="homestead_placeable_battaniaplatform_name" text="Raised Fighting Platform" />
+    <string id="homestead_placeable_battaniaplatform_desc" text="A raised wooden platform useful for archers or siege weapons." />
+    <string id="homestead_placeable_woodenplatform2_name" text="Large Wooden Platform" />
+    <string id="homestead_placeable_woodenplatform2_desc" text="A large standalone wooden platform for elevated defense placement." />
+    <string id="homestead_placeable_stonewall_name" text="Stone Wall Segment" />
+    <string id="homestead_placeable_stonewall_desc" text="A larger stone wall segment for sturdier defensive cover." />
+    <string id="homestead_placeable_battaniawall_name" text="Tall Defensive Wall" />
+    <string id="homestead_placeable_battaniawall_desc" text="A tall Battanian-style wall segment for late homestead defenses." />
+    
+    <string id="MCM_HR_Mod_Name" text="Homesteads Reloaded" />
+    <string id="MCM_HR_Group_Compatibility" text="Compatibility" />
+    <string id="MCM_HR_McmLayoutFix_Name" text="Fix MCM Menu Order" />
+    <string id="MCM_HR_McmLayoutFix_Hint" text="Corrects the reversed group and header order in the MCM settings menu on Bannerlord 1.4.5. Disable if another mod already provides an MCM layout fix to avoid conflicts. Requires a game restart to take effect." />
+    <string id="MCM_HR_Group_Debug" text="Debug" />
+    <string id="MCM_HR_EnableDebugLogging_Name" text="Enable Debug Logging" />
+    <string id="MCM_HR_EnableDebugLogging_Hint" text="Write detailed trace messages to the HomesteadsReloaded.trace.log file. Disable for better performance." />
+    <string id="MCM_HR_Group_Notifications" text="Notifications" />
+    <string id="MCM_HR_ShowDailyProductionNotifications_Name" text="Daily Production Notifications" />
+    <string id="MCM_HR_ShowDailyProductionNotifications_Hint" text="Show daily production reports for homesteads (gold, produced goods, training results, and the Tavern's daily road-toll income)." />
+    <string id="MCM_HR_ShowCaravanTradeNotifications_Name" text="Caravan Trade Notifications" />
+    <string id="MCM_HR_ShowCaravanTradeNotifications_Hint" text="Show notifications when caravans trade with homesteads." />
+    <string id="MCM_HR_ShowRecruitNotifications_Name" text="Recruit Arrival Notifications" />
+    <string id="MCM_HR_ShowRecruitNotifications_Hint" text="Show notifications when recruits arrive at or depart for homesteads." />
+    <string id="MCM_HR_ShowNpcXpNotifications_Name" text="NPC XP &amp; Relation Notifications" />
+    <string id="MCM_HR_ShowNpcXpNotifications_Hint" text="Show daily homestead notifications for: leader &amp; companion skill gains (Steward, Engineering, Leadership from the homestead; Trade from a Market or caravan trades; Charm from an Ambassador's Hall) and the Ambassador's diplomatic relation improvements with nearby lords, notables, and caravan owners." />
+    <string id="MCM_HR_ShowPatrolNotifications_Name" text="Patrol Notifications" />
+    <string id="MCM_HR_ShowPatrolNotifications_Hint" text="Show notifications about patrol dispatch and status." />
+    <string id="MCM_HR_Group_KeyBinds" text="Change Key Binds" />
+    <string id="MCM_HR_KeyBindEditMode_Name" text="Toggle Edit Mode Types" />
+    <string id="MCM_HR_KeyBindEditMode_Hint" text="The button that is used to switch to an edit mode or turn it off." />
+    <string id="MCM_HR_KeyBindSwitchBuilderModeCategory_Name" text="Switch Builder Mode Category" />
+    <string id="MCM_HR_KeyBindSwitchBuilderModeCategory_Hint" text="The button that will switch your build menu's category of placeables to the next category." />
+    <string id="MCM_HR_KeyBindCycleLeft_Name" text="Cycle Placeables Left" />
+    <string id="MCM_HR_KeyBindCycleLeft_Hint" text="One of two buttons that are used to switch to a different placeable." />
+    <string id="MCM_HR_KeyBindCycleRight_Name" text="Cycle Placeables Right" />
+    <string id="MCM_HR_KeyBindCycleRight_Hint" text="One of two buttons that are used to switch to a different placeable." />
+    <string id="MCM_HR_KeyBindPlace_Name" text="Place Highlighted Placeable" />
+    <string id="MCM_HR_KeyBindPlace_Hint" text="The button that is used to place the selected placeable." />
+    <string id="MCM_HR_KeyBindSetPlayerSpawn_Name" text="Set Player Spawn" />
+    <string id="MCM_HR_KeyBindSetPlayerSpawn_Hint" text="The button that is used to set the player's spawn." />
+    <string id="MCM_HR_KeyBindResetRotation_Name" text="Reset Rotation" />
+    <string id="MCM_HR_KeyBindResetRotation_Hint" text="The button that is used to reset the rotation of the dummy placeable while in edit mode." />
+    <string id="MCM_HR_KeyBindRotateUp_Name" text="Rotate Up" />
+    <string id="MCM_HR_KeyBindRotateUp_Hint" text="The button that is used to rotate the highlighted placeable upwards." />
+    <string id="MCM_HR_KeyBindRotateDown_Name" text="Rotate Down" />
+    <string id="MCM_HR_KeyBindRotateDown_Hint" text="The button that is used to rotate the highlighted placeable downwards." />
+    <string id="MCM_HR_KeyBindRotateTiltLeft_Name" text="Rotate Tilt Left" />
+    <string id="MCM_HR_KeyBindRotateTiltLeft_Hint" text="The button that is used to tilt the highlighted placeable left." />
+    <string id="MCM_HR_KeyBindRotateTiltRight_Name" text="Rotate Tilt Right" />
+    <string id="MCM_HR_KeyBindRotateTiltRight_Hint" text="The button that is used to tilt the highlighted placeable right." />
+    <string id="MCM_HR_KeyBindRotateTurnLeft_Name" text="Rotate Turn Left" />
+    <string id="MCM_HR_KeyBindRotateTurnLeft_Hint" text="The button that is used to turn the highlighted placeable left." />
+    <string id="MCM_HR_KeyBindRotateTurnRight_Name" text="Rotate Turn Right" />
+    <string id="MCM_HR_KeyBindRotateTurnRight_Hint" text="The button that is used to turn the highlighted placeable right." />
+    <string id="MCM_HR_KeyBindMoveUp_Name" text="Move Up" />
+    <string id="MCM_HR_KeyBindMoveUp_Hint" text="The button that is used to move the highlighted placeable upwards." />
+    <string id="MCM_HR_KeyBindMoveDown_Name" text="Move Down" />
+    <string id="MCM_HR_KeyBindMoveDown_Hint" text="The button that is used to move the highlighted placeable downwards." />
+    
+    <string id="homestead_patrol_follow_msg" text="The patrol will escort you." />
+    <string id="homestead_patrol_resume_msg" text="The patrol has resumed their route." />
+    <string id="homestead_patrol_joined_msg" text="{TROOP_COUNT} troops from the patrol have joined your party." />
+    <string id="homestead_courier_arrives" text="A courier arrives..." />
+    <string id="homestead_leader_died_msg" text="They bring you a message that bears bad news. {LEADER_NAME} has died and {HOMESTEAD_NAME} needs a new leader assigned to it." />
+    <string id="homestead_gold_label" text=" gold" />
+    <string id="homestead_tavern_tolls_label" text=" gold (tavern road tolls)" />
+    <string id="homestead_forge_crafted" text="Homestead Crafted {CURR_TEMPLATE_NAME}" />
+    <string id="homestead_training_xp_label" text=" training XP" />
+    <string id="homestead_troop_upgrades_label" text=" troop upgrades" />
+    <string id="homestead_training_gold_label" text=" training gold" />
+    <string id="homestead_upgrade_items_used_label" text=" upgrade items used" />
+    <string id="homestead_daily_tick_earnings" text="Homestead of {HOMESTEAD_NAME} daily report: {EARNINGS}." />
+    <string id="homestead_patrol_created" text="A patrol of {PATROL_SIZE} troops has been sent out from your homestead of {HOMESTEAD_NAME}." />
+    <string id="homestead_patrol_destroyed" text="The patrol from your homestead of {HOMESTEAD_NAME} has been destroyed!" />
+    <string id="homestead_supporting_trade_xp" text="{SUPPORTING_HERO_COUNT} companion(s) gained {TRADE_XP} Trade XP at {HOMESTEAD_NAME}." />
+    <string id="homestead_continue" text="Continue." />
+    <string id="homestead_patrol_report" text="On patrol, sir! Awaiting your orders." />
+    <string id="homestead_patrol_follow" text="Follow me." />
+    <string id="homestead_patrol_resume" text="Resume patrolling." />
+    <string id="homestead_villager_greeting" text="{?PLAYER.GENDER}My lady{?}My lord{\?}! Just hauling goods for the estate." />
+    <string id="homestead_villager_follow" text="Follow me." />
+    <string id="homestead_villager_stop" text="You can head home now." />
+    <string id="homestead_villager_leave" text="Carry on." />
+    <string id="homestead_villager_ack_follow" text="Right away — we'll keep close to you." />
+    <string id="homestead_villager_ack_stop" text="As you say — back to the estate we go." />
+    <string id="homestead_patrol_join" text="Join my troops." />
+    <string id="homestead_patrol_encounter_leave" text="Carry on." />
+    <string id="homestead_patrol_ack_follow" text="Right away, sir! Staying close." />
+    <string id="homestead_patrol_ack_resume" text="Yes, sir! Back to patrol!" />
+    <string id="homestead_patrol_ack_join" text="Understood, sir! Joining your ranks!" />
+    <string id="homestead_recruiter_report" text="We are headed to {HOMESTEAD_NAME}. Nothing to report, sir." />
+    <string id="homestead_recruiter_encounter_leave" text="Carry on then." />
+    <string id="homestead_recruits_from" text="Recruits from {VILLAGE_NAME}" />
+    <string id="homestead_village" text="Village" />
+    
+    <string id="homestead_caravan_trade_both" text="A caravan traded with {HOMESTEAD_NAME}: earned {GOLD_EARNED} gold from goods sold, spent {GOLD_SPENT} gold on food." />
+    <string id="homestead_caravan_trade_sell" text="A caravan bought goods from {HOMESTEAD_NAME}, earning {GOLD_EARNED} gold." />
+    <string id="homestead_caravan_trade_buy" text="A caravan sold food to {HOMESTEAD_NAME} for {GOLD_SPENT} gold." />
+    <string id="homestead_caravantrade_sold" text="Your homestead of {HOMESTEAD_NAME} sold {AMOUNT} units of {ITEM_NAME} to a passing caravan for {GOLD} gold." />
+    <string id="homestead_caravantrade_bought" text="Your homestead of {HOMESTEAD_NAME} bought {AMOUNT} units of {ITEM_NAME} from a passing caravan for {GOLD} gold." />
+    <string id="homestead_leader_reassigned" text="Your homestead of {HOMESTEAD_NAME} was reassigned to {NEW_LEADER_NAME} because its previous leader is unavailable." />
+    <string id="homestead_leader_unavailable" text="Your homestead of {HOMESTEAD_NAME} has no active leader because its previous leader is unavailable. Assign a new leader to resume leader bonuses." />
+    
+    
+    <string id="homestead_save_template_ask" text="I want to save this homestead's layout as a template." />
+    <string id="homestead_template_name_prompt" text="What would you like to name this template?" />
+    <string id="homestead_template_saved" text="Template '{TEMPLATE_NAME}' saved successfully. You can load it when building in any homestead." />
+    <string id="homestead_template_empty" text="There are no buildings to save as a template." />
+    <string id="homestead_template_failed" text="Failed to save template." />
+    <string id="homestead_template_created" text="Template '{TEMPLATE_NAME}' created with {COUNT} buildings." />
+    <string id="homestead_template_save_failed" text="Failed to save template: {ERROR}" />
+    <string id="homestead_entered_template_mode_empty" text="You are now in template mode, but no templates are available. Save a homestead layout first." />
+    <string id="homestead_entered_template_mode_dynamic" text="Template mode. {PLACE_KEY}: place. {LEFT_KEY}/{RIGHT_KEY}: cycle. {ROTATE_TURN_LEFT_KEY}-{ROTATE_TURN_RIGHT_KEY}: rotate. Scroll wheel: adjust height. Hold RMB + mouse: rotate." />
+    <string id="homestead_template_selected" text="Template: {NAME}" />
+    <string id="homestead_template_not_enough_build_points" text="Not enough build points. Need: {NEEDED}, Have: {HAVE}" />
+    <string id="homestead_template_not_enough_materials" text="Not enough materials: {MATERIALS}" />
+    <string id="homestead_template_placed" text="Template '{NAME}' placed successfully! {COUNT} buildings constructed." />
+    
+    
+    <string id="homestead_placeable_ironmine_name" text="Iron Mine" />
+    <string id="homestead_placeable_ironmine_desc" text="A crude mine shaft that extracts iron ore from the earth. Stockpile iron early so your Smithy never sits idle." />
+    <string id="homestead_placeable_fishery_name" text="Fishery" />
+    <string id="homestead_placeable_fishery_desc" text="A small fishing hut with nets and barrels. Provides a reliable daily catch to feed the homestead or sell at market." />
+    <string id="homestead_placeable_saltworks_name" text="Salt Works" />
+    <string id="homestead_placeable_saltworks_desc" text="A brine spring and evaporation setup that draws salt from the ground. Salt trades well and preserves food for the long march." />
+    <string id="homestead_placeable_potterykiln_name" text="Pottery Kiln" />
+    <string id="homestead_placeable_potterykiln_desc" text="A stone-built firing kiln that turns raw clay into finished pottery. Requires clay in the homestead stash. Pairs well with a Clay Gatherer." />
+    <string id="homestead_placeable_silvermine_name" text="Silver Mine" />
+    <string id="homestead_placeable_silvermine_desc" text="A deep shaft mine that yields raw silver ore. Prized for trade on its own, or refined further by a skilled jeweler." />
+    <string id="homestead_placeable_jewelersworkshop_name" text="Jeweler's Workshop" />
+    <string id="homestead_placeable_jewelersworkshop_desc" text="An artisan's bench where skilled craftspeople refine raw silver into fine ornamental goods and luxury wares. Requires silver and tools from the homestead stash." />
+
+    <string id="homestead_placeable_brewery_name" text="Brewery" />
+    <string id="homestead_placeable_brewery_desc" text="A working brewery that ferments grain into beer. Beer sells well in any town and keeps your garrison in good spirits. Requires grain in the homestead stash." />
+
+    
+    <string id="homestead_placeable_woodenstairs_name" text="Wooden Stairs" />
+    <string id="homestead_placeable_woodenstairs_desc" text="A set of walkable wooden stairs. Use them to connect platforms, walls, or elevated terrain to ground level." />
+    <string id="homestead_placeable_heavywoodenstairs_name" text="Heavy Wooden Stairs" />
+    <string id="homestead_placeable_heavywoodenstairs_desc" text="A sturdier, wider staircase built from heavy timber. Pairs well with the large wooden platforms and castle walls." />
+
+    
+    <string id="homestead_placeable_woodenladder_name" text="Wooden Ladder" />
+    <string id="homestead_placeable_woodenladder_desc" text="A simple wooden ladder for climbing to elevated positions. Build early to give defenders access to any raised ground." />
+    <string id="homestead_placeable_smallplatform_name" text="Small Plank Platform" />
+    <string id="homestead_placeable_smallplatform_desc" text="A compact elevated platform section. Stack with ramps and railings to build custom wall walks and fighting positions." />
+    <string id="homestead_placeable_platformplank_name" text="Platform Plank" />
+    <string id="homestead_placeable_platformplank_desc" text="A single narrow plank for bridging gaps or extending a walkway. The basic unit of any wall walk or catwalk." />
+    <string id="homestead_placeable_plankwallb_name" text="Plank Wall B" />
+    <string id="homestead_placeable_plankwallb_desc" text="A medium-height plank wall section. Fills the gap between the light and heavy wall variants for a consistent defensive perimeter." />
+  		<string id="homestead_placeable_claygatherer_name" text="Clay Gatherer" />
+		<string id="homestead_placeable_claygatherer_desc" text="A clay pit with pickaxes for gathering clay from the earth." />
+		<string id="homestead_placeable_castlewall_name" text="High Castle Wall" />
+		<string id="homestead_placeable_castlewall_desc" text="A heavy castle wall segment for fully developed homestead defenses." />
+		<string id="homestead_placeable_decorative_desc" text="Decorative." />
+		<string id="homestead_placeable_regionalmarket_name" text="Regional Market Pavilion" />
+		<string id="homestead_placeable_regionalmarket_desc" text="A prosperous market pavilion that turns the homestead into a local trading stop." />
+		<string id="homestead_placeable_tablebenches_name" text="Table with Benches" />
+		<string id="homestead_placeable_tablebenches_desc" text="A shared table with two benches. Adds leisure and provides sitting spots for homestead residents." />
+		<string id="homestead_placeable_campfire_name" text="Campfire" />
+		<string id="homestead_placeable_campfire_desc" text="A small communal fire that adds leisure and gives people somewhere to stand around." />
+		<string id="homestead_placeable_mastermedical_name" text="Master Medical Pavilion" />
+		<string id="homestead_placeable_mastermedical_desc" text="An expanded physician's tent that improves care, recovery, and morale in a large homestead." />
+		<string id="homestead_placeable_ballista_name" text="Defender Ballista" />
+		<string id="homestead_placeable_ballista_desc" text="A native siege ballista. In homestead attack battles, it should be usable like the defender ballistas in siege scenes." />
+		<string id="homestead_placeable_dirtmound_name" text="Dirt Mound" />
+		<string id="homestead_placeable_dirtmound_desc" text="A small mound of raised earth. Purely decorative." />
+		<string id="homestead_placeable_buildingplot_name" text="Large Building Plot" />
+		<string id="homestead_placeable_buildingplot_desc" text="A wide, flat earthen pad. Purely a foundation — lay it down to give yourself a level surface to place other buildings on." />
+		<string id="homestead_placeable_warbanner_name" text="War Banner" />
+		<string id="homestead_placeable_warbanner_desc" text="A battlefield banner for rallying defenders. During homestead battles, friendly troops near it gain morale and slowly recover health." />
+		<string id="homestead_placeable_clanbanner_name" text="Clan Banner" />
+		<string id="homestead_placeable_clanbanner_desc" text="A large banner bearing your clan's colors and device, flying proudly over the homestead." />
+		<string id="homestead_placeable_clanbannerpole_name" text="Clan Banner (Pole)" />
+		<string id="homestead_placeable_clanbannerpole_desc" text="A clan banner mounted on a standing flagpole." />
+		<string id="homestead_placeable_clanshield_name" text="Clan Shield" />
+		<string id="homestead_placeable_clanshield_desc" text="A decorative shield bearing your clan's device, mounted for display." />
+		<string id="homestead_category_lighting_insignia" text="Lighting and Insignia" />
+		<string id="homestead_settlement_intro_fallback" text="You have arrived at {SETTLEMENT_LINK}." />
+		<string id="homestead_settlement_loading_title" text="Loading..." />
+		<string id="homestead_placeable_smithy_name" text="Smithy" />
+		<string id="homestead_placeable_smithy_desc" text="A working smithy. Produces one set of tools daily." />
+		<string id="homestead_placeable_lumberjackcamp_name" text="Lumberjack Camp" />
+		<string id="homestead_placeable_lumberjackcamp_desc" text="A rough timber camp with work space and stacked logs. Adds productivity and gives workers a place to gather." />
+		<string id="homestead_placeable_arrowbarrel_name" text="Arrow Barrel" />
+		<string id="homestead_placeable_arrowbarrel_desc" text="A siege arrow barrel. In battle, it should let defenders with bows or crossbows refill arrows and bolts." />
+		<string id="homestead_placeable_flaxweaver_name" text="Flax Weaver" />
+		<string id="homestead_placeable_flaxweaver_desc" text="Converts flax into linen using a loom and spinning wheel. Requires flax in the homestead inventory." />
+		<string id="homestead_placeable_commandpavilion_name" text="Command Pavilion" />
+		<string id="homestead_placeable_commandpavilion_desc" text="A large command tent for a settled homestead leader and their retinue." />
+		<string id="homestead_placeable_gatehouse_name" text="Fortified Gatehouse" />
+		<string id="homestead_placeable_gatehouse_desc" text="A large gatehouse capstone for turning a mature homestead into a defensible strongpoint." />
+		<string id="homestead_placeable_generallight_desc" text="Light source." />
+		<string id="homestead_placeable_chickencoop_name" text="Chicken Coop" />
+		<string id="homestead_placeable_chickencoop_desc" text="A small henhouse. Your resident flock provides a steady daily supply of meat from eggs and culled birds." />
+		<string id="homestead_placeable_storehouse_name" text="Storehouse" />
+		<string id="homestead_placeable_storehouse_desc" text="A large barn-style storehouse. Provides substantial troop space for a growing homestead." />
+		<string id="homestead_placeable_fieldkitchen_name" text="Field Kitchen" />
+		<string id="homestead_placeable_fieldkitchen_desc" text="A bustling cooking camp with stoves, pots, and prep tables. Adds leisure and a little space, and its hot meals draw folk in — boosting hearth growth in the villages your homestead recruits from." />
+		<string id="homestead_fieldkitchen_hearth" text="{HOMESTEAD_NAME} (Field Kitchen)" />
+		<string id="homestead_placeable_watchtower_name" text="Watchtower" />
+		<string id="homestead_placeable_watchtower_desc" text="An elevated watchtower that improves your homestead's defensive posture." />
+
+		
+		<string id="companion_follow_option" text="Follow me." />
+		<string id="companion_unfollow_option" text="Stay here for now." />
+		<string id="companion_follow_ack" text="Of course. I'll stay close." />
+		<string id="companion_unfollow_ack" text="Understood. I'll get back to what I was doing." />
+
+		
+		<string id="MCM_HR_Group_Gameplay" text="Gameplay" />
+		<string id="MCM_HR_AutoTroopUpgradesEnabled_Name" text="Automatic Troop Upgrades" />
+		<string id="MCM_HR_AutoTroopUpgradesEnabled_Hint" text="When enabled, garrison and patrol troops automatically promote to the next tier once they accumulate enough XP (and your homestead has the required gold and items). Disable if you want to manage troop tiers yourself. Troops still earn XP either way." />
+		<string id="MCM_HR_Group_Battle" text="Battle" />
+		<string id="MCM_HR_ShowKeepoutsInBattle_Name" text="Show Keepout Zones During Battle" />
+		<string id="MCM_HR_ShowKeepoutsInBattle_Hint" text="If enabled, Keepout Zone markers you have placed in the homestead will be visible (in red) during battles. Disabled by default to keep the battlefield visually clean." />
+		<string id="MCM_HR_ShowNavPointsInBattle_Name" text="Show Nav Points During Battle" />
+		<string id="MCM_HR_ShowNavPointsInBattle_Hint" text="If enabled, Nav Point flags you have placed in the homestead will be visible (in green) during battles. Disabled by default to keep the battlefield visually clean." />
+		<string id="MCM_HR_MaxBattleDogs_Name" text="Max Battle Dogs" />
+		<string id="MCM_HR_MaxBattleDogs_Hint" text="Maximum number of dogs from your homestead stash that will join you in battle. Set to 0 to disable battle dogs entirely." />
+		<string id="MCM_HR_KeyBindSnapToGround_Name" text="Snap to Ground" />
+		<string id="MCM_HR_KeyBindSnapToGround_Hint" text="Snaps the building preview (or template) to terrain height at the cursor position." />
+		<string id="MCM_HR_KeyBindToggleHeightLock_Name" text="Toggle Height Lock" />
+		<string id="MCM_HR_KeyBindToggleHeightLock_Hint" text="Toggles between terrain-following mode (preview Z tracks the ground beneath the cursor) and height-lock mode (preview holds a fixed elevation; only scroll wheel and Move Up/Down change the height)." />
+		<string id="MCM_HR_Group_CtrlBinds" text="Controller Binds" />
+		<string id="MCM_HR_CtrlBindEditMode_Name" text="Cycle Edit Mode" />
+		<string id="MCM_HR_CtrlBindEditMode_Hint" text="Controller button that cycles through the build/edit modes (D-pad up by default). Also rotates the object's pitch while the modifier is held." />
+		<string id="MCM_HR_CtrlBindCategory_Name" text="Switch Category" />
+		<string id="MCM_HR_CtrlBindCategory_Hint" text="Controller button that switches the builder category (D-pad down by default). Also rotates the object's pitch while the modifier is held." />
+		<string id="MCM_HR_CtrlBindCycleLeft_Name" text="Cycle Placeables Left" />
+		<string id="MCM_HR_CtrlBindCycleLeft_Hint" text="Controller button that cycles placeables/templates left (D-pad left by default). Also rotates the object left while the modifier is held." />
+		<string id="MCM_HR_CtrlBindCycleRight_Name" text="Cycle Placeables Right" />
+		<string id="MCM_HR_CtrlBindCycleRight_Hint" text="Controller button that cycles placeables/templates right (D-pad right by default). Also rotates the object right while the modifier is held." />
+		<string id="MCM_HR_CtrlBindPlace_Name" text="Place / Confirm" />
+		<string id="MCM_HR_CtrlBindPlace_Hint" text="Controller button that places the highlighted placeable (A by default — also drives the native cursor click)." />
+		<string id="MCM_HR_CtrlBindHeightLockSnap_Name" text="Height Lock + Snap to Ground" />
+		<string id="MCM_HR_CtrlBindHeightLockSnap_Hint" text="Dual-purpose button: toggles height lock AND snaps the preview to the ground in one press (X by default)." />
+		<string id="MCM_HR_CtrlBindModifier_Name" text="Camera/Rotate Modifier (hold)" />
+		<string id="MCM_HR_CtrlBindModifier_Hint" text="Hold this button (Y by default): the left stick flies the camera and the D-pad rotates the held object instead of cycling." />
+		<string id="MCM_HR_CtrlBindResetRotation_Name" text="Reset Rotation" />
+		<string id="MCM_HR_CtrlBindResetRotation_Hint" text="Controller button that resets the held object's rotation (right stick click by default)." />
+		<string id="MCM_HR_CtrlBindMoveUp_Name" text="Object Up" />
+		<string id="MCM_HR_CtrlBindMoveUp_Hint" text="Controller button that raises the held object (right trigger by default)." />
+		<string id="MCM_HR_CtrlBindMoveDown_Name" text="Object Down" />
+		<string id="MCM_HR_CtrlBindMoveDown_Hint" text="Controller button that lowers the held object (left trigger by default)." />
+		<string id="MCM_HR_CtrlBindCameraUp_Name" text="Camera Up" />
+		<string id="MCM_HR_CtrlBindCameraUp_Hint" text="Controller button that raises the free camera (right bumper by default)." />
+		<string id="MCM_HR_CtrlBindCameraDown_Name" text="Camera Down" />
+		<string id="MCM_HR_CtrlBindCameraDown_Hint" text="Controller button that lowers the free camera (left bumper by default)." />
+
+		
+		<string id="homestead_height_lock_on" text="Height locked at {Z}m. Scroll or use Move Up/Down to adjust. Press {KEY} to follow terrain again." />
+		<string id="homestead_height_lock_off" text="Height lock off — preview follows terrain." />
+		<string id="homestead_gui_height_follow" text="Height: Follow Terrain" />
+		<string id="homestead_gui_height_locked" text="Height: Locked ({Z}m)" />
+
+		
+		<string id="homestead_planning_empty" text="No buildings placed yet" />
+		<string id="homestead_planning_free" text="No materials required" />
+	
+  <string id="homestead_placeable_grapefarm_name" text="Grape Farm" />
+  <string id="homestead_placeable_grapefarm_desc" text="A small vineyard producing fresh grapes daily." />
+
+
+  <string id="homestead_placeable_winery_name" text="Winery" />
+  <string id="homestead_placeable_winery_desc" text="A facility to press and ferment grapes into wine. Requires grapes in the homestead stash." />
+
+
+  <string id="homestead_placeable_dogkennel_name" text="Dog Kennel" />
+  <string id="homestead_placeable_dogkennel_desc" text="A simple shelter that attracts stray dogs. Provides homestead defense." />
+
+    
+    <string id="homestead_plan_ask" text="Let's plan out our homestead." />
+    <string id="homestead_plan_npc_response" text="Of course! Take your time planning — come back when you've designed something you like." />
+
+    
+    <string id="homestead_gamemenu_manage_stash_fmt" text="{MENU_TEXT} ({COUNT}/{CAPACITY})" />
+
+    
+    <string id="homestead_entered_edit_mode" text="You are now in edit mode. Press Q, by default, to pick up the currently looked at entity." />
+
+    
+    <string id="homestead_target_none" text="No object selected" />
+    <string id="homestead_target_hint" text="Look at a built object and press the place key." />
+    <string id="homestead_target_delete_hint" text="Press {PLACE_KEY} to delete this object." />
+    <string id="homestead_target_edit_hint" text="Press {PLACE_KEY} to pick up this object." />
+
+    
+    <string id="homestead_gui_category" text="Category: " />
+    <string id="homestead_gui_category_hint_fallback" text="Press the category key to switch category. Press the cycle keys to cycle placeables." />
+    <string id="homestead_gui_category_hint_dynamic" text="Press {CATEGORY_KEY} to switch category. Press {LEFT_KEY} and {RIGHT_KEY} to cycle placeables." />
+
+    
+    <string id="homestead_gui_materials" text="Building Materials:" />
+
+    
+    <string id="homestead_current_placeable_buildpoints_required" text="{BUILD_POINTS_NEEDED} BUILD POINTS NEEDED" />
+    <string id="homestead_current_placeable_increases" text="+{PRODUCTIVITY} Productivity | +{SPACE} Space | +{LEISURE} Leisure | +{MEDICAL_CARE} Medical Care" />
+
+    
+    <string id="homestead_tracker_tooltip" text="Homestead: {HOMESTEAD_NAME}" />
+    <string id="homestead_patrol_tracker_tooltip" text="Patrol: {HOMESTEAD_NAME}" />
+
+    
+    <string id="homestead_medical_care_morale_bonus" text="Medical care" />
+    <string id="homestead_ai_influence_disease_care_bonus" text="Medical care against disease" />
+    <string id="homestead_medical_care_healing_bonus" text="Homestead medical care" />
+
+    
+    <string id="homestead_patrol_speed" text="Homestead Patrol" />
+
+    
+    <string id="MCM_HR_Group_Trade" text="Caravan Trade Thresholds" />
+    <string id="MCM_HR_TradeSellFoodMin_Name" text="Sell Minimum: Food" />
+    <string id="MCM_HR_TradeSellFoodMin_Hint" text="The minimum amount of food to keep in stash before selling the surplus." />
+    <string id="MCM_HR_TradeSellBuildingMaterialsMin_Name" text="Sell Minimum: Building Materials" />
+    <string id="MCM_HR_TradeSellBuildingMaterialsMin_Hint" text="The minimum amount of building materials to keep in stash before selling the surplus." />
+    <string id="MCM_HR_TradeSellGeneralGoodsMin_Name" text="Sell Minimum: General Goods" />
+    <string id="MCM_HR_TradeSellGeneralGoodsMin_Hint" text="The minimum amount of general goods to keep in stash before selling the surplus." />
+    <string id="MCM_HR_TradeBuyFoodMax_Name" text="Buy Maximum: Food" />
+    <string id="MCM_HR_TradeBuyFoodMax_Hint" text="The maximum amount of food the homestead will stockpile by buying from caravans." />
+    <string id="MCM_HR_TradeBuyBuildingMaterialsMax_Name" text="Buy Maximum: Building Materials" />
+    <string id="MCM_HR_TradeBuyBuildingMaterialsMax_Hint" text="The maximum amount of building materials the homestead will stockpile by buying from caravans." />
+    <string id="MCM_HR_TradeBuyHorsesMax_Name" text="Buy Maximum: Horses (per category)" />
+    <string id="MCM_HR_TradeBuyHorsesMax_Hint" text="The maximum number of riding horses or war horses the homestead will stockpile per upgrade category by buying from passing caravans. Set to 0 to disable." />
+
+    
+    <string id="homestead_adopted_dog_name" text="Loyal Hound" />
+    <string id="homestead_gamemenu_talk_houndmaster" text="Talk to Hound Master" />
+    <string id="homestead_houndmaster_no_dogs" text="I am still trying to catch and tame some wild dogs, my lord. We need some in the kennel before I can offer you a companion." />
+    <string id="homestead_houndmaster_offer_dog" text="We have {DOG_COUNT} dogs ready, my lord. Shall I set one aside for you?" />
+    <string id="homestead_houndmaster_accept" text="Yes, I'll take a companion." />
+    <string id="homestead_houndmaster_decline" text="Not today." />
+    <string id="homestead_houndmaster_has_dog" text="{DOG_NAME} is a fine beast. Loyal to you through and through." />
+    <string id="homestead_houndmaster_has_dog_leave" text="Good to know." />
+    <string id="homestead_houndmaster_release_dog" text="I need to let {DOG_NAME} go." />
+    <string id="homestead_dog_ask" text="What do you think of my dog?" />
+    <string id="homestead_dog_reaction_f" text="Ah, {DOG_NAME} is cute!" />
+    <string id="homestead_dog_reaction_m" text="Wow, {DOG_NAME} looks like a loyal partner!" />
+
+    
+    <string id="MCM_HR_KeyBindSicEm_Name" text="Sic 'Em (Companion Dog)" />
+    <string id="MCM_HR_KeyBindSicEm_Hint" text="In combat, press this key to toggle Sic 'Em mode — your companion dog (and any kennel dogs in battle) will chase the nearest enemy regardless of distance. Press again to stand down." />
+    
+    <string id="homestead_patrol_recalled_to_defend" text="The patrol has rushed back to defend {HOMESTEAD_NAME}!" />
+    
+    <string id="homestead_market_lady_name" text="Market Lady" />
+    <string id="homestead_gamemenu_talk_marketlady" text="Talk to Market Lady" />
+    <string id="homestead_marketlady_greeting" text="Welcome, my lord. The market stalls are busy today. Shall I tell you what the traders have been saying?" />
+    <string id="homestead_marketlady_ask_rumors" text="What are the prices looking like?" />
+    <string id="homestead_marketlady_goodbye" text="Not right now, thank you." />
+    <string id="homestead_marketlady_rumors" text="{TRADE_RUMOR_TEXT}" />
+    <string id="homestead_marketlady_post_rumors_leave" text="Thank you. I'll keep that in mind." />
+
+    
+    <string id="homestead_ambassador_name" text="Ambassador" />
+    <string id="homestead_gamemenu_talk_ambassador" text="Talk to Ambassador" />
+    <string id="homestead_ambassador_greeting" text="My lord. The hall is always open. I have been making overtures to the nearby notables and passing lords on your behalf." />
+    <string id="homestead_converted_notable_greeting" text="Well met, {?PLAYER.GENDER}my lady{?}my lord{\?}. What can I do for you?" />
+    <string id="homestead_ambassador_ask_relations" text="How go the diplomatic efforts?" />
+    <string id="homestead_ambassador_goodbye" text="Keep up the good work." />
+    
+    <string id="homestead_ambassador_relations_leave" text="Well said." />
+
+    <string id="homestead_ambassador_relations_improved" text="The Ambassador at {HOMESTEAD_NAME} improved your relations with {TARGET_NAME} (+2)." />
+    <string id="homestead_ambassador_conv_relations_improved" text="Your Ambassador at {ANCHOR_NAME} improved your relations with {TARGET_NAME} (+1)." />
+    <string id="homestead_amb_anchor_party" text="your party" />
+    <string id="homestead_ambassador_charm_xp" text="{SUPPORTING_HERO_COUNT} companion(s) gained {CHARM_XP} Charm XP from the Ambassador's Hall at {HOMESTEAD_NAME}." />
+    
+    <string id="homestead_placeable_ambassadorhall_name" text="Ambassador's Hall" />
+    <string id="homestead_placeable_ambassadorhall_desc" text="A dignified hall for receiving guests and conducting diplomacy. Your Ambassador will work to improve relations with nearby lords, settlement notables, and visiting caravans." />
+    <string id="homestead_marketlady_post_rumors_again" text="Tell me more." />
+    <string id="homestead_market_trade_xp" text="{SUPPORTING_HERO_COUNT} companion(s) gained {TRADE_XP} Trade XP from the market at {HOMESTEAD_NAME}." />
+    
+    <string id="homestead_placeable_market_name" text="Market" />
+    <string id="homestead_placeable_market_desc" text="A bustling marketplace where merchants sell their wares, increasing the homestead's productivity and wealth." />
+    
+    <string id="MCM_HR_KeyBindPetDog_Hint" text="While walking around (not in battle), look at a nearby dog and press this key to give it a pat — the dog barks happily. Defaults to F, the standard interact key (only active for dogs when you are not building)." />
+    <string id="MCM_HR_KeyBindPetDog_Name" text="Pet Dog" />
+    <string id="homestead_companion_dog_name" text="Loyal Hound" />
+    <string id="hr_honorific_lady" text="my lady" />
+    <string id="hr_honorific_lord" text="my lord" />
+    <string id="hr_npc_guard_1" text="Quiet on the watch, {HONORIFIC}. Not so much as a stray fox." />
+    <string id="hr_npc_guard_2" text="The gate's secure. We'll raise the alarm the moment anything stirs." />
+    <string id="hr_npc_guard_3" text="I keep my eyes on the road, {HONORIFIC}. No one passes unannounced." />
+    <string id="hr_npc_guard_4" text="Cold night for sentry duty, but the homestead sleeps easy for it." />
+    <string id="hr_npc_guard_5" text="Rest easy, {HONORIFIC}. Nothing gets past this post while I'm standing it." />
+    <string id="hr_npc_guard_6" text="Spear's sharp and my eyes are open. Trouble would be a fool to try us." />
+    <string id="hr_npc_musician_1" text="A tune for the master of the house? Just say the word, {HONORIFIC}." />
+    <string id="hr_npc_musician_2" text="Music keeps the spirits high and the work moving, {HONORIFIC}." />
+    <string id="hr_npc_musician_3" text="I know every song from here to the capital — name one and I'll play it." />
+    <string id="hr_npc_musician_4" text="Ah, {HONORIFIC}! Come to hear an old melody, have you?" />
+    <string id="hr_npc_musician_5" text="A homestead with no song is just a heap of timber, I always say." />
+    <string id="hr_npc_musician_6" text="My fingers are cold, but the strings still sing. Care for a verse?" />
+    <string id="hr_npc_soldier_1" text="Good to see you about, {HONORIFIC}. The lads are keeping sharp." />
+    <string id="hr_npc_soldier_2" text="We drill every morning. This place will be ready if trouble comes." />
+    <string id="hr_npc_soldier_3" text="An honour to serve here, {HONORIFIC}. Beats marching in the mud, that's certain." />
+    <string id="hr_npc_soldier_4" text="Give the word and we'll march, {HONORIFIC}. Until then, we hold the line here." />
+    <string id="hr_npc_soldier_5" text="My blade is yours, {HONORIFIC} — same as the day I took the oath." />
+    <string id="hr_npc_soldier_6" text="The garrison's in good order. You've little to fear from raiders." />
+    <string id="hr_npc_villager_1" text="{HONORIFIC}! Didn't expect to see you walking the grounds. It's an honour." />
+    <string id="hr_npc_villager_2" text="Bless you, {HONORIFIC}. This place has been good to us and ours." />
+    <string id="hr_npc_villager_3" text="We're settling in well, {HONORIFIC}. Never thought I'd have a roof this fine." />
+    <string id="hr_npc_villager_4" text="A fine day to you, {HONORIFIC}. The little ones are growing strong here." />
+    <string id="hr_npc_villager_5" text="Good of you to visit, {HONORIFIC}. We don't see the master often." />
+    <string id="hr_npc_villager_6" text="All's well with us, {HONORIFIC}. Hard work and good neighbours — what more is there?" />
+    <string id="hr_npc_worker_1" text="Honest work today, {HONORIFIC} — the fields don't tend themselves." />
+    <string id="hr_npc_worker_2" text="Back's aching, but the harvest's looking fair this year." />
+    <string id="hr_npc_worker_3" text="Plenty to do before sundown, {HONORIFIC}. A homestead's never finished." />
+    <string id="hr_npc_worker_4" text="We'll have the stores full before the frost, the gods willing." />
+    <string id="hr_npc_worker_5" text="Good land, this. Treat it right and it feeds everyone, {HONORIFIC}." />
+    <string id="hr_npc_worker_6" text="Mind the fresh mud by the pens, {HONORIFIC} — been hauling all morning." />
+    <string id="hr_pet_dog_hint" text="Press {KEY} to pet the dog." />
+    <string id="hr_companion_dog_downed" text="{DOG_NAME} has fallen in battle, but will recover and rejoin you afterward." />
+
+    
+    <string id="homestead_role_houndmaster" text="Hound Master" />
+    <string id="homestead_role_marketlady" text="Market Lady" />
+    <string id="homestead_role_ambassador" text="Ambassador" />
+    <string id="homestead_houndmaster_nodogs_leave" text="Understood. Carry on." />
+    <string id="homestead_favor_ask" text="Is there anything you need from me?" />
+    <string id="homestead_favor_offer" text="As it happens, yes. If you could bring {FAVOR_COUNT} {FAVOR_ITEM} to me, it would help us greatly." />
+    <string id="homestead_favor_pending" text="Have you brought the {FAVOR_COUNT} {FAVOR_ITEM} yet, my lord?" />
+    <string id="homestead_favor_ready" text="Ah — you've brought the {FAVOR_ITEM}! You have my thanks." />
+    <string id="homestead_favor_offer_accept" text="Consider it done." />
+    <string id="homestead_favor_offer_decline" text="Not right now." />
+    <string id="homestead_favor_pending_leave" text="Not yet — I'll see to it." />
+    <string id="homestead_favor_turnin" text="Here you are." />
+    <string id="homestead_favor_thanks" text="You are too good to us, my lord. We won't forget it." />
+    <string id="homestead_favor_about" text="About that task you gave me..." />
+    <string id="homestead_favor_partial_deliver" text="I have {PLAYER_COUNT} {FAVOR_ITEM} with me — take them." />
+    <string id="homestead_favor_partial_ack" text="Every bit helps. Bring the rest when you can." />
+    <string id="homestead_favor_partial_delivered" text="Delivered {FAVOR_COUNT} {FAVOR_ITEM} — {REMAINING} more needed." />
+    <string id="homestead_favor_failed" text="You failed to deliver {ITEM} to {NOTABLE} in time (-{PENALTY} relation)." />
+    <string id="homestead_favor_accepted" text="{NOTABLE_NAME} will remember this favor: bring {FAVOR_COUNT} {FAVOR_ITEM} in your party inventory, then return to hand them over. (Added to your Quest Log.)" />
+    <string id="homestead_favor_completed" text="{NOTABLE_NAME}'s favor complete (+{REWARD} relation)." />
+    
+    <string id="homestead_favor_quest_title" text="A Favor for {NOTABLE}" />
+    <string id="homestead_favor_quest_log" text="{NOTABLE} of {HOMESTEAD} has asked you to bring {COUNT} {ITEM}. Carry them in your party inventory, then return to hand them over." />
+    <string id="homestead_favor_quest_task" text="Deliver {ITEM}" />
+    
+    <string id="homestead_delivery_ask" text="Do you need anything delivered nearby?" />
+    <string id="homestead_delivery_status" text="I sent the {PKG_ITEM} along with you. Have you managed to deliver it to {PKG_RECIPIENT} in {PKG_SETTLEMENT} yet?" />
+    <string id="homestead_delivery_status_leave" text="Still making my way there — I'll see it done." />
+    <string id="homestead_delivery_offer" text="Actually, yes. Could you take this {PKG_ITEM} to {PKG_RECIPIENT} in {PKG_SETTLEMENT}? I would greatly appreciate it." />
+    <string id="homestead_delivery_no_target" text="Not at the moment — the people I deal with are a bit further afield than I can ask of you." />
+    <string id="homestead_delivery_accept" text="Leave it to me." />
+    <string id="homestead_delivery_decline" text="I cannot make that trip right now." />
+    <string id="homestead_delivery_handover" text="I have a delivery for you from {PKG_SENDER}." />
+    <string id="homestead_delivery_received" text="Ah, wonderful! I have been expecting this. You have my thanks — and please pass along my regards to {PKG_SENDER}." />
+    <string id="homestead_delivery_done" text="I will pass that on. Safe travels." />
+    <string id="homestead_delivery_lost" text="I seem to have misplaced your delivery from {PKG_SENDER}. I will sort it out." />
+    <string id="homestead_delivery_lost_npc" text="Oh... that is most unfortunate. I do hope you can recover it — {PKG_SENDER} will be relying on it." />
+    <string id="homestead_pkg_accepted" text="You carry {PKG_ITEM} for delivery to {PKG_RECIPIENT} in {PKG_SETTLEMENT}. (Added to Quest Log.)" />
+    <string id="homestead_pkg_complete" text="Delivery complete! {PKG_SENDER} will be pleased (+{REWARD} relation)." />
+    <string id="homestead_pkg_failed" text="You failed to deliver {ITEM} to {RECIPIENT} in time (-{PENALTY} relation)." />
+    <string id="homestead_pkg_quest_title" text="Delivery: {ITEM} for {RECIPIENT}" />
+    <string id="homestead_pkg_quest_log" text="{SENDER} has asked you to deliver {ITEM} to {RECIPIENT} in {SETTLEMENT}. The package has been added to your inventory. Find {RECIPIENT} and speak with them to hand it over." />
+    <string id="homestead_pkg_quest_task" text="Deliver {ITEM} to {RECIPIENT} in {SETTLEMENT}" />
+
+    
+    <string id="homestead_angry_mob" text="Angry Mob" />
+    <string id="homestead_raid_offer" text="My lord — we have had reports of an angry mob forming nearby. They may be on their way here. We need every sword ready!" />
+    <string id="homestead_raid_accept" text="I'll deal with them — everyone to arms!" />
+    <string id="homestead_raid_status" text="The Angry Mob is still out there, my lord. {RAID_COUNT} of them, moving this way. We are watching and ready." />
+    <string id="homestead_raid_status_leave" text="Stay sharp. I'll intercept them on the map if I can." />
+    <string id="homestead_raid_victory" text="The Angry Mob has been driven off! Your homestead notables are grateful (+{REWARD} relation each)." />
+    <string id="homestead_raid_dispersed" text="The Angry Mob approaching {HOMESTEAD} has dispersed." />
+    <string id="homestead_raid_lost" text="The homestead fell to the Angry Mob." />
+    <string id="homestead_raid_quest_title" text="Angry Mob Approaching {HOMESTEAD}" />
+    <string id="homestead_raid_quest_log" text="An angry mob of {COUNT} is moving toward your homestead of {HOMESTEAD}. Intercept them on the campaign map or defend the homestead when they arrive." />
+    <string id="homestead_raid_quest_task" text="Defeat the Angry Mob" />
+
+    
+    <string id="homestead_apparel_slot_helmet" text="helmet" />
+    <string id="homestead_apparel_slot_shoulders" text="cloak" />
+    <string id="homestead_apparel_slot_torso" text="garment" />
+    <string id="homestead_apparel_slot_gloves" text="gloves" />
+    <string id="homestead_apparel_slot_shoes" text="boots" />
+    <string id="homestead_apparel_offer" text="There is one thing, my lord. I have grown weary of these rags — I should dearly love a proper {APPAREL_ITEM} to wear. Would you find me one?" />
+    <string id="homestead_apparel_accept" text="You shall have it." />
+    <string id="homestead_apparel_ready" text="Is that the {APPAREL_ITEM} you found for me? Wonderful!" />
+    <string id="homestead_apparel_handover" text="Here — it should fit you well." />
+    <string id="homestead_apparel_pending" text="Have you found that {APPAREL_ITEM} for me yet, my lord?" />
+    <string id="homestead_apparel_pending_leave" text="Not yet — I'll keep an eye out." />
+    <string id="homestead_apparel_complete" text="{NOTABLE} is delighted with the new {SLOT} (+{REWARD} relation)." />
+    <string id="homestead_apparel_failed" text="You failed to bring {NOTABLE} the {SLOT} they wanted (-{PENALTY} relation)." />
+    <string id="homestead_apparel_quest_title" text="New Attire for {NOTABLE}" />
+    <string id="homestead_apparel_quest_log" text="{NOTABLE} has asked you to bring them a fine {ITEM} to wear. Acquire it and return to hand it over." />
+    <string id="homestead_apparel_quest_task" text="Bring {ITEM} to {NOTABLE}" />
+
+    
+    <string id="homestead_build_offer" text="There is, my lord. The homestead could really use a {BUILD_BUILDING}. Might you build one for us?" />
+    <string id="homestead_build_accept" text="Consider it built." />
+    <string id="homestead_build_decline" text="Not right now." />
+    <string id="homestead_build_ready" text="You built the {BUILD_BUILDING}! Splendid work, my lord." />
+    <string id="homestead_build_handover" text="It was the least I could do." />
+    <string id="homestead_build_status" text="Have you had a chance to build that {BUILD_BUILDING} yet, my lord?" />
+    <string id="homestead_build_status_leave" text="I'll get it built soon." />
+    <string id="homestead_build_complete" text="{NOTABLE} is pleased with the new {BUILDING} (+{REWARD} relation)." />
+    <string id="homestead_build_failed" text="You never built the {BUILDING} {NOTABLE} asked for (-{PENALTY} relation)." />
+    <string id="homestead_build_quest_title" text="A Building for {NOTABLE}" />
+    <string id="homestead_build_quest_log" text="{NOTABLE} has asked you to build a {BUILDING} in the homestead. Construct it in build mode to satisfy the request." />
+    <string id="homestead_build_quest_task" text="Build a {BUILDING}" />
+
+    
+    <string id="homestead_appr_offer" text="There is, my lord. I know of a promising youth, keen to learn the ways of war but green as spring grass. Would you take them into your company and blood them in a few battles?" />
+    <string id="homestead_appr_accept" text="Send them along — I'll make a warrior of them." />
+    <string id="homestead_appr_decline" text="I can't take on a recruit right now." />
+    <string id="homestead_appr_accepted" text="{APPRENTICE} joins your party to learn the ways of war. Win battles with them along." />
+    <string id="homestead_appr_ready" text="You've made a fine warrior of {APPR_NAME}! They are ready to come home." />
+    <string id="homestead_appr_graduate" text="They've earned their place here." />
+    <string id="homestead_appr_status" text="How fares {APPR_NAME}? ({APPR_POINTS} of {APPR_REQ} skill points gained so far.)" />
+    <string id="homestead_appr_status_leave" text="Coming along. I'll keep at it." />
+    <string id="homestead_appr_ready_notice" text="{APPRENTICE} has grown into a capable fighter. Return to {NOTABLE} at the homestead." />
+    <string id="homestead_appr_gear_up" text="{APPRENTICE} has earned better equipment." />
+    <string id="homestead_appr_complete" text="{APPRENTICE} has completed their training (grew most in {SKILL}) and will settle at the homestead. {NOTABLE} is grateful (+{REWARD} relation)." />
+    <string id="homestead_appr_failed" text="{APPRENTICE} never got the training {NOTABLE} hoped for (-{PENALTY} relation)." />
+    <string id="homestead_appr_quest_title" text="Training {APPRENTICE} for {NOTABLE}" />
+    <string id="homestead_appr_quest_log" text="{NOTABLE} has asked you to take their apprentice {APPRENTICE} into your party and season them in battle. Win battles with {APPRENTICE} along until they have gained {POINTS} skill points, then return to {NOTABLE}." />
+    <string id="homestead_appr_quest_task" text="Train {APPRENTICE}" />
+
+    <string id="hr_pet_dog_player" text="You give the dog a scratch behind the ears. &quot;Good boy!&quot;" />
+    <string id="hr_pet_dog_react" text="{DOG} barks happily and wags its tail!" />
+<string id="homestead_houndmaster_mastery_offer" text="My lord, the hounds have grown strong and disciplined under my training. With your permission, I can teach them a new trick to knock your enemies off their feet in battle." /><string id="homestead_houndmaster_mastery_accept" text="That sounds excellent. Teach them everything you know." /><string id="homestead_houndmaster_mastery_decline" text="Not right now. Carry on." /><string id="homestead_houndmaster_mastery_done" text="Right away, my lord! The enemies of your house will fear our pack." /><string id="homestead_marketlady_mastery_offer" text="My lord, with the connections we've made, I can now ensure our goods fetch the best prices, and our purchases cost us less, no matter where you trade." /><string id="homestead_marketlady_mastery_accept" text="That is an excellent strategy. Proceed immediately." /><string id="homestead_marketlady_mastery_decline" text="Hold off on that for now." /><string id="homestead_marketlady_mastery_done" text="Right away, my lord! I will send word to our contacts." /><string id="homestead_ambassador_mastery_offer" text="My lord, we have achieved much together. With your blessing, I will begin writing ahead to every notable figure in the realm. My tactful introductions will ensure they respect you before you even arrive." /><string id="homestead_ambassador_mastery_accept" text="That is an excellent strategy. Proceed immediately." /><string id="homestead_ambassador_mastery_decline" text="Hold off on that for now." /><string id="homestead_ambassador_mastery_done" text="At once, my lord. The ravens will fly this very night." /><string id="homestead_ambassador_relations_report" text="{AMBASSADOR_REPORT_TEXT}" /><string id="homestead_ambassador_no_report" text="I have no report at this time, my lord." /><string id="homestead_appr_redirect" text="I'll find them." /><string id="homestead_appr_farewell_speech" text="My lord... I've fought hard at your side, and I'd like to think I've grown into something worthy. I honed myself most in {APPR_TOP_SKILL} through it all. I am grateful for the chance you gave me — and I am ready to call this homestead home." /><string id="homestead_appr_farewell_accept" text="You've earned your place. Serve this homestead well." /><string id="homestead_appr_farewell_accept_alt" text="The homestead is lucky to have you. Make the most of it." /><string id="homestead_appr_farewell_npc_end" text="I will, my lord. You have my thanks." /><string id="homestead_ambassador_no_contacts" text="I have yet to establish contacts in the area, my lord." /><string id="homestead_ambassador_caravan_owner" text="caravan owner" /><string id="homestead_ambassador_quiet_roads" text="The roads have been quiet, my lord. I have yet to make contact with any notable lords or settlement figures within reach of the homestead." /><string id="homestead_ambassador_assessed_standing" text="I have assessed our standing with nearby figures, my lord:" /><string id="homestead_ambassador_others_in_range" text="...and {COUNT} others within range." /><string id="homestead_ambassador_rel_50" text="Trusted ally" /><string id="homestead_ambassador_rel_25" text="Friendly" /><string id="homestead_ambassador_rel_10" text="Warm" /><string id="homestead_ambassador_rel_0" text="Neutral" /><string id="homestead_ambassador_rel_m10" text="Cool" /><string id="homestead_ambassador_rel_m25" text="Unfriendly" /><string id="homestead_ambassador_rel_m50" text="Hostile" /><string id="hr_companion_dog_fallback_name" text="Your dog" /><string id="homestead_ambassador_name_no_first" text="Ambassador of {HOMESTEAD_NAME}" /><string id="homestead_ambassador_fallback_first" text="the Ambassador" />
+
+    <!-- Arms Master NPC strings -->
+    <string id="homestead_arms_master_name" text="Arms Master" />
+    <string id="homestead_role_armsmaster" text="Arms Master" />
+
+    <!-- Arms Master recruit quest strings -->
+    <string id="homestead_arms_master_quest_title" text="Find an Arms Master" />
+    <string id="homestead_arms_master_quest_expired" text="The search for an Arms Master was abandoned — time has passed without a tournament victory." />
+    <string id="homestead_arms_master_quest_success" text="Your victory in the tournament has earned the respect of a seasoned warrior. They have agreed to serve as Arms Master at your homestead." />
+    <string id="homestead_arms_master_quest_cancelled" text="The search for an Arms Master has been abandoned." />
+
+    <!-- Arms Master leader dialog strings -->
+    <string id="homestead_leader_arms_master_ask" text="I want to find a skilled Arms Master for our training grounds." />
+    <string id="homestead_leader_arms_master_npc" text="An Arms Master? That is no small feat, my lord. Warriors of that calibre respect strength above all else. Win a tournament — prove yourself on the sand — and such a man might follow you." />
+    <string id="homestead_arms_master_accept" text="I will enter the next tournament." />
+    <string id="homestead_arms_master_decline" text="Perhaps another time." />
+    <string id="homestead_arms_master_quest_accepted_npc" text="Good hunting, my lord. The training grounds await." />
+    <string id="homestead_leader_arms_master_status" text="Any word on finding an Arms Master?" />
+    <string id="homestead_arms_master_status_npc_line" text="Not yet, my lord. Win a tournament — a victory in the arena will bring the right man to our gates." />
+
+    <!-- Arms Master NPC dialog strings -->
+    <string id="homestead_arms_master_greeting" text="My lord. Your men drill well. Say the word and I'll put them through their paces." />
+    <string id="homestead_arms_master_ask_status" text="How does the training go?" />
+    <string id="homestead_arms_master_goodbye" text="Carry on." />
+    <string id="homestead_arms_master_status_report" text="The men are sharp, my lord. Discipline is high. {DRILL_SERGEANT_STATUS}" />
+    <string id="homestead_arms_master_tactical_edge_active" text="My Tactical Edge is yours — our forces hit harder in the field." />
+    <string id="homestead_arms_master_tactical_edge_inactive" text="Earn my full loyalty and I can offer even more in battle." />
+    <string id="homestead_arms_master_post_status_leave" text="Well done. Keep at it." />
+
+    <!-- Master Smith recruit quest strings -->
+    <string id="homestead_smith_quest_title" text="A Smith for the Homestead" />
+    <string id="homestead_smith_quest_start" text="Your homestead's smithy stands ready, but it needs a master to work it. Seek out a Blacksmith in any town and persuade them to take up the hammer at your homestead." />
+    <string id="homestead_smith_quest_progress" text="Prove your dedication to the craft: complete {DONE} of {TOTAL} smithing orders in any town, then return to the blacksmith in {SETTLEMENT}. ({DONE}/{TOTAL})" />
+    <string id="homestead_smith_quest_orders_done" text="You have proven your dedication to the craft. Return to the blacksmith in {SETTLEMENT} and offer them a place at your homestead." />
+    <string id="homestead_smith_quest_success" text="The Blacksmith has accepted your offer and will serve as Master Smith at your homestead's forge." />
+    <string id="homestead_smith_quest_expired" text="The search for a Master Smith was abandoned — too much time has passed." />
+    <string id="homestead_smith_quest_cancelled" text="The search for a Master Smith has been abandoned." />
+
+    <!-- Master Smith leader + blacksmith dialog strings -->
+    <string id="homestead_leader_smith_ask" text="Our smithy stands idle. How might we find a master to work it?" />
+    <string id="homestead_leader_smith_offer" text="Smiths of true skill are proud folk, my lord. Seek one out in any town and win his respect — he'll not leave his forge for less." />
+    <string id="homestead_leader_smith_accept" text="I'll find a worthy smith and bring him to our forge." />
+    <string id="homestead_leader_smith_decline" text="Another time." />
+    <string id="homestead_leader_smith_accepted" text="A fine notion. Earn a smith's respect, and our forge will ring at last." />
+    <string id="homestead_smith_pitch" text="I'm building a smithy at my homestead. Would you come and run my forge?" />
+    <string id="homestead_smith_pitch_reply" text="Leave a town forge for some backwater? Prove you honour the craft first — fill ten smithing orders in the towns of Calradia. Do that, then come back to me here, and we'll talk." />
+    <string id="homestead_smith_recruit" text="I've filled the ten orders you asked of me. Will you come to my homestead now?" />
+    <string id="homestead_smith_recruit_accept" text="You've the dedication of a true smith, my lord. I'll pack my tools and make for your homestead." />
+
+    <!-- Master Smith Mastery: quality upgrades -->
+    <string id="homestead_grandmaster_smith" text="Grandmaster Smith {BASE_NAME}" />
+    <string id="homestead_mastersmith_mastery_offer" text="{HONORIFIC}, my hands have learned this trade as well as any living. Give me leave and I'll temper and refine the very gear you carry — make good steel better." />
+    <string id="homestead_mastersmith_mastery_accept" text="Show me what your hammer can do." />
+    <string id="homestead_mastersmith_mastery_decline" text="Maybe later." />
+    <string id="homestead_mastersmith_mastery_done" text="Then bring me a piece whenever you like, and I'll see it improved." />
+    <string id="homestead_mastersmith_upgrade_ask" text="I have a piece I'd like you to improve." />
+    <string id="homestead_mastersmith_upgrade_ack" text="Let's see what you're carrying. Pick the piece, and I'll have it ready by tomorrow." />
+    <string id="homestead_mastersmith_upgrade_ack2" text="Gladly. Pick the piece from the homestead menu and I'll have it ready by tomorrow." />
+    <string id="homestead_mastersmith_upgrade_status_ask" text="How's my piece coming along?" />
+    <string id="homestead_mastersmith_upgrade_status" text="Still at the anvil, {HONORIFIC}. Good work takes time — come back tomorrow and it'll be ready." />
+    <string id="homestead_mastersmith_upgrade_ready" text="Good timing, {HONORIFIC} — your piece is finished. Tempered and true; you'll feel the difference. Here you are." />
+    <string id="homestead_smith_upgrade_title" text="Forge Upgrade" />
+    <string id="homestead_smith_upgrade_body" text="Choose one piece for the master to refine — it will be ready tomorrow.{newline}You have {GOLD}{GOLD_ICON}." />
+    <string id="homestead_smith_upgrade_ready_banner" text="{ITEM} is ready — return to {SMITH} to collect it." />
+    <string id="homestead_smith_upgrade_collected" text="Your {ITEM} returns from the forge as a {UPGRADED}." />
+    <string id="homestead_gamemenu_talk_mastersmith" text="Talk to the Master Smith" />
+    <string id="homestead_gamemenu_smith_refine" text="Have the Master Smith refine a piece" />
+    <string id="homestead_gamemenu_smith_collect" text="Collect your refined piece from the Master Smith" />
+    <string id="homestead_smith_upgrade_row" text="{TARGET}  —  {COST}{GOLD_ICON}" />
+    <string id="homestead_smith_upgrade_hint" text="Currently {CURRENT}. Cost {COST}{GOLD_ICON}." />
+    <string id="homestead_smith_upgrade_normal" text="Normal" />
+    <string id="homestead_smith_upgrade_none" text="You're carrying nothing the smith can improve." />
+    <string id="homestead_smith_upgrade_poor" text="You can't afford that upgrade." />
+    <string id="homestead_smith_upgrade_moved" text="That piece is no longer where it was. Try again." />
+    <string id="homestead_smith_upgrade_dropped" text="The master takes your {ITEM} to the anvil. Return tomorrow to collect it." />
+    <!-- Master Smith dynamically generated names and fallbacks -->
+    <string id="homestead_master_smith_fallback" text="the Master Smith" />
+    <string id="homestead_master_smith_name" text="{FIRST_NAME} the Master Smith of {HOMESTEAD_NAME}" />
+    <string id="homestead_smith_quest_town_fallback" text="the town where you made your offer" />
+    <string id="homestead_tavern_tariff_collected" text="Tavern at {HOMESTEAD_NAME} collected {TARIFF} gold from passing villagers." />
+    <string id="homestead_notables_menu_text" text="Who would you like to speak with?" />
+    <string id="homestead_world_famous" text="{BASE_NAME}, World Famous Innkeeper of {HOMESTEAD_NAME}" />
+    <string id="homestead_relocating_title_named" text="Homestead of {HOMESTEAD_NAME} is relocating..." />
+    <string id="homestead_relocating_title_generic" text="Homestead is relocating..." />
+    <string id="homestead_placement_controls" text="Left Click to Place | Right Click to Cancel" />
+    <string id="homestead_placement_warning" text="Warning: Results may vary depending on pathing and terrain" />
+    <string id="homestead_placement_halted" text="Note: All production is halted while the homestead is relocating" />
+    <string id="homestead_travel_time_less_hour" text="Estimated Travel Time: Less than an hour" />
+    <string id="homestead_travel_time_days_hours" text="Estimated Travel Time: {DAYS} Days, {HOURS} Hours" />
+    <string id="homestead_travel_time_hours" text="Estimated Travel Time: {HOURS} Hours" />
+    <string id="homestead_travel_unavailable" text="Unavailable" />
+      <string id="homestead_role_mastersmith" text="Master Smith" />
+    <string id="homestead_role_stablemaster" text="Stable Master" />
+    <string id="homestead_station_title" text="Station Companions" />
+    <string id="homestead_station_desc" text="Select companions to leave at {HOMESTEAD}." />
+    <string id="homestead_retrieve_title" text="Retrieve Companions" />
+    <string id="homestead_retrieve_desc" text="Select companions to take from {HOMESTEAD} into your party." />
+    <string id="homestead_clan_record_line" text="{HERO}: {WINS} wins in {ENTRIES} tournaments" />
+    <string id="homestead_clan_record_none" text="None of your clan have yet competed in a tournament." />
+    <string id="homestead_clan_sparring_record_none" text="None of your clan have yet competed in a sparring match." />
+    <string id="homestead_clan_sparring_records_title" text="Sparring Records" />
+    <string id="homestead_race_records_pick_title" text="Which Track?" />
+    <string id="homestead_race_records_pick_text" text="Whose records would you like to hear?" />
+    <string id="homestead_race_rec_laps" text="Fastest Laps:" />
+    <string id="homestead_race_rec_totals" text="Fastest Race Times:" />
+    <string id="homestead_race_rec_counts" text="Most Races:" />
+    <string id="homestead_race_records_title" text="{TRACK} — Records" />
+    <string id="homestead_apprentice_title" text="{BASE_NAME} the Apprentice" />
+    <string id="homestead_station_companions" text="I'd like to station some companions here." />
+    <string id="homestead_retrieve_companions" text="I'd like to take some companions back with me." />
+    <string id="homestead_transfer_done" text="As you wish." />
+    <string id="homestead_grand_houndmaster" text="Grand Houndmaster {BASE_NAME}" />
+    <string id="homestead_trade_guru" text="Trade Guru {BASE_NAME}" />
+    <string id="homestead_stablemaster_greeting" text="The horses are restless today, my lord. What would you have of me?" />
+    <string id="homestead_stablemaster_race" text="Let's hold a horse race." />
+    <string id="homestead_stablemaster_race_ack" text="A fine day for it! Ride out to the track and we'll line up." />
+    <string id="homestead_stablemaster_records" text="How have the races been going?" />
+    <string id="homestead_stablemaster_records_response" text="Let me tell you who's been quickest, my lord." />
+    <string id="homestead_stablemaster_goodbye" text="Carry on." />
+    <string id="homestead_stablemaster_mastery_offer" text="{HONORIFIC_CAP}, I've raised riders and bred mounts until I know horseflesh better than most know kin. Name me your Grand Stablemistress and the finest steeds in the land will come from these stables." />
+    <string id="homestead_stablemaster_mastery_accept" text="You've earned it. Rise, Grand Stablemistress." />
+    <string id="homestead_grand_stablemistress" text="Grand Stablemistress {BASE_NAME}" />
+    <string id="homestead_stablemaster_mastery_decline" text="Maybe later." />
+    <string id="homestead_stablemaster_mastery_done" text="You honour me, {HONORIFIC}. The stables will not disappoint you." />
+    <string id="homestead_lord_ambassador" text="Lord Ambassador {BASE_NAME}" />
+    <string id="homestead_leader_arms_master_offer" text="Prove yourself, my lord — win renown in a tournament, and a seasoned Arms Master may be persuaded to settle here and school the guards." />
+    <string id="homestead_leader_arms_master_accept" text="I'll prove myself in the arena and bring back a master-at-arms." />
+    <string id="homestead_leader_arms_master_decline" text="Another time." />
+    <string id="homestead_leader_arms_master_accepted" text="Splendid. Bring honour to our house in the lists, and word will spread." />
+    <string id="homestead_leader_stable_ask" text="Our stable stands empty. How might we draw a stable master here?" />
+    <string id="homestead_leader_stable_offer" text="Fine animals draw fine handlers, my lord. Gather a founding herd — two each of pack animals, riding horses and war horses, and a noble mount — bring them home, and a skilled stable master is sure to follow." />
+    <string id="homestead_leader_stable_accept" text="I'll gather a founding herd and bring it home." />
+    <string id="homestead_leader_stable_decline" text="Another time." />
+    <string id="homestead_leader_stable_accepted" text="Very good, my lord. Bring the herd, then tell me when it's gathered." />
+    <string id="homestead_leader_stable_status" text="How fares the search for a stable master?" />
+    <string id="homestead_leader_stable_status_ready" text="The herd is gathered, my lord! Shall I have them stabled and send word that a master is wanted?" />
+    <string id="homestead_leader_stable_status_need" text="Not yet, my lord — we still want for more animals. ({STABLE_PROGRESS})" />
+    <string id="homestead_leader_stable_deliver_yes" text="Yes — have them stabled." />
+    <string id="homestead_leader_stable_deliver_no" text="Not just yet." />
+    <string id="homestead_leader_stable_delivered" text="At once, my lord. Word will go out that our stable wants a master." />
+    <string id="homestead_arms_master_spar_result_win_line" text="Well fought, my lord! A crushing victory for your side. Ready to go again, or shall we call it a day?" />
+    <string id="homestead_arms_master_spar_result_loss_line" text="A tough bout, my lord, but the homestead men took the day. Shall we run it again?" />
+    <string id="homestead_arms_master_greet" text="My lord! What are your orders for the men?" />
+    <string id="homestead_tournament_master_recruit" text="You fight as well as any I've faced. Come serve as Arms Master at my homestead." />
+    <string id="homestead_tournament_master_recruit_accept" text="You honour me. I have taught these fields long enough — I'll bring my craft to your homestead." />
+    <string id="homestead_arena_horse_race" text="Care to organise a horse race?" />
+    <string id="homestead_arena_horse_race_ack" text="A race? The crowd does love a good gallop. Ride out and we'll line up the field." />
+    <string id="homestead_arms_master_spar_me" text="Let me spar against your best man. (1v1)" />
+    <string id="homestead_arms_master_run_match" text="Let us hold a group match — five against five." />
+    <string id="homestead_arms_master_sparring_records" text="How have our men fared in the sparring matches?" />
+    <string id="homestead_arms_master_sparring_records_response" text="Of course, my lord. The records are as follows." />
+    <string id="homestead_arms_master_leave" text="Not just now." />
+    <string id="homestead_arms_master_spar_ack" text="To the field, then!" />
+    <string id="homestead_arms_master_records_done" text="A proud tally, my lord — long may it grow." />
+    <string id="homestead_arms_master_mastery_offer" text="My lord, with the warriors we have tested and the drills I run every dawn, your men are ready to become something your enemies will truly dread. Give me the authority to push them past their limits." />
+    <string id="homestead_arms_master_mastery_accept" text="Push them until they break — then push harder. You have my leave." />
+    <string id="homestead_drill_sergeant" text="Drill Sergeant {BASE_NAME}" />
+    <string id="homestead_arms_master_mastery_decline" text="Not yet. Carry on as before." />
+    <string id="homestead_arms_master_mastery_done" text="Ha! Now that is an order I can respect. From this day forth — Drill Sergeant it is, my lord." />
+    <string id="homestead_tavern_keeper_network_offer" text="There is something I have been meaning to raise, {HONORIFIC}. The traders and travellers who pass through here — I know their faces, their routes, their whispers. With a little coin to grease the right palms, I can have every rumour worth hearing brought to your door. Your name would grow with every caravan that leaves." />
+    <string id="homestead_tavern_keeper_network_accept" text="Build your network. Every voice that reaches me is worth paying for." />
+    <string id="homestead_tavern_keeper_network_decline" text="Not yet. Let things settle first." />
+    <string id="homestead_tavern_keeper_network_done" text="Very good, {HONORIFIC}. I will begin reaching out tonight. Give it time — word travels faster than armies." />
+    <string id="homestead_tavernkeeper_greeting" text="Welcome, {HONORIFIC}. The hearth is warm and the cups are full. What can I do for you?" />
+    <string id="homestead_mastersmith_greeting" text="The forge is hot, {HONORIFIC}. Need steel worked, or something off my anvil?" />
+    <string id="homestead_mastersmith_use_forge" text="May I use your forge?" />
+    <string id="homestead_mastersmith_forge_ack" text="Aye — it's yours. Mind the heat." />
+    <string id="homestead_mastersmith_leave" text="Nothing for now." />
+    <string id="homestead_tavernkeeper_ask_news" text="What's the talk around here?" />
+    <string id="homestead_tavernkeeper_news_report" text="Travellers come and go, {HONORIFIC}, and every one of them leaves a little gossip behind. Keep this place busy and you'll always hear the realm's pulse first." />
+    <string id="homestead_tavernkeeper_goodbye" text="Keep the cups full." />
+    <string id="homestead_prisoner_greet" text="What do you want? I'm not going anywhere." />
+    <string id="homestead_prisoner_leave" text="Just making sure." />
+    <string id="homestead_ransom_broker_greet" text="Greetings, {?PLAYER.GENDER}madam{?}sir{\?}. If you have any prisoners you'd like to be rid of, I can take them off your hands for a fair price." />
+    <string id="homestead_ransom_broker_sell" text="I have prisoners to sell." />
+    <string id="homestead_ransom_broker_sell_screen" text="Let me see what you have..." />
+    <string id="homestead_ransom_broker_pretalk" text="Anything else?" />
+    <string id="homestead_ransom_broker_leave" text="Not right now. Good day." />
+    <string id="homestead_mercenary_recruit_start" text="Do you have a need for fighters, {?PLAYER.GENDER}madam{?}sir{\?}? Me and {?PLURAL}{MERCENARY_COUNT} of my mates{?}one of my mates{\?} are looking for a master. You might call us mercenaries, like. We'll join you for {GOLD_AMOUNT}{GOLD_ICON}" />
+    <string id="homestead_mercenary_recruit_accept" text="All right. I will hire {?PLURAL}all of you{?}you{\?}. Here is {GOLD_AMOUNT}{GOLD_ICON}" />
+    <string id="homestead_mercenary_recruit_reject_gold" text="That sounds good. But I can't afford any more men right now." />
+    <string id="homestead_mercenary_recruit_reject" text="Sorry, I can't take on any more troops right now." />
+    <string id="homestead_mercenary_recruit_end" text="Right away, {?PLAYER.GENDER}madam{?}sir{\?}. We'll grab our things and meet you outside." />
+    <string id="homestead_musician_lyric" text="*The musician hums a familiar tavern tune and glances your way with a nod.*" />
+    <string id="homestead_musician_leave" text="Play on, good man." />
+    <string id="homestead_barmaid_greet" text="What can I bring you, {?PLAYER.GENDER}madam{?}sir{\?}?" />
+    <string id="homestead_barmaid_order" text="I'll have whatever you've got." />
+    <string id="homestead_barmaid_ack" text="It'll be right up, {?PLAYER.GENDER}ma'am{?}sir{\?}." />
+    <string id="homestead_barmaid_leave" text="I'm fine, thank you." />
+    <string id="homestead_tavern_generic" text="*nods respectfully*" />
+    <string id="homestead_tavern_generic_leave" text="Carry on." />
+    <string id="hr_honorific_cap_lady" text="My lady" />
+    <string id="hr_honorific_cap_lord" text="My lord" />
+    <string id="homestead_race_track_pick_title" text="Choose a Track" />
+    <string id="homestead_race_track_pick_text" text="Which track shall we race?" />
+    <string id="homestead_race_riding" text="Riding {N}" />
+    <string id="homestead_race_pick_title" text="Choose Racers" />
+    <string id="homestead_race_pick_text" text="Select up to two riders to race against." />
+    <string id="homestead_gamemenu_visit_notable" text="Visit a notable" />
+    <string id="homestead_moving_disabled_tooltip" text="Not available while the homestead is packed up and relocating." />
+    <string id="homestead_gamemenu_talk_armsmaster" text="Talk to Arms Master" />
+    <string id="homestead_gamemenu_talk_stablemaster" text="Talk to the Stable Master" />
+    <string id="homestead_back" text="Back" />
+    <string id="homestead_gamemenu_enter_smithy" text="Enter the smithy" />
+    <string id="homestead_gamemenu_move" text="Move Homestead" />
+    <string id="homestead_moving_tooltip" text="Homestead is already moving to a new location." />
+    <string id="homestead_race_forfeit_title" text="Leave the Race?" />
+    <string id="homestead_race_forfeit_text" text="Leaving now will forfeit the match." />
+    <string id="homestead_race_forfeit_yes" text="Forfeit" />
+    <string id="homestead_race_forfeit_no" text="Keep Racing" />
+    <string id="homestead_race_forfeited" text="You forfeited the race." />
+    <string id="homestead_race_ai_finish" text="{RIDER} finishes in place {PLACE}!" />
+    <string id="homestead_race_go" text="Go!" />
+    <string id="homestead_race_recovered" text="Back to the start — restart your lap." />
+    <string id="homestead_race_recover_prompt" text="Stuck or off the track?  Press X to restart your lap." />
+    <string id="homestead_race_recovered_gate" text="Back on the track at your last gate." />
+    <string id="homestead_race_recover_prompt_gate" text="Stuck or off the track?  Press X to return to your last gate." />
+    <string id="homestead_race_spur" text="Spur!" />
+    <string id="homestead_race_spur_ready" text="Spur ready — press Q (Press {FLAG_KEY} to toggle flags)" />
+    <string id="homestead_race_lap" text="Lap {DONE} of {TOTAL}!" />
+    <string id="homestead_race_win" text="1st place! Time: {M}m {S}s" />
+    <string id="homestead_race_place" text="You finish in place {PLACE}. Time: {M}m {S}s" />
+    <string id="homestead_race_all_in" text="All racers are in. Good race!" />
+    <string id="homestead_prod_riding_horse" text="Riding Horse" />
+    <string id="homestead_prod_war_horse" text="War Horse" />
+    <string id="homestead_prod_noble_horse" text="Noble Horse" />
+    <string id="homestead_arms_master_quest_start" text="Your homestead requires an experienced warrior to train the guards. Win a tournament to prove your prowess and attract the attention of a skilled Arms Master." />
+    <string id="homestead_arms_master_quest_tournament_won" text="Your victory has drawn the attention of a seasoned warrior. Return to {TOWN_NAME} and speak with the Tournament Master at the arena to offer them a place at your homestead." />
+    <string id="homestead_stable_quest_start" text="Your stable stands empty. Gather a founding herd — two each of pack animals, riding horses, and war horses, plus a noble mount — and bring them to your homestead, then tell your homestead's leader. Fine animals will draw a skilled stable master to your door." />
+    <string id="homestead_stable_quest_title" text="A Master for the Stable" />
+    <string id="homestead_stable_quest_success" text="Word of your fine animals has spread, and a skilled stable master has come to take charge of your homestead's stable." />
+    <string id="homestead_stable_master_arrived" text="A stable master has been drawn to your homestead." />
+    <string id="homestead_stable_quest_expired" text="The search for a stable master was abandoned — too much time has passed." />
+    <string id="homestead_stable_quest_cancelled" text="The search for a stable master has been abandoned." />
+    <string id="MkVTRqAw" text="Orders ({ORDER_COUNT})" />
+    <string id="homestead_drill_sergeant_morale" text="Drill Sergeant's training" />
+    <string id="homestead_moving_speed" text="Homestead Relocating" />
+    <string id="MCM_HR_KeyBindRaceFlagToggle_Name" text="Toggle Race Gate Flags" />
+    <string id="MCM_HR_KeyBindRaceFlagToggle_Hint" text="During a horse race, press this key to show/hide the gate flag-poles (e.g. for screenshots). Defaults to \." />
+    <string id="MCM_HR_KeyBindOpenBuildMenu_Name" text="Open Build Menu" />
+    <string id="MCM_HR_KeyBindOpenBuildMenu_Hint" text="While in Build mode, press this key to open the building picker &#8212; a browsable list of every available placeable, grouped by category, with full details and one-click selection. Defaults to the backtick/tilde key (` ). On controller, D-pad Down opens it instead." />
+    <string id="homestead_picker_confirm" text="Build This" />
+    <string id="homestead_picker_col_building" text="Building" />
+    <string id="homestead_picker_col_points" text="Build Pts" />
+    <string id="homestead_picker_tier" text="Tier {TIER}" />
+    <string id="homestead_picker_can_build" text="Ready to build." />
+    <string id="homestead_picker_need" text="Need: {MISSING}" />
+    <string id="homestead_picker_cancel" text="Cancel" />
+    <string id="homestead_picker_controls_tab" text="Controls" />
+    <string id="homestead_picker_controls_footer" text="Rebind these in Mod Options (MCM) &#8594; Homesteads Reloaded &#8594; Change Key Binds / Controller Binds." />
+    <string id="homestead_picker_ctrl_open" text="Open This Menu" />
+    <string id="homestead_picker_ctrl_mode" text="Cycle Edit Mode" />
+    <string id="homestead_picker_ctrl_category" text="Switch Category" />
+    <string id="homestead_picker_ctrl_cycle" text="Cycle Placeables" />
+    <string id="homestead_picker_ctrl_place" text="Place / Delete / Pick Up" />
+    <string id="homestead_picker_ctrl_rotate" text="Rotate" />
+    <string id="homestead_picker_ctrl_reset" text="Reset Rotation" />
+    <string id="homestead_picker_ctrl_height" text="Object Height" />
+    <string id="homestead_picker_ctrl_snap" text="Snap to Ground" />
+    <string id="homestead_picker_ctrl_lock" text="Toggle Height Lock" />
+    <string id="homestead_picker_ctrl_camera" text="Camera Height" />
+    <string id="homestead_picker_ctrl_col_action" text="Action" />
+    <string id="homestead_picker_ctrl_col_keyboard" text="Keyboard" />
+    <string id="homestead_picker_ctrl_col_controller" text="Controller" />
+    <string id="homestead_headman_trust_title" text="The Headman's Trust" />
+    <string id="homestead_headman_trust_start" text="Your homestead has grown enough to expand, but a larger, more permanent steading encroaches on the lands of {VILLAGE}. Win the trust of its headman, {HEADMAN} (reach {RELATION} relation), then ask for his blessing to grow. Doing his people's tasks — or sending your Ambassador to speak on your behalf — will warm him to you." />
+    <string id="homestead_the_nearby_village" text="the nearby village" />
+    <string id="homestead_the_headman" text="the headman" />
+    <string id="homestead_headman_trust_success" text="{HEADMAN} of {VILLAGE} gives his blessing for your homestead to grow. Construction may resume." />
+    <string id="homestead_headman_trust_relocated" text="Your homestead has moved on, so its bid to expand here is set aside — a new village's headman now holds the lands you encroach upon." />
+    <string id="homestead_headman_trust_retarget" text="{VILLAGE} has a new headman, {HEADMAN}. You will need to earn his trust instead." />
+    <string id="homestead_headman_trust_paid" text="Your homestead has grown enough to expand, but doing so encroaches on the village of {VILLAGE}. You must first earn the blessing of its headman, {HEADMAN}. Speak with your homestead leader to begin." />
+    <string id="homestead_leader_headman_ask" text="Why has our expansion stalled? We've the means to grow." />
+    <string id="homestead_leader_headman_offer" text="We've grown into something more permanent now, my lord — and we encroach on the lands of {VILLAGE}. Its headman, {HEADMAN}, must give his blessing before we raise another stone. Win his trust, then ask him plainly." />
+    <string id="homestead_leader_headman_accept" text="I'll earn the headman's approval." />
+    <string id="homestead_leader_headman_decline" text="That can wait." />
+    <string id="homestead_leader_headman_accepted" text="Wise, my lord. Do his people some good, send our Ambassador to speak for us, or simply share his table — he'll come around." />
+    <string id="homestead_headman_turnin_ask" text="My homestead nearby has grown. Will you give your blessing for it to expand?" />
+    <string id="homestead_headman_turnin_grant" text="You've proven a good neighbour to my people. Aye — let your homestead grow. You have my blessing." />
+    <string id="homestead_headman_turnin_deny" text="Your steading sprawls onto our lands, and I scarcely know you. Earn my trust first — do right by my people, and we'll speak of it again." />
+    <string id="homestead_headman_trust_timeout" text="You failed to win the blessing of {HEADMAN} in time. The villagers of {VILLAGE}, resentful of your encroachment, march on your homestead." />
+    <string id="homestead_angry_villagers" text="Angry Villagers" />
+    <string id="homestead_villagers_quest_title" text="Angry Villagers at {HOMESTEAD}" />
+    <string id="homestead_villagers_quest_log" text="You let the headman's patience run out. A mob of {COUNT} angry villagers from {VILLAGE} has gathered at {HOMESTEAD}. Drive them off, or they will sack your stores and disperse." />
+    <string id="homestead_villagers_defeated" text="You drove off the angry villagers, but {HEADMAN} is furious that you cut down his people. You must earn his trust anew before your homestead can grow." />
+    <string id="homestead_villagers_sacked" text="The angry villagers sacked {HOMESTEAD}'s stores (lost {GOLD} gold) and dispersed. Your homestead still cannot grow without the headman's blessing." />
+    <string id="homestead_ambassador_task_headman" text="Turn your efforts to winning over {HEADMAN} of {VILLAGE} — we need their blessing to expand." />
+    <string id="homestead_ambassador_task_headman_reply" text="I will devote myself to it, my lord. Each day I will press your case with them until they come around." />
+    <string id="homestead_ambassador_stop_headman" text="You may set aside your efforts with the village headman for now." />
+    <string id="homestead_ambassador_stop_headman_reply" text="As you wish, my lord. I will turn my attention elsewhere." />
+    <string id="homestead_lords_men" text="The Lord's Men" />
+    <string id="homestead_enforcers_quest_title" text="The Lord's Men at {HOMESTEAD}" />
+    <string id="homestead_enforcers_quest_log" text="You let the deadline for a land patent lapse. {COUNT} men-at-arms sent by {CLAN} have encamped at {HOMESTEAD}. Drive them off, or they will levy a fine from your stores and depart." />
+    <string id="homestead_enforcers_defeated" text="You drove off {CLAN}'s men, but cutting them down has soured the whole clan against you. You must regain their favour before your homestead can grow." />
+    <string id="homestead_enforcers_sacked" text="{CLAN}'s men levied a fine from {HOMESTEAD}'s stores (took {GOLD} gold) and departed. Your homestead still cannot grow without their land patent." />
+    <string id="homestead_land_patent_title" text="A Land Patent" />
+    <string id="homestead_land_patent_start" text="Your homestead is large enough to grow again, but a holding this permanent needs a land patent from {CLAN}, who rule {TOWN}. Win the favour of their house (reach {RELATION} relation), then ask any of their nobles to grant it. Doing their clan's work — or sending your Ambassador to speak for you — will warm them to you." />
+    <string id="homestead_land_patent_success" text="{CLAN} grant your homestead a land patent. It may grow once more." />
+    <string id="homestead_land_patent_timeout" text="You failed to secure a land patent from {CLAN} in time. They have dispatched men-at-arms to bring your unsanctioned steading to heel." />
+    <string id="homestead_land_patent_relocated" text="Your homestead has moved on; its bid for a land patent here is set aside, as a different town now holds sway over its lands." />
+    <string id="homestead_land_patent_retarget" text="{TOWN} has changed hands. You must now win the favour of {CLAN} to secure your land patent." />
+    <string id="homestead_land_patent_paid" text="Your homestead is ready to expand, but a holding this large needs a land patent from {CLAN}, who rule {TOWN}. Speak with your homestead leader to begin." />
+    <string id="homestead_the_local_clan" text="the local ruling house" />
+    <string id="homestead_the_nearest_town" text="the nearest town" />
+    <string id="homestead_leader_landpatent_self_ask" text="We're ready to expand again — and we rule the nearest town ourselves." />
+    <string id="homestead_leader_landpatent_self_grant" text="Indeed, my lord — the land is ours to grant. I'll draw up the patent at once." />
+    <string id="homestead_leader_landpatent_ask" text="Why can't we expand the homestead any further?" />
+    <string id="homestead_leader_landpatent_offer" text="A holding this large needs a land patent, my lord — and these lands answer to {CLAN}, who hold {TOWN}. Win their house's favour, then ask any of their nobles to grant it." />
+    <string id="homestead_leader_landpatent_accept" text="I'll secure their land patent." />
+    <string id="homestead_leader_landpatent_decline" text="That can wait." />
+    <string id="homestead_leader_landpatent_accepted" text="Very good, my lord. Their favour — or our Ambassador's persuasion — will see it done." />
+    <string id="homestead_landpatent_turnin_ask" text="My homestead nearby has grown. Will your house grant it a land patent to expand?" />
+    <string id="homestead_landpatent_turnin_grant" text="You have proven a friend to our house. Very well — your homestead has our leave to grow. The patent is yours." />
+    <string id="homestead_landpatent_turnin_deny" text="Your steading sprawls across lands my house holds, and we scarcely know you. Earn our favour first, and we'll consider it." />
+    <string id="homestead_ambassador_task_landpatent" text="Turn your efforts to winning the favour of {CLAN} — we need their land patent to expand." />
+    <string id="homestead_ambassador_task_landpatent_reply" text="I will press your case with their house daily, my lord, until they relent." />
+    <string id="homestead_charter_title" text="A Settlement Charter" />
+    <string id="homestead_charter_start" text="Your homestead is ready to become a settlement, but raising a town and castle requires a royal charter. Win the leave of {RULER}, who rules {KINGDOM} — the realm holding {SETTLEMENT}. {THRESHOLD}" />
+    <string id="homestead_charter_thresh_vassal" text="As their vassal you must reach 40 relation with them, then ask for the charter." />
+    <string id="homestead_charter_thresh_outsider" text="As an outsider you must reach 60 relation with them, then ask for the charter." />
+    <string id="homestead_charter_success" text="{RULER} grants your homestead a charter to raise a settlement. You may now build it into a town and castle of your own." />
+    <string id="homestead_charter_timeout" text="You did not secure a settlement charter from {RULER} in time. Your homestead waits, ready, until you try again." />
+    <string id="homestead_charter_relocated" text="Your homestead has moved on; its petition for a charter here is set aside, as a different realm now holds the nearest lands." />
+    <string id="homestead_charter_retarget" text="{SETTLEMENT} now answers to {KINGDOM}. You must seek your charter from {RULER} instead." />
+    <string id="homestead_the_local_realm" text="the local realm" />
+    <string id="homestead_its_ruler" text="its ruler" />
+    <string id="homestead_leader_charter_self_ask" text="The homestead is ready to become a settlement — and these lands answer to us." />
+    <string id="homestead_leader_charter_self_grant" text="Then the charter is yours to grant, my lord. I'll see it sealed at once." />
+    <string id="homestead_leader_charter_ask" text="Can we make our homestead into a true settlement?" />
+    <string id="homestead_leader_charter_offer" text="It is ready, my lord — but raising a town and castle needs a royal charter. These lands lie within {KINGDOM}; win the leave of {RULER}, then ask them for it." />
+    <string id="homestead_leader_charter_accept" text="I'll secure a charter from the crown." />
+    <string id="homestead_leader_charter_decline" text="Not yet." />
+    <string id="homestead_leader_charter_accepted" text="Very good, my lord. Their favour — or our Ambassador's word at court — will carry it." />
+    <string id="homestead_charter_turnin_ask" text="My homestead has grown into a true holding. Will you grant it a charter to become a settlement?" />
+    <string id="homestead_charter_turnin_grant" text="You have served the realm well. Granted — raise your settlement, and may it strengthen our borders." />
+    <string id="homestead_charter_turnin_deny" text="You ask much, and have not yet earned such trust from me. Prove your worth to the realm first, and we shall speak again." />
+    <string id="homestead_ambassador_task_charter" text="Turn your efforts to winning the favour of {RULER} — we need a charter to raise our settlement." />
+    <string id="homestead_ambassador_task_charter_reply" text="I will press your suit at court, my lord, until the crown relents." />
+    <string id="hsr_castle_name" text="Castle {NAME}" />
+    <string id="hsr_village_villa" text="{NAME}'s Villa" />
+    <string id="hsr_village_grange" text="{NAME}'s Grange" />
+    <string id="hsr_village_holding" text="{NAME} Holding" />
+    <string id="hsr_village_steading" text="{NAME} Steading" />
+    <string id="hsr_village_croft" text="{NAME}'s Croft" />
+    <string id="homestead_appr_prisoner" text="Word reached me that {APPR_NAME} was taken captive after the battle, my lord. It is a bitter thing — but I still have friends who owe me favours. If you wish it, I can arrange their release and send them back to you." />
+    <string id="homestead_appr_prisoner_confirm" text="Leave it with me, my lord. {APPR_NAME} will find their way back to you — I will see to it personally." />
+    <string id="homestead_appr_prisoner_leave" text="I will handle it myself." />
+    <string id="homestead_appr_prisoner_rescue" text="Please, do what you can. I want them back." />
+    <string id="homestead_appr_rescued" text="{APPR_NAME} has been tracked down and released — they have returned to your party." />
+    <string id="homestead_dog_cant_afford" text="You can't afford that." />
+    <string id="homestead_dog_coat_desc" text="What coat does {DOG_NAME} have?
+
+Tawny – golden-brown
+Sable – dark black
+Piebald – white with patches" />
+    <string id="homestead_dog_coat_piebald" text="Piebald" />
+    <string id="homestead_dog_coat_sable" text="Sable" />
+    <string id="homestead_dog_coat_sablepiebald" text="Sable / Piebald" />
+    <string id="homestead_dog_coat_tawny" text="Tawny" />
+    <string id="homestead_dog_coat_title" text="Choose a Coat" />
+    <string id="homestead_dog_coat_which" text="Which coat for {DOG_NAME}?" />
+    <string id="homestead_dog_follows" text="{DOG_NAME} now follows you." />
+    <string id="homestead_dog_name_next" text="Next" />
+    <string id="homestead_dog_name_prompt" text="What will you name your companion?" />
+    <string id="homestead_dog_name_title" text="Name your dog" />
+    <string id="homestead_dog_returned" text="{DOG_NAME} has returned to the kennel." />
+    <string id="homestead_enforcers_quest_log_march" text="You let the deadline for a land patent lapse. {COUNT} men-at-arms sent by {CLAN} have set out from {VILLAGE} for {HOMESTEAD}. Intercept them on the road, or drive them off when they arrive -- else they will levy a fine from your stores and depart." />
+    <string id="homestead_favor_decline" text="Not right now." />
+    <string id="homestead_fight_wounded_tooltip" text="You are too wounded to lead the battle in person. Send your troops to fight without you." />
+    <string id="homestead_gamemenu_choose_map" text="Choose homestead map" />
+    <string id="homestead_gamemenu_encounter_send_troops" text="Send troops (let them fight without you)" />
+    <string id="homestead_gamemenu_pay_upgrade_eligible" text="to become eligible for a settlement charter" />
+    <string id="homestead_gamemenu_pay_upgrade_tier" text="to upgrade to tier {CURRENT_HOMESTEAD_NEXT_TIER}" />
+    <string id="homestead_houndmaster_settlement_accept" text="Yes, I'll take a companion." />
+    <string id="homestead_houndmaster_settlement_decline" text="Not today." />
+    <string id="homestead_houndmaster_settlement_offer_dog" text="The kennels here are well stocked, my lord. For {DOG_COST}{GOLD_ICON}, I can set aside a fine hound for you." />
+    <string id="homestead_leader_begin_placement" text="The charter is in hand. Let us choose the site for our new settlement." />
+    <string id="homestead_leader_begin_placement_resp" text="Aye, my lord. Mark where you will raise the town and castle — I'll have everything ready for the day you commit the site." />
+    <string id="homestead_leader_charter_notables_ask" text="Is the homestead ready to become a true settlement?" />
+    <string id="homestead_leader_charter_notables_resp" text="Not yet, my lord. A town needs more hands of standing than these walls hold — we have {FILLED} of the {NEEDED} we'd need: a Master Smith, a Market Lady, an Ambassador, an Arms Master, a Tavern Keeper, a Hound Master, a Troubadour, a Stable Master. Recruit a few more before we raise a charter." />
+    <string id="homestead_map_chosen" text="Homestead map changed — Walk around to preview it." />
+    <string id="homestead_map_only_one" text="This spot has only one battlefield map available, so there's nothing to choose — your homestead uses it." />
+    <string id="homestead_map_pick_text" text="Pick a map, then Walk around to preview it. You can change it freely until you build your first structure, after which it locks in." />
+    <string id="homestead_map_pick_title" text="Choose Homestead Map" />
+    <string id="homestead_patrol_ack_garrison" text="Understood, sir! Returning to the garrison!" />
+    <string id="homestead_pkg_raided" text="{SETTLEMENT} has been raided, so your delivery of {ITEM} to {RECIPIENT} is cancelled. No one holds it against you." />
+    <string id="homestead_place_cancelled" text="Settlement placement cancelled." />
+    <string id="homestead_place_fail_castle" text="Place the castle a short distance from the town (not too close, not too far)." />
+    <string id="homestead_place_fail_castlegate" text="Place the gate close to the castle." />
+    <string id="homestead_place_fail_default" text="Invalid location." />
+    <string id="homestead_place_fail_gate" text="Place the gate close to the town." />
+    <string id="homestead_place_fail_port" text="Place the port within a reasonable distance." />
+    <string id="homestead_place_fail_town" text="Too far from the homestead – place the town closer." />
+    <string id="homestead_place_fail_village_castle" text="Place the village close to its castle." />
+    <string id="homestead_place_fail_village_town" text="Place the village close to its town." />
+    <string id="homestead_place_invalid_terrain" text="Invalid terrain or navmesh." />
+    <string id="homestead_place_gate_unreachable" text="That gate can't reach the road network cleanly (steep/cliff ground) — parties would get stuck there. Pick flatter, more open ground for the gate." />
+    <string id="homestead_place_msg_castle" text="Place your CASTLE a short distance from the town." />
+    <string id="homestead_place_msg_castlegate" text="Place the GATE near the castle." />
+    <string id="homestead_place_msg_gate" text="Place the GATE near the town." />
+    <string id="homestead_place_msg_port" text="Place the PORT on the water. Right Click = Skip Port phase." />
+    <string id="homestead_place_msg_town" text="Place your TOWN near the homestead. Mouse = move, Q/E = rotate, Left-click = place, ESC = cancel." />
+    <string id="homestead_place_msg_village_castle" text="Place VILLAGE {INDEX} of {COUNT} close to its CASTLE." />
+    <string id="homestead_place_msg_village_town" text="Place VILLAGE {INDEX} of {COUNT} close to its TOWN." />
+    <string id="homestead_place_port_prompt" text="Does this settlement have a port?" />
+    <string id="homestead_place_port_title" text="Port" />
+    <string id="homestead_place_villageres_confirm" text="Confirm" />
+    <string id="homestead_place_villageres_desc" text="Choose what this village produces." />
+    <string id="homestead_place_villageres_title" text="Village {INDEX} resource" />
+    <string id="homestead_postconv_save_failed" text="Auto-save failed — please save and reload manually to finalize the new settlement." />
+    <string id="homestead_postconv_saving" text="Saving and reloading to finalize the new settlement..." />
+    <string id="homestead_race_sic_em" text="Sic 'em!" />
+    <string id="homestead_relocation_cancelled" text="Homestead relocation cancelled." />
+    <string id="homestead_relocation_unpacked" text="Your homestead has unpacked at its new location." />
+    <string id="homestead_spar_blue_wins" text="Training Match: Blue Team Wins!" />
+    <string id="homestead_spar_draw" text="Training Match: Draw!" />
+    <string id="homestead_spar_red_wins" text="Training Match: Red Team Wins!" />
+    <string id="homestead_spar_resetting" text="{RESULT} Resetting match..." />
+    <string id="homestead_tavern_culture_auto" text="Automatic (nearest match)" />
+    <string id="homestead_tavern_culture_body" text="Choose which culture's tavern I should lead you to." />
+    <string id="homestead_tavern_culture_set" text="From now on, I'll lead you to a {CULTURE} tavern." />
+    <string id="homestead_tavern_culture_set_auto" text="From now on, I'll lead you to whichever tavern is nearest." />
+    <string id="homestead_tavern_culture_title" text="Tavern Style" />
+    <string id="homestead_tavern_greeter_change_culture" text="I'd like to choose which tavern you borrow." />
+    <string id="homestead_tavern_greeter_change_culture_ack" text="As you wish. Pick a style, and I'll lead you there next time." />
+    <string id="homestead_villageres_cattle_farm" text="Cattle Range" />
+    <string id="homestead_villageres_clay_mine" text="Clay Pit (pottery)" />
+    <string id="homestead_villageres_date_farm" text="Date Farm" />
+    <string id="homestead_villageres_fisherman" text="Fishing Village" />
+    <string id="homestead_villageres_flax_plant" text="Flax Fields" />
+    <string id="homestead_villageres_horse_ranch" text="Horse Ranch" />
+    <string id="homestead_villageres_iron_mine" text="Iron Mine" />
+    <string id="homestead_villageres_lumberjack" text="Woodland (timber)" />
+    <string id="homestead_villageres_olive_trees" text="Olive Grove" />
+    <string id="homestead_villageres_salt_mine" text="Salt Mine" />
+    <string id="homestead_villageres_sheep_farm" text="Sheep / Wool" />
+    <string id="homestead_villageres_silk_plant" text="Silkworm Farm" />
+    <string id="homestead_villageres_silver_mine" text="Silver Mine" />
+    <string id="homestead_villageres_swine_farm" text="Swine Farm" />
+    <string id="homestead_villageres_trapper" text="Trapper's Camp" />
+    <string id="homestead_villageres_vineyard" text="Vineyard" />
+    <string id="homestead_villageres_wheat_farm" text="Grain Farm" />
+    <string id="homestead_villagers_quest_log_march" text="You let the headman's patience run out. A mob of {COUNT} angry villagers from {VILLAGE} is marching on {HOMESTEAD}. Intercept them, or drive them off when they arrive -- else they will sack your stores and disperse." />
+</strings>
+</base>

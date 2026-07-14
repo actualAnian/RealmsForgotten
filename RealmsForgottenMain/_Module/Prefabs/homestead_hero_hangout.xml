@@ -1,0 +1,404 @@
+<?xml version='1.0' encoding='utf-8'?>
+<prefabs>
+  <game_entity name="homestead_hero_hangout" old_prefab_name="">
+    <transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" />
+    <children>
+      <game_entity name="burning_campfire_big" old_prefab_name="">
+        <transform position="-0.948, -1.445, -0.259" rotation_euler="0.000, 0.000, 0.000" />
+      </game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.451, 0.605, -0.212" rotation_euler="0.000, 0.000, -2.177" />
+      <components><meta_mesh_component name="log_bench_beech_c" /></components><physics shape="bo_log_bench_default_c" override_material="wood" /><children><game_entity name="sp_npc_sit_bench" old_prefab_name="" mobility="1"><visibility_masks><visibility_mask name="visible_only_when_editing" value="true" /></visibility_masks><transform position="0.000, -0.050, 0.470" rotation_euler="0.000, 0.000, 1.571" /><scripts><script name="UsablePlace"><variables><variable name="PilotStandingPointTag" value="Pilot" /><variable name="AmmoPickUpTag" value="ammopickup" /><variable name="WaitStandingPointTag" value="Wait" /></variables></script></scripts><children><game_entity name="animation_point" old_prefab_name="" mobility="1"><visibility_masks><visibility_mask name="visible_only_when_editing" value="true" /></visibility_masks><scripts><script name="AnimationPoint"><variables><variable name="ArriveAction" value="act_sit_to_fence_front" /><variable name="LoopStartAction" value="act_sit_fence_front_loop" /><variable name="LeaveAction" value="act_sit_from_fence_front" /><variable name="GroupId" value="-1" /><variable name="MinUserToStartInteraction" value="1" /><variable name="ActivatePairs" value="false" /><variable name="MinWaitinSeconds" value="50.000" /><variable name="MaxWaitInSeconds" value="320.000" /><variable name="TranslateUser" value="true" /></variables></script></scripts></game_entity></children></game_entity></children></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.796, -3.585, -0.289" rotation_euler="0.000, 0.000, -0.835" />
+      <components><meta_mesh_component name="log_bench_beech_c" /></components><physics shape="bo_log_bench_default_c" override_material="wood" /><children><game_entity name="sp_npc_sit_bench" old_prefab_name="" mobility="1"><visibility_masks><visibility_mask name="visible_only_when_editing" value="true" /></visibility_masks><transform position="0.000, -0.050, 0.470" rotation_euler="0.000, 0.000, 1.571" /><scripts><script name="UsablePlace"><variables><variable name="PilotStandingPointTag" value="Pilot" /><variable name="AmmoPickUpTag" value="ammopickup" /><variable name="WaitStandingPointTag" value="Wait" /></variables></script></scripts><children><game_entity name="animation_point" old_prefab_name="" mobility="1"><visibility_masks><visibility_mask name="visible_only_when_editing" value="true" /></visibility_masks><scripts><script name="AnimationPoint"><variables><variable name="ArriveAction" value="act_sit_to_fence_front" /><variable name="LoopStartAction" value="act_sit_fence_front_loop" /><variable name="LeaveAction" value="act_sit_from_fence_front" /><variable name="GroupId" value="-1" /><variable name="MinUserToStartInteraction" value="1" /><variable name="ActivatePairs" value="false" /><variable name="MinWaitinSeconds" value="50.000" /><variable name="MaxWaitInSeconds" value="320.000" /><variable name="TranslateUser" value="true" /></variables></script></scripts></game_entity></children></game_entity></children></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.238, 4.113, -0.161" rotation_euler="0.000, 0.000, 0.400" />
+      <components><meta_mesh_component name="bd_barrel_c" /></components><physics shape="bo_bd_barrel_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.547, 5.247, -0.152" rotation_euler="0.000, 0.000, -0.601" />
+      <components><meta_mesh_component name="rock_001" /></components><physics shape="bo_rock_001" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.235, 4.856, -0.155" rotation_euler="0.000, 0.000, 2.439" />
+      <components><meta_mesh_component name="bd_barrel_a" /></components><physics shape="bo_bd_barrel_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.365, 2.417, -0.194" rotation_euler="0.000, 0.000, -1.155" />
+      <components><meta_mesh_component name="bd_table_trunk_a" /></components><physics shape="bo_bd_table_trunk_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.906, 3.002, 0.615" rotation_euler="0.000, 0.000, 1.233" />
+      <components><meta_mesh_component name="mead_cup_wooden_a" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.176, 1.044, 0.615" rotation_euler="0.000, 0.000, 0.403" />
+      <components><meta_mesh_component name="mead_cup_wooden_a" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.125, 1.960, 0.615" rotation_euler="0.000, 0.000, 0.403" />
+      <components><meta_mesh_component name="mead_cup_wooden_a" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.538, 2.900, 0.615" rotation_euler="0.000, 0.000, 1.461" />
+      <components><meta_mesh_component name="kitchen_plate_grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.191, 1.127, 0.615" rotation_euler="0.000, 0.000, 1.946" />
+      <components><meta_mesh_component name="kitchen_plate_steak" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.693, 1.830, -0.235" rotation_euler="0.000, 0.000, -2.739" />
+      <components><meta_mesh_component name="log_bench_pine_c" /></components><physics shape="bo_log_bench_default_c" override_material="wood" /><children><game_entity name="sp_npc_sit_bench" old_prefab_name="" mobility="1"><visibility_masks><visibility_mask name="visible_only_when_editing" value="true" /></visibility_masks><transform position="0.000, -0.050, 0.470" rotation_euler="0.000, 0.000, 1.571" /><scripts><script name="UsablePlace"><variables><variable name="PilotStandingPointTag" value="Pilot" /><variable name="AmmoPickUpTag" value="ammopickup" /><variable name="WaitStandingPointTag" value="Wait" /></variables></script></scripts><children><game_entity name="animation_point" old_prefab_name="" mobility="1"><visibility_masks><visibility_mask name="visible_only_when_editing" value="true" /></visibility_masks><scripts><script name="AnimationPoint"><variables><variable name="ArriveAction" value="act_sit_to_fence_front" /><variable name="LoopStartAction" value="act_sit_fence_front_loop" /><variable name="LeaveAction" value="act_sit_from_fence_front" /><variable name="GroupId" value="-1" /><variable name="MinUserToStartInteraction" value="1" /><variable name="ActivatePairs" value="false" /><variable name="MinWaitinSeconds" value="50.000" /><variable name="MaxWaitInSeconds" value="320.000" /><variable name="TranslateUser" value="true" /></variables></script></scripts></game_entity></children></game_entity></children></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.963, -2.622, -0.263" rotation_euler="0.000, 0.000, -2.835" />
+      <components><meta_mesh_component name="bd_roasting_spit_a" /></components><physics shape="bo_bd_roasting_spit_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.681, -0.576, -0.241" rotation_euler="0.000, 0.000, -2.835" />
+      <components><meta_mesh_component name="bd_roasting_spit_a" /></components><physics shape="bo_bd_roasting_spit_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.399, -2.459, 0.688" rotation_euler="0.000, 0.000, -1.331" />
+      <components><meta_mesh_component name="chicken_raw" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.145, -2.705, 0.708" rotation_euler="0.000, 0.000, -1.331" />
+      <components><meta_mesh_component name="chicken_raw" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.655, -0.593, 0.671" rotation_euler="-0.298, -1.513, 1.436" />
+      <components><meta_mesh_component name="merchandise_meat" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.065, 2.799, -0.162" rotation_euler="0.000, 0.000, -0.083" />
+      <components><meta_mesh_component name="shop_prop_merchantleather_b" /></components><physics shape="bo_shop_prop_merchantleather_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.717, 3.118, -0.177" rotation_euler="0.000, 0.000, 1.169" />
+      <components><meta_mesh_component name="shop_prop_merchantleather_b" /></components><physics shape="bo_shop_prop_merchantleather_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="1.952, -4.855, -0.040" rotation_euler="0.000, 0.000, -1.638" />
+      <components><meta_mesh_component name="bd_stacked_wood" /></components><physics shape="bo_bd_stacked_wood" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="1.882, -5.420, -0.243" rotation_euler="0.000, 0.000, -1.638" />
+      <components><meta_mesh_component name="bd_stacked_wood" /></components><physics shape="bo_bd_stacked_wood" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.189, 3.625, 0.615" rotation_euler="0.000, 0.000, -1.638" />
+      <components><meta_mesh_component name="weapon_heap_sword_a" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="2.273, -5.700, 0.010" rotation_euler="0.000, 0.000, -1.638" />
+      <components><meta_mesh_component name="bd_stacked_wood" /></components><physics shape="bo_bd_stacked_wood" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="3.550, 3.213, -0.847" rotation_euler="0.000, 0.000, 1.377" />
+      <components><meta_mesh_component name="merchandise_leather_b" /></components><physics shape="bo_merchandise_leather_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="2.835, -5.291, -0.246" rotation_euler="0.000, 0.000, -1.579" />
+      <components><meta_mesh_component name="bd_wood_heap_a" /></components><physics shape="bo_bd_wood_heap_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="4.714, -0.952, -0.163" rotation_euler="0.000, 0.000, -2.212" />
+      <components><meta_mesh_component name="shop_prop_merchantleather_b" /></components><physics shape="bo_shop_prop_merchantleather_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="5.745, -2.797, -0.176" rotation_euler="0.000, 0.000, -1.673" />
+      <components><meta_mesh_component name="bed_ground_h" /></components><physics shape="bo_bed_ground_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="1.564, 3.874, -0.139" rotation_euler="0.000, 0.000, -0.704" />
+      <components><meta_mesh_component name="bed_ground_g" /></components><physics shape="bo_bed_ground_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="5.771, -2.724, -0.173" rotation_euler="0.000, 0.000, -1.673" />
+      <components><meta_mesh_component name="village_tent_c" /></components><physics shape="bo_village_tent_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.947, 2.484, -0.193" rotation_euler="0.000, 0.000, 1.962" />
+      <components><meta_mesh_component name="bd_chair_c" /></components><physics shape="bo_bd_chair_c" override_material="wood" /><children><game_entity name="sp_chair_sit_auto" old_prefab_name="" mobility="1"><tags><tag name="sp_player_sit" /></tags><transform position="0.000, 0.000, 0.450" rotation_euler="0.000, 0.000, 0.000" /><scripts><script name="UsablePlace"><variables><variable name="PilotStandingPointTag" value="Pilot" /><variable name="AmmoPickUpTag" value="ammopickup" /><variable name="WaitStandingPointTag" value="Wait" /></variables></script></scripts><children><game_entity name="animation_point" old_prefab_name="" mobility="1"><visibility_masks><visibility_mask name="visible_only_when_editing" value="true" /></visibility_masks><scripts><script name="AnimationPoint"><variables><variable name="ArriveAction" value="act_sit_to_fence_front" /><variable name="LoopStartAction" value="act_sit_fence_front_loop" /><variable name="LeaveAction" value="act_sit_from_fence_front" /><variable name="GroupId" value="-1" /><variable name="MinUserToStartInteraction" value="1" /><variable name="ActivatePairs" value="false" /><variable name="MinWaitinSeconds" value="50.000" /><variable name="MaxWaitInSeconds" value="320.000" /><variable name="TranslateUser" value="true" /></variables></script></scripts></game_entity></children></game_entity></children></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.059, -2.233, -0.259" rotation_euler="0.000, 0.000, -1.638" />
+      <components><meta_mesh_component name="burned_wood_a" /></components><physics shape="bo_burned_wood_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.764, -4.147, -0.299" rotation_euler="0.000, 0.000, 1.757" />
+      <components><meta_mesh_component name="bd_chair_c" /></components><physics shape="bo_bd_chair_c" override_material="wood" /><children><game_entity name="sp_chair_sit_auto" old_prefab_name="" mobility="1"><tags><tag name="sp_player_sit" /></tags><transform position="0.000, 0.000, 0.450" rotation_euler="0.000, 0.000, 0.000" /><scripts><script name="UsablePlace"><variables><variable name="PilotStandingPointTag" value="Pilot" /><variable name="AmmoPickUpTag" value="ammopickup" /><variable name="WaitStandingPointTag" value="Wait" /></variables></script></scripts><children><game_entity name="animation_point" old_prefab_name="" mobility="1"><visibility_masks><visibility_mask name="visible_only_when_editing" value="true" /></visibility_masks><scripts><script name="AnimationPoint"><variables><variable name="ArriveAction" value="act_sit_to_fence_front" /><variable name="LoopStartAction" value="act_sit_fence_front_loop" /><variable name="LeaveAction" value="act_sit_from_fence_front" /><variable name="GroupId" value="-1" /><variable name="MinUserToStartInteraction" value="1" /><variable name="ActivatePairs" value="false" /><variable name="MinWaitinSeconds" value="50.000" /><variable name="MaxWaitInSeconds" value="320.000" /><variable name="TranslateUser" value="true" /></variables></script></scripts></game_entity></children></game_entity></children></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="1.888, -4.475, -0.267" rotation_euler="0.000, 0.000, -1.638" />
+      <components><meta_mesh_component name="bd_stacked_wood" /></components><physics shape="bo_bd_stacked_wood" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="5.937, -0.357, -0.146" rotation_euler="0.000, 0.000, 1.994" />
+      <components><meta_mesh_component name="merchandise_hides_a" /></components><physics shape="bo_merchandise_hides_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="2.777, 1.958, -0.153" rotation_euler="0.000, 0.000, 1.994" />
+      <components><meta_mesh_component name="merchandise_hides_b" /></components><physics shape="bo_merchandise_hides_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="6.996, -0.977, -0.139" rotation_euler="0.000, 0.000, 1.868" />
+      <components><meta_mesh_component name="shop_prop_merchantleather_b" /></components><physics shape="bo_shop_prop_merchantleather_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="1.289, 3.742, 0.214" rotation_euler="0.000, 0.000, -0.198" />
+      <components><meta_mesh_component name="village_tent_c" /></components><physics shape="bo_village_tent_c" override_material="wood" /></game_entity>
+    <game_entity name="sp_npc_leader" old_prefab_name="" mobility="1">
+        <transform position="0.000, 1.200, 0.000" rotation_euler="0.000, 0.000, 0.000" />
+        <tags>
+          <tag name="spawnpoint_homestead_leader" />
+        <tag name="spawnpoint_homestead_npc" /></tags>
+        <scripts>
+          <script name="UsablePlace">
+            <variables>
+              <variable name="PilotStandingPointTag" value="Pilot" />
+              <variable name="AmmoPickUpTag" value="ammopickup" />
+              <variable name="WaitStandingPointTag" value="Wait" />
+              <variable name="NavMeshPrefabName" value="" />
+            </variables>
+          </script>
+        </scripts>
+        <children>
+          <game_entity name="animation_point" old_prefab_name="" mobility="1">
+            <scripts>
+              <script name="AnimationPoint">
+                <variables>
+                  <variable name="ArriveAction" value="" />
+                  <variable name="LoopStartAction" value="act_npc_villager_cloth_washing" />
+                  <variable name="PairLoopStartAction" value="" />
+                  <variable name="LeaveAction" value="" />
+                  <variable name="GroupId" value="-1" />
+                  <variable name="RightHandItem" value="" />
+                  <variable name="RightHandItemBone" value="ItemR" />
+                  <variable name="LeftHandItem" value="" />
+                  <variable name="LeftHandItemBone" value="ItemL" />
+                  <variable name="MinUserToStartInteraction" value="1" />
+                  <variable name="ActivatePairs" value="false" />
+                  <variable name="MinWaitinSeconds" value="50.000" />
+                  <variable name="MaxWaitInSeconds" value="320.000" />
+                  <variable name="ForwardDistanceToPivotPoint" value="0.000" />
+                  <variable name="SideDistanceToPivotPoint" value="0.000" />
+                  <variable name="KeepOldVisibility" value="false" />
+                  <variable name="AutoSheathWeapons" value="true" />
+                  <variable name="AutoEquipWeaponsOnUseStopped" value="false" />
+                  <variable name="AutoWieldWeapons" value="false" />
+                  <variable name="TranslateUser" value="true" />
+                  <variable name="HasRecentlyBeenRechecked" value="false" />
+                  <variable name="NavMeshPrefabName" value="" />
+                </variables>
+              </script>
+            </scripts>
+          </game_entity>
+        </children>
+      </game_entity><game_entity name="sp_npc_spouse" old_prefab_name="" mobility="1">
+        <transform position="-0.900, -1.400, 0.000" rotation_euler="0.000, 0.000, 0.000" />
+        <tags>
+          <tag name="spawnpoint_homestead_spouse" />
+        <tag name="spawnpoint_homestead_npc" /></tags>
+        <scripts>
+          <script name="UsablePlace">
+            <variables>
+              <variable name="PilotStandingPointTag" value="Pilot" />
+              <variable name="AmmoPickUpTag" value="ammopickup" />
+              <variable name="WaitStandingPointTag" value="Wait" />
+              <variable name="NavMeshPrefabName" value="" />
+            </variables>
+          </script>
+        </scripts>
+        <children>
+          <game_entity name="animation_point" old_prefab_name="" mobility="1">
+            <scripts>
+              <script name="AnimationPoint">
+                <variables>
+                  <variable name="ArriveAction" value="" />
+                  <variable name="LoopStartAction" value="act_stand_1" />
+                  <variable name="PairLoopStartAction" value="" />
+                  <variable name="LeaveAction" value="" />
+                  <variable name="GroupId" value="-1" />
+                  <variable name="RightHandItem" value="" />
+                  <variable name="RightHandItemBone" value="ItemR" />
+                  <variable name="LeftHandItem" value="" />
+                  <variable name="LeftHandItemBone" value="ItemL" />
+                  <variable name="MinUserToStartInteraction" value="1" />
+                  <variable name="ActivatePairs" value="false" />
+                  <variable name="MinWaitinSeconds" value="50.000" />
+                  <variable name="MaxWaitInSeconds" value="320.000" />
+                  <variable name="ForwardDistanceToPivotPoint" value="0.000" />
+                  <variable name="SideDistanceToPivotPoint" value="0.000" />
+                  <variable name="KeepOldVisibility" value="false" />
+                  <variable name="AutoSheathWeapons" value="true" />
+                  <variable name="AutoEquipWeaponsOnUseStopped" value="false" />
+                  <variable name="AutoWieldWeapons" value="false" />
+                  <variable name="TranslateUser" value="true" />
+                  <variable name="HasRecentlyBeenRechecked" value="false" />
+                  <variable name="NavMeshPrefabName" value="" />
+                </variables>
+              </script>
+            </scripts>
+          </game_entity>
+        </children>
+      </game_entity><game_entity name="sp_npc_companion_1" old_prefab_name="" mobility="1">
+        <transform position="0.500, 0.600, 0.000" rotation_euler="0.000, 0.000, 0.000" />
+        <tags>
+          <tag name="spawnpoint_homestead_companion" />
+        <tag name="spawnpoint_homestead_npc" /></tags>
+        <scripts>
+          <script name="UsablePlace">
+            <variables>
+              <variable name="PilotStandingPointTag" value="Pilot" />
+              <variable name="AmmoPickUpTag" value="ammopickup" />
+              <variable name="WaitStandingPointTag" value="Wait" />
+              <variable name="NavMeshPrefabName" value="" />
+            </variables>
+          </script>
+        </scripts>
+        <children>
+          <game_entity name="animation_point" old_prefab_name="" mobility="1">
+            <scripts>
+              <script name="AnimationPoint">
+                <variables>
+                  <variable name="ArriveAction" value="" />
+                  <variable name="LoopStartAction" value="act_stand_1" />
+                  <variable name="PairLoopStartAction" value="" />
+                  <variable name="LeaveAction" value="" />
+                  <variable name="GroupId" value="-1" />
+                  <variable name="RightHandItem" value="" />
+                  <variable name="RightHandItemBone" value="ItemR" />
+                  <variable name="LeftHandItem" value="" />
+                  <variable name="LeftHandItemBone" value="ItemL" />
+                  <variable name="MinUserToStartInteraction" value="1" />
+                  <variable name="ActivatePairs" value="false" />
+                  <variable name="MinWaitinSeconds" value="50.000" />
+                  <variable name="MaxWaitInSeconds" value="320.000" />
+                  <variable name="ForwardDistanceToPivotPoint" value="0.000" />
+                  <variable name="SideDistanceToPivotPoint" value="0.000" />
+                  <variable name="KeepOldVisibility" value="false" />
+                  <variable name="AutoSheathWeapons" value="true" />
+                  <variable name="AutoEquipWeaponsOnUseStopped" value="false" />
+                  <variable name="AutoWieldWeapons" value="false" />
+                  <variable name="TranslateUser" value="true" />
+                  <variable name="HasRecentlyBeenRechecked" value="false" />
+                  <variable name="NavMeshPrefabName" value="" />
+                </variables>
+              </script>
+            </scripts>
+          </game_entity>
+        </children>
+      </game_entity><game_entity name="sp_npc_companion_2" old_prefab_name="" mobility="1">
+        <transform position="-0.900, 1.500, 0.000" rotation_euler="0.000, 0.000, 0.000" />
+        <tags>
+          <tag name="spawnpoint_homestead_companion" />
+        <tag name="spawnpoint_homestead_npc" /></tags>
+        <scripts>
+          <script name="UsablePlace">
+            <variables>
+              <variable name="PilotStandingPointTag" value="Pilot" />
+              <variable name="AmmoPickUpTag" value="ammopickup" />
+              <variable name="WaitStandingPointTag" value="Wait" />
+              <variable name="NavMeshPrefabName" value="" />
+            </variables>
+          </script>
+        </scripts>
+        <children>
+          <game_entity name="animation_point" old_prefab_name="" mobility="1">
+            <scripts>
+              <script name="AnimationPoint">
+                <variables>
+                  <variable name="ArriveAction" value="" />
+                  <variable name="LoopStartAction" value="act_stand_1" />
+                  <variable name="PairLoopStartAction" value="" />
+                  <variable name="LeaveAction" value="" />
+                  <variable name="GroupId" value="-1" />
+                  <variable name="RightHandItem" value="" />
+                  <variable name="RightHandItemBone" value="ItemR" />
+                  <variable name="LeftHandItem" value="" />
+                  <variable name="LeftHandItemBone" value="ItemL" />
+                  <variable name="MinUserToStartInteraction" value="1" />
+                  <variable name="ActivatePairs" value="false" />
+                  <variable name="MinWaitinSeconds" value="50.000" />
+                  <variable name="MaxWaitInSeconds" value="320.000" />
+                  <variable name="ForwardDistanceToPivotPoint" value="0.000" />
+                  <variable name="SideDistanceToPivotPoint" value="0.000" />
+                  <variable name="KeepOldVisibility" value="false" />
+                  <variable name="AutoSheathWeapons" value="true" />
+                  <variable name="AutoEquipWeaponsOnUseStopped" value="false" />
+                  <variable name="AutoWieldWeapons" value="false" />
+                  <variable name="TranslateUser" value="true" />
+                  <variable name="HasRecentlyBeenRechecked" value="false" />
+                  <variable name="NavMeshPrefabName" value="" />
+                </variables>
+              </script>
+            </scripts>
+          </game_entity>
+        </children>
+      </game_entity><game_entity name="sp_guard_1" old_prefab_name="" mobility="1">
+        <transform position="1.600, -1.300, 0.000" rotation_euler="0.000, 0.000, 0.000" />
+        <tags>
+          <tag name="spawnpoint_homestead_npc" />
+        </tags>
+        <scripts>
+          <script name="UsablePlace">
+            <variables>
+              <variable name="PilotStandingPointTag" value="Pilot" />
+              <variable name="AmmoPickUpTag" value="ammopickup" />
+              <variable name="WaitStandingPointTag" value="Wait" />
+              <variable name="NavMeshPrefabName" value="" />
+            </variables>
+          </script>
+        </scripts>
+        <children>
+          <game_entity name="animation_point" old_prefab_name="" mobility="1">
+            <scripts>
+              <script name="AnimationPoint">
+                <variables>
+                  <variable name="ArriveAction" value="" />
+                  <variable name="LoopStartAction" value="act_walk_idle_unarmed" />
+                  <variable name="PairLoopStartAction" value="" />
+                  <variable name="LeaveAction" value="" />
+                  <variable name="GroupId" value="-1" />
+                  <variable name="RightHandItem" value="" />
+                  <variable name="RightHandItemBone" value="ItemR" />
+                  <variable name="LeftHandItem" value="" />
+                  <variable name="LeftHandItemBone" value="ItemL" />
+                  <variable name="MinUserToStartInteraction" value="1" />
+                  <variable name="ActivatePairs" value="false" />
+                  <variable name="MinWaitinSeconds" value="50.000" />
+                  <variable name="MaxWaitInSeconds" value="320.000" />
+                  <variable name="ForwardDistanceToPivotPoint" value="0.000" />
+                  <variable name="SideDistanceToPivotPoint" value="0.000" />
+                  <variable name="KeepOldVisibility" value="false" />
+                  <variable name="AutoSheathWeapons" value="true" />
+                  <variable name="AutoEquipWeaponsOnUseStopped" value="false" />
+                  <variable name="AutoWieldWeapons" value="false" />
+                  <variable name="TranslateUser" value="true" />
+                  <variable name="HasRecentlyBeenRechecked" value="false" />
+                  <variable name="NavMeshPrefabName" value="" />
+                </variables>
+              </script>
+            </scripts>
+          </game_entity>
+        </children>
+      </game_entity><game_entity name="sp_guard_2" old_prefab_name="" mobility="1">
+        <transform position="-1.500, 0.700, 0.000" rotation_euler="0.000, 0.000, 0.000" />
+        <tags>
+          <tag name="spawnpoint_homestead_npc" />
+        </tags>
+        <scripts>
+          <script name="UsablePlace">
+            <variables>
+              <variable name="PilotStandingPointTag" value="Pilot" />
+              <variable name="AmmoPickUpTag" value="ammopickup" />
+              <variable name="WaitStandingPointTag" value="Wait" />
+              <variable name="NavMeshPrefabName" value="" />
+            </variables>
+          </script>
+        </scripts>
+        <children>
+          <game_entity name="animation_point" old_prefab_name="" mobility="1">
+            <scripts>
+              <script name="AnimationPoint">
+                <variables>
+                  <variable name="ArriveAction" value="" />
+                  <variable name="LoopStartAction" value="act_walk_idle_unarmed" />
+                  <variable name="PairLoopStartAction" value="" />
+                  <variable name="LeaveAction" value="" />
+                  <variable name="GroupId" value="-1" />
+                  <variable name="RightHandItem" value="" />
+                  <variable name="RightHandItemBone" value="ItemR" />
+                  <variable name="LeftHandItem" value="" />
+                  <variable name="LeftHandItemBone" value="ItemL" />
+                  <variable name="MinUserToStartInteraction" value="1" />
+                  <variable name="ActivatePairs" value="false" />
+                  <variable name="MinWaitinSeconds" value="50.000" />
+                  <variable name="MaxWaitInSeconds" value="320.000" />
+                  <variable name="ForwardDistanceToPivotPoint" value="0.000" />
+                  <variable name="SideDistanceToPivotPoint" value="0.000" />
+                  <variable name="KeepOldVisibility" value="false" />
+                  <variable name="AutoSheathWeapons" value="true" />
+                  <variable name="AutoEquipWeaponsOnUseStopped" value="false" />
+                  <variable name="AutoWieldWeapons" value="false" />
+                  <variable name="TranslateUser" value="true" />
+                  <variable name="HasRecentlyBeenRechecked" value="false" />
+                  <variable name="NavMeshPrefabName" value="" />
+                </variables>
+              </script>
+            </scripts>
+          </game_entity>
+        </children>
+      </game_entity></children>
+  </game_entity>
+</prefabs>

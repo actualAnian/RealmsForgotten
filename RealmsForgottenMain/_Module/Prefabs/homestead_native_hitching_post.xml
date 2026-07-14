@@ -1,0 +1,15 @@
+<prefabs>
+  <game_entity name="homestead_native_hitching_post" old_prefab_name="">
+    <children>
+      <game_entity name="horse_barrier" old_prefab_name="">
+        <physics shape="bo_horse_barrier_a" override_material="wood"/>
+        <components><meta_mesh_component name="horse_barrier_a"/></components>
+      </game_entity>
+      <game_entity name="merchant_horse" old_prefab_name="">
+        <transform position="0.850, 0.200, 0.000" rotation_euler="0.000, 0.000, -1.571"/>
+        <physics shape="bo_shop_prop_merchanthorse_a"/>
+        <components><meta_mesh_component name="shop_prop_merchanthorse_a"/></components>
+      </game_entity>
+    </children>
+  </game_entity>
+</prefabs>

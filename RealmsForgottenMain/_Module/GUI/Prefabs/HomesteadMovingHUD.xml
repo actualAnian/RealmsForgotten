@@ -1,0 +1,23 @@
+<Prefab>
+  <Window>
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+      <Children>
+        <BrushWidget Brush="Frame1Brush" RenderLate="true"
+                     WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                     HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="100">
+          <Children>
+            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                       StackLayout.LayoutMethod="VerticalTopToBottom"
+                       MarginTop="15" MarginBottom="15" MarginLeft="25" MarginRight="25">
+              <Children>
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" MarginBottom="5" Text="@RelocatingTitleText" Brush="SPOptions.Description.Text" Brush.FontSize="20" Brush.FontColor="#FFCC00FF"/>
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" Text="@EstimatedTravelTimeText" Brush="SPOptions.Description.Text" Brush.FontSize="24" Brush.FontColor="#FFFFFFFF"/>
+              </Children>
+            </ListPanel>
+          </Children>
+        </BrushWidget>
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

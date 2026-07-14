@@ -1,0 +1,781 @@
+<?xml version='1.0' encoding='utf-8'?>
+<prefabs>
+  <!-- Baked race track (converted from builder export homestead_happy_hippodrome).
+       Rocks borrow bo_castle_plank_wall_c collision; tents keep their own roof collision;
+       gatehouses are native-instantiated; markers are tagged invisible points (gates ordered gate_NNN).
+       world_anchor (built on battle_terrain_009): 698.374, 684.178, -1.285
+       The race loader instantiates this root AT that anchor so it fits the terrain. -->
+  <game_entity name="homestead_happy_hippodrome" old_prefab_name="">
+    <transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000"/>
+    <children>
+      <game_entity name="empire_hippodrome_a" old_prefab_name="">
+        <transform position="-3.738, 13.516, 3.292" rotation_euler="0.000, 0.000, 0.000"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-20.718, -40.530, 3.578" rotation_euler="0.000, 0.000, 1.567"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-20.739, -16.799, 3.578" rotation_euler="0.000, 0.000, 1.567"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-20.798, 27.900, 3.218" rotation_euler="0.000, 0.000, 1.567"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-20.706, 50.378, 3.218" rotation_euler="0.000, 0.000, 1.551"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-20.561, 95.120, 3.218" rotation_euler="0.000, 0.000, 1.551"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="19.017, 87.522, 3.218" rotation_euler="0.000, 0.000, 1.584"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="18.671, 50.493, 3.218" rotation_euler="0.000, 0.000, 1.584"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="19.027, 27.232, 3.218" rotation_euler="0.000, 0.000, 1.584"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="18.749, 4.757, 3.218" rotation_euler="0.000, 0.000, 1.584"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="18.761, -18.113, 3.218" rotation_euler="0.000, 0.000, 1.584"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="18.779, -40.427, 3.218" rotation_euler="0.000, 0.000, 1.584"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="16.285, -67.352, 3.218" rotation_euler="0.000, 0.000, -2.165"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-19.220, -65.629, 3.218" rotation_euler="0.000, 0.000, -1.081"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-20.874, -57.679, -0.022" rotation_euler="0.000, 0.000, -1.548"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-21.077, -49.086, -0.022" rotation_euler="0.000, 0.000, -1.548"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-21.140, -40.545, -0.022" rotation_euler="0.000, 0.000, -1.564"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-20.914, -32.402, -0.022" rotation_euler="0.000, 0.000, -1.581"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-20.755, -24.827, -0.022" rotation_euler="0.000, 0.000, -1.581"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-20.556, -16.020, -0.022" rotation_euler="0.000, 0.000, -1.581"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-20.619, -7.069, -0.022" rotation_euler="0.000, 0.000, -1.581"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-20.576, 2.012, -0.022" rotation_euler="0.000, 0.000, -1.581"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-20.598, 10.514, -0.022" rotation_euler="0.000, 0.000, -1.548"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-20.734, 19.319, -0.022" rotation_euler="0.000, 0.000, -1.565"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-20.564, 56.200, -0.022" rotation_euler="0.000, 0.000, -1.515"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-20.761, 65.149, -0.022" rotation_euler="0.000, 0.000, -1.565"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-20.693, 73.583, -0.022" rotation_euler="0.000, 0.000, -1.565"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-20.423, 82.597, -0.022" rotation_euler="0.000, 0.000, -1.631"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="18.863, 87.853, -0.022" rotation_euler="0.000, 0.000, -1.565"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="18.723, 79.446, -0.022" rotation_euler="0.000, 0.000, -1.565"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="18.558, 71.191, -0.022" rotation_euler="0.000, 0.000, -1.565"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="18.624, 62.487, -0.022" rotation_euler="0.000, 0.000, -1.565"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="18.576, 53.540, -0.022" rotation_euler="0.000, 0.000, -1.565"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="18.610, 44.517, -0.022" rotation_euler="0.000, 0.000, -1.565"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="18.696, 35.781, -0.022" rotation_euler="0.000, 0.000, -1.565"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="18.796, 20.742, -0.022" rotation_euler="0.000, 0.000, -1.565"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="18.730, 13.045, -0.022" rotation_euler="0.000, 0.000, -1.565"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="18.748, 4.391, -0.022" rotation_euler="0.000, 0.000, -1.565"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="18.690, -4.440, -0.022" rotation_euler="0.000, 0.000, -1.565"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="18.681, -13.046, -0.022" rotation_euler="0.000, 0.000, -1.565"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="18.754, -21.971, -0.022" rotation_euler="0.000, 0.000, -1.565"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="18.779, -30.956, -0.022" rotation_euler="0.000, 0.000, -1.565"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="18.669, -39.170, -0.022" rotation_euler="0.000, 0.000, -1.565"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="18.817, -47.862, -0.022" rotation_euler="0.000, 0.000, -1.565"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="18.687, -56.640, -0.022" rotation_euler="0.000, 0.000, -1.565"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="18.872, -61.547, -0.022" rotation_euler="0.000, 0.000, -1.748"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="11.711, -71.998, -0.022" rotation_euler="0.000, 0.000, -2.598"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="5.705, -74.449, -0.022" rotation_euler="0.000, 0.000, -2.799"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-1.072, -75.443, -0.022" rotation_euler="0.000, 0.000, -3.099"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-9.088, -75.742, -0.022" rotation_euler="0.000, 0.000, -3.099"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-8.618, -74.242, -0.022" rotation_euler="0.000, 0.000, 2.768"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-15.526, -69.890, -0.022" rotation_euler="0.000, 0.000, 2.351"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="0.017, 29.611, 0.698" rotation_euler="0.000, 0.000, 1.550"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-0.325, 20.535, 0.698" rotation_euler="0.000, 0.000, 1.550"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-0.588, 11.357, 0.698" rotation_euler="0.000, 0.000, 1.550"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-0.800, 2.156, 0.698" rotation_euler="0.000, 0.000, 1.550"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-1.095, -6.828, 0.698" rotation_euler="0.000, 0.000, 1.550"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-1.618, -12.027, 0.698" rotation_euler="0.000, 0.000, 1.550"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-2.204, -28.828, 0.698" rotation_euler="0.000, 0.000, 1.550"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-1.686, -34.036, 0.698" rotation_euler="0.000, 0.000, 1.550"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-1.243, -3.258, 0.698" rotation_euler="0.000, 0.000, 1.534"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-1.904, -19.979, 0.698" rotation_euler="0.000, 0.000, 1.534"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-2.610, -37.188, 0.698" rotation_euler="0.000, 0.000, 1.534"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-2.984, -46.325, 0.698" rotation_euler="0.000, 0.000, 1.534"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="-3.190, -48.131, 0.698" rotation_euler="0.000, 0.000, 1.534"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="0.331, -48.516, 0.698" rotation_euler="0.000, 0.000, 1.534"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="0.597, -39.593, 0.698" rotation_euler="0.000, 0.000, 1.534"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="1.040, -30.527, 0.698" rotation_euler="0.000, 0.000, 1.534"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="1.437, -21.640, 0.698" rotation_euler="0.000, 0.000, 1.534"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="1.763, -12.660, 0.698" rotation_euler="0.000, 0.000, 1.534"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="2.216, -3.635, 0.698" rotation_euler="0.000, 0.000, 1.534"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="2.558, 5.237, 0.698" rotation_euler="0.000, 0.000, 1.534"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="2.850, 13.993, 0.698" rotation_euler="0.000, 0.000, 1.534"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="3.192, 23.053, 0.698" rotation_euler="0.000, 0.000, 1.534"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="3.570, 30.340, 0.698" rotation_euler="0.000, 0.000, 1.534"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="3.942, 41.049, 0.698" rotation_euler="0.000, 0.000, 1.534"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a2" old_prefab_name="">
+        <transform position="0.446, 41.226, 0.698" rotation_euler="0.000, 0.000, 1.534"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_middle_platform_a" old_prefab_name="">
+        <transform position="-2.668, -53.743, 0.698" rotation_euler="0.000, 0.000, 1.534"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_middle_platform_a" old_prefab_name="">
+        <transform position="-0.295, -53.734, 0.698" rotation_euler="0.000, 0.000, 1.534"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_middle_platform_a" old_prefab_name="">
+        <transform position="-1.261, -51.948, 0.698" rotation_euler="0.000, 0.000, 1.534"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_middle_platform_c" old_prefab_name="">
+        <transform position="-1.452, -54.206, 0.698" rotation_euler="0.000, 0.000, -1.565"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_middle_platform_c" old_prefab_name="">
+        <transform position="11.406, 51.915, 2.843" rotation_euler="0.000, 0.000, 1.537"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="11.525, 48.096, 1.832" rotation_euler="0.000, 0.000, 1.587"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="11.634, 39.157, 1.832" rotation_euler="0.000, 0.000, 1.587"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="11.756, 30.763, 1.832" rotation_euler="0.000, 0.000, 1.587"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="11.869, 22.046, 1.832" rotation_euler="0.000, 0.000, 1.587"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="12.012, 13.219, 1.832" rotation_euler="0.000, 0.000, 1.587"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="11.955, 4.137, 1.832" rotation_euler="0.000, 0.000, 1.570"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="11.876, -4.475, 1.832" rotation_euler="0.000, 0.000, 1.570"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="11.787, -13.361, 1.832" rotation_euler="0.000, 0.000, 1.570"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="11.783, -22.029, 1.832" rotation_euler="0.000, 0.000, 1.570"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="11.790, -31.064, 1.832" rotation_euler="0.000, 0.000, 1.570"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="11.761, -39.927, 1.832" rotation_euler="0.000, 0.000, 1.570"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="10.162, -48.547, 1.832" rotation_euler="0.000, 0.000, 1.220"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="6.894, -57.211, 1.832" rotation_euler="0.000, 0.000, 1.220"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="1.820, -64.021, 1.832" rotation_euler="0.000, 0.000, 0.636"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="-5.317, -64.034, 1.832" rotation_euler="0.000, 0.000, -0.664"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="-10.051, -57.582, 1.832" rotation_euler="0.000, 0.000, -1.198"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="-12.231, -49.288, 1.832" rotation_euler="0.000, 0.000, -1.448"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="-12.722, -40.758, 1.832" rotation_euler="0.000, 0.000, -1.581"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="-12.693, -32.213, 1.832" rotation_euler="0.000, 0.000, -1.581"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="-12.590, -23.838, 1.832" rotation_euler="0.000, 0.000, -1.581"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="-12.704, -15.610, 1.832" rotation_euler="0.000, 0.000, -1.548"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="-12.896, -7.140, 1.832" rotation_euler="0.000, 0.000, -1.548"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="-13.036, 1.258, 1.832" rotation_euler="0.000, 0.000, -1.548"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="-13.243, 9.851, 1.832" rotation_euler="0.000, 0.000, -1.548"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="-13.432, 18.397, 1.832" rotation_euler="0.000, 0.000, -1.548"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="-13.560, 27.276, 1.832" rotation_euler="0.000, 0.000, -1.548"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="-13.310, 36.182, 2.675" rotation_euler="0.000, 0.000, -1.648"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="-12.435, 45.144, 3.035" rotation_euler="0.000, 0.000, -1.698"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="-11.001, 53.899, 3.755" rotation_euler="0.000, 0.000, -1.765"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="-7.724, 60.939, 3.755" rotation_euler="0.000, 0.000, -2.232"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="-3.503, 67.598, 3.755" rotation_euler="0.000, 0.000, -2.049"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="-1.162, 75.042, 3.755" rotation_euler="0.000, 0.000, -1.715"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="3.046, 51.612, 3.755" rotation_euler="0.000, 0.000, -1.715"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="5.362, 59.881, 3.755" rotation_euler="0.000, 0.000, -1.948"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="9.460, 66.366, 3.755" rotation_euler="0.000, 0.000, -2.349"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="empire_hippodrome_enterance_wall_a" old_prefab_name="">
+        <transform position="16.194, 71.840, 4.115" rotation_euler="0.000, 0.000, -2.566"/>
+        <tags><tag name="homestead_race_prop"/></tags>
+      </game_entity>
+      <game_entity name="homestead_race_start" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_start"/></tags>
+        <transform position="-0.402, 85.464, 4.115" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_000"/></tags>
+        <transform position="-7.170, 82.852, 4.115" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_001"/></tags>
+        <transform position="-12.004, 76.010, 4.115" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_002"/></tags>
+        <transform position="-14.930, 68.637, 4.115" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_003"/></tags>
+        <transform position="-16.056, 59.115, 4.115" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_004"/></tags>
+        <transform position="-16.987, 48.933, 4.115" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_005"/></tags>
+        <transform position="-17.120, 41.458, 4.115" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_006"/></tags>
+        <transform position="-17.380, 34.104, 4.115" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_007"/></tags>
+        <transform position="-17.024, 26.055, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_008"/></tags>
+        <transform position="-17.600, 14.711, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_009"/></tags>
+        <transform position="-17.304, 3.030, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_010"/></tags>
+        <transform position="-17.507, -5.728, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_011"/></tags>
+        <transform position="-17.362, -13.146, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_012"/></tags>
+        <transform position="-16.957, -22.634, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_013"/></tags>
+        <transform position="-17.242, -29.586, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_014"/></tags>
+        <transform position="-16.933, -39.944, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_015"/></tags>
+        <transform position="-16.421, -50.174, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_016"/></tags>
+        <transform position="-14.702, -58.903, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_017"/></tags>
+        <transform position="-11.980, -64.322, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_018"/></tags>
+        <transform position="-6.044, -68.964, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_019"/></tags>
+        <transform position="1.457, -70.280, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_020"/></tags>
+        <transform position="8.561, -65.585, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_021"/></tags>
+        <transform position="12.478, -58.521, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_022"/></tags>
+        <transform position="14.370, -50.505, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_023"/></tags>
+        <transform position="15.337, -41.681, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_024"/></tags>
+        <transform position="15.407, -30.806, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_025"/></tags>
+        <transform position="15.710, -20.038, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_026"/></tags>
+        <transform position="15.539, -8.027, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_027"/></tags>
+        <transform position="15.661, 3.421, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_028"/></tags>
+        <transform position="16.018, 14.013, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_029"/></tags>
+        <transform position="15.990, 23.841, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_030"/></tags>
+        <transform position="16.210, 35.435, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_031"/></tags>
+        <transform position="15.933, 46.255, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_032"/></tags>
+        <transform position="16.599, 55.871, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_033"/></tags>
+        <transform position="13.921, 59.547, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_034"/></tags>
+        <transform position="9.648, 59.990, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_035"/></tags>
+        <transform position="6.141, 54.578, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_036"/></tags>
+        <transform position="7.003, 48.569, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_037"/></tags>
+        <transform position="8.249, 41.471, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_038"/></tags>
+        <transform position="8.448, 34.398, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_039"/></tags>
+        <transform position="8.637, 26.676, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_040"/></tags>
+        <transform position="8.934, 16.606, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_041"/></tags>
+        <transform position="8.184, 10.377, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_042"/></tags>
+        <transform position="7.935, 2.705, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_043"/></tags>
+        <transform position="8.050, -6.658, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_044"/></tags>
+        <transform position="7.807, -12.750, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_045"/></tags>
+        <transform position="7.741, -17.766, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_046"/></tags>
+        <transform position="7.206, -22.429, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_047"/></tags>
+        <transform position="7.133, -30.272, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_048"/></tags>
+        <transform position="6.537, -37.587, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_049"/></tags>
+        <transform position="5.988, -45.394, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_050"/></tags>
+        <transform position="5.499, -51.196, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_051"/></tags>
+        <transform position="3.285, -59.226, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_052"/></tags>
+        <transform position="0.414, -61.643, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_053"/></tags>
+        <transform position="-4.366, -60.730, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_054"/></tags>
+        <transform position="-7.523, -56.451, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_055"/></tags>
+        <transform position="-8.863, -50.423, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_056"/></tags>
+        <transform position="-9.192, -44.025, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_057"/></tags>
+        <transform position="-8.743, -38.668, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_058"/></tags>
+        <transform position="-8.230, -32.371, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_059"/></tags>
+        <transform position="-7.524, -25.037, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_060"/></tags>
+        <transform position="-6.808, -16.497, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_061"/></tags>
+        <transform position="-6.447, -10.130, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_062"/></tags>
+        <transform position="-5.999, -2.442, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_063"/></tags>
+        <transform position="-5.381, 6.152, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_064"/></tags>
+        <transform position="-5.807, 14.902, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_065"/></tags>
+        <transform position="-5.592, 24.561, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_066"/></tags>
+        <transform position="-4.720, 33.992, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_067"/></tags>
+        <transform position="-5.398, 41.279, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_068"/></tags>
+        <transform position="-4.260, 49.590, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_069"/></tags>
+        <transform position="-0.806, 58.037, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_070"/></tags>
+        <transform position="4.431, 68.217, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_071"/></tags>
+        <transform position="10.184, 80.305, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+      <game_entity name="homestead_race_gate" old_prefab_name="" mobility="1">
+        <tags><tag name="homestead_race_gate"/><tag name="gate_072"/></tags>
+        <transform position="7.107, 88.706, 2.141" rotation_euler="0.000, 0.000, -2.566"/>
+      </game_entity>
+    </children>
+  </game_entity>
+</prefabs>

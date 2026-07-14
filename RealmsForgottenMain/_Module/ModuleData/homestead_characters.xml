@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+  <!-- Last-resort fallback template used by TryEnsureMarketLadyHero only when no
+       vanilla female RuralNotable template matching the player's culture can be found.
+       No culture attribute so it is not filtered out for any player culture.
+       Primary path uses CharacterObject.All filtered by player culture instead. -->
+  <NPCCharacter id="homestead_market_lady_template"
+                name="{=homestead_market_lady_name}Market Lady"
+                is_template="true"
+                voice="debating"
+                age="32"
+                default_group="Infantry"
+                is_female="true"
+                skill_template="SkillSet.spc_notable_empire_21"
+                occupation="RuralNotable">
+    <face>
+      <face_key_template value="BodyProperty.villager_woman_empire" />
+    </face>
+    <Equipments>
+      <EquipmentSet id="npc_armed_wanderer_equipment_template_empire" />
+      <EquipmentSet id="npc_wanderer_equipment_template_empire" equipmentType="Civilian" />
+    </Equipments>
+  </NPCCharacter>
+
+  <!-- Last-resort fallback template used by TryEnsureHoundMasterHero only when no
+       vanilla RuralNotable template matching the player's culture can be found.
+       No culture attribute so it is not filtered out for any player culture.
+       Primary path uses CharacterObject.All filtered by player culture instead. -->
+  <NPCCharacter id="homestead_hound_master_template"
+                name="{=homestead_hound_master_name}Hound Master"
+                is_template="true"
+                voice="curt"
+                age="35"
+                default_group="Infantry"
+                is_female="false"
+                skill_template="SkillSet.spc_notable_empire_21"
+                occupation="RuralNotable">
+    <face>
+      <face_key_template value="BodyProperty.villager_empire" />
+    </face>
+    <Equipments>
+      <EquipmentSet id="npc_armed_wanderer_equipment_template_empire" />
+      <EquipmentSet id="npc_wanderer_equipment_template_empire" equipmentType="Civilian" />
+    </Equipments>
+  </NPCCharacter>
+
+  <!-- Last-resort fallback template for the Arms Master.  No civilian EquipmentSet is
+       defined — CreateArmsMasterHero copies battle gear to the civilian slot so the NPC
+       is always in combat attire.  No culture attribute so it is not filtered out for any
+       player culture.  Primary path uses CharacterObject.All filtered by player culture
+       searching for Wanderer occupation templates first. -->
+  <NPCCharacter id="homestead_arms_master_template"
+                name="{=homestead_arms_master_name}Arms Master"
+                is_template="true"
+                voice="curt"
+                age="40"
+                default_group="Infantry"
+                is_female="false"
+                skill_template="SkillSet.spc_notable_empire_21"
+                occupation="RuralNotable">
+    <face>
+      <face_key_template value="BodyProperty.villager_empire" />
+    </face>
+    <Equipments>
+      <!-- Battle equipment only; code copies this to the civilian slot at creation time -->
+      <EquipmentSet id="npc_armed_wanderer_equipment_template_empire" />
+    </Equipments>
+  </NPCCharacter>
+
+  <!-- Last-resort fallback template used by TryEnsureAmbassadorHero only when no
+       vanilla Merchant template matching the player's culture can be found.
+       No culture attribute so it is not filtered out for any player culture.
+       Primary path uses CharacterObject.All filtered by player culture instead. -->
+  <NPCCharacter id="homestead_ambassador_template"
+                name="{=homestead_ambassador_name}Ambassador"
+                is_template="true"
+                voice="debating"
+                age="40"
+                default_group="Infantry"
+                is_female="false"
+                skill_template="SkillSet.spc_notable_empire_21"
+                occupation="RuralNotable">
+    <face>
+      <face_key_template value="BodyProperty.villager_empire" />
+    </face>
+    <Equipments>
+      <EquipmentSet id="npc_armed_wanderer_equipment_template_empire" />
+      <EquipmentSet id="npc_wanderer_equipment_template_empire" equipmentType="Civilian" />
+    </Equipments>
+  </NPCCharacter>
+</NPCCharacters>

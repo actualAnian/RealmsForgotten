@@ -1,0 +1,24 @@
+<prefabs>
+  <game_entity name="homestead_clan_banner_flag" old_prefab_name="">
+    <transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="1.000, 1.000, 1.000"/>
+    <children>
+      <game_entity name="homestead_clan_banner_flag_pole" old_prefab_name="">
+        <transform position="0.000, 0.000, 1.400" rotation_euler="0.000, 0.000, 0.000" scale="3.000, 3.000, 3.000"/>
+        <components>
+          <meta_mesh_component name="generic_flag_pole_a"/>
+        </components>
+        <children>
+          <game_entity name="homestead_clan_banner_flag_cloth" old_prefab_name="">
+            <transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="1.000, 1.000, 1.000"/>
+            <tags>
+              <tag name="hsr_clan_banner_cloth"/>
+            </tags>
+            <components>
+              <meta_mesh_component name="generic_flag_vertical_a"/>
+            </components>
+          </game_entity>
+        </children>
+      </game_entity>
+    </children>
+  </game_entity>
+</prefabs>

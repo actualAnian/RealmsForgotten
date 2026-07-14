@@ -1,0 +1,22 @@
+<prefabs>
+  <game_entity name="homestead_native_decorated_work_table" old_prefab_name="">
+    <children>
+      <game_entity name="table" old_prefab_name="">
+        <physics shape="bo_bd_table_e" override_material="wood"/>
+        <components><meta_mesh_component name="bd_table_e"/></components>
+      </game_entity>
+      <game_entity name="bucket" old_prefab_name="">
+        <transform position="-0.500, -0.250, 0.820" rotation_euler="0.000, 0.000, 0.600" scale="0.550, 0.550, 0.550"/>
+        <components><meta_mesh_component name="bd_bucket_a"/></components>
+      </game_entity>
+      <game_entity name="pot" old_prefab_name="">
+        <transform position="0.350, 0.250, 0.820" rotation_euler="0.000, 0.000, -0.300" scale="0.650, 0.650, 0.650"/>
+        <components><meta_mesh_component name="kitchen_pot_a"/></components>
+      </game_entity>
+      <game_entity name="bowl" old_prefab_name="">
+        <transform position="0.150, -0.300, 0.820" rotation_euler="0.000, 0.000, 0.000"/>
+        <components><meta_mesh_component name="kitchen_bowl_c"/></components>
+      </game_entity>
+    </children>
+  </game_entity>
+</prefabs>

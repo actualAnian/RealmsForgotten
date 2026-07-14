@@ -1,0 +1,90 @@
+<Prefab>
+  <Constants>
+  </Constants>
+
+  <Window>
+		<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+      <Children>
+      
+        <ListPanel IsVisible="@AreStatsVisible" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" HorizontalAlignment="Right" VerticalAlignment="Top" MarginTop="60" MarginRight="60">
+          <Children>
+            
+            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight" HorizontalAlignment="Right" VerticalAlignment="Center">
+              <Children>
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Text="@BuildPointsLocalization" />
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Left" VerticalAlignment="Bottom" IntText="@BuildPointsLeft" />
+              </Children>
+            </ListPanel>
+            
+            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight" HorizontalAlignment="Right" VerticalAlignment="Center">
+              <Children>
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Text="@ProductivityLocalization" />
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" IntText="@TotalProductivity" />
+              </Children>
+            </ListPanel>
+            
+            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight" HorizontalAlignment="Right" VerticalAlignment="Center">
+              <Children>
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Text="@SpaceLocalization" />
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" IntText="@ExtraSpace" />
+              </Children>
+            </ListPanel>
+            
+            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight" HorizontalAlignment="Right" VerticalAlignment="Center">
+              <Children>
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Text="@LeisureLocalization" />
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" IntText="@TotalLeisure" />
+              </Children>
+            </ListPanel>
+            
+            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" HorizontalAlignment="Right" VerticalAlignment="Center">
+              <Children>
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" Brush.TextHorizontalAlignment="Right" Text="@AvailableMaterialsText" />
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" Brush.TextHorizontalAlignment="Right" Text="@AvailableMaterialsLocalization" />
+              </Children>
+            </ListPanel>
+            
+          </Children>
+        </ListPanel>
+        
+        <BrushWidget IsVisible="@CurrentPlaceableBoxVisible" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" HorizontalAlignment="Left" VerticalAlignment="Top" MarginLeft="60" MarginTop="60" Brush="Frame1Brush" RenderLate="true">
+          <Children>
+            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" StackLayout.LayoutMethod="VerticalTopToBottom" MarginRight="20" MarginLeft="20" MarginTop="20" MarginBottom="20">
+              <Children>
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" Brush.FontSize="30" Text="@CurrentPlaceableName" />
+                <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight" HorizontalAlignment="Center" VerticalAlignment="Center">
+                  <Children>
+                    <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Brush.FontSize="24" Text="@CategoryLocalization" />
+                    <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Brush.FontSize="24" Text="@CurrentCategoryName" />
+                  </Children>
+                </ListPanel>
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" Brush.FontSize="20" Text="@CurrentPlaceableDesc" />
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" Brush.FontSize="16" Text="@HeightModeText" />
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" Brush.FontSize="18" Text="@CategoryHintLocalization" />
+              </Children>
+            </ListPanel>
+          </Children>
+        </BrushWidget>
+
+        <BrushWidget IsVisible="@TargetBoxVisible" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="140" Brush="Frame1Brush" RenderLate="true">
+          <Children>
+            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" StackLayout.LayoutMethod="VerticalTopToBottom" MarginRight="18" MarginLeft="18" MarginTop="12" MarginBottom="12">
+              <Children>
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" Brush.FontSize="26" Text="@TargetName" />
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" Brush.FontSize="18" Text="@TargetHint" />
+              </Children>
+            </ListPanel>
+          </Children>
+        </BrushWidget>
+        
+        <TextWidget IsVisible="@IsBuildMenuPromptVisible" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                    HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="160"
+                    Text="@BuildMenuPromptText"
+                    Brush.FontSize="34"
+                    Brush.FontColor="#7FE0FFFF"
+                    Brush.TextHorizontalAlignment="Center" />
+
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

@@ -1,0 +1,27 @@
+<prefabs>
+  <game_entity name="homestead_native_dirt_mound" old_prefab_name="">
+    <children>
+      <game_entity name="dirt_mound_part_a" old_prefab_name="">
+        <transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="0.338, 0.338, 0.210"/>
+        <physics shape="bo_cliff_soil_a" override_material="default"/>
+        <components>
+          <meta_mesh_component name="cliff_soil_a"/>
+        </components>
+      </game_entity>
+      <game_entity name="dirt_mound_part_b" old_prefab_name="">
+        <transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 2.094" scale="0.338, 0.338, 0.210"/>
+        <physics shape="bo_cliff_soil_a" override_material="default"/>
+        <components>
+          <meta_mesh_component name="cliff_soil_a"/>
+        </components>
+      </game_entity>
+      <game_entity name="dirt_mound_part_c" old_prefab_name="">
+        <transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 4.189" scale="0.338, 0.338, 0.210"/>
+        <physics shape="bo_cliff_soil_a" override_material="default"/>
+        <components>
+          <meta_mesh_component name="cliff_soil_a"/>
+        </components>
+      </game_entity>
+    </children>
+  </game_entity>
+</prefabs>

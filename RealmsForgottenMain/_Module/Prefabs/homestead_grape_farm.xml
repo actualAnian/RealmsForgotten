@@ -1,0 +1,1074 @@
+<?xml version='1.0' encoding='utf-8'?>
+<prefabs>
+  <game_entity name="homestead_grape_farm" old_prefab_name="">
+    <transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" />
+    <children>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="5.147, -3.059, -0.649" rotation_euler="0.000, 0.000, 0.000" />
+      <components><meta_mesh_component name="bd_cloth_stick_5m" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="2.741, 0.680, -0.847" rotation_euler="0.000, 0.000, 0.000" />
+      <components><meta_mesh_component name="bd_cloth_stick_5m" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.212, 2.825, 1.929" rotation_euler="0.000, 0.000, 0.640" />
+      <components><meta_mesh_component name="bd_cloth_stick_5m" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="3.200, -4.494, 2.225" rotation_euler="0.000, 0.000, 0.640" />
+      <components><meta_mesh_component name="bd_cloth_stick_5m" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.778, -0.784, 2.068" rotation_euler="0.000, 0.000, 0.640" />
+      <components><meta_mesh_component name="bd_cloth_stick_5m" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.243, -0.177, 1.843" rotation_euler="0.000, 0.000, 0.640" />
+      <components><meta_mesh_component name="bd_cloth_stick_5m" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.924, -7.523, 2.110" rotation_euler="0.000, 0.000, 0.636" />
+      <components><meta_mesh_component name="bd_cloth_stick_5m" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.298, -3.794, 2.041" rotation_euler="0.000, 0.000, 0.640" />
+      <components><meta_mesh_component name="bd_cloth_stick_5m" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.188, 4.327, -0.982" rotation_euler="0.000, 0.000, 0.000" />
+      <components><meta_mesh_component name="bd_cloth_stick_5m" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.293, -2.297, -0.897" rotation_euler="0.000, 0.000, 0.000" />
+      <components><meta_mesh_component name="bd_cloth_stick_5m" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.281, 1.350, -1.034" rotation_euler="0.000, 0.000, 0.000" />
+      <components><meta_mesh_component name="bd_cloth_stick_5m" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="1.149, -6.003, -0.748" rotation_euler="0.000, 0.000, 0.000" />
+      <components><meta_mesh_component name="bd_cloth_stick_5m" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.958, -8.980, -0.790" rotation_euler="0.000, 0.000, 0.000" />
+      <components><meta_mesh_component name="bd_cloth_stick_5m" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.313, -5.278, -0.870" rotation_euler="0.000, 0.000, 0.000" />
+      <components><meta_mesh_component name="bd_cloth_stick_5m" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-8.326, -1.634, -1.085" rotation_euler="0.000, 0.000, 0.000" />
+      <components><meta_mesh_component name="bd_cloth_stick_5m" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.265, 2.834, -0.929" rotation_euler="0.000, 0.000, 0.636" />
+      <components><meta_mesh_component name="bd_cloth_stick_5m" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.389, -0.186, -0.929" rotation_euler="0.000, 0.000, 0.636" />
+      <components><meta_mesh_component name="bd_cloth_stick_5m" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.367, -3.840, -0.728" rotation_euler="0.000, 0.000, 0.636" />
+      <components><meta_mesh_component name="bd_cloth_stick_5m" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.940, -7.562, -0.448" rotation_euler="0.000, 0.000, 0.620" />
+      <components><meta_mesh_component name="bd_cloth_stick_5m" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="3.117, -4.558, -0.544" rotation_euler="0.000, 0.000, 0.636" />
+      <components><meta_mesh_component name="bd_cloth_stick_5m" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.755, -0.790, -0.701" rotation_euler="0.000, 0.000, 0.636" />
+      <components><meta_mesh_component name="bd_cloth_stick_5m" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.518, 4.047, -2.404" rotation_euler="0.000, 0.000, 0.355" />
+      <components><meta_mesh_component name="grape_root" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.629, 1.719, -2.426" rotation_euler="0.000, 0.000, -2.141" />
+      <components><meta_mesh_component name="grape_root" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.297, 2.734, -2.418" rotation_euler="0.000, 0.000, -2.141" />
+      <components><meta_mesh_component name="grape_root" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.132, 0.602, -2.472" rotation_euler="0.000, 0.000, 0.128" />
+      <components><meta_mesh_component name="grape_root" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.652, -0.456, -2.508" rotation_euler="0.000, 0.000, -2.277" />
+      <components><meta_mesh_component name="grape_root" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-7.867, -1.324, -2.549" rotation_euler="0.000, 0.000, -2.277" />
+      <components><meta_mesh_component name="grape_root" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="4.405, -3.336, -2.099" rotation_euler="0.000, 0.000, -2.277" />
+      <components><meta_mesh_component name="grape_root" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="1.648, -5.529, -2.148" rotation_euler="0.000, 0.000, -0.902" />
+      <components><meta_mesh_component name="grape_root" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.020, -6.816, -2.175" rotation_euler="0.000, 0.000, -2.322" />
+      <components><meta_mesh_component name="grape_root" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.324, -8.454, -2.192" rotation_euler="0.000, 0.000, -0.979" />
+      <components><meta_mesh_component name="grape_root" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="3.236, -4.385, -2.124" rotation_euler="0.000, 0.000, -0.979" />
+      <components><meta_mesh_component name="grape_root" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.109, -7.542, -2.184" rotation_euler="0.000, 0.000, -0.979" />
+      <components><meta_mesh_component name="grape_root" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="2.151, 0.063, -2.266" rotation_euler="0.000, 0.000, -0.979" />
+      <components><meta_mesh_component name="grape_root" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.937, -0.349, -2.286" rotation_euler="0.000, 0.000, -0.979" />
+      <components><meta_mesh_component name="grape_root" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.338, -1.771, -2.286" rotation_euler="0.000, 0.000, -0.979" />
+      <components><meta_mesh_component name="grape_root" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.279, -2.594, -2.318" rotation_euler="0.000, 0.000, -0.979" />
+      <components><meta_mesh_component name="grape_root" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.621, -4.202, -2.304" rotation_euler="0.000, 0.000, -0.979" />
+      <components><meta_mesh_component name="grape_root" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.902, -4.906, -2.349" rotation_euler="0.000, 0.000, -0.979" />
+      <components><meta_mesh_component name="grape_root" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.616, 3.998, -1.295" rotation_euler="0.000, 0.000, 0.618" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.543, 4.006, -1.293" rotation_euler="0.000, 0.000, -2.462" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.182, 2.828, -1.305" rotation_euler="0.000, 0.000, -2.462" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.631, 1.802, -1.316" rotation_euler="0.000, 0.000, -2.462" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.102, 0.646, -1.359" rotation_euler="0.000, 0.000, -2.462" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.642, -0.419, -1.396" rotation_euler="0.000, 0.000, -2.462" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-7.845, -1.271, -1.436" rotation_euler="0.000, 0.000, -2.462" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.376, 2.888, -1.312" rotation_euler="0.000, 0.000, 0.610" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.690, 1.742, -1.316" rotation_euler="0.000, 0.000, 0.610" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.300, 0.681, -1.370" rotation_euler="0.000, 0.000, 0.610" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.761, -0.426, -1.399" rotation_euler="0.000, 0.000, 0.610" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-8.009, -1.224, -1.450" rotation_euler="0.000, 0.000, 0.610" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.731, -0.136, -1.185" rotation_euler="0.000, 0.000, 1.805" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.691, -0.313, -1.181" rotation_euler="0.000, 0.000, 1.805" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="1.936, 0.114, -1.160" rotation_euler="0.000, 0.000, 1.805" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="1.868, 0.413, -1.170" rotation_euler="0.000, 0.000, 0.064" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.397, -1.683, -1.179" rotation_euler="0.000, 0.000, 0.064" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.521, -1.807, -1.182" rotation_euler="0.000, 0.000, 1.464" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.157, -2.867, -1.193" rotation_euler="0.000, 0.000, 2.436" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.274, -2.658, -1.204" rotation_euler="0.000, 0.000, -0.470" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.734, -4.104, -1.198" rotation_euler="0.000, 0.000, 0.274" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.653, -4.241, -1.192" rotation_euler="0.000, 0.000, -2.720" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.712, -4.808, -1.230" rotation_euler="0.000, 0.000, -1.847" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.811, -5.031, -1.229" rotation_euler="0.000, 0.000, -2.984" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.918, -5.039, -1.234" rotation_euler="0.000, 0.000, 1.441" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="4.370, -3.322, -0.987" rotation_euler="0.000, 0.000, 1.908" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="4.339, -3.398, -0.988" rotation_euler="0.000, 0.000, -0.133" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="4.474, -3.224, -0.984" rotation_euler="0.000, 0.000, -1.888" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="3.200, -4.221, -1.019" rotation_euler="0.000, 0.000, -1.888" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="1.561, -5.438, -1.042" rotation_euler="0.000, 0.000, -1.888" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.029, -6.672, -1.067" rotation_euler="0.000, 0.000, -1.888" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.257, -7.413, -1.079" rotation_euler="0.000, 0.000, -1.888" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.339, -8.434, -1.081" rotation_euler="0.000, 0.000, -1.888" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="3.161, -4.302, -1.017" rotation_euler="0.000, 0.000, 1.739" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="1.616, -5.498, -1.038" rotation_euler="0.000, 0.000, 1.739" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.100, -6.722, -1.067" rotation_euler="0.000, 0.000, 1.739" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.212, -7.456, -1.077" rotation_euler="0.000, 0.000, 1.739" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.443, -8.461, -1.083" rotation_euler="0.000, 0.000, 1.739" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.421, -7.491, -1.081" rotation_euler="0.000, 0.000, 0.361" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.591, -8.464, -1.088" rotation_euler="0.000, 0.000, 0.361" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.229, -6.739, -1.070" rotation_euler="0.000, 0.000, 0.361" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="1.480, -5.532, -1.044" rotation_euler="0.000, 0.000, 0.361" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="3.072, -4.298, -1.022" rotation_euler="0.000, 0.000, 0.361" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.213, 4.354, -0.051" rotation_euler="-0.384, 0.598, 0.763" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.900, 3.750, -0.062" rotation_euler="0.433, -0.403, 0.699" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.821, 3.885, -0.064" rotation_euler="0.433, -0.403, -1.897" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.413, 4.093, -0.056" rotation_euler="-0.172, 0.423, -2.199" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.165, 3.631, 1.842" rotation_euler="-0.655, 1.549, 2.225" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.647, 2.444, 1.834" rotation_euler="-0.655, 1.549, 2.225" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.227, 2.915, 1.977" rotation_euler="-0.655, 1.549, -0.918" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.230, 3.831, 1.979" rotation_euler="-0.655, 1.549, -0.918" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.756, -1.929, 2.096" rotation_euler="-0.655, 1.549, -0.918" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.944, -0.768, 2.122" rotation_euler="-0.655, 1.549, -0.918" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="2.829, 0.738, 2.139" rotation_euler="-0.655, 1.549, -0.918" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.971, -7.503, 2.121" rotation_euler="-0.655, 1.549, -0.918" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.472, -6.417, 2.130" rotation_euler="-0.655, 1.549, -0.918" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="1.984, -5.292, 2.163" rotation_euler="-0.655, 1.549, -0.918" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="2.754, 0.554, 1.971" rotation_euler="-0.611, 1.560, 2.183" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="1.018, -0.794, 1.960" rotation_euler="-0.611, 1.560, 2.183" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.886, -2.115, 1.934" rotation_euler="-0.611, 1.560, 2.183" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.799, -7.574, 2.057" rotation_euler="-0.611, 1.560, 2.183" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.703, -6.475, 2.067" rotation_euler="-0.611, 1.560, 2.183" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="2.041, -5.466, 2.103" rotation_euler="-0.611, 1.560, 2.183" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-8.327, -1.480, 1.735" rotation_euler="-0.858, -1.543, -2.426" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-7.268, -2.887, 1.823" rotation_euler="-0.858, -1.543, -2.426" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.115, -4.263, 1.887" rotation_euler="-0.858, -1.543, -2.426" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.075, -5.707, 1.981" rotation_euler="-0.858, -1.543, -2.426" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.039, -6.938, 2.039" rotation_euler="-0.858, -1.543, -2.426" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.082, -3.529, 2.069" rotation_euler="-0.858, -1.543, -2.426" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.523, -2.841, 2.055" rotation_euler="-0.858, -1.543, -2.426" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.156, -1.808, 1.988" rotation_euler="-0.858, -1.543, -2.426" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.233, 3.126, 1.889" rotation_euler="-0.858, -1.543, -2.426" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.532, 2.364, 1.919" rotation_euler="-0.858, -1.543, -2.426" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.433, 1.034, 1.979" rotation_euler="-0.858, -1.543, -2.426" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.294, -1.706, 1.930" rotation_euler="-0.858, -1.543, -2.426" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.300, -0.442, 1.861" rotation_euler="-0.858, -1.543, -2.426" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.786, 0.482, 1.813" rotation_euler="-0.858, -1.543, -2.426" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.106, -7.054, 2.039" rotation_euler="-0.858, -1.543, 0.710" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.105, -7.110, 2.131" rotation_euler="-0.858, -1.543, 0.710" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.149, -5.890, 2.077" rotation_euler="-0.858, -1.543, 0.710" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.772, -5.209, 2.021" rotation_euler="-0.858, -1.543, 0.710" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.721, -3.907, 1.964" rotation_euler="-0.858, -1.543, 0.710" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-7.276, -2.989, 1.918" rotation_euler="-0.858, -1.543, 0.710" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-8.354, -1.646, 1.829" rotation_euler="-0.858, -1.543, 0.710" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-7.654, -2.448, 1.884" rotation_euler="-0.858, -1.543, 0.710" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.217, -3.991, 2.166" rotation_euler="-0.858, -1.543, 0.710" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.542, -3.143, 2.152" rotation_euler="-0.858, -1.543, 0.710" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.403, -1.833, 2.071" rotation_euler="-0.858, -1.543, 0.710" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.552, 1.076, 2.071" rotation_euler="-0.858, -1.543, 0.710" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.339, 1.790, 2.012" rotation_euler="-0.858, -1.543, 0.710" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.161, 3.121, 2.074" rotation_euler="-0.858, -1.543, 0.710" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.851, 1.717, 2.127" rotation_euler="-0.858, -1.543, 0.710" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.023, 0.684, 1.983" rotation_euler="-0.858, -1.543, 0.710" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.935, -0.844, 2.074" rotation_euler="-0.858, -1.543, 0.710" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.196, -1.913, 2.120" rotation_euler="-0.858, -1.543, 0.710" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.079, -1.476, -1.018" rotation_euler="0.000, 0.000, 0.992" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="1.174, -0.299, -1.016" rotation_euler="0.000, 0.000, 0.992" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.015, -1.317, -1.020" rotation_euler="0.000, 0.000, -2.679" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.438, -1.677, -1.028" rotation_euler="0.000, 0.000, -1.882" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.843, -0.171, -1.028" rotation_euler="0.000, 0.000, -1.882" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.452, -5.164, -2.371" rotation_euler="0.000, 0.000, -1.560" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.354, -5.406, -2.360" rotation_euler="0.000, 0.000, 0.222" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.413, -5.461, -0.754" rotation_euler="0.000, 0.000, 0.222" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.302, -5.250, -0.754" rotation_euler="0.000, 0.000, -1.855" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="5.196, -3.129, -2.060" rotation_euler="0.000, 0.000, 1.077" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="5.240, -2.951, -2.060" rotation_euler="0.000, 0.000, 3.060" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="5.210, -3.050, -0.477" rotation_euler="0.000, 0.000, 3.060" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="5.154, -3.163, -0.480" rotation_euler="0.000, 0.000, 1.585" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.438, 1.785, -2.467" rotation_euler="0.000, 0.000, 0.000" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.584, 3.665, 0.197" rotation_euler="0.000, 0.000, 0.000" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.260, 3.965, 0.197" rotation_euler="0.000, 0.000, 1.135" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.333, 3.967, 1.243" rotation_euler="0.000, 0.000, 1.209" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.797, 3.630, 1.239" rotation_euler="0.000, 0.000, 0.257" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.628, 4.570, 1.234" rotation_euler="0.000, 0.000, -2.294" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.193, 4.111, 1.220" rotation_euler="0.000, 0.000, -2.294" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.672, 4.334, 0.057" rotation_euler="0.000, 0.000, -2.294" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.883, 3.991, 0.052" rotation_euler="0.000, 0.000, -1.839" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.999, 1.957, 0.017" rotation_euler="0.000, 0.000, -1.839" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.421, 0.779, -0.026" rotation_euler="0.000, 0.000, -1.839" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.756, 2.082, 0.026" rotation_euler="0.000, 0.000, -3.086" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.176, 0.975, -0.018" rotation_euler="0.000, 0.000, -3.086" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.305, 3.114, 0.038" rotation_euler="0.000, 0.000, -3.086" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.601, -0.060, -0.051" rotation_euler="0.000, 0.000, -3.086" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-8.160, -1.098, -0.111" rotation_euler="0.000, 0.000, -2.039" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.502, 2.786, 0.827" rotation_euler="0.000, 0.000, -2.039" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.232, 3.110, 0.826" rotation_euler="0.000, 0.000, 2.807" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.543, 1.963, 0.821" rotation_euler="0.000, 0.000, 2.807" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.417, 0.725, 0.762" rotation_euler="0.000, 0.000, -1.595" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.916, -0.332, 0.733" rotation_euler="0.000, 0.000, -2.097" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-8.104, -1.189, 0.681" rotation_euler="0.000, 0.000, -2.097" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.626, -5.177, 0.872" rotation_euler="0.000, 0.000, -2.097" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.716, -5.342, 0.074" rotation_euler="0.000, 0.000, -1.185" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.283, -5.684, 0.105" rotation_euler="0.000, 0.000, 0.427" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.855, -5.247, 0.116" rotation_euler="0.000, 0.000, 0.948" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.634, -0.707, -0.047" rotation_euler="0.000, 0.000, 0.948" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-7.826, -1.426, -0.093" rotation_euler="0.000, 0.000, 0.948" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-7.917, -1.394, 0.887" rotation_euler="0.000, 0.000, 0.536" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.478, -0.471, 0.936" rotation_euler="0.000, 0.000, 1.406" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.028, 0.642, 0.971" rotation_euler="0.000, 0.000, 1.406" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.813, 1.671, 1.007" rotation_euler="0.000, 0.000, -0.564" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.069, 2.820, 1.024" rotation_euler="0.000, 0.000, 1.147" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.063, 2.841, 0.128" rotation_euler="0.000, 0.000, 1.147" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.339, 2.616, 0.127" rotation_euler="0.000, 0.000, 0.297" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.736, 1.504, 0.116" rotation_euler="0.000, 0.000, 0.297" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.323, 1.758, 0.124" rotation_euler="0.000, 0.000, 1.510" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.915, 0.698, 0.079" rotation_euler="0.000, 0.000, 1.510" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.421, -0.365, 0.039" rotation_euler="0.000, 0.000, 1.510" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-7.715, -1.237, 0.389" rotation_euler="0.000, 0.000, 1.510" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.787, -4.013, 1.969" rotation_euler="0.000, 0.000, -0.938" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-7.764, -2.762, 1.894" rotation_euler="0.000, 0.000, -0.938" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-7.283, -3.278, 1.932" rotation_euler="0.000, 0.000, -0.938" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.213, -6.283, 2.099" rotation_euler="0.000, 0.000, -0.938" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.478, -7.236, 2.138" rotation_euler="0.000, 0.000, -0.938" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.607, -8.061, 2.152" rotation_euler="0.000, 0.000, -0.938" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.983, -2.239, 2.044" rotation_euler="0.000, 0.000, -0.938" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.363, -3.256, 2.093" rotation_euler="0.000, 0.000, -0.938" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.005, -0.964, 1.992" rotation_euler="0.000, 0.000, -0.938" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.592, -1.728, 2.022" rotation_euler="0.000, 0.000, -0.938" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.812, 0.943, 2.078" rotation_euler="0.000, 0.000, -0.938" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.124, 0.393, 2.082" rotation_euler="0.000, 0.000, -0.938" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.538, 2.122, 2.018" rotation_euler="0.000, 0.000, -0.938" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.547, -4.651, 2.198" rotation_euler="0.000, 0.000, -0.938" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.912, -5.268, 2.224" rotation_euler="0.000, 0.000, -0.938" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.607, -3.119, 2.058" rotation_euler="0.000, 0.000, -0.938" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.041, 1.792, 1.932" rotation_euler="0.000, 0.000, 2.250" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.307, 0.444, 1.992" rotation_euler="0.000, 0.000, 2.250" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.332, 1.142, 1.978" rotation_euler="0.000, 0.000, 2.250" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.721, -0.606, 1.890" rotation_euler="0.000, 0.000, 2.250" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.555, -2.499, 1.969" rotation_euler="0.000, 0.000, 2.250" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.171, -1.432, 1.926" rotation_euler="0.000, 0.000, 2.250" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-7.058, -2.831, 1.836" rotation_euler="0.000, 0.000, 2.250" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-7.792, -2.151, 1.777" rotation_euler="0.000, 0.000, 2.250" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.870, -4.428, 1.904" rotation_euler="0.000, 0.000, 2.250" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.653, -7.241, 2.040" rotation_euler="0.000, 0.000, 2.250" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.521, -6.113, 2.035" rotation_euler="0.000, 0.000, 2.250" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.958, -8.144, 2.088" rotation_euler="0.000, 0.000, 2.250" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.965, -4.666, 2.110" rotation_euler="0.000, 0.000, 2.250" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.082, -3.320, 2.068" rotation_euler="0.000, 0.000, 2.250" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="2.055, 0.381, 1.069" rotation_euler="0.000, 0.000, 3.031" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.926, 0.144, 1.046" rotation_euler="0.000, 0.000, -3.075" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.192, -1.075, 1.048" rotation_euler="0.000, 0.000, -3.075" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.201, -2.528, 1.025" rotation_euler="0.000, 0.000, -3.075" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-3.630, -3.933, 1.033" rotation_euler="0.000, 0.000, -3.075" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.921, -4.576, 0.986" rotation_euler="0.000, 0.000, -3.075" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.035, -6.560, 1.633" rotation_euler="0.000, 0.000, -3.068" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.221, -7.222, 1.618" rotation_euler="0.000, 0.000, -3.068" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.297, -7.966, 1.609" rotation_euler="0.000, 0.000, -3.068" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.293, -6.726, 1.629" rotation_euler="0.000, 0.000, -1.528" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-1.479, -7.505, 1.619" rotation_euler="0.000, 0.000, -1.528" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="2.917, -4.238, 1.668" rotation_euler="0.000, 0.000, -1.528" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="4.248, -3.330, 1.711" rotation_euler="0.000, 0.000, -1.528" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="4.368, -2.962, 1.051" rotation_euler="0.000, 0.000, -2.772" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="3.103, -3.991, 1.010" rotation_euler="0.000, 0.000, -2.772" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="1.967, -4.675, 0.987" rotation_euler="0.000, 0.000, -2.772" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="5.158, -2.652, 1.087" rotation_euler="0.000, 0.000, -2.772" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="5.512, -2.933, 1.112" rotation_euler="0.000, 0.000, 1.438" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="1.096, -5.348, -2.182" rotation_euler="0.000, 0.000, 0.000" />
+      <components><meta_mesh_component name="kitchen_basket_grape" /></components><physics shape="bo_kitchen_basket_grape" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="1.585, -4.996, -2.175" rotation_euler="0.000, 0.000, 1.094" />
+      <components><meta_mesh_component name="kitchen_basket_grape" /></components><physics shape="bo_kitchen_basket_grape" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.832, -4.797, -2.400" rotation_euler="0.000, 0.000, 1.094" />
+      <components><meta_mesh_component name="kitchen_basket_grape" /></components><physics shape="bo_kitchen_basket_grape" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.900, -5.438, -2.387" rotation_euler="0.000, 0.000, 1.094" />
+      <components><meta_mesh_component name="kitchen_basket_grape" /></components><physics shape="bo_kitchen_basket_grape" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.792, -0.560, -2.509" rotation_euler="0.000, 0.000, 1.094" />
+      <components><meta_mesh_component name="kitchen_basket_grape" /></components><physics shape="bo_kitchen_basket_grape" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-6.178, -0.356, -2.498" rotation_euler="0.000, 0.000, 1.094" />
+      <components><meta_mesh_component name="kitchen_basket_grape" /></components><physics shape="bo_kitchen_basket_grape" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-4.189, 1.014, -2.438" rotation_euler="0.000, 0.000, 1.094" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-2.549, -2.793, -2.313" rotation_euler="0.000, 0.000, 1.094" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="2.226, 0.682, -2.274" rotation_euler="0.000, 0.000, 1.094" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="1.633, 0.487, -2.289" rotation_euler="0.000, 0.000, 1.094" />
+      <components><meta_mesh_component name="kitchen_basket_grape" /></components><physics shape="bo_kitchen_basket_grape" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="5.705, -2.770, -2.038" rotation_euler="0.000, 0.000, 1.094" />
+      <components><meta_mesh_component name="kitchen_basket_grape" /></components><physics shape="bo_kitchen_basket_grape" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="6.353, -2.841, -2.009" rotation_euler="0.000, 0.000, 1.094" />
+      <components><meta_mesh_component name="kitchen_basket_grape" /></components><physics shape="bo_kitchen_basket_grape" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="6.090, -2.324, -2.010" rotation_euler="0.000, 0.000, 1.094" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.021, 4.759, -2.391" rotation_euler="0.000, 0.000, 1.094" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="2.278, 7.993, -2.329" rotation_euler="0.000, 0.000, 0.531" />
+      <components><meta_mesh_component name="hut_b" /></components><physics shape="bo_hut_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.117, 4.059, 2.136" rotation_euler="1.266, 0.903, 0.238" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.396, 4.395, 2.159" rotation_euler="1.266, 0.903, 0.238" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.928, 4.828, 2.177" rotation_euler="1.266, 0.903, 0.238" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.246, 4.676, 2.569" rotation_euler="1.266, 0.903, 0.238" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="1.584, 5.048, 2.201" rotation_euler="1.266, 0.903, 0.238" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.017, 4.960, -1.287" rotation_euler="0.000, 0.000, 0.741" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.503, 5.225, -1.217" rotation_euler="0.000, 0.000, 0.741" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.258, 5.113, -1.175" rotation_euler="0.000, 0.000, 0.741" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.870, 5.517, -1.181" rotation_euler="0.000, 0.000, 0.741" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.519, 5.432, 0.293" rotation_euler="0.000, 0.000, 0.741" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.133, 5.017, -0.383" rotation_euler="0.000, 0.000, 0.741" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="6.077, 8.986, -1.071" rotation_euler="0.000, 0.000, 1.868" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="6.069, 9.340, -1.170" rotation_euler="0.000, 0.000, 2.161" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="6.170, 8.688, -1.025" rotation_euler="0.000, 0.000, 0.369" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="5.879, 8.464, -1.172" rotation_euler="0.000, 0.000, 0.369" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="5.791, 8.574, -0.055" rotation_euler="0.000, 0.000, 0.369" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="6.105, 8.770, 0.320" rotation_euler="0.000, 0.000, 1.662" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="5.932, 9.150, 0.398" rotation_euler="0.000, 0.000, 2.220" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="6.411, 8.654, 2.478" rotation_euler="0.202, 1.435, 1.357" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="6.203, 8.207, 2.484" rotation_euler="0.202, 1.435, 1.357" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="5.169, 8.152, 2.459" rotation_euler="-0.214, 1.513, 1.796" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="3.924, 7.411, 2.444" rotation_euler="-0.214, 1.513, 1.796" />
+      <components><meta_mesh_component name="grape_branch" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="5.909, 8.230, 0.777" rotation_euler="0.000, 0.000, 0.389" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="6.407, 8.586, 0.780" rotation_euler="0.000, 0.000, 0.389" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="1.081, 5.315, 0.642" rotation_euler="0.000, 0.000, 0.389" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.304, 4.750, 1.044" rotation_euler="0.000, 0.000, 0.389" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="6.087, 8.389, 1.830" rotation_euler="0.000, 0.000, 0.389" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="6.351, 9.074, 1.819" rotation_euler="0.000, 0.000, 2.316" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="6.207, 9.535, 1.803" rotation_euler="0.000, 0.000, 2.316" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="6.360, 9.168, 0.682" rotation_euler="0.000, 0.000, 1.667" />
+      <components><meta_mesh_component name="grape" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="5.312, 7.045, -2.216" rotation_euler="0.000, 0.000, 0.522" />
+      <components><meta_mesh_component name="bd_table_b" /></components><physics shape="bo_bd_table_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="3.595, 6.681, -1.417" rotation_euler="0.000, 0.000, 1.108" />
+      <components><meta_mesh_component name="kitchen_basket_grape" /></components><physics shape="bo_kitchen_basket_grape" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="6.534, 7.705, -1.417" rotation_euler="0.000, 0.000, -0.370" />
+      <components><meta_mesh_component name="kitchen_basket_grape" /></components><physics shape="bo_kitchen_basket_grape" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="5.263, 6.630, -1.417" rotation_euler="0.000, 0.000, 0.264" />
+      <components><meta_mesh_component name="kitchen_basket_grape" /></components><physics shape="bo_kitchen_basket_grape" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="5.642, 7.724, -1.417" rotation_euler="0.000, 0.000, 0.264" />
+      <components><meta_mesh_component name="kitchen_basket_grape" /></components><physics shape="bo_kitchen_basket_grape" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="7.445, 7.440, -2.185" rotation_euler="0.000, 0.000, 0.264" />
+      <components><meta_mesh_component name="kitchen_basket_grape" /></components><physics shape="bo_kitchen_basket_grape" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="4.375, 5.582, -2.222" rotation_euler="0.000, 0.000, 0.264" />
+      <components><meta_mesh_component name="kitchen_basket_grape" /></components><physics shape="bo_kitchen_basket_grape" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="5.138, 6.494, -2.216" rotation_euler="0.000, 0.000, 0.264" />
+      <components><meta_mesh_component name="kitchen_basket_grape" /></components><physics shape="bo_kitchen_basket_grape" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="4.950, 5.906, -2.216" rotation_euler="0.000, 0.000, 0.264" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="6.951, 6.982, -2.173" rotation_euler="0.000, 0.000, 0.264" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="7.087, 7.411, -1.417" rotation_euler="0.000, 0.000, 0.264" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="6.056, 8.188, -1.417" rotation_euler="0.000, 0.000, 0.264" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="6.691, 8.241, -1.417" rotation_euler="0.000, 0.000, 0.264" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="4.078, 6.241, -1.417" rotation_euler="0.000, 0.000, 0.264" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="4.156, 6.948, -1.417" rotation_euler="0.000, 0.000, 0.264" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="5.638, 7.119, -1.417" rotation_euler="0.000, 0.000, 0.264" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="4.942, 7.265, -1.417" rotation_euler="0.000, 0.000, 0.264" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="6.198, 7.032, -2.203" rotation_euler="0.000, 0.000, 0.264" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="7.214, 7.897, -2.196" rotation_euler="0.000, 0.000, 0.264" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="6.109, 6.231, -2.188" rotation_euler="0.000, 0.000, 0.264" />
+      <components><meta_mesh_component name="shop_prop_merchantwinery_b" /></components><physics shape="bo_shop_prop_merchantwinery_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="6.148, 6.988, -1.417" rotation_euler="0.000, 0.000, 1.034" />
+      <components><meta_mesh_component name="shop_prop_merchantwinery_b" /></components><physics shape="bo_shop_prop_merchantwinery_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="6.632, 9.834, -2.251" rotation_euler="0.000, 0.000, 1.927" />
+      <components><meta_mesh_component name="shop_prop_merchantwinery_c" /></components><physics shape="bo_shop_prop_merchantwinery_c" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="8.421, 7.087, -2.133" rotation_euler="0.000, 0.000, 1.927" />
+      <components><meta_mesh_component name="foods_basket_a" /></components><physics shape="bo_foods_basket_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="3.265, 0.319, -2.244" rotation_euler="0.000, 0.000, 1.927" />
+      <components><meta_mesh_component name="foods_basket_a" /></components><physics shape="bo_foods_basket_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-0.046, 7.193, -1.175" rotation_euler="0.000, 0.000, 2.964" />
+      <components><meta_mesh_component name="foods_basket_a" /></components><physics shape="bo_foods_basket_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.607, 8.533, -1.172" rotation_euler="0.000, 0.000, 0.268" />
+      <components><meta_mesh_component name="foods_basket_a" /></components><physics shape="bo_foods_basket_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="1.688, -0.430, -2.265" rotation_euler="0.000, 0.000, 0.268" />
+      <components><meta_mesh_component name="foods_basket_a" /></components><physics shape="bo_foods_basket_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="2.243, 6.589, -1.182" rotation_euler="0.000, 0.000, 1.369" />
+      <components><meta_mesh_component name="bd_basket_a" /></components><physics shape="bo_bd_basket_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="4.221, 7.026, 2.209" rotation_euler="0.000, 0.000, 0.478" />
+      <components><meta_mesh_component name="bd_wall_baskets_a" /></components><physics shape="bo_bd_wall_baskets_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="5.260, 7.693, 2.271" rotation_euler="0.000, 0.000, 0.478" />
+      <components><meta_mesh_component name="bd_wall_baskets_a" /></components><physics shape="bo_bd_wall_baskets_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="1.343, 6.024, 1.779" rotation_euler="0.000, 0.000, 2.193" />
+      <components><meta_mesh_component name="bd_wall_baskets_a" /></components><physics shape="bo_bd_wall_baskets_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="1.733, 6.134, -1.183" rotation_euler="0.000, 0.000, 0.791" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="8.666, 11.059, -2.278" rotation_euler="0.000, 0.000, 1.621" />
+      <components><meta_mesh_component name="bd_cart_a" /></components><physics shape="bo_bd_cart_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="9.864, 1.400, -1.916" rotation_euler="0.000, 0.000, 2.199" />
+      <components><meta_mesh_component name="bd_hay_cart_a" /></components><physics shape="bo_bd_hay_cart_a" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="8.407, 1.012, -0.897" rotation_euler="0.000, 0.000, 2.821" />
+      <components><meta_mesh_component name="kitchen_basket_grape" /></components><physics shape="bo_kitchen_basket_grape" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="9.069, 0.128, -0.863" rotation_euler="0.000, 0.000, 2.821" />
+      <components><meta_mesh_component name="kitchen_basket_grape" /></components><physics shape="bo_kitchen_basket_grape" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="9.172, 0.862, -0.876" rotation_euler="0.000, 0.000, 2.821" />
+      <components><meta_mesh_component name="kitchen_basket_grape" /></components><physics shape="bo_kitchen_basket_grape" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="10.325, 2.285, -0.883" rotation_euler="0.000, 0.000, 2.821" />
+      <components><meta_mesh_component name="kitchen_basket_grape" /></components><physics shape="bo_kitchen_basket_grape" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="10.653, 1.173, -0.862" rotation_euler="0.000, 0.000, 2.821" />
+      <components><meta_mesh_component name="kitchen_basket_grape" /></components><physics shape="bo_kitchen_basket_grape" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="9.594, 1.726, -0.884" rotation_euler="0.000, 0.000, 2.821" />
+      <components><meta_mesh_component name="kitchen_basket_grape" /></components><physics shape="bo_kitchen_basket_grape" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="9.982, 0.829, -0.862" rotation_euler="0.000, 0.000, 2.821" />
+      <components><meta_mesh_component name="kitchen_basket_grape" /></components><physics shape="bo_kitchen_basket_grape" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="9.661, 1.236, -0.872" rotation_euler="0.000, 0.000, 2.821" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="10.146, 1.352, -0.869" rotation_euler="0.000, 0.000, 2.821" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="10.589, 1.834, -0.873" rotation_euler="0.000, 0.000, 2.821" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="11.157, 1.555, -0.863" rotation_euler="0.000, 0.000, 2.821" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="8.969, 1.432, -0.893" rotation_euler="0.000, 0.000, 2.821" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="8.734, 0.551, -0.880" rotation_euler="0.000, 0.000, 2.821" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="9.650, 0.398, -0.858" rotation_euler="0.000, 0.000, 2.821" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="10.060, 1.973, -0.880" rotation_euler="0.000, 0.000, 2.821" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="9.219, 0.555, -0.365" rotation_euler="0.000, 0.000, 2.821" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="9.972, 2.128, -0.450" rotation_euler="0.000, 0.000, 2.821" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="10.323, 1.033, -0.862" rotation_euler="0.000, 0.000, 2.821" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="10.401, 0.954, -0.432" rotation_euler="0.000, 0.000, 2.821" />
+      <components><meta_mesh_component name="kitchen_basket_grape_b" /></components><physics shape="bo_kitchen_basket_grape_b" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="9.221, 1.504, -0.463" rotation_euler="0.000, 0.000, 2.821" />
+      <components><meta_mesh_component name="kitchen_basket_grape" /></components><physics shape="bo_kitchen_basket_grape" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="10.567, 1.615, -0.443" rotation_euler="0.000, 0.000, 2.821" />
+      <components><meta_mesh_component name="kitchen_basket_grape" /></components><physics shape="bo_kitchen_basket_grape" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="0.664, 5.178, -2.374" rotation_euler="0.000, 0.000, -0.595" />
+      <components><meta_mesh_component name="bd_log_and_axe" /></components><physics shape="bo_bd_log_and_axe" override_material="wood" /></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="4.368, 6.054, -1.407" rotation_euler="-1.317, 1.446, -0.250" />
+      <components><meta_mesh_component name="peasent_sickle" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="7.548, 9.267, -0.967" rotation_euler="-1.317, 1.446, -0.252" />
+      <components><meta_mesh_component name="peasent_sickle" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="1.801, -4.857, -1.649" rotation_euler="-1.317, 1.446, -0.252" />
+      <components><meta_mesh_component name="peasent_sickle" /></components></game_entity>
+      <game_entity name="homestead_prop" old_prefab_name="">
+        <transform position="-5.616, -4.657, -1.878" rotation_euler="-1.317, 1.446, -0.252" />
+      <components><meta_mesh_component name="peasent_sickle" /></components></game_entity>
+    <game_entity name="sp_npc_worker" old_prefab_name="" mobility="1">
+                <flags>
+                    <flag name="record_to_scene_replay" value="true" />
+                </flags>
+                <visibility_masks>
+                    <visibility_mask name="visible_only_when_editing" value="true" />
+                </visibility_masks>
+                <tags>
+                    <tag name="spawnpoint_homestead_npc" />
+                </tags>
+                <transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" />
+                <scripts>
+                    <script name="UsablePlace">
+                        <variables>
+                            <variable name="PilotStandingPointTag" value="Pilot" />
+                            <variable name="AmmoPickUpTag" value="ammopickup" />
+                            <variable name="WaitStandingPointTag" value="Wait" />
+                            <variable name="NavMeshPrefabName" value="" />
+                        </variables>
+                    </script>
+                </scripts>
+                <children>
+                    <game_entity name="anim_point" old_prefab_name="" mobility="1">
+                        <transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000" />
+                        <tags>
+                            <tag name="Pilot" />
+                        </tags>
+                        <scripts>
+                            <script name="AnimationPoint">
+                                <variables>
+                                    <variable name="ArriveAction" value="" />
+                                    <variable name="LoopStartAction" value="act_npc_farmer_scythe_using" />
+                                    <variable name="PairLoopStartAction" value="" />
+                                    <variable name="LeaveAction" value="" />
+                                    <variable name="GroupId" value="-1" />
+                                    <variable name="ActionWanderOnNavigationMesh" value="false" />
+                                    <variable name="RightHandItem" value="" />
+                                    <variable name="LeftHandItem" value="" />
+                                    <variable name="BipedalItem" value="" />
+                                    <variable name="ActionIsCombat" value="false" />
+                                    <variable name="KeepOldVisibility" value="false" />
+                                </variables>
+                            </script>
+                        </scripts>
+                    </game_entity>
+                </children>
+            </game_entity></children>
+  </game_entity>
+</prefabs>

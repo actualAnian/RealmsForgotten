@@ -1,0 +1,46 @@
+<prefabs>
+  <game_entity name="homestead_medical_tent" old_prefab_name="">
+    <children>
+      <game_entity name="medical_tent_shelter" old_prefab_name="">
+        <transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000"/>
+        <physics shape="bo_tent_vlandia_a"/>
+        <components>
+          <meta_mesh_component name="tent_vlandia_a"/>
+        </components>
+      </game_entity>
+      <game_entity name="medical_tent_bed_a" old_prefab_name="">
+        <transform position="-0.550, 0.450, 0.000" rotation_euler="0.000, 0.000, 1.570" scale="0.900, 0.900, 0.900"/>
+        <physics shape="bo_bed_straw_a" override_material="wood"/>
+        <components>
+          <meta_mesh_component name="bed_straw_a"/>
+        </components>
+      </game_entity>
+      <game_entity name="medical_tent_bed_b" old_prefab_name="">
+        <transform position="0.550, 0.450, 0.000" rotation_euler="0.000, 0.000, 1.570" scale="0.900, 0.900, 0.900"/>
+        <physics shape="bo_bed_straw_a" override_material="wood"/>
+        <components>
+          <meta_mesh_component name="bed_straw_b"/>
+        </components>
+      </game_entity>
+      <game_entity name="medical_tent_table" old_prefab_name="">
+        <transform position="0.000, -0.850, 0.000" rotation_euler="0.000, 0.000, 0.000" scale="0.700, 0.700, 0.700"/>
+        <physics shape="bo_bd_table_e" override_material="wood"/>
+        <components>
+          <meta_mesh_component name="bd_table_e"/>
+        </components>
+      </game_entity>
+      <game_entity name="sp_medical_tent_physician" old_prefab_name="" mobility="1">
+        <visibility_masks>
+          <visibility_mask name="visible_only_when_editing" value="true"/>
+        </visibility_masks>
+        <tags>
+          <tag name="spawnpoint_homestead_npc"/>
+        </tags>
+        <transform position="0.000, -1.450, 0.000" rotation_euler="0.000, 0.000, 0.000"/>
+        <components>
+          <meta_mesh_component name="arrow_new_icon"/>
+        </components>
+      </game_entity>
+    </children>
+  </game_entity>
+</prefabs>

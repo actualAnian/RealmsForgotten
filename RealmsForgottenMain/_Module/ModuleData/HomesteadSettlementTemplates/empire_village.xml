@@ -1,0 +1,10 @@
+<Settlements>
+  <Settlement id="{{ID}}" name="{{NAME}}" posX="{{POS_X}}" posY="{{POS_Y}}" culture="Culture.{{PLAYER_CULTURE}}" template_type="Village" template_variant="1">
+    <Components>
+      <Village id="{{ID}}_village_comp" village_type="VillageType.{{VILLAGE_TYPE}}" hearth="200" gate_rotation="0.008" bound="Settlement.{{BOUND_ID}}" background_crop_position="0.0" background_mesh="gui_bg_village_empire" wait_mesh="wait_empire_village" castle_background_mesh="gui_bg_castle_empire" />
+    </Components>
+    <Locations complex_template="LocationComplexTemplate.village_complex">
+      <Location id="village_center" scene_name="empire_village_003" max_prosperity="70" />
+    </Locations>
+  </Settlement>
+</Settlements>
