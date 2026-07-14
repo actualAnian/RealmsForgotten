@@ -408,7 +408,10 @@ namespace RealmsForgotten
         protected override void OnSubModuleLoad()
         {
             if (Globals.IsWarSailsLoaded)
+            {
+                WarSailsPatchRegister.Apply(harmony);
                 WarSailsPatchRegister.RemoveWarsailsUI(Module.CurrentModule);
+            }
             Assembly asm = typeof(SubModule).Assembly;
             RFLogger.Log($"[Lifecycle] RealmsForgotten.SubModule.OnSubModuleLoad | asm={asm.Location} | version={asm.GetName().Version} | lastWrite={File.GetLastWriteTime(asm.Location):O}");
             RFLogger.Log($"[Lifecycle] SaveableTypeDefiners present | main={typeof(SaveDefiner).FullName} | ai={typeof(CustomSaveableTypeDefiner).FullName} | intrigue={typeof(StrategicIntrigueTypeDefiner).FullName} | quest={typeof(QuestTypeDefiner).FullName}");
@@ -430,7 +433,6 @@ namespace RealmsForgotten
             // engine classes early can corrupt native bindings; missions only
             // exist after campaign init, so battle AI patches lose nothing by
             // applying late). Only the naval startup patches must stay early.
-            WarSailsPatchRegister.Apply(harmony);
 
             TextObject coreContentDisabledReason = new("Disabled during installation.", null);
             UIConfig.DoNotUseGeneratedPrefabs = true;

@@ -3,7 +3,6 @@ using SandBox.View.Map.Visuals;
 using System;
 using System.Xml;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
@@ -19,17 +18,14 @@ namespace RF_Settlers
         bool _manualPatchApplied = false;
         protected override void OnSubModuleLoad()
         {
-            base.OnSubModuleLoad();
             if (!_harmonyApplied)
             {
                 _harmonyApplied = true;
                 harmony.PatchAll(typeof(SubModule).Assembly);
             }
         }
-
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
-            base.OnGameStart(game, gameStarterObject);
             if (gameStarterObject is CampaignGameStarter campaignGameStarter)
             {
                 campaignGameStarter.AddBehavior(new SettlersCampaignBehavior());
@@ -110,7 +106,7 @@ namespace RF_Settlers
         }
         private static void RunManualPatches()
         {
-            var original = AccessTools.Method(typeof(MobilePartyVisual), "MobilePartyVisual.AddMobileIconComponents");
+            var original = AccessTools.Method(typeof(MobilePartyVisual), "AddMobileIconComponents");
             var prefix = AccessTools.Method(typeof(Patches.SettlerCampVisualPatch), nameof(Patches.SettlerCampVisualPatch.Prefix));
             harmony.Patch(original, prefix);
         }
