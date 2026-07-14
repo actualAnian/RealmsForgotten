@@ -232,7 +232,12 @@ namespace RealmsForgotten
                         else if (!keys.Contains(key))
                         {
                             DefaultKey defaultKey = (DefaultKey)Attribute.GetCustomAttribute(property, typeof(DefaultKey));
-                            
+                            // The [DefaultKey] attribute lives on the concrete
+                            // settings class, not the interface property — guard
+                            // the null so an invalid key doesn't NRE at startup.
+                            if (defaultKey == null)
+                                continue;
+
                             InformationManager.ShowInquiry(new InquiryData("Error", $"Invalid key at {property.Name}, setting to default ({defaultKey.DefaultValue})", true,
                                 false, GameTexts.FindText("str_done").ToString(), "", null, null), true);
                             property.SetValue(RFSettings.Instance, defaultKey.DefaultValue);
@@ -318,6 +323,17 @@ namespace RealmsForgotten
             if (!manualPatchesHaveFired)
             {
                 manualPatchesHaveFired = true;
+
+                // Patch application is LATE by design (community guidance:
+                // Harmony-patching engine classes in OnSubModuleLoad can corrupt
+                // native bindings). The uncategorized attribute sweep and the
+                // BattleAI bootstrap both run here, once, before the manual
+                // patches. (Fold bisect note 2026-07-14: fold persisted even
+                // with the sweep fully disabled, so its patches are exonerated —
+                // re-enabled with all features.)
+                ApplyUncategorizedHarmonyPatchesSafely();
+                RF_BattleAI.BattleAIBootstrap.Initialize();
+
                 try
                 {
                     RunManualPatches();
@@ -406,9 +422,12 @@ namespace RealmsForgotten
             {
                 RFLogger.Log($"[Lifecycle] UIExtender registration failed in RealmsForgotten.SubModule: {ex}");
             }
-            ApplyUncategorizedHarmonyPatchesSafely();
+            // HUMAN-BULLET BISECT: both early patch appliers introduced on
+            // 2026-06-27 are moved out of OnSubModuleLoad — the uncategorized
+            // sweep is disabled for this test and BattleAIBootstrap now runs in
+            // OnGameInitializationFinished (missions only exist after campaign
+            // init, so battle AI patches lose nothing by applying late).
             OptionalNavalStartupPatchBootstrap.Apply(harmony);
-            BattleAIBootstrap.Initialize();
 
 
             TextObject coreContentDisabledReason = new("Disabled during installation.", null);
@@ -443,29 +462,37 @@ namespace RealmsForgotten
         public static Dictionary<string, int> undeadRespawnConfig { get; private set; }
         private void ReadConfigFile()
         {
-            string jsonFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "undead_respawn_config.json");
-            JObject jsonObject = JObject.Parse(File.ReadAllText(jsonFilePath));
-
-            if (jsonObject.TryGetValue("characters", out JToken charactersToken))
+            // Missing/corrupt config must not crash campaign start (this runs in
+            // OnGameStart). Default to an empty dictionary on any failure.
+            undeadRespawnConfig = new();
+            try
             {
-                JObject charactersObject = (JObject)charactersToken;
-                undeadRespawnConfig = new();
-                foreach (var character in charactersObject)
+                string jsonFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "undead_respawn_config.json");
+                if (!File.Exists(jsonFilePath))
                 {
-
-                    string characterName = character.Key;
-                    int characterValue = character.Value.Value<int>();
-                    if (characterValue > 100)
-                        characterValue = 100;
-                    if (characterValue < 1)
-                        characterValue = 1;
-                    undeadRespawnConfig.Add(characterName, characterValue);
+                    RFLogger.Log("[Config] undead_respawn_config.json not found — using empty config.");
+                    return;
                 }
 
+                JObject jsonObject = JObject.Parse(File.ReadAllText(jsonFilePath));
+                if (jsonObject.TryGetValue("characters", out JToken charactersToken))
+                {
+                    JObject charactersObject = (JObject)charactersToken;
+                    foreach (var character in charactersObject)
+                    {
+                        string characterName = character.Key;
+                        int characterValue = character.Value.Value<int>();
+                        if (characterValue > 100)
+                            characterValue = 100;
+                        if (characterValue < 1)
+                            characterValue = 1;
+                        undeadRespawnConfig[characterName] = characterValue;
+                    }
+                }
             }
-            else
+            catch (Exception exception)
             {
-                Console.WriteLine("Error in undead_respawn_config.json");
+                RFLogger.Log($"[Config] Error reading undead_respawn_config.json: {exception.Message}");
             }
         }
         public override void OnGameLoaded(Game game, object initializerObject)
@@ -498,7 +525,18 @@ namespace RealmsForgotten
             //}
             base.OnNewGameCreated(game, initializerObject);
             RFLogger.Log($"[Lifecycle] RealmsForgotten.SubModule.OnNewGameCreated | initializer={initializerObject?.GetType().FullName ?? "null"}");
-            QuestSubModule.OnNewGameCreated((CampaignGameStarter)initializerObject);
+            if (initializerObject is CampaignGameStarter newGameStarter)
+            {
+                QuestSubModule.OnNewGameCreated(newGameStarter);
+
+                // Same injection the load path does — WITHOUT it a NEW campaign
+                // never gets RFAgentStatCalculateModel, so career passives on
+                // agents, spell ammo-by-skill and wand reload/accuracy stay
+                // inactive until the player saves and reloads.
+                RFAgentStatCalculateModel rfAgentStatCalculateModel = new RFAgentStatCalculateModel(newGameStarter.GetExistingModel<AgentStatCalculateModel>());
+                newGameStarter.AddModel(rfAgentStatCalculateModel);
+                AccessTools.Property(typeof(MissionGameModels), "AgentStatCalculateModel").SetValue(MissionGameModels.Current, rfAgentStatCalculateModel);
+            }
         }
         protected override void InitializeGameStarter(Game game, IGameStarter starterObject)
         {

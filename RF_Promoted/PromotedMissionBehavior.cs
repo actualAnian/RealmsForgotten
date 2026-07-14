@@ -35,8 +35,11 @@ public sealed class PromotedMissionBehavior : MissionLogic
             return;
         }
 
-        if (affectorAgent.Origin is PartyAgentOrigin partyAgentOrigin
-            && partyAgentOrigin.Party != PartyBase.MainParty)
+        // Campaign battles give agents PartyGroupAgentOrigin, not PartyAgentOrigin,
+        // so the old `is PartyAgentOrigin` filter never fired and ALLIED kills
+        // (matching a player troop type) counted for MainParty. Both origin types
+        // expose the real party via BattleCombatant.
+        if ((affectorAgent.Origin?.BattleCombatant as PartyBase) != PartyBase.MainParty)
         {
             return;
         }

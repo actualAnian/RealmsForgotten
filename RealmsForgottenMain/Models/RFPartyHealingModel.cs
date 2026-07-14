@@ -58,7 +58,9 @@ namespace RealmsForgotten.Models
 
         public override ExplainedNumber GetDailyHealingForRegulars(PartyBase party, bool isPrisoner, bool includeDescriptions = false)
         {
-            var value = _baseModel.GetDailyHealingForRegulars(party, includeDescriptions);
+            // Pass isPrisoner explicitly — passing only (party, includeDescriptions)
+            // put the bool in the isPrisoner slot, so prisoners healed as regulars.
+            var value = _baseModel.GetDailyHealingForRegulars(party, isPrisoner, includeDescriptions);
             if (party == MobileParty.MainParty.Party) AddCareerPassivesForTroopRegeneration(MobileParty.MainParty, ref value);
             return value;
 
@@ -66,7 +68,7 @@ namespace RealmsForgotten.Models
 
         public override ExplainedNumber GetDailyHealingHpForHeroes(PartyBase party, bool isPrisoners, bool includeDescriptions = false)
         {
-            ExplainedNumber baseValue = _baseModel.GetDailyHealingHpForHeroes(party, includeDescriptions);
+            ExplainedNumber baseValue = _baseModel.GetDailyHealingHpForHeroes(party, isPrisoners, includeDescriptions);
             if (party == MobileParty.MainParty.Party) AddCareerPassivesForHeroRegeneration(MobileParty.MainParty, ref baseValue);
             return baseValue;
         }

@@ -58,7 +58,7 @@ namespace RF_Settlers
                     return false;
                 }
 
-                Patches.SettlersMapScenePatch.RegisterVillagePrefab(record.StringId, record.PrefabId);
+                Patches.SettlersMapScenePatch.RegisterVillagePrefab(record.StringId, record.PrefabId, record.VillageTypeId);
 
                 XmlDocument document = new();
                 document.LoadXml(record.SettlementXml);
@@ -91,9 +91,12 @@ namespace RF_Settlers
 
                 EnsureCampaignRegistries(settlement);
                 SeedVillage(settlement);
-                TryAddNameplateLive(settlement);
-                DestroyCampParty(record.CampPartyId);
+                // Mark established IMMEDIATELY after the economic seeding: if a
+                // later best-effort step (nameplate/camp cleanup) throws, the
+                // retry must NOT re-run SeedVillage and grant +3000 gold again.
                 record.Established = true;
+                DestroyCampParty(record.CampPartyId);
+                TryAddNameplateLive(settlement);
                 AnnounceFounded(settlement);
                 return true;
             }
@@ -173,8 +176,10 @@ namespace RF_Settlers
             // missing (every step checks before adding).
             EnsureCampaignRegistries(settlement);
             SeedVillage(settlement);
-            DestroyCampParty(record.CampPartyId);
+            // Mark established right after seeding so a failure below never
+            // re-grants the village's starting gold on the next load.
             record.Established = true;
+            DestroyCampParty(record.CampPartyId);
             AnnounceFounded(settlement);
         }
 

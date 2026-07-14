@@ -694,9 +694,16 @@ namespace RealmsForgotten.Chamberlain
         private void DeleteEquipmentSet(CharacterObject unit)
         {
             if (set == 0)
+            {
+                // Was falling through to the delete block below and deleting set 0
+                // anyway (the else only bound to the set == -1 check).
                 InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=house_troop_menu_delete_equipment_set_error}Cannot delete equipment set 0").ToString()));
+                return;
+            }
             if (set == -1)
+            {
                 InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=house_troop_menu_invalid_set}Choose or create an Equipment Set for your House Troop first.").ToString()));
+            }
             else
             {
                 List<Equipment> equipments = new List<Equipment>();

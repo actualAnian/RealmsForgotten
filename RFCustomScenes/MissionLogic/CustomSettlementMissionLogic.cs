@@ -127,6 +127,7 @@ namespace RealmsForgotten.RFCustomSettlements
             }
             HandleRFFocusedObject();
             HandleLeaveMission();
+            ProcessPendingLootables();
         }
         private void HandleRFFocusedObject()
         {
@@ -137,13 +138,38 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             BTRegister.RegisterClass("HornBlowerBehaviorTree", objects => HornBlowerBehaviorTree.BuildTree(objects));
         }
-        private async Task AddBodyToLootableList(Agent agent)
+        // Agents queued to become lootable ~2s after death. Processed on the
+        // MAIN thread in OnMissionTick — the old async Task.Delay continued on
+        // a thread-pool thread and mutated LootableAgents / read Agent native
+        // position while the tick enumerated the same dict (raycast) → race.
+        private readonly List<KeyValuePair<Agent, float>> _pendingLootables = new();
+
+        private void EnqueueLootable(Agent agent)
         {
-            await Task.Delay(2000);
-            Vec3 position;
-            try { position = agent.GetChestGlobalPosition(); }
-            catch (Exception) { position = agent.Position; }
-            LootableAgents.Add(agent, position);
+            _pendingLootables.Add(new KeyValuePair<Agent, float>(agent, _timePassed + 2f));
+        }
+
+        private void ProcessPendingLootables()
+        {
+            for (int i = _pendingLootables.Count - 1; i >= 0; i--)
+            {
+                if (_timePassed < _pendingLootables[i].Value)
+                {
+                    continue;
+                }
+
+                Agent agent = _pendingLootables[i].Key;
+                _pendingLootables.RemoveAt(i);
+                if (agent == null || LootableAgents.ContainsKey(agent))
+                {
+                    continue;
+                }
+
+                Vec3 position;
+                try { position = agent.GetChestGlobalPosition(); }
+                catch (Exception) { position = agent.Position; }
+                LootableAgents.Add(agent, position);
+            }
         }
         public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
         {
@@ -158,9 +184,7 @@ namespace RealmsForgotten.RFCustomSettlements
             UnitKilled?.Invoke(agentId);
             if (affectedAgent.Components.Any(c => c is LootableAgentComponent))
             {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                AddBodyToLootableList(affectedAgent);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                EnqueueLootable(affectedAgent);
             }
         }
         private void UsedObjectTick(float dt)
@@ -602,10 +626,20 @@ namespace RealmsForgotten.RFCustomSettlements
             GameEntity gameEntity = base.Mission.Scene.FindEntityWithTag("spawnpoint_player");
             CharacterObject playerCharacter = CharacterObject.PlayerCharacter;
 
-            Vec3 playerSpawnFallback = Mission.Current.Scene.FindEntityWithName("sp_player").GlobalPosition;
-            Mission.Current.GetTrueRandomPositionAroundPoint(playerSpawnFallback, 20, 500, false);
+            // Guard both spawn-point lookups (either can be absent from a scene)
+            // and actually USE the fallback instead of discarding it.
+            Vec3 spawnPosition;
+            if (gameEntity != null)
+            {
+                spawnPosition = gameEntity.GetGlobalFrame().origin;
+            }
+            else
+            {
+                GameEntity fallbackEntity = Mission.Current.Scene.FindEntityWithName("sp_player");
+                spawnPosition = fallbackEntity != null ? fallbackEntity.GlobalPosition : Vec3.Zero;
+            }
 
-            AgentBuildData agentBuildData = new AgentBuildData(playerCharacter).Team(base.Mission.PlayerTeam).InitialPosition(gameEntity.GetGlobalFrame().origin);
+            AgentBuildData agentBuildData = new AgentBuildData(playerCharacter).Team(base.Mission.PlayerTeam).InitialPosition(spawnPosition);
 
             Vec2 vec = matrixFrame.rotation.f.AsVec2;
             vec = vec.Normalized();

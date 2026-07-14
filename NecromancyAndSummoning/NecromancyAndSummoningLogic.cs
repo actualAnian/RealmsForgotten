@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using NecromancyAndSummoning.CustomClass;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
@@ -11,6 +12,10 @@ namespace NecromancyAndSummoning
     {
         public override void AfterStart()
 		{
+			// Reset the static victory flag — otherwise a mission that ends
+			// without OnMissionResultReady reuses the PREVIOUS battle's result
+			// (spurious reanimation rewards).
+			battleVictory = false;
 			NecroSummon.ResetCount();
 		}
 
@@ -27,7 +32,9 @@ namespace NecromancyAndSummoning
 		}
         public override void OnEndMissionInternal()
 		{
-			if (battleVictory)
+			// End-of-battle rewards (XP, body parts) touch MobileParty.MainParty =
+			// Campaign.Current.MainParty — null in Custom Battle. Guard it.
+			if (battleVictory && Campaign.Current != null)
 			{
 				List<SummonKillRecord> totalSummonKill = NecroSummon.GetTotalSummonKill();
 				if (totalSummonKill.Count > 0)
@@ -43,9 +50,12 @@ namespace NecromancyAndSummoning
 				ItemObject wieldedItem = NecroSummon.GetWieldedItem(attacker);
 				if (!NecroSummon.IsAgentOverLimit())
 				{
+					// Parenthesised: item present AND (player-summon OR troop-summon).
+					// The old grouping was (item && player) || troop, so a troop
+					// hit summoned even with no wielded item.
 					if (wieldedItem != null && (
-						SubModule.Config.EnablePlayerSummon && attacker == Agent.Main)
-						|| (SubModule.Config.EnableTroopSummon && attacker != Agent.Main))
+						(SubModule.Config.EnablePlayerSummon && attacker == Agent.Main)
+						|| (SubModule.Config.EnableTroopSummon && attacker != Agent.Main)))
 						NecroSummon.Summoning(attacker, collisionData.CollisionGlobalPosition);
 				}
 			}

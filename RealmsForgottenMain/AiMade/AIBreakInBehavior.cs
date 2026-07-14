@@ -20,7 +20,9 @@ namespace RealmsForgotten.AiMade
 
         private void OnHourlyTick(MobileParty party)
         {
-            if (party == null || !party.IsLordParty || party.IsMainParty || party.IsBandit || party.LeaderHero == null || party.MapFaction == null)
+            // Skip army members: overriding their orders every hour fights the
+            // army's own cohesion/movement AI.
+            if (party == null || !party.IsLordParty || party.IsMainParty || party.IsBandit || party.LeaderHero == null || party.MapFaction == null || party.Army != null)
                 return;
 
             // Find nearby sieges

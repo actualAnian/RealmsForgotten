@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 using RealmsForgotten.Behaviors;
 using RealmsForgotten.Patches;
 using RealmsForgotten.Quest;
@@ -59,10 +60,27 @@ public class SubModule : MBSubModuleBase
     }
     private void RunManualPatches()
     {
+        try
+        {
 #pragma warning disable BHA0003 // Type was not found
-        MethodInfo originalMethod = AccessTools.Method("EncyclopediaHeroPageVM:Refresh");
+            MethodInfo originalMethod = AccessTools.Method("EncyclopediaHeroPageVM:Refresh");
 #pragma warning restore BHA0003 // Type was not found
-        harmony.Patch(originalMethod, postfix: new HarmonyMethod(typeof(EncyclopediaHeroPageVMPatch), nameof(EncyclopediaHeroPageVMPatch.Postfix)));
+            // A game hotfix could rename/remove the target — harmony.Patch(null)
+            // throws and crashes OnGameInitializationFinished. Skip if not found.
+            if (originalMethod != null)
+            {
+                harmony.Patch(originalMethod, postfix: new HarmonyMethod(typeof(EncyclopediaHeroPageVMPatch), nameof(EncyclopediaHeroPageVMPatch.Postfix)));
+            }
+            else
+            {
+                TaleWorlds.Library.Debug.Print("[RFReligions] EncyclopediaHeroPageVM:Refresh not found — skipping patch.");
+            }
+        }
+        catch (Exception exception)
+        {
+            TaleWorlds.Library.Debug.Print($"[RFReligions] RunManualPatches failed: {exception}");
+        }
+
         QuestPatches.PatchAll();
     }
 

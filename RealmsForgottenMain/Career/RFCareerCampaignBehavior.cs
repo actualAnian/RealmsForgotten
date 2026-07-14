@@ -133,8 +133,13 @@ namespace RealmsForgotten.Career
 
         private void OnItemLooted(MobileParty mobileParty, ItemRoster roster)
         {
+            // Only the MAIN party's RAID loot counts. The old condition only
+            // returned for (non-main AND raid), so loot from OTHER parties in
+            // non-raid events leaked into raidLootedItems (and MapEvent could
+            // be null → NRE).
             if (mobileParty == null
-                || (mobileParty != MobileParty.MainParty && mobileParty.MapEvent.IsRaid)
+                || mobileParty != MobileParty.MainParty
+                || mobileParty.MapEvent?.IsRaid != true
                 || !PlayerCareerExtension.HasAnyCareer())
                 return;
 

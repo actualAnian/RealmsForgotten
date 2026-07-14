@@ -131,6 +131,10 @@ namespace RF_AIDialog
 
         protected override void OnApplicationTick(float dt)
         {
+            // Drain facial-animation / lip-sync engine calls queued from audio
+            // background threads (must run on the main thread).
+            RFAudioPlaybackManager.PumpMainThread();
+
             // ── AI response notification ──────────────────────────────────
             if (_dialogBehavior != null && _dialogBehavior.ResponseJustArrived)
             {

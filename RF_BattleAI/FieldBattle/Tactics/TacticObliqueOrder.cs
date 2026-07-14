@@ -176,9 +176,13 @@ public sealed class TacticObliqueOrder : TacticComponent
             return ObliqueBattleState.RefusedWing;
         }
 
-        if (distanceSquared > 1024f && _advancePowerGate.Evaluate(powerRatio))
+        // Failed power gate → hold the refused wing, do not fall through to
+        // FullCommit; full commit is reserved for actual contact range.
+        if (distanceSquared > 1024f)
         {
-            return ObliqueBattleState.WeightedAdvance;
+            return _advancePowerGate.Evaluate(powerRatio)
+                ? ObliqueBattleState.WeightedAdvance
+                : ObliqueBattleState.RefusedWing;
         }
 
         return ObliqueBattleState.FullCommit;

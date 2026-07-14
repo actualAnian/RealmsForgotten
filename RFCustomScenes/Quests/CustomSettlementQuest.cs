@@ -33,7 +33,9 @@ namespace RFCustomSettlements.Quests
         public static void AddNewQuest(string questId, string text, Dictionary<string, int> enemiesToKill)
         {
             CustomSettlementQuestSync behavior = Campaign.Current.GetCampaignBehavior<CustomSettlementQuestSync>();
-            behavior.questSaveableData.Add(questId, new(text, enemiesToKill));
+            // Indexer, not Add: re-accepting a repeatable quest whose entry was
+            // never removed on completion would throw ArgumentException.
+            behavior.questSaveableData[questId] = new(text, enemiesToKill);
         }
         public static void Update(string questId, Dictionary<string, int> enemiesToKill)
         {
@@ -70,8 +72,12 @@ namespace RFCustomSettlements.Quests
     }
     public class CustomSettlementQuest : QuestBase
     {
-        readonly Func<bool> _completeCondition;
-        readonly Action _completeConsequence;
+        // NOT readonly: on load the quest is deserialized (ctor never runs),
+        // so these must be rebuilt in LoadData from AllQuests[StringId] —
+        // otherwise Evaluate()/CompleteQuest() dereference null delegates and
+        // crash the quest dialogue after a reload.
+        Func<bool> _completeCondition;
+        Action _completeConsequence;
         public Dictionary<string, int> enemiesToKill = new();
         private string tasksString;
         [SaveableField(0)]
@@ -391,7 +397,15 @@ namespace RFCustomSettlements.Quests
 
         internal void LoadData(string item2, Dictionary<string, int> tasks)
         {
-            _title = CustomSettlementsCampaignBehavior.AllQuests[StringId].QuestLogText;
+            if (CustomSettlementsCampaignBehavior.AllQuests.TryGetValue(StringId, out QuestData data))
+            {
+                _title = data.QuestLogText;
+                // Rebuild the delegates the constructor would have set — they
+                // are not serialized (they capture parsed condition/consequence).
+                _completeCondition = CreateCondition(data.CompleteCondition);
+                _completeConsequence = CreateConsequence(data.CompleteConsequence);
+            }
+
             tasksString = item2;
             enemiesToKill = tasks;
             //this.StartQuest();

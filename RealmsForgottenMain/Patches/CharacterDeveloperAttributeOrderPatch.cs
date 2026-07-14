@@ -23,14 +23,14 @@ namespace RealmsForgotten.Patches
 
             int navalIndex = attributes.IndexOf(naval);
             int disciplineIndex = attributes.IndexOf(discipline);
-            if (navalIndex >= 0 && disciplineIndex >= 0 && navalIndex < disciplineIndex)
+            if (navalIndex >= 0 && disciplineIndex >= 0 && disciplineIndex < navalIndex)
             {
                 return;
             }
 
             attributes.Remove(naval);
             disciplineIndex = attributes.IndexOf(discipline);
-            attributes.Insert(disciplineIndex, naval);
+            attributes.Insert(disciplineIndex + 1, naval);
 
             __instance.Attributes.Clear();
             foreach (CharacterAttributeItemVM attribute in attributes)

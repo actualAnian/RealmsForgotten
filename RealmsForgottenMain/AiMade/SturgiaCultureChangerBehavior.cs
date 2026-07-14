@@ -21,7 +21,18 @@ namespace RealmsForgotten.AiMade
         public override void RegisterEvents()
         {
             CampaignEvents.DailyTickSettlementEvent.AddNonSerializedListener(this, OnDailySettlementTick);
+            CampaignEvents.OnSettlementOwnerChangedEvent.AddNonSerializedListener(this, OnSettlementOwnerChanged);
             CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, OnGameLoaded);
+        }
+
+        private void OnSettlementOwnerChanged(Settlement settlement, bool openToClaim, Hero newOwner, Hero oldOwner, Hero capturerHero, ChangeOwnerOfSettlementAction.ChangeOwnerOfSettlementDetail detail)
+        {
+            // Ownership changed hands — the counter must measure continuous
+            // Sturgian POSSESSION, not the settlement's age. Reset it.
+            if (settlement != null)
+            {
+                _ownershipDurations.Remove(settlement.StringId);
+            }
         }
 
         private void OnDailySettlementTick(Settlement settlement)
@@ -31,18 +42,24 @@ namespace RealmsForgotten.AiMade
 
             string settlementId = settlement.StringId;
 
+            // Only accrue days while the owner is actually Sturgian — a
+            // non-Sturgian holder makes no progress toward conversion (and its
+            // counter is cleared so it starts fresh if a Sturgian later takes it).
+            if (settlement.OwnerClan.Culture?.StringId != TargetCultureId)
+            {
+                _ownershipDurations.Remove(settlementId);
+                return;
+            }
+
             if (!_ownershipDurations.ContainsKey(settlementId))
             {
                 _ownershipDurations[settlementId] = 0f;
             }
 
-            // Increment the ownership duration
             _ownershipDurations[settlementId] += 1f;
 
-            // Check if the settlement is eligible for culture change
             if (_ownershipDurations[settlementId] >= DaysToChangeCulture &&
-                settlement.OwnerClan.Culture.StringId == TargetCultureId &&
-                settlement.Culture.StringId != TargetCultureId)
+                settlement.Culture?.StringId != TargetCultureId)
             {
                 UpdateSettlementCulture(settlement, settlement.OwnerClan.Culture);
                 _ownershipDurations.Remove(settlementId);

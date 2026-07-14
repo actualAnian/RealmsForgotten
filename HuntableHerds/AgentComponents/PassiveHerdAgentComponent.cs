@@ -8,7 +8,7 @@ namespace RealmsForgotten.HuntableHerds.AgentComponents {
         }
 
         public override void HuntableAITick(float dt) {
-            if (Agent.CanSeeOtherAgent(Agent.Main, HerdBuildData.CurrentHerdBuildData.SightRange))
+            if (Agent.CanSeeOtherAgent(Agent.Main, distance: HerdBuildData.CurrentHerdBuildData.SightRange))
                 GoToPositionOppositeFromOtherAgent(Agent.Main);
         }
     }

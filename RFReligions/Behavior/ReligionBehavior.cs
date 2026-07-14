@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Helpers;
+using RealmsForgotten.Career;
+using RealmsForgotten.Career.CareerPointsSystem;
 using RealmsForgotten.RFReligions.Core;
 using RealmsForgotten.RFReligions.Helper;
 using TaleWorlds.CampaignSystem;
@@ -53,6 +55,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
         CampaignEvents.TickEvent.AddNonSerializedListener(this, new Action<float>(OnTick));
         CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnBattleEnded);
         CampaignEvents.OnGovernorChangedEvent.AddNonSerializedListener(this, OnGovernorChanged);
+        CampaignEvents.MobilePartyDestroyed.AddNonSerializedListener(this, OnMobilePartyDestroyed);
     }
 
     private void OnBattleEnded(MapEvent mapEvent)
@@ -194,6 +197,19 @@ internal class ReligionBehavior : CampaignBehaviorBase
             $"You have received {religion}'s blessing for 5 days!", Colors.Green));
     }
 
+    private static void AwardClericSacrificeDeeds()
+    {
+        if (PlayerCareerExtension.GetCareer()?.StringId != "cleric")
+            return;
+
+        if (PlayerCareerExtension.PointsSystem is not DeedsPointsSystem deedsPointsSystem)
+            return;
+
+        deedsPointsSystem.AwardDeedsPoints(3);
+        InformationManager.DisplayMessage(new InformationMessage(
+            "Your sacrifice strengthens your sacred deeds. (+3 deeds)", Colors.Green));
+    }
+
     private void HealParty(MobileParty party, float percent)
     {
         if (party == null || party.MemberRoster == null)
@@ -205,9 +221,10 @@ internal class ReligionBehavior : CampaignBehaviorBase
             {
                 int healCount = (int)(element.WoundedNumber * percent);
 
-                // Heal by reducing wounded and increasing healthy count
-                party.MemberRoster.AddToCounts(element.Character, healCount); // Add healthy
-                party.MemberRoster.AddToCounts(element.Character, -healCount, insertAtFront: false); // Remove wounded
+                // Heal = reduce WOUNDED without changing the total count. The old
+                // +healCount / -healCount pair left Number unchanged and never
+                // touched woundedCount, so the blessing healed nobody.
+                party.MemberRoster.AddToCounts(element.Character, 0, woundedCount: -healCount);
             }
         }
     }
@@ -247,16 +264,20 @@ internal class ReligionBehavior : CampaignBehaviorBase
 
                 if (blessing.religion == Core.RFReligions.PharunAegis)
                 {
-                    float currentFood = party.Food;
-                    if (currentFood > 0f)
+                    // The blessing REDUCES food use — the old code REMOVED 10% of
+                    // the stock on top of vanilla consumption (a penalty, opposite
+                    // of the text). Give back a share of the day's consumption as
+                    // grain so net food use is lower.
+                    float dailyConsumption = TaleWorlds.Library.MathF.Max(0f, -party.FoodChange);
+                    int foodBack = (int)(dailyConsumption * 0.25f);
+                    if (foodBack > 0)
                     {
-                        float foodConsumed = currentFood * 0.1f;
-                        ConsumeFoodManually(party, foodConsumed);
+                        party.ItemRoster.AddToCounts(DefaultItems.Grain, foodBack);
 
                         if (party.LeaderHero == Hero.MainHero)
                         {
                             InformationManager.DisplayMessage(new InformationMessage(
-                                $"Your Pharunite discipline reduces food use. Only {foodConsumed:0.0} food consumed today.",
+                                $"Your Pharunite discipline eases the march — {foodBack} grain saved today.",
                                 Colors.Green));
                         }
                     }
@@ -266,6 +287,16 @@ internal class ReligionBehavior : CampaignBehaviorBase
         catch (Exception ex)
         {
             InformationManager.DisplayMessage(new InformationMessage("Religions DailyTick Error"));
+        }
+    }
+
+    private void OnMobilePartyDestroyed(MobileParty party, PartyBase destroyer)
+    {
+        // Prune destroyed parties — _partyMoraleEffect is saved and otherwise
+        // accumulates every lord party that ever existed, bloating the save.
+        if (party != null)
+        {
+            _partyMoraleEffect.Remove(party);
         }
     }
 
@@ -867,6 +898,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
         AddMoraleEffectToParty(MobileParty.MainParty, 10f, tempSelecteddReligion);
         _heroes[Hero.MainHero].AddDevotion(15f, tempSelecteddReligion, Hero.MainHero);
         ApplySacrificeBonus(Hero.MainHero, tempSelecteddReligion);
+        AwardClericSacrificeDeeds();
         var haveReligionHero = false;
         foreach (var hero in Settlement.CurrentSettlement.Notables
                      .Where(hero => _heroes.ContainsKey(hero) && _heroes[hero].Religion == tempSelecteddReligion))
@@ -1019,6 +1051,7 @@ internal class ReligionBehavior : CampaignBehaviorBase
             AddMoraleEffectToParty(MobileParty.MainParty, 10f, heroReligionModel.Religion);
             heroReligionModel.AddDevotion(15f, Hero.MainHero);
             ApplySacrificeBonus(Hero.MainHero, heroReligionModel.Religion);
+            AwardClericSacrificeDeeds();
 
             RefreshCurrentMenu();
         }
@@ -1089,11 +1122,16 @@ internal class ReligionBehavior : CampaignBehaviorBase
 
     private void PromptReligionSelector()
     {
+        // This is called precisely WHEN MainHero has no religion yet (OnTick
+        // guard: !_heroes.ContainsKey(MainHero)) — indexing _heroes[MainHero]
+        // here threw KeyNotFoundException every tick. Only exclude the current
+        // religion if the hero actually has one.
+        bool hasReligion = _heroes.TryGetValue(Hero.MainHero, out var mainHeroReligion);
         List<InquiryElement> list = new();
         foreach (var obj in Enum.GetValues(typeof(Core.RFReligions)))
         {
             var rfReligions = (Core.RFReligions)obj;
-            if (rfReligions != _heroes[Hero.MainHero].Religion)
+            if (!hasReligion || rfReligions != mainHeroReligion.Religion)
             {
                 list.Add(new InquiryElement(rfReligions.ToString(),
                     ReligionUIHelper.GetReligionName(rfReligions).ToString(), null, true, ""));

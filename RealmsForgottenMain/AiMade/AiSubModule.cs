@@ -106,6 +106,7 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new HumanCohesionBehavior());
             campaignGameStarter.AddBehavior(new BanditPartyGrowthBehavior());
             campaignGameStarter.AddBehavior(new BanditHordeBehavior());
+            campaignGameStarter.AddBehavior(new BanditMutualAidBehavior());
             campaignGameStarter.AddBehavior(new UndeadHordeBehavior());
             campaignGameStarter.AddBehavior(new BarbarianHordeInvasion());
             campaignGameStarter.AddBehavior(new ADODInnBehavior());

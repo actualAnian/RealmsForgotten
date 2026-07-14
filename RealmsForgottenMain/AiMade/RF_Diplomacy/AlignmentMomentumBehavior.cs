@@ -54,6 +54,11 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
 
         private void ReapplyPromotedCultures()
         {
+            // The alignment lists are static — reset to baseline first so a new
+            // or loaded campaign never inherits promotions from a previous
+            // campaign played in the same session.
+            CultureAlignment.ResetToBaseline();
+
             foreach (string cultureId in _promotedGoodCultures)
             {
                 CultureObject culture = Campaign.Current?.ObjectManager?.GetObject<CultureObject>(cultureId);

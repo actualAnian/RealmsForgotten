@@ -7,7 +7,10 @@ namespace RealmsForgotten.Smithing.Behavior;
 
 public class TownKardrathiumBehavior : CampaignBehaviorBase
 {
-    private readonly string[] _settlementIds = { "town_dwarf_1", "town_dwarf_2", "town_dwarf3", "town_dwarf5", "town_dwarf6", "town_dwarf7" };
+    // Ids MUST match the map's canonical "town_dwarf_N" form — the last four
+    // were missing the underscore, so Settlement.Find returned null and the
+    // weekly tick threw, crashing the campaign.
+    private readonly string[] _settlementIds = { "town_dwarf_1", "town_dwarf_2", "town_dwarf_3", "town_dwarf_5", "town_dwarf_6", "town_dwarf_7" };
     private const int AvailableCountPerWeek = 5;
     
     public override void RegisterEvents()
@@ -29,8 +32,8 @@ public class TownKardrathiumBehavior : CampaignBehaviorBase
         {
             Settlement settlement = Settlement.Find(id);
             if (settlement == null)
-                throw new Exception($"Settlement not found on {nameof(TownKardrathiumBehavior)}: {id}");
-            
+                continue; // missing dwarf town on this map — skip, never crash the tick
+
             if (settlement.ItemRoster.FindIndexOfItem(RFItems.Kardrathium) > -1)
                 continue;
             

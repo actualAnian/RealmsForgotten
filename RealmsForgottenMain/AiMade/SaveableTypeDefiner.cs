@@ -45,6 +45,7 @@ namespace RealmsForgotten.AiMade
             ConstructContainerDefinition(typeof(List<MilitaryAidRequest>));
             ConstructContainerDefinition(typeof(List<SecretWarCompactRequest>));
             ConstructContainerDefinition(typeof(Dictionary<string, CampaignTime>));
+            ConstructContainerDefinition(typeof(Dictionary<Settlement, RealmsForgotten.Behaviors.MercenaryData>));
         }
 
         protected override void DefineEnumTypes()
@@ -137,6 +138,7 @@ namespace RealmsForgotten.AiMade
             // started anywhere yet. An unregistered QuestBase crashes the save
             // the moment someone wires it up, so reserve its id now.
             AddClassDefinition(typeof(AIQuest.SimpleNpcQuest), 100);
+            AddClassDefinition(typeof(RealmsForgotten.Behaviors.MercenaryData), 101);
         }
     }
 }

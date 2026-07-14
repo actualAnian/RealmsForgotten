@@ -122,6 +122,15 @@
         <Tag key="IsNoRenderModeElement" value="false" />
       </Tags>
     </SubModule>
+    <SubModule>
+      <Name value="Homesteads Reloaded" />
+      <DLLName value="HomesteadsReloaded.dll" />
+      <SubModuleClassType value="Homesteads.HomesteadsReloaded" />
+      <Tags>
+        <Tag key="DedicatedServerType" value="none" />
+        <Tag key="IsNoRenderModeElement" value="false" />
+      </Tags>
+    </SubModule>
   </SubModules>
   <Xmls>
     <XmlNode>
@@ -276,6 +285,21 @@
     </XmlNode>
     <XmlNode>
       <XmlName id="GameText" path="rf_module_strings" />
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="GameText" path="rfsmithing" />
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="Strings" path="homestead_strings" />
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="homestead_characters" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
     </XmlNode>
     <XmlNode>
       <XmlName id="NPCCharacters" path="rf_spnpccharactertemplates" />

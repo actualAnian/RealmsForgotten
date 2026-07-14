@@ -43,7 +43,7 @@ namespace RealmsForgotten.Quest
                 {
                     foreach (KeyValuePair<ITrackableCampaignObject, List<QuestBase>> obj in Campaign.Current.QuestManager.TrackedObjects)
                     {
-                        if (obj.Value[0].StringId == "rf_queen_quest"
+                        if (obj.Value.Count > 0 && obj.Value[0].StringId == "rf_queen_quest"
                             && obj.Key is Settlement sett
                             && sett.StringId == Settlement.CurrentSettlement.StringId)
                             return true;

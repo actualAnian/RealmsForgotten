@@ -135,7 +135,7 @@ public sealed class RFWarDecisionPlannerBehavior : CampaignBehaviorBase
 
     private static float GetCurrentDay()
     {
-        return (float)CampaignTime.Now.ElapsedDaysUntilNow;
+        return (float)CampaignTime.Now.ToDays;
     }
 
     private static string GetKingdomKey(Kingdom kingdom)
@@ -177,6 +177,10 @@ public sealed class RFWarDecisionPlannerBehavior : CampaignBehaviorBase
     {
         bestCandidate = null;
         secondBestBias = float.MinValue;
+        if (kingdom.RulingClan == null)
+        {
+            return false;
+        }
 
         if (!allowPendingDecision && HasPendingWarDecision(kingdom))
         {
@@ -234,6 +238,10 @@ public sealed class RFWarDecisionPlannerBehavior : CampaignBehaviorBase
         out WarCandidateSnapshot? bestCandidate)
     {
         bestCandidate = null;
+        if (kingdom.RulingClan == null)
+        {
+            return false;
+        }
 
         DiplomacyModel diplomacy = Campaign.Current.Models.DiplomacyModel;
         int influenceCost = diplomacy.GetInfluenceCostOfProposingWar(kingdom.RulingClan);
@@ -415,6 +423,10 @@ public sealed class RFWarDecisionPlannerBehavior : CampaignBehaviorBase
         bool allowPendingDecision = false)
     {
         bestCandidate = null;
+        if (kingdom.RulingClan == null)
+        {
+            return false;
+        }
 
         if (!allowPendingDecision && HasPendingPeaceDecision(kingdom))
         {
@@ -457,6 +469,10 @@ public sealed class RFWarDecisionPlannerBehavior : CampaignBehaviorBase
         out PeaceCandidateSnapshot? bestCandidate)
     {
         bestCandidate = null;
+        if (kingdom.RulingClan == null)
+        {
+            return false;
+        }
 
         DiplomacyModel diplomacy = Campaign.Current.Models.DiplomacyModel;
         int influenceCost = diplomacy.GetInfluenceCostOfProposingPeace(kingdom.RulingClan);
@@ -489,7 +505,7 @@ public sealed class RFWarDecisionPlannerBehavior : CampaignBehaviorBase
         candidate = null;
 
         DiplomacyModel diplomacy = Campaign.Current.Models.DiplomacyModel;
-        if (sponsor == null || enemy == null || enemy.IsEliminated || !kingdom.IsAtWarWith(enemy) || diplomacy.IsAtConstantWar(kingdom, enemy))
+        if (sponsor == null || enemy == null || enemy.IsEliminated || enemy.RulingClan == null || !kingdom.IsAtWarWith(enemy) || diplomacy.IsAtConstantWar(kingdom, enemy))
         {
             return false;
         }
@@ -669,6 +685,19 @@ public sealed class RFWarDecisionPlannerBehavior : CampaignBehaviorBase
 
     private void ReplaceDecision(Kingdom kingdom, KingdomDecision oldDecision, KingdomDecision newDecision)
     {
+        // Only replace a decision that is GENUINELY PENDING. For AI kingdoms,
+        // vanilla AddDecision runs the election synchronously right after the
+        // KingdomDecisionAdded event (MEGA_010:243602) and never adds the
+        // decision to UnresolvedDecisions — so RemoveDecision(old) is a no-op
+        // and AddDecision(new) declares a SECOND war (double influence charge)
+        // on top of the original that resolves the instant our handler returns.
+        // Redirecting AI war targets is the score model's job (GetScoreOf-
+        // DeclaringWar), not a reentrant decision swap.
+        if (!kingdom.UnresolvedDecisions.Contains(oldDecision))
+        {
+            return;
+        }
+
         _suppressDecisionAudit = true;
         try
         {
@@ -1414,6 +1443,13 @@ public sealed class RFWarDecisionPlannerBehavior : CampaignBehaviorBase
 
     private static bool AreKingdomsStrategicallyAligned(Kingdom left, Kingdom right)
     {
+        // Alignment blocs (good/evil) only exist after the quest-driven global
+        // alignment war starts; before that no coalition-convergence bonus.
+        if (!Logic.RFWarExternalFrontContext.AlignmentDoctrineActive)
+        {
+            return false;
+        }
+
         if (left.Culture == null || right.Culture == null)
         {
             return false;

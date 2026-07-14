@@ -20,8 +20,10 @@ namespace RealmsForgotten.Behaviors
 
         private void OnDailyTickParty(MobileParty party)
         {
-            // Check if the party leader is of the "human" race
-            if (party.LeaderHero != null && party.LeaderHero.CharacterObject.Race.ToString() == "human")
+            // Check if the party leader is of the "human" race. Race is an int
+            // id — Race.ToString() gives "0"/"1"..., never "human"; use the
+            // RaceManager-backed IsHuman() extension.
+            if (party.LeaderHero != null && party.LeaderHero.CharacterObject.IsHuman())
             {
                 if (party.Army != null)
                 {

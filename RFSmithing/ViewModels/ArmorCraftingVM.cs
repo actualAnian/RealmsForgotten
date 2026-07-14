@@ -196,11 +196,15 @@ namespace RealmsForgotten.Smithing.ViewModels
             get => _currentItem;
             set
             {
-                if (value != _currentItem && value is not null)
+                // Allow null so an emptied/filtered list actually CLEARS the
+                // selection — the old `value is not null` guard left the last
+                // item "selected" invisibly, so crafting used a stale item.
+                if (value != _currentItem)
                 {
                     _currentItem = value;
                     OnPropertyChangedWithValue(value, "CurrentItem");
-                    RefreshSecondaryUsages();
+                    if (value is not null)
+                        RefreshSecondaryUsages();
                     _mixin.OnRefresh();
                 }
             }

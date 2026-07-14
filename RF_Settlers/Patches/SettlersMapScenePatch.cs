@@ -22,31 +22,48 @@ namespace RF_Settlers.Patches
     {
         private const string GenericPrefab = "rf_settler_village_icon";
 
-        private static readonly Dictionary<string, string> PrefabByEntityId = new();
+        private static readonly Dictionary<string, (string PrefabId, string VillageTypeId)> PrefabByEntityId = new();
 
         /// <summary>Called when a record is created and again on every early
-        /// load, so the mapping exists before the map scene initializes.</summary>
-        public static void RegisterVillagePrefab(string entityId, string prefabId)
+        /// load, so the mapping exists before the map scene initializes.
+        /// villageTypeId lets the icon use the SAME map mesh vanilla villages
+        /// of that type use (wheat farm, fishing hut, mine...) — resolved
+        /// lazily at spawn time because VillageType objects don't exist yet
+        /// during early load.</summary>
+        public static void RegisterVillagePrefab(string entityId, string prefabId, string villageTypeId = null)
         {
             if (!string.IsNullOrEmpty(entityId))
             {
-                PrefabByEntityId[entityId] = string.IsNullOrEmpty(prefabId) ? GenericPrefab : prefabId;
+                PrefabByEntityId[entityId] =
+                    (string.IsNullOrEmpty(prefabId) ? GenericPrefab : prefabId, villageTypeId);
             }
         }
 
         private static bool Prefix(Scene ____scene, string entityId, CampaignVec2 position)
         {
-            if (entityId == null || !PrefabByEntityId.TryGetValue(entityId, out string prefabId))
+            if (entityId == null || !PrefabByEntityId.TryGetValue(entityId, out var mapping))
             {
                 return true;
             }
 
             try
             {
-                GameEntity entity = GameEntity.Instantiate(____scene, prefabId, true, true, "");
-                if (entity == null && prefabId != GenericPrefab)
+                GameEntity entity = null;
+
+                // 1) The village-type map mesh (what a REAL village of this type
+                //    looks like on the map). 2) The culture prefab. 3) Generic.
+                string typeMesh = SettlerVillageTypePicker.Resolve(mapping.VillageTypeId)?.MeshName;
+                foreach (string candidate in new[] { typeMesh, mapping.PrefabId, GenericPrefab })
                 {
-                    entity = GameEntity.Instantiate(____scene, GenericPrefab, true, true, "");
+                    if (string.IsNullOrEmpty(candidate))
+                    {
+                        continue;
+                    }
+                    entity = GameEntity.Instantiate(____scene, candidate, true, true, "");
+                    if (entity != null)
+                    {
+                        break;
+                    }
                 }
 
                 if (entity == null)

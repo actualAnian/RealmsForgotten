@@ -30,6 +30,7 @@ internal static class BattleAITacticController
     private static string? _playerDoctrineOverrideId;
     private static float _playerDoctrineOverrideUntilTime;
     private static Mission? _trackedMission;
+    private static bool _postSpawnReapplyDone;
     private static readonly System.Collections.Generic.Dictionary<Team, FlankLockState> FlankLocks = new();
 
     public static void ResetPlayerOverride()
@@ -187,6 +188,55 @@ internal static class BattleAITacticController
         FlankLocks.Clear();
         _playerDoctrineOverrideId = null;
         _playerDoctrineOverrideUntilTime = 0f;
+        _postSpawnReapplyDone = false;
+    }
+
+    /// <summary>
+    /// Re-selects doctrines ONCE after troops have spawned. ApplyDoctrine runs
+    /// in MissionCombatantsLogic.EarlyStart — BEFORE any agent exists — so
+    /// team.GeneralAgent is null (tactics skill reads 0) and QuerySystem
+    /// composition ratios are 0. Every lord doctrine gated on skill>=60 or a
+    /// composition threshold therefore failed at that point, leaving only the
+    /// bandit doctrine (skill 0) ever selected automatically. This re-runs the
+    /// selection with the real general and army composition once they exist.
+    /// </summary>
+    public static void TickPostSpawnDoctrineReapply()
+    {
+        ResetTransientStateIfMissionChanged();
+
+        Mission? mission = Mission.Current;
+        if (_postSpawnReapplyDone
+            || mission == null
+            || mission.MissionTeamAIType != Mission.MissionTeamAITypeEnum.FieldBattle)
+        {
+            return;
+        }
+
+        // Wait until agents have spawned and generals are assigned.
+        bool anyGeneral = false;
+        foreach (Team team in mission.Teams)
+        {
+            if (team?.GeneralAgent != null)
+            {
+                anyGeneral = true;
+                break;
+            }
+        }
+
+        if (!anyGeneral)
+        {
+            return;
+        }
+
+        foreach (Team team in mission.Teams)
+        {
+            if (team != null)
+            {
+                ApplyDoctrine(team);
+            }
+        }
+
+        _postSpawnReapplyDone = true;
     }
 
     private static void RemoveManagedTactics(Team team)

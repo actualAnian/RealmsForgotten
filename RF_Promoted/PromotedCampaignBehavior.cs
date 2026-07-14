@@ -137,6 +137,7 @@ public sealed class PromotedCampaignBehavior : CampaignBehaviorBase
     private void BuildPromotionOffers()
     {
         int totalOffers = 0;
+        bool stopQueuing = false;
         foreach (KeyValuePair<string, int> entry in _battleKills.OrderByDescending(item => item.Value))
         {
             string troopId = entry.Key;
@@ -155,13 +156,21 @@ public sealed class PromotedCampaignBehavior : CampaignBehaviorBase
                 continue;
             }
 
+            // Always bank this troop's merit (_battleKills is cleared right after
+            // this scan). The old early return skipped AwardPromotionMerit for the
+            // remaining troops, permanently discarding their earned merit.
             AwardPromotionMerit(troopId, kills);
-            totalOffers += QueuePromotionOffers(troop, currentCount);
 
-            if (totalOffers > 0 && !PromotedSettings.Current.AllowMultiplePromotions)
+            if (!stopQueuing)
             {
-                PromotedDebug.Message($"Promotion ready | troop={troop.StringId} offers={totalOffers}");
-                return;
+                totalOffers += QueuePromotionOffers(troop, currentCount);
+                if (totalOffers > 0 && !PromotedSettings.Current.AllowMultiplePromotions)
+                {
+                    // Stop queuing further offers, but keep looping so remaining
+                    // troops still get their merit banked for the next cycle.
+                    PromotedDebug.Message($"Promotion ready | troop={troop.StringId} offers={totalOffers}");
+                    stopQueuing = true;
+                }
             }
         }
 

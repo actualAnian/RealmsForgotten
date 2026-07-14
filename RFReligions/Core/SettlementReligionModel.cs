@@ -78,15 +78,25 @@ public class SettlementReligionModel
         foreach (var keyValuePair in _religiousValues)
             if (keyValuePair.Key != mainReligion)
                 num += keyValuePair.Value;
-        return _religiousValues[mainReligion] / (num + _religiousValues[mainReligion]);
+        // Guard 0/0 = NaN (all devotions zero — e.g. prosperity-0 town): NaN
+        // would be written back into the devotions and propagate to town loyalty.
+        float denominator = num + _religiousValues[mainReligion];
+        if (denominator <= 0f)
+            return 0f;
+        return _religiousValues[mainReligion] / denominator;
     }
 
     private RFReligions CalculateMainReligion()
     {
         float maxValue = 0;
-        RFReligions maxKey = default;
+        // default(RFReligions) is All (enum index 0) — so a town with zero
+        // devotion used to report All as its "main religion". Default to None
+        // and skip the non-religion values All/None as candidates.
+        RFReligions maxKey = RFReligions.None;
         foreach (KeyValuePair<RFReligions, float> keyValuePair in _religiousValues)
         {
+            if (keyValuePair.Key == RFReligions.All || keyValuePair.Key == RFReligions.None)
+                continue;
             if (keyValuePair.Value > maxValue)
             {
                 maxValue = keyValuePair.Value;
@@ -101,12 +111,18 @@ public class SettlementReligionModel
         var num = subject.Town.Prosperity * mainReligionRatio;
         var num2 = subject.Town.Prosperity - num;
         RFReligions key = CalculateMainReligion();
-        _religiousValues[key] = num;
+        // Only assign the main share to a REAL religion (None = "no dominant
+        // faith" must not accumulate devotion and become dominant next tick).
+        if (key != RFReligions.All && key != RFReligions.None)
+            _religiousValues[key] = num;
         foreach (var keyValuePair in _religiousValues.ToList())
         {
             if (num2 < 1f) break;
             var num3 = MBRandom.RandomFloatRanged(num2);
-            if (keyValuePair.Key != key)
+            // Never distribute devotion to the non-religion values All/None.
+            if (keyValuePair.Key != key
+                && keyValuePair.Key != RFReligions.All
+                && keyValuePair.Key != RFReligions.None)
             {
                 num2 -= num3;
                 _religiousValues[keyValuePair.Key] = num3;

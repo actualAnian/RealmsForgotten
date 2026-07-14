@@ -1405,6 +1405,15 @@ public sealed class RFWarCampaignDirectorBehavior : CampaignBehaviorBase
 
     private static bool IsAlignmentHostileToSameSide(string? leftCultureId, string? rightCultureId)
     {
+        // Good/evil sides only become strategic blocs once the quest-driven
+        // global alignment war starts (witch defeated). Before that the
+        // director treats them as ordinary kingdoms — otherwise the alignment
+        // war effectively begins on day 1.
+        if (!Logic.RFWarExternalFrontContext.AlignmentDoctrineActive)
+        {
+            return false;
+        }
+
         return IsGoodCulture(leftCultureId) && IsGoodCulture(rightCultureId)
             || IsEvilCulture(leftCultureId) && IsEvilCulture(rightCultureId);
     }
@@ -1465,7 +1474,7 @@ public sealed class RFWarCampaignDirectorBehavior : CampaignBehaviorBase
 
     private static float GetCurrentDay()
     {
-        return (float)CampaignTime.Now.ElapsedDaysUntilNow;
+        return (float)CampaignTime.Now.ToDays;
     }
 
     private static string GetKingdomKey(Kingdom kingdom)

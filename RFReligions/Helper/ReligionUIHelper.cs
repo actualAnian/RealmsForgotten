@@ -21,7 +21,12 @@ public static class ReligionUIHelper
     public static int GetTownReligionLbl()
     {
         var campaignBehavior = ReligionBehavior.Instance;
-        var settlementReligionModel = campaignBehavior._settlements[Settlement.CurrentSettlement];
+        // A newly founded/captured town may not be registered in _settlements
+        // yet — indexing it directly threw KeyNotFoundException and broke the
+        // town menu overlay. Fall back to 0 when absent.
+        if (campaignBehavior == null || Settlement.CurrentSettlement == null
+            || !campaignBehavior._settlements.TryGetValue(Settlement.CurrentSettlement, out var settlementReligionModel))
+            return 0;
         var mainReligion = settlementReligionModel.GetMainReligion();
         return (int)settlementReligionModel._religiousValues.Sum(keyValuePair => keyValuePair.Value *
             (keyValuePair.Key == mainReligion ? 1 : -1));

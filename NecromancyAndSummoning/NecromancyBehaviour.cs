@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
@@ -38,7 +38,7 @@ namespace NecromancyAndSummoning
 				string str2 = ex.Message.ToString();
 				string str3 = "\n";
 				Exception innerException = ex.InnerException;
-				throw new Exception((str + str2 + str3 + ((innerException != null) ? innerException.ToString() : null) != null) ? ex.InnerException.Message.ToString() : "");
+				throw new Exception(str + str2 + str3 + (innerException != null ? innerException.ToString() : ""));
 			}
 		}
 

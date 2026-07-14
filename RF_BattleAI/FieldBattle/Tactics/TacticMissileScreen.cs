@@ -194,9 +194,14 @@ public sealed class TacticMissileScreen : TacticComponent
             return MissileScreenState.SetLine;
         }
 
-        if (distanceSquared > 1600f && _fallBackPowerGate.Evaluate(powerRatio))
+        // Failed power gate → hold the firing line (SetLine) instead of
+        // collapsing into CloseDefense; CloseDefense is for contact range only,
+        // not for a weak ranged force that should keep shooting from a line.
+        if (distanceSquared > 1600f)
         {
-            return MissileScreenState.FireAndFallBack;
+            return _fallBackPowerGate.Evaluate(powerRatio)
+                ? MissileScreenState.FireAndFallBack
+                : MissileScreenState.SetLine;
         }
 
         return MissileScreenState.CloseDefense;

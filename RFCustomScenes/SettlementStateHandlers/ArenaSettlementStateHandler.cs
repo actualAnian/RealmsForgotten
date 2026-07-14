@@ -294,8 +294,17 @@ namespace RealmsForgotten.RFCustomSettlements
             currentState = currentArenaState;
             if (currentChallengeToSync != null)
             {
-                ArenaChallenge curChallenge = (from challenge in BuildData.Challenges where challenge.ChallengeName == currentChallengeToSync select challenge).Single();
+                // FirstOrDefault, not Single: a challenge renamed/removed from
+                // the XML since the save would throw InvalidOperationException
+                // on load. If it no longer exists, drop back to an idle arena
+                // instead of crashing.
+                ArenaChallenge? curChallenge = BuildData.Challenges
+                    .FirstOrDefault(challenge => challenge.ChallengeName == currentChallengeToSync);
                 currentChallenge = curChallenge;
+                if (curChallenge == null)
+                {
+                    currentState = ArenaState.Visiting;
+                }
             }
             hasToWait = isWaiting;
         }

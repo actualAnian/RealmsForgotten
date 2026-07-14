@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +9,8 @@ using TaleWorlds.MountAndBlade.View;
 
 namespace RealmsForgotten.AiMade.Patches
 {
+    // A/B test 2026-07-13: disabling this did NOT fix the folded characters —
+    // exonerated and re-enabled (covers custom-race tableau refresh demand).
     [HarmonyPatch(typeof(CharacterTableau), nameof(CharacterTableau.SetRace))]
     public class SetRacePostFix
     {

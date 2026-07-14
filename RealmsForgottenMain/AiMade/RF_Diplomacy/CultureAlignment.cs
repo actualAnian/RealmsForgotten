@@ -9,22 +9,28 @@ namespace RealmsForgotten.AiMade.RF_Diplomacy
 {
     public static class CultureAlignment
     {
-        // Define your own cultures here
-        public static readonly List<string> GoodCultures = new()
-        {
-            "battania",
-            "giant",
-            "dwarf",
-            "grimwatch"
-        };
+        // Baseline sides — never mutated. The live lists below start from these
+        // and can be changed at runtime (momentum promotes neutral cultures).
+        private static readonly string[] BaselineGoodCultures = { "battania", "giant", "dwarf", "grimwatch" };
+        private static readonly string[] BaselineEvilCultures = { "sturgia", "urkhai", "aserai", "mage" };
 
-        public static readonly List<string> EvilCultures = new()
+        public static readonly List<string> GoodCultures = new(BaselineGoodCultures);
+
+        public static readonly List<string> EvilCultures = new(BaselineEvilCultures);
+
+        /// <summary>
+        /// Restores the baseline lists. The lists are STATIC and are mutated by
+        /// AlignmentMomentumBehavior (promoted cultures) — without this reset a
+        /// new/loaded campaign in the same game session inherits the previous
+        /// campaign's promotions. Call before ReapplyPromotedCultures.
+        /// </summary>
+        public static void ResetToBaseline()
         {
-            "sturgia",
-            "urkhai",
-            "aserai",
-            "mage"
-        };
+            GoodCultures.Clear();
+            GoodCultures.AddRange(BaselineGoodCultures);
+            EvilCultures.Clear();
+            EvilCultures.AddRange(BaselineEvilCultures);
+        }
 
         public static bool IsGoodCulture(this CultureObject culture)
             => GoodCultures.Contains(culture.StringId);

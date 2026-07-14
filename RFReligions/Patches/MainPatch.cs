@@ -28,10 +28,22 @@ internal class MainPatch
             try
             {
                 if (menuOverlayType == GameMenu.MenuOverlayType.Encounter)
+                {
                     __result = new EncounterMenuOverlayVM();
-                else
+                    return false;
+                }
+                // Only the settlement overlay types get the religion overlay.
+                // For None (and any other type) fall through to the original
+                // method — vanilla returns null for None, so returning a
+                // settlement overlay there produced a spurious/broken UI.
+                if (menuOverlayType == GameMenu.MenuOverlayType.SettlementWithBoth
+                    || menuOverlayType == GameMenu.MenuOverlayType.SettlementWithCharacters
+                    || menuOverlayType == GameMenu.MenuOverlayType.SettlementWithParties)
+                {
                     __result = new ReligionsSettlementMenuOverlayVM(menuOverlayType);
-                return false;
+                    return false;
+                }
+                return true;
             }
             catch (Exception)
             {
@@ -107,7 +119,11 @@ internal class MainPatch
                     compatibleReligion != Core.RFReligions.All &&
                     heroReligionModel2.Religion != compatibleReligion)
                 {
-                    int religionPenalty = (int)(relationChange * 0.1f);
+                    // Penalty by MAGNITUDE: with a negative relationChange (a
+                    // relation LOSS) the old `relationChange * 0.1` was negative,
+                    // so subtracting it IMPROVED the relation — intolerance was
+                    // softening quarrels. Always reduce the relation.
+                    int religionPenalty = (int)(System.Math.Abs(relationChange) * 0.1f);
                     relationChange -= religionPenalty;
 
                     if (originalHero == Hero.MainHero)

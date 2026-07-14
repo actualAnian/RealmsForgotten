@@ -67,11 +67,17 @@ namespace RealmsForgotten.RFCustomSettlements
         public int EnterEnd { get; private set; }
         public RFMusicType MusicType { get; private set; } = RFMusicType.StandardBattle;
         internal ISettlementStateHandler StateHandler { get; private set; }
+        private IFaction _cachedMapFaction;
         public override IFaction MapFaction
         {
             get
             {
-                return Campaign.Current.Factions.First(f => f.Culture.StringId == "empire");
+                // FirstOrDefault (not First → InvalidOperationException if no
+                // empire-culture faction exists) + null-safe culture, cached to
+                // avoid the LINQ scan on every access.
+                if (_cachedMapFaction == null)
+                    _cachedMapFaction = Campaign.Current.Factions.FirstOrDefault(f => f.Culture?.StringId == "empire");
+                return _cachedMapFaction;
             }
         }
         //public override IFaction MapFaction => Campaign.Current.Factions.First(f => f.Culture.StringId == "empire"); //@TODO check
