@@ -10,6 +10,33 @@ namespace RealmsForgotten.AiMade.StrategicIntrigue.Mechanics.KingdomObjectives;
 
 public static class KingdomObjectiveService
 {
+    /// <summary>0..100 wealth flowing from resource zones (gold/silver mines)
+    /// owned by the kingdom's clans. Installed VIA REFLECTION by
+    /// RF_ResourceZones on session launch — the zones system is an optional
+    /// add-on, so no assembly reference exists. Null = zones absent.</summary>
+    public static Func<Kingdom, float>? ZoneWealthScoreProvider;
+
+    /// <summary>0..100 share of the map's mountain mines (iron/gold/silver
+    /// zones) under the kingdom's control. Same installation contract.</summary>
+    public static Func<Kingdom, float>? MineControlScoreProvider;
+
+    private static float GetProviderScore(Func<Kingdom, float>? provider, Kingdom kingdom)
+    {
+        if (provider == null || kingdom == null)
+        {
+            return 0f;
+        }
+
+        try
+        {
+            return Clamp01Score(provider(kingdom));
+        }
+        catch
+        {
+            return 0f;
+        }
+    }
+
     private static readonly HashSet<string> AseraiRealmIds = new(StringComparer.OrdinalIgnoreCase)
     {
         "aserai",
@@ -64,6 +91,11 @@ public static class KingdomObjectiveService
             "mage_kingdom" => KingdomObjectiveType.ArcaneFrontier,
             "grimwatch_kingdom" => KingdomObjectiveType.UnbreakableRealm,
             "wulf_kingdom" => KingdomObjectiveType.MartialGlory,
+            "giant_kingdom" => KingdomObjectiveType.GuardianFrenzy,
+            "katogai_kingdom" => KingdomObjectiveType.MercenaryCreed,
+            "tharnmar_kingdom" => KingdomObjectiveType.MercenaryCreed,
+            "valthorne_kingdom" => KingdomObjectiveType.WovenAlliances,
+            "nord_colonies" => KingdomObjectiveType.ColonialExpansion,
             _ => ResolveByCulture(kingdom.Culture?.StringId)
         };
     }
@@ -83,6 +115,10 @@ public static class KingdomObjectiveService
             KingdomObjectiveType.DefileMountainHolds => new TextObject("{=rf_ko_title_urkhai}Defile the Mountain Holds"),
             KingdomObjectiveType.MartialGlory => new TextObject("{=rf_ko_title_wulf}Win Unrivaled Martial Glory"),
             KingdomObjectiveType.UnbreakableRealm => new TextObject("{=rf_ko_title_grimwatch}Become the Unbreakable Realm"),
+            KingdomObjectiveType.GuardianFrenzy => new TextObject("{=rf_ko_title_giant}Guard the Giants' Peace"),
+            KingdomObjectiveType.MercenaryCreed => new TextObject("{=rf_ko_title_mercenary}Stand Ready, Owe Nothing"),
+            KingdomObjectiveType.WovenAlliances => new TextObject("{=rf_ko_title_valthorne}Weave the Web of Allies"),
+            KingdomObjectiveType.ColonialExpansion => new TextObject("{=rf_ko_title_nord}Expand the Colonies"),
             _ => new TextObject("{=rf_ko_title_none}No Grand Design")
         };
     }
@@ -102,6 +138,10 @@ public static class KingdomObjectiveService
             KingdomObjectiveType.DefileMountainHolds => new TextObject("{=rf_ko_fantasy_urkhai}The kingdom wants dwarf holds shattered and their mountain defenses profaned."),
             KingdomObjectiveType.MartialGlory => new TextObject("{=rf_ko_fantasy_wulf}The realm lives for renown in battle and wants the world to admit its warriors are supreme."),
             KingdomObjectiveType.UnbreakableRealm => new TextObject("{=rf_ko_fantasy_grimwatch}The kingdom aims to become the hardest realm on the map to crack, siege, or shame."),
+            KingdomObjectiveType.GuardianFrenzy => new TextObject("{=rf_ko_fantasy_giant}The giants covet nothing beyond their own lands and would risk no war for gain — but wake their wrath, and they will not rest until the aggressor is utterly broken."),
+            KingdomObjectiveType.MercenaryCreed => new TextObject("{=rf_ko_fantasy_mercenary}A realm of sellswords with no grand design: keep the coffers full, the walls manned, and owe allegiance to no crown."),
+            KingdomObjectiveType.WovenAlliances => new TextObject("{=rf_ko_fantasy_valthorne}Cast off from the Realms, Valthorne means to grow strong through diplomacy — lending swords to friends so that it never stands alone against an enemy."),
+            KingdomObjectiveType.ColonialExpansion => new TextObject("{=rf_ko_fantasy_nord}The colonies hunger for new land: conquer, settle, and push the frontier ever outward."),
             _ => new TextObject("{=rf_ko_fantasy_none}This realm has no settled grand design.")
         };
     }
@@ -153,6 +193,10 @@ public static class KingdomObjectiveService
             KingdomObjectiveType.DefileMountainHolds => EvaluateRivalStrongholdObjective(kingdom, state, "dwarf_kingdom", "dwarf"),
             KingdomObjectiveType.MartialGlory => EvaluateMartialGloryObjective(kingdom, state),
             KingdomObjectiveType.UnbreakableRealm => EvaluateFortressObjective(kingdom),
+            KingdomObjectiveType.GuardianFrenzy => EvaluateGuardianFrenzyObjective(kingdom, state),
+            KingdomObjectiveType.MercenaryCreed => EvaluateMercenaryCreedObjective(kingdom),
+            KingdomObjectiveType.WovenAlliances => EvaluateWovenAlliancesObjective(kingdom),
+            KingdomObjectiveType.ColonialExpansion => EvaluateColonialExpansionObjective(kingdom, state),
             _ => 0f
         };
     }
@@ -175,6 +219,22 @@ public static class KingdomObjectiveService
         if (state.ObjectiveType == KingdomObjectiveType.UnbreakableRealm && kingdom.Fiefs.Count() <= 2)
         {
             pressure += 8f;
+        }
+
+        // Giant frenzy: once at war the realm demands total victory — the
+        // pressure only releases when the aggressor is broken or peace is made.
+        if (state.ObjectiveType == KingdomObjectiveType.GuardianFrenzy
+            && kingdom.FactionsAtWarWith.Any(x => x.IsKingdomFaction))
+        {
+            pressure += 16f;
+        }
+
+        // Elvean preservation is DEFENSIVE: peace with the old woods intact is
+        // success. Pressure only builds while invaders hold Battanian lands.
+        if (state.ObjectiveType == KingdomObjectiveType.PreserveBattanianHomelands)
+        {
+            float lostHomeland = 100f - GetSettlementShare(kingdom, town => town.Settlement.Culture?.StringId == "battania");
+            pressure += lostHomeland * 0.12f;
         }
 
         return Clamp01Score(pressure);
@@ -208,6 +268,12 @@ public static class KingdomObjectiveService
             "urkhai" => KingdomObjectiveType.DefileMountainHolds,
             "wulf" => KingdomObjectiveType.MartialGlory,
             "grimwatch" => KingdomObjectiveType.UnbreakableRealm,
+            "giant" => KingdomObjectiveType.GuardianFrenzy,
+            "katogai" => KingdomObjectiveType.MercenaryCreed,
+            "tharnmar" => KingdomObjectiveType.MercenaryCreed,
+            "valthorne" => KingdomObjectiveType.WovenAlliances,
+            "nord" => KingdomObjectiveType.ColonialExpansion,
+            "nords" => KingdomObjectiveType.ColonialExpansion,
             _ => KingdomObjectiveType.None
         };
     }
@@ -231,7 +297,17 @@ public static class KingdomObjectiveService
 
     private static float EvaluateVlandianWealthObjective(Kingdom kingdom)
     {
+        // "Richest in the WORLD" is a rank, not a number: measure the realm's
+        // clan wealth against the richest rival kingdom.
         float totalGold = kingdom.Clans.Sum(x => (float)x.Gold);
+        float richestRivalGold = Kingdom.All
+            .Where(x => x != kingdom && !x.IsEliminated)
+            .Select(x => x.Clans.Sum(c => (float)c.Gold))
+            .DefaultIfEmpty(1f)
+            .Max();
+        float rankScore = Clamp01Score(MapToRange(
+            totalGold / Math.Max(1f, richestRivalGold), 0.35f, 1.25f, 5f, 100f));
+
         float averageProsperity = kingdom.Fiefs.Any()
             ? (float)kingdom.Fiefs.Average(x => x.Prosperity)
             : 0f;
@@ -240,10 +316,12 @@ public static class KingdomObjectiveService
             ? (float)houseCount / (kingdom.Clans.Count - 1)
             : 0f;
 
-        float goldScore = Clamp01Score((float)Math.Sqrt(totalGold) * 0.08f);
         float prosperityScore = Clamp01Score((averageProsperity / 7500f) * 100f);
         float houseScore = Clamp01Score(houseStrength * 100f);
-        return Clamp01Score((goldScore * 0.42f) + (prosperityScore * 0.33f) + (houseScore * 0.25f));
+        // Gold and silver zones feed the design directly — Nasoria has one more
+        // reason to covet, upgrade and defend the mines.
+        float zoneScore = GetProviderScore(ZoneWealthScoreProvider, kingdom);
+        return Clamp01Score((rankScore * 0.35f) + (prosperityScore * 0.25f) + (houseScore * 0.2f) + (zoneScore * 0.2f));
     }
 
     private static float EvaluateBlocUnificationObjective(
@@ -282,7 +360,10 @@ public static class KingdomObjectiveService
         float conquest = GetSettlementShare(kingdom, town => town.Settlement.Culture?.StringId == rivalCultureId);
         float rivalWeakness = GetRivalWeaknessScore(kingdom, rivalKingdomId);
         float homelandSecurity = EvaluateHomelandSecurity(kingdom, kingdom.Culture?.StringId);
-        return Clamp01Score((conquest * 0.45f) + (rivalWeakness * 0.3f) + (homelandSecurity * 0.1f) + (state.ObjectiveWarScore * 0.15f));
+        // The mountain war is fought over the MINES too: holding the map's
+        // iron/gold/silver diggings counts toward mastery of the holds.
+        float mineControl = GetProviderScore(MineControlScoreProvider, kingdom);
+        return Clamp01Score((conquest * 0.4f) + (rivalWeakness * 0.25f) + (homelandSecurity * 0.1f) + (mineControl * 0.1f) + (state.ObjectiveWarScore * 0.15f));
     }
 
     private static float EvaluateMartialGloryObjective(Kingdom kingdom, KingdomIntrigueState state)
@@ -305,6 +386,66 @@ public static class KingdomObjectiveService
         float militiaScore = Clamp01Score((float)fiefs.Average(x => Math.Min(100f, x.Militia / 3.2f)));
         float garrisonScore = Clamp01Score((float)fiefs.Average(x => Math.Min(100f, (x.GarrisonParty?.Party.NumberOfHealthyMembers ?? 0) / 4.8f)));
         return Clamp01Score((securityScore * 0.24f) + (loyaltyScore * 0.14f) + (militiaScore * 0.28f) + (garrisonScore * 0.34f));
+    }
+
+    /// <summary>Giants: at peace, success is simply holding the homeland safe.
+    /// At war (frenzy), success is measured by how thoroughly the aggressor is
+    /// being broken — peace-of-mind metrics stop mattering.</summary>
+    private static float EvaluateGuardianFrenzyObjective(Kingdom kingdom, KingdomIntrigueState state)
+    {
+        float homelandControl = GetSettlementShare(kingdom, town => town.Settlement.Culture?.StringId == "giant");
+        float homelandSecurity = EvaluateHomelandSecurity(kingdom, "giant");
+
+        List<Kingdom> enemies = kingdom.FactionsAtWarWith.OfType<Kingdom>().ToList();
+        if (enemies.Count == 0)
+        {
+            return Clamp01Score((homelandControl * 0.45f) + (homelandSecurity * 0.35f) + 20f);
+        }
+
+        float enemyWeakness = AverageScores(enemies.Select(x => GetRivalWeaknessScore(kingdom, x.StringId)).ToArray());
+        return Clamp01Score((enemyWeakness * 0.45f) + (state.ObjectiveWarScore * 0.3f) + (homelandControl * 0.25f));
+    }
+
+    /// <summary>Mercenary realms (Katogai, Tharnmar): full coffers and walls
+    /// that hold — no grand design beyond readiness.</summary>
+    private static float EvaluateMercenaryCreedObjective(Kingdom kingdom)
+    {
+        float readiness = EvaluateFortressObjective(kingdom);
+        float coffers = Clamp01Score((float)Math.Sqrt(kingdom.Clans.Sum(x => (float)x.Gold)) * 0.07f);
+        return Clamp01Score((readiness * 0.72f) + (coffers * 0.28f));
+    }
+
+    /// <summary>Valthorne: strength through diplomacy — the fewer enemies and
+    /// the more co-belligerent friends, the stronger the web.</summary>
+    private static float EvaluateWovenAlliancesObjective(Kingdom kingdom)
+    {
+        List<Kingdom> others = Kingdom.All.Where(x => x != kingdom && !x.IsEliminated).ToList();
+        if (others.Count == 0)
+        {
+            return 0f;
+        }
+
+        List<Kingdom> enemies = kingdom.FactionsAtWarWith.OfType<Kingdom>().ToList();
+        float peaceShare = Clamp01Score((1f - ((float)enemies.Count / others.Count)) * 100f);
+
+        // "Military support": realms fighting the same enemies count as friends
+        // the web has bound — the diplomatic promise made real.
+        int friendsInArms = others.Count(other =>
+            other.FactionsAtWarWith.OfType<Kingdom>().Any(sharedEnemy =>
+                sharedEnemy != kingdom && enemies.Contains(sharedEnemy)));
+        float friendScore = Clamp01Score(friendsInArms * 25f);
+
+        float strengthScore = Clamp01Score((float)Math.Sqrt(kingdom.CurrentTotalStrength) * 0.12f);
+        return Clamp01Score((peaceShare * 0.5f) + (friendScore * 0.28f) + (strengthScore * 0.22f));
+    }
+
+    /// <summary>Nord colonies: expansion is the design — every new fief is the
+    /// colony pushing its frontier outward.</summary>
+    private static float EvaluateColonialExpansionObjective(Kingdom kingdom, KingdomIntrigueState state)
+    {
+        float holdings = Clamp01Score(kingdom.Fiefs.Count() * 9f);
+        float strengthScore = Clamp01Score((float)Math.Sqrt(kingdom.CurrentTotalStrength) * 0.12f);
+        return Clamp01Score((holdings * 0.55f) + (state.ObjectiveWarScore * 0.25f) + (strengthScore * 0.2f));
     }
 
     private static float EvaluateHomelandSecurity(Kingdom kingdom, string cultureId)
@@ -372,15 +513,20 @@ public static class KingdomObjectiveService
 
     private static bool IsAggressiveObjective(KingdomObjectiveType objectiveType)
     {
+        // PreserveBattanianHomelands removed (author decision 2026-07-15): a
+        // defensive design must not accumulate frustration during peace — its
+        // pressure now comes from invaders holding Elvean lands instead.
         return objectiveType is KingdomObjectiveType.CrushBattanianResistance
-            or KingdomObjectiveType.PreserveBattanianHomelands
             or KingdomObjectiveType.UniteAseraiRealms
             or KingdomObjectiveType.ClaimImperialLegitimacy
             or KingdomObjectiveType.ForgeBorderEmpire
             or KingdomObjectiveType.ArcaneFrontier
             or KingdomObjectiveType.SecureMountainHolds
             or KingdomObjectiveType.DefileMountainHolds
-            or KingdomObjectiveType.MartialGlory;
+            or KingdomObjectiveType.MartialGlory
+            or KingdomObjectiveType.ColonialExpansion;
+        // GuardianFrenzy, MercenaryCreed and WovenAlliances are deliberately
+        // NOT aggressive: peace is their success state, not a frustration.
     }
 
     private static TextObject GetProgressStatus(float progress, float pressure)

@@ -2,7 +2,6 @@
 using HarmonyLib;
 using RealmsForgotten.Behaviors;
 using RealmsForgotten.Patches;
-using RealmsForgotten.Quest;
 using RealmsForgotten.RFReligions.Behavior;
 using RealmsForgotten.RFReligions.Core;
 using RealmsForgotten.RFReligions.Models;
@@ -80,8 +79,6 @@ public class SubModule : MBSubModuleBase
         {
             TaleWorlds.Library.Debug.Print($"[RFReligions] RunManualPatches failed: {exception}");
         }
-
-        QuestPatches.PatchAll();
     }
 
 }

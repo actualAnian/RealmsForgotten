@@ -23,11 +23,21 @@ namespace RealmsForgotten.Behaviors
             // Check if the party leader is of the "human" race. Race is an int
             // id — Race.ToString() gives "0"/"1"..., never "human"; use the
             // RaceManager-backed IsHuman() extension.
-            if (party.LeaderHero != null && party.LeaderHero.CharacterObject.IsHuman())
+            // Faction parties only — human-led BANDIT bands don't share the
+            // "cohesion of men" bonus (author decision 2026-07-15).
+            if (party.LeaderHero != null && party.LeaderHero.CharacterObject.IsHuman()
+                && party.ActualClan != null && !party.ActualClan.IsBanditFaction)
             {
                 if (party.Army != null)
                 {
-                    IncreaseArmyCohesion(party.Army);
+                    // Once per ARMY per day — DailyTickParty fires for every
+                    // member party, so crediting each one stacked +1 per human
+                    // lord and made big human armies effectively immortal
+                    // (cohesion is the game's army-disband limiter).
+                    if (party.Army.LeaderParty == party)
+                    {
+                        IncreaseArmyCohesion(party.Army);
+                    }
                 }
                 else
                 {

@@ -28,7 +28,12 @@ namespace RF_Settlers.Patches
     {
         private static bool Prefix(MobileParty mobileParty)
         {
-            return mobileParty?.PartyComponent is not (SettlerPartyComponent or SettlerCampComponent);
+            // Settler parties/camps plus every self-driven RF party (resource
+            // zones, their caravans): leaderless — and bandit-held zones are
+            // OWNERLESS, which vanilla's suitability check dereferences
+            // (mobileParty.Party.Owner.MapFaction) without a null guard.
+            return mobileParty?.PartyComponent
+                is not (SettlerPartyComponent or SettlerCampComponent or IRFSelfDrivenParty);
         }
 
         private static Exception Finalizer(Exception __exception, MobileParty mobileParty)
@@ -38,10 +43,14 @@ namespace RF_Settlers.Patches
                 return null;
             }
 
-            if (__exception is KeyNotFoundException)
+            if (__exception is KeyNotFoundException or NullReferenceException)
             {
-                SettlersLog.Write("Suppressed KeyNotFound in AiVisitSettlementBehavior.AiHourlyTick "
+                // Skipping ONE hourly visit-evaluation for one party is always
+                // safer than ending the campaign — and the log line identifies
+                // exactly which party shape vanilla choked on.
+                SettlersLog.Write($"Suppressed {__exception.GetType().Name} in AiVisitSettlementBehavior.AiHourlyTick "
                     + $"for party '{mobileParty?.StringId}' (component={mobileParty?.PartyComponent?.GetType().Name ?? "none"}, "
+                    + $"owner={mobileParty?.Party?.Owner?.Name?.ToString() ?? "<null>"}, "
                     + $"leader={mobileParty?.LeaderHero?.Name?.ToString() ?? "<none>"}, faction={mobileParty?.MapFaction?.Name?.ToString() ?? "?"}). "
                     + $"Stack: {__exception.StackTrace}");
                 return null;

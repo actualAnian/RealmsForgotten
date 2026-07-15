@@ -2255,6 +2255,30 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
         ApplyWarStateShift(faction2, 6f, -2f);
         RefreshFactionStates(faction1);
         RefreshFactionStates(faction2);
+        TriggerGuardianFrenzyIfAttacked(faction1 as Kingdom, faction2 as Kingdom);
+    }
+
+    /// <summary>Giant grand design (GuardianFrenzy): the giants never seek war,
+    /// but being ATTACKED wakes a fury the war system treats as an enduring
+    /// rivalry — they press the aggressor relentlessly until broken or peace.</summary>
+    private void TriggerGuardianFrenzyIfAttacked(Kingdom attacker, Kingdom defender)
+    {
+        if (attacker == null || defender == null || attacker.IsEliminated || defender.IsEliminated)
+        {
+            return;
+        }
+
+        if (KingdomObjectiveService.ResolveObjective(defender) != KingdomObjectiveType.GuardianFrenzy)
+        {
+            return;
+        }
+
+        RFWarExternalIntentApi.ReinforceEnduringRivalryWar(defender, attacker);
+
+        TextObject message = new TextObject("{=rf_ko_giant_frenzy}The giants of {DEFENDER} have been roused — they will not rest until {ATTACKER} is broken.");
+        message.SetTextVariable("DEFENDER", defender.Name);
+        message.SetTextVariable("ATTACKER", attacker.Name);
+        InformationManager.DisplayMessage(new InformationMessage(message.ToString(), Color.FromUint(0xFFC86E6Eu)));
     }
 
     private void OnMakePeace(IFaction faction1, IFaction faction2, MakePeaceAction.MakePeaceDetail detail)
@@ -4823,6 +4847,8 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
             KingdomObjectiveType.PreserveBattanianHomelands
                 => kingdom.FactionsAtWarWith.OfType<Kingdom>().Any(x => x.StringId == "sturgia" || x.StringId == "mage_kingdom" || x.Culture?.StringId == "mage"),
             KingdomObjectiveType.MartialGlory
+                => kingdom.FactionsAtWarWith.Any(x => x.IsKingdomFaction),
+            KingdomObjectiveType.GuardianFrenzy or KingdomObjectiveType.ColonialExpansion
                 => kingdom.FactionsAtWarWith.Any(x => x.IsKingdomFaction),
             _ => false
         };

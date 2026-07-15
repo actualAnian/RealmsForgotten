@@ -6,11 +6,18 @@ namespace RF_BattleAI;
 
 internal static class BattleAIFormationCaptainTuner
 {
+    private static Mission? _mission;
     private static float _nextUpdateTime;
 
     public static void Tick()
     {
         Mission? mission = Mission.Current;
+        if (!ReferenceEquals(_mission, mission))
+        {
+            _mission = mission;
+            _nextUpdateTime = 0f;
+        }
+
         if (mission == null || mission.MissionTeamAIType != Mission.MissionTeamAITypeEnum.FieldBattle)
         {
             return;

@@ -36,7 +36,6 @@ namespace RealmsForgotten.AiMade
         private void OnSessionLaunched(CampaignGameStarter starter)
         {
             _configs["castle_EW7"] = new ExampleConfig("Hire Anorite High Templars", new List<string> { "anorit_high_templar" });
-            AddGameMenus(starter);
             _configs["castle_EM1"] = new ExampleConfig("Hire Red Mage Elite", new List<string> { "red_mage_elite" });
             AddGameMenus(starter);
         }

@@ -22,6 +22,17 @@ public static class RFWarExternalIntentApi
         RFWarExternalFrontContext.AlignmentDoctrineActive = active;
     }
 
+    /// <summary>
+    /// Installs the resource-zone greed provider: given (attacker, defender),
+    /// returns 0..1 — how much the attacker covets the defender's mines. Feeds
+    /// the war-target selection bias so wealth differentials start wars.
+    /// Pushed by RF_ResourceZones on session launch; pass null to remove.
+    /// </summary>
+    public static void SetResourceGreedProvider(Func<Kingdom, Kingdom, float>? provider)
+    {
+        RFWarExternalFrontContext.ResourceGreedProvider = provider;
+    }
+
     public static void ReinforceEnduringRivalryWar(Kingdom attacker, Kingdom defender)
     {
         if (attacker == null || defender == null || attacker == defender || attacker.IsEliminated || defender.IsEliminated)

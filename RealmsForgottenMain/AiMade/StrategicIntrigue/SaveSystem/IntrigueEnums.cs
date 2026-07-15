@@ -49,5 +49,16 @@ public enum KingdomObjectiveType
     SecureMountainHolds = 8,
     DefileMountainHolds = 9,
     MartialGlory = 10,
-    UnbreakableRealm = 11
+    UnbreakableRealm = 11,
+    /// <summary>Giants (Xilantlacay): guard their lands, covet nothing — but an
+    /// attack triggers a frenzy that only ends with the aggressor broken.</summary>
+    GuardianFrenzy = 12,
+    /// <summary>Katogai and Tharnmar: mercenary realms with no grand design
+    /// beyond full coffers and walls that hold.</summary>
+    MercenaryCreed = 13,
+    /// <summary>Valthorne: independent from the Realms, they build strength
+    /// through diplomacy and lent swords, so they never stand alone.</summary>
+    WovenAlliances = 14,
+    /// <summary>Nord colonies: expand the colonial holdings by conquest.</summary>
+    ColonialExpansion = 15
 }

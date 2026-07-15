@@ -13,6 +13,47 @@ namespace RealmsForgotten.CampaignCheats
 {
     public static class DebugCheats
     {
+        /// <summary>
+        /// Campaign-map slowdown triage: the campaign tick cost scales with the
+        /// number of live MobileParties, so a runaway spawner (quest party leak,
+        /// horde, refugees...) shows up here as an inflated group. Run
+        /// "rf.debug.party_census" in the console and read the top groups.
+        /// </summary>
+        [CommandLineFunctionality.CommandLineArgumentFunction("party_census", "rf.debug")]
+        public static string PartyCensus(List<string> args)
+        {
+            if (Campaign.Current == null)
+            {
+                return "rf.debug.party_census: campaign not running.";
+            }
+
+            var parties = MobileParty.All.ToList();
+            var groups = parties
+                .GroupBy(party =>
+                {
+                    string componentName = party.PartyComponent?.GetType().Name ?? "NoComponent";
+                    // Collapse ids like "lord_1_17_party_3" into a stable prefix.
+                    string id = party.StringId ?? "null";
+                    var tokens = id.Split('_');
+                    string idPrefix = string.Join("_", tokens.Take(Math.Min(2, tokens.Length)));
+                    return $"{componentName} [{idPrefix}]";
+                })
+                .Select(group => new { Key = group.Key, Count = group.Count() })
+                .OrderByDescending(group => group.Count)
+                .ToList();
+
+            int inactive = parties.Count(party => !party.IsActive);
+            var message = $"Total mobile parties: {parties.Count} (inactive: {inactive})\n";
+            message += "Top groups (component [id prefix] = count):\n";
+            foreach (var group in groups.Take(25))
+            {
+                message += $"  {group.Key} = {group.Count}\n";
+            }
+
+            Debug.Print("[RF] party_census:\n" + message);
+            return message;
+        }
+
         [CommandLineFunctionality.CommandLineArgumentFunction("check_caches", "rf.debug")]
         public static string CheckDistanceCaches(List<string> args)
         {

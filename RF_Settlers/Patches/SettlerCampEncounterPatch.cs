@@ -20,7 +20,11 @@ namespace RF_Settlers.Patches
     {
         private static bool Prefix(PlayerEncounter __instance)
         {
-            if (PlayerEncounter.EncounteredParty?.MobileParty?.PartyComponent is not SettlerCampComponent)
+            // Covers every stationary camp-style component (settler camps,
+            // resource zones) — each supplies its own menu id.
+            if (PlayerEncounter.EncounteredParty?.MobileParty?.PartyComponent
+                    is not IRFStationaryCampParty camp
+                || string.IsNullOrEmpty(camp.EncounterMenuId))
             {
                 return true;
             }
@@ -33,7 +37,7 @@ namespace RF_Settlers.Patches
                     ?.SetValue(__instance, PlayerEncounterState.Begin);
                 AccessTools.Field(typeof(PlayerEncounter), "_stateHandled")
                     ?.SetValue(__instance, true);
-                GameMenu.SwitchToMenu("rf_settler_camp");
+                GameMenu.SwitchToMenu(camp.EncounterMenuId);
                 return false;
             }
             catch (Exception exception)

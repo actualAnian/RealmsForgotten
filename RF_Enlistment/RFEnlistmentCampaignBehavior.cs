@@ -66,6 +66,7 @@ public sealed class RFEnlistmentCampaignBehavior : CampaignBehaviorBase
     public static RFEnlistmentCampaignBehavior? Instance { get; private set; }
 
     private const string ServiceWaitMenuId = "rf_enlistment_service_wait";
+    private const float MaintenanceIntervalSeconds = 0.25f;
     private const float DefaultContractDays = 365f;
     private const int RecruitPromotionXp = 100;
     private const int SoldierPromotionXp = 350;
@@ -107,6 +108,9 @@ public sealed class RFEnlistmentCampaignBehavior : CampaignBehaviorBase
     private bool _pendingCommanderAttachment;
     private bool _createdCommanderArmyForService;
     private float _nextAttachmentRetryHour;
+    private float _maintenanceTickElapsed;
+    private Hero? _cachedCommander;
+    private string _cachedCommanderId = string.Empty;
     private string _lastTraceSignature = string.Empty;
     private long _lastTraceWriteTicks;
     private RFEnlistmentBattleMeritReport _latestBattleMeritReport = new();
@@ -150,6 +154,9 @@ public sealed class RFEnlistmentCampaignBehavior : CampaignBehaviorBase
 
     private void OnSessionLaunched(CampaignGameStarter starter)
     {
+        _cachedCommander = null;
+        _cachedCommanderId = string.Empty;
+        _maintenanceTickElapsed = 0f;
         RepairLegacyCommanderServiceState();
         AddServiceWaitMenu(starter);
 
@@ -833,6 +840,14 @@ public sealed class RFEnlistmentCampaignBehavior : CampaignBehaviorBase
         {
             return;
         }
+
+        _maintenanceTickElapsed += dt;
+        if (_maintenanceTickElapsed < MaintenanceIntervalSeconds)
+        {
+            return;
+        }
+
+        _maintenanceTickElapsed = 0f;
 
         EnsureDutyMissionTargetVisibility();
 
@@ -6055,12 +6070,22 @@ public sealed class RFEnlistmentCampaignBehavior : CampaignBehaviorBase
 
     private Hero? ResolveCommander()
     {
-        if (string.IsNullOrWhiteSpace(_serviceRecord.CommanderId))
+        string commanderId = _serviceRecord.CommanderId;
+        if (string.IsNullOrWhiteSpace(commanderId))
         {
+            _cachedCommander = null;
+            _cachedCommanderId = string.Empty;
             return null;
         }
 
-        return Hero.FindFirst(hero => hero.StringId == _serviceRecord.CommanderId);
+        if (string.Equals(_cachedCommanderId, commanderId, StringComparison.Ordinal))
+        {
+            return _cachedCommander;
+        }
+
+        _cachedCommanderId = commanderId;
+        _cachedCommander = Hero.FindFirst(hero => hero.StringId == commanderId);
+        return _cachedCommander;
     }
 
     private void RefreshCommanderContextState()

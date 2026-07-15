@@ -824,6 +824,9 @@ public sealed class RFWarDecisionPlannerBehavior : CampaignBehaviorBase
         bias += 125f * primaryEnemyBias;
         bias += 135f * RFWarFrontEvaluator.GetWarFrontOpportunity(attacker, defender);
         bias += 120f * RFWarExternalFrontContext.GetEnemyPriority(attacker, defender);
+        // Greed: the defender's resource zones within the attacker's reach
+        // (provider installed by RF_ResourceZones; 0 when absent).
+        bias += 115f * RFWarExternalFrontContext.GetResourceGreedFactor(attacker, defender);
         bias += 110f * frontierBias;
         bias += 90f * GetClaimBias(attacker, defender);
         bias += 80f * GetEnemyMultiFrontOpportunity(defender);

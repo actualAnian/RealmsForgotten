@@ -20,6 +20,13 @@ internal static class RFWarExternalFrontContext
     // blocs — otherwise the alignment war effectively starts on day 1.
     internal static bool AlignmentDoctrineActive;
 
+    // Installed by RF_ResourceZones (RFWarExternalIntentApi): 0..1 greed of the
+    // attacker for the defender's resource zones. Null = zones system absent.
+    // NOT cleared in Reset(): the provider is stateless per-campaign (it reads
+    // the live zones behavior), and Reset ordering vs. its installation is
+    // undefined across session launches.
+    internal static Func<Kingdom, Kingdom, float>? ResourceGreedProvider;
+
     private const float FrontClusterDistanceSquared = 32400f;
 
     /// <summary>
@@ -160,6 +167,27 @@ internal static class RFWarExternalFrontContext
         }
 
         return entry.Priority;
+    }
+
+    /// <summary>Greed of <paramref name="kingdom"/> for the resource zones held
+    /// by <paramref name="enemy"/>'s clans (0..1). A provider failure disables
+    /// the factor rather than ever breaking war planning.</summary>
+    public static float GetResourceGreedFactor(Kingdom kingdom, Kingdom enemy)
+    {
+        if (kingdom == null || enemy == null || ResourceGreedProvider == null)
+        {
+            return 0f;
+        }
+
+        try
+        {
+            return Math.Max(0f, Math.Min(1f, ResourceGreedProvider(kingdom, enemy)));
+        }
+        catch
+        {
+            ResourceGreedProvider = null;
+            return 0f;
+        }
     }
 
     public static float GetHolyWarPressure(Kingdom kingdom, Kingdom enemy)

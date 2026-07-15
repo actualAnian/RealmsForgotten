@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Resource-zone slots (PLANO_RESOURCE_ZONES.md), authored in-game by the mod
+  author with rf_zones.mark_zone on 2026-07-15 (recovered from rgl_log).
+  Read directly by RF_ResourceZones — a missing file means zero zones + a log
+  line, never a crash. boundTown omitted = caravans feed the nearest town.
+-->
+<ResourceZones>
+  <Zone id="rf_zone_karthradium_ov" type="Karthradium" name="OV Mine" posX="305.79" posY="1426.93" />
+  <Zone id="rf_zone_karthradium_thrumdek" type="Karthradium" name="Thrumdek Mine" posX="253.50" posY="1404.44" />
+  <Zone id="rf_zone_karthradium_khazrak" type="Karthradium" name="Khazrak Mine" posX="160.12" posY="1414.55" />
+  <Zone id="rf_zone_karthradium_grimz_thuldar" type="Karthradium" name="Grimz Thuldar Mine" posX="145.10" posY="1315.47" />
+  <Zone id="rf_zone_karthradium_grimz_thulgar" type="Karthradium" name="Grimz Thulgar Deep Mine" posX="215.60" posY="1286.00" />
+  <Zone id="rf_zone_karthradium_grimrock" type="Karthradium" name="Grimrock Deep Mine" posX="373.77" posY="1440.10" />
+  <Zone id="rf_zone_karthradium_mithralheim" type="Karthradium" name="Mithralheim Deep Mine" posX="437.33" posY="1460.36" />
+  <Zone id="rf_zone_karthradium_tharnold" type="Karthradium" name="Tharnold Mine" posX="406.18" posY="1401.46" />
+  <Zone id="rf_zone_iron_agash" type="Iron" name="Agash Mine" posX="263.79" posY="1176.42" />
+  <Zone id="rf_zone_gold_agash" type="Gold" name="Agash Mine" posX="188.62" posY="1178.48" />
+  <Zone id="rf_zone_iron_agash_2" type="Iron" name="Agash Mine" posX="277.86" posY="1183.20" />
+  <Zone id="rf_zone_gold_nipura" type="Gold" name="Nipura Mine" posX="363.59" posY="1240.57" />
+  <Zone id="rf_zone_gold_shish" type="Gold" name="Shish Mine" posX="354.37" posY="1306.94" />
+  <Zone id="rf_zone_wood_drannor" type="Wood" name="Drannor Mine" posX="641.77" posY="952.58" />
+  <Zone id="rf_zone_wood_aster" type="Wood" name="Aster Mine" posX="546.33" posY="975.01" />
+  <Zone id="rf_zone_wood_druimmor" type="Wood" name="Druimmor Mine" posX="626.15" posY="1102.49" />
+  <Zone id="rf_zone_charcoal_throswynd" type="Charcoal" name="Throswynd Mine" posX="519.42" posY="1234.04" />
+  <Zone id="rf_zone_charcoal_caergrun" type="Charcoal" name="Caergrun Mine" posX="518.60" posY="1133.90" />
+  <Zone id="rf_zone_charcoal_drunhalden" type="Charcoal" name="Drunhalden Mine" posX="600.86" posY="1248.21" />
+  <Zone id="rf_zone_wood_grimhallow" type="Wood" name="Grimhallow Mine" posX="432.43" posY="1224.82" />
+  <Zone id="rf_zone_silver_argon" type="Silver" name="Argon Mine" posX="418.77" posY="877.35" />
+  <Zone id="rf_zone_wood_aispur" type="Wood" name="Aispur Mine" posX="398.38" posY="794.53" />
+  <Zone id="rf_zone_silver_rhesos" type="Silver" name="Rhesos Mine" posX="440.83" posY="879.72" />
+  <Zone id="rf_zone_wood_caerheim" type="Wood" name="Caerheim Mine" posX="430.33" posY="751.57" />
+  <Zone id="rf_zone_charcoal_odrisa" type="Charcoal" name="Odrisa Mine" posX="401.84" posY="652.42" />
+  <Zone id="rf_zone_silver_tevea" type="Silver" name="Tevea Mine" posX="428.88" posY="591.98" />
+  <Zone id="rf_zone_gold_xochiquerna" type="Gold" name="Xochiquerna Mine" posX="503.90" posY="322.17" />
+  <Zone id="rf_zone_gold_tlanaquilar" type="Gold" name="Tlanaquilar Mine" posX="554.51" posY="308.46" />
+  <Zone id="rf_zone_gold_tezquendel" type="Gold" name="Tezquendel Mine" posX="578.38" posY="365.83" />
+  <Zone id="rf_zone_wood_uitlaxi" type="Wood" name="Uitlaxi Mine" posX="577.58" posY="265.05" />
+  <Zone id="rf_zone_gold_nexotlitan" type="Gold" name="Nexotlitan Mine" posX="628.61" posY="215.38" />
+  <Zone id="rf_zone_wood_nexochquen" type="Wood" name="Nexochquen Mine" posX="510.56" posY="367.62" />
+  <Zone id="rf_zone_charcoal_temer" type="Charcoal" name="Temer Mine" posX="758.02" posY="957.72" />
+  <Zone id="rf_zone_iron_ebonridge" type="Iron" name="Ebonridge Mine" posX="788.85" posY="864.46" />
+  <Zone id="rf_zone_iron_brymwyke" type="Iron" name="Brymwyke Mine" posX="786.65" posY="915.93" />
+  <Zone id="rf_zone_charcoal_uraclo" type="Charcoal" name="Uraclo Mine" posX="706.27" posY="913.06" />
+  <Zone id="rf_zone_silver_emberhold" type="Silver" name="Emberhold Mine" posX="611.60" posY="855.09" />
+  <Zone id="rf_zone_silver_thaumaturg" type="Silver" name="Thaumaturg Mine" posX="609.91" posY="881.56" />
+  <Zone id="rf_zone_charcoal_blackmere" type="Charcoal" name="Blackmere Mine" posX="744.16" posY="1117.14" />
+  <Zone id="rf_zone_charcoal_throssmere" type="Charcoal" name="Throssmere Mine" posX="742.84" posY="1075.47" />
+  <Zone id="rf_zone_charcoal_grimbarrow" type="Charcoal" name="Grimbarrow Mine" posX="706.07" posY="1144.00" />
+  <Zone id="rf_zone_charcoal_cairnrest" type="Charcoal" name="Cairnrest Mine" posX="836.42" posY="1160.38" />
+  <Zone id="rf_zone_iron_dunhollow" type="Iron" name="Dunhollow Mine" posX="790.29" posY="1192.26" />
+  <Zone id="rf_zone_iron_grontharok" type="Iron" name="Grontharok Mine" posX="533.09" posY="1453.02" />
+  <Zone id="rf_zone_iron_zarvok_mor" type="Iron" name="Zarvok Mor Mine" posX="549.01" posY="1510.05" />
+  <Zone id="rf_zone_iron_skarrgrim" type="Iron" name="Skarrgrim Mine" posX="573.37" posY="1495.76" />
+  <Zone id="rf_zone_iron_grimfen" type="Iron" name="Grimfen Mine" posX="650.75" posY="1479.91" />
+  <Zone id="rf_zone_iron_vuzruk" type="Iron" name="Vuzruk Mine" posX="649.04" posY="1527.81" />
+  <Zone id="rf_zone_iron_throsgar" type="Iron" name="Throsgar Mine" posX="783.35" posY="1455.49" />
+  <Zone id="rf_zone_wood_grimhold" type="Wood" name="Grimhold Mine" posX="702.46" posY="1319.88" />
+  <Zone id="rf_zone_silver_stoneguard" type="Silver" name="Stoneguard Mine" posX="680.03" posY="1257.00" />
+  <Zone id="rf_zone_iron_lost" type="Iron" name="Lost Mine" posX="824.62" posY="1385.09" />
+  <Zone id="rf_zone_iron_ironwrath" type="Iron" name="Ironwrath Mine" posX="918.21" posY="1257.57" />
+  <Zone id="rf_zone_wood_dreadmoor" type="Wood" name="Dreadmoor Mine" posX="1006.09" posY="1256.92" />
+  <Zone id="rf_zone_silver_lost" type="Silver" name="Lost Mine" posX="1057.55" posY="1246.59" />
+  <Zone id="rf_zone_wood_ibnalbaida" type="Wood" name="Ibnalbaida Mine" posX="1145.14" posY="1213.44" />
+  <Zone id="rf_zone_silver_drapand" type="Silver" name="Drapand Mine" posX="1183.68" posY="1211.54" />
+  <Zone id="rf_zone_gold_albaicin" type="Gold" name="Albaicin Mine" posX="1096.40" posY="1163.82" />
+  <Zone id="rf_zone_wood_odiz" type="Wood" name="Odiz Mine" posX="1239.79" posY="1058.99" />
+  <Zone id="rf_zone_gold_usanc" type="Gold" name="Usanc Mine" posX="1086.35" posY="1124.82" />
+  <Zone id="rf_zone_iron_gripsby" type="Iron" name="Gripsby Mine" posX="1070.55" posY="997.24" />
+  <Zone id="rf_zone_wood_algilting" type="Wood" name="Algilting Mine" posX="1025.40" posY="999.63" />
+  <Zone id="rf_zone_silver_bodach" type="Silver" name="Bodach Mine" posX="1167.20" posY="880.09" />
+  <Zone id="rf_zone_charcoal_waltas" type="Charcoal" name="Waltas Mine" posX="1261.20" posY="849.82" />
+  <Zone id="rf_zone_iron_q_aramun" type="Iron" name="Q&apos;aramun Mine" posX="1322.42" posY="822.53" />
+  <Zone id="rf_zone_iron_tamnuh" type="Iron" name="Tamnuh Mine" posX="1124.39" posY="835.53" />
+  <Zone id="rf_zone_gold_tubilis" type="Gold" name="Tubilis Mine" posX="1135.46" posY="640.81" />
+  <Zone id="rf_zone_charcoal_balik" type="Charcoal" name="Balik Mine" posX="1251.72" posY="804.02" />
+</ResourceZones>

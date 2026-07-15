@@ -55,17 +55,21 @@ namespace RealmsForgotten.Behaviors
             if (sturgiaKingdom == null)
                 return;
 
+            // Absolute campaign days, NOT GetDayOfYear: the 84-day year wraps
+            // and made the difference negative after each new year, silencing
+            // Sturgia's war drive for up to a full year.
+            int today = (int)CampaignTime.Now.ToDays;
             if (!lastWarDeclarationDays.ContainsKey(sturgiaKingdom.StringId))
             {
-                lastWarDeclarationDays[sturgiaKingdom.StringId] = CampaignTime.Now.GetDayOfYear;
+                lastWarDeclarationDays[sturgiaKingdom.StringId] = today;
             }
 
-            int daysSinceLastWar = CampaignTime.Now.GetDayOfYear - lastWarDeclarationDays[sturgiaKingdom.StringId];
+            int daysSinceLastWar = today - lastWarDeclarationDays[sturgiaKingdom.StringId];
 
             if (daysSinceLastWar > 15)
             {
                 DeclareWarOnSpecificFactions(sturgiaKingdom);
-                lastWarDeclarationDays[sturgiaKingdom.StringId] = CampaignTime.Now.GetDayOfYear;
+                lastWarDeclarationDays[sturgiaKingdom.StringId] = today;
             }
         }
 

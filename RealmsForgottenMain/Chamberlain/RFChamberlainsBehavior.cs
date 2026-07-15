@@ -102,7 +102,6 @@ namespace RealmsForgotten.Chamberlain
         private void AddHouseTroopMenu(CampaignGameStarter campaignGameStarter)
         {
             InitXml();
-            campaignGameStarter.AddGameMenu("house_troop_menu", "You approach the Chamberlain's chambers. You see him going over upkeep costs for your party.", null, GameMenu.MenuOverlayType.SettlementWithBoth, GameMenu.MenuFlags.None, null);
             campaignGameStarter.AddGameMenuOption("town_keep", "house_troop_keep", "Visit the Chamberlain's Chambers", delegate (MenuCallbackArgs args)
             {
                 args.optionLeaveType = GameMenuOption.LeaveType.Manage;
@@ -111,8 +110,6 @@ namespace RealmsForgotten.Chamberlain
             {
                 GameMenu.SwitchToMenu("house_troop_menu");
             }, false, 1, false, null);
-
-            campaignGameStarter.AddGameMenu("house_troop_menu", "You approach the Chamberlain's chambers. You see him going over upkeep costs for your party.", null, GameMenu.MenuOverlayType.SettlementWithBoth, GameMenu.MenuFlags.None, null);
             campaignGameStarter.AddGameMenuOption("castle", "house_troop_keep", "Visit the Chamberlain's Chambers", delegate (MenuCallbackArgs args)
             {
                 args.optionLeaveType = GameMenuOption.LeaveType.Manage;

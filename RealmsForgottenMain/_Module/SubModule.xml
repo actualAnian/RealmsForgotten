@@ -102,6 +102,15 @@
       </Tags>
     </SubModule>
     <SubModule>
+      <Name value="RF_ResourceZones" />
+      <DLLName value="RF_ResourceZones.dll" />
+      <SubModuleClassType value="RF_ResourceZones.SubModule" />
+      <Tags>
+        <Tag key="DedicatedServerType" value="none" />
+        <Tag key="IsNoRenderModeElement" value="false" />
+      </Tags>
+    </SubModule>
+    <SubModule>
       <Name value="MCMv5" />
       <DLLName value="MCMv5.dll" />
       <SubModuleClassType value="MCM.MCMSubModule" />

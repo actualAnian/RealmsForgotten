@@ -70,7 +70,9 @@ namespace RealmsForgotten.AiMade
         }
         private void SpawnBanditParties()
         {
-            cumulativeGrowth += GrowthFactor;
+            // Escalates with each wave but capped at 3× — players and AI also
+            // grow over the years, but unbounded growth eventually outpaces both.
+            cumulativeGrowth = Math.Min(3f, cumulativeGrowth + GrowthFactor);
 
             if (towns == null || !towns.Any())
             {

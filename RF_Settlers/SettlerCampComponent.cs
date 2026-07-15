@@ -13,8 +13,12 @@ namespace RF_Settlers
     /// real settlement (phase C — Player Settlement XML-injection technique).
     /// Defended by its villager roster in a plain field battle when attacked.
     /// </summary>
-    public class SettlerCampComponent : PartyComponent
+    public class SettlerCampComponent : PartyComponent, IRFStationaryCampParty
     {
+        string IRFStationaryCampParty.EncounterMenuId => "rf_settler_camp";
+
+        string? IRFStationaryCampParty.MapIconMeshName => null; // settler camps keep the tent
+
         [SaveableField(1)]
         private Kingdom _kingdom;
 
