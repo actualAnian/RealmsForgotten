@@ -218,6 +218,7 @@ namespace RF_ResourceZones
         private void RelinkZoneParties()
         {
             _zoneParties.Clear();
+            ResourceZoneIdleVisuals.ClearAll(); // stale derelict icons from a prior load
             List<MobileParty> orphans = new();
             foreach (MobileParty party in MobileParty.All)
             {
@@ -266,8 +267,53 @@ namespace RF_ResourceZones
 
         // ── Zone party lifecycle ─────────────────────────────────────────────
 
+        /// <summary>Resolves a zone's world position from its manifest entry
+        /// (absolute coords, or an anchor settlement's gate + offset). Returns
+        /// false if an anchor can't be found.</summary>
+        private static bool TryResolveZonePosition(ResourceZoneDefinition definition, out CampaignVec2 position)
+        {
+            if (definition.HasAbsolutePosition)
+            {
+                position = new CampaignVec2(new Vec2(definition.PosX, definition.PosY), isOnLand: true);
+                return true;
+            }
+
+            Settlement? anchor = Settlement.Find(definition.AnchorSettlementId);
+            if (anchor == null)
+            {
+                position = CampaignVec2.Zero;
+                return false;
+            }
+            position = anchor.GatePosition + new Vec2(definition.OffsetX, definition.OffsetY);
+            return true;
+        }
+
         private void EnsureZoneParty(ResourceZoneRecord record, ResourceZoneDefinition definition)
         {
+            // Player just won the battle and hasn't chosen plunder/occupy yet:
+            // DO NOT respawn — a premature respawn resurrected the bandit
+            // garrison before the inquiry ("same garrison as before" bug).
+            if (record.ZoneId == _pendingCaptureZoneId)
+            {
+                return;
+            }
+
+            // Abandoned (plundered) works stay empty until the idle window ends —
+            // shown by a standalone derelict icon (not a party).
+            if (record.IdleUntilDay > 0f)
+            {
+                if (CampaignTime.Now.ToDays < record.IdleUntilDay)
+                {
+                    if (TryResolveZonePosition(definition, out CampaignVec2 idlePos))
+                    {
+                        ResourceZoneIdleVisuals.Show(record.ZoneId, definition.Type, idlePos.ToVec2());
+                    }
+                    return;
+                }
+                record.IdleUntilDay = 0f;                      // window over
+                ResourceZoneIdleVisuals.Hide(record.ZoneId);   // brigands re-occupy — drop the derelict icon
+            }
+
             if (_zoneParties.TryGetValue(record.ZoneId, out MobileParty? existing)
                 && existing != null && existing.IsActive)
             {
@@ -290,20 +336,10 @@ namespace RF_ResourceZones
                 }
             }
 
-            CampaignVec2 position;
-            if (definition.HasAbsolutePosition)
+            if (!TryResolveZonePosition(definition, out CampaignVec2 position))
             {
-                position = new CampaignVec2(new Vec2(definition.PosX, definition.PosY), isOnLand: true);
-            }
-            else
-            {
-                Settlement? anchor = Settlement.Find(definition.AnchorSettlementId);
-                if (anchor == null)
-                {
-                    Debug.Print($"[RF_ResourceZones] Zone '{definition.Id}' skipped: anchor settlement '{definition.AnchorSettlementId}' not found.");
-                    return;
-                }
-                position = anchor.GatePosition + new Vec2(definition.OffsetX, definition.OffsetY);
+                Debug.Print($"[RF_ResourceZones] Zone '{definition.Id}' skipped: anchor settlement '{definition.AnchorSettlementId}' not found.");
+                return;
             }
 
             Clan? owner = record.OwnerClan;
@@ -361,6 +397,8 @@ namespace RF_ResourceZones
             {
                 return;
             }
+
+            AdvanceFortifications();
 
             foreach (ResourceZoneRecord record in _records)
             {
@@ -462,7 +500,7 @@ namespace RF_ResourceZones
                 return;
             }
 
-            int cap = ResourceZoneRules.GarrisonCap(record.Tier);
+            int cap = ResourceZoneRules.GarrisonCap(record.Tier, record.HasFortification);
             if (party.MemberRoster.TotalManCount >= cap)
             {
                 return;
@@ -721,16 +759,69 @@ namespace RF_ResourceZones
                 Clan? newOwner = victorLeader?.MobileParty?.ActualClan
                                  ?? victorLeader?.LeaderHero?.Clan;
 
+                _zoneParties.Remove(component.ZoneId); // the beaten party is gone
+
+                // PLAYER victory: pop the plunder/occupy INQUIRY right here.
+                // (The earlier game-menu attempt hooked OnPlayerBattleEndEvent —
+                // which fires BEFORE MapEventEnded in vanilla's teardown, so the
+                // pending id was never consumed and no menu ever appeared. The
+                // inquiry is the same proven pattern the nomad-kingdom sack uses
+                // and depends on no event ordering.)
+                if (newOwner == Clan.PlayerClan)
+                {
+                    _pendingCaptureZoneId = component.ZoneId;
+                    Debug.Print($"[RF_ResourceZones] Player captured zone '{component.ZoneId}' — showing plunder/occupy inquiry.");
+                    ShowCaptureInquiry(component.ZoneId);
+                    continue;
+                }
+
                 Clan? previousOwner = record.OwnerClan;
                 record.OwnerClan = newOwner != null && !newOwner.IsBanditFaction ? newOwner : null;
                 record.StoredGold = 0;          // coffers are part of the plunder
                 record.ActiveCaravanPartyId = string.Empty;
                 record.UpgradeProgressDays = 0; // growth restarts under the new master
 
-                _zoneParties.Remove(component.ZoneId); // the beaten party is gone; daily tick respawns it
+                // Respawn the icon RIGHT AWAY under the new owner — don't leave
+                // the map blank until the next daily tick.
+                if (_definitions.TryGetValue(component.ZoneId, out ResourceZoneDefinition? def))
+                {
+                    EnsureZoneParty(record, def);
+                }
 
                 AnnounceCapture(component, record, previousOwner);
             }
+        }
+
+        // ── Player capture: plunder or occupy (modal inquiry) ────────────────
+
+        /// <summary>While set, EnsureZoneParty must NOT respawn this zone — the
+        /// player hasn't chosen plunder/occupy yet, and a premature respawn
+        /// brought the bandits straight back ("same garrison as before").</summary>
+        private string _pendingCaptureZoneId = string.Empty;
+
+        private void ShowCaptureInquiry(string zoneId)
+        {
+            ResourceZoneRecord? record = GetRecord(zoneId);
+            _definitions.TryGetValue(zoneId, out ResourceZoneDefinition? definition);
+            string zoneName = definition?.Name ?? zoneId;
+
+            TextObject title = new("{=rf_zone_cap_title}{ZONE} is taken!");
+            title.SetTextVariable("ZONE", zoneName);
+
+            TextObject body = record != null && record.StoredGold > 0
+                ? new TextObject("{=rf_zone_cap_body_gold}The guards are routed and its stores are already on your baggage train. A strongbox of {GOLD} denars sits in the overseer's hut. Seize it and ride on — or occupy the works as your own?")
+                : new TextObject("{=rf_zone_cap_body}The guards are routed and its stores are already on your baggage train. Strip the works and ride on — or occupy them as your own?");
+            body.SetTextVariable("GOLD", record?.StoredGold ?? 0);
+
+            InformationManager.ShowInquiry(new InquiryData(
+                title.ToString(),
+                body.ToString(),
+                true, true,
+                new TextObject("{=rf_zone_btn_occupy}Occupy the mine").ToString(),
+                new TextObject("{=rf_zone_btn_plunder}Plunder and ride on").ToString(),
+                () => OccupyCapturedZone(zoneId),
+                () => PlunderCapturedZone(zoneId)),
+                pauseGameActiveState: true);
         }
 
         private static void AnnounceCapture(ResourceZonePartyComponent component, ResourceZoneRecord record, Clan? previousOwner)
@@ -808,6 +899,28 @@ namespace RF_ResourceZones
                 args => UpgradeZone());
 
             starter.AddGameMenuOption(
+                MenuId, "rf_zone_fortify",
+                "{=rf_zone_fortify}Build a fortification ({FORT_GOLD}{GOLD_ICON} + {FORT_WOOD} hardwood, {FORT_DAYS} days)",
+                args =>
+                {
+                    args.optionLeaveType = GameMenuOption.LeaveType.Manage;
+                    ResourceZoneRecord? record = CurrentRecord();
+                    if (record == null || record.OwnerClan != Clan.PlayerClan
+                        || record.HasFortification || record.FortificationCompleteDay > 0f)
+                    {
+                        return false; // only once, and not while building
+                    }
+
+                    if (!CanAffordFortification(out TextObject? reason))
+                    {
+                        args.IsEnabled = false;
+                        args.Tooltip = reason;
+                    }
+                    return true;
+                },
+                args => StartFortification());
+
+            starter.AddGameMenuOption(
                 MenuId, "rf_zone_attack",
                 "{=rf_zone_attack}Attack the guards and seize the mine",
                 args =>
@@ -845,6 +958,84 @@ namespace RF_ResourceZones
                 true);
         }
 
+        /// <summary>Plunder: the produced goods were already looted in the
+        /// battle; this grabs the strongbox gold, and the works lie abandoned
+        /// until brigands drift back (raided-village recovery window).</summary>
+        private void PlunderCapturedZone(string zoneId)
+        {
+            _pendingCaptureZoneId = string.Empty;
+            ResourceZoneRecord? record = GetRecord(zoneId);
+            if (record == null)
+            {
+                return;
+            }
+
+            if (record.StoredGold > 0)
+            {
+                GiveGoldAction.ApplyBetweenCharacters(null, Hero.MainHero, record.StoredGold, disableNotification: false);
+            }
+            record.StoredGold = 0;
+            record.OwnerClan = null;
+            record.UpgradeProgressDays = 0;
+            record.ActiveCaravanPartyId = string.Empty;
+
+            record.IdleUntilDay = (float)CampaignTime.Now.ToDays + ResourceZoneRules.PlunderedIdleDays;
+            DespawnZoneParty(record.ZoneId);
+            if (_definitions.TryGetValue(record.ZoneId, out ResourceZoneDefinition? plunderedDef)
+                && TryResolveZonePosition(plunderedDef, out CampaignVec2 idlePos))
+            {
+                ResourceZoneIdleVisuals.Show(record.ZoneId, plunderedDef.Type, idlePos.ToVec2());
+            }
+
+            TextObject msg = new("{=rf_zone_plundered}You strip {ZONE} bare. It will lie abandoned until brigands drift back to it.");
+            msg.SetTextVariable("ZONE", _definitions.TryGetValue(zoneId, out ResourceZoneDefinition? d1) ? d1.Name : zoneId);
+            InformationManager.DisplayMessage(new InformationMessage(msg.ToString(), Color.FromUint(0xFFC8A66Eu)));
+        }
+
+        /// <summary>Occupy: the mine becomes the player clan's, respawned with a
+        /// starter garrison — the full owner menu (donate, fortify) unlocks.</summary>
+        private void OccupyCapturedZone(string zoneId)
+        {
+            _pendingCaptureZoneId = string.Empty;
+            ResourceZoneRecord? record = GetRecord(zoneId);
+            if (record == null)
+            {
+                return;
+            }
+
+            record.OwnerClan = Clan.PlayerClan;
+            record.UpgradeProgressDays = 0;
+            record.ActiveCaravanPartyId = string.Empty;
+
+            // Any party that slipped back in (respawn race) must go before the
+            // player-owned garrison spawns.
+            DespawnZoneParty(record.ZoneId);
+            if (_definitions.TryGetValue(record.ZoneId, out ResourceZoneDefinition? def))
+            {
+                EnsureZoneParty(record, def); // respawns under the player — icon returns
+            }
+
+            TextObject message = new("{=rf_zone_occupied}{ZONE} is yours. Garrison it and its riches will flow to your clan.");
+            message.SetTextVariable("ZONE", def?.Name ?? record.ZoneId);
+            InformationManager.DisplayMessage(new InformationMessage(message.ToString(), Color.FromUint(0xFF9BC8A0u)));
+        }
+
+        /// <summary>Removes the zone's live party (and any stray duplicate) from
+        /// the map — used before a respawn under a new owner.</summary>
+        private void DespawnZoneParty(string zoneId)
+        {
+            _zoneParties.Remove(zoneId);
+            foreach (MobileParty party in MobileParty.All.ToList())
+            {
+                if (party.IsActive
+                    && party.PartyComponent is ResourceZonePartyComponent component
+                    && component.ZoneId == zoneId)
+                {
+                    DestroyPartyAction.Apply(null, party);
+                }
+            }
+        }
+
         /// <summary>The player may storm any mine that isn't their own —
         /// brigand-held, enemy, OR a realm at peace. Seizing a peaceful realm's
         /// mine is an act of war, and the attack DECLARES it (like raiding a
@@ -857,31 +1048,20 @@ namespace RF_ResourceZones
 
         private void AttackZone()
         {
-            if (PlayerEncounter.Current == null)
+            MobileParty? mineParty = PlayerEncounter.EncounteredParty?.MobileParty;
+            if (mineParty == null || PlayerEncounter.Current == null)
             {
                 return;
             }
 
-            // Storming a mine held by a realm still at peace is a declaration of
-            // war (player-initiated hostility), exactly like raiding one of its
-            // villages — better emergent politics than a hard block.
-            ResourceZoneRecord? record = CurrentRecord();
-            IFaction? ownerFaction = record?.OwnerClan?.MapFaction;
-            if (ownerFaction != null
-                && ownerFaction != Hero.MainHero.MapFaction
-                && !ownerFaction.IsAtWarWith(Hero.MainHero.MapFaction))
-            {
-                DeclareWarAction.ApplyByPlayerHostility(Hero.MainHero.MapFaction, ownerFaction);
-            }
-
-            // Convert the peaceful visit into a battle against the garrison —
-            // the same idiom QuestHelper uses for its hideout storm. Winning
-            // routes through OnMapEventEnded, which transfers ownership.
-            if (PlayerEncounter.Battle == null)
-            {
-                PlayerEncounter.StartBattle();
-                PlayerEncounter.Update();
-            }
+            // EXACT vanilla village-raid idiom (game_menu_village_hostile_action
+            // -> StartHostileAction): make the encounter hostile — which also
+            // declares war on a realm at peace, just like raiding its village —
+            // then hand off to the standard battle "encounter" menu, which
+            // builds the MapEvent and shows Attack/Leave. Winning routes through
+            // OnMapEventEnded, which captures the mine.
+            BeHostileAction.ApplyEncounterHostileAction(PartyBase.MainParty, mineParty.Party);
+            GameMenu.SwitchToMenu("encounter");
         }
 
         private ResourceZonePartyComponent? CurrentComponent()
@@ -962,6 +1142,9 @@ namespace RF_ResourceZones
             MBTextManager.SetTextVariable("ZONE_GOLD", record.StoredGold);
             MBTextManager.SetTextVariable("UPGRADE_GOLD", ResourceZoneRules.UpgradeGoldCost(record.Tier));
             MBTextManager.SetTextVariable("UPGRADE_WOOD", ResourceZoneRules.UpgradeWoodCost(record.Tier));
+            MBTextManager.SetTextVariable("FORT_GOLD", ResourceZoneRules.FortificationGoldCost);
+            MBTextManager.SetTextVariable("FORT_WOOD", ResourceZoneRules.FortificationWoodCost);
+            MBTextManager.SetTextVariable("FORT_DAYS", ResourceZoneRules.FortificationBuildDays);
         }
 
         private static string GetZoneBackgroundMesh()
@@ -1035,6 +1218,84 @@ namespace RF_ResourceZones
             message.SetTextVariable("TIER", record.Tier);
             InformationManager.DisplayMessage(new InformationMessage(message.ToString(), Color.FromUint(0xFF9BC8A0u)));
             GameMenu.SwitchToMenu(MenuId);
+        }
+
+        // ── Fortification (build over days, then bigger garrison + stronghold icon) ──
+
+        private bool CanAffordFortification(out TextObject? reason)
+        {
+            if (Hero.MainHero.Gold < ResourceZoneRules.FortificationGoldCost)
+            {
+                reason = new TextObject("{=rf_zone_fort_no_gold}Not enough denars to raise a fortification.");
+                return false;
+            }
+            if (MobileParty.MainParty.ItemRoster.GetItemNumber(DefaultItems.HardWood) < ResourceZoneRules.FortificationWoodCost)
+            {
+                reason = new TextObject("{=rf_zone_fort_no_wood}Not enough hardwood to raise a fortification.");
+                return false;
+            }
+            if (MobileParty.MainParty.ItemRoster.GetItemNumber(DefaultItems.Tools) < ResourceZoneRules.FortificationToolsCost)
+            {
+                reason = new TextObject("{=rf_zone_fort_no_tools}Not enough tools to raise a fortification.");
+                return false;
+            }
+            reason = null;
+            return true;
+        }
+
+        private void StartFortification()
+        {
+            ResourceZoneRecord? record = CurrentRecord();
+            if (record == null || record.OwnerClan != Clan.PlayerClan
+                || record.HasFortification || record.FortificationCompleteDay > 0f
+                || !CanAffordFortification(out _))
+            {
+                return;
+            }
+
+            Hero.MainHero.ChangeHeroGold(-ResourceZoneRules.FortificationGoldCost);
+            MobileParty.MainParty.ItemRoster.AddToCounts(DefaultItems.HardWood, -ResourceZoneRules.FortificationWoodCost);
+            MobileParty.MainParty.ItemRoster.AddToCounts(DefaultItems.Tools, -ResourceZoneRules.FortificationToolsCost);
+            record.FortificationCompleteDay = (float)CampaignTime.Now.ToDays + ResourceZoneRules.FortificationBuildDays;
+
+            TextObject message = new("{=rf_zone_fort_started}Masons and sappers set to work — the fortification will stand in {DAYS} days.");
+            message.SetTextVariable("DAYS", ResourceZoneRules.FortificationBuildDays);
+            InformationManager.DisplayMessage(new InformationMessage(message.ToString(), Color.FromUint(0xFFB8A46Bu)));
+            GameMenu.SwitchToMenu(MenuId);
+        }
+
+        /// <summary>Advances any in-progress fortifications; called from the
+        /// daily tick. Completing one raises the garrison cap and swaps the icon
+        /// (the party is respawned so MobilePartyVisual re-reads the mesh).</summary>
+        private void AdvanceFortifications()
+        {
+            foreach (ResourceZoneRecord record in _records)
+            {
+                if (record.HasFortification || record.FortificationCompleteDay <= 0f
+                    || CampaignTime.Now.ToDays < record.FortificationCompleteDay)
+                {
+                    continue;
+                }
+
+                record.HasFortification = true;
+                record.FortificationCompleteDay = 0f;
+
+                // Force the map visual to rebuild so it picks up the stronghold
+                // icon (ResourceZonePartyComponent.MapIconMeshName now returns
+                // the fortified prefab).
+                _zoneParties.TryGetValue(record.ZoneId, out MobileParty? party);
+                if (party != null && party.IsActive)
+                {
+                    party.Party.SetVisualAsDirty();
+                }
+
+                if (record.OwnerClan == Clan.PlayerClan)
+                {
+                    TextObject message = new("{=rf_zone_fort_done}The fortification at {ZONE} is complete — its garrison can grow far larger now.");
+                    message.SetTextVariable("ZONE", party?.Name ?? new TextObject(record.ZoneId));
+                    InformationManager.DisplayMessage(new InformationMessage(message.ToString(), Color.FromUint(0xFF9BC8A0u)));
+                }
+            }
         }
     }
 }

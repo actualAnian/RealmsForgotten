@@ -1,5 +1,6 @@
 using System;
 using HarmonyLib;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Party;
@@ -21,7 +22,10 @@ namespace RF_Settlers.Patches
         private static bool Prefix(PlayerEncounter __instance)
         {
             // Covers every stationary camp-style component (settler camps,
-            // resource zones) — each supplies its own menu id.
+            // resource zones) — each supplies its own menu id. Even a
+            // bandit-held zone opens this menu (its "Attack" option then routes
+            // into the standard battle "encounter" menu, exactly like a
+            // village's hostile-action menu does).
             if (PlayerEncounter.EncounteredParty?.MobileParty?.PartyComponent
                     is not IRFStationaryCampParty camp
                 || string.IsNullOrEmpty(camp.EncounterMenuId))

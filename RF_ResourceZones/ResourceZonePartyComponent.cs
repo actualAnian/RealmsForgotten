@@ -41,27 +41,32 @@ namespace RF_ResourceZones
 
         string IRFStationaryCampParty.EncounterMenuId => "rf_resource_zone";
 
-        /// <summary>Vanilla village-type map icon per resource: iron/silver
-        /// mine diggings, lumberjack camp... resolved lazily (VillageTypes only
-        /// exist once the campaign is up). Gold reuses the silver-mine icon;
-        /// charcoal burners use the clay-pit kilns. Null falls back to the tent.</summary>
+        /// <summary>Map-icon PREFAB name per resource — the author's custom
+        /// prefabs in RF_Map/Prefabs/mine_icons.xml (built from the vanilla
+        /// mi_*_mine map-icon meshes), instantiated via GameEntity.Instantiate.
+        /// Null → tent fallback.</summary>
         string? IRFStationaryCampParty.MapIconMeshName
         {
             get
             {
-                if (Campaign.Current == null)
+                // A built fortification overrides the mine icon with a
+                // stronghold prefab (the visual patch falls back to the tent if
+                // the prefab can't be instantiated).
+                if (ResourceZonesCampaignBehavior.Instance?.GetRecord(_zoneId)?.HasFortification == true)
                 {
-                    return null;
+                    return "battania_castle_keep";
                 }
 
                 return (ResourceZoneType)_zoneType switch
                 {
-                    ResourceZoneType.Iron => DefaultVillageTypes.IronMine?.MeshName,
-                    ResourceZoneType.Karthradium => DefaultVillageTypes.IronMine?.MeshName,
-                    ResourceZoneType.Silver => DefaultVillageTypes.SilverMine?.MeshName,
-                    ResourceZoneType.Gold => DefaultVillageTypes.SilverMine?.MeshName,
-                    ResourceZoneType.Wood => DefaultVillageTypes.Lumberjack?.MeshName,
-                    ResourceZoneType.Charcoal => DefaultVillageTypes.ClayMine?.MeshName,
+                    ResourceZoneType.Iron => "mine_icon_iron",
+                    ResourceZoneType.Karthradium => "mine_icon_iron",
+                    ResourceZoneType.Silver => "map_icons_production_gold",
+                    ResourceZoneType.Gold => "map_icons_production_gold",
+                    ResourceZoneType.Wood => "mine_icon_wood",
+                    ResourceZoneType.Charcoal => "mine_icon_charcoal",
+                    ResourceZoneType.Salt => "mine_icon_saltmine",
+                    ResourceZoneType.Clay => "mine_icons_clay",
                     _ => null,
                 };
             }

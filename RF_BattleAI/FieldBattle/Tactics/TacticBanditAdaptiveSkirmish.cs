@@ -93,6 +93,13 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
     private int _mainPursuerCount;
     private float _supportPursuerPower;
     private int _supportPursuerCount;
+    // Archers shoot from far; sense them in a wider ring than the melee
+    // pursuer radius. A group with this many enemy RANGED agents on it is
+    // "under fire" and spreads out (loose) so most shafts miss.
+    private const float RangedPursuerSenseRadius = 100f;
+    private const int RangedFireThreshold = 4;
+    private int _mainRangedPursuerCount;
+    private int _supportRangedPursuerCount;
 
     public TacticBanditAdaptiveSkirmish(Team team)
         : base(team)
@@ -378,6 +385,18 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
     {
         _lastBaitDecision = "ROUT";
         _lastSupportDecision = "ROUT";
+
+        // Broken men still run OVERALL — but not blindly. Per formation:
+        //  (1) CAUGHT (a chaser is within reach): turning to sell your life
+        //      dearly beats taking blows in the back until you drop.
+        //  (2) A beatable ISOLATED fragment right here: interrupt the flight,
+        //      crush it for a few extra kills, then resume next tick — the
+        //      "small space, more force locally" opportunity. FindIsolatedPrey
+        //      already guarantees the prey is weaker, isolated AND safe to
+        //      divert for (won't drag us across the pursuing army's path).
+        //  (3) Otherwise: retreat, as before.
+        List<Formation> enemies = EnumerateEnemyFormations();
+
         foreach (Formation formation in FormationsIncludingEmpty)
         {
             if (formation.CountOfUnits <= 0 || !formation.IsAIControlled)
@@ -386,6 +405,27 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
             }
 
             formation.AI.ResetBehaviorWeights();
+
+            Formation? chaser = FindNearestEnemyTo(formation, enemies);
+            float chaserDistance = chaser != null
+                ? chaser.CachedMedianPosition.AsVec2.Distance(formation.CachedMedianPosition.AsVec2)
+                : float.MaxValue;
+            bool caught = chaser != null
+                && EffectiveChaseDistance(chaserDistance, chaser) <= CaughtEnterDistance;
+
+            if (caught)
+            {
+                formation.AI.SetBehaviorWeight<BehaviorTacticalCharge>(10f);
+                continue;
+            }
+
+            Formation? prey = FindIsolatedPrey(formation, enemies);
+            if (prey != null)
+            {
+                formation.AI.SetBehaviorWeight<BehaviorDirectedCharge>(10f).TargetEnemyFormation = prey;
+                continue;
+            }
+
             formation.AI.SetBehaviorWeight<TaleWorlds.MountAndBlade.BehaviorRetreat>(10f);
         }
     }
@@ -669,6 +709,12 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
         bool baitNeedsHelp = baitSwats && baitPower < baitPursuerPower * PursuerParityRatio;
         bool strikerNeedsHelp = strikerSwats && strikerPower < strikerPursuerPower * PursuerParityRatio;
 
+        // Under arrow fire: whichever group carries the ranged-pursuer count.
+        int baitRangedCount = _supportIsBait ? _supportRangedPursuerCount : _mainRangedPursuerCount;
+        int strikerRangedCount = _supportIsBait ? _mainRangedPursuerCount : _supportRangedPursuerCount;
+        bool baitUnderFire = baitRangedCount >= RangedFireThreshold;
+        bool strikerUnderFire = strikerRangedCount >= RangedFireThreshold;
+
         // CAUGHT — decided PER GROUP with distance hysteresis: at this range
         // the group cannot outrun its chaser (mounted chasers "reach" much
         // farther), so fleeing means dying with its back turned. It turns and
@@ -725,12 +771,22 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
                 charge.TargetEnemyFormation = baitPrey;
                 _lastBaitDecision = $"prey:F{(int)baitPrey.FormationIndex}";
             }
+            else if (baitUnderFire && FindOverextendedRangedTarget(baitGroup, enemies) is Formation exposedArchers)
+            {
+                // Rethink: rather than take shafts in the back, turn on the
+                // overextended archers and crush them (shields face them as we
+                // close). Their melee support is far — safe to seize.
+                BehaviorDirectedCharge charge = baitGroup.AI.SetBehaviorWeight<BehaviorDirectedCharge>(10f);
+                charge.TargetEnemyFormation = exposedArchers;
+                _lastBaitDecision = $"chargeArchers:F{(int)exposedArchers.FormationIndex}";
+            }
             else
             {
                 BehaviorBaitLure lure = baitGroup.AI.SetBehaviorWeight<BehaviorBaitLure>(10f);
                 lure.FlankSide = baitGroupSide;
                 lure.TargetEnemyFormation = baitChaser;
-                _lastBaitDecision = "flee";
+                lure.UnderRangedFire = baitUnderFire; // spread out under arrow fire
+                _lastBaitDecision = baitUnderFire ? "flee(loose)" : "flee";
             }
 
             baitGroup.AI.Side = baitGroupSide;
@@ -791,7 +847,8 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
                     BehaviorBaitLure flee = strikerGroup.AI.SetBehaviorWeight<BehaviorBaitLure>(10f);
                     flee.FlankSide = strikerGroupSide;
                     flee.TargetEnemyFormation = FindNearestEnemyTo(strikerGroup, enemies);
-                    _lastSupportDecision = $"{RolePrefix()}flee";
+                    flee.UnderRangedFire = strikerUnderFire;
+                    _lastSupportDecision = $"{RolePrefix()}{(strikerUnderFire ? "flee(loose)" : "flee")}";
                 }
 
                 strikerGroup.AI.Side = strikerGroupSide;
@@ -817,6 +874,7 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
                 BehaviorBaitLure flee = strikerGroup.AI.SetBehaviorWeight<BehaviorBaitLure>(10f);
                 flee.FlankSide = strikerGroupSide;
                 flee.TargetEnemyFormation = strikerChaser;
+                flee.UnderRangedFire = strikerUnderFire;
                 strikerGroup.AI.Side = strikerGroupSide;
             }
         }
@@ -875,6 +933,55 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
                 best = enemy;
                 bestDistance = distance;
             }
+        }
+
+        return best;
+    }
+
+    /// <summary>An enemy RANGED formation that has overextended to shoot the
+    /// fleeing group — close to us, beatable by the band, and with its own
+    /// melee support left far behind. Turning to crush it stops the arrows AND
+    /// uses shields (they face the target as they close). Returns null when the
+    /// enemy melee is near enough that turning would be a trap.</summary>
+    private Formation? FindOverextendedRangedTarget(Formation group, List<Formation> enemies)
+    {
+        Vec2 groupPosition = group.CachedMedianPosition.AsVec2;
+        float ourPower = (_mainInfantry?.QuerySystem.FormationPower ?? 0f)
+            + (_supportInfantry?.QuerySystem.FormationPower ?? 0f);
+
+        Formation? best = null;
+        float bestDistance = 90f; // only worth turning for archers this close
+        foreach (Formation enemy in enemies)
+        {
+            if (!enemy.QuerySystem.IsRangedFormation && !enemy.QuerySystem.IsRangedCavalryFormation)
+            {
+                continue;
+            }
+
+            float distance = enemy.CachedMedianPosition.AsVec2.Distance(groupPosition);
+            if (distance > bestDistance || enemy.QuerySystem.FormationPower > ourPower * 0.9f)
+            {
+                continue;
+            }
+
+            float nearestMeleeAlly = float.MaxValue;
+            foreach (Formation ally in enemies)
+            {
+                if (ally == enemy || ally.QuerySystem.IsRangedFormation || ally.QuerySystem.IsRangedCavalryFormation)
+                {
+                    continue;
+                }
+                nearestMeleeAlly = MathF.Min(nearestMeleeAlly,
+                    ally.CachedMedianPosition.AsVec2.Distance(enemy.CachedMedianPosition.AsVec2));
+            }
+
+            if (nearestMeleeAlly < 80f)
+            {
+                continue; // melee too close — turning is a trap, keep spreading & running
+            }
+
+            best = enemy;
+            bestDistance = distance;
         }
 
         return best;
@@ -944,6 +1051,36 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
     {
         _mainPursuerPower = GetPursuerPower(_mainInfantry, out _mainPursuerCount);
         _supportPursuerPower = GetPursuerPower(_supportInfantry, out _supportPursuerCount);
+        _mainRangedPursuerCount = GetRangedPursuerCount(_mainInfantry);
+        _supportRangedPursuerCount = GetRangedPursuerCount(_supportInfantry);
+    }
+
+    /// <summary>Enemy RANGED agents within the wider ranged-sense ring of the
+    /// group — i.e. archers actively able to shoot it in the back.</summary>
+    private int GetRangedPursuerCount(Formation? group)
+    {
+        Mission? mission = Mission.Current;
+        if (mission == null || group == null || group.CountOfUnits <= 0)
+        {
+            return 0;
+        }
+
+        Vec2 median = group.CachedMedianPosition.AsVec2;
+        if (!median.IsValid)
+        {
+            return 0;
+        }
+
+        int count = 0;
+        foreach (Agent agent in mission.GetNearbyEnemyAgents(median, RangedPursuerSenseRadius, base.Team, _pursuerBuffer))
+        {
+            if (agent.IsActive() && agent.IsRangedCached && !agent.HasMount)
+            {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     private float GetPursuerPower(Formation? group, out int count)

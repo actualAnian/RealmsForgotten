@@ -29,6 +29,12 @@ public sealed class BehaviorBaitLure : BehaviorComponent
     /// <summary>Sideways curve of the flight, in radians (~34 degrees).</summary>
     public float LateralBiasRadians { get; set; } = 0.6f;
 
+    /// <summary>Set by the tactic when this fleeing group is taking arrows in
+    /// the back. A tight LINE running away is a shooting gallery for archers;
+    /// LOOSE spacing scatters the ranks so most shafts fall in the gaps — the
+    /// same trick vanilla uses to keep skirmishers alive under fire.</summary>
+    public bool UnderRangedFire { get; set; }
+
     public BehaviorBaitLure(Formation formation)
         : base(formation)
     {
@@ -93,6 +99,16 @@ public sealed class BehaviorBaitLure : BehaviorComponent
             BattleAITerrainPreference.DefensiveHighGround,
             searchRadius: 10f);
         base.CurrentOrder = MovementOrder.MovementOrderMove(worldPosition);
+
+        // Spread out while running under fire; re-form tight once the arrows
+        // stop, so the group is ready to turn and fight.
+        ArrangementOrder desiredArrangement = UnderRangedFire && base.Formation.CountOfUnits > 1
+            ? ArrangementOrder.ArrangementOrderLoose
+            : ArrangementOrder.ArrangementOrderLine;
+        if (base.Formation.ArrangementOrder != desiredArrangement)
+        {
+            base.Formation.SetArrangementOrder(desiredArrangement);
+        }
     }
 
     public override void TickOccasionally()

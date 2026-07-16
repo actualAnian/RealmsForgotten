@@ -13,14 +13,13 @@ namespace RF_Settlers.Patches
     /// Stationary camp-style parties (settler camps, resource zones) are
     /// MobileParties, so vanilla would draw them as walking figures. This
     /// prefix reroutes their map icon:
-    /// - components exposing MapIconMeshName render that STATIC mesh (a vanilla
-    ///   village-type mesh: iron_mine, silver_mine, lumberjack, clay_mine...)
-    ///   plus the owner's banner flag;
+    /// - components exposing MapIconMeshName INSTANTIATE that village-type
+    ///   PREFAB (iron_mine, silver_mine, lumberjack, clay_mine — the same
+    ///   prefabs the settlement visual assembles from child parts) plus the
+    ///   owner's banner flag;
     /// - the rest get the base game's siege-camp TENT (banner included).
-    /// The entity is built exactly like vanilla AddTentEntityForParty (correct
-    /// CreateEmpty/AddChild signatures + SetVisibilityExcludeParents), only the
-    /// mesh name swaps. Applied LATE via RF_Settlers.RunManualPatches — never at
-    /// module load (the folded-character lesson).
+    /// Applied LATE via RF_Settlers.RunManualPatches — never at module load
+    /// (the folded-character lesson).
     /// </summary>
     public static class SettlerCampVisualPatch
     {
@@ -37,9 +36,9 @@ namespace RF_Settlers.Patches
 
             try
             {
-                string? meshName = camp.MapIconMeshName;
-                if (!string.IsNullOrEmpty(meshName)
-                    && TryBuildIcon(__instance.StrategicEntity, party, meshName!))
+                string? prefabName = camp.MapIconMeshName;
+                if (!string.IsNullOrEmpty(prefabName)
+                    && TryBuildIcon(__instance.StrategicEntity, party, prefabName!))
                 {
                     return false;
                 }
@@ -54,26 +53,23 @@ namespace RF_Settlers.Patches
             }
         }
 
-        /// <summary>Builds the map icon entity the same way vanilla builds the
-        /// siege-camp tent, swapping in <paramref name="meshName"/> and planting
-        /// the owner clan's banner on top. Returns false (→ tent fallback) if the
-        /// mesh can't be loaded.</summary>
-        private static bool TryBuildIcon(GameEntity strategicEntity, PartyBase party, string meshName)
+        /// <summary>Instantiates the village-type PREFAB (which assembles its
+        /// child part meshes, exactly like the icons seen inside towns) and
+        /// plants the owner clan's banner on top. Returns false (→ tent) if the
+        /// prefab can't be instantiated.</summary>
+        private static bool TryBuildIcon(GameEntity strategicEntity, PartyBase party, string prefabName)
         {
-            MetaMesh? iconMesh = MetaMesh.GetCopy(meshName, true, false);
-            if (iconMesh == null)
+            GameEntity? entity = GameEntity.Instantiate(strategicEntity.Scene, prefabName, true, true, "");
+            if (entity == null)
             {
-                Debug.Print($"[RF_Settlers] Map icon mesh '{meshName}' not loadable; using the tent instead.");
+                Debug.Print($"[RF_Settlers] Map icon prefab '{prefabName}' not instantiable; using the tent instead.");
                 return false;
             }
 
-            GameEntity entity = GameEntity.CreateEmpty(strategicEntity.Scene, true, true, true);
-            entity.AddMultiMesh(iconMesh, true);
-
-            MatrixFrame frame = MatrixFrame.Identity;
-            frame.rotation.ApplyScaleLocal(1.0f);
-            entity.SetFrame(ref frame, true);
-
+            // DON'T override the frame: the author's prefab carries its own
+            // tuned transform (scale + local origin 0). AddChild(..., false)
+            // uses that as the LOCAL frame → the icon sits at the party position
+            // at the size the author set in RF_Map/Prefabs/mine_icons.xml.
             TryPlantOwnerBanner(entity, party);
 
             strategicEntity.AddChild(entity, false);

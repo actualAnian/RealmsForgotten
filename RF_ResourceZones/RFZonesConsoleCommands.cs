@@ -43,7 +43,7 @@ namespace RF_ResourceZones
             string type = strings.Count > 0 ? strings[0] : "Iron";
             if (!Enum.TryParse(type, ignoreCase: true, out ResourceZoneType parsedType))
             {
-                return $"Unknown type '{type}'. Use: Gold, Iron, Wood, Charcoal, Silver, Karthradium.";
+                return $"Unknown type '{type}'. Use: Gold, Iron, Wood, Charcoal, Silver, Karthradium, Salt, Clay.";
             }
 
             string name = strings.Count > 1

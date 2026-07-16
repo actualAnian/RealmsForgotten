@@ -15,6 +15,8 @@ namespace RF_ResourceZones
         /// <summary>The dwarves' sacred metal (item "kardrathium", registered
         /// at runtime by RFSmithing). Mined only in the dwarf homelands.</summary>
         Karthradium = 5,
+        Salt = 6,
+        Clay = 7,
     }
 
     /// <summary>
@@ -26,7 +28,18 @@ namespace RF_ResourceZones
         public const int MaxTier = 3;
 
         // Garrison caps per tier — the zone's MemberRoster is its garrison.
-        public static int GarrisonCap(int tier) => tier switch { 1 => 25, 2 => 45, _ => 80 };
+        // A built fortification adds a flat +50 (walls to man).
+        public static int GarrisonCap(int tier, bool hasFortification = false)
+        {
+            int baseCap = tier switch { 1 => 25, 2 => 45, _ => 80 };
+            return hasFortification ? baseCap + 50 : baseCap;
+        }
+
+        // ── Fortification construction (player-owned zones) ──────────────────
+        public const int FortificationGoldCost = 25000;
+        public const int FortificationWoodCost = 120;
+        public const int FortificationToolsCost = 30;
+        public const int FortificationBuildDays = 12;
 
         // Fresh garrison strength for a newly spawned/captured zone.
         public const int InitialBanditGarrison = 18;
@@ -46,10 +59,16 @@ namespace RF_ResourceZones
                 ResourceZoneType.Charcoal => 7,
                 ResourceZoneType.Silver => 3,
                 ResourceZoneType.Karthradium => 2, // rare — but each load is worth ~300
+                ResourceZoneType.Salt => 5,
+                ResourceZoneType.Clay => 8,
                 _ => 0,
             };
             return baseUnits * tier;
         }
+
+        // Days a plundered deposit lies abandoned before brigands re-occupy it
+        // (like a raided village's recovery window).
+        public const int PlunderedIdleDays = 10;
 
         // A caravan departs when the stockpile reaches this many units.
         public static int CaravanLoad(int tier) => 25 * tier;
@@ -95,6 +114,14 @@ namespace RF_ResourceZones
         public static string RichnessLabel(int richness) =>
             richness switch { 1 => "poor vein", 3 => "rich vein", _ => "steady vein" };
 
+        /// <summary>Derelict map prefab shown while a plundered deposit lies
+        /// abandoned — the author's single "mine_icon_burned" prefab
+        /// (RF_Map/Prefabs/mine_icons.xml, burned_wood_a mesh).</summary>
+        public static string? BurnedPrefab(ResourceZoneType type)
+        {
+            return "mine_icon_burned";
+        }
+
         /// <summary>Trade item produced by the type; null for Gold (direct denars)
         /// and for items missing from the current game data (logged, skipped).</summary>
         public static ItemObject? ProducedItem(ResourceZoneType type)
@@ -114,6 +141,10 @@ namespace RF_ResourceZones
                     // Registered at runtime by RFSmithing (RFItems.RegisterAll);
                     // note the item id spelling differs from the type name.
                     return MBObjectManager.Instance?.GetObject<ItemObject>("kardrathium");
+                case ResourceZoneType.Salt:
+                    return MBObjectManager.Instance?.GetObject<ItemObject>("salt");
+                case ResourceZoneType.Clay:
+                    return MBObjectManager.Instance?.GetObject<ItemObject>("clay");
                 default:
                     return null;
             }
