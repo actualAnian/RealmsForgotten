@@ -194,7 +194,17 @@ internal static class BattleAIAdaptiveMemory
                 return fallback;
             }
 
-            return querySystem.RemainingPowerRatio;
+            // Clamp: once one side is nearly annihilated the raw ratio explodes
+            // (own power / a sliver of enemy power → 20, 57, 147…). Those spikes
+            // are meaningless for "how did this doctrine do" and, unclamped, they
+            // poisoned the adaptive-memory averages (avgDelta/avgPeak). Cap at a
+            // decisive-but-sane 3.0 (and floor at 0).
+            float ratio = querySystem.RemainingPowerRatio;
+            if (float.IsNaN(ratio) || float.IsInfinity(ratio))
+            {
+                return fallback;
+            }
+            return Math.Max(0f, Math.Min(3f, ratio));
         }
         catch
         {

@@ -1,4 +1,5 @@
 using System;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
@@ -157,6 +158,14 @@ internal static class HomesteadBattleContext
 
 	private static void EnsurePreparedFromActivePlayerEncounter(string source)
 	{
+		// Custom battles, the main menu, and other non-campaign missions have no
+		// Campaign.Current. MapEvent.PlayerMapEvent (the first operand below) and
+		// the rest of this method dereference campaign state and throw NRE there.
+		// Homesteads only exist inside a campaign, so there is nothing to recover.
+		if (Campaign.Current == null)
+		{
+			return;
+		}
 		if (pendingHomestead != null && pendingMapEvent != null)
 		{
 			return;

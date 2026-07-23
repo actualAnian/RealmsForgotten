@@ -818,7 +818,25 @@ namespace RF_AIDialog
                 }
 
                 // Request fulfilled — this is the single trigger for quest closure.
-                if (_parsed.RequestFulfilled && _currentContext.HasPendingRequest)
+                // The LLM's word alone is NOT enough when the quest has a real
+                // mechanic: the atom engine tracks the truth in the world, and a
+                // player could otherwise talk a small model into paying the
+                // reward for work never done. Roleplay-only requests (no
+                // mechanic) still close on the LLM's judgement.
+                bool mechanicSatisfied = true;
+                var pendingMechanic = _currentContext.PendingRequest?.Mechanic;
+                if (pendingMechanic != null)
+                {
+                    mechanicSatisfied = pendingMechanic.AllCompleted
+                        || (pendingMechanic.HasReturnStep && pendingMechanic.AllExceptReturnCompleted);
+                }
+
+                if (_parsed.RequestFulfilled && _currentContext.HasPendingRequest && !mechanicSatisfied)
+                {
+                    RFAIDebug.Log("ConsequenceClearResponse: LLM claimed fulfilled but mechanic objectives are incomplete — closure blocked");
+                }
+
+                if (_parsed.RequestFulfilled && _currentContext.HasPendingRequest && mechanicSatisfied)
                 {
                     // Pay mechanic reward gold unless the LLM already granted gold explicitly.
                     int rewardGold = _currentContext.PendingRequest!.Mechanic?.RewardGold ?? 0;

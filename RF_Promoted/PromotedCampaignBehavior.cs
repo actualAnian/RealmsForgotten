@@ -79,7 +79,10 @@ public sealed class PromotedCampaignBehavior : CampaignBehaviorBase
             return;
         }
 
-        int playerStrength = playerSide.GetTotalHealthyTroopCountOfSide();
+        // Fair-fight ratio counts the PLAYER'S OWN PARTY against the whole enemy
+        // side. Counting the full allied side made kingdom-war battles (ally
+        // lords piling in) permanently ineligible — merit could never accrue.
+        int playerStrength = MobileParty.MainParty.MemberRoster.TotalHealthyCount;
         int enemyStrength = Math.Max(1, enemySide.GetTotalHealthyTroopCountOfSide());
         _battleRatio = playerStrength / (float)enemyStrength;
 
@@ -136,6 +139,12 @@ public sealed class PromotedCampaignBehavior : CampaignBehaviorBase
 
     private void BuildPromotionOffers()
     {
+        // A stack that upgraded tiers carried its merit under the OLD troop id,
+        // where it sat orphaned forever — the soldiers who killed the most (and
+        // therefore levelled fastest) were exactly the ones who never got
+        // promoted. Move orphaned merit down the upgrade tree first.
+        ConsolidateOrphanedMerits();
+
         int totalOffers = 0;
         bool stopQueuing = false;
         foreach (KeyValuePair<string, int> entry in _battleKills.OrderByDescending(item => item.Value))
@@ -152,7 +161,18 @@ public sealed class PromotedCampaignBehavior : CampaignBehaviorBase
             int currentCount = MobileParty.MainParty?.MemberRoster?.GetTroopCount(troop) ?? 0;
             if (currentCount <= 0)
             {
-                _promotionMerits.Remove(troopId);
+                // Type no longer in the party: try to pass its merit (including
+                // this battle's kills) to an upgraded descendant before dropping.
+                CharacterObject? heir = FindUpgradedDescendantInParty(troop);
+                if (heir != null)
+                {
+                    AwardPromotionMerit(troopId, kills);
+                    TransferMerit(troopId, heir.StringId);
+                }
+                else
+                {
+                    _promotionMerits.Remove(troopId);
+                }
                 continue;
             }
 
@@ -175,6 +195,92 @@ public sealed class PromotedCampaignBehavior : CampaignBehaviorBase
         }
 
         PromotedDebug.Message($"Promotion scan finished | offers={totalOffers}");
+    }
+
+    /// <summary>
+    /// Moves merit stored under troop types no longer present in the party onto
+    /// their upgraded descendants that ARE present, so tiering up never loses
+    /// earned merit. Runs before each promotion scan.
+    /// </summary>
+    private void ConsolidateOrphanedMerits()
+    {
+        TroopRoster? roster = MobileParty.MainParty?.MemberRoster;
+        if (roster == null || _promotionMerits.Count == 0)
+        {
+            return;
+        }
+
+        foreach (string troopId in _promotionMerits.Keys.ToList())
+        {
+            CharacterObject? troop = MBObjectManager.Instance.GetObject<CharacterObject>(troopId);
+            if (troop == null)
+            {
+                _promotionMerits.Remove(troopId);
+                continue;
+            }
+
+            if (roster.GetTroopCount(troop) > 0)
+            {
+                continue;
+            }
+
+            CharacterObject? heir = FindUpgradedDescendantInParty(troop);
+            if (heir != null)
+            {
+                TransferMerit(troopId, heir.StringId);
+            }
+            // No descendant in the party either: keep the merit parked — the
+            // player may still hold these troops in a garrison and re-add them.
+        }
+    }
+
+    /// <summary>
+    /// Breadth-first walk down a troop's upgrade tree (max 3 tiers) for the
+    /// first descendant type currently in the player's party.
+    /// </summary>
+    private static CharacterObject? FindUpgradedDescendantInParty(CharacterObject troop)
+    {
+        TroopRoster? roster = MobileParty.MainParty?.MemberRoster;
+        if (roster == null)
+        {
+            return null;
+        }
+
+        Queue<(CharacterObject Node, int Depth)> queue = new();
+        queue.Enqueue((troop, 0));
+        while (queue.Count > 0)
+        {
+            (CharacterObject node, int depth) = queue.Dequeue();
+            if (depth >= 3 || node.UpgradeTargets == null)
+            {
+                continue;
+            }
+
+            foreach (CharacterObject target in node.UpgradeTargets)
+            {
+                if (target == null || target.IsHero)
+                {
+                    continue;
+                }
+                if (roster.GetTroopCount(target) > 0)
+                {
+                    return target;
+                }
+                queue.Enqueue((target, depth + 1));
+            }
+        }
+        return null;
+    }
+
+    private void TransferMerit(string fromTroopId, string toTroopId)
+    {
+        int merit = GetPromotionMerit(fromTroopId);
+        _promotionMerits.Remove(fromTroopId);
+        if (merit > 0)
+        {
+            _promotionMerits[toTroopId] = GetPromotionMerit(toTroopId) + merit;
+            PromotedDebug.Message($"Merit transferred | from={fromTroopId} to={toTroopId} merit={merit}");
+        }
     }
 
     private void AwardPromotionMerit(string troopId, int kills)

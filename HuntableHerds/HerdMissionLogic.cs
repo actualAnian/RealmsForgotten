@@ -155,8 +155,12 @@ namespace RealmsForgotten.HuntableHerds
 
             Agent agent = base.Mission.SpawnAgent(agentBuildData2);
 
-            for (int i = 0; i < 3; i++) {
-                Agent.Main.AgentVisuals.GetSkeleton().TickAnimations(0.1f, Agent.Main.AgentVisuals.GetGlobalFrame(), true);
+            var playerVisuals = Agent.Main?.AgentVisuals;
+            var playerSkeleton = playerVisuals?.GetSkeleton();
+            if (playerVisuals != null && playerSkeleton != null) {
+                for (int i = 0; i < 3; i++) {
+                    playerSkeleton.TickAnimations(0.1f, playerVisuals.GetGlobalFrame(), true);
+                }
             }
 
             return agent;
@@ -181,15 +185,24 @@ namespace RealmsForgotten.HuntableHerds
             if (_trackingActive)
                 SetTrackContour(agent, true);
 
-            for (int i = 0; i < 3; i++) {
-                agent.AgentVisuals.GetSkeleton().TickAnimations(0.1f, agent.AgentVisuals.GetGlobalFrame(), true);
+            var animalVisuals = agent.AgentVisuals;
+            var animalSkeleton = animalVisuals?.GetSkeleton();
+            if (animalVisuals != null && animalSkeleton != null) {
+                for (int i = 0; i < 3; i++) {
+                    animalSkeleton.TickAnimations(0.1f, animalVisuals.GetGlobalFrame(), true);
+                }
             }
         }
 
         private Vec3 GetRandomSpawnPosition(List<Vec3> spawnPositions) {
             if (spawnPositions.Count == 0) {
                 SubModule.PrintDebugMessage("spawn points aren't set up properly in this scene for hunting!!!");
-                Vec3 playerSpawnFallback = Mission.Current.Scene.FindEntityWithName("sp_player").GlobalPosition;
+                // The fallback for a misconfigured scene must not itself crash:
+                // sp_player may be missing from the very scene that is broken.
+                var playerEntity = Mission.Current?.Scene?.FindEntityWithName("sp_player");
+                Vec3 playerSpawnFallback = playerEntity?.GlobalPosition
+                    ?? Agent.Main?.Position
+                    ?? Vec3.Zero;
                 return Mission.Current.GetTrueRandomPositionAroundPoint(playerSpawnFallback, 20, 500, false);
             }
             int randomIndex = MBRandom.RandomInt(0, spawnPositions.Count);

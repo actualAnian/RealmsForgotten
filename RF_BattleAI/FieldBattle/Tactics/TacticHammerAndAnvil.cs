@@ -20,7 +20,6 @@ public sealed class TacticHammerAndAnvil : TacticComponent
 
     private const float SetAnvilDistanceSquared = 32400f;
     private const float HammerCommitDistanceSquared = 12100f;
-    private const float ManualReleaseCenterDistanceSquared = 25600f;
     private const float ManualReleaseArcherPressureDistanceSquared = 32400f;
     private const float CavalryOuterArcLateralDistance = 86f;
     private const float CavalryOuterArcRearOffset = 22f;
@@ -230,7 +229,16 @@ public sealed class TacticHammerAndAnvil : TacticComponent
             _deploymentPhaseFinished = true;
         }
 
-        if (distanceSquared <= 8100f)
+        // The hammer only swings once the anvil has actually PINNED the enemy
+        // (melee contact range) — releasing at 90m let the enemy face the
+        // cavalry freely. BUT the wait is scaled by the ENEMY's cavalry share:
+        // against a horse-heavy foe, staged wings waiting for contact are
+        // sitting ducks for the enemy horse, so the release comes early enough
+        // to meet them (cav-heavy ≥35%: 90m; mixed ≥15%: 50m; infantry foe: 25m).
+        float enemyCavalryRatio = base.Team.QuerySystem.EnemyCavalryRatio + base.Team.QuerySystem.EnemyRangedCavalryRatio;
+        float releaseDistanceSquared = enemyCavalryRatio >= 0.35f ? 8100f : (enemyCavalryRatio >= 0.15f ? 2500f : 625f);
+        float readyShortcutSquared = enemyCavalryRatio >= 0.35f ? 19600f : (enemyCavalryRatio >= 0.15f ? 10000f : 1600f);
+        if (distanceSquared <= releaseDistanceSquared)
         {
             return HammerBattleState.SwingFlanks;
         }
@@ -240,7 +248,7 @@ public sealed class TacticHammerAndAnvil : TacticComponent
             return HammerBattleState.SwingFlanks;
         }
 
-        if (anyCavalryReady && distanceSquared <= 19600f)
+        if (anyCavalryReady && distanceSquared <= readyShortcutSquared)
         {
             return HammerBattleState.SwingFlanks;
         }
@@ -535,12 +543,25 @@ public sealed class TacticHammerAndAnvil : TacticComponent
             return false;
         }
 
-        if (distanceSquared <= ManualReleaseCenterDistanceSquared)
+        // Manual doctrine means "fight THIS way", not "skip the pin". The old
+        // unconditional 160m release fired long before the anvil arrived in
+        // every manual battle, making the composition ladder below dead code.
+        // Manual now follows the same enemy-cavalry-scaled ladder as the auto
+        // gate, ~30% looser to honor the player's intent (117m / 65m / 32m).
+        float enemyCavalryRatio = base.Team.QuerySystem.EnemyCavalryRatio + base.Team.QuerySystem.EnemyRangedCavalryRatio;
+        float manualReleaseDistanceSquared = enemyCavalryRatio >= 0.35f ? 13689f : (enemyCavalryRatio >= 0.15f ? 4225f : 1024f);
+        if (distanceSquared <= manualReleaseDistanceSquared)
         {
             return true;
         }
 
-        if (distanceSquared <= ManualReleaseArcherPressureDistanceSquared && IsCavalryUnderRangedPressure())
+        // Survival valve: wings bleeding under MASSED archery are released
+        // rather than left parked on the arc. Gated on the enemy actually
+        // being ranged-heavy — a 20% archer contingent must not trigger a
+        // full early release.
+        if (base.Team.QuerySystem.EnemyRangedRatio >= 0.35f
+            && distanceSquared <= ManualReleaseArcherPressureDistanceSquared
+            && IsCavalryUnderRangedPressure())
         {
             return true;
         }

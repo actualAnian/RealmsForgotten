@@ -125,10 +125,30 @@ namespace RealmsForgotten
                 campaignGameStarter.AddModel(new RFBanditDensityModel(campaignGameStarter.GetExistingModel<BanditDensityModel>()));
                 campaignGameStarter.AddModel(new RFClanFinanceModel(campaignGameStarter.GetExistingModel<ClanFinanceModel>()));
                 campaignGameStarter.AddModel(new RFMapVisibilityModel(campaignGameStarter.GetExistingModel<MapVisibilityModel>()));
+                // Urkhai BEFORE the RF wrapper: Urkhai extends Default directly, so the
+                // chain must be Default -> Urkhai -> RFPartySizeLimitModel(wraps existing).
+                // Registered the other way round, the wrapper's effects would be discarded.
+                campaignGameStarter.AddModel(new RealmsForgotten.AiMade.Models.UrkhaiPartySizeModel());
                 campaignGameStarter.AddModel(new RFPartySizeLimitModel(campaignGameStarter.GetExistingModel<PartySizeLimitModel>()));
                 campaignGameStarter.AddModel(new RFClanTierModel());
                 campaignGameStarter.AddModel(new RFStrikeMagnitudeModel());
                 campaignGameStarter.AddModel(new RFSettlementValueModel(campaignGameStarter.GetExistingModel<SettlementValueModel>()));
+
+                // Revived from AiSubModule.AddCustomModels, which never ran (AiSubModule
+                // is not in SubModule.xml, so its engine lifecycle never fired — these
+                // models were silently dead). Order matters for DiplomacyModel:
+                // Default -> RFDiplomacy (standalone extend) -> Alignment (wrapper) ->
+                // RF_warsystem's wrapper, registered later by its own submodule.
+                campaignGameStarter.AddModel(new RealmsForgotten.AiMade.Models.RFDiplomacyModel());
+                campaignGameStarter.AddModel(new RealmsForgotten.AiMade.RF_Diplomacy.AlignmentDiplomacyModel(campaignGameStarter.GetExistingModel<DiplomacyModel>()));
+                campaignGameStarter.AddModel(new RealmsForgotten.AiMade.Models.ClimateAwareVillageProductionModel(campaignGameStarter.GetExistingModel<VillageProductionCalculatorModel>()));
+                campaignGameStarter.AddModel(new RealmsForgotten.AiMade.Models.ClimateAwareSettlementFoodModel(campaignGameStarter.GetExistingModel<SettlementFoodModel>()));
+                // Trade-pact discount + weather-price multiplier. Both live inside this
+                // model's GetPrice and were dead while it was unregistered (player paid
+                // for a pact and got no discount). Now extends the Default model and
+                // calls base.GetPrice, so the Homesteads Market-Lady postfix still fires
+                // and all three effects compose. See CustomTradePriceModel.cs.
+                campaignGameStarter.AddModel(new RealmsForgotten.AiMade.TradePact.CustomTradeItemPriceFactorModel());
 
                 new RFAttributes().Initialize();
                 new RFSkills().Initialize();
@@ -232,16 +252,30 @@ namespace RealmsForgotten
                             valid = true;
                         else if (!keys.Contains(key))
                         {
-                            DefaultKey defaultKey = (DefaultKey)Attribute.GetCustomAttribute(property, typeof(DefaultKey));
-                            // The [DefaultKey] attribute lives on the concrete
-                            // settings class, not the interface property — guard
-                            // the null so an invalid key doesn't NRE at startup.
-                            if (defaultKey == null)
+                            // [DefaultKey] lives on the CONCRETE CustomSettings class,
+                            // not on the interface property this loop iterates — read it
+                            // from there. And whatever happens, the entry MUST land in
+                            // KeysConfig: mission behaviors index it directly
+                            // (PotionsMissionBehavior, AbilityManagerMissionLogic,
+                            // SpellAmmoMissionBehavior), and a missing entry was a
+                            // guaranteed KeyNotFoundException mid-mission for any user
+                            // with a corrupted MCM key value.
+                            var concreteProperty = typeof(CustomSettings).GetProperty(property.Name);
+                            DefaultKey defaultKey =
+                                (DefaultKey)Attribute.GetCustomAttribute(property, typeof(DefaultKey))
+                                ?? (concreteProperty != null
+                                    ? (DefaultKey)Attribute.GetCustomAttribute(concreteProperty, typeof(DefaultKey))
+                                    : null);
+
+                            string fallbackKey = defaultKey?.DefaultValue as string;
+                            if (string.IsNullOrEmpty(fallbackKey) || !keys.Contains(fallbackKey))
                                 continue;
 
-                            InformationManager.ShowInquiry(new InquiryData("Error", $"Invalid key at {property.Name}, setting to default ({defaultKey.DefaultValue})", true,
+                            InformationManager.ShowInquiry(new InquiryData("Error", $"Invalid key at {property.Name}, setting to default ({fallbackKey})", true,
                                 false, GameTexts.FindText("str_done").ToString(), "", null, null), true);
-                            property.SetValue(RFSettings.Instance, defaultKey.DefaultValue);
+                            property.SetValue(RFSettings.Instance, fallbackKey);
+                            key = fallbackKey;
+                            valid = true;
                         }
 
                         if (valid)
@@ -286,6 +320,35 @@ namespace RealmsForgotten
                         mission.AddMissionBehavior(new PotionsMissionBehavior(elixir, berserker));
                 }
                 mission.AddMissionBehavior(new HealOnKillMissionBehavior());
+
+                // Revived from AiSubModule.OnMissionBehaviorInitialize, which the engine
+                // never called (AiSubModule is not in SubModule.xml). Deliberately NOT
+                // revived from that list: InfectionMissionBehavior (already attached
+                // lazily by RealmsForgottenInfectPatch.EnsureOn) and
+                // CommanderSwapMissionBehavior (its parent CommanderDefenseBehavior is
+                // intentionally disabled — reviving half the system would misbehave).
+                if ((mission.Mode == MissionMode.Battle || mission.Mode == MissionMode.StartUp || mission.Mode == MissionMode.Conversation)
+                    && mission.CombatType != Mission.MissionCombatType.ArenaCombat)
+                {
+                    mission.AddMissionBehavior(new CustomBerserkerBehavior());
+                    mission.AddMissionBehavior(new ADODFireArrowsMissionBehavior());
+                }
+
+                // RF-owned reinforcements system. Replaces the retired
+                // ADODReinforcementsSystem (decompiled third-party code:
+                // thread-pool spawning, dead filters, no 3-faction awareness).
+                if (mission.MissionLogics.OfType<DeploymentMissionController>().Any()
+                    && !mission.MissionLogics.OfType<CustomBattleAgentLogic>().Any()
+                    && !mission.MissionLogics.OfType<SiegeDeploymentMissionController>().Any())
+                {
+                    RealmsForgotten.Reinforcements.RFReinforcementsConfig.EnsureLoaded();
+                    if (RealmsForgotten.Reinforcements.RFReinforcementsConfig.Enabled)
+                    {
+                        mission.AddMissionBehavior(new RealmsForgotten.Reinforcements.RFReinforcementsMissionLogic());
+                    }
+                }
+
+                mission.AddMissionBehavior(new FindMagicItemsMissionBehavior());
             }
             if (Game.Current.GameType is Campaign)
             {
@@ -343,6 +406,23 @@ namespace RealmsForgotten
                 {
                     Debug.Print($"[RF] RunManualPatches failed; continuing without the remaining manual patches: {ex}");
                 }
+
+                // AgentVisualsDataMonsterFix stays DISABLED (reverted 2026-07-18).
+                // Reviving it caused a System.AccessViolationException (native
+                // memory corruption) during party visual creation
+                // (MobileParty.InitializeMobilePartyAroundPosition, seen in
+                // ResourceZones zone-party spawn). It reflectively patches every
+                // AgentVisualsData builder taking a CharacterObject and mutates the
+                // monster mid-construction — exactly the engine-visual patching the
+                // community warns corrupts native bindings. It was dead code in
+                // every build that ran without crashing, so it goes back to dead.
+                // The cost is cosmetic (doubled characters in tableaus); a hard
+                // crash is not an acceptable trade. Do NOT re-enable without a
+                // fundamentally safer, narrowly-targeted implementation.
+
+                // The join-encounter menu patch is a different animal — it patches
+                // menu on_condition methods, not engine visuals — so it stays on.
+                AiSubModule.ApplyDelayedJoinEncounterPatch();
                 // War Sails patches are applied once in OnSubModuleLoad via
                 // WarSailsPatchRegister.Apply (plus the attribute scan for
                 // FillMissingCachesPatch); re-applying them here ran every prefix twice.

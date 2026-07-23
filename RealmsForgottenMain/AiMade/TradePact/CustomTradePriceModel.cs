@@ -4,13 +4,20 @@ using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
+using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 
 namespace RealmsForgotten.AiMade.TradePact
 {
-    public class CustomTradeItemPriceFactorModel : TradeItemPriceFactorModel
+    // Extends the DEFAULT model (not the abstract base) on purpose: GetPrice
+    // delegates to base.GetPrice, which is the method the Homesteads Market-Lady
+    // discount postfix-patches. That keeps the Homestead discount alive while
+    // this model layers the weather and trade-pact multipliers on top. When this
+    // extended the abstract base and reimplemented GetPrice standalone, the
+    // Homestead patch never fired — which is why the model had to stay disabled.
+    public class CustomTradeItemPriceFactorModel : DefaultTradeItemPriceFactorModel
     {
         public override float GetTradePenalty(ItemObject item, MobileParty clientParty, PartyBase merchant, bool isSelling, float inStore, float supply, float demand)
         {
@@ -183,16 +190,14 @@ namespace RealmsForgotten.AiMade.TradePact
         public override int GetPrice(EquipmentElement itemRosterElement, MobileParty clientParty, PartyBase merchant, bool isSelling, float inStore, float supply, float demand)
         {
             ItemObject item = itemRosterElement.Item;
-            float basePriceFactor = GetBasePriceFactor(item.ItemCategory, inStore, supply, demand, isSelling, item.Value);
-            float tradePenalty = GetTradePenalty(item, clientParty, merchant, isSelling, inStore, supply, demand);
-            float priceFactor = !isSelling ? basePriceFactor * (1f + tradePenalty) : basePriceFactor / (1f + tradePenalty);
-            float f = itemRosterElement.ItemValue * priceFactor;
-            int basePrice = isSelling ? TaleWorlds.Library.MathF.Floor(f) : TaleWorlds.Library.MathF.Ceiling(f);
 
-            if (!isSelling && merchant?.MobileParty != null && merchant.MobileParty.IsCaravan && clientParty.HasPerk(DefaultPerks.Trade.SilverTongue, checkSecondaryRole: true))
-            {
-                basePrice = TaleWorlds.Library.MathF.Ceiling(basePrice * (1f - DefaultPerks.Trade.SilverTongue.SecondaryBonus));
-            }
+            // base.GetPrice = DefaultTradeItemPriceFactorModel.GetPrice. It runs
+            // the vanilla pricing formula (routing through OUR GetTradePenalty /
+            // GetBasePriceFactor overrides via virtual dispatch) AND carries the
+            // Homesteads Market-Lady discount postfix. We then layer the two RF
+            // multipliers — weather and trade pact — on the already-discounted
+            // result, so all three effects compose instead of cancelling.
+            int basePrice = base.GetPrice(itemRosterElement, clientParty, merchant, isSelling, inStore, supply, demand);
 
             float marketClimateMultiplier = WeatherClimateCatalog.GetWeatherPriceMultiplier(merchant?.Settlement ?? clientParty?.CurrentSettlement, item);
             float pactMultiplier = 1f;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using RF_warsystem.Diagnostics;
 using TaleWorlds.CampaignSystem;
@@ -15,7 +16,12 @@ internal enum RFWarSpecialRequestType
     AlignmentWar,
     MercenaryContract,
     StrategicIntrigue,
-    EnduringRivalry
+    EnduringRivalry,
+    /// <summary>A kingdom's grand design (KingdomObjectives) pressing for the
+    /// war its court keeps demanding. The most patient request type: it yields
+    /// to every other type and gives the planner the longest window to reach
+    /// the same conclusion on its own.</summary>
+    GrandDesign
 }
 
 public sealed class RFWarSpecialAuthorityBehavior : CampaignBehaviorBase
@@ -39,6 +45,69 @@ public sealed class RFWarSpecialAuthorityBehavior : CampaignBehaviorBase
 
     public override void SyncData(IDataStore dataStore)
     {
+        // Pending requests carry multi-day grace/fallback windows — losing them
+        // on reload silently cancelled every special war (grand designs, holy
+        // wars, collective defense) the moment the player saved mid-campaign.
+        string warState = string.Empty;
+        string peaceState = string.Empty;
+
+        if (!dataStore.IsLoading)
+        {
+            warState = string.Join(";", _pendingWarsByPair.Values.Select(request => string.Join("|",
+                request.AttackerKingdomId,
+                request.DefenderKingdomId,
+                ((int)request.Type).ToString(CultureInfo.InvariantCulture),
+                request.Intensity.ToString("R", CultureInfo.InvariantCulture),
+                request.SupportCount.ToString(CultureInfo.InvariantCulture),
+                request.FirstRequestDay.ToString("R", CultureInfo.InvariantCulture),
+                request.LastRequestDay.ToString("R", CultureInfo.InvariantCulture))));
+            peaceState = string.Join(";", _pendingPeacesByPair.Values.Select(request => string.Join("|",
+                request.LeftKingdomId,
+                request.RightKingdomId,
+                request.FirstRequestDay.ToString("R", CultureInfo.InvariantCulture),
+                request.LastRequestDay.ToString("R", CultureInfo.InvariantCulture))));
+        }
+
+        dataStore.SyncData("RFWarSystem_PendingSpecialWars", ref warState);
+        dataStore.SyncData("RFWarSystem_PendingSpecialPeaces", ref peaceState);
+
+        if (!dataStore.IsLoading)
+        {
+            return;
+        }
+
+        _pendingWarsByPair.Clear();
+        foreach (string entry in (warState ?? string.Empty).Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+        {
+            string[] parts = entry.Split('|');
+            if (parts.Length != 7
+                || !int.TryParse(parts[2], NumberStyles.Integer, CultureInfo.InvariantCulture, out int type)
+                || !float.TryParse(parts[3], NumberStyles.Float, CultureInfo.InvariantCulture, out float intensity)
+                || !int.TryParse(parts[4], NumberStyles.Integer, CultureInfo.InvariantCulture, out int support)
+                || !float.TryParse(parts[5], NumberStyles.Float, CultureInfo.InvariantCulture, out float firstDay)
+                || !float.TryParse(parts[6], NumberStyles.Float, CultureInfo.InvariantCulture, out float lastDay))
+            {
+                continue;
+            }
+
+            _pendingWarsByPair[$"{parts[0]}->{parts[1]}"] = new PendingSpecialWarRequest(
+                parts[0], parts[1], (RFWarSpecialRequestType)type, intensity, support, firstDay, lastDay);
+        }
+
+        _pendingPeacesByPair.Clear();
+        foreach (string entry in (peaceState ?? string.Empty).Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+        {
+            string[] parts = entry.Split('|');
+            if (parts.Length != 4
+                || !float.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out float firstDay)
+                || !float.TryParse(parts[3], NumberStyles.Float, CultureInfo.InvariantCulture, out float lastDay))
+            {
+                continue;
+            }
+
+            _pendingPeacesByPair[$"{parts[0]}->{parts[1]}"] = new PendingSpecialPeaceRequest(
+                parts[0], parts[1], firstDay, lastDay);
+        }
     }
 
     internal static void RequestWar(Kingdom attacker, Kingdom defender, RFWarSpecialRequestType type, float intensity = 1f)
@@ -345,6 +414,16 @@ public sealed class RFWarSpecialAuthorityBehavior : CampaignBehaviorBase
             return RFWarSpecialRequestType.HolyWar;
         }
 
+        if (left == RFWarSpecialRequestType.GrandDesign)
+        {
+            return right;
+        }
+
+        if (right == RFWarSpecialRequestType.GrandDesign)
+        {
+            return left;
+        }
+
         return right;
     }
 
@@ -358,6 +437,7 @@ public sealed class RFWarSpecialAuthorityBehavior : CampaignBehaviorBase
             RFWarSpecialRequestType.MercenaryContract => 0.45f,
             RFWarSpecialRequestType.HolyWar => 0.75f,
             RFWarSpecialRequestType.AlignmentWar => 1.2f,
+            RFWarSpecialRequestType.GrandDesign => 1.6f,
             _ => 1f
         };
     }
@@ -372,6 +452,9 @@ public sealed class RFWarSpecialAuthorityBehavior : CampaignBehaviorBase
             RFWarSpecialRequestType.MercenaryContract => 1.9f,
             RFWarSpecialRequestType.HolyWar => 2.6f,
             RFWarSpecialRequestType.AlignmentWar => 3.2f,
+            // Longest of all: a grand design should almost always reach war
+            // through the planner's own proposal, not through the force path.
+            RFWarSpecialRequestType.GrandDesign => 6f,
             _ => 2.2f
         };
     }

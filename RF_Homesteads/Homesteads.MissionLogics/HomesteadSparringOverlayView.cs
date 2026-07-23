@@ -273,7 +273,7 @@ public class HomesteadSparringOverlayView : MissionView
 
 	public override void OnMissionScreenInitialize()
 	{
-		((MissionView)this).OnMissionScreenInitialize();
+		base.OnMissionScreenInitialize();
 		_logic = ((MissionBehavior)this).Mission.GetMissionBehavior<HomesteadSparringMissionLogic>();
 		_dataSource = new SparringVM();
 		_layer = new PassiveGauntletLayer("HomesteadSparringHUD", 1);
@@ -284,7 +284,7 @@ public class HomesteadSparringOverlayView : MissionView
 
 	public override void OnMissionScreenTick(float dt)
 	{
-		((MissionView)this).OnMissionScreenTick(dt);
+		base.OnMissionScreenTick(dt);
 		if (!_agentsCached)
 		{
 			TryCacheAgents();
@@ -305,7 +305,7 @@ public class HomesteadSparringOverlayView : MissionView
 		}
 		_dataSource = null;
 		_layer = null;
-		((MissionView)this).OnMissionScreenFinalize();
+		base.OnMissionScreenFinalize();
 	}
 
 	private void TryCacheAgents()

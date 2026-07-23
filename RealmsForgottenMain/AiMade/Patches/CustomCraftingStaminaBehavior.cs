@@ -31,11 +31,16 @@ namespace RealmsForgotten.AiMade.Patches
         // This method is called every hour in the game to apply stamina recovery
         private void OnHourlyTick()
         {
+            // Resolve the behavior ONCE: GetCampaignBehavior is a linear scan of
+            // ~150 behaviors, and this loop visits ~2000 heroes every game hour.
+            ICraftingCampaignBehavior craftingBehavior = Campaign.Current.GetCampaignBehavior<ICraftingCampaignBehavior>();
+            if (craftingBehavior == null) return;
+
             foreach (Hero hero in Hero.AllAliveHeroes)
             {
                 // No restriction to player character, now applies to all heroes (both player and NPCs)
                 bool isInsideTown = hero.CurrentSettlement != null;
-                ApplyCraftingStaminaRecovery(hero, isInsideTown);
+                ApplyCraftingStaminaRecovery(craftingBehavior, hero, isInsideTown);
             }
         }
 
@@ -76,15 +81,22 @@ namespace RealmsForgotten.AiMade.Patches
        
         public void ApplyCraftingStaminaRecovery(Hero hero, bool isInsideTown)
         {
-            ICraftingCampaignBehavior craftingBehavior = Campaign.Current.GetCampaignBehavior<ICraftingCampaignBehavior>();
-            if (craftingBehavior == null || hero == null) return;
+            ApplyCraftingStaminaRecovery(Campaign.Current.GetCampaignBehavior<ICraftingCampaignBehavior>(), hero, isInsideTown);
+        }
 
-            // Get the appropriate recovery rate for the hero's race
-            float recoveryRate = GetCraftingStaminaRecoveryRate(hero, isInsideTown);
+        private void ApplyCraftingStaminaRecovery(ICraftingCampaignBehavior craftingBehavior, Hero hero, bool isInsideTown)
+        {
+            if (craftingBehavior == null || hero == null) return;
 
             // Get current and max stamina
             int currentStamina = craftingBehavior.GetHeroCraftingStamina(hero);
             int maxStamina = craftingBehavior.GetMaxHeroCraftingStamina(hero);
+
+            // Already full — skip the rate math and the interface write.
+            if (currentStamina >= maxStamina) return;
+
+            // Get the appropriate recovery rate for the hero's race
+            float recoveryRate = GetCraftingStaminaRecoveryRate(hero, isInsideTown);
 
             // Calculate stamina to recover (adjust formula as needed)
             int staminaRecovered = (int)(recoveryRate * 10); // Adjust recovery amount here

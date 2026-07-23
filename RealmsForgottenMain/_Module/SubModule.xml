@@ -132,7 +132,7 @@
       </Tags>
     </SubModule>
     <SubModule>
-      <Name value="Homesteads Reloaded" />
+      <Name value="RF Homestead" />
       <DLLName value="HomesteadsReloaded.dll" />
       <SubModuleClassType value="Homesteads.HomesteadsReloaded" />
       <Tags>
@@ -168,6 +168,27 @@
     </XmlNode>
     <XmlNode>
       <XmlName id="NPCCharacters" path="spnpccharacters" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <!-- Declared (with no local .xml) so RF's naval_characters.xslt is applied to
+         WarSails' NavalDLC/naval_characters.xml at load — re-themes the naval troops. -->
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="naval_characters" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <!-- Declared so RF's ship_upgrade_pieces.xslt is applied (Imperial -> North Realm). -->
+    <XmlNode>
+      <XmlName id="ShipUpgradePieces" path="ship_upgrade_pieces" />
       <IncludedGameTypes>
         <GameType value="Campaign" />
         <GameType value="CampaignStoryMode" />

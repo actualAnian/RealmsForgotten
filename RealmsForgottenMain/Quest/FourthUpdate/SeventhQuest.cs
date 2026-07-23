@@ -76,16 +76,22 @@ namespace RealmsForgotten.Quest.FourthUpdate
         [SaveableField(16)]
         private JournalLog? vortiakLairLog;
 
-        [SaveableField(17)]
+        // Índice 27, não 17: o 17 pertenceu a deformedSpawningEnabled (removido
+        // abaixo). Reciclar um índice faz o valor antigo do save vazar para o
+        // campo novo — um save antigo com deformedSpawning ligado disparava o
+        // diálogo da coruja espuriamente no load.
+        [SaveableField(27)]
         private bool _shouldTriggerOwlDialogueNextTick = false;
 
-        // ======================= CAMPOS REMOVIDOS =======================
+        // ================== CAMPOS REMOVIDOS (ÍNDICES APOSENTADOS) ==================
+        // NUNCA reusar estes índices — saves antigos ainda carregam os valores:
         // [SaveableField(17)] private bool deformedSpawningEnabled -> MOVIDO PARA O BEHAVIOR
         // [SaveableField(18)] private CampaignTime _nextDeformedSpawnTime -> MOVIDO PARA O BEHAVIOR
         // [SaveableField(19)] private int _deformedPartySpawnCount -> MOVIDO PARA O BEHAVIOR
         // [SaveableField(20)] private bool _eighthQuestStarted -> MOVIDO PARA O BEHAVIOR
+        // [SaveableField(22)] (nunca usado)
         // [SaveableField(23)] private JournalLog eighthPriestessLog -> REMOVIDO (não é mais necessário)
-        // ================================================================
+        // ============================================================================
 
         [SaveableField(21)]
         private bool _witchConversationCompleted = false;

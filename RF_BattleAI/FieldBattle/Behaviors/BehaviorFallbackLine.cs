@@ -22,6 +22,11 @@ public sealed class BehaviorFallbackLine : BehaviorComponent
     // endless treadmill the enemy can never catch.
     public float StepTriggerDistance { get; set; } = 30f;
 
+    /// <summary>Enemy distance beyond which no withdrawal happens — the line
+    /// simply holds where the army stands. Falling back only makes sense under
+    /// approach pressure.</summary>
+    public float EngageProximity { get; set; } = 70f;
+
     private Vec2 _heldFallbackPosition = Vec2.Invalid;
 
     public BehaviorFallbackLine(Formation formation)
@@ -56,6 +61,28 @@ public sealed class BehaviorFallbackLine : BehaviorComponent
         Vec2 anchorPosition = anchor.CachedMedianPosition.AsVec2;
         Vec2 enemyPosition = anchor.CachedClosestEnemyFormation?.Formation.CachedMedianPosition.AsVec2
             ?? base.Formation.Team.QuerySystem.AverageEnemyPosition;
+
+        // No withdrawal before contact: while the enemy is still far away there is
+        // nothing to fall back FROM — hold the line where the army currently
+        // stands. Without this, applying a fallback-using doctrine mid-map made
+        // the formations march backwards toward their deployment zone (tester
+        // report: "troops run back to the start of the map").
+        if (enemyPosition.IsValid && anchorPosition.IsValid
+            && enemyPosition.DistanceSquared(anchorPosition) > EngageProximity * EngageProximity)
+        {
+            if (!_heldFallbackPosition.IsValid)
+            {
+                _heldFallbackPosition = anchorPosition;
+            }
+            WorldPosition holdPosition = BattleAITerrainAnalyzer.CreateTerrainAdjustedPosition(
+                base.Formation,
+                _heldFallbackPosition,
+                enemyPosition,
+                BattleAITerrainPreference.DefensiveHighGround,
+                searchRadius: 16f);
+            base.CurrentOrder = MovementOrder.MovementOrderMove(holdPosition);
+            return;
+        }
 
         // Stepped withdrawal: keep ordering the formation to the line it already
         // holds; only pick a new line once the enemy has closed in on this one.

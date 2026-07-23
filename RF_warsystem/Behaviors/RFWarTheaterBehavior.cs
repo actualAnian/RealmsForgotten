@@ -236,7 +236,9 @@ public sealed class RFWarTheaterBehavior : CampaignBehaviorBase
             return null;
         }
 
-        return Settlement.All.FirstOrDefault(settlement => settlement.StringId == settlementId);
+        // O(1) lookup — see RFWarFrontlineBehavior.GetCurrentAnchor for why a
+        // linear scan here is unacceptable (target-score hot path).
+        return Settlement.Find(settlementId);
     }
 
     private static Settlement? GetBestDefensiveAnchor(Kingdom kingdom, Kingdom enemy)

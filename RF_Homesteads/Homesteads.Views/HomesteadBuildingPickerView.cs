@@ -20,7 +20,7 @@ public class HomesteadBuildingPickerView : MissionView
 
 	public override void OnMissionScreenInitialize()
 	{
-		((MissionView)this).OnMissionScreenInitialize();
+		base.OnMissionScreenInitialize();
 		Instance = this;
 	}
 
@@ -31,7 +31,7 @@ public class HomesteadBuildingPickerView : MissionView
 		{
 			Instance = null;
 		}
-		((MissionView)this).OnMissionScreenFinalize();
+		base.OnMissionScreenFinalize();
 	}
 
 	public void Open(HomesteadSceneEditingMissionLogic owner)
@@ -90,7 +90,7 @@ public class HomesteadBuildingPickerView : MissionView
 
 	public override void OnMissionScreenTick(float dt)
 	{
-		((MissionView)this).OnMissionScreenTick(dt);
+		base.OnMissionScreenTick(dt);
 		if (IsOpen && _layer != null && (_layer.Input.IsHotKeyReleased("Exit") || _layer.Input.IsKeyReleased(InputKey.Escape) || (TaleWorlds.InputSystem.Input.IsGamepadActive && _layer.Input.IsKeyReleased(InputKey.ControllerRRight))))
 		{
 			Close();

@@ -41,6 +41,10 @@ public class HomesteadVM : ViewModel
 
 	private bool _isBuildMenuPromptVisible;
 
+	private bool _isHelpPanelVisible;
+
+	private string _helpPanelText = "";
+
 	[DataSourceProperty]
 	public string BuildPointsLocalization => Utils.GetLocalizedString("{=homestead_gui_build_points}Build Points: ");
 
@@ -82,6 +86,40 @@ public class HomesteadVM : ViewModel
 			{
 				_areStatsVisible = value;
 				OnPropertyChangedWithValue(value, "AreStatsVisible");
+			}
+		}
+	}
+
+	[DataSourceProperty]
+	public bool IsHelpPanelVisible
+	{
+		get
+		{
+			return _isHelpPanelVisible;
+		}
+		set
+		{
+			if (value != _isHelpPanelVisible)
+			{
+				_isHelpPanelVisible = value;
+				OnPropertyChangedWithValue(value, "IsHelpPanelVisible");
+			}
+		}
+	}
+
+	[DataSourceProperty]
+	public string HelpPanelText
+	{
+		get
+		{
+			return _helpPanelText;
+		}
+		set
+		{
+			if (value != _helpPanelText)
+			{
+				_helpPanelText = value;
+				OnPropertyChangedWithValue(value, "HelpPanelText");
 			}
 		}
 	}

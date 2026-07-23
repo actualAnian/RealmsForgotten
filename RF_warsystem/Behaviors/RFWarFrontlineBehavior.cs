@@ -213,7 +213,11 @@ public sealed class RFWarFrontlineBehavior : CampaignBehaviorBase
             return null;
         }
 
-        return Settlement.All.FirstOrDefault(settlement => settlement.StringId == settlementId);
+        // Settlement.Find is an O(1) MBObjectManager lookup. This getter sits
+        // inside the army target-score hot path the vanilla AI calls tens of
+        // thousands of times per game hour — a linear Settlement.All scan here
+        // was the single biggest map-stutter source in the mod.
+        return Settlement.Find(settlementId);
     }
 
     private static Settlement? SelectBestFrontAnchor(Kingdom kingdom, Kingdom enemy)

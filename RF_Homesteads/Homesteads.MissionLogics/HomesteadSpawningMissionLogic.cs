@@ -1262,6 +1262,7 @@ public class HomesteadSpawningMissionLogic : MissionLogic
 			return false;
 		}
 		List<GameEntity> e = entitiesWithNpcSpawnTag.ToList();
+		Queue<Vec3> campSpots = BuildTentCampSpots(isPrisoner);
 		int num = 0;
 		foreach (CharacterObject item in list)
 		{
@@ -1272,16 +1273,151 @@ public class HomesteadSpawningMissionLogic : MissionLogic
 			bool shouldWearCivEquipment = !num2;
 			bool shouldSheathWeapons = num2;
 			HandleSpawnEntitySpecialTags(gameEntity, ref actionSetCodeSuffix, ref shouldWearCivEquipment, ref shouldSheathWeapons);
-			Vec3 positionToSpawnAt = (flag ? gameEntity.GlobalPosition : GetOverflowSpawnPosition(gameEntity.GlobalPosition, num));
-			Mat3 rotation = gameEntity.GetFrame().rotation;
-			SpawnHomesteadAgent(flag ? gameEntity : null, positionToSpawnAt, rotation, homestead.Party, item, AgentControllerType.AI, actionSetCodeSuffix, shouldWearCivEquipment, shouldSheathWeapons, noHorses: true, heroesFollow, isPrisoner);
-			if (flag)
+			Vec3 positionToSpawnAt;
+			Mat3 rotation;
+			bool usedCampSpot = false;
+			if (!item.IsHero && !isPrisoner && campSpots.Count > 0)
+			{
+				// Regular garrison troops live around the camp's tents, not in a
+				// block on the spawn point: each takes a spot ringed around a
+				// placed tent and faces a random way (the villager action set
+				// supplies the ambient idles).
+				positionToSpawnAt = campSpots.Dequeue();
+				rotation = Mat3.Identity;
+				rotation.RotateAboutUp(MBRandom.RandomFloat * (TaleWorlds.Library.MathF.PI * 2f));
+				usedCampSpot = true;
+			}
+			else
+			{
+				positionToSpawnAt = (flag ? gameEntity.GlobalPosition : GetOverflowSpawnPosition(gameEntity.GlobalPosition, num));
+				rotation = gameEntity.GetFrame().rotation;
+				if (!item.IsHero && !isPrisoner)
+				{
+					rotation = Mat3.Identity;
+					rotation.RotateAboutUp(MBRandom.RandomFloat * (TaleWorlds.Library.MathF.PI * 2f));
+				}
+			}
+			Agent spawned = SpawnHomesteadAgent((flag && !usedCampSpot) ? gameEntity : null, positionToSpawnAt, rotation, homestead.Party, item, AgentControllerType.AI, actionSetCodeSuffix, shouldWearCivEquipment, shouldSheathWeapons, noHorses: true, heroesFollow, isPrisoner);
+			if (spawned != null && !item.IsHero && !isPrisoner)
+			{
+				_campTroopAgents.Add(spawned);
+			}
+			if (flag && !usedCampSpot)
 			{
 				entitiesWithNpcSpawnTag.Remove(gameEntity);
 			}
 			num++;
 		}
 		return true;
+	}
+
+	private readonly List<Agent> _campTroopAgents = new List<Agent>();
+
+	/// <summary>
+	/// Spots ringed around every placed tent, shuffled, so garrison troops idle
+	/// around and between the tents like a lived-in camp instead of piling up on
+	/// the location's spawn point.
+	/// </summary>
+	private Queue<Vec3> BuildTentCampSpots(bool isPrisoner)
+	{
+		Queue<Vec3> queue = new Queue<Vec3>();
+		if (isPrisoner)
+		{
+			return queue;
+		}
+		try
+		{
+			List<Vec3> spots = new List<Vec3>();
+			foreach (KeyValuePair<GameEntity, HomesteadSceneSavedEntity> kv in homestead.GetHomesteadScene().LoadedSavedEntities)
+			{
+				string prefab = kv.Value?.Placeable?.PrefabName ?? "";
+				if (kv.Key == null || (prefab.IndexOf("tent", StringComparison.OrdinalIgnoreCase) < 0 && prefab.IndexOf("yurt", StringComparison.OrdinalIgnoreCase) < 0))
+				{
+					continue;
+				}
+				int points = 3 + MBRandom.RandomInt(3);
+				for (int i = 0; i < points; i++)
+				{
+					spots.Add(GetRingSpotAround(kv.Key));
+				}
+			}
+			while (spots.Count > 0)
+			{
+				int index = MBRandom.RandomInt(spots.Count);
+				queue.Enqueue(spots[index]);
+				spots.RemoveAt(index);
+			}
+			if (queue.Count > 0)
+			{
+				TraceLogger.Write("HomesteadSpawningMissionLogic", $"BuildTentCampSpots: {queue.Count} camp spots around placed tents.");
+			}
+		}
+		catch (Exception ex)
+		{
+			TraceLogger.Write("HomesteadSpawningMissionLogic", "BuildTentCampSpots failed: " + ex.Message);
+		}
+		return queue;
+	}
+
+	/// <summary>
+	/// A ring spot OUTSIDE the shelter's canvas: the minimum radius comes from
+	/// the entity's bounding-box footprint plus clearance, so nobody spawns
+	/// halfway inside the tent walls.
+	/// </summary>
+	private Vec3 GetRingSpotAround(GameEntity shelterEntity)
+	{
+		Vec3 center = shelterEntity.GlobalPosition;
+		float footprint = 1.4f;
+		try
+		{
+			Vec3 boundingBoxMin = shelterEntity.GetBoundingBoxMin();
+			Vec3 boundingBoxMax = shelterEntity.GetBoundingBoxMax();
+			footprint = Math.Max(Math.Abs(boundingBoxMax.X - boundingBoxMin.X), Math.Abs(boundingBoxMax.Y - boundingBoxMin.Y)) * 0.5f;
+		}
+		catch
+		{
+		}
+		float radius = Math.Max(1.8f, footprint + 0.6f) + MBRandom.RandomFloat * 1.6f;
+		float angle = MBRandom.RandomFloat * (TaleWorlds.Library.MathF.PI * 2f);
+		return SnapToGround(center + new Vec3(TaleWorlds.Library.MathF.Cos(angle) * radius, TaleWorlds.Library.MathF.Sin(angle) * radius));
+	}
+
+	/// <summary>
+	/// Called when a tent/yurt is built mid-visit: up to four garrison troops
+	/// WALK over (scripted move, walking animation) and settle around the new
+	/// shelter, so the camp reorganizes live instead of only on the next visit.
+	/// </summary>
+	public void SendTroopsToCampShelter(GameEntity shelterEntity, int maxTroops = 4)
+	{
+		try
+		{
+			if (shelterEntity == null)
+			{
+				return;
+			}
+			Vec3 center = shelterEntity.GlobalPosition;
+			List<Agent> candidates = _campTroopAgents.Where((Agent a) => a != null && a.IsActive() && !a.IsPlayerControlled && center.Distance(a.Position) > 5f).OrderByDescending((Agent a) => center.Distance(a.Position)).ToList();
+			int sent = 0;
+			foreach (Agent agent in candidates)
+			{
+				if (sent >= maxTroops)
+				{
+					break;
+				}
+				Vec3 spot = GetRingSpotAround(shelterEntity);
+				WorldPosition worldPosition = new WorldPosition(base.Mission.Scene, spot);
+				agent.SetScriptedPosition(ref worldPosition, addHumanLikeDelay: true, Agent.AIScriptedFrameFlags.DoNotRun);
+				sent++;
+			}
+			if (sent > 0)
+			{
+				TraceLogger.Write("HomesteadSpawningMissionLogic", $"SendTroopsToCampShelter: {sent} troops walking to the new shelter at ({center.X:0.#},{center.Y:0.#}).");
+			}
+		}
+		catch (Exception ex)
+		{
+			TraceLogger.Write("HomesteadSpawningMissionLogic", "SendTroopsToCampShelter failed: " + ex.Message);
+		}
 	}
 
 	private Vec3 SnapToGround(Vec3 p)
@@ -1302,9 +1438,12 @@ public class HomesteadSpawningMissionLogic : MissionLogic
 
 	private static Vec3 GetOverflowSpawnPosition(Vec3 origin, int index)
 	{
-		float x = (float)(index % 12) * (TaleWorlds.Library.MathF.PI / 6f);
+		// Wide, slightly jittered rings: overflow troops spread out like a camp
+		// instead of packing shoulder-to-shoulder on the spawn point.
+		float x = (float)(index % 12) * (TaleWorlds.Library.MathF.PI / 6f) + MBRandom.RandomFloat * 0.35f;
 		int num = index / 12 + 1;
-		return origin + new Vec3(TaleWorlds.Library.MathF.Cos(x) * 1.4f * (float)num, TaleWorlds.Library.MathF.Sin(x) * 1.4f * (float)num);
+		float num2 = (2.6f + MBRandom.RandomFloat) * (float)num;
+		return origin + new Vec3(TaleWorlds.Library.MathF.Cos(x) * num2, TaleWorlds.Library.MathF.Sin(x) * num2);
 	}
 
 	private static int GetPrisonSpawnPriority(GameEntity entity)
@@ -2157,9 +2296,18 @@ public class HomesteadSpawningMissionLogic : MissionLogic
 
 	private void TickAgentAnimations(Agent agent)
 	{
+		// One call site wraps this in try/catch, the other doesn't — guard here
+		// so a freshly spawned agent without visuals can't crash either path.
+		var visuals = agent?.AgentVisuals;
+		var skeleton = visuals?.GetSkeleton();
+		if (visuals == null || skeleton == null)
+		{
+			return;
+		}
+
 		for (int i = 0; i < 3; i++)
 		{
-			agent.AgentVisuals.GetSkeleton().TickAnimations(0.1f, agent.AgentVisuals.GetGlobalFrame(), tickAnimsForChildren: true);
+			skeleton.TickAnimations(0.1f, visuals.GetGlobalFrame(), tickAnimsForChildren: true);
 		}
 	}
 

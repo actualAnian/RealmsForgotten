@@ -16,6 +16,11 @@ public sealed class RFArmyCommandCampaignBehavior : CampaignBehaviorBase
     {
         CampaignEvents.HourlyTickPartyEvent.AddNonSerializedListener(this, OnHourlyTickParty);
         CampaignEvents.MobilePartyDestroyed.AddNonSerializedListener(this, OnMobilePartyDestroyed);
+        // ManualOverrides is static and only replaced on LOAD (ImportManualOverrides).
+        // A brand-new campaign in the same session inherited the previous
+        // campaign's overrides, keyed by leader ids that can collide.
+        CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, _ =>
+            RFArmyCommandService.ImportManualOverrides(new List<string>()));
     }
 
     public override void SyncData(IDataStore dataStore)

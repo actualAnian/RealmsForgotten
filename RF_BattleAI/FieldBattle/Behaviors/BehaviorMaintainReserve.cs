@@ -57,6 +57,20 @@ public sealed class BehaviorMaintainReserve : BehaviorComponent
         }
 
         Vec2 reservePosition = anchorPosition - directionToEnemy * DesiredDistance;
+
+        // Reposition hysteresis: jittery enemy medians (an army shuffling in a
+        // corner) used to drag the reserve back and forth every tick. Keep the
+        // held station until the ideal spot has drifted meaningfully.
+        if (_heldReservePosition.IsValid
+            && reservePosition.DistanceSquared(_heldReservePosition) < RepositionThreshold * RepositionThreshold)
+        {
+            reservePosition = _heldReservePosition;
+        }
+        else
+        {
+            _heldReservePosition = reservePosition;
+        }
+
         WorldPosition targetPosition = BattleAITerrainAnalyzer.CreateTerrainAdjustedPosition(
             base.Formation,
             reservePosition,
@@ -65,6 +79,12 @@ public sealed class BehaviorMaintainReserve : BehaviorComponent
             searchRadius: 14f);
         base.CurrentOrder = MovementOrder.MovementOrderMove(targetPosition);
     }
+
+    /// <summary>How far the ideal reserve spot must drift before the formation
+    /// is actually re-stationed.</summary>
+    public float RepositionThreshold { get; set; } = 15f;
+
+    private Vec2 _heldReservePosition = Vec2.Invalid;
 
     public override void TickOccasionally()
     {

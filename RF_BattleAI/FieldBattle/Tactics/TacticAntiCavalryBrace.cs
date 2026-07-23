@@ -297,6 +297,17 @@ public sealed class TacticAntiCavalryBrace : TacticComponent
 
         _supportInfantry.AI.ResetBehaviorWeights();
         SetDefaultBehaviorWeights(_supportInfantry);
+
+        // If the main body is already locked in melee, the reserve must NOT sit
+        // back — that is what left "half the infantry outnumbered while the other
+        // half regrouped" (tester, battle 10). Commit it to reinforce instead.
+        if (IsMainInfantryInMelee())
+        {
+            _supportInfantry.AI.SetBehaviorWeight<BehaviorAdvance>(0.9f);
+            _supportInfantry.AI.SetBehaviorWeight<BehaviorTacticalCharge>(1.2f);
+            return;
+        }
+
         if (defendWeight > 0f)
         {
             _supportInfantry.AI.SetBehaviorWeight<BehaviorDefend>(defendWeight).DefensePosition = GetDefensivePosition(_supportInfantry);
@@ -311,6 +322,23 @@ public sealed class TacticAntiCavalryBrace : TacticComponent
         {
             _supportInfantry.AI.SetBehaviorWeight<BehaviorTacticalCharge>(chargeWeight);
         }
+    }
+
+    private bool IsMainInfantryInMelee()
+    {
+        Formation? main = _mainInfantry;
+        if (main == null || main.CountOfUnits <= 0)
+        {
+            return false;
+        }
+        Formation? enemy = main.CachedClosestEnemyFormation?.Formation;
+        if (enemy == null || enemy.CountOfUnits <= 0)
+        {
+            return false;
+        }
+        // ~18m: shields have clashed. Also trust the query system's own signal.
+        float distSq = main.CachedMedianPosition.AsVec2.DistanceSquared(enemy.CachedMedianPosition.AsVec2);
+        return distSq <= 324f || main.QuerySystem.UnderRangedAttackRatio > 0.5f;
     }
 
     private void ApplyArchers(float screenedWeight, float skirmishWeight)

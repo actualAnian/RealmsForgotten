@@ -14,13 +14,34 @@ namespace RealmsForgotten.AiMade.TradePact
 {
     public class EconomicPactBehavior : CampaignBehaviorBase
     {
+        private List<string> _serializedPacts = new List<string>();
+
         public override void RegisterEvents()
         {
             CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, OnDailyTick);
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, OnSessionLaunched);
+            // The pact list is a static — a brand-new campaign in the same game
+            // session used to inherit the previous campaign's pacts (with dead
+            // faction references). Loads are covered by SyncData's import.
+            CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, _ => EconomicPactManager.Reset());
         }
 
-        public override void SyncData(IDataStore dataStore) { }
+        public override void SyncData(IDataStore dataStore)
+        {
+            // Pacts used to live only in the static manager: never saved (gone on
+            // restart) and never cleared (bleeding across campaigns).
+            if (dataStore.IsSaving)
+            {
+                _serializedPacts = EconomicPactManager.ExportForSave();
+            }
+
+            dataStore.SyncData("RF_EconomicPacts", ref _serializedPacts);
+
+            if (dataStore.IsLoading)
+            {
+                EconomicPactManager.ImportFromSave(_serializedPacts);
+            }
+        }
 
         private void OnDailyTick()
         {

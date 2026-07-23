@@ -27,58 +27,22 @@ using TaleWorlds.CampaignSystem.ComponentInterfaces;
 
 namespace RealmsForgotten.AiMade
 {
+    // LIFECYCLE OWNERSHIP (audit 2026-07-18): this class is NOT listed in
+    // SubModule.xml, so the engine never instantiates it — its MBSubModuleBase
+    // overrides were dead code that silently killed 6 models, 5 mission
+    // behaviors and 2 manual patches for as long as they lived here. Everything
+    // is now owned by RealmsForgotten.SubModule (behaviors via
+    // AddCampaignBehaviors below; models in its OnGameStart; mission behaviors
+    // in its OnMissionBehaviorInitialize; the join-encounter menu patch in its
+    // OnGameInitializationFinished). NOTE: AgentVisualsDataMonsterFix was tried
+    // there and reverted — it caused a native AccessViolation (see that method's
+    // comment in SubModule.cs); it stays dead.
+    //
+    // DO NOT add this class to SubModule.xml and DO NOT re-add lifecycle
+    // overrides here: with SubModule also registering, every behavior would be
+    // added twice and every uncategorized Harmony patch would run under two ids.
     public class AiSubModule : MBSubModuleBase
     {
-        private UIExtender _extender;
-        protected override void OnSubModuleLoad()
-        {
-            base.OnSubModuleLoad();
-            Assembly asm = typeof(AiSubModule).Assembly;
-            RFLogger.Log($"[Lifecycle] AiSubModule.OnSubModuleLoad | asm={asm.Location} | version={asm.GetName().Version} | lastWrite={System.IO.File.GetLastWriteTime(asm.Location):O}");
-            RFLogger.Log("[RF] SubModule loaded");
-            try
-            {
-                _extender = new UIExtender("RealmsForgotten");
-                _extender.Register(asm);
-                _extender.Enable();
-
-                var harmony = new Harmony("com.realmsforgotten.aimade");
-                harmony.PatchAll();
-                int patched = AgentVisualsDataMonsterFix.TryPatch(harmony);
-                InformationManager.DisplayMessage(new InformationMessage("RealmsForgotten: Harmony patches applied successfully."));
-            }
-            catch (Exception ex)
-            {
-                RFLogger.Log("[Harmony] AiSubModule.PatchAll failed: " + ex);
-                InformationManager.DisplayMessage(new InformationMessage($"RealmsForgotten: Failed to apply Harmony patches. {ex.Message}"));
-            }
-            
-
-        }
-
-        protected override void OnSubModuleUnloaded()
-        {
-            _extender?.Disable();
-            _extender?.Deregister();
-            _extender = null;
-            base.OnSubModuleUnloaded();
-        }
-
-        protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
-        {
-            base.OnGameStart(game, gameStarterObject);
-            RFLogger.Log($"[Lifecycle] AiSubModule.OnGameStart | gameType={game.GameType?.GetType().FullName ?? "null"} | starter={gameStarterObject?.GetType().FullName ?? "null"}");
-            if (game.GameType is Campaign)
-            {
-                var campaignStarter = (CampaignGameStarter)gameStarterObject;
-                AddCampaignBehaviors(campaignStarter);
-                AddCustomModels(campaignStarter);
-                ApplyDelayedJoinEncounterPatch();
-
-            }
-            RFLogger.Log("[Probe] Siege transition probe disabled for cold-load isolation");
-        }
-            
         public static void AddCampaignBehaviors(CampaignGameStarter campaignGameStarter)
         {
             // Initialize quest behaviors
@@ -151,58 +115,21 @@ namespace RealmsForgotten.AiMade
             campaignGameStarter.AddBehavior(new RFJoinRaidEncounterBehavior());
             //campaignGameStarter.AddBehavior(new CommanderDefenseBehavior());
         }
-        private void AddCustomModels(CampaignGameStarter campaignGameStarter)
-        {
-            // Register the custom inventory capacity model
-            campaignGameStarter.AddModel(new UrkhaiPartySizeModel());
-            campaignGameStarter.AddModel(new AlignmentDiplomacyModel(Campaign.Current.Models.DiplomacyModel));
-            campaignGameStarter.AddModel(new ClimateAwareVillageProductionModel(campaignGameStarter.GetExistingModel<VillageProductionCalculatorModel>()));
-            campaignGameStarter.AddModel(new ClimateAwareSettlementFoodModel(campaignGameStarter.GetExistingModel<SettlementFoodModel>()));
-            campaignGameStarter.AddModel(new CustomTradeItemPriceFactorModel());
-            //campaignGameStarter.AddModel(new SpearAwareBattleSpawnModel());
-            campaignGameStarter.AddModel(new RFDiplomacyModel());
-        }
-        public override void OnMissionBehaviorInitialize(Mission mission)
-        {
-            if (mission == null)
-                return;
-
-            // Add Custom Berserker Behavior for specific mission modes
-            if ((mission.Mode == MissionMode.Battle || mission.Mode == MissionMode.StartUp || mission.Mode == MissionMode.Conversation)
-                && mission.CombatType != Mission.MissionCombatType.ArenaCombat)
-            {
-                var berserkerBehavior = new CustomBerserkerBehavior();
-                mission.AddMissionBehavior(berserkerBehavior);
-
-                //mission.AddMissionBehavior(new ForceWinterMissionBehavior());
-                mission.AddMissionBehavior(new ADODFireArrowsMissionBehavior());
-            }
-
-            if (mission.Mode == MissionMode.Battle
-       || mission.Mode == MissionMode.Stealth
-       || mission.Mode == MissionMode.Duel)
-            {
-                mission.AddMissionBehavior(new InfectionMissionBehavior());
-            }
-
-            // Add Reinforcements Runner if DeploymentMissionController is present
-            if (mission.MissionLogics.OfType<DeploymentMissionController>().Any()
-                && !mission.MissionLogics.OfType<CustomBattleAgentLogic>().Any()
-                && !mission.MissionLogics.OfType<SiegeDeploymentMissionController>().Any())
-            {
-                mission.AddMissionBehavior(new ADODReinforcementsRunner());
-                mission.AddMissionBehavior(new CommanderSwapMissionBehavior());
-            }
-            // Add Find Magic Items behavior to all missions
-            mission.AddMissionBehavior(new FindMagicItemsMissionBehavior());
-            // No final do OnMissionBehaviorInitialize, depois de AddMissionBehavior(...)
-            // Mission tick probe disabled during cold-load investigation.
-
-        }
+        // Models moved to RealmsForgotten.SubModule.OnGameStart (this method never
+        // ran — see the class comment). Chain order matters there:
+        // Urkhai before RFPartySizeLimitModel; RFDiplomacy before Alignment.
+        // CustomTradeItemPriceFactorModel is now revived too (reworked to extend
+        // the Default model so it composes with the Homesteads discount patch).
+        // SpearAwareBattleSpawnModel stays off as before.
+        // Mission behaviors moved to RealmsForgotten.SubModule.OnMissionBehaviorInitialize
+        // (this class's override never ran — see the class comment). Two were left
+        // out on purpose: InfectionMissionBehavior (attached lazily by
+        // RealmsForgottenInfectPatch.EnsureOn) and CommanderSwapMissionBehavior
+        // (parent CommanderDefenseBehavior is deliberately disabled).
 
         private static bool _menuPatchApplied = false;
 
-        private void ApplyDelayedJoinEncounterPatch()
+        internal static void ApplyDelayedJoinEncounterPatch()
         {
             if (_menuPatchApplied)
                 return;

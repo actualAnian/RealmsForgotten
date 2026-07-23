@@ -8,6 +8,8 @@ using HarmonyLib;
 using Helpers;
 using MCM.Abstractions.Base.Global;
 using SandBox.View.Map;
+using SandBox.View.Map.Managers;
+using SandBox.View.Map.Visuals;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
@@ -99,7 +101,10 @@ public class Homestead : PartyComponent
 
 	private const float NearbyHomesteadSceneReuseRadius = 75f;
 
-	private static readonly Vec3 MapVisualOffset = new Vec3(-1.6f, 0.15f);
+	// Zero offset: the camp model sits exactly on the party anchor, so the
+	// hover/selection circle and the nameplate (which follow the party position)
+	// visually belong to the camp — it IS the homestead's map icon.
+	private static readonly Vec3 MapVisualOffset = new Vec3(0f, 0f);
 
 	private static readonly float[] HomesteadSceneSampleRadii = new float[5] { 8f, 16f, 32f, 64f, 128f };
 
@@ -3134,6 +3139,7 @@ public class Homestead : PartyComponent
 			DestroyStandaloneMapIcon();
 			return;
 		}
+		EnsureHomesteadPartyClickProxyVisible();
 		if (_standaloneMapIcon != null)
 		{
 			if (_standaloneMapIconTier == Tier)
@@ -3144,8 +3150,13 @@ public class Homestead : PartyComponent
 				Campaign.Current.MapSceneWrapper.GetHeightAtPoint(in point, ref height);
 				frame.origin = new Vec3(base.MobileParty.GetPosition2D.X, base.MobileParty.GetPosition2D.Y, height) + MapVisualOffset;
 				_standaloneMapIcon.SetFrame(ref frame);
+				RegisterStandaloneMapIconClickTarget();
+				// Re-assert every visual tick: agent visuals can be recreated by the
+				// party visual refresh and would pop back in.
+				SetHomesteadRiderAgentVisualsVisibility(visible: false);
 				return;
 			}
+			UnregisterStandaloneMapIconClickTarget();
 			_standaloneMapIcon.Remove(115);
 			_standaloneMapIcon = null;
 		}
@@ -3160,13 +3171,127 @@ public class Homestead : PartyComponent
 			Campaign.Current.MapSceneWrapper.GetHeightAtPoint(in point2, ref height2);
 			frame2.origin = new Vec3(base.MobileParty.GetPosition2D.X, base.MobileParty.GetPosition2D.Y, height2) + MapVisualOffset;
 			_standaloneMapIcon.SetFrame(ref frame2);
+			RegisterStandaloneMapIconClickTarget();
+			SetHomesteadRiderAgentVisualsVisibility(visible: false);
 			TraceLogger.Write("Homestead", $"Created new standalone map icon for '{Name}' tier {Tier} during {reason}");
+		}
+	}
+
+	/// <summary>
+	/// Restores the party's raycast/click proxy. The StrategicEntity is NOT the
+	/// rider's render body (agent visuals are separate entities) — it is what the
+	/// map mouse ray hits to resolve the party. Hiding it does not hide the rider;
+	/// it only makes the party unclickable. This runs every visual tick so any
+	/// save/session that was affected by the old hiding heals itself.
+	/// </summary>
+	private void EnsureHomesteadPartyClickProxyVisible()
+	{
+		try
+		{
+			MobilePartyVisualManager.Current?.GetPartyVisual(base.Party)?.StrategicEntity?.SetVisibilityExcludeParents(visible: true);
+		}
+		catch
+		{
+		}
+	}
+
+	private static readonly FieldInfo? PartyVisualBannerEntityField =
+		AccessTools.Field(typeof(MobilePartyVisual), "_cachedBannerEntity");
+
+	/// <summary>
+	/// While the camp model is on the map it IS the homestead's icon, so the
+	/// rider render (leader + mount + banner flag) is hidden. This touches ONLY
+	/// the agent visual entities and the cached banner entity — never the
+	/// StrategicEntity, which is the party's raycast/click proxy and must stay
+	/// visible (hiding it was the earlier mistake that killed all clicking).
+	/// </summary>
+	private void SetHomesteadRiderAgentVisualsVisibility(bool visible)
+	{
+		try
+		{
+			MobilePartyVisual? partyVisual = MobilePartyVisualManager.Current?.GetPartyVisual(base.Party);
+			if (partyVisual == null)
+			{
+				return;
+			}
+			partyVisual.HumanAgentVisuals?.GetEntity()?.SetVisibilityExcludeParents(visible);
+			partyVisual.MountAgentVisuals?.GetEntity()?.SetVisibilityExcludeParents(visible);
+			partyVisual.CaravanMountAgentVisuals?.GetEntity()?.SetVisibilityExcludeParents(visible);
+			if (PartyVisualBannerEntityField?.GetValue(partyVisual) is ValueTuple<string, GameEntity> bannerEntity)
+			{
+				bannerEntity.Item2?.SetVisibilityExcludeParents(visible);
+			}
+		}
+		catch
+		{
+		}
+	}
+
+	/// <summary>
+	/// The standalone icon is a raw scene entity, invisible to the campaign UI:
+	/// hovering or clicking the camp model does nothing, so players who read the
+	/// camp as "the homestead" cannot open its menu (only the party rider works).
+	/// The map resolves hover/click by looking the hit entity's pointer up in
+	/// MapScreen.VisualsOfEntities, so registering the icon entity against the
+	/// homestead party's own visual makes clicking the camp behave exactly like
+	/// clicking the party.
+	/// </summary>
+	private void RegisterStandaloneMapIconClickTarget()
+	{
+		if (_standaloneMapIcon == null)
+		{
+			return;
+		}
+		try
+		{
+			if (MapScreen.VisualsOfEntities.ContainsKey(_standaloneMapIcon.Pointer))
+			{
+				return;
+			}
+			MapEntityVisual? partyVisual = null;
+			foreach (MapEntityVisual visual in MapScreen.VisualsOfEntities.Values)
+			{
+				if (visual is MapEntityVisual<PartyBase> partyEntityVisual && partyEntityVisual.MapEntity == base.Party)
+				{
+					partyVisual = visual;
+					break;
+				}
+			}
+			if (partyVisual != null)
+			{
+				MapScreen.VisualsOfEntities[_standaloneMapIcon.Pointer] = partyVisual;
+				TraceLogger.Write("Homestead", $"Registered standalone map icon of '{Name}' as a click target for the homestead party.");
+			}
+		}
+		catch (Exception ex)
+		{
+			TraceLogger.WriteOnce("IconClickReg_" + (base.MobileParty?.StringId ?? Name?.ToString() ?? "unknown"), "Homestead", $"Could not register map icon click target for '{Name}': {ex.GetType().Name}: {ex.Message}");
+		}
+	}
+
+	private void UnregisterStandaloneMapIconClickTarget()
+	{
+		if (_standaloneMapIcon == null)
+		{
+			return;
+		}
+		try
+		{
+			MapScreen.VisualsOfEntities.Remove(_standaloneMapIcon.Pointer);
+		}
+		catch
+		{
 		}
 	}
 
 	private GameEntity? TryCreateStandaloneMapIconEntity()
 	{
 		Scene mapScene = MapScreen.Instance.MapScene;
+		GameEntity? gameEntity2 = TryCreateTentClusterIcon(mapScene);
+		if (gameEntity2 != null)
+		{
+			return gameEntity2;
+		}
 		foreach (MapVisualCandidate mapIconCandidate in GetMapIconCandidates())
 		{
 			try
@@ -3186,6 +3311,13 @@ public class Homestead : PartyComponent
 					MatrixFrame frame = MatrixFrame.Identity;
 					frame.rotation.ApplyScaleLocal(mapIconCandidate.Scale);
 					gameEntity.SetFrame(ref frame);
+					// A bare decorative mesh is invisible to the map's mouse ray, so
+					// the camp could never be hovered or clicked. Give it a
+					// raycast-only sphere body — the exact pattern WarSails uses for
+					// its clickable anchor icon — so the ray hits it and the
+					// VisualsOfEntities registration resolves it to the homestead
+					// party (tooltip + click -> homestead menu).
+					gameEntity.AddSphereAsBody(new Vec3(0f, 0f, 0f, -1f), 2f, BodyFlags.Moveable | BodyFlags.OnlyCollideWithRaycast);
 					return gameEntity;
 				}
 			}
@@ -3198,11 +3330,72 @@ public class Homestead : PartyComponent
 		return null;
 	}
 
+	/// <summary>
+	/// Camp icon built from the vanilla siege-camp tent map mesh: one tent at
+	/// tier 0, growing to a five-tent camp at tier 4 — the homestead reads as a
+	/// camp that expands with its tier, like a siege camp does. The raycast
+	/// sphere sits on the cluster parent, which is the entity registered as the
+	/// click target. Returns null (caller falls back to the old house meshes) if
+	/// the tent mesh is unavailable.
+	/// </summary>
+	private GameEntity? TryCreateTentClusterIcon(Scene mapScene)
+	{
+		try
+		{
+			int num = 1 + Math.Max(0, Math.Min(Tier, 4));
+			Vec2[] array = new Vec2[5]
+			{
+				new Vec2(0f, 0f),
+				new Vec2(1.2f, 0.5f),
+				new Vec2(-1.1f, 0.7f),
+				new Vec2(0.8f, -1f),
+				new Vec2(-1f, -0.9f)
+			};
+			float[] array2 = new float[5] { 0f, 2.4f, 4.1f, 1.2f, 5.3f };
+			GameEntity gameEntity = GameEntity.CreateEmpty(mapScene);
+			int num2 = 0;
+			for (int i = 0; i < num; i++)
+			{
+				MetaMesh copy = MetaMesh.GetCopy("map_icon_siege_camp_tent", showErrors: false, mayReturnNull: true);
+				if (copy == null)
+				{
+					break;
+				}
+				GameEntity gameEntity3 = GameEntity.CreateEmpty(mapScene);
+				gameEntity3.AddMultiMesh(copy);
+				MatrixFrame frame = MatrixFrame.Identity;
+				frame.rotation.RotateAboutUp(array2[i]);
+				frame.origin = new Vec3(array[i].x, array[i].y, 0f);
+				gameEntity3.SetFrame(ref frame);
+				gameEntity.AddChild(gameEntity3);
+				num2++;
+			}
+			if (num2 == 0)
+			{
+				gameEntity.Remove(115);
+				return null;
+			}
+			gameEntity.AddSphereAsBody(new Vec3(0f, 0f, 0f, -1f), 2.5f, BodyFlags.Moveable | BodyFlags.OnlyCollideWithRaycast);
+			TraceLogger.Write("Homestead", $"Created tent-cluster map icon for '{Name}': {num2} tents (tier {Tier}).");
+			return gameEntity;
+		}
+		catch (Exception ex)
+		{
+			TraceLogger.Write("Homestead", $"Tent-cluster icon failed for '{Name}' ({ex.GetType().Name}: {ex.Message}) — falling back to house meshes.");
+			return null;
+		}
+	}
+
 	public void DestroyStandaloneMapIcon()
 	{
 		if (_standaloneMapIcon != null)
 		{
+			UnregisterStandaloneMapIconClickTarget();
 			_standaloneMapIcon.Remove(115);
+			EnsureHomesteadPartyClickProxyVisible();
+			// No camp model anymore (e.g. the homestead is moving) — the rider is
+			// the homestead's marker again, so bring its render back.
+			SetHomesteadRiderAgentVisualsVisibility(visible: true);
 		}
 		_standaloneMapIcon = null;
 	}
@@ -4472,6 +4665,7 @@ public class Homestead : PartyComponent
 			Tier++;
 			TierProgress = 0f;
 			base.MobileParty?.Party?.SetVisualAsDirty();
+			HomesteadChronicle.Record($"The homestead of {Name} has grown into a larger camp (tier {Tier}).");
 		}
 	}
 
@@ -4952,6 +5146,30 @@ public class Homestead : PartyComponent
 			}
 		}
 		return null;
+	}
+
+	/// <summary>
+	/// Everything worth stealing: stored gold plus the market value of the stash.
+	/// Drives the wealth-attracts-raiders pressure.
+	/// </summary>
+	public int GetWealthValue()
+	{
+		int num = Math.Max(0, GoldStored);
+		try
+		{
+			foreach (ItemRosterElement item in Stash)
+			{
+				ItemObject item2 = item.EquipmentElement.Item;
+				if (item2 != null && item.Amount > 0)
+				{
+					num += item2.Value * item.Amount;
+				}
+			}
+		}
+		catch
+		{
+		}
+		return num;
 	}
 
 	public int GetStashCapacity()

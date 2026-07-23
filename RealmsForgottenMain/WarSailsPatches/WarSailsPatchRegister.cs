@@ -11,10 +11,27 @@ namespace RealmsForgotten.WarSailsPatches
     {
         public static void RemoveWarsailsUI(TaleWorlds.MountAndBlade.Module currentModule)
         {
-            var modules = currentModule.CollectSubModules();
-            var navalGauntletModule = modules.FirstOrDefault(m => m is NavalDLCGauntletUISubModule);
-            FieldInfo category = AccessTools.Field(typeof(NavalDLCGauntletUISubModule), "_initializedLoadingCategory");
-            category.SetValue(navalGauntletModule, true);
+            // Both lookups can legitimately come back null (Gauntlet submodule
+            // disabled, or the private field renamed by a War Sails update).
+            // This runs inside OnSubModuleLoad with no try/catch above it, so a
+            // null here used to be a hard crash at startup after a DLC update.
+            try
+            {
+                var modules = currentModule.CollectSubModules();
+                var navalGauntletModule = modules.FirstOrDefault(m => m is NavalDLCGauntletUISubModule);
+                FieldInfo category = AccessTools.Field(typeof(NavalDLCGauntletUISubModule), "_initializedLoadingCategory");
+                if (navalGauntletModule == null || category == null)
+                {
+                    RFLogger.Log("[Lifecycle] RemoveWarsailsUI skipped | gauntlet submodule or field not found");
+                    return;
+                }
+
+                category.SetValue(navalGauntletModule, true);
+            }
+            catch (Exception ex)
+            {
+                RFLogger.Log($"[Lifecycle] RemoveWarsailsUI failed | error={ex}");
+            }
         }
         internal static void Apply(Harmony harmony)
         {

@@ -417,6 +417,17 @@ internal static class BattleAICavalryStabilizer
         float distanceToRegroupPoint = cavalry.CachedMedianPosition.AsVec2.Distance(regroupPoint);
         float elapsed = mission.CurrentTime - regroupState.StartedAt;
 
+        // Guard: never sit still in a fire lane. Standing cavalry taking arrows is
+        // dying uselessly — the very thing the anti-bog regroup exists to prevent,
+        // just from a different source. Under ranged fire, end the regroup so the
+        // horses keep moving (charge/reposition) instead of holding the point.
+        // The anti-bog core is untouched; this only aborts an already-exposed hold.
+        if (cavalry.QuerySystem.IsUnderRangedAttack || cavalry.QuerySystem.UnderRangedAttackRatio > 0.15f)
+        {
+            reason = $"aborted-under-fire ratio={cavalry.QuerySystem.UnderRangedAttackRatio:F2}";
+            return false;
+        }
+
         if (elapsed < MinimumRegroupSeconds)
         {
             reason = $"elapsed={elapsed:F1} target={distanceToRegroupPoint:F1}";

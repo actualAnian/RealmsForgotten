@@ -14,6 +14,12 @@ namespace RealmsForgotten.Career.Ability
 
         public static void RegisterAll()
         {
+            // Static list + one RegisterAll per game start: without this Clear,
+            // every new campaign in the same session appended 4 more abilities
+            // and .First()-style lookups kept returning the FIRST session's
+            // instances (stale delegates over dead mission state).
+            All.Clear();
+
             // Mercenary ability
             AbilityData mercAbilityData = new(15, 90,
                 baseActions: new()

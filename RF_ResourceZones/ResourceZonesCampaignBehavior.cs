@@ -5,6 +5,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameMenus;
+using TaleWorlds.CampaignSystem.GameState;
 using Helpers;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
@@ -363,6 +364,31 @@ namespace RF_ResourceZones
                 : ResourceZoneRules.PostCaptureGarrison;
             members.AddToCounts(garrisonTroop, garrisonSize);
 
+            // Belt-and-braces: only spawn while the map is the live game state
+            // (so MapSceneWrapper below is valid and the native spawn is legal).
+            if (!IsMapSceneReadyForPartySpawn())
+            {
+                return;
+            }
+
+            // THE ACTUAL CRASH GUARD. InitializeMobilePartyAroundPosition runs a
+            // native navmesh query (FindReachablePointAroundPosition ->
+            // GetPathDistanceBetweenAIFaces) that reads protected memory and
+            // hard-crashes with System.AccessViolationException when `position`
+            // is off the navigable mesh — a coordinate in rf_resource_zones.xml
+            // that lands in water / off-map, or an anchor+offset that does.
+            // GetFaceIndex is SAFE to call on any position (vanilla uses it exactly
+            // this way to test points); InitializeMobilePartyAroundPosition is not.
+            // Validate first, and name the offending zone in the log so a bad
+            // coordinate can be fixed in the data instead of crashing the game.
+            var mapScene = Campaign.Current.MapSceneWrapper;
+            if (mapScene == null || !mapScene.GetFaceIndex(position).IsValid())
+            {
+                LogZoneDiagnostic($"Zone '{definition.Id}' NOT spawned: position {position.ToVec2()} is off the navigable map mesh. Fix its coordinates in rf_resource_zones.xml.");
+                return;
+            }
+
+            LogZoneDiagnostic($"Spawning zone party '{definition.Id}' at {position.ToVec2()}.");
             MobileParty party = MobileParty.CreateParty(
                 $"rf_zone_party_{definition.Id}_{(long)CampaignTime.Now.ToMilliseconds}",
                 new ResourceZonePartyComponent(definition.Id, definition.Name, definition.Type));
@@ -374,6 +400,42 @@ namespace RF_ResourceZones
 
             record.PartyId = party.StringId;
             _zoneParties[record.ZoneId] = party;
+        }
+
+        /// <summary>Writes zone-spawn diagnostics to a dedicated file in ModLogs.
+        /// TaleWorlds' Debug.Print only reaches the attached debugger's Output
+        /// pane (gone once the session ends), so it could not be read after the
+        /// fact — this file persists, next to the other RF_*.log files, so which
+        /// zones spawned (and which were skipped for a bad coordinate) can be
+        /// checked after a play session.</summary>
+        private static void LogZoneDiagnostic(string message)
+        {
+            try
+            {
+                string path = System.IO.Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                    "Mount and Blade II Bannerlord", "Configs", "ModLogs", "RF_ResourceZones.log");
+                System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));
+                System.IO.File.AppendAllText(path, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}{Environment.NewLine}");
+            }
+            catch
+            {
+                // Diagnostics must never be able to break a spawn.
+            }
+
+            Debug.Print($"[RF_ResourceZones] {message}");
+        }
+
+        /// <summary>Whether it is safe to spawn a party onto the campaign map
+        /// right now. Party initialization does a native navmesh query that only
+        /// works when the map is the active game state — same guard the army-command
+        /// patches already use (RFArmyCommandPatches: ActiveState is not MapState).</summary>
+        private static bool IsMapSceneReadyForPartySpawn()
+        {
+            return Campaign.Current != null
+                && Campaign.Current.GameStarted
+                && PlayerEncounter.Current == null
+                && Game.Current?.GameStateManager?.ActiveState is MapState;
         }
 
         private static Clan? FindBanditClan()

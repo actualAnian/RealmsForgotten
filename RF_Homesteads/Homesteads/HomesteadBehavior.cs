@@ -486,6 +486,7 @@ public class HomesteadBehavior : CampaignBehaviorBase
 		CampaignEvents.OnCraftingOrderCompletedEvent.AddNonSerializedListener(this, OnCraftingOrderCompleted);
 		CampaignEvents.TickEvent.AddNonSerializedListener(this, OnCampaignTick);
 		CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, ConvertedAmbassadorDailyTick);
+		CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, WealthRaidDailyTick);
 		CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, ConvertedAmbassadorHourlyTick);
 		CampaignEvents.GameMenuOpened.AddNonSerializedListener(this, delegate
 		{
@@ -2172,6 +2173,73 @@ public class HomesteadBehavior : CampaignBehaviorBase
 			return $"{num3:0.0}s";
 		}
 		return $"{num2}m {num3:0.0}s";
+	}
+
+	// In-memory only (resets on load): next campaign day a wealth raid may hit
+	// each homestead. Keeps rich camps from being hit day after day.
+	private readonly Dictionary<string, int> _wealthRaidNextDay = new Dictionary<string, int>();
+
+	private const int WealthRaidMinWealth = 10000;
+
+	private const int WealthRaidCooldownDays = 5;
+
+	/// <summary>
+	/// Wealth attracts greed: every day, each homestead rolls a raid chance that
+	/// scales with the value of its hoard (gold + stash). 30k wealth ≈ 10%/day,
+	/// capped at 30%. The mob size also scales with wealth. A hound master makes
+	/// the raiders spawn farther out (early warning = more reaction time).
+	/// </summary>
+	private void WealthRaidDailyTick()
+	{
+		try
+		{
+			if (GlobalSettings<MCMSettings>.Instance?.WealthRaidsEnabled != true)
+			{
+				return;
+			}
+			int num = (int)CampaignTime.Now.ToDays;
+			foreach (KeyValuePair<MobileParty, Homestead> item in HomesteadMobileParties.ToList())
+			{
+				MobileParty key = item.Key;
+				Homestead value = item.Value;
+				if (key == null || !key.IsActive || key.IsDisbanding || value == null || value.IsRetiredOrDestroyed || value.IsMoving || key.MapEvent != null || GetActiveRaidQuestForHomestead(value) != null)
+				{
+					continue;
+				}
+				if (_wealthRaidNextDay.TryGetValue(key.StringId, out var value2) && num < value2)
+				{
+					continue;
+				}
+				Hero hero = key.LeaderHero ?? value.HoundMasterHero ?? value.MarketLadyHero;
+				if (hero == null || !hero.IsAlive)
+				{
+					continue;
+				}
+				int wealthValue = value.GetWealthValue();
+				if (wealthValue < WealthRaidMinWealth)
+				{
+					continue;
+				}
+				float num2 = Math.Min(0.3f, (float)wealthValue / 300000f);
+				if (MBRandom.RandomFloat >= num2)
+				{
+					continue;
+				}
+				int num3 = (int)Math.Min(90L, 12L + (long)wealthValue / 2500L);
+				bool flag = value.HoundMasterHero != null && value.HoundMasterHero.IsAlive;
+				new HomesteadRaidEventQuest($"homestead_wealth_raid_{key.StringId}_{CampaignTime.Now.ToMilliseconds}", hero, value, num3, Math.Max(1, value.Tier), flag).StartQuest();
+				_wealthRaidNextDay[key.StringId] = num + WealthRaidCooldownDays;
+				_lastRaidDayByHomestead[key.StringId] = num;
+				string text = (flag ? $"Your hound master's dogs raised the alarm early: word of {value.Name}'s wealth has spread, and an angry mob of about {num3} is gathering in the distance!" : $"Word of {value.Name}'s wealth has spread — an angry mob of about {num3} is marching on your homestead!");
+				InformationManager.DisplayMessage(new InformationMessage(text, new Color(1f, 0.35f, 0.25f)));
+				HomesteadChronicle.Record($"Drawn by its wealth, an angry mob of {num3} marched on the homestead of {value.Name}.");
+				TraceLogger.Write("HomesteadBehavior", $"WealthRaid: wealth={wealthValue} chance={num2:0.##} size={num3} houndWarning={flag} homestead='{value.Name}'.");
+			}
+		}
+		catch (Exception ex)
+		{
+			TraceLogger.Write("HomesteadBehavior", "WealthRaidDailyTick failed: " + ex.GetType().Name + ": " + ex.Message);
+		}
 	}
 
 	public bool CanOfferRaid(Homestead? hs)
@@ -9613,6 +9681,7 @@ public class HomesteadBehavior : CampaignBehaviorBase
 		mobileParty.ActualClan = Hero.MainHero.Clan;
 		mobileParty.ShouldJoinPlayerBattles = true;
 		mobileParty.Party.SetVisualAsDirty();
+		HomesteadChronicle.Record($"{leaderHero.Name} raised a homestead for {Hero.MainHero.Name}'s clan.");
 		HomesteadMobileParties[mobileParty] = homestead;
 		float num = (float)(leaderHero.GetSkillValue(DefaultSkills.Steward) / 2 + leaderHero.GetSkillValue(DefaultSkills.Engineering) / 2) / 100f;
 		int num2 = (int)Math.Floor(num);

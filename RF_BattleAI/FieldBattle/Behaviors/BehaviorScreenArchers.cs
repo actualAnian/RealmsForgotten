@@ -51,6 +51,20 @@ public sealed class BehaviorScreenArchers : BehaviorComponent
         }
 
         Vec2 screenPosition = archerPosition + directionToEnemy * ScreenDistance;
+
+        // Reposition hysteresis: hold the screen line until the ideal spot has
+        // drifted meaningfully, so a shuffling enemy median cannot drag the
+        // screen back and forth every tick.
+        if (_heldScreenPosition.IsValid
+            && screenPosition.DistanceSquared(_heldScreenPosition) < 144f)
+        {
+            screenPosition = _heldScreenPosition;
+        }
+        else
+        {
+            _heldScreenPosition = screenPosition;
+        }
+
         WorldPosition targetPosition = BattleAITerrainAnalyzer.CreateTerrainAdjustedPosition(
             base.Formation,
             screenPosition,
@@ -65,4 +79,6 @@ public sealed class BehaviorScreenArchers : BehaviorComponent
         CalculateCurrentOrder();
         base.Formation.SetMovementOrder(base.CurrentOrder);
     }
+
+    private Vec2 _heldScreenPosition = Vec2.Invalid;
 }

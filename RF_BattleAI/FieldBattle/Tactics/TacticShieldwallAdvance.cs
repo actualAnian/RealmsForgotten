@@ -182,6 +182,14 @@ public sealed class TacticShieldwallAdvance : TacticComponent
 
         if (distanceSquared > 3600f)
         {
+            // Never stand at long range forever: press once the wall is able
+            // (power gate), and ALWAYS press while taking archer fire — standing
+            // under arrows is free casualties (tester: the AI "has no answer to
+            // archers", and the player's own wall "never feels safe enough").
+            if (IsUnderRangedPressure() || _pressPowerGate.Evaluate(powerRatio))
+            {
+                return ShieldwallBattleState.PressAdvance;
+            }
             return ShieldwallBattleState.FormShieldwall;
         }
 
@@ -189,12 +197,43 @@ public sealed class TacticShieldwallAdvance : TacticComponent
         // FinalPush; the final push is reserved for actual contact range.
         if (distanceSquared > 1225f)
         {
-            return _pressPowerGate.Evaluate(powerRatio)
+            return (_pressPowerGate.Evaluate(powerRatio) || IsUnderRangedPressure())
                 ? ShieldwallBattleState.PressAdvance
                 : ShieldwallBattleState.FormShieldwall;
         }
 
+        // Enemy cavalry that has broken into contact must be weathered as a wall,
+        // not chased: charging off here is exactly how the wall "never regains
+        // formation and spreads out chasing cav" (tester). Hold the shieldwall
+        // until the horse threat is spent, then push.
+        if (HasEnemyCavalryInContact())
+        {
+            return ShieldwallBattleState.FormShieldwall;
+        }
+
         return ShieldwallBattleState.FinalPush;
+    }
+
+    private bool HasEnemyCavalryInContact()
+    {
+        if (_mainInfantry == null)
+        {
+            return false;
+        }
+        Formation? cav = FindNearestEnemyCavalry(_mainInfantry);
+        if (cav == null || cav.CountOfUnits < 4)
+        {
+            return false;
+        }
+        float distSq = cav.CachedMedianPosition.AsVec2.DistanceSquared(_mainInfantry.CachedMedianPosition.AsVec2);
+        return distSq <= 1600f; // ~40m: cavalry mixed into the line
+    }
+
+    private bool IsUnderRangedPressure()
+    {
+        Formation f = _mainInfantry;
+        return f != null && f.CountOfUnits > 0
+            && (f.QuerySystem.IsUnderRangedAttack || f.QuerySystem.UnderRangedAttackRatio > 0.12f);
     }
 
     private float GetEngagementDistanceSquared()
@@ -331,21 +370,55 @@ public sealed class TacticShieldwallAdvance : TacticComponent
         }
     }
 
+    /// <summary>
+    /// Anti-cavalry brace: a formation about to be charged must PRESENT to the
+    /// horses, not be caught moving with its back turned (tester: "my front line
+    /// turned their backs to the cav and took losses"). Face the enemy always;
+    /// a formation big enough forms a square (can't be flanked/rear-charged),
+    /// otherwise a shield wall facing the threat.
+    /// </summary>
+    private static void BraceAgainstCavalry(Formation formation)
+    {
+        if (formation == null || formation.CountOfUnits <= 0)
+        {
+            return;
+        }
+
+        ArrangementOrder arrangement = formation.CountOfUnits >= 20
+            ? ArrangementOrder.ArrangementOrderSquare
+            : (formation.QuerySystem.HasShield ? ArrangementOrder.ArrangementOrderShieldWall : ArrangementOrder.ArrangementOrderLine);
+        if (formation.ArrangementOrder != arrangement)
+        {
+            formation.SetArrangementOrder(arrangement);
+        }
+        formation.SetFacingOrder(FacingOrder.FacingOrderLookAtEnemy);
+    }
+
+    private static void FaceEnemy(Formation formation)
+    {
+        if (formation != null && formation.CountOfUnits > 0)
+        {
+            formation.SetFacingOrder(FacingOrder.FacingOrderLookAtEnemy);
+        }
+    }
+
     private void ApplyEmergencyBrace()
     {
         if (_mainInfantry != null)
         {
-            ApplyInfantryArrangement(_mainInfantry, shieldwall: true);
             _mainInfantry.AI.ResetBehaviorWeights();
             SetDefaultBehaviorWeights(_mainInfantry);
             _mainInfantry.AI.SetBehaviorWeight<BehaviorDefend>(1.95f).DefensePosition = GetDefensivePosition(_mainInfantry, searchRadius: 6f);
+            // Arrangement + facing AFTER the behavior weights, so the square/face
+            // is what the formation actually holds during the charge.
+            BraceAgainstCavalry(_mainInfantry);
         }
 
         if (_supportInfantry != null)
         {
-            ApplyInfantryArrangement(_supportInfantry, shieldwall: true);
             _supportInfantry.AI.ResetBehaviorWeights();
             SetDefaultBehaviorWeights(_supportInfantry);
+            BraceAgainstCavalry(_supportInfantry);
             if (_archers != null)
             {
                 BehaviorScreenArchers screenBehavior = _supportInfantry.AI.SetBehaviorWeight<BehaviorScreenArchers>(2.1f);
@@ -380,6 +453,9 @@ public sealed class TacticShieldwallAdvance : TacticComponent
             _mainInfantry.AI.ResetBehaviorWeights();
             SetDefaultBehaviorWeights(_mainInfantry);
             _mainInfantry.AI.SetBehaviorWeight<BehaviorDefend>(1.6f).DefensePosition = GetDefensivePosition(_mainInfantry);
+            // Present the wall forward so a frontal charge meets shields, not a
+            // formation angled off toward its move target.
+            FaceEnemy(_mainInfantry);
         }
 
         if (_supportInfantry != null)
@@ -462,9 +538,24 @@ public sealed class TacticShieldwallAdvance : TacticComponent
             _archers.AI.ResetBehaviorWeights();
             SetDefaultBehaviorWeights(_archers);
             _archers.AI.SetBehaviorWeight<BehaviorScreenedSkirmish>(screenedSkirmishWeight);
-            if (skirmishWeight > 0f)
+
+            // With a foot screen present, the free-roaming BehaviorSkirmish is
+            // what marched the archers down the field chasing cavalry and drawing
+            // melee (tester report). Suppress it while screened so they hold
+            // behind the wall and shoot; only unscreened archers get to skirmish.
+            bool hasFootScreen = _mainInfantry != null && _mainInfantry.CountOfUnits > 0;
+            if (skirmishWeight > 0f && !hasFootScreen)
             {
                 _archers.AI.SetBehaviorWeight<BehaviorSkirmish>(skirmishWeight);
+            }
+
+            // Under real cavalry pressure the archers pull back onto the infantry
+            // line instead of standing to be ridden down or wandering forward.
+            if (hasFootScreen && HasEnemyCavalryInContact())
+            {
+                BehaviorFallbackLine fallback = _archers.AI.SetBehaviorWeight<BehaviorFallbackLine>(1.4f);
+                fallback.AnchorFormation = _mainInfantry;
+                fallback.FallbackDistance = 6f;
             }
         }
 

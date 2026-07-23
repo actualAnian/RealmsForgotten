@@ -108,8 +108,12 @@ namespace RF_AIDialog
                 {
                     try
                     {
+                        // ModelName, not APIModelName: AskAsync only uses this
+                        // parameter on the LOCAL Ollama path, and asking Ollama
+                        // for the remote model name 404s — which silently
+                        // destroyed every letter for local-model users.
                         string raw = await AIClient.AskAsync(
-                            AIConfig.APIModelName,
+                            AIConfig.ModelName,
                             prompt,
                             reason,
                             maxTokens: 320).ConfigureAwait(false);
@@ -277,8 +281,12 @@ namespace RF_AIDialog
                 {
                     try
                     {
+                        // ModelName, not APIModelName: AskAsync only uses this
+                        // parameter on the LOCAL Ollama path, and asking Ollama
+                        // for the remote model name 404s — which silently
+                        // destroyed every letter for local-model users.
                         string raw = await AIClient.AskAsync(
-                            AIConfig.APIModelName,
+                            AIConfig.ModelName,
                             prompt,
                             replyText.Trim(),
                             maxTokens: 320).ConfigureAwait(false);

@@ -5,6 +5,7 @@ using System.Reflection;
 using HarmonyLib;
 using Homesteads.MissionLogics;
 using Homesteads.Models;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
@@ -27,6 +28,14 @@ internal static class HomesteadMissionStateOpenNewPatch
 
 	private static void Prefix(string missionName, ref MissionInitializerRecord rec, ref InitializeMissionBehaviorsDelegate handler)
 	{
+		// Custom Battle, the main menu and other non-campaign missions run this
+		// too. Homesteads only exist inside a campaign, so there is nothing to
+		// inject here — and touching campaign state (TryApplyTo) throws NRE when
+		// Campaign.Current is null. Leave those missions completely untouched.
+		if (Campaign.Current == null)
+		{
+			return;
+		}
 		bool num = IsBattleMissionName(missionName);
 		bool flag = IsArenaMissionName(missionName);
 		if (!num)
@@ -113,6 +122,12 @@ internal static class HomesteadMissionStateOpenNewPatch
 
 	private static void Postfix(Mission __result)
 	{
+		// Same reasoning as Prefix: no campaign means no homestead, so do not
+		// attach the companion dog / battle-scene logic to Custom Battle etc.
+		if (Campaign.Current == null)
+		{
+			return;
+		}
 		HomesteadBattleMissionPatch.TryAttachBattleSceneLogic(__result, "HomesteadMissionStateOpenNewPatch");
 	}
 }

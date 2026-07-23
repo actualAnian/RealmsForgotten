@@ -189,6 +189,7 @@ public class RFNomadKingdomBehavior : CampaignBehaviorBase
             notice.SetTextVariable("KINGDOM", kingdomName);
             notice.SetTextVariable("HOMESTEAD", homestead?.Name ?? new TextObject("{=rf_nomad_your_homestead}Your homestead"));
             InformationManager.DisplayMessage(new InformationMessage(notice.ToString(), Colors.Green));
+            HomesteadChronicle.Record($"{Hero.MainHero.Name} proclaimed the nomad kingdom of {kingdomName} from the homestead of {homestead?.Name}.");
 
             if (Campaign.Current.CurrentMenuContext != null)
             {

@@ -151,7 +151,7 @@ namespace RF_AIDialog
                         UpdatedUtc = DateTime.UtcNow.ToString("o")
                     };
 
-                    File.WriteAllText(PlayerReputationPath, JsonConvert.SerializeObject(snapshot, Formatting.Indented));
+                    WriteAllTextAtomic(PlayerReputationPath, JsonConvert.SerializeObject(snapshot, Formatting.Indented));
                     UpsertSummaryUnsafe("player", "player", snapshot.Summary, day);
                 }
             }
@@ -311,7 +311,7 @@ namespace RF_AIDialog
                     BuildGroupedSummaries(summaries, "settlement", SettlementMemoryPath, "settlement_memory", day, campaignKey, now);
                     BuildGroupedSummaries(summaries, "clan", ClanMemoryPath, "clan_memory", day, campaignKey, now);
 
-                    File.WriteAllText(SummariesPath, JsonConvert.SerializeObject(summaries, Formatting.Indented));
+                    WriteAllTextAtomic(SummariesPath, JsonConvert.SerializeObject(summaries, Formatting.Indented));
                 }
             }
             catch (Exception ex)
@@ -354,23 +354,35 @@ namespace RF_AIDialog
                 CampaignKey = GetCampaignKey(),
                 UpdatedUtc = DateTime.UtcNow.ToString("o")
             };
-            File.WriteAllText(SummariesPath, JsonConvert.SerializeObject(summaries, Formatting.Indented));
+            WriteAllTextAtomic(SummariesPath, JsonConvert.SerializeObject(summaries, Formatting.Indented));
         }
+
+        /// <summary>In-memory cache of summaries.json. A single conversation
+        /// reads summaries 5-6 times while building its prompt (npc + fiefs +
+        /// clan + world), and each read used to re-parse the whole file on the
+        /// game thread. Every writer already runs under _lock and goes through
+        /// the same code paths, so the cache is simply the last dictionary
+        /// read or written.</summary>
+        private static Dictionary<string, AIMemorySummary> _summariesCache;
 
         private static Dictionary<string, AIMemorySummary> ReadSummariesUnsafe()
         {
+            if (_summariesCache != null)
+                return _summariesCache;
+
             if (!File.Exists(SummariesPath))
-                return new Dictionary<string, AIMemorySummary>(StringComparer.OrdinalIgnoreCase);
+                return _summariesCache = new Dictionary<string, AIMemorySummary>(StringComparer.OrdinalIgnoreCase);
 
             try
             {
-                return JsonConvert.DeserializeObject<Dictionary<string, AIMemorySummary>>(
-                           File.ReadAllText(SummariesPath))
-                       ?? new Dictionary<string, AIMemorySummary>(StringComparer.OrdinalIgnoreCase);
+                return _summariesCache =
+                    JsonConvert.DeserializeObject<Dictionary<string, AIMemorySummary>>(
+                        File.ReadAllText(SummariesPath))
+                    ?? new Dictionary<string, AIMemorySummary>(StringComparer.OrdinalIgnoreCase);
             }
             catch
             {
-                return new Dictionary<string, AIMemorySummary>(StringComparer.OrdinalIgnoreCase);
+                return _summariesCache = new Dictionary<string, AIMemorySummary>(StringComparer.OrdinalIgnoreCase);
             }
         }
 
@@ -397,6 +409,23 @@ namespace RF_AIDialog
                 return;
 
             File.WriteAllText(path, contents);
+        }
+
+        /// <summary>Temp + rename. A crash mid-write used to truncate the JSON,
+        /// and the tolerant readers then silently reset the whole store —
+        /// reputation and summaries lost with no error shown.</summary>
+        private static void WriteAllTextAtomic(string path, string contents)
+        {
+            string tempPath = path + ".tmp";
+            File.WriteAllText(tempPath, contents);
+            if (File.Exists(path))
+            {
+                File.Replace(tempPath, path, null);
+            }
+            else
+            {
+                File.Move(tempPath, path);
+            }
         }
 
         private static List<AIMemoryRecord> ReadRecent(

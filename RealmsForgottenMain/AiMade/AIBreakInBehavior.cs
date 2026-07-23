@@ -25,16 +25,19 @@ namespace RealmsForgotten.AiMade
             if (party == null || !party.IsLordParty || party.IsMainParty || party.IsBandit || party.LeaderHero == null || party.MapFaction == null || party.Army != null)
                 return;
 
-            // Find nearby sieges
-            var nearbySieges = Settlement.All
-                .Where(s => s.IsUnderSiege && party.Position.DistanceSquared(s.GatePosition) < 900f) // 30*30 radius
-                .ToList();
-
-            if (!nearbySieges.Any())
+            // This fires once per party per hour (~200 lord parties). Scanning
+            // Settlement.All (~600) here burned ~120k iterations/hour even with
+            // zero sieges on the map — the siege manager already keeps the
+            // handful of active sieges.
+            var siegeEvents = Campaign.Current?.SiegeEventManager?.SiegeEvents;
+            if (siegeEvents == null || siegeEvents.Count == 0)
                 return;
 
-            foreach (var settlement in nearbySieges)
+            foreach (var siege in siegeEvents)
             {
+                var settlement = siege?.BesiegedSettlement;
+                if (settlement == null || party.Position.DistanceSquared(settlement.GatePosition) >= 900f) // 30*30 radius
+                    continue;
                 // Is the settlement's faction the same as the party's faction?
                 bool isFriendlyDefense = settlement.MapFaction == party.MapFaction;
 
@@ -50,13 +53,8 @@ namespace RealmsForgotten.AiMade
                 if (!isFriendlyDefense && !(isPlayerSieging && isFriendlyToPlayer))
                     continue;
 
-                // Find the besieging army
-                var siegeEvent = settlement.SiegeEvent;
-                if (siegeEvent == null)
-                    continue;
-
                 // Get the lead party of the besieging army
-                var besiegingParty = siegeEvent.BesiegerCamp.LeaderParty;
+                var besiegingParty = siege.BesiegerCamp?.LeaderParty;
                 if (besiegingParty == null || besiegingParty == party)
                     continue;
 

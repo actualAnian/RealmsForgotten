@@ -972,8 +972,8 @@ namespace RF_AIDialog
                 {
                     mechanic.MarkCompleted(i);
                     RFAIDebug.Log($"QuestAtomEngine: WIN_TOURNAMENT completed for {ctx.HeroId} ({current}/{required})");
-                    UpdateQuestLog(ctx.HeroId, $"âœ“ {label}");
-                    Notify($"Quest objective: âœ“ {label}");
+                    UpdateQuestLog(ctx.HeroId, $"✓ {label}");
+                    Notify($"Quest objective: ✓ {label}");
                 }
                 else
                 {

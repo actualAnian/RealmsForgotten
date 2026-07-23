@@ -84,6 +84,9 @@ namespace RealmsForgotten.AiMade
 
         private void AddItemToPlayerInventory(ItemObject item)
         {
+            // No player party outside a campaign (e.g. Custom Battle) — nothing to add to.
+            if (MobileParty.MainParty == null)
+                return;
             var mainParty = MobileParty.MainParty.ItemRoster;
             mainParty.AddToCounts(item, 1);
             InformationManager.DisplayMessage(new InformationMessage($"The {item.Name} has been added to your inventory."));

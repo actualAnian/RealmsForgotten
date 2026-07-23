@@ -118,7 +118,7 @@ namespace RealmsForgotten.RFEffects
         {
             if (agentEffect.Timer.Check(Time.ApplicationTime))
             {
-                RFAgentApplyDamageModel.Instance.ModifiedDamageAgents.Remove(agentEffect.Agent.Index);
+                RFAgentApplyDamageModel.Instance?.ModifiedDamageAgents.Remove(agentEffect.Agent.Index);
                 agentEffect.RemoveEffect();
                 AgentsUnderEffect.Remove(agentEffect);
             }

@@ -16,6 +16,11 @@ namespace RF_BattleAI;
 /// </summary>
 internal static class BanditTrapTelemetry
 {
+    /// <summary>Diagnostic-only. Ships OFF: this writes to disk every 2 s of
+    /// battle while the bandit trap runs — same convention as
+    /// BattleAITacticTelemetry.Enabled. Flip on locally when investigating.</summary>
+    private const bool Enabled = false;
+
     private static readonly string LogPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
         "Mount and Blade II Bannerlord", "Configs", "ModLogs", "RF_BattleAI_trap.log");
@@ -34,6 +39,11 @@ internal static class BanditTrapTelemetry
         bool powerFavorable,
         string pursuerSensor = "")
     {
+        if (!Enabled)
+        {
+            return;
+        }
+
         try
         {
             Mission? mission = Mission.Current;

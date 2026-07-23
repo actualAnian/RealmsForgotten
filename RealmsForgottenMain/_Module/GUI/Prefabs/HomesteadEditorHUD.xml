@@ -84,6 +84,17 @@
                     Brush.FontColor="#7FE0FFFF"
                     Brush.TextHorizontalAlignment="Center" />
 
+        <!-- Editor controls help panel: manually toggled with the help key (MCM,
+             default F1); stays in the corner until toggled off again. -->
+        <BrushWidget IsVisible="@IsHelpPanelVisible" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Left" VerticalAlignment="Bottom" MarginLeft="30" MarginBottom="150" Brush="Frame1Brush" RenderLate="true">
+          <Children>
+            <TextWidget WidthSizePolicy="Fixed" SuggestedWidth="540" HeightSizePolicy="CoverChildren"
+                        MarginLeft="16" MarginRight="16" MarginTop="12" MarginBottom="12"
+                        Brush.FontSize="20"
+                        Text="@HelpPanelText" />
+          </Children>
+        </BrushWidget>
+
       </Children>
     </Widget>
   </Window>

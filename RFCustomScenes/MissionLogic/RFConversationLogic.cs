@@ -43,7 +43,7 @@ namespace RFCustomSettlements
                 agent3.ForceAiBehaviorSelection();
                 agent3.AgentVisuals.SetClothComponentKeepStateOfAllMeshes(true);
             }
-            base.Mission.MainAgentServer.AgentVisuals.SetClothComponentKeepStateOfAllMeshes(true);
+            base.Mission.MainAgentServer?.AgentVisuals?.SetClothComponentKeepStateOfAllMeshes(true);
             base.Mission.SetMissionMode(MissionMode.Conversation, setActionsInstantly);
         }
         private void OnConversationEnd()
@@ -66,7 +66,10 @@ namespace RFCustomSettlements
                 Agent.Main.AgentVisuals.SetClothComponentKeepStateOfAllMeshes(false);
                 Agent.Main.MountAgent?.AgentVisuals.SetVisible(true);
             }
-			base.Mission.MainAgentServer.Controller = AgentControllerType.Player;
+			if (base.Mission.MainAgentServer != null)
+			{
+				base.Mission.MainAgentServer.Controller = AgentControllerType.Player;
+			}
 			this.ConversationManager.ConversationEnd -= this.OnConversationEnd;
         }
         public override bool IsThereAgentAction(Agent userAgent, Agent otherAgent)

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using RealmsForgotten.AiMade.StrategicIntrigue.Mechanics.KingdomObjectives;
 using RF_warsystem;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Election;
@@ -80,13 +81,36 @@ namespace RealmsForgotten.Behaviors
                             (k.Culture.StringId == "vlandia" || k.Culture.StringId == "battania" || k.Culture.StringId == "empire"))
                 .ToList();
 
-            if (potentialEnemies.Any())
+            if (!potentialEnemies.Any())
             {
-                var chosenEnemy = potentialEnemies[MBRandom.RandomInt(potentialEnemies.Count)];
-                RFWarExternalIntentApi.ReinforceEnduringRivalryWar(sturgiaKingdom, chosenEnemy);
-
-                MBInformationManager.AddQuickInformation(new TextObject($"Sturgia is pressing toward war with {chosenEnemy.Name}!"));
+                return;
             }
+
+            // Sturgia's grand design names Battania. Drawing uniformly from the
+            // whole list marched the realm at the wrong enemy two times out of
+            // three, so the design it is supposedly pursuing never moved.
+            var pool = GetGrandDesignTargets(sturgiaKingdom, potentialEnemies);
+            var chosenEnemy = pool[MBRandom.RandomInt(pool.Count)];
+            RFWarExternalIntentApi.ReinforceEnduringRivalryWar(sturgiaKingdom, chosenEnemy);
+
+            MBInformationManager.AddQuickInformation(new TextObject($"Sturgia is pressing toward war with {chosenEnemy.Name}!"));
+        }
+
+        /// <summary>The candidates the realm's grand design actually covets, or
+        /// every candidate if the design names no particular ground.</summary>
+        private static List<Kingdom> GetGrandDesignTargets(Kingdom kingdom, List<Kingdom> candidates)
+        {
+            IReadOnlyList<string> covetedCultures = KingdomObjectiveService.GetCovetedCultureIds(
+                KingdomObjectiveService.ResolveObjective(kingdom));
+            if (covetedCultures.Count == 0)
+            {
+                return candidates;
+            }
+
+            var designTargets = candidates
+                .Where(k => covetedCultures.Contains(k.Culture?.StringId))
+                .ToList();
+            return designTargets.Count > 0 ? designTargets : candidates;
         }
     }
 }

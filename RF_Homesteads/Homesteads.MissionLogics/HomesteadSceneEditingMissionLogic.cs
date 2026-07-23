@@ -186,6 +186,10 @@ public class HomesteadSceneEditingMissionLogic : MissionLogic
 		{
 			return;
 		}
+		if (Input.IsKeyPressed(HomesteadsReloaded.Settings?.GetToggleHelpPanelKey() ?? InputKey.F1))
+		{
+			ToggleHelpPanel();
+		}
 		if (isPlanningMode && !_planningCameraActivated && HomesteadFreeCameraView.Instance != null && HomesteadMissionView.Instance != null && HomesteadMissionView.Instance.dataSource != null)
 		{
 			HomesteadFreeCameraView.Instance.SetActive(active: true);
@@ -431,7 +435,9 @@ public class HomesteadSceneEditingMissionLogic : MissionLogic
 					}
 					else
 					{
-						homesteadScene.AddPlaceableEntityToCurrentScene(currentPlaceable, dummyEntity.GlobalPosition, buildingModeSavedRotation);
+						Vec3 placedAt = dummyEntity.GlobalPosition;
+						homesteadScene.AddPlaceableEntityToCurrentScene(currentPlaceable, placedAt, buildingModeSavedRotation);
+						NotifyCampShelterPlaced(currentPlaceable, placedAt);
 					}
 					RemoveDummyEntity();
 				}
@@ -694,6 +700,124 @@ public class HomesteadSceneEditingMissionLogic : MissionLogic
 		}
 	}
 
+	/// <summary>
+	/// Manual, sticky help panel (corner of the screen): the help key shows it,
+	/// pressing the key again hides it. Content always reflects the CURRENT edit
+	/// mode and the CONFIGURED key binds, refreshed on every mode switch.
+	/// </summary>
+	private void ToggleHelpPanel()
+	{
+		HomesteadVM homesteadVM = HomesteadMissionView.Instance?.dataSource;
+		if (homesteadVM != null)
+		{
+			homesteadVM.IsHelpPanelVisible = !homesteadVM.IsHelpPanelVisible;
+			if (homesteadVM.IsHelpPanelVisible)
+			{
+				RefreshHelpPanelText();
+			}
+		}
+	}
+
+	private void RefreshHelpPanelText()
+	{
+		HomesteadVM homesteadVM = HomesteadMissionView.Instance?.dataSource;
+		if (homesteadVM == null || !homesteadVM.IsHelpPanelVisible)
+		{
+			return;
+		}
+		MCMSettings settings = HomesteadsReloaded.Settings;
+		string text = settings?.GetEditModeKeyLabel() ?? "\\";
+		string text2 = settings?.GetPlaceKeyLabel() ?? "F";
+		string text3 = settings?.GetCycleLeftKeyLabel() ?? "[";
+		string text4 = settings?.GetCycleRightKeyLabel() ?? "]";
+		string text5 = settings?.GetSwitchBuilderModeCategoryKeyLabel() ?? "'";
+		string text6 = settings?.GetRotateTurnLeftKeyLabel() ?? "Q";
+		string text7 = settings?.GetRotateTurnRightKeyLabel() ?? "E";
+		string text8 = settings?.GetResetRotationKeyLabel() ?? "Ctrl";
+		string text9 = settings?.GetSnapToGroundKeyLabel() ?? "G";
+		string text10 = settings?.GetToggleHeightLockKeyLabel() ?? "H";
+		string text11 = settings?.GetOpenBuildMenuKeyLabel() ?? "~";
+		string text12 = settings?.GetSetPlayerSpawnKeyLabel() ?? "O";
+		string text13 = settings?.GetToggleHelpPanelKeyLabel() ?? "F1";
+		string text14 = editModeType switch
+		{
+			0 => "OFF",
+			1 => "BUILD",
+			2 => "DELETE",
+			3 => "MOVE",
+			4 => "TEMPLATE",
+			_ => "?"
+		};
+		string text15 = "MODE: " + text14 + "    (" + text13 + ": hide this)\n";
+		text15 = text15 + text + " cycles: Build > Delete > Move > Template > Off\n";
+		switch (editModeType)
+		{
+		case 1:
+			text15 = text15 + text11 + ": build menu    " + text5 + ": category    " + text3 + "/" + text4 + ": cycle\n";
+			text15 = text15 + text2 + ": place    " + text6 + "/" + text7 + ": rotate flat (horizontal)\n";
+			text15 = text15 + "Hold right mouse button + drag: tilt (vertical)    " + text8 + ": reset rotation\n";
+			text15 = text15 + "Scroll: raise/lower    " + text9 + ": snap to ground (" + text9 + " again: tilt to slope)\n";
+			text15 = text15 + text10 + ": lock height    " + text12 + ": set player spawn\n";
+			text15 = text15 + "Misplaced something? " + text + " to Delete mode (refunds) or Move mode.\n";
+			break;
+		case 2:
+			text15 = text15 + "Aim at a built object and press " + text2 + " to DELETE it.\n";
+			text15 += "Refunds all build points and part of the materials (more with higher Engineering).\n";
+			break;
+		case 3:
+			text15 = text15 + "Aim at a built object and press " + text2 + " to pick it up,\n";
+			text15 = text15 + "then " + text2 + " again to place it. Rotation/height keys work as in Build.\n";
+			break;
+		case 4:
+			text15 = text15 + text3 + "/" + text4 + ": cycle templates    " + text2 + ": apply\n";
+			text15 = text15 + text6 + "/" + text7 + " or right mouse button + drag: rotate    Scroll: raise/lower    " + text9 + ": snap\n";
+			break;
+		default:
+			text15 = text15 + "Press " + text + " to enter Build mode.\n";
+			break;
+		}
+		text15 += "Camera: WASD pan, Shift+WASD fly, Shift+mouse look, Space/Alt up/down";
+		homesteadVM.HelpPanelText = text15;
+	}
+
+	/// <summary>
+	/// When a tent/yurt is built while troops are already in the scene, a few of
+	/// them walk over and settle around it right away — no re-entering needed.
+	/// </summary>
+	private void NotifyCampShelterPlaced(HomesteadScenePlaceable placeable, Vec3 position)
+	{
+		try
+		{
+			string prefab = placeable?.PrefabName ?? "";
+			if (prefab.IndexOf("tent", StringComparison.OrdinalIgnoreCase) < 0 && prefab.IndexOf("yurt", StringComparison.OrdinalIgnoreCase) < 0)
+			{
+				return;
+			}
+			GameEntity? placedEntity = null;
+			float best = 4f;
+			foreach (KeyValuePair<GameEntity, HomesteadSceneSavedEntity> kv in homesteadScene.LoadedSavedEntities)
+			{
+				if (kv.Key != null)
+				{
+					float d = kv.Key.GlobalPosition.Distance(position);
+					if (d < best)
+					{
+						best = d;
+						placedEntity = kv.Key;
+					}
+				}
+			}
+			if (placedEntity != null)
+			{
+				Mission.Current?.GetMissionBehavior<HomesteadSpawningMissionLogic>()?.SendTroopsToCampShelter(placedEntity);
+			}
+		}
+		catch (Exception ex)
+		{
+			TraceLogger.Write("HomesteadSceneEditingMissionLogic", "NotifyCampShelterPlaced failed: " + ex.Message);
+		}
+	}
+
 	private void SwitchEditMode()
 	{
 		if (currentPlaceableOverride != null)
@@ -710,6 +834,8 @@ public class HomesteadSceneEditingMissionLogic : MissionLogic
 		{
 			editModeType = 0;
 		}
+		_alignToSlopeOnNextSnap = false;
+		RefreshHelpPanelText();
 		_navMarkerVisibilityDirty = true;
 		HomesteadFreeCameraView.Instance?.SetActive(editModeType != 0);
 		if (HomesteadMissionView.Instance?.dataSource != null)
@@ -982,13 +1108,115 @@ public class HomesteadSceneEditingMissionLogic : MissionLogic
 		}
 	}
 
+	private bool _alignToSlopeOnNextSnap;
+
+	/// <summary>
+	/// Lowest ground height under the object's footprint (center + 4 corners).
+	/// Sampling a single point left parts of the object floating on any slope;
+	/// taking the minimum sinks it against the hillside instead.
+	/// </summary>
+	private float SampleGroundMinUnderFootprint(Vec3 center, float halfX, float halfY)
+	{
+		Scene scene = Mission.Current.Scene;
+		if (halfX < 0.5f)
+		{
+			halfX = 0.5f;
+		}
+		if (halfY < 0.5f)
+		{
+			halfY = 0.5f;
+		}
+		float num = scene.GetGroundHeightAtPosition(center);
+		Vec3[] array = new Vec3[4]
+		{
+			new Vec3(center.X - halfX, center.Y - halfY, center.Z),
+			new Vec3(center.X + halfX, center.Y - halfY, center.Z),
+			new Vec3(center.X - halfX, center.Y + halfY, center.Z),
+			new Vec3(center.X + halfX, center.Y + halfY, center.Z)
+		};
+		Vec3[] array2 = array;
+		foreach (Vec3 position in array2)
+		{
+			float groundHeightAtPosition = scene.GetGroundHeightAtPosition(position);
+			if (groundHeightAtPosition < num)
+			{
+				num = groundHeightAtPosition;
+			}
+		}
+		return num;
+	}
+
+	/// <summary>
+	/// Tilts the held object so its up-axis matches the terrain normal (estimated
+	/// from three ground samples), preserving the current horizontal facing. The
+	/// reset-rotation key undoes it.
+	/// </summary>
+	private void AlignDummyToSlope()
+	{
+		Scene scene = Mission.Current.Scene;
+		float num = 1.5f;
+		float groundHeightAtPosition = scene.GetGroundHeightAtPosition(positionLookingAt);
+		float groundHeightAtPosition2 = scene.GetGroundHeightAtPosition(new Vec3(positionLookingAt.X + num, positionLookingAt.Y, positionLookingAt.Z));
+		float groundHeightAtPosition3 = scene.GetGroundHeightAtPosition(new Vec3(positionLookingAt.X, positionLookingAt.Y + num, positionLookingAt.Z));
+		Vec3 vec = new Vec3((0f - (groundHeightAtPosition2 - groundHeightAtPosition)) / num, (0f - (groundHeightAtPosition3 - groundHeightAtPosition)) / num, 1f);
+		vec.Normalize();
+		Vec3 f = buildingModeSavedRotation.f;
+		f -= vec * Vec3.DotProduct(f, vec);
+		if (f.LengthSquared < 0.0001f)
+		{
+			f = new Vec3(0f, 1f, 0f);
+			f -= vec * Vec3.DotProduct(f, vec);
+		}
+		f.Normalize();
+		Vec3 s = Vec3.CrossProduct(f, vec);
+		s.Normalize();
+		buildingModeSavedRotation = new Mat3(s, f, vec);
+		Utils.PrintLocalizedMessage("homestead_snap_align_done", "Tilted to match the slope. {RESET_KEY} resets the rotation.", 160f, 255f, 160f, ("RESET_KEY", HomesteadsReloaded.Settings?.GetResetRotationKeyLabel() ?? "Ctrl"));
+	}
+
 	private void SnapPreviewToGround()
 	{
 		if (!positionLookingAt.IsValid)
 		{
 			return;
 		}
-		float groundHeightAtPosition = Mission.Current.Scene.GetGroundHeightAtPosition(positionLookingAt);
+		if (_alignToSlopeOnNextSnap && dummyEntity != null && editModeType != 4)
+		{
+			_alignToSlopeOnNextSnap = false;
+			AlignDummyToSlope();
+			return;
+		}
+		float halfX = 1.5f;
+		float halfY = 1.5f;
+		if (editModeType == 4 && CurrentTemplate?.Entities != null && CurrentTemplate.Entities.Count > 0)
+		{
+			float num = float.MaxValue;
+			float num2 = float.MinValue;
+			float num3 = float.MaxValue;
+			float num4 = float.MinValue;
+			foreach (TemplateEntity entity in CurrentTemplate.Entities)
+			{
+				num = Math.Min(num, entity.RelativePosX);
+				num2 = Math.Max(num2, entity.RelativePosX);
+				num3 = Math.Min(num3, entity.RelativePosY);
+				num4 = Math.Max(num4, entity.RelativePosY);
+			}
+			halfX = Math.Max(1.5f, (num2 - num) / 2f);
+			halfY = Math.Max(1.5f, (num4 - num3) / 2f);
+		}
+		else if (dummyEntity != null)
+		{
+			Vec3 boundingBoxMin = dummyEntity.GetBoundingBoxMin();
+			Vec3 boundingBoxMax = dummyEntity.GetBoundingBoxMax();
+			halfX = Math.Max(0.5f, (boundingBoxMax.X - boundingBoxMin.X) / 2f);
+			halfY = Math.Max(0.5f, (boundingBoxMax.Y - boundingBoxMin.Y) / 2f);
+		}
+		float groundHeightAtPosition = SampleGroundMinUnderFootprint(positionLookingAt, halfX, halfY);
+		if (dummyEntity != null && editModeType != 4)
+		{
+			_alignToSlopeOnNextSnap = true;
+			Utils.PrintLocalizedMessage("homestead_snap_min_done", "Snapped to the lowest ground under the object. Press {SNAP_KEY} again to tilt it to the slope.", 200f, 200f, 255f, ("SNAP_KEY", HomesteadsReloaded.Settings?.GetSnapToGroundKeyLabel() ?? "G"));
+		}
 		if (_heightLockEnabled)
 		{
 			_lockedHeightZ = groundHeightAtPosition;

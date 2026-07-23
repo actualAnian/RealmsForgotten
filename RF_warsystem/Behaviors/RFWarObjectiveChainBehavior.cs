@@ -571,7 +571,9 @@ public sealed class RFWarObjectiveChainBehavior : CampaignBehaviorBase
             return null;
         }
 
-        return Settlement.All.FirstOrDefault(settlement => settlement.StringId == settlementId);
+        // O(1) MBObjectManager lookup — this runs inside the vanilla AI's
+        // target-score evaluation, tens of thousands of times per game hour.
+        return Settlement.Find(settlementId);
     }
 
     private void PruneInactivePairs()

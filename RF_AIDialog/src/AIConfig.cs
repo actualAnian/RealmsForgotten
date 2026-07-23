@@ -368,7 +368,11 @@ namespace RF_AIDialog
             if (!string.IsNullOrWhiteSpace(profile.TTSApiKey))
                 return profile.TTSApiKey;
 
-            return ResolveApiKey();
+            // NO fallback to the main LLM key: TTS talks to a different
+            // provider (OpenAI) than the main endpoint (DeepSeek by default),
+            // and falling back used to transmit the DeepSeek secret to OpenAI
+            // as a Bearer token. Unconfigured means unconfigured.
+            return null;
         }
 
         private static string? ResolveSttApiKey()
@@ -392,10 +396,14 @@ namespace RF_AIDialog
             if (!string.IsNullOrWhiteSpace(profile.STTApiKey))
                 return profile.STTApiKey;
 
-            if (!string.IsNullOrWhiteSpace(ResolveTtsApiKey()))
-                return ResolveTtsApiKey();
+            // STT and TTS both default to api.openai.com, so sharing the
+            // dedicated TTS key is a same-provider fallback. The main LLM key
+            // is a different provider — never send it here (secret leak).
+            string? ttsKey = ResolveTtsApiKey();
+            if (!string.IsNullOrWhiteSpace(ttsKey))
+                return ttsKey;
 
-            return ResolveApiKey();
+            return null;
         }
 
         private static string? ResolveFishTtsApiKey()
@@ -419,10 +427,11 @@ namespace RF_AIDialog
             if (!string.IsNullOrWhiteSpace(profile.FishTTSApiKey))
                 return profile.FishTTSApiKey;
 
-            if (!string.IsNullOrWhiteSpace(ResolveTtsApiKey()))
-                return ResolveTtsApiKey();
-
-            return ResolveApiKey();
+            // Fish Audio is its own provider: neither the OpenAI TTS key nor
+            // the main LLM key belongs there. No cross-provider fallback —
+            // an unconfigured Fish key means Fish TTS is off, not "send some
+            // other service's secret and see".
+            return null;
         }
 
         private static string? TryReadSecretFile(string path)

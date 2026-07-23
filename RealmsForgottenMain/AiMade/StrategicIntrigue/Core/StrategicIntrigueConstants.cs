@@ -60,6 +60,22 @@ public static class StrategicIntrigueConstants
     public const float KingdomObjectiveDirectiveCooldownDays = 10f;
     public const int KingdomObjectiveDirectiveBaseInfluenceCost = 20;
     public const int KingdomObjectiveDirectiveBaseGoldCost = 2000;
+
+    // Grand design -> war system bridge. The design always nudges the war
+    // director on WHO to hate and WHERE to march; it only presses for an actual
+    // declaration when the court is desperate (pressure) about a design that is
+    // going nowhere (progress) while the realm sits idle at peace. The quiet
+    // period starts when a design war ENDS: measured from the declaration it
+    // would simply elapse during a long war and let the realm re-declare days
+    // after making peace.
+    // Calibrated against what EvaluatePressure can actually produce: an idle
+    // expansionist design reads max(0, 58 - progress) + 6, so it saturates in the
+    // mid-50s to low-60s and a higher bar would simply never fire. 52 means "the
+    // design has barely moved" (progress under ~12) rather than "slightly behind".
+    public const float GrandDesignWarPressureThreshold = 52f;
+    public const float GrandDesignWarMaxProgress = 45f;
+    public const float GrandDesignWarMaxExhaustion = 55f;
+    public const float GrandDesignWarQuietDays = 45f;
     public const float SeverePunishmentSuspicionThreshold = 92f;
     public const float SeverePunishmentThreatThreshold = 135f;
     public const int ExecutionRelationThreshold = -70;

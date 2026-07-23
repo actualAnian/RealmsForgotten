@@ -229,14 +229,14 @@ public class HomesteadFreeCameraView : MissionView
 
 	public override void OnMissionScreenInitialize()
 	{
-		((MissionView)this).OnMissionScreenInitialize();
+		base.OnMissionScreenInitialize();
 		Instance = this;
 		base.ViewOrderPriority = 1;
 	}
 
 	public override void OnMissionScreenFinalize()
 	{
-		((MissionView)this).OnMissionScreenFinalize();
+		base.OnMissionScreenFinalize();
 		_conversationCamActive = false;
 		if (Instance == this)
 		{
@@ -326,7 +326,7 @@ public class HomesteadFreeCameraView : MissionView
 			ApplyConversationFrame();
 			return true;
 		}
-		return ((MissionView)this).UpdateOverridenCamera(dt);
+		return base.UpdateOverridenCamera(dt);
 	}
 
 	private void ApplyConversationFrame()
@@ -356,7 +356,7 @@ public class HomesteadFreeCameraView : MissionView
 
 	public override void OnMissionScreenTick(float dt)
 	{
-		((MissionView)this).OnMissionScreenTick(dt);
+		base.OnMissionScreenTick(dt);
 		if (!_isActive)
 		{
 			return;

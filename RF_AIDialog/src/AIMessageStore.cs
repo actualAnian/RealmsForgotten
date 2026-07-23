@@ -363,7 +363,20 @@ namespace RF_AIDialog
         private static void WriteUnsafe(AIMessageStoreData data)
         {
             Directory.CreateDirectory(MessageDirectory);
-            File.WriteAllText(StorePath, JsonConvert.SerializeObject(data, Formatting.Indented));
+            // Temp + rename: a crash mid-write used to leave a truncated file,
+            // which ReadUnsafe silently turns into an EMPTY store — every
+            // letter and thread the player ever had, gone. The rename is
+            // atomic-enough on NTFS; the payload is never half-written.
+            string tempPath = StorePath + ".tmp";
+            File.WriteAllText(tempPath, JsonConvert.SerializeObject(data, Formatting.Indented));
+            if (File.Exists(StorePath))
+            {
+                File.Replace(tempPath, StorePath, null);
+            }
+            else
+            {
+                File.Move(tempPath, StorePath);
+            }
         }
 
         private static bool ParticipantsMatch(AIMessageThread thread, string a, string b)

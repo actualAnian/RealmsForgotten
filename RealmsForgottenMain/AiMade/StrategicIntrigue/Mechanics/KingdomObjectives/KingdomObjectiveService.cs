@@ -100,11 +100,34 @@ public static class KingdomObjectiveService
         };
     }
 
+    /// <summary>The settlement cultures a design actually covets, used to tell
+    /// the war system WHERE the realm wants to march (RFWarExternalIntentApi
+    /// .ReinforceGrandDesignIntent). Empty means "the design names no particular
+    /// ground" — either it is not territorial at all, or, like the Nord colonies,
+    /// any enemy land will do.</summary>
+    public static IReadOnlyList<string> GetCovetedCultureIds(KingdomObjectiveType objectiveType)
+    {
+        return objectiveType switch
+        {
+            KingdomObjectiveType.CrushBattanianResistance
+                or KingdomObjectiveType.ArcaneFrontier
+                or KingdomObjectiveType.PreserveBattanianHomelands => new[] { "battania" },
+            KingdomObjectiveType.SecureMountainHolds => new[] { "urkhai" },
+            KingdomObjectiveType.DefileMountainHolds => new[] { "dwarf" },
+            KingdomObjectiveType.ForgeBorderEmpire => new[] { "sturgia", "empire", "south_realm", "west_realm" },
+            KingdomObjectiveType.UniteAseraiRealms => new[] { "aserai" },
+            KingdomObjectiveType.ClaimImperialLegitimacy => new[] { "empire", "south_realm", "west_realm" },
+            _ => Array.Empty<string>()
+        };
+    }
+
     public static TextObject GetTitle(KingdomObjectiveType objectiveType)
     {
         return objectiveType switch
         {
-            KingdomObjectiveType.CrushBattanianResistance => new TextObject("{=rf_ko_title_sturgia}Break Battanian Resistance"),
+            // Player-facing text says Elvean, never "Battanian": battania is the
+            // engine slot this realm occupies, not the name of anyone in Aeurth.
+            KingdomObjectiveType.CrushBattanianResistance => new TextObject("{=rf_ko_title_sturgia}Break Elvean Resistance"),
             KingdomObjectiveType.NobleWealthSupremacy => new TextObject("{=rf_ko_title_vlandia}Noble Wealth Supremacy"),
             KingdomObjectiveType.PreserveBattanianHomelands => new TextObject("{=rf_ko_title_battania}Preserve the Old Forest Realm"),
             KingdomObjectiveType.UniteAseraiRealms => new TextObject("{=rf_ko_title_aserai}Unite the Desert Realms"),
@@ -127,13 +150,13 @@ public static class KingdomObjectiveService
     {
         return objectiveType switch
         {
-            KingdomObjectiveType.CrushBattanianResistance => new TextObject("{=rf_ko_fantasy_sturgia}The court wants Battania broken and the northern forests bent to Sturgian will."),
+            KingdomObjectiveType.CrushBattanianResistance => new TextObject("{=rf_ko_fantasy_sturgia}The court wants the Elveans broken and the old forests bent to Dreadrealm will."),
             KingdomObjectiveType.NobleWealthSupremacy => new TextObject("{=rf_ko_fantasy_vlandia}The realm seeks unmatched wealth, entrenched great houses, and a nobility too rich to challenge."),
-            KingdomObjectiveType.PreserveBattanianHomelands => new TextObject("{=rf_ko_fantasy_battania}The clans mean to hold the old woods, repel invaders, and keep the forest realm alive."),
-            KingdomObjectiveType.UniteAseraiRealms => new TextObject("{=rf_ko_fantasy_aserai}The desert crowns are meant to yield until one Aserai supremacy rules the sands."),
+            KingdomObjectiveType.PreserveBattanianHomelands => new TextObject("{=rf_ko_fantasy_battania}The Elvean clans mean to hold the old woods, repel invaders, and keep the forest realm alive."),
+            KingdomObjectiveType.UniteAseraiRealms => new TextObject("{=rf_ko_fantasy_aserai}The desert crowns are meant to yield until one supremacy rules the sands."),
             KingdomObjectiveType.ClaimImperialLegitimacy => new TextObject("{=rf_ko_fantasy_empire}This court claims there can be only one lawful Empire, and all rival claimants must bend."),
             KingdomObjectiveType.ForgeBorderEmpire => new TextObject("{=rf_ko_fantasy_khuzait}The khanate seeks to swallow the realms on its frontier and turn raids into empire."),
-            KingdomObjectiveType.ArcaneFrontier => new TextObject("{=rf_ko_fantasy_mage}The kingdom means to take Battanian lands and refashion them into an arcane frontier."),
+            KingdomObjectiveType.ArcaneFrontier => new TextObject("{=rf_ko_fantasy_mage}The kingdom means to take Elvean lands and refashion them into an arcane frontier."),
             KingdomObjectiveType.SecureMountainHolds => new TextObject("{=rf_ko_fantasy_dwarf}The realm is bent on breaking Urkhai power and making the mountain holds eternal."),
             KingdomObjectiveType.DefileMountainHolds => new TextObject("{=rf_ko_fantasy_urkhai}The kingdom wants dwarf holds shattered and their mountain defenses profaned."),
             KingdomObjectiveType.MartialGlory => new TextObject("{=rf_ko_fantasy_wulf}The realm lives for renown in battle and wants the world to admit its warriors are supreme."),

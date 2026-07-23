@@ -74,6 +74,9 @@ public sealed class KingdomIntrigueState
     [SaveableField(22)]
     private float _rivalAgendaStrength;
 
+    [SaveableField(23)]
+    private CampaignTime _objectiveWarQuietUntil;
+
     public Kingdom Kingdom => _kingdom;
 
     public float RulerLegitimacy
@@ -202,6 +205,15 @@ public sealed class KingdomIntrigueState
         set => _rivalAgendaStrength = value;
     }
 
+    /// <summary>Until when the court may not press the war system for the war its
+    /// grand design demands. Set when a design war ENDS, so the rest is measured
+    /// from the peace rather than from the declaration. Zero = free to press.</summary>
+    public CampaignTime ObjectiveWarQuietUntil
+    {
+        get => _objectiveWarQuietUntil;
+        set => _objectiveWarQuietUntil = value;
+    }
+
     private KingdomIntrigueState()
     {
     }
@@ -216,6 +228,7 @@ public sealed class KingdomIntrigueState
         _lastOrganicPactAt = CampaignTime.Now;
         _lastObjectiveRewardAt = CampaignTime.Now;
         _lastObjectiveDirectiveAt = CampaignTime.Zero;
+        _objectiveWarQuietUntil = CampaignTime.Zero;
     }
 
     public void ClampValues()

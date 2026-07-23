@@ -173,14 +173,29 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
         {
-            int enemyAgents = Mission.Current.PlayerEnemyTeam.ActiveAgents.Count;
-            if (enemyAgents < 5)
+            if (affectedAgent == null)
             {
-                TextObject text = new("{rf_enemy_count}{ENEMY_AGENTS} enemies remaining");
-                text.SetTextVariable("ENEMY_AGENTS", enemyAgents);
-                InformationManager.DisplayMessage(new(text.ToString()));
+                return;
             }
-            string agentId = affectedAgent.Character == null ? affectedAgent.Monster.StringId : affectedAgent.Character.StringId;
+
+            // These scenes spawn neutral agents (chickens, herd animals) — when
+            // one of those is removed there may be no enemy team at all, and
+            // PlayerEnemyTeam is legitimately null.
+            var enemyTeam = Mission.Current?.PlayerEnemyTeam;
+            if (enemyTeam != null)
+            {
+                int enemyAgents = enemyTeam.ActiveAgents.Count;
+                if (enemyAgents < 5)
+                {
+                    TextObject text = new("{rf_enemy_count}{ENEMY_AGENTS} enemies remaining");
+                    text.SetTextVariable("ENEMY_AGENTS", enemyAgents);
+                    InformationManager.DisplayMessage(new(text.ToString()));
+                }
+            }
+
+            string agentId = affectedAgent.Character == null
+                ? affectedAgent.Monster?.StringId ?? "unknown"
+                : affectedAgent.Character.StringId;
             UnitKilled?.Invoke(agentId);
             if (affectedAgent.Components.Any(c => c is LootableAgentComponent))
             {
@@ -655,9 +670,14 @@ namespace RealmsForgotten.RFCustomSettlements
 
             Agent agent = base.Mission.SpawnAgent(agentBuildData2);
 
-            for (int i = 0; i < 3; i++)
+            var playerVisuals = Agent.Main?.AgentVisuals;
+            var playerSkeleton = playerVisuals?.GetSkeleton();
+            if (playerVisuals != null && playerSkeleton != null)
             {
-                Agent.Main.AgentVisuals.GetSkeleton().TickAnimations(0.1f, Agent.Main.AgentVisuals.GetGlobalFrame(), true);
+                for (int i = 0; i < 3; i++)
+                {
+                    playerSkeleton.TickAnimations(0.1f, playerVisuals.GetGlobalFrame(), true);
+                }
             }
 
             return agent;
@@ -732,6 +752,15 @@ namespace RealmsForgotten.RFCustomSettlements
         }
         private static void SimulateAnimalAnimations(Agent agent)
         {
+            // Freshly SpawnMonster-ed agents can have no visuals/skeleton yet;
+            // the sibling herd-spawn path already guards this inside a try/catch.
+            var visuals = agent?.AgentVisuals;
+            var skeleton = visuals?.GetSkeleton();
+            if (agent == null || visuals == null || skeleton == null)
+            {
+                return;
+            }
+
             int num = 10 + MBRandom.RandomInt(90);
             for (int i = 0; i < num; i++)
             {
@@ -741,7 +770,7 @@ namespace RealmsForgotten.RFCustomSettlements
                 {
                     agent.TeleportToPosition(agent.Position + v);
                 }
-                agent.AgentVisuals.GetSkeleton().TickAnimations(0.1f, agent.AgentVisuals.GetGlobalFrame(), true);
+                skeleton.TickAnimations(0.1f, visuals.GetGlobalFrame(), true);
             }
         }
         internal void OnAgentLooted(Agent agent)

@@ -104,8 +104,13 @@ namespace RealmsForgotten.AiMade
         // Active rallies: converge, merge, or release.
         // ------------------------------------------------------------------
 
+        // Rebuilt lazily once per tick (only when rallies exist); never carried
+        // across ticks — hunters change every hour.
+        private Dictionary<MobileParty, MobileParty> _maintenanceHunterMap;
+
         private void UpdateActiveRallies()
         {
+            _maintenanceHunterMap = null;
             for (int i = _rallies.Count - 1; i >= 0; i--)
             {
                 Rally rally = _rallies[i];
@@ -124,7 +129,8 @@ namespace RealmsForgotten.AiMade
                 }
 
                 // Threat over for both? Disperse back to normal bandit life.
-                if (FindHunterFor(a) == null && FindHunterFor(b) == null)
+                _maintenanceHunterMap ??= BuildHunterByTarget();
+                if (FindHunterFor(a, _maintenanceHunterMap) == null && FindHunterFor(b, _maintenanceHunterMap) == null)
                 {
                     ReleaseRally(i);
                     continue;
@@ -208,6 +214,8 @@ namespace RealmsForgotten.AiMade
                 return;
             }
 
+            Dictionary<MobileParty, MobileParty> hunterByTarget = BuildHunterByTarget();
+
             foreach (MobileParty bandit in bandits)
             {
                 if (IsInRally(bandit) || bandit.MemberRoster.TotalHealthyCount > WeakPartySize)
@@ -215,7 +223,7 @@ namespace RealmsForgotten.AiMade
                     continue;
                 }
 
-                if (FindHunterFor(bandit) == null)
+                if (FindHunterFor(bandit, hunterByTarget) == null)
                 {
                     continue;
                 }
@@ -261,7 +269,33 @@ namespace RealmsForgotten.AiMade
             return new CampaignVec2(mid, isOnLand: true);
         }
 
-        private static MobileParty FindHunterFor(MobileParty bandit)
+        /// <summary>ONE pass over MobileParty.All indexing active hunters by
+        /// their engage-target. FindHunterFor used to rescan all ~1000 parties
+        /// per weak bandit (~100k iterations/hour); callers build this once per
+        /// tick and every lookup becomes a dictionary hit.</summary>
+        private static Dictionary<MobileParty, MobileParty> BuildHunterByTarget()
+        {
+            Dictionary<MobileParty, MobileParty> hunterByTarget = new();
+            foreach (MobileParty hunter in MobileParty.All)
+            {
+                if (hunter == null || !hunter.IsActive || hunter.IsBandit
+                    || hunter == MobileParty.MainParty || hunter.MapEvent != null
+                    || hunter.ShortTermBehavior != AiBehavior.EngageParty
+                    || hunter.ShortTermTargetParty == null)
+                {
+                    continue;
+                }
+
+                if (!hunterByTarget.ContainsKey(hunter.ShortTermTargetParty))
+                {
+                    hunterByTarget[hunter.ShortTermTargetParty] = hunter;
+                }
+            }
+
+            return hunterByTarget;
+        }
+
+        private static MobileParty FindHunterFor(MobileParty bandit, Dictionary<MobileParty, MobileParty> hunterByTarget)
         {
             // Healthy headcount as the strength proxy — version-proof and good
             // enough for "the hunter is clearly bigger than this band".
@@ -281,26 +315,10 @@ namespace RealmsForgotten.AiMade
                 }
             }
 
-            foreach (MobileParty hunter in MobileParty.All)
+            if (hunterByTarget.TryGetValue(bandit, out MobileParty hunter)
+                && hunter.Position.Distance(bandit.Position) <= ThreatScanRadius
+                && hunter.MemberRoster.TotalHealthyCount >= banditStrength * ThreatStrengthRatio)
             {
-                if (hunter == null || !hunter.IsActive || hunter.IsBandit || hunter == main
-                    || hunter.MapEvent != null)
-                {
-                    continue;
-                }
-                if (hunter.ShortTermBehavior != AiBehavior.EngageParty
-                    || hunter.ShortTermTargetParty != bandit)
-                {
-                    continue;
-                }
-                if (hunter.Position.Distance(bandit.Position) > ThreatScanRadius)
-                {
-                    continue;
-                }
-                if (hunter.MemberRoster.TotalHealthyCount < banditStrength * ThreatStrengthRatio)
-                {
-                    continue;
-                }
                 return hunter;
             }
 

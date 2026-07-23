@@ -113,7 +113,12 @@ public sealed class TacticReserveCounterattack : TacticComponent
         float distanceSquared = _mainInfantry.CachedMedianPosition.AsVec2.DistanceSquared(
             _mainInfantry.CachedClosestEnemyFormation.Formation.CachedMedianPosition.AsVec2);
 
-        return distanceSquared < 1600f || _commitPowerGate.Evaluate(base.Team.QuerySystem.RemainingPowerRatio);
+        // Standing in reserve while archers whittle the main body down is a lost
+        // battle in slow motion — sustained ranged pressure commits the reserve
+        // even when the power gate would counsel patience.
+        bool underRangedPressure = _mainInfantry.CountOfUnits > 0
+            && (_mainInfantry.QuerySystem.IsUnderRangedAttack || _mainInfantry.QuerySystem.UnderRangedAttackRatio > 0.12f);
+        return distanceSquared < 1600f || underRangedPressure || _commitPowerGate.Evaluate(base.Team.QuerySystem.RemainingPowerRatio);
     }
 
     private WorldPosition GetDefensivePosition(Formation formation)

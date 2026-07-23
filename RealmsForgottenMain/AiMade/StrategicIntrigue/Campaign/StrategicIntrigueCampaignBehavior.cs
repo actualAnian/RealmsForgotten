@@ -1526,6 +1526,10 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
             KingdomObjectiveType.DefileMountainHolds => new TextObject("{=rf_ko_directive_name_urkhai}Black Siege Decree"),
             KingdomObjectiveType.MartialGlory => new TextObject("{=rf_ko_directive_name_wulf}Warrior Muster"),
             KingdomObjectiveType.UnbreakableRealm => new TextObject("{=rf_ko_directive_name_grimwatch}Iron Bastion Program"),
+            KingdomObjectiveType.GuardianFrenzy => new TextObject("{=rf_ko_directive_name_giant}Vigil of the Peaks"),
+            KingdomObjectiveType.MercenaryCreed => new TextObject("{=rf_ko_directive_name_mercenary}Muster Rolls and Coffers"),
+            KingdomObjectiveType.WovenAlliances => new TextObject("{=rf_ko_directive_name_valthorne}Envoys and Oaths"),
+            KingdomObjectiveType.ColonialExpansion => new TextObject("{=rf_ko_directive_name_nord}Frontier Charter"),
             _ => new TextObject("{=rf_ko_directive_name_generic}Grand Court Directive")
         };
     }
@@ -1566,6 +1570,18 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
                 new TextObject("{=rf_ko_directive_desc_wulf}Order the warrior houses into an aggressive muster, privileging battle-readiness, renown, and public demonstrations of strength."),
             KingdomObjectiveType.UnbreakableRealm =>
                 new TextObject("{=rf_ko_directive_desc_grimwatch}Direct the court to pour labor and coin into walls, discipline, and settlement resilience until the realm feels unassailable."),
+            KingdomObjectiveType.GuardianFrenzy =>
+                new TextObject(activeFront
+                    ? "{=rf_ko_directive_desc_giant_war}Loose the wrath the aggressor called down: no ground given, no rest taken, until the offense is answered in full."
+                    : "{=rf_ko_directive_desc_giant_peace}Set the watch on every pass and slope, so that whoever tries the giants' lands finds them awake and unwelcoming."),
+            KingdomObjectiveType.MercenaryCreed =>
+                new TextObject("{=rf_ko_directive_desc_mercenary}Put the court to the ledgers and the muster rolls: coffers full, walls manned, contracts honoured, and no crown owed a thing."),
+            KingdomObjectiveType.WovenAlliances =>
+                new TextObject("{=rf_ko_directive_desc_valthorne}Send the envoys out with gifts and lent swords, so that every friend made is a war Valthorne will not have to fight alone."),
+            KingdomObjectiveType.ColonialExpansion =>
+                new TextObject(activeFront
+                    ? "{=rf_ko_directive_desc_nord_war}Press the campaign and turn what is taken into settled colony, not a raided ruin left behind."
+                    : "{=rf_ko_directive_desc_nord_peace}Ready the ships and the charters: the colonies want new land marked out before another season passes."),
             _ => new TextObject("{=rf_ko_directive_desc_generic}The court will concentrate its effort behind the realm's declared doctrine.")
         };
     }
@@ -1641,6 +1657,10 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
             KingdomObjectiveType.DefileMountainHolds => new TextObject("{=rf_ko_rival_name_urkhai}Warchief Claimants"),
             KingdomObjectiveType.MartialGlory => new TextObject("{=rf_ko_rival_name_wulf}High Seat Claimants"),
             KingdomObjectiveType.UnbreakableRealm => new TextObject("{=rf_ko_rival_name_grimwatch}Marcher War Party"),
+            KingdomObjectiveType.GuardianFrenzy => new TextObject("{=rf_ko_rival_name_giant}Elders of the Long Sleep"),
+            KingdomObjectiveType.MercenaryCreed => new TextObject("{=rf_ko_rival_name_mercenary}Banner-Sworn Faction"),
+            KingdomObjectiveType.WovenAlliances => new TextObject("{=rf_ko_rival_name_valthorne}Isolationist Circle"),
+            KingdomObjectiveType.ColonialExpansion => new TextObject("{=rf_ko_rival_name_nord}Old Country Party"),
             _ => kingdom != null
                 ? new TextObject("{=rf_ko_rival_name_generic}Dissident Court Bloc")
                 : new TextObject("{=rf_ko_rival_name_none}No Rival Agenda")
@@ -1683,6 +1703,16 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
                 new TextObject("{=rf_ko_rival_summary_wulf}When glory is scarce, rival champions begin to imagine replacing the present high command with a stronger war leader."),
             KingdomObjectiveType.UnbreakableRealm =>
                 new TextObject("{=rf_ko_rival_summary_grimwatch}A marcher war party is starting to argue that a realm built only on walls will eventually be strangled unless it takes the fight outward."),
+            KingdomObjectiveType.GuardianFrenzy =>
+                new TextObject(activeFront
+                    ? "{=rf_ko_rival_summary_giant_war}Older voices want the fury called off before the giants forget how to stop, and become the very thing they wake to punish."
+                    : "{=rf_ko_rival_summary_giant_peace}Some elders would rather sleep deeper still, arguing that even watching the passes invites the world to bother them."),
+            KingdomObjectiveType.MercenaryCreed =>
+                new TextObject("{=rf_ko_rival_summary_mercenary}A faction is tired of selling swords and wants the realm to swear to a crown at last, trading independence for a place at someone's table."),
+            KingdomObjectiveType.WovenAlliances =>
+                new TextObject("{=rf_ko_rival_summary_valthorne}An isolationist circle argues that every oath lent is a war borrowed, and that Valthorne should owe nothing to anyone beyond its own borders."),
+            KingdomObjectiveType.ColonialExpansion =>
+                new TextObject("{=rf_ko_rival_summary_nord}An old-country party wants the colonies to stop swallowing land they cannot hold and consolidate what has already been settled."),
             _ => new TextObject("{=rf_ko_rival_summary_generic}A dissatisfied bloc inside the court is looking for a different path than the crown's declared design.")
         };
     }
@@ -1785,6 +1815,14 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
                 ? new TextObject("{=rf_ko_need_wulf_war}Keep winning hard battles and do not let warrior prestige cool.")
                 : new TextObject("{=rf_ko_need_wulf_nowar}The warrior lords want a worthy war. Peace without glory is starting to sour the realm."),
             KingdomObjectiveType.UnbreakableRealm => new TextObject("{=rf_ko_need_grimwatch}Stronger garrisons, steadier walls, and settlements that can survive shame-free through siege."),
+            KingdomObjectiveType.GuardianFrenzy => HasObjectiveTargetWar(kingdom, state.ObjectiveType)
+                ? new TextObject("{=rf_ko_need_giant_war}The aggressor must be broken. Nothing else will settle the wrath that was woken.")
+                : new TextObject("{=rf_ko_need_giant_peace}Nothing beyond the giants' own lands, held quiet and held safe."),
+            KingdomObjectiveType.MercenaryCreed => new TextObject("{=rf_ko_need_mercenary}Full coffers, manned walls, and no crown with a claim on the realm."),
+            KingdomObjectiveType.WovenAlliances => new TextObject("{=rf_ko_need_valthorne}Fewer enemies, more realms fighting beside us, and never a war fought alone."),
+            KingdomObjectiveType.ColonialExpansion => HasObjectiveTargetWar(kingdom, state.ObjectiveType)
+                ? new TextObject("{=rf_ko_need_nord_war}Turn the campaign into settled ground: more holdings, held and colonised.")
+                : new TextObject("{=rf_ko_need_nord_nowar}The colonies want new land, and no season of peace has ever marked out a frontier."),
             _ => new TextObject("{=rf_ko_need_default}The realm needs proof that its doctrine can still shape events.")
         };
     }
@@ -1823,10 +1861,19 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
         Dictionary<Clan, bool> breakawayReadinessBeforeTick = CaptureActivePactBreakawayReadiness();
         foreach (Kingdom kingdom in Kingdom.All)
         {
-            if (IsValidIntrigueKingdom(kingdom))
+            if (!IsObjectiveCapableKingdom(kingdom))
             {
-                RefreshKingdomState(kingdom);
+                continue;
             }
+
+            RefreshKingdomState(kingdom);
+
+            // Exactly once per realm per day, and only from here. RefreshKingdomState
+            // also runs per-clan and out of report getters; pushing from inside it
+            // filed one war request per vassal per day, and RegisterPendingWar
+            // escalates intensity and support on every repeat — a large court would
+            // saturate the request to maximum urgency on its first day.
+            PushGrandDesignWarIntent(kingdom, GetOrCreateKingdomState(kingdom));
         }
 
         foreach (Clan clan in Clan.All)
@@ -2287,6 +2334,8 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
         ApplyWarStateShift(faction2, -10f, 4f);
         RefreshFactionStates(faction1);
         RefreshFactionStates(faction2);
+        StartGrandDesignWarQuietPeriod(faction1 as Kingdom, faction2 as Kingdom);
+        StartGrandDesignWarQuietPeriod(faction2 as Kingdom, faction1 as Kingdom);
     }
 
     private void ApplyGeneralDecisionPressure(Kingdom kingdom, Clan favoredClan, float baseResentment)
@@ -2527,7 +2576,7 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
         {
             foreach (Kingdom kingdom in Kingdom.All)
             {
-                if (IsValidIntrigueKingdom(kingdom))
+                if (IsObjectiveCapableKingdom(kingdom))
                 {
                     GetOrCreateKingdomState(kingdom);
                 }
@@ -2548,7 +2597,7 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
 
             foreach (Kingdom kingdom in Kingdom.All)
             {
-                if (IsValidIntrigueKingdom(kingdom))
+                if (IsObjectiveCapableKingdom(kingdom))
                 {
                     RefreshKingdomState(kingdom);
                 }
@@ -4202,6 +4251,197 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
         }
     }
 
+    /// <summary>Hands the realm's grand design to the war director. Without this
+    /// the designs never leave the court: the director runs its own objective
+    /// model and has no idea a realm was ever meant to covet anything.
+    ///
+    /// Two channels, deliberately unequal. Every day the design nudges WHO the
+    /// realm resents and WHERE it wants to march, which biases the director's own
+    /// war and target choices — so a design shows up as organic appetite. Only a
+    /// court that is desperate, idle and getting nowhere additionally presses for
+    /// the declaration itself.</summary>
+    private void PushGrandDesignWarIntent(Kingdom kingdom, KingdomIntrigueState state)
+    {
+        if (kingdom == null || state == null || state.ObjectiveType == KingdomObjectiveType.None)
+        {
+            return;
+        }
+
+        // The giants covet nothing. Their war comes to them, never from them.
+        if (state.ObjectiveType == KingdomObjectiveType.GuardianFrenzy)
+        {
+            return;
+        }
+
+        Kingdom target = SelectGrandDesignTarget(kingdom, state.ObjectiveType);
+        if (target == null)
+        {
+            return;
+        }
+
+        float conviction = MBMath.ClampFloat(
+            (state.ObjectivePressure * 0.7f) + (Math.Max(0f, 60f - state.ObjectiveProgress) * 0.5f),
+            12f,
+            100f) / 100f;
+
+        RFWarExternalIntentApi.ReinforceGrandDesignIntent(
+            kingdom,
+            target,
+            GetCovetedSettlements(target, state.ObjectiveType),
+            conviction,
+            ShouldPressGrandDesignWar(kingdom, state));
+    }
+
+    /// <summary>The one realm the design is pointed at right now. A design already
+    /// at war with one of its targets stays pointed at that war — that is the case
+    /// where the bridge earns its keep, aiming the armies at the right ground
+    /// instead of wherever the director happened to drift.</summary>
+    private static Kingdom SelectGrandDesignTarget(Kingdom kingdom, KingdomObjectiveType objectiveType)
+    {
+        Kingdom activeWarTarget = kingdom.FactionsAtWarWith
+            .OfType<Kingdom>()
+            .FirstOrDefault(enemy => IsObjectiveTargetKingdom(kingdom, objectiveType, enemy));
+        if (activeWarTarget != null)
+        {
+            return activeWarTarget;
+        }
+
+        Kingdom best = null;
+        float bestScore = float.MinValue;
+        foreach (Kingdom candidate in Kingdom.All)
+        {
+            if (!IsObjectiveTargetKingdom(kingdom, objectiveType, candidate)
+                || kingdom.IsAtWarWith(candidate)
+                || !candidate.Fiefs.Any())
+            {
+                continue;
+            }
+
+            float score = GetGrandDesignTargetScore(kingdom, candidate);
+            if (score > bestScore)
+            {
+                bestScore = score;
+                best = candidate;
+            }
+        }
+
+        return best;
+    }
+
+    /// <summary>Prefer the weak and the near. Designs that name no particular
+    /// enemy (Wulf glory, Nord colonies) would otherwise pick a victim across
+    /// the map from a realm they have never met.</summary>
+    private static float GetGrandDesignTargetScore(Kingdom kingdom, Kingdom candidate)
+    {
+        float weakness = kingdom.CurrentTotalStrength / Math.Max(1f, candidate.CurrentTotalStrength);
+        float score = MBMath.ClampFloat(weakness, 0f, 3f);
+
+        float borderDistanceSquared = GetBorderDistanceSquared(kingdom, candidate);
+        if (borderDistanceSquared < float.MaxValue)
+        {
+            float distance = (float)Math.Sqrt(borderDistanceSquared);
+            score += MBMath.ClampFloat(1.5f - (distance / 250f), -0.75f, 1.5f);
+        }
+
+        return score;
+    }
+
+    /// <summary>Distance between the two realms' nearest holdings — how far the
+    /// design would actually have to reach. Walked once per candidate per realm
+    /// per day while the realm is not yet at war with a target of its design;
+    /// Kingdom.Fiefs is a cached list, so this stays in the tens of thousands of
+    /// float compares a day even in the worst case.</summary>
+    private static float GetBorderDistanceSquared(Kingdom left, Kingdom right)
+    {
+        float nearest = float.MaxValue;
+        foreach (Town leftFief in left.Fiefs)
+        {
+            if (leftFief?.Settlement == null)
+            {
+                continue;
+            }
+
+            foreach (Town rightFief in right.Fiefs)
+            {
+                if (rightFief?.Settlement == null)
+                {
+                    continue;
+                }
+
+                float distanceSquared = leftFief.Settlement.GatePosition.DistanceSquared(rightFief.Settlement.GatePosition);
+                if (distanceSquared < nearest)
+                {
+                    nearest = distanceSquared;
+                }
+            }
+        }
+
+        return nearest;
+    }
+
+    /// <summary>The ground the design wants out of this target. A design that
+    /// names no culture (the Nord colonies just want land) takes anything the
+    /// target holds.</summary>
+    private static IEnumerable<Settlement> GetCovetedSettlements(Kingdom target, KingdomObjectiveType objectiveType)
+    {
+        IEnumerable<Settlement> fiefs = target.Fiefs
+            .Select(fief => fief?.Settlement)
+            .Where(settlement => settlement != null);
+
+        IReadOnlyList<string> covetedCultures = KingdomObjectiveService.GetCovetedCultureIds(objectiveType);
+        return covetedCultures.Count == 0
+            ? fiefs
+            : fiefs.Where(settlement => covetedCultures.Contains(settlement.Culture?.StringId));
+    }
+
+    /// <summary>Whether the court is desperate enough to press for the declaration
+    /// itself. A special request goes stale after 3 silent days, so this stays true
+    /// day after day while the conditions hold and the daily push keeps it alive;
+    /// it goes false the moment the war it asked for exists.</summary>
+    private bool ShouldPressGrandDesignWar(Kingdom kingdom, KingdomIntrigueState state)
+    {
+        if (!IsWarSeekingObjective(state.ObjectiveType)
+            || HasObjectiveTargetWar(kingdom, state.ObjectiveType)
+            || state.ObjectivePressure < StrategicIntrigueConstants.GrandDesignWarPressureThreshold
+            || state.ObjectiveProgress >= StrategicIntrigueConstants.GrandDesignWarMaxProgress
+            || state.WarExhaustion >= StrategicIntrigueConstants.GrandDesignWarMaxExhaustion)
+        {
+            return false;
+        }
+
+        // Never open a second front. A stalled design must not pile a war of
+        // choice on top of a war the realm is already fighting.
+        if (kingdom.FactionsAtWarWith.Any(x => x.IsKingdomFaction))
+        {
+            return false;
+        }
+
+        // Zero (never fought a design war, or an older save) is already in the past.
+        return CampaignTime.Now >= state.ObjectiveWarQuietUntil;
+    }
+
+    /// <summary>A realm that has just fought the war its design demanded does not
+    /// get to demand it again the week after the peace. Anchored to the end of the
+    /// war on purpose: a rest measured from the declaration would elapse during a
+    /// long war and expire before the fighting even stopped.</summary>
+    private void StartGrandDesignWarQuietPeriod(Kingdom kingdom, Kingdom formerEnemy)
+    {
+        if (kingdom == null || formerEnemy == null)
+        {
+            return;
+        }
+
+        KingdomIntrigueState state = GetKingdomState(kingdom);
+        if (state == null
+            || state.ObjectiveType == KingdomObjectiveType.None
+            || !IsObjectiveTargetKingdom(kingdom, state.ObjectiveType, formerEnemy))
+        {
+            return;
+        }
+
+        state.ObjectiveWarQuietUntil = CampaignTime.DaysFromNow(StrategicIntrigueConstants.GrandDesignWarQuietDays);
+    }
+
     private void HandleObjectiveMilestoneChange(Kingdom kingdom, KingdomIntrigueState state, int previousMilestone, int newMilestone)
     {
         if (kingdom == null || state == null || newMilestone == previousMilestone)
@@ -4308,6 +4548,37 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
                 PulseSettlementSecurity(kingdom.Fiefs, 2.8f * strength, 1.8f * strength);
                 state.RebellionPressure = MBMath.ClampFloat(state.RebellionPressure - (7f * strength), 0f, 100f);
                 state.CourtFragmentation = MBMath.ClampFloat(state.CourtFragmentation - (5f * strength), 0f, 100f);
+                break;
+
+            case KingdomObjectiveType.GuardianFrenzy:
+                // At peace the vigil hardens the slopes; once roused, the same
+                // order becomes the fury that will not let the aggressor rest.
+                PulseSettlementSecurity(kingdom.Fiefs.Where(x => x.Settlement.Culture?.StringId == "giant"), 2.6f * strength, 1.5f * strength);
+                state.RebellionPressure = MBMath.ClampFloat(state.RebellionPressure - (6f * strength), 0f, 100f);
+                if (HasObjectiveTargetWar(kingdom, state.ObjectiveType))
+                {
+                    state.ObjectiveWarScore = MBMath.ClampFloat(state.ObjectiveWarScore + (9f * strength), 0f, 100f);
+                    state.WarExhaustion = MBMath.ClampFloat(state.WarExhaustion - (7f * strength), 0f, 100f);
+                }
+
+                break;
+
+            case KingdomObjectiveType.MercenaryCreed:
+                PulseSettlementSecurity(kingdom.Fiefs, 2.4f * strength, 1.2f * strength);
+                state.CourtFragmentation = MBMath.ClampFloat(state.CourtFragmentation - (7f * strength), 0f, 100f);
+                state.ClaimantPressure = MBMath.ClampFloat(state.ClaimantPressure - (5f * strength), 0f, 100f);
+                break;
+
+            case KingdomObjectiveType.WovenAlliances:
+                state.RulerLegitimacy = MBMath.ClampFloat(state.RulerLegitimacy + (6f * strength), 0f, 100f);
+                state.CourtFragmentation = MBMath.ClampFloat(state.CourtFragmentation - (7f * strength), 0f, 100f);
+                state.WarExhaustion = MBMath.ClampFloat(state.WarExhaustion - (4f * strength), 0f, 100f);
+                break;
+
+            case KingdomObjectiveType.ColonialExpansion:
+                PulseProsperity(GetPrimaryObjectiveFiefs(kingdom, 3), 90f * strength);
+                state.ObjectiveWarScore = MBMath.ClampFloat(state.ObjectiveWarScore + (8f * strength), 0f, 100f);
+                state.WarExhaustion = MBMath.ClampFloat(state.WarExhaustion - (5f * strength), 0f, 100f);
                 break;
         }
 
@@ -4520,6 +4791,27 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
                 state.CourtFragmentation = MBMath.ClampFloat(state.CourtFragmentation + ((!hasTargetWar ? 0.38f : 0f) * pressureFactor), 0f, 100f);
                 break;
 
+            // The three designs whose success state IS peace (author decision
+            // 2026-07-15). They must never take the default branch: it fractures
+            // a court for having no war on, which is exactly what these realms
+            // are supposed to want.
+            case KingdomObjectiveType.GuardianFrenzy:
+                PulseSettlementSecurity(kingdom.Fiefs.Where(x => x.Settlement.Culture?.StringId == "giant"), 0.2f + (progressFactor * 0.2f), 0.12f + (progressFactor * 0.14f));
+                state.WarExhaustion = MBMath.ClampFloat(state.WarExhaustion - ((hasTargetWar ? 0.44f : 0.2f) * progressFactor), 0f, 100f);
+                state.RebellionPressure = MBMath.ClampFloat(state.RebellionPressure - (progressFactor * 0.3f), 0f, 100f);
+                break;
+
+            case KingdomObjectiveType.MercenaryCreed:
+                PulseSettlementSecurity(kingdom.Fiefs, 0.16f + (progressFactor * 0.18f), 0.1f + (progressFactor * 0.12f));
+                state.CourtFragmentation = MBMath.ClampFloat(state.CourtFragmentation - (progressFactor * 0.32f) + (pressureFactor * 0.18f), 0f, 100f);
+                state.ClaimantPressure = MBMath.ClampFloat(state.ClaimantPressure - (progressFactor * 0.24f) + (pressureFactor * 0.12f), 0f, 100f);
+                break;
+
+            case KingdomObjectiveType.WovenAlliances:
+                state.CourtFragmentation = MBMath.ClampFloat(state.CourtFragmentation - (progressFactor * 0.34f) + (pressureFactor * 0.16f), 0f, 100f);
+                state.WarExhaustion = MBMath.ClampFloat(state.WarExhaustion - (progressFactor * 0.26f), 0f, 100f);
+                break;
+
             default:
                 state.WarExhaustion = MBMath.ClampFloat(state.WarExhaustion - ((hasTargetWar ? 0.34f : 0f) * progressFactor), 0f, 100f);
                 state.CourtFragmentation = MBMath.ClampFloat(state.CourtFragmentation + ((!hasTargetWar ? 0.26f : 0f) * pressureFactor), 0f, 100f);
@@ -4600,10 +4892,33 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
         }
     }
 
+    /// <summary>Refreshes only the layers a court-less realm still has. A realm of
+    /// a single clan (a young colony, a mercenary band, a freshly proclaimed
+    /// kingdom) has no vassals to resent the crown, so every clan-politics factor
+    /// would read zero anyway — but it still carries a grand design, and used to
+    /// be dropped from the feature entirely with no sign that anything was
+    /// missing.</summary>
+    private void RefreshObjectiveOnlyKingdomState(Kingdom kingdom)
+    {
+        if (!IsObjectiveCapableKingdom(kingdom) || IsValidIntrigueKingdom(kingdom))
+        {
+            return;
+        }
+
+        KingdomIntrigueState state = GetOrCreateKingdomState(kingdom);
+        state.WarExhaustion = MBMath.ClampFloat((state.WarExhaustion * 0.65f) + GetWarExhaustionFactor(kingdom), 0f, 100f);
+        state.RecentLosses = MBMath.ClampFloat(state.RecentLosses * 0.82f, 0f, 100f);
+        RefreshKingdomObjectiveState(kingdom, state);
+        ApplyOngoingObjectiveEffects(kingdom, state);
+        state.LastUpdated = CampaignTime.Now;
+        state.ClampValues();
+    }
+
     private void RefreshKingdomState(Kingdom kingdom)
     {
         if (!IsValidIntrigueKingdom(kingdom))
         {
+            RefreshObjectiveOnlyKingdomState(kingdom);
             return;
         }
 
@@ -4830,28 +5145,56 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
             return false;
         }
 
+        return kingdom.FactionsAtWarWith
+            .OfType<Kingdom>()
+            .Any(enemy => IsObjectiveTargetKingdom(kingdom, objectiveType, enemy));
+    }
+
+    /// <summary>Whether <paramref name="candidate"/> is a realm this design names
+    /// as its target. Single source of truth for both "is the realm already
+    /// fighting the war its design demands?" (HasObjectiveTargetWar) and "which
+    /// realm should it be fighting?" (the war-system bridge).</summary>
+    private static bool IsObjectiveTargetKingdom(Kingdom kingdom, KingdomObjectiveType objectiveType, Kingdom candidate)
+    {
+        if (kingdom == null || candidate == null || candidate == kingdom || candidate.IsEliminated)
+        {
+            return false;
+        }
+
         return objectiveType switch
         {
             KingdomObjectiveType.CrushBattanianResistance or KingdomObjectiveType.ArcaneFrontier
-                => kingdom.FactionsAtWarWith.OfType<Kingdom>().Any(x => x.StringId == "battania"),
+                => candidate.StringId == "battania",
             KingdomObjectiveType.SecureMountainHolds
-                => kingdom.FactionsAtWarWith.OfType<Kingdom>().Any(x => x.StringId == "urkhai_kingdom"),
+                => candidate.StringId == "urkhai_kingdom",
             KingdomObjectiveType.DefileMountainHolds
-                => kingdom.FactionsAtWarWith.OfType<Kingdom>().Any(x => x.StringId == "dwarf_kingdom"),
+                => candidate.StringId == "dwarf_kingdom",
             KingdomObjectiveType.ForgeBorderEmpire
-                => kingdom.FactionsAtWarWith.OfType<Kingdom>().Any(IsKhuzaitBorderTarget),
+                => IsKhuzaitBorderTarget(candidate),
             KingdomObjectiveType.UniteAseraiRealms
-                => kingdom.FactionsAtWarWith.OfType<Kingdom>().Any(IsAseraiRealm),
+                => IsAseraiRealm(candidate),
             KingdomObjectiveType.ClaimImperialLegitimacy
-                => kingdom.FactionsAtWarWith.OfType<Kingdom>().Any(IsImperialRealm),
+                => IsImperialRealm(candidate),
             KingdomObjectiveType.PreserveBattanianHomelands
-                => kingdom.FactionsAtWarWith.OfType<Kingdom>().Any(x => x.StringId == "sturgia" || x.StringId == "mage_kingdom" || x.Culture?.StringId == "mage"),
+                => candidate.StringId == "sturgia" || candidate.StringId == "mage_kingdom" || candidate.Culture?.StringId == "mage",
+            // No named enemy: any realm will do.
             KingdomObjectiveType.MartialGlory
-                => kingdom.FactionsAtWarWith.Any(x => x.IsKingdomFaction),
-            KingdomObjectiveType.GuardianFrenzy or KingdomObjectiveType.ColonialExpansion
-                => kingdom.FactionsAtWarWith.Any(x => x.IsKingdomFaction),
+                or KingdomObjectiveType.GuardianFrenzy
+                or KingdomObjectiveType.ColonialExpansion
+                => true,
             _ => false
         };
+    }
+
+    /// <summary>Designs that actively want a war, as opposed to those that only
+    /// want to hold what they have. GuardianFrenzy is NOT here: the giants never
+    /// seek anyone — their fury is wired to being attacked
+    /// (<see cref="TriggerGuardianFrenzyIfAttacked"/>).</summary>
+    private static bool IsWarSeekingObjective(KingdomObjectiveType objectiveType)
+    {
+        return IsExpansionistObjective(objectiveType)
+            || objectiveType is KingdomObjectiveType.MartialGlory
+            or KingdomObjectiveType.ColonialExpansion;
     }
 
     private static bool IsExpansionistObjective(KingdomObjectiveType objectiveType)
@@ -4907,10 +5250,17 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
 
     private static bool IsValidIntrigueKingdom(Kingdom kingdom)
     {
+        return IsObjectiveCapableKingdom(kingdom) && kingdom.Clans.Count > 1;
+    }
+
+    /// <summary>A realm that can hold a grand design. Unlike
+    /// <see cref="IsValidIntrigueKingdom"/> this does not demand vassals: the
+    /// clan-politics layer needs a court to work on, a design does not.</summary>
+    private static bool IsObjectiveCapableKingdom(Kingdom kingdom)
+    {
         return kingdom != null
             && !kingdom.IsEliminated
-            && kingdom.RulingClan?.Leader != null
-            && kingdom.Clans.Count > 1;
+            && kingdom.RulingClan?.Leader != null;
     }
 
     private bool CanAssignCompanionToEspionage(Hero companion)

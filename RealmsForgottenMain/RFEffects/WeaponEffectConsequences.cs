@@ -89,12 +89,18 @@ namespace RealmsForgotten.RFEffects
             {
                 ApplyParticleOnSingleAgent(agentsInRadius[amount], weaponEffectData, agentsInRadius[amount] == affectedAgent ? gameEntity : null);
 
-                if (RFAgentApplyDamageModel.Instance.ModifiedDamageAgents.ContainsKey(agentsInRadius[amount].Index))
-                    RFAgentApplyDamageModel.Instance.ModifiedDamageAgents.Remove(agentsInRadius[amount].Index);
+                // RFAgentApplyDamageModel is a campaign GameModel; its Instance is null
+                // outside a campaign (e.g. Custom Battle), where the damage modifier is
+                // not in the pipeline anyway — skip the bookkeeping instead of crashing.
+                if (RFAgentApplyDamageModel.Instance != null)
+                {
+                    if (RFAgentApplyDamageModel.Instance.ModifiedDamageAgents.ContainsKey(agentsInRadius[amount].Index))
+                        RFAgentApplyDamageModel.Instance.ModifiedDamageAgents.Remove(agentsInRadius[amount].Index);
 
-                RFAgentApplyDamageModel.Instance.ModifiedDamageAgents.Add(agentsInRadius[amount].Index, -0.25f);
+                    RFAgentApplyDamageModel.Instance.ModifiedDamageAgents.Add(agentsInRadius[amount].Index, -0.25f);
 
-                agentsInRadius[amount].UpdateCustomDrivenProperties();
+                    agentsInRadius[amount].UpdateCustomDrivenProperties();
+                }
             }
 
             if (affectorAgent.IsMainAgent && amount > 0)
@@ -140,12 +146,18 @@ namespace RealmsForgotten.RFEffects
                 ApplyParticleOnSingleAgent(agentsInRadius[amount], weaponEffectData, agentsInRadius[amount] == affectedAgent ? gameEntity : null);
 
 
-                if (RFAgentApplyDamageModel.Instance.ModifiedDamageAgents.ContainsKey(agentsInRadius[amount].Index))
-                    RFAgentApplyDamageModel.Instance.ModifiedDamageAgents.Remove(agentsInRadius[amount].Index);
+                // RFAgentApplyDamageModel is a campaign GameModel; its Instance is null
+                // outside a campaign (e.g. Custom Battle), where the damage modifier is
+                // not in the pipeline anyway — skip the bookkeeping instead of crashing.
+                if (RFAgentApplyDamageModel.Instance != null)
+                {
+                    if (RFAgentApplyDamageModel.Instance.ModifiedDamageAgents.ContainsKey(agentsInRadius[amount].Index))
+                        RFAgentApplyDamageModel.Instance.ModifiedDamageAgents.Remove(agentsInRadius[amount].Index);
 
-                RFAgentApplyDamageModel.Instance.ModifiedDamageAgents.Add(agentsInRadius[amount].Index, 0.25f);
+                    RFAgentApplyDamageModel.Instance.ModifiedDamageAgents.Add(agentsInRadius[amount].Index, 0.25f);
 
-                agentsInRadius[amount].UpdateCustomDrivenProperties();
+                    agentsInRadius[amount].UpdateCustomDrivenProperties();
+                }
             }
 
             if (affectorAgent.IsMainAgent && amount > 0)

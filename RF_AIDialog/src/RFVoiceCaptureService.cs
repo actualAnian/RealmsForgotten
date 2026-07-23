@@ -71,10 +71,23 @@ namespace RF_AIDialog
             return _capturedAudio;
         }
 
+        // ~3 minutes at 16 kHz / 16-bit mono (~1.9 MB per minute). A forgotten
+        // Record used to grow the buffer without limit and then fail the STT
+        // upload only AFTER shipping a giant payload.
+        private const long MaxCaptureBytes = 3L * 60 * 16000 * 2;
+
         private void OnDataAvailable(object? sender, WaveInEventArgs e)
         {
             try
             {
+                if (_memoryStream != null && _memoryStream.Length >= MaxCaptureBytes)
+                {
+                    // Auto-stop: keep what we have; the transcript path proceeds
+                    // normally from StopRecording's captured bytes.
+                    _waveIn?.StopRecording();
+                    return;
+                }
+
                 _writer?.Write(e.Buffer, 0, e.BytesRecorded);
                 _writer?.Flush();
             }

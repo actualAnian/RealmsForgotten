@@ -53,6 +53,64 @@ public static class RFWarExternalIntentApi
         RFWarSpecialAuthorityBehavior.RequestWar(attacker, defender, RFWarSpecialRequestType.EnduringRivalry, 0.92f * doctrineFactor);
     }
 
+    /// <summary>
+    /// Feeds a kingdom's GRAND DESIGN (KingdomObjectives in RealmsForgottenMain)
+    /// into the war director. Without this the designs are pure narration: the
+    /// director has its own objective model and never reads them.
+    ///
+    /// This is deliberately the SOFTEST intent channel. It mostly teaches the
+    /// director *who to hate and where to march* — the rivalry/heat floors bias
+    /// the planner's own war and target choices, so the design shows up as
+    /// organic pressure rather than a scripted declaration. <paramref name="pressForWar"/>
+    /// (only when the court is genuinely desperate) additionally files the most
+    /// patient special request there is; the planner still gets ~6 days to reach
+    /// the same conclusion by itself before the force path triggers.
+    ///
+    /// <paramref name="conviction"/> is 0..1 — how hard the design is pushing.
+    /// </summary>
+    public static void ReinforceGrandDesignIntent(
+        Kingdom kingdom,
+        Kingdom target,
+        IEnumerable<Settlement>? covetedSettlements,
+        float conviction,
+        bool pressForWar)
+    {
+        if (kingdom == null || target == null || kingdom == target || kingdom.IsEliminated || target.IsEliminated)
+        {
+            return;
+        }
+
+        float clampedConviction = Math.Max(0f, Math.Min(1f, conviction));
+        RFWarStrategicProfile profile = RFWarStrategicProfiles.Get(kingdom);
+        float doctrineFactor = 1f + Math.Max(0f, profile.Persistence) * 0.15f;
+        float weight = (0.3f + (clampedConviction * 0.45f)) * doctrineFactor;
+
+        RFWarStrategicMemoryBehavior.RaiseExternalPairRivalryFloor(kingdom, target, weight);
+        RFWarStrategicMemoryBehavior.RaiseExternalPairCommitmentFloor(kingdom, target, weight * 0.92f);
+        RFWarStrategicMemoryBehavior.RaiseExternalHomePressureFloor(kingdom, 0.12f + (clampedConviction * 0.16f));
+        RFWarExternalFrontContext.ReinforceEnemy(kingdom, target, weight, 2f);
+
+        if (covetedSettlements != null)
+        {
+            foreach (Settlement settlement in covetedSettlements)
+            {
+                if (settlement == null || settlement.MapFaction != target)
+                {
+                    continue;
+                }
+
+                float settlementWeight = settlement.IsTown ? 1f : settlement.IsCastle ? 0.85f : 0.6f;
+                RFWarStrategicMemoryBehavior.RaiseExternalSettlementHeatFloor(kingdom, settlement, 1.6f * settlementWeight * (0.55f + clampedConviction * 0.45f));
+                RFWarExternalFrontContext.ReinforceTarget(kingdom, settlement, weight * settlementWeight, 2f);
+            }
+        }
+
+        if (pressForWar)
+        {
+            RFWarSpecialAuthorityBehavior.RequestWar(kingdom, target, RFWarSpecialRequestType.GrandDesign, 0.4f + (clampedConviction * 0.3f));
+        }
+    }
+
     public static void ReinforceReligiousWar(Kingdom kingdom1, Kingdom kingdom2)
     {
         if (kingdom1 == null || kingdom2 == null || kingdom1 == kingdom2 || kingdom1.IsEliminated || kingdom2.IsEliminated)

@@ -384,24 +384,20 @@ public static class CustomMissions
 
 	public static Mission StartHomesteadPlanningMission(Homestead homestead, string targetSceneName = null)
 	{
-		string text;
-		MissionInitializerRecord rec;
-		if (!string.IsNullOrEmpty(targetSceneName))
-		{
-			text = targetSceneName;
-			rec = CreatePlanningRecord(text);
-		}
-		else if (PlanningSceneExists())
-		{
-			text = "mp_skirmish_spawn_test";
-			rec = CreatePlanningRecord(text);
-		}
-		else
-		{
-			TraceLogger.Write("CustomMissions", "Planning scene 'mp_skirmish_spawn_test' not found in SceneObj — falling back to homestead scene (no map patch) for planning mode.");
-			text = homestead.GetHomesteadScene().SceneName;
-			rec = CreatePlanningRecord(text);
-		}
+		// The old planning canvas was Native's multiplayer test scene
+		// "mp_skirmish_spawn_test". On current game builds (1.4.x + WarSails)
+		// loading that MP scene as a singleplayer sandbox mission hard-crashes
+		// the engine during mission init (CTD right after team creation, no
+		// managed exception — see rgl_log). Plan on the homestead's own scene
+		// instead: it is the exact scene normal visits already load fine, and
+		// the editor logics work the same there.
+		//
+		// The record must carry the terrain map patch (like the visit record
+		// does): homestead scenes are battle-terrain scenes generated from the
+		// campaign map, and opening one without patch data sends terrain
+		// generation into infinite recursion (StackOverflow mid-transition).
+		string text = (!string.IsNullOrEmpty(targetSceneName)) ? targetSceneName : homestead.GetHomesteadScene().SceneName;
+		MissionInitializerRecord rec = CreateHomesteadVisitRecord(homestead, text);
 		return MissionState.OpenNew(text, rec, delegate(Mission mission)
 		{
 			//IL_0011: Unknown result type (might be due to invalid IL or missing references)

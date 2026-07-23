@@ -136,7 +136,31 @@ namespace RealmsForgotten
             return TaleWorlds.MountAndBlade.Agent.Main != null && TaleWorlds.MountAndBlade.Agent.Main.Character == CharacterObject.PlayerCharacter;
         }
         public static bool IsWarSailsLoaded => ModuleHelper.IsModuleActive("NavalDLC");
-        public static bool IsUsingRFWarsailsModule => Directory.GetFiles(ModuleHelper.GetModuleFullPath("RF_Map") + "/ModuleData/DistanceCaches").Count() >= 3;
+        public static bool IsUsingRFWarsailsModule
+        {
+            get
+            {
+                // GetModuleFullPath throws KeyNotFoundException when RF_Map is
+                // not an active module, and GetFiles throws when the caches
+                // folder is missing — either way this used to hard-crash the
+                // game at startup on a partial install. A broken install must
+                // read as "not using the RF naval map", never as a crash.
+                try
+                {
+                    if (!ModuleHelper.IsModuleActive("RF_Map"))
+                    {
+                        return false;
+                    }
+
+                    string cachesPath = ModuleHelper.GetModuleFullPath("RF_Map") + "/ModuleData/DistanceCaches";
+                    return Directory.Exists(cachesPath) && Directory.GetFiles(cachesPath).Count() >= 3;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
         public static List<string> SkillsOrderInCharacterDeveloper = new()
         {
             "OneHanded",

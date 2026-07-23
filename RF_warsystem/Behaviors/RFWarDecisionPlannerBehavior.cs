@@ -56,6 +56,40 @@ public sealed class RFWarDecisionPlannerBehavior : CampaignBehaviorBase
 
     public override void SyncData(IDataStore dataStore)
     {
+        // Losing this on reload let every kingdom re-propose war/peace the very
+        // day a save was loaded, bypassing the 3-day proposal cooldown.
+        string cooldownState = string.Empty;
+        if (!dataStore.IsLoading)
+        {
+            cooldownState = string.Join(";", _lastProposalDayByKingdom.Select(pair =>
+                $"{pair.Key}={pair.Value.ToString("R", System.Globalization.CultureInfo.InvariantCulture)}"));
+        }
+
+        dataStore.SyncData("RFWarSystem_LastProposalDays", ref cooldownState);
+
+        if (!dataStore.IsLoading)
+        {
+            return;
+        }
+
+        _lastProposalDayByKingdom.Clear();
+        foreach (string entry in (cooldownState ?? string.Empty).Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+        {
+            int separatorIndex = entry.LastIndexOf('=');
+            if (separatorIndex <= 0 || separatorIndex >= entry.Length - 1)
+            {
+                continue;
+            }
+
+            if (float.TryParse(
+                entry.Substring(separatorIndex + 1),
+                System.Globalization.NumberStyles.Float,
+                System.Globalization.CultureInfo.InvariantCulture,
+                out float day))
+            {
+                _lastProposalDayByKingdom[entry.Substring(0, separatorIndex)] = day;
+            }
+        }
     }
 
     internal static bool TryPromoteSpecialWarProposal(Kingdom kingdom, Kingdom target)

@@ -88,6 +88,10 @@ public class MCMSettings : AttributeGlobalSettings<MCMSettings>
 	[SettingPropertyGroup("{=MCM_HR_Group_Gameplay}Gameplay", GroupOrder = 10)]
 	public bool AutoTroopUpgradesEnabled { get; set; } = true;
 
+	[SettingPropertyBool("{=MCM_HR_WealthRaidsEnabled_Name}Wealth Attracts Raiders", Order = 12, HintText = "{=MCM_HR_WealthRaidsEnabled_Hint}A rich homestead draws greedy eyes: the more gold and goods you hoard there, the more often (and the larger) angry mobs march on it. A hound master gives early warning — raiders start farther away. Disable for a peaceful homestead.", RequireRestart = false)]
+	[SettingPropertyGroup("{=MCM_HR_Group_Gameplay}Gameplay", GroupOrder = 10)]
+	public bool WealthRaidsEnabled { get; set; } = true;
+
 	[SettingPropertyBool("{=MCM_HR_ShowNavPointsInBattle_Name}Show Nav Points During Battle", Order = 21, HintText = "{=MCM_HR_ShowNavPointsInBattle_Hint}If enabled, Nav Point flags you have placed in the homestead will be visible (in green) during battles. Disabled by default to keep the battlefield visually clean.", RequireRestart = false)]
 	[SettingPropertyGroup("{=MCM_HR_Group_Battle}Battle", GroupOrder = 20)]
 	public bool ShowNavPointsInBattle { get; set; }
@@ -188,6 +192,10 @@ public class MCMSettings : AttributeGlobalSettings<MCMSettings>
 	[SettingPropertyGroup("{=MCM_HR_Group_KeyBinds}Change Key Binds", GroupOrder = 40)]
 	public string KeyBindOpenBuildMenu { get; set; } = "Tilde";
 
+	[SettingPropertyText("{=MCM_HR_KeyBindToggleHelpPanel_Name}Toggle Editor Help Panel", -1, true, "", Order = 58, HintText = "{=MCM_HR_KeyBindToggleHelpPanel_Hint}Shows or hides a small panel in the corner of the screen listing the editor controls for the current mode. Press again to hide it.", RequireRestart = false)]
+	[SettingPropertyGroup("{=MCM_HR_Group_KeyBinds}Change Key Binds", GroupOrder = 40)]
+	public string KeyBindToggleHelpPanel { get; set; } = "F1";
+
 	[SettingPropertyDropdown("{=MCM_HR_CtrlBindEditMode_Name}Cycle Edit Mode", Order = 45, RequireRestart = false, HintText = "{=MCM_HR_CtrlBindEditMode_Hint}Controller button that cycles through the build/edit modes (D-pad up by default). Also rotates the object's pitch while the modifier is held.")]
 	[SettingPropertyGroup("{=MCM_HR_Group_CtrlBinds}Controller Binds", GroupOrder = 45)]
 	public Dropdown<string> CtrlBindEditMode { get; set; } = CtrlDropdown("ControllerLUp");
@@ -242,7 +250,7 @@ public class MCMSettings : AttributeGlobalSettings<MCMSettings>
 
 	public override string Id => "HomesteadsReloaded";
 
-	public override string DisplayName => new TextObject("{=MCM_HR_Mod_Name}Homesteads Reloaded").ToString();
+	public override string DisplayName => new TextObject("{=MCM_HR_Mod_Name}RF Homestead").ToString();
 
 	public override string FolderName => "HomesteadsReloaded";
 
@@ -444,6 +452,16 @@ public class MCMSettings : AttributeGlobalSettings<MCMSettings>
 	public string GetEditModeKeyLabel()
 	{
 		return GetKeyLabel(KeyBindEditMode, "BackSlash");
+	}
+
+	public InputKey GetToggleHelpPanelKey()
+	{
+		return GetKey(KeyBindToggleHelpPanel, InputKey.F1);
+	}
+
+	public string GetToggleHelpPanelKeyLabel()
+	{
+		return GetKeyLabel(KeyBindToggleHelpPanel, "F1");
 	}
 
 	public string GetSetPlayerSpawnKeyLabel()

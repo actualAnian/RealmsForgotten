@@ -63,21 +63,23 @@ public class HomesteadRaidEventQuest : QuestBase
 
 	public override string SpecialQuestType => "HomesteadsQuest";
 
-	public HomesteadRaidEventQuest(string questId, Hero questGiver, Homestead homestead, int raiderCount, int tier)
+	public HomesteadRaidEventQuest(string questId, Hero questGiver, Homestead homestead, int raiderCount, int tier, bool distantSpawn = false)
 		: base(questId, questGiver, CampaignTime.DaysFromNow(7f), 0)
 	{
 		_homestead = homestead;
 		_homesteadParty = homestead.MobileParty;
 		_raiderCount = raiderCount;
-		_raiderParty = SpawnRaiderParty(raiderCount, tier, homestead);
+		_raiderParty = SpawnRaiderParty(raiderCount, tier, homestead, distantSpawn);
 		AddObjectiveLog();
 	}
 
-	private static MobileParty SpawnRaiderParty(int count, int tier, Homestead homestead)
+	private static MobileParty SpawnRaiderParty(int count, int tier, Homestead homestead, bool distantSpawn = false)
 	{
 		Vec2 getPosition2D = homestead.MobileParty.GetPosition2D;
 		float num = MBRandom.RandomFloat * (TaleWorlds.Library.MathF.PI * 2f);
-		float num2 = 2f + MBRandom.RandomFloat;
+		// A hound master's dogs catch the raiders' scent early: the mob starts
+		// farther out, which buys the player real time to ride home or prepare.
+		float num2 = (distantSpawn ? (4.5f + MBRandom.RandomFloat * 1.5f) : (2f + MBRandom.RandomFloat));
 		Vec2 pos = new Vec2(getPosition2D.X + (float)Math.Cos(num) * num2, getPosition2D.Y + (float)Math.Sin(num) * num2);
 		CampaignVec2 position = new CampaignVec2(pos, isOnLand: true);
 		MobileParty mobileParty = MobileParty.CreateParty("homestead_angry_mob_" + homestead.Name?.ToString() + "_" + CampaignTime.Now.ToMilliseconds, new HomesteadRaiderPartyComponent(homestead));
@@ -164,6 +166,7 @@ public class HomesteadRaidEventQuest : QuestBase
 		textObject.SetTextVariable("REWARD", 5);
 		InformationManager.DisplayMessage(new InformationMessage(textObject.ToString(), new Color(0.3f, 0.85f, 0.4f)));
 		TraceLogger.Write("HomesteadRaidEventQuest", $"Raid victory: applied +{5} relation to {num} notables.");
+		HomesteadChronicle.Record($"The homestead of {_homestead?.Name} drove off an angry mob of {_raiderCount} raiders.");
 		_progressLog?.UpdateCurrentProgress(1);
 		CompleteQuestWithSuccess();
 	}

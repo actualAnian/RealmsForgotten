@@ -36,7 +36,7 @@ internal static class TraceLogger
 				Directory.CreateDirectory(LogDirectoryPath);
 				if (!sessionStarted)
 				{
-					File.AppendAllText(LogFilePath, Environment.NewLine + "===== New Homesteads Reloaded Session =====" + Environment.NewLine);
+					File.AppendAllText(LogFilePath, Environment.NewLine + "===== New RF Homestead Session =====" + Environment.NewLine);
 					TrimLogFileToLimit();
 					sessionStarted = true;
 				}

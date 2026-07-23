@@ -293,7 +293,7 @@ public class HomesteadRaceProgressView : MissionView
 
 	public override void OnMissionScreenInitialize()
 	{
-		((MissionView)this).OnMissionScreenInitialize();
+		base.OnMissionScreenInitialize();
 		_logic = ((MissionBehavior)this).Mission.GetMissionBehavior<HomesteadRaceMissionLogic>();
 		_dataSource = new RaceProgressVM();
 		_layer = new PassiveGauntletLayer("HomesteadRaceHUD", 1)
@@ -306,7 +306,7 @@ public class HomesteadRaceProgressView : MissionView
 
 	public override void OnMissionScreenTick(float dt)
 	{
-		((MissionView)this).OnMissionScreenTick(dt);
+		base.OnMissionScreenTick(dt);
 		_timer += dt;
 		if (!(_timer < 0.2f))
 		{
@@ -323,6 +323,6 @@ public class HomesteadRaceProgressView : MissionView
 		}
 		_dataSource = null;
 		_layer = null;
-		((MissionView)this).OnMissionScreenFinalize();
+		base.OnMissionScreenFinalize();
 	}
 }

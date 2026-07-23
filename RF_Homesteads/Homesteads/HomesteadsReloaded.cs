@@ -15,7 +15,7 @@ public class HomesteadsReloaded : MBSubModuleBase
 {
 	public const string ModuleId = "HomesteadsReloaded";
 
-	public const string ModuleDisplayName = "Homesteads Reloaded";
+	public const string ModuleDisplayName = "RF Homestead";
 
 	private const bool EnableAiVisitSettlementPatch = true;
 
@@ -51,7 +51,7 @@ public class HomesteadsReloaded : MBSubModuleBase
 
 	public static MCMSettings Settings { get; private set; }
 
-	public static string ModName { get; private set; } = "Homesteads Reloaded";
+	public static string ModName { get; private set; } = "RF Homestead";
 
 	protected override void OnSubModuleLoad()
 	{
@@ -89,7 +89,7 @@ public class HomesteadsReloaded : MBSubModuleBase
 				TraceLogger.Write("HomesteadsReloaded", "OnBeforeInitialModuleScreenSetAsRoot skipped because module is already loaded");
 				return;
 			}
-			ModName = "Homesteads Reloaded";
+			ModName = "RF Homestead";
 			TraceLogger.Write("HomesteadsReloaded", "Resolved module name to " + ModName);
 			Settings = GlobalSettings<MCMSettings>.Instance ?? throw new NullReferenceException("Settings are null");
 			TraceLogger.Write("HomesteadsReloaded", "Loaded MCM settings instance");
@@ -130,6 +130,7 @@ public class HomesteadsReloaded : MBSubModuleBase
 			obj.AddBehavior(new HomesteadBehavior());
 			obj.AddBehavior(new HomesteadSettlementBehavior());
 			obj.AddBehavior(new RFNomadKingdomBehavior());
+			obj.AddBehavior(new HomesteadWorldTiesBehavior());
 			TraceLogger.Write("HomesteadsReloaded", "Registered HomesteadBehavior + HomesteadSettlementBehavior + RFNomadKingdomBehavior for campaign game");
 		}
 		ApplyLateAgentPatches();

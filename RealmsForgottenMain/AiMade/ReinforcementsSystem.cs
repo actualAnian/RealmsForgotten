@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -232,7 +232,12 @@ namespace RealmsForgotten.AiMade
                 valor = party.LeaderHero.GetTraitLevel(DefaultTraits.Valor);
             }
 
-            if (PlayerEncounter.EncounteredMobileParty == null || PlayerEncounter.EncounteredMobileParty.Owner == null || PlayerEncounter.EncounteredMobileParty.LeaderHero == null || party.Owner == null || party.LeaderHero == null)
+            // Fallback for incomplete encounter context (e.g. settlement
+            // party). The old code dereferenced party.LeaderHero and
+            // EncounteredParty.LeaderHero inside the branch that had just
+            // detected they might be null.
+            if ((PlayerEncounter.EncounteredMobileParty == null || PlayerEncounter.EncounteredMobileParty.Owner == null || PlayerEncounter.EncounteredMobileParty.LeaderHero == null || party.Owner == null)
+                && party.LeaderHero != null && PlayerEncounter.EncounteredParty?.LeaderHero != null)
             {
                 relation = party.LeaderHero.GetBaseHeroRelation(PlayerEncounter.EncounteredParty.LeaderHero);
             }
@@ -265,11 +270,11 @@ namespace RealmsForgotten.AiMade
                 else if (relation <= -10) relation = -10;
             }
 
-            if (PlayerEncounter.EncounteredParty.MobileParty != null && party.ActualClan == PlayerEncounter.EncounteredParty.MobileParty.ActualClan)
+            if (PlayerEncounter.EncounteredParty?.MobileParty != null && party.ActualClan == PlayerEncounter.EncounteredParty.MobileParty.ActualClan)
             {
                 num += 15;
             }
-            else if (party.MapFaction == PlayerEncounter.EncounteredParty.MapFaction)
+            else if (PlayerEncounter.EncounteredParty != null && party.MapFaction == PlayerEncounter.EncounteredParty.MapFaction)
             {
                 num += 10;
             }
@@ -339,7 +344,7 @@ namespace RealmsForgotten.AiMade
 
         public static bool Filter2_2(MobileParty party, List<MapEventParty> alreadyParties)
         {
-            if (PlayerEncounter.EncounteredParty.MobileParty != null && PlayerEncounter.EncounteredMobileParty.IsBandit)
+            if (PlayerEncounter.EncounteredParty?.MobileParty != null && PlayerEncounter.EncounteredParty.MobileParty.IsBandit)
             {
                 return true;
             }
@@ -357,7 +362,7 @@ namespace RealmsForgotten.AiMade
 
         public static bool Filter3_1(MobileParty party, List<MapEventParty> alreadyParties)
         {
-            if (PlayerEncounter.EncounteredParty.MobileParty != null && PlayerEncounter.EncounteredMobileParty.IsBandit)
+            if (PlayerEncounter.EncounteredParty?.MobileParty != null && PlayerEncounter.EncounteredParty.MobileParty.IsBandit)
             {
                 return true;
             }
@@ -375,7 +380,7 @@ namespace RealmsForgotten.AiMade
 
         public static bool Filter3_2(MobileParty party, List<MapEventParty> alreadyParties)
         {
-            if (PlayerEncounter.EncounteredParty.MobileParty != null && PlayerEncounter.EncounteredMobileParty.IsBandit)
+            if (PlayerEncounter.EncounteredParty?.MobileParty != null && PlayerEncounter.EncounteredParty.MobileParty.IsBandit)
             {
                 return true;
             }
@@ -500,149 +505,123 @@ namespace RealmsForgotten.AiMade
             public override void OnMissionModeChange(MissionMode oldMissionMode, bool atStart)
             {
                 base.OnMissionModeChange(oldMissionMode, atStart);
-                if (oldMissionMode == MissionMode.Deployment)
+                if (oldMissionMode != MissionMode.Deployment)
                 {
-                    bool autoDetectRBM = false;
-                    if (autoDetectRBM)
+                    return;
+                }
+
+                // Nothing below is guaranteed to exist at end-of-deployment in
+                // every battle shape (army events, joined encounters, quest
+                // fights) — bail out instead of dereferencing.
+                Mission mission = Mission.Current;
+                MapEvent playerEvent = MapEvent.PlayerMapEvent;
+                if (mission?.PlayerTeam == null || playerEvent == null
+                    || PlayerEncounter.Current == null || Campaign.Current?.MainParty == null)
+                {
+                    return;
+                }
+
+                MobileParty encounteredMobile = PlayerEncounter.EncounteredParty?.MobileParty;
+
+                // The clan whose wars decide friend-from-foe: the player's own
+                // when commanding, the team leader's when serving as sergeant.
+                // Team.Leader may not be spawned yet — fall back to the player.
+                Clan referenceClan = mainHeros.Clan;
+                if (mission.PlayerTeam.IsPlayerSergeant)
+                {
+                    Hero teamLeader = (mission.PlayerTeam.Leader?.Character as CharacterObject)?.HeroObject;
+                    referenceClan = teamLeader?.Clan ?? referenceClan;
+                }
+                if (referenceClan == null)
+                {
+                    return;
+                }
+
+                foreach (MobileParty mobileParty in MobileParty.AllLordParties.FindAll(a => Campaign.Current.MainParty.GetPosition2D.Distance(a.GetPosition2D) <= radiousSetting))
+                {
+                    if (playerEvent.InvolvedParties.Contains(mobileParty.Party)
+                        || mobileParty.IsMainParty
+                        || mobileParty.MemberRoster.Contains(Hero.MainHero.CharacterObject)
+                        || mobileParty.IsGarrison
+                        || mobileParty.CurrentSettlement != null
+                        || mobileParty.BesiegerCamp != null
+                        || mobileParty.MapEvent != null
+                        || partiesTimerDic.ContainsKey(mobileParty))
                     {
-                        if (Utilities.GetModulesNames().Contains("RBM"))
-                        {
-                            timerset = 1;
-                        }
+                        continue;
                     }
-                    foreach (MobileParty mobileParty in MobileParty.AllLordParties.FindAll(a => Campaign.Current.MainParty.GetPosition2D.Distance(a.GetPosition2D) <= radiousSetting))
+                    if (mobileParty.Army != null && mobileParty.Army.LeaderParty != mobileParty && mobileParty.Army.DoesLeaderPartyAndAttachedPartiesContain(mobileParty))
                     {
-                        if (!MapEvent.PlayerMapEvent.InvolvedParties.Contains(mobileParty.Party))
-                        {
-                            if (!mobileParty.IsMainParty && !mobileParty.MemberRoster.Contains(Hero.MainHero.CharacterObject) && !mobileParty.IsGarrison && mobileParty.CurrentSettlement == null && mobileParty.BesiegerCamp == null)
-                            {
-                                if (mobileParty.Army != null)
-                                {
-                                    if (mobileParty.Army.LeaderParty != mobileParty && mobileParty.Army.DoesLeaderPartyAndAttachedPartiesContain(mobileParty))
-                                    {
-                                        continue;
-                                    }
-                                }
-                                if (mobileParty.MapEvent == null)
-                                {
-                                    float num = Campaign.Current.MainParty.GetPosition2D.Distance(mobileParty.GetPosition2D);
-                                    short num2 = timerset;
-                                    short num3 = num2;
-                                    int num4;
-                                    if (num3 != 1)
-                                    {
-                                        if (num3 != 2)
-                                        {
-                                            num4 = 23;
-                                        }
-                                        else
-                                        {
-                                            num4 = 16;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        num4 = 30;
-                                    }
-                                    float duration = (num - 3f) * num4;
-                                    if (Mission.Current.PlayerTeam.IsPlayerGeneral)
-                                    {
-                                        if (mainHeros.Clan != null && mobileParty.Owner.Clan != null && mainHeros.Clan.IsAtWarWith(mobileParty.Owner.Clan) || mainHeros.Clan.Kingdom != null && mobileParty.Owner.Clan.Kingdom != null && mainHeros.Clan.Kingdom.IsAtWarWith(mobileParty.Owner.Clan.Kingdom) || mainHeros.Clan.MapFaction != null && mobileParty.Owner.Clan.MapFaction != null && mainHeros.Clan.MapFaction.IsAtWarWith(mobileParty.Owner.Clan.MapFaction))
-                                        {
-                                            if (PlayerEncounter.EncounteredParty.MobileParty == null || !PlayerEncounter.EncounteredParty.MobileParty.IsBandit)
-                                            {
-                                                if (!partiesTimerDic.ContainsKey(mobileParty))
-                                                {
-                                                    partiesTimerDic.Add(mobileParty, new MissionTimer(duration));
-                                                    RelationFilter(mobileParty);
-                                                    nearPartiesEnemy.Add(mobileParty);
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (!partiesTimerDic.ContainsKey(mobileParty))
-                                            {
-                                                partiesTimerDic.Add(mobileParty, new MissionTimer(duration));
-                                                RelationFilter(mobileParty);
-                                                nearPartiesAlly.Add(mobileParty);
-                                            }
-                                        }
-                                    }
-                                    else if (Mission.Current.PlayerTeam.IsPlayerSergeant)
-                                    {
-                                        CharacterObject characterObject = (CharacterObject)Mission.Current.PlayerTeam.Leader.Character;
-                                        if (characterObject.HeroObject.Clan != null && mobileParty.Owner.Clan != null && characterObject.HeroObject.Clan.IsAtWarWith(mobileParty.Owner.Clan) || characterObject.HeroObject.Clan.Kingdom != null && mobileParty.Owner.Clan.Kingdom != null && characterObject.HeroObject.Clan.Kingdom.IsAtWarWith(mobileParty.Owner.Clan.Kingdom) || characterObject.HeroObject.Clan.MapFaction != null && mobileParty.Owner.Clan.MapFaction != null && characterObject.HeroObject.Clan.MapFaction.IsAtWarWith(mobileParty.Owner.Clan.MapFaction))
-                                        {
-                                            if (PlayerEncounter.EncounteredParty.MobileParty == null || !PlayerEncounter.EncounteredParty.MobileParty.IsBandit)
-                                            {
-                                                if (!partiesTimerDic.ContainsKey(mobileParty))
-                                                {
-                                                    partiesTimerDic.Add(mobileParty, new MissionTimer(duration));
-                                                    if (mobileParty.LeaderHero != null && !relationPair.ContainsKey(mobileParty.LeaderHero))
-                                                    {
-                                                        relationPair.Add(mobileParty.LeaderHero, AdodEnum.None);
-                                                    }
-                                                    nearPartiesEnemy.Add(mobileParty);
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (!partiesTimerDic.ContainsKey(mobileParty))
-                                            {
-                                                partiesTimerDic.Add(mobileParty, new MissionTimer(duration));
-                                                if (mobileParty.LeaderHero != null && !relationPair.ContainsKey(mobileParty.LeaderHero))
-                                                {
-                                                    relationPair.Add(mobileParty.LeaderHero, AdodEnum.None);
-                                                }
-                                                nearPartiesAlly.Add(mobileParty);
-                                            }
-                                        }
-                                    }
-                                    if (PlayerEncounter.EncounteredParty.MobileParty != null && PlayerEncounter.EncounteredParty.MobileParty.IsBandit)
-                                    {
-                                        foreach (MobileParty mobileParty2 in MobileParty.AllBanditParties.FindAll(a => Campaign.Current.MainParty.GetPosition2D.Distance(a.GetPosition2D) <= radiousSetting))
-                                        {
-                                            if (!MapEvent.PlayerMapEvent.InvolvedParties.Contains(mobileParty2.Party) && !mobileParty2.IsEngaging && (mobileParty2.CurrentSettlement == null || !mobileParty2.CurrentSettlement.IsHideout))
-                                            {
-                                                float num5 = Campaign.Current.MainParty.GetPosition2D.Distance(mobileParty2.GetPosition2D);
-                                                short num6 = timerset;
-                                                short num7 = num6;
-                                                int num8;
-                                                if (num7 != 1)
-                                                {
-                                                    if (num7 != 2)
-                                                    {
-                                                        num8 = 16;
-                                                    }
-                                                    else
-                                                    {
-                                                        num8 = 12;
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    num8 = 20;
-                                                }
-                                                float duration2 = (num5 - 3f) * num8;
-                                                if (!partiesTimerDic.ContainsKey(mobileParty2))
-                                                {
-                                                    partiesTimerDic.Add(mobileParty2, new MissionTimer(duration2));
-                                                    nearPartiesEnemy.Add(mobileParty2);
-                                                }
-                                            }
-                                        }
-                                    }
-                                    if (partiesTimerDic.Count != 0)
-                                    {
-                                        missionSidesBoth = typeof(DefaultBattleMissionAgentSpawnLogic).GetField("_missionSides", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(Mission.GetMissionBehavior<DefaultBattleMissionAgentSpawnLogic>()) as IEnumerable;
-                                        timerStart = true;
-                                    }
-                                }
-                            }
-                        }
+                        continue;
                     }
+
+                    // Leaderless clans and ownerless parties cannot be
+                    // classified — skipping beats the old NRE on Owner.Clan.
+                    Clan otherClan = mobileParty.Owner?.Clan ?? mobileParty.ActualClan;
+                    if (otherClan == null)
+                    {
+                        continue;
+                    }
+
+                    float distance = Campaign.Current.MainParty.GetPosition2D.Distance(mobileParty.GetPosition2D);
+                    int secondsPerUnit = timerset == 1 ? 30 : (timerset == 2 ? 16 : 23);
+                    float duration = (distance - 3f) * secondsPerUnit;
+
+                    bool atWarWithPlayerSide =
+                        referenceClan.IsAtWarWith(otherClan)
+                        || (referenceClan.Kingdom != null && otherClan.Kingdom != null && referenceClan.Kingdom.IsAtWarWith(otherClan.Kingdom))
+                        || (referenceClan.MapFaction != null && otherClan.MapFaction != null && referenceClan.MapFaction.IsAtWarWith(otherClan.MapFaction));
+
+                    if (atWarWithPlayerSide && encounteredMobile != null && encounteredMobile.IsBandit)
+                    {
+                        // Original behavior: enemy lords stay out of the
+                        // player's bandit fights.
+                        continue;
+                    }
+
+                    partiesTimerDic.Add(mobileParty, new MissionTimer(duration));
+                    if (mission.PlayerTeam.IsPlayerGeneral)
+                    {
+                        RelationFilter(mobileParty);
+                    }
+                    else if (mobileParty.LeaderHero != null && !relationPair.ContainsKey(mobileParty.LeaderHero))
+                    {
+                        relationPair.Add(mobileParty.LeaderHero, AdodEnum.None);
+                    }
+                    (atWarWithPlayerSide ? nearPartiesEnemy : nearPartiesAlly).Add(mobileParty);
+                }
+
+                // Bandit reinforcements for bandit fights. This used to live
+                // INSIDE the lord loop, so with no lord party in radius it
+                // never ran at all.
+                if (encounteredMobile != null && encounteredMobile.IsBandit)
+                {
+                    foreach (MobileParty bandit in MobileParty.AllBanditParties.FindAll(a => Campaign.Current.MainParty.GetPosition2D.Distance(a.GetPosition2D) <= radiousSetting))
+                    {
+                        if (playerEvent.InvolvedParties.Contains(bandit.Party)
+                            || bandit.IsEngaging
+                            || (bandit.CurrentSettlement != null && bandit.CurrentSettlement.IsHideout)
+                            || partiesTimerDic.ContainsKey(bandit))
+                        {
+                            continue;
+                        }
+                        float distance = Campaign.Current.MainParty.GetPosition2D.Distance(bandit.GetPosition2D);
+                        int secondsPerUnit = timerset == 1 ? 20 : (timerset == 2 ? 12 : 16);
+                        partiesTimerDic.Add(bandit, new MissionTimer((distance - 3f) * secondsPerUnit));
+                        nearPartiesEnemy.Add(bandit);
+                    }
+                }
+
+                if (partiesTimerDic.Count != 0)
+                {
+                    DefaultBattleMissionAgentSpawnLogic spawnLogic = mission.GetMissionBehavior<DefaultBattleMissionAgentSpawnLogic>();
+                    if (spawnLogic != null)
+                    {
+                        missionSidesBoth = typeof(DefaultBattleMissionAgentSpawnLogic).GetField("_missionSides", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(spawnLogic) as IEnumerable;
+                    }
+                    // Without the spawn-side bookkeeping we cannot spawn
+                    // safely — leave the system dormant for this mission.
+                    timerStart = missionSidesBoth != null;
                 }
             }
 
@@ -659,26 +638,36 @@ namespace RealmsForgotten.AiMade
                             RunAdod(keyValuePair.Key);
                         }
                     }
-                    if (tooMany)
+                    if (tooMany && addSpawnTimer.Check(true))
                     {
-                        if (addSpawnTimer.Check(true))
-                        {
-                            TrySpawn(2);
-                        }
+                        // Drain BOTH queues; the old TrySpawn(2) retry only
+                        // ever resumed the attacker queue.
+                        tooMany = false;
+                        TrySpawn(0);
+                        TrySpawn(1);
                     }
                     tempDic.ForEach(delegate (MobileParty party)
                     {
                         partiesTimerDic.Remove(party);
-                        if (partiesTimerDic.Count <= 0 && reservedQueue0.Count == 0 && reservedQueue1.Count == 0)
-                        {
-                            timerStart = false;
-                        }
                     });
+                    tempDic.Clear();
+                    if (partiesTimerDic.Count <= 0 && reservedQueue0.Count == 0 && reservedQueue1.Count == 0)
+                    {
+                        timerStart = false;
+                    }
                 }
             }
 
             public void RunAdod(MobileParty party)
             {
+                // Every filter below leans on the encounter/battle being alive.
+                if (PlayerEncounter.Current == null || PlayerEncounter.Battle == null
+                    || MapEvent.PlayerMapEvent == null || Mission.Current == null)
+                {
+                    timerStart = false;
+                    return;
+                }
+
                 // Check if the player is knocked out before proceeding
                 if (Hero.MainHero.HitPoints <= 0 || Mission.Current.MainAgent == null || !Mission.Current.MainAgent.IsActive())
                 {
@@ -731,7 +720,7 @@ namespace RealmsForgotten.AiMade
                     {
                         balance2 = PowerBalance(party, oppositeSide2);
                     }
-                    if (PlayerEncounter.EncounteredParty.MobileParty != null && PlayerEncounter.EncounteredMobileParty.IsBandit)
+                    if (PlayerEncounter.EncounteredParty?.MobileParty != null && PlayerEncounter.EncounteredParty.MobileParty.IsBandit)
                     {
                         if (!FilterBandit(balance2))
                         {
@@ -950,21 +939,85 @@ namespace RealmsForgotten.AiMade
             }
 
 
-            public async void TrySpawn(int side)
+            // Synchronous on purpose. The old version was async void with
+            // await Task.Delay inside the spawn loop: after the first await
+            // every continuation ran on the THREAD POOL (Bannerlord has no
+            // SynchronizationContext), so Mission.SpawnTroop executed off the
+            // main thread — random engine corruption. Spawning now happens in
+            // bounded bursts on the mission tick; the retry timer in
+            // OnMissionTick paces the remainder.
+            public void TrySpawn(int side)
             {
-                if (Mission.Current.Agents.Count >= 1400)
+                Mission mission = Mission.Current;
+                if (mission == null || missionSidesBoth == null || PlayerEncounter.Battle == null)
                 {
-                    if (tooMany)
-                        return;
-                    tooMany = true;
-                    addSpawnTimer = new MissionTimer(20f);
+                    return;
                 }
-                else
+                Queue<IAgentOriginBase> selectedQueue = side == 0 ? reservedQueue0 : reservedQueue1;
+                if (selectedQueue.Count == 0)
                 {
-                    Queue<IAgentOriginBase> selectedQueue = side == 0 ? reservedQueue0 : reservedQueue1;
-                    bool playerTeam = PlayerEncounter.Battle.PlayerSide == (BattleSideEnum)side;
-                    bool hasFormation = side == 0 && Mission.Current.DefenderAllyTeam != null || side == 1 && Mission.Current.AttackerAllyTeam != null;
-                    int spawnCount = 0;
+                    return;
+                }
+                if (mission.Agents.Count >= 1400)
+                {
+                    ScheduleSpawnRetry();
+                    return;
+                }
+
+                bool playerTeam = PlayerEncounter.Battle.PlayerSide == (BattleSideEnum)side;
+                bool hasFormation = side == 0 && mission.DefenderAllyTeam != null || side == 1 && mission.AttackerAllyTeam != null;
+                // Spawn at the side's own deployment area — the old code used
+                // the PLAYER team's spawn for both sides, so enemy
+                // reinforcements materialized inside the player's lines.
+                Team sideTeam = (side == 0 ? mission.DefenderTeam : mission.AttackerTeam) ?? mission.PlayerTeam;
+
+                int spawnCount = 0;
+                foreach (var missionSide in missionSidesBoth)
+                {
+                    var fieldInfo = missionSide.GetType().GetField("_numSpawnedTroops", BindingFlags.Instance | BindingFlags.NonPublic);
+                    if (fieldInfo != null)
+                    {
+                        int? spawnTroopNumber = fieldInfo.GetValue(missionSide) as int?;
+                        if (spawnTroopNumber.HasValue)
+                        {
+                            fieldInfo.SetValue(missionSide, spawnTroopNumber.Value + 10000);
+                            break;
+                        }
+                    }
+                }
+                while (spawnCount < 60 && selectedQueue.Count > 0 && mission.Agents.Count < 1600)
+                {
+                    spawnCount++;
+                    IAgentOriginBase originBase = selectedQueue.Dequeue();
+                    try
+                    {
+                        TaleWorlds.Library.Vec2 spawnPosition = mission.GetFormationSpawnPosition(sideTeam, originBase.Troop.DefaultFormationClass);
+                        Agent nagent = mission.SpawnTroop(
+                            originBase,
+                            playerTeam,
+                            hasFormation,
+                            true, true,
+                            0,
+                            originBase.Troop.DefaultFormationGroup,
+                            true, false,
+                            spawnPosition.ToVec3(0.0f),
+                            spawnPosition,
+                            null,
+                            null,
+                            FormationClass.NumberOfAllFormations,
+                            false);
+                        if (side == 0)
+                            newAgentsDefend.Add(nagent);
+                        else
+                            newAgentsAttack.Add(nagent);
+                    }
+                    catch
+                    {
+                        InformationManager.DisplayMessage(new InformationMessage("Spawn Failed!"));
+                    }
+                }
+                if (spawnCount > 0)
+                {
                     foreach (var missionSide in missionSidesBoth)
                     {
                         var fieldInfo = missionSide.GetType().GetField("_numSpawnedTroops", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -973,64 +1026,24 @@ namespace RealmsForgotten.AiMade
                             int? spawnTroopNumber = fieldInfo.GetValue(missionSide) as int?;
                             if (spawnTroopNumber.HasValue)
                             {
-                                fieldInfo.SetValue(missionSide, spawnTroopNumber.Value + 10000);
+                                fieldInfo.SetValue(missionSide, spawnTroopNumber.Value + spawnCount - 10000);
                                 break;
                             }
                         }
                     }
-                    while (spawnCount < 700 && selectedQueue.Count > 0 && Mission.Current.Agents.Count < 1600)
-                    {
-                        spawnCount++;
-                        IAgentOriginBase originBase = selectedQueue.Dequeue();
-                        try
-                        {
-                            Mission current = Mission.Current;
-                            Agent nagent = current.SpawnTroop(
-                                originBase,
-                                playerTeam,
-                                hasFormation,
-                                true, true,
-                                0,
-                                originBase.Troop.DefaultFormationGroup,
-                                true, false,
-                                Mission.Current.GetFormationSpawnPosition(Mission.Current.PlayerTeam, originBase.Troop.DefaultFormationClass).ToVec3(0.0f),
-                                Mission.Current.GetFormationSpawnPosition(Mission.Current.PlayerTeam, originBase.Troop.DefaultFormationClass),
-                                null,
-                                null,
-                                FormationClass.NumberOfAllFormations,
-                                false);
-                            if (side == 0)
-                                newAgentsDefend.Add(nagent);
-                            else
-                                newAgentsAttack.Add(nagent);
-                            await Task.Delay(5);
-                        }
-                        catch
-                        {
-                            InformationManager.DisplayMessage(new InformationMessage("Spawn Failed!"));
-                        }
-                    }
-                    if (spawnCount > 0)
-                    {
-                        foreach (var missionSide in missionSidesBoth)
-                        {
-                            var fieldInfo = missionSide.GetType().GetField("_numSpawnedTroops", BindingFlags.Instance | BindingFlags.NonPublic);
-                            if (fieldInfo != null)
-                            {
-                                int? spawnTroopNumber = fieldInfo.GetValue(missionSide) as int?;
-                                if (spawnTroopNumber.HasValue)
-                                {
-                                    fieldInfo.SetValue(missionSide, spawnTroopNumber.Value + spawnCount - 10000);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    if (selectedQueue.Count > 0 && !tooMany)
-                    {
-                        tooMany = true;
-                        addSpawnTimer = new MissionTimer(20f);
-                    }
+                }
+                if (selectedQueue.Count > 0)
+                {
+                    ScheduleSpawnRetry();
+                }
+            }
+
+            private void ScheduleSpawnRetry()
+            {
+                if (!tooMany)
+                {
+                    tooMany = true;
+                    addSpawnTimer = new MissionTimer(3f);
                 }
             }
 

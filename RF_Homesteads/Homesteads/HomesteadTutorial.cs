@@ -24,7 +24,7 @@ public static class HomesteadTutorial
 		{
 			TutorialStage++;
 			string localizedTag = "homestead_tutorial_launched_menu";
-			string text = "Hello, you beautiful person. Welcome to Homesteads Reloaded! This tutorial will hopefully help you a little along this journey.\r\nTo the left of this message box, you will see your homestead's game menu. The two most important options are 'Walk around' and 'Manage homestead'.\r\nPlease click 'Manage homestead' to continue the tutorial, I won't pop up in 'Walk around' until you do. :)";
+			string text = "Hello, you beautiful person. Welcome to RF Homestead! This tutorial will hopefully help you a little along this journey.\r\nTo the left of this message box, you will see your homestead's game menu. The two most important options are 'Walk around' and 'Manage homestead'.\r\nPlease click 'Manage homestead' to continue the tutorial, I won't pop up in 'Walk around' until you do. :)";
 			Utils.ShowMessageBox(GetTitleLocalizedString(), GetTextLocalizedString(localizedTag, text));
 		}
 	}
@@ -59,6 +59,6 @@ public static class HomesteadTutorial
 
 	private static string GetTitleLocalizedString()
 	{
-		return Utils.GetLocalizedString("{=homestead_tutorial_title}Homesteads Reloaded Tutorial");
+		return Utils.GetLocalizedString("{=homestead_tutorial_title}RF Homestead Tutorial");
 	}
 }
