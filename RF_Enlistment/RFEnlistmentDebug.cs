@@ -3,9 +3,13 @@ using System.IO;
 
 namespace RF_Enlistment;
 
-internal static class RFEnlistmentDebug
+public static class RFEnlistmentDebug
 {
-    public static bool Enabled => false;
+    /// <summary>Pushed by RealmsForgotten's RF Diagnostics MCM page
+    /// (reflection; default OFF).</summary>
+    public static bool RuntimeEnabled;
+
+    public static bool Enabled => RuntimeEnabled;
 
     private static readonly string LogPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),

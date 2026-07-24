@@ -102,6 +102,13 @@ namespace RealmsForgotten
                 campaignGameStarter.AddBehavior(new SlaversRosterBehavior());
                 campaignGameStarter.AddBehavior(new AiSlaversPatrollingBehavior());
                 campaignGameStarter.AddBehavior(new RealmsForgotten.WorldState.Refugees.RefugeeCampaignBehavior());
+                // Diagnostics switchboard: push the RF Diagnostics MCM switches into
+                // every satellite module before any system can write a log line.
+                RealmsForgotten.Diagnostics.RFLogSwitchboard.PushToModules();
+                campaignGameStarter.AddBehavior(new RealmsForgotten.Diagnostics.RFLogSwitchboardBehavior());
+                campaignGameStarter.AddBehavior(new RealmsForgotten.WorldState.YoungWorld.RFYoungWorldBehavior());
+                campaignGameStarter.AddBehavior(new RealmsForgotten.WorldState.YoungWorld.RFFactionEconomyIndex());
+                campaignGameStarter.AddBehavior(new RealmsForgotten.WorldState.YoungWorld.RFEquipmentStageCapBehavior());
                 campaignGameStarter.AddBehavior(new RFLegendaryTroopsPlayerVisitTownCampaignBehavior());
                 campaignGameStarter.AddBehavior(new RFLegendaryTroopsNotableBehaviors());
                 campaignGameStarter.AddBehavior(new RFLegendaryTroopsAIRecruitment());
@@ -119,6 +126,14 @@ namespace RealmsForgotten
                 campaignGameStarter.AddModel(new RFPrisonerRecruitmentCalculationModel(campaignGameStarter.GetExistingModel<PrisonerRecruitmentCalculationModel>()));
                 campaignGameStarter.AddModel(new RFRaidModel(campaignGameStarter.GetExistingModel<RaidModel>()));
                 campaignGameStarter.AddModel(new RFVolunteerModel(campaignGameStarter.GetExistingModel<VolunteerModel>()));
+                // Wraps the existing volunteer model (Default -> RFVolunteerModel ->
+                // this) to cap notable volunteer tiers by kingdom wall stage. Must
+                // register AFTER RFVolunteerModel so GetExistingModel picks it up as
+                // the previous model and the RF volunteer logic stays in the chain.
+                campaignGameStarter.AddModel(new RealmsForgotten.WorldState.YoungWorld.RFTierCapVolunteerModel(campaignGameStarter.GetExistingModel<VolunteerModel>()));
+                // Same wall-stage rule for in-party upgrades (player path; the AI
+                // path is covered by the Harmony postfix in the same file).
+                campaignGameStarter.AddModel(new RealmsForgotten.WorldState.YoungWorld.RFTierCapTroopUpgradeModel(campaignGameStarter.GetExistingModel<PartyTroopUpgradeModel>()));
                 campaignGameStarter.AddModel(new RFWageModel(campaignGameStarter.GetExistingModel<PartyWageModel>()));
                 campaignGameStarter.AddModel(new RFBattleCaptainModel(campaignGameStarter.GetExistingModel<BattleCaptainModel>()));
                 campaignGameStarter.AddModel(new RFInventoryCapacityModel(campaignGameStarter.GetExistingModel<InventoryCapacityModel>()));

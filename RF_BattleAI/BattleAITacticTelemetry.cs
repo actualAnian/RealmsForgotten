@@ -26,7 +26,7 @@ internal static class BattleAITacticTelemetry
     /// (e.g. BehaviorScreenedSkirmish.GetAiWeight) have SIDE EFFECTS — they call
     /// CalculateCurrentOrder and mutate inactive behaviors' state. Only enable
     /// it for a deliberate hijack-audit session, never in normal play.</summary>
-    public static bool Enabled;
+    public static bool Enabled => BattleAILogSwitches.Tactics;
 
     private const float LogInterval = 2f;
 

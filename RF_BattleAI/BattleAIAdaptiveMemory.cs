@@ -314,6 +314,11 @@ internal static class BattleAIAdaptiveMemory
             record.Duration.ToString("F1", CultureInfo.InvariantCulture)
         }) + Environment.NewLine;
 
+        if (!BattleAILogSwitches.AdaptiveMemory)
+        {
+            return;
+        }
+
         foreach (string logPath in LogPaths.Distinct())
         {
             try

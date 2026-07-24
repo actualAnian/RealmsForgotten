@@ -16,24 +16,21 @@ namespace RealmsForgotten.AiMade
 
         internal static void Write(string message)
         {
+            // Gated by the RF Diagnostics MCM page (default OFF): this is the
+            // most verbose log in the mod — it reached 10 MB in testing.
+            if (!RealmsForgotten.Diagnostics.RFLogSwitchboard.IsEnabled(
+                    RealmsForgotten.Diagnostics.RFLogSwitchboard.CampaignAiTrace))
+            {
+                return;
+            }
+
             try
             {
                 string line = $"[{DateTime.Now:HH:mm:ss.fff}] {message}{Environment.NewLine}";
                 foreach (string logPath in LogPaths.Distinct())
                 {
-                    try
-                    {
-                        string directory = Path.GetDirectoryName(logPath);
-                        if (!string.IsNullOrWhiteSpace(directory))
-                        {
-                            Directory.CreateDirectory(directory);
-                        }
-
-                        File.AppendAllText(logPath, line);
-                    }
-                    catch
-                    {
-                    }
+                    RealmsForgotten.Diagnostics.RFLogSwitchboard.Append(
+                        RealmsForgotten.Diagnostics.RFLogSwitchboard.CampaignAiTrace, logPath, line);
                 }
             }
             catch

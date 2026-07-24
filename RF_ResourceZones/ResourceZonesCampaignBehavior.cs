@@ -408,8 +408,18 @@ namespace RF_ResourceZones
         /// fact — this file persists, next to the other RF_*.log files, so which
         /// zones spawned (and which were skipped for a bad coordinate) can be
         /// checked after a play session.</summary>
+        /// <summary>Pushed by RealmsForgotten's RF Diagnostics MCM page. Default
+        /// OFF: an uninstrumented session writes nothing to disk.</summary>
+        public static bool LogEnabled;
+
         private static void LogZoneDiagnostic(string message)
         {
+            if (!LogEnabled)
+            {
+                Debug.Print($"[RF_ResourceZones] {message}");
+                return;
+            }
+
             try
             {
                 string path = System.IO.Path.Combine(

@@ -19,7 +19,7 @@ internal static class BanditTrapTelemetry
     /// <summary>Diagnostic-only. Ships OFF: this writes to disk every 2 s of
     /// battle while the bandit trap runs — same convention as
     /// BattleAITacticTelemetry.Enabled. Flip on locally when investigating.</summary>
-    private const bool Enabled = false;
+    private static bool Enabled => BattleAILogSwitches.BanditTrap;
 
     private static readonly string LogPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),

@@ -9,9 +9,13 @@ using TaleWorlds.Library;
 
 namespace RF_warsystem.Diagnostics;
 
-internal static class RFWarSystemTraceLog
+public static class RFWarSystemTraceLog
 {
-    private const bool Enabled = false;
+    /// <summary>Pushed by RealmsForgotten's RF Diagnostics MCM page
+    /// (RFLogSwitchboard.PushToModules). Default OFF.</summary>
+    public static bool RuntimeEnabled;
+
+    private static bool Enabled => RuntimeEnabled;
     internal static bool IsEnabled => Enabled;
 
     private static readonly string[] LogPaths =

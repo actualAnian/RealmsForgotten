@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -497,6 +497,11 @@ namespace RealmsForgotten
         private static void AuditCapitulation(string message)
         {
             if (_remainingAuditLines <= 0)
+                return;
+
+            // RF Diagnostics MCM page (default OFF).
+            if (!RealmsForgotten.Diagnostics.RFLogSwitchboard.IsEnabled(
+                    RealmsForgotten.Diagnostics.RFLogSwitchboard.Capitulation))
                 return;
 
             try

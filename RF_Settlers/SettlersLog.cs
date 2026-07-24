@@ -10,12 +10,22 @@ namespace RF_Settlers
     /// </summary>
     public static class SettlersLog
     {
+        /// <summary>Pushed by RealmsForgotten's RF Diagnostics MCM page
+        /// (RFLogSwitchboard.PushToModules). Default OFF so an uninstrumented
+        /// session writes nothing.</summary>
+        public static bool LogEnabled;
+
         private static readonly string LogPath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
             "Mount and Blade II Bannerlord", "Configs", "ModLogs", "RF_Settlers.log");
 
         public static void Write(string message)
         {
+            if (!LogEnabled)
+            {
+                return;
+            }
+
             string line = $"[{DateTime.Now:HH:mm:ss}] {message}";
             Debug.Print("[RF_Settlers] " + message);
             try

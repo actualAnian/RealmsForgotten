@@ -88,7 +88,19 @@ internal static class RFWarStrategicHeuristics
             adjustment *= 1.05f;
         }
 
-        return baseScore + adjustment;
+        float finalScore = baseScore + adjustment;
+
+        // Young World calm: during a young world's first weeks the war director
+        // is held back. Dampen only a POSITIVE (pro-war) score — never scale a
+        // peace-leaning negative score toward war. Inert (multiplier == 1) unless
+        // RealmsForgotten pushed a young world active, so the OFF state is exact.
+        float calmMultiplier = RF_warsystem.RFYoungWorldWarBridge.GetWarScoreMultiplier();
+        if (calmMultiplier < 1f && finalScore > 0f)
+        {
+            finalScore *= calmMultiplier;
+        }
+
+        return finalScore;
     }
 
     public static float AdjustPeaceScore(DiplomacyModel baseModel, float baseScore, IFaction factionDeclaresPeace, IFaction factionDeclaredPeace)

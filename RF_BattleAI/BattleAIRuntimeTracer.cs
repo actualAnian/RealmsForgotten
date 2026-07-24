@@ -275,6 +275,11 @@ internal static class BattleAIRuntimeTracer
     {
         string line = $"[{DateTime.Now:HH:mm:ss.fff}] {message}{Environment.NewLine}";
 
+        if (!BattleAILogSwitches.RuntimeTrace)
+        {
+            return;
+        }
+
         foreach (string logPath in LogPaths.Distinct())
         {
             try

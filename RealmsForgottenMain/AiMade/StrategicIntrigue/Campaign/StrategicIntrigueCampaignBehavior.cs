@@ -4276,6 +4276,7 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
         Kingdom target = SelectGrandDesignTarget(kingdom, state.ObjectiveType);
         if (target == null)
         {
+            Mechanics.KingdomObjectives.KingdomObjectiveTrace.Write(kingdom, state, null, 0f, false, "no_target");
             return;
         }
 
@@ -4284,12 +4285,20 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
             12f,
             100f) / 100f;
 
+        bool pressForWar = ShouldPressGrandDesignWar(kingdom, state);
+        if (Mechanics.KingdomObjectives.KingdomObjectiveTrace.Enabled)
+        {
+            Mechanics.KingdomObjectives.KingdomObjectiveTrace.Write(
+                kingdom, state, target, conviction, pressForWar,
+                pressForWar ? "-" : GetGrandDesignWarBlocker(kingdom, state));
+        }
+
         RFWarExternalIntentApi.ReinforceGrandDesignIntent(
             kingdom,
             target,
             GetCovetedSettlements(target, state.ObjectiveType),
             conviction,
-            ShouldPressGrandDesignWar(kingdom, state));
+            pressForWar);
     }
 
     /// <summary>The one realm the design is pointed at right now. A design already
@@ -4398,6 +4407,21 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
     /// itself. A special request goes stale after 3 silent days, so this stays true
     /// day after day while the conditions hold and the daily push keeps it alive;
     /// it goes false the moment the war it asked for exists.</summary>
+    /// <summary>Which gate (if any) stops the design from pressing for war —
+    /// the diagnostic twin of <see cref="ShouldPressGrandDesignWar"/>. Kept
+    /// beside it so the two can never drift apart.</summary>
+    private string GetGrandDesignWarBlocker(Kingdom kingdom, KingdomIntrigueState state)
+    {
+        if (!IsWarSeekingObjective(state.ObjectiveType)) return "not_war_seeking";
+        if (HasObjectiveTargetWar(kingdom, state.ObjectiveType)) return "already_at_war_with_target";
+        if (state.ObjectivePressure < StrategicIntrigueConstants.GrandDesignWarPressureThreshold) return "pressure_below_threshold";
+        if (state.ObjectiveProgress >= StrategicIntrigueConstants.GrandDesignWarMaxProgress) return "progress_too_high";
+        if (state.WarExhaustion >= StrategicIntrigueConstants.GrandDesignWarMaxExhaustion) return "war_exhaustion";
+        if (kingdom.FactionsAtWarWith.Any(x => x.IsKingdomFaction)) return "second_front_guard";
+        if (CampaignTime.Now < state.ObjectiveWarQuietUntil) return "quiet_period";
+        return "-";
+    }
+
     private bool ShouldPressGrandDesignWar(Kingdom kingdom, KingdomIntrigueState state)
     {
         if (!IsWarSeekingObjective(state.ObjectiveType)
