@@ -19,10 +19,50 @@ public sealed class RFWarDecisionPlannerBehavior : CampaignBehaviorBase
     private const float MinimumWarLikelihood = 0.32f;
     private const float MinimumPeaceLikelihood = 0.26f;
     private const float ProposalReplacementBiasLead = 45f;
+    // A newly-declared war may not be sued for peace by the planner until it is
+    // at least this many days old — breaks the 2-day war/peace flip-flop.
+    private const float MinWarDaysBeforePeace = 8f;
+    // Cap on realm-vote simulations (KingdomElection ~30ms each) run per kingdom
+    // when picking the best peace candidate: gather all without the election,
+    // then vote-simulate only the top few by partial score.
+    private const int MaxPeaceElectionsPerKingdom = 2;
 
     private readonly Dictionary<string, float> _lastProposalDayByKingdom = new(StringComparer.Ordinal);
     private bool _suppressDecisionAudit;
     internal static RFWarDecisionPlannerBehavior? Instance { get; private set; }
+
+    // ── Per-day memoization ──────────────────────────────────────────────────
+    // TryEvaluateWarCandidate runs Kingdom.All × Kingdom.All × sponsors every
+    // day and calls three expensive vanilla routines whose results do not change
+    // within a day: GetWarSelectionBias (a dozen heavy sub-scores that depend
+    // only on the attacker/defender PAIR, so recomputing per-sponsor was pure
+    // waste), GetScoreOfDeclaringWar, and — the worst — KingdomElection, which
+    // simulates a whole realm vote. The profiler pinned this behavior at up to
+    // 1.2s/day. Cache all three, keyed by the campaign day so the first call of
+    // a day recomputes and the rest (including RFWarSpecialAuthorityBehavior's
+    // re-evaluation) reuse — order-independent, no stale cross-day data.
+    private static int _evalCacheDay = int.MinValue;
+    private static readonly Dictionary<string, float> _selectionBiasCache = new(StringComparer.Ordinal);
+    private static readonly Dictionary<string, float> _warScoreCache = new(StringComparer.Ordinal);
+    private static readonly Dictionary<string, float> _likelihoodCache = new(StringComparer.Ordinal);
+    private static readonly Dictionary<string, float> _peaceScoreCache = new(StringComparer.Ordinal);
+    private static readonly Dictionary<string, float> _peaceLikelihoodCache = new(StringComparer.Ordinal);
+    private static readonly Dictionary<string, float> _peaceBiasCache = new(StringComparer.Ordinal);
+
+    private static void EnsureEvalCacheFresh()
+    {
+        int day = (int)CampaignTime.Now.ToDays;
+        if (day != _evalCacheDay)
+        {
+            _evalCacheDay = day;
+            _selectionBiasCache.Clear();
+            _warScoreCache.Clear();
+            _likelihoodCache.Clear();
+            _peaceScoreCache.Clear();
+            _peaceLikelihoodCache.Clear();
+            _peaceBiasCache.Clear();
+        }
+    }
 
     private sealed class WarCandidateSnapshot
     {
@@ -39,6 +79,7 @@ public sealed class RFWarDecisionPlannerBehavior : CampaignBehaviorBase
     {
         public MakePeaceKingdomDecision? Decision;
         public Clan? Sponsor;
+        public Kingdom? Enemy;
         public float PeaceScore;
         public float Threshold;
         public float Support;
@@ -104,6 +145,7 @@ public sealed class RFWarDecisionPlannerBehavior : CampaignBehaviorBase
 
     private void OnDailyTick()
     {
+            using var _rfPerf = RF_warsystem.Diagnostics.RFPerfProbe.Measure("WarPlanner");
         if ((float)(int)Campaign.Current.Models.CampaignTimeModel.CampaignStartTime.ElapsedDaysUntilNow < CampaignStartGateDays)
         {
             return;
@@ -327,9 +369,25 @@ public sealed class RFWarDecisionPlannerBehavior : CampaignBehaviorBase
             return false;
         }
 
+        EnsureEvalCacheFresh();
         DiplomacyModel diplomacy = Campaign.Current.Models.DiplomacyModel;
-        TextObject reason;
-        float strategicScore = diplomacy.GetScoreOfDeclaringWar(kingdom, target, sponsor, out reason, includeReason: false);
+
+        // Sub-call profiling: "n" (call count) reveals how many triples reach
+        // each gate; "ms" reveals which vanilla routine dominates. Enabled only
+        // by the RF Diagnostics perf toggle; near-zero overhead when off.
+        using (RF_warsystem.Diagnostics.RFPerfProbe.Measure("eval.entered")) { }
+
+        // GetScoreOfDeclaringWar is stable within a day for a given triple.
+        string scoreKey = kingdom.StringId + "|" + target.StringId + "|" + sponsor.StringId;
+        float strategicScore;
+        using (RF_warsystem.Diagnostics.RFPerfProbe.Measure("eval.Score"))
+        {
+            if (!_warScoreCache.TryGetValue(scoreKey, out strategicScore))
+            {
+                strategicScore = diplomacy.GetScoreOfDeclaringWar(kingdom, target, sponsor, out _, includeReason: false);
+                _warScoreCache[scoreKey] = strategicScore;
+            }
+        }
         if (strategicScore <= -999999f)
         {
             return false;
@@ -341,35 +399,71 @@ public sealed class RFWarDecisionPlannerBehavior : CampaignBehaviorBase
             return false;
         }
 
-        float barterValue = new DeclareWarBarterable(kingdom, target).GetValueForFaction(sponsor);
+        float barterValue;
+        using (RF_warsystem.Diagnostics.RFPerfProbe.Measure("eval.Barter"))
+        {
+            barterValue = new DeclareWarBarterable(kingdom, target).GetValueForFaction(sponsor);
+        }
         if (barterValue < threshold)
         {
             return false;
         }
 
         DeclareWarDecision decision = new(sponsor, target);
-        if (!decision.CanMakeDecision(out _))
+        using (RF_warsystem.Diagnostics.RFPerfProbe.Measure("eval.CanMake"))
         {
-            return false;
+            if (!decision.CanMakeDecision(out _))
+            {
+                return false;
+            }
         }
 
-        float support = decision.CalculateSupport(sponsor);
+        float support;
+        using (RF_warsystem.Diagnostics.RFPerfProbe.Measure("eval.Support"))
+        {
+            support = decision.CalculateSupport(sponsor);
+        }
         if (support <= 50f)
         {
             return false;
         }
 
-        float likelihood = new KingdomElection(decision).GetLikelihoodForSponsor(sponsor);
+        // KingdomElection is the suspected worst call (it simulates a realm
+        // vote). Memoize per (sponsor, target) for the day.
+        string likelihoodKey = sponsor.StringId + "|" + target.StringId;
+        float likelihood;
+        using (RF_warsystem.Diagnostics.RFPerfProbe.Measure("eval.Election"))
+        {
+            if (!_likelihoodCache.TryGetValue(likelihoodKey, out likelihood))
+            {
+                likelihood = new KingdomElection(decision).GetLikelihoodForSponsor(sponsor);
+                _likelihoodCache[likelihoodKey] = likelihood;
+            }
+        }
         if (likelihood < MinimumWarLikelihood)
         {
             return false;
+        }
+
+        // GetWarSelectionBias depends only on the attacker/defender pair, NOT on
+        // the sponsor — cache it so a realm's many sponsors don't each re-run its
+        // dozen sub-scores.
+        string biasKey = kingdom.StringId + "|" + target.StringId;
+        float selectionBias;
+        using (RF_warsystem.Diagnostics.RFPerfProbe.Measure("eval.Bias"))
+        {
+            if (!_selectionBiasCache.TryGetValue(biasKey, out selectionBias))
+            {
+                selectionBias = GetWarSelectionBias(kingdom, target);
+                _selectionBiasCache[biasKey] = selectionBias;
+            }
         }
 
         float candidateScore =
             (strategicScore - threshold) +
             support * 0.18f +
             likelihood * 35f +
-            GetWarSelectionBias(kingdom, target);
+            selectionBias;
 
         candidate = new WarCandidateSnapshot
         {
@@ -475,26 +569,50 @@ public sealed class RFWarDecisionPlannerBehavior : CampaignBehaviorBase
             return false;
         }
 
-        float threshold = diplomacy.GetDecisionMakingThreshold(kingdom);
-        float bestScore = float.MinValue;
+        // Gather all candidates WITHOUT the election (cheap), then run the
+        // election only for the highest-scoring few — the election is ~30ms and
+        // the likelihood barely reorders millions-scale scores.
+        var gathered = new List<PeaceCandidateSnapshot>();
         foreach (Kingdom enemy in kingdom.FactionsAtWarWith.OfType<Kingdom>())
         {
             foreach (Clan sponsor in sponsors)
             {
-                if (!TryEvaluatePeaceCandidate(kingdom, sponsor, enemy, out PeaceCandidateSnapshot? candidate) || candidate == null)
+                if (TryEvaluatePeaceCandidate(kingdom, sponsor, enemy, out PeaceCandidateSnapshot? candidate, deferElection: true) && candidate != null)
                 {
-                    continue;
-                }
-
-                if (candidate.Bias > bestScore)
-                {
-                    bestScore = candidate.Bias;
-                    bestCandidate = candidate;
+                    gathered.Add(candidate);
                 }
             }
         }
 
+        bestCandidate = SelectBestByDeferredElection(gathered);
         return bestCandidate != null;
+    }
+
+    /// <summary>Sorts gathered (election-deferred) peace candidates by their
+    /// partial score and runs the realm vote on the top few only, returning the
+    /// first that the realm would actually pass. Caps the number of expensive
+    /// KingdomElection runs at <see cref="MaxPeaceElectionsPerKingdom"/>.</summary>
+    private static PeaceCandidateSnapshot? SelectBestByDeferredElection(List<PeaceCandidateSnapshot> gathered)
+    {
+        if (gathered.Count == 0)
+        {
+            return null;
+        }
+        gathered.Sort((a, b) => b.Bias.CompareTo(a.Bias));
+        int tried = 0;
+        foreach (PeaceCandidateSnapshot candidate in gathered)
+        {
+            if (tried >= MaxPeaceElectionsPerKingdom)
+            {
+                break;
+            }
+            tried++;
+            if (FinalizePeaceCandidate(candidate))
+            {
+                return candidate;
+            }
+        }
+        return null;
     }
 
     private static bool TryGetBestPeaceCandidateForTarget(
@@ -516,87 +634,183 @@ public sealed class RFWarDecisionPlannerBehavior : CampaignBehaviorBase
             return false;
         }
 
-        float bestScore = float.MinValue;
+        var gathered = new List<PeaceCandidateSnapshot>();
         foreach (Clan sponsor in sponsors)
         {
-            if (!TryEvaluatePeaceCandidate(kingdom, sponsor, target, out PeaceCandidateSnapshot? candidate) || candidate == null)
+            if (TryEvaluatePeaceCandidate(kingdom, sponsor, target, out PeaceCandidateSnapshot? candidate, deferElection: true) && candidate != null)
             {
-                continue;
-            }
-
-            if (candidate.Bias > bestScore)
-            {
-                bestScore = candidate.Bias;
-                bestCandidate = candidate;
+                gathered.Add(candidate);
             }
         }
 
+        bestCandidate = SelectBestByDeferredElection(gathered);
         return bestCandidate != null;
     }
 
-    private static bool TryEvaluatePeaceCandidate(Kingdom kingdom, Clan sponsor, Kingdom enemy, out PeaceCandidateSnapshot? candidate)
+    private static bool TryEvaluatePeaceCandidate(Kingdom kingdom, Clan sponsor, Kingdom enemy, out PeaceCandidateSnapshot? candidate, bool deferElection = false)
     {
         candidate = null;
 
+        EnsureEvalCacheFresh();
         DiplomacyModel diplomacy = Campaign.Current.Models.DiplomacyModel;
         if (sponsor == null || enemy == null || enemy.IsEliminated || enemy.RulingClan == null || !kingdom.IsAtWarWith(enemy) || diplomacy.IsAtConstantWar(kingdom, enemy))
         {
             return false;
         }
 
+        // Anti flip-flop: a war two days old must not be sued for peace. Vanilla's
+        // GetScoreOfDeclaringPeace saturates to millions the moment a war starts
+        // (war is costly), so without this floor the planner made peace on the
+        // tick after every declaration — and the collective-defense system then
+        // re-forced the same war ~2 days later, endlessly (confirmed in the war
+        // trace: aserai→empire_s forced 7×, all age≈2.0). The floor lets a war
+        // actually run before peace is on the table, which also collapses the
+        // per-day peace-evaluation cost that pinned the WarPlanner at ~1.2s.
+        StanceLink stance = kingdom.GetStanceWith(enemy);
+        if (stance != null && stance.WarStartDate.ElapsedDaysUntilNow < MinWarDaysBeforePeace)
+        {
+            return false;
+        }
+        using (RF_warsystem.Diagnostics.RFPerfProbe.Measure("evalP.entered")) { }
+
         float threshold = diplomacy.GetDecisionMakingThreshold(kingdom);
-        float peaceScore = diplomacy.GetScoreOfDeclaringPeace(kingdom, enemy);
+
+        // GetScoreOfDeclaringPeace depends only on (kingdom, enemy); cache it so
+        // the realm's many sponsors don't each recompute it.
+        string peaceScoreKey = kingdom.StringId + "|" + enemy.StringId;
+        float peaceScore;
+        using (RF_warsystem.Diagnostics.RFPerfProbe.Measure("evalP.Score"))
+        {
+            if (!_peaceScoreCache.TryGetValue(peaceScoreKey, out peaceScore))
+            {
+                peaceScore = diplomacy.GetScoreOfDeclaringPeace(kingdom, enemy);
+                _peaceScoreCache[peaceScoreKey] = peaceScore;
+            }
+        }
         if (peaceScore < threshold)
         {
             return false;
         }
 
         int tributeDurationInDays;
-        int dailyTributeToPay = diplomacy.GetDailyTributeToPay(sponsor, enemy.RulingClan, out tributeDurationInDays);
+        int dailyTributeToPay;
+        using (RF_warsystem.Diagnostics.RFPerfProbe.Measure("evalP.Tribute"))
+        {
+            dailyTributeToPay = diplomacy.GetDailyTributeToPay(sponsor, enemy.RulingClan, out tributeDurationInDays);
+        }
         if (dailyTributeToPay < 0)
         {
             return false;
         }
 
         MakePeaceKingdomDecision decision = new(sponsor, enemy, dailyTributeToPay, tributeDurationInDays);
-        if (!decision.CanMakeDecision(out _))
+        using (RF_warsystem.Diagnostics.RFPerfProbe.Measure("evalP.CanMake"))
         {
-            return false;
+            if (!decision.CanMakeDecision(out _))
+            {
+                return false;
+            }
         }
 
-        DecisionOutcome supportOutcome = decision
-            .DetermineInitialCandidates()
-            .First(outcome => outcome is MakePeaceKingdomDecision.MakePeaceDecisionOutcome peaceOutcome && peaceOutcome.ShouldPeaceBeDeclared);
-
-        float support = decision.DetermineSupport(sponsor, supportOutcome);
+        float support;
+        using (RF_warsystem.Diagnostics.RFPerfProbe.Measure("evalP.Support"))
+        {
+            DecisionOutcome supportOutcome = decision
+                .DetermineInitialCandidates()
+                .First(outcome => outcome is MakePeaceKingdomDecision.MakePeaceDecisionOutcome peaceOutcome && peaceOutcome.ShouldPeaceBeDeclared);
+            support = decision.DetermineSupport(sponsor, supportOutcome);
+        }
         if (support <= 0f)
         {
             return false;
         }
 
-        float likelihood = new KingdomElection(decision).GetLikelihoodForSponsor(sponsor);
+        // The KingdomElection (realm-vote simulation) is the single most
+        // expensive call — ~30ms each, and there can be many candidates a day.
+        // Since the peace score dwarfs the likelihood*28 term (peace scores run
+        // into the millions), the likelihood barely affects ranking. So in the
+        // gather phase (deferElection) we skip the election entirely and score
+        // the candidate without it; the caller then runs the election only for
+        // the top few. This is where the WarPlanner's residual cost lived.
+        string peaceBiasKey = kingdom.StringId + "|" + enemy.StringId;
+        float peaceSelectionBias;
+        using (RF_warsystem.Diagnostics.RFPerfProbe.Measure("evalP.Bias"))
+        {
+            if (!_peaceBiasCache.TryGetValue(peaceBiasKey, out peaceSelectionBias))
+            {
+                peaceSelectionBias = GetPeaceSelectionBias(kingdom, enemy);
+                _peaceBiasCache[peaceBiasKey] = peaceSelectionBias;
+            }
+        }
+
+        if (deferElection)
+        {
+            candidate = new PeaceCandidateSnapshot
+            {
+                Decision = decision,
+                Sponsor = sponsor,
+                Enemy = enemy,
+                PeaceScore = peaceScore,
+                Threshold = threshold,
+                Support = support,
+                Likelihood = -1f, // not yet computed
+                Bias = (peaceScore - threshold) + support * 0.12f + peaceSelectionBias,
+                TributePerDay = dailyTributeToPay
+            };
+            return true;
+        }
+
+        float likelihood = RunPeaceElection(decision, sponsor, enemy);
         if (likelihood < MinimumPeaceLikelihood)
         {
             return false;
         }
 
-        float candidateScore =
-            (peaceScore - threshold) +
-            support * 0.12f +
-            likelihood * 28f +
-            GetPeaceSelectionBias(kingdom, enemy);
-
         candidate = new PeaceCandidateSnapshot
         {
             Decision = decision,
             Sponsor = sponsor,
+            Enemy = enemy,
             PeaceScore = peaceScore,
             Threshold = threshold,
             Support = support,
             Likelihood = likelihood,
-            Bias = candidateScore,
+            Bias = (peaceScore - threshold) + support * 0.12f + likelihood * 28f + peaceSelectionBias,
             TributePerDay = dailyTributeToPay
         };
+        return true;
+    }
+
+    private static float RunPeaceElection(MakePeaceKingdomDecision decision, Clan sponsor, Kingdom enemy)
+    {
+        string peaceLikelihoodKey = sponsor.StringId + "|" + enemy.StringId;
+        using (RF_warsystem.Diagnostics.RFPerfProbe.Measure("evalP.Election"))
+        {
+            if (!_peaceLikelihoodCache.TryGetValue(peaceLikelihoodKey, out float likelihood))
+            {
+                likelihood = new KingdomElection(decision).GetLikelihoodForSponsor(sponsor);
+                _peaceLikelihoodCache[peaceLikelihoodKey] = likelihood;
+            }
+            return likelihood;
+        }
+    }
+
+    /// <summary>Runs the deferred election on a gathered candidate and folds the
+    /// likelihood back into its Bias. Returns false (and the candidate is
+    /// unusable) if the realm would not actually vote the peace through.</summary>
+    private static bool FinalizePeaceCandidate(PeaceCandidateSnapshot candidate)
+    {
+        if (candidate?.Decision == null || candidate.Sponsor == null || candidate.Enemy == null)
+        {
+            return false;
+        }
+        float likelihood = RunPeaceElection(candidate.Decision, candidate.Sponsor, candidate.Enemy);
+        if (likelihood < MinimumPeaceLikelihood)
+        {
+            return false;
+        }
+        candidate.Likelihood = likelihood;
+        candidate.Bias += likelihood * 28f;
         return true;
     }
 

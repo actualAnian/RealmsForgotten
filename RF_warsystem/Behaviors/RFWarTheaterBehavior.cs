@@ -74,6 +74,7 @@ public sealed class RFWarTheaterBehavior : CampaignBehaviorBase
 
     private void OnDailyTick()
     {
+            using var _rfPerf = RF_warsystem.Diagnostics.RFPerfProbe.Measure("WarTheater");
         PruneInactivePairs();
 
         foreach (Kingdom kingdom in Kingdom.All)

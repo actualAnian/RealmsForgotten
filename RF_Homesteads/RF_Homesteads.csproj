@@ -30,7 +30,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="$(GameFolder)\bin\Win64_Shipping_Client\*">
+    <Reference Include="$(GameFolder)\bin\Win64_Shipping_Client\*.dll">
       <HintPath>%(Identity)</HintPath>
       <Private>False</Private>
     </Reference>

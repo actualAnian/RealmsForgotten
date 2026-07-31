@@ -34,6 +34,11 @@ namespace RealmsForgotten.Diagnostics
         [SettingPropertyGroup(GroupGeneral, GroupOrder = 0)]
         public bool MasterEnabled { get; set; } = false;
 
+        [SettingPropertyBool("{=RF_Logs_Perf_Name}War/AI performance profiler", Order = 1, RequireRestart = false,
+            HintText = "{=RF_Logs_Perf_Hint}RF_Perf.log — one line per day timing each war-system and strategic-intrigue daily tick, worst-to-best. Turn on to find what causes the pause before kingdom war/peace decisions, then send the log.")]
+        [SettingPropertyGroup(GroupGeneral, GroupOrder = 0)]
+        public bool Perf { get; set; } = false;
+
         // ── World & kingdoms ─────────────────────────────────────────────────
         [SettingPropertyBool("{=RF_Logs_KingdomObjectives}Kingdom grand designs", Order = 0, RequireRestart = false,
             HintText = "{=RF_Logs_KingdomObjectives_Hint}RF_KingdomObjectives.log — per realm per day: design progress, pressure, chosen target and which gate is blocking a war declaration.")]
@@ -135,6 +140,7 @@ namespace RealmsForgotten.Diagnostics
                     RFLogSwitchboard.BattleAiMemory => settings.BattleAiMemory,
                     RFLogSwitchboard.BattleAiTactics => settings.BattleAiTactics,
                     RFLogSwitchboard.BattleAiTrap => settings.BattleAiTrap,
+                    RFLogSwitchboard.Perf => settings.Perf,
                     _ => false
                 };
             }

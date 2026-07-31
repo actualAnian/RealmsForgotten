@@ -90,6 +90,9 @@ namespace RealmsForgotten
             {
                 campaignGameStarter.AddBehavior(new CampaignHealthChecker());
                 campaignGameStarter.AddBehavior(new BaseGameDebugCampaignBehavior());
+                // Editor de bandeiras (Ctrl+B no mapa). Reaplica os overrides
+                // guardados em Configs/RF_BannerWorks a cada carga de sessao.
+                campaignGameStarter.AddBehavior(new RealmsForgotten.BannerWorks.RFBannerWorksBehavior());
                 campaignGameStarter.AddBehavior(new RFEnchantmentVendorBehavior());
                 //Faith bhv comes before cultures bhv
                 campaignGameStarter.AddBehavior(new RFFaithCampaignBehavior());
@@ -325,7 +328,13 @@ namespace RealmsForgotten
                     mission.AddMissionBehavior(new DemonLordsAmbushLogic());
                     mission.AddMissionBehavior(new GandalfStaffMissionBehavior());
                 }
-                mission.AddMissionBehavior(new SpellAmmoMissionBehavior());
+                // [RF-LEGACY] motor musket-spell: seleção e munição de feitiço pelo
+                // cajado-arma-de-fogo. NecromancerStaff/GandalfStaff/Meteor ficam de
+                // FORA do gate de propósito — ver RFLegacyMagic.
+                if (RFLegacyMagic.Enabled)
+                {
+                    mission.AddMissionBehavior(new SpellAmmoMissionBehavior());
+                }
 
                 if (Campaign.Current != null)
                 {
@@ -392,6 +401,16 @@ namespace RealmsForgotten
             }
         }
         protected override void OnBeforeInitialModuleScreenSetAsRoot() { }
+
+        /// <summary>
+        /// Hotkey do editor de bandeiras: Ctrl+B, e apenas com o MapScreen no topo
+        /// (a propria RFBannerWorksHotkey.Tick verifica isso).
+        /// </summary>
+        protected override void OnApplicationTick(float dt)
+        {
+            base.OnApplicationTick(dt);
+            RealmsForgotten.BannerWorks.RFBannerWorksHotkey.Tick();
+        }
         public override void OnGameInitializationFinished(Game game)
         {
             base.OnGameInitializationFinished(game);

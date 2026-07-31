@@ -14,6 +14,39 @@ namespace RealmsForgotten.Career.Patches
         private const string Position = "Position";
         private const string DistanceToCamera = "DistanceToCamera";
 
+        // Os prefixes abaixo so podem interceptar membros que a EXTENSAO RF possui.
+        // A versao anterior curto-circuitava TODO binding de uma VM estendida, e
+        // propriedades de mixin de outros mods (UIExtenderEx — ex.: o botao do
+        // spellbook do SOTOR, IsSpellBookButtonVisible) vivem no cache
+        // _propertiesAndMethods, que so o pipeline vanilla consulta → resolviam
+        // null e a UI deles morria. Regra: e nosso → extensao; nao e → vanilla.
+        private static readonly Dictionary<Type, HashSet<string>> _ownedProps = new();
+        private static readonly Dictionary<Type, HashSet<string>> _ownedMethods = new();
+
+        private static bool ExtensionOwnsProperty(IViewModelExtension ext, string name)
+        {
+            if (ext == null || string.IsNullOrEmpty(name)) return false;
+            Type t = ext.GetType();
+            if (!_ownedProps.TryGetValue(t, out var set))
+            {
+                set = new HashSet<string>(ext.GetProperties().Keys, StringComparer.Ordinal);
+                _ownedProps[t] = set;
+            }
+            return set.Contains(name);
+        }
+
+        private static bool ExtensionOwnsMethod(IViewModelExtension ext, string name)
+        {
+            if (ext == null || string.IsNullOrEmpty(name)) return false;
+            Type t = ext.GetType();
+            if (!_ownedMethods.TryGetValue(t, out var set))
+            {
+                set = new HashSet<string>(ext.GetMethods().Keys, StringComparer.Ordinal);
+                _ownedMethods[t] = set;
+            }
+            return set.Contains(name);
+        }
+
         private static void LogPatchFailure(string stage, Exception ex, ViewModel vm = null)
         {
             try
@@ -104,8 +137,14 @@ namespace RealmsForgotten.Career.Patches
             {
                 if (__instance.HasExtensionInstance())
                 {
-                    __result = __instance.GetExtensionInstance().GetViewModelAtPath(path);
-                    return false;
+                    var ext = __instance.GetExtensionInstance();
+                    // So assumimos o caminho se o primeiro no do subpath for NOSSO;
+                    // caminhos vanilla e de mixin de outros mods seguem no vanilla.
+                    if (ExtensionOwnsProperty(ext, path?.SubPath?.FirstNode))
+                    {
+                        __result = ext.GetViewModelAtPath(path);
+                        return false;
+                    }
                 }
             }
             catch (Exception ex)
@@ -124,8 +163,12 @@ namespace RealmsForgotten.Career.Patches
             {
                 if (__instance.HasExtensionInstance())
                 {
-                    __result = __instance.GetExtensionInstance().GetPropertyValue(name);
-                    return false;
+                    var ext = __instance.GetExtensionInstance();
+                    if (ExtensionOwnsProperty(ext, name))
+                    {
+                        __result = ext.GetPropertyValue(name);
+                        return false;
+                    }
                 }
             }
             catch (Exception ex)
@@ -148,8 +191,12 @@ namespace RealmsForgotten.Career.Patches
             {
                 if (__instance.HasExtensionInstance())
                 {
-                    __instance.GetExtensionInstance().SetPropertyValue(name, value);
-                    return false;
+                    var ext = __instance.GetExtensionInstance();
+                    if (ExtensionOwnsProperty(ext, name))
+                    {
+                        ext.SetPropertyValue(name, value);
+                        return false;
+                    }
                 }
             }
             catch (Exception ex)
@@ -168,8 +215,12 @@ namespace RealmsForgotten.Career.Patches
             {
                 if (__instance.HasExtensionInstance())
                 {
-                    __instance.GetExtensionInstance().ExecuteCommand(commandName, parameters);
-                    return false;
+                    var ext = __instance.GetExtensionInstance();
+                    if (ExtensionOwnsMethod(ext, commandName))
+                    {
+                        ext.ExecuteCommand(commandName, parameters);
+                        return false;
+                    }
                 }
             }
             catch (Exception ex)

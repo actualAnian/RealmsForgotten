@@ -117,30 +117,45 @@ namespace RealmsForgotten.CustomSkills
                 "{=faith_perk_desc.8}Regenerates 25% of the wounded troops after battle.",
                 PartyRole.PartyLeader, 0.25f, EffectIncrementType.AddFactor);
 
-            // Arcane perks
+            // ── Arcane perks ────────────────────────────────────────────────────
+            // RECALIBRADOS 2026-07-30 para o motor do SOTOR (fase 5c). Os valores
+            // antigos foram feitos para o motor legado (dano de Cartridge / splash de
+            // wand) e nao se traduzem:
+            //
+            //   Talisman (DANO do feitico): era 0.9 / 1.2 / 1.2 — o primeiro perk da
+            //   arvore era uma PENALIDADE (x0.9) e os dois ultimos eram identicos,
+            //   sem progressao. Agora 1.10 / 1.20 / 1.30.
+            //
+            //   Staff (RAIO de area): era 1.5 / 3.0 / 4.5. Medido no proprio conteudo,
+            //   os feiticos do SOTOR tem raio de 0.4 a 30 (massa em 3-10). Com x4.5 um
+            //   feitico de raio 20 cobriria 90m — cerca de um quarto do mapa de
+            //   batalha. Agora 1.15 / 1.30 / 1.50, o que ainda multiplica a AREA por
+            //   1.3 / 1.7 / 2.25 (pi.r^2), mais forte que o eixo de dano — justo,
+            //   porque o raio so ajuda feitico de area, enquanto o Talisman vale
+            //   tambem para alvo unico.
             _neophytesTalisman.Initialize("{=arcane_perk_title.1}Neophytes Talisman", RFSkills.Arcane, 50, _neophytesStaff,
-                "{=arcane_perk_desc.1}Augments the effectiveness of your magic damage by x0.9.",
-                PartyRole.Personal, 0.9f, EffectIncrementType.AddFactor);
+                "{=arcane_perk_desc.1}Increases your spell damage by x1.1.",
+                PartyRole.Personal, 1.1f, EffectIncrementType.AddFactor);
 
             _neophytesStaff.Initialize("{=arcane_perk_title.2}Neophytes Staff", RFSkills.Arcane, 50, _neophytesTalisman,
-                "{=arcane_perk_desc.2}Augments the area damage by x1.5.",
-                PartyRole.Personal, 1.5f, EffectIncrementType.AddFactor);
+                "{=arcane_perk_desc.2}Increases the area of effect radius of your spells by x1.15.",
+                PartyRole.Personal, 1.15f, EffectIncrementType.AddFactor);
 
             _initiatesTalisman.Initialize("{=arcane_perk_title.3}Initiates Talisman", RFSkills.Arcane, 100, _initiatesStaff,
-                "{=arcane_perk_desc.3}Augments the effectiveness of your magic damage by x1.2 times",
+                "{=arcane_perk_desc.3}Increases your spell damage by x1.2.",
                 PartyRole.Personal, 1.2f, EffectIncrementType.AddFactor);
 
             _initiatesStaff.Initialize("{=arcane_perk_title.4}Initiates Staff", RFSkills.Arcane, 100, _initiatesTalisman,
-                "{=arcane_perk_desc.4}Augments the area damage by x3.0.",
-                PartyRole.Personal, 3.0f, EffectIncrementType.AddFactor);
+                "{=arcane_perk_desc.4}Increases the area of effect radius of your spells by x1.3.",
+                PartyRole.Personal, 1.3f, EffectIncrementType.AddFactor);
 
             _hierophantsTalisman.Initialize("{=arcane_perk_title.5}Hierophant's Talisman", RFSkills.Arcane, 150, _hierophantsStaff,
-                "{=arcane_perk_desc.5}Augments the effectiveness your magic items by x1.2 (must be equipped with a magic item).",
-                PartyRole.Personal, 1.2f, EffectIncrementType.AddFactor);
+                "{=arcane_perk_desc.5}Increases your spell damage by x1.3.",
+                PartyRole.Personal, 1.3f, EffectIncrementType.AddFactor);
 
             _hierophantsStaff.Initialize("{=arcane_perk_title.6}Hierophant's Staff", RFSkills.Arcane, 150, _hierophantsTalisman,
-                "{=arcane_perk_desc.6}Augments the area damage by x4.5.",
-                PartyRole.Personal, 4.5f, EffectIncrementType.AddFactor);
+                "{=arcane_perk_desc.6}Increases the area of effect radius of your spells by x1.5.",
+                PartyRole.Personal, 1.5f, EffectIncrementType.AddFactor);
 
             // Alchemy perks
             _novicesLuck.Initialize("{=alchemy_perk_title.1}Novice's Luck", RFSkills.Alchemy, 50, _novicesDedication,

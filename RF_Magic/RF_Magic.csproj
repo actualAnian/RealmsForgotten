@@ -1,0 +1,110 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    RF_Magic — fork do SOTOR ("Spells of the Old Realms") que vira o motor de
+    magia do RealmsForgotten.
+
+    IMPORTANTE: o AssemblyName continua sendo SOTOR.dll de proposito. O
+    SubModule.xml do modulo aponta para SOTOR.SubModule, os prefabs de GUI
+    referenciam widgets por nome de tipo completo, e o SotorSaveableTypeDefiner
+    grava IDs de save ligados aos nomes dos tipos. Renomear assembly ou
+    namespaces quebraria save-compat e a UI (ver PLANO_RF_MAGIC.md secao 2.3).
+  -->
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <Platforms>x64</Platforms>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <AssemblyName>SOTOR</AssemblyName>
+    <RootNamespace>SOTOR</RootNamespace>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <GameFolder>$(BANNERLORD_GAME_DIR)</GameFolder>
+    <ModuleRoot>$(GameFolder)\Modules\RF_Magic</ModuleRoot>
+    <ModuleBin>$(ModuleRoot)\bin\Win64_Shipping_Client</ModuleBin>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Optimize>False</Optimize>
+    <DebugType>portable</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Optimize>False</Optimize>
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Engine + base game -->
+    <!-- *.dll, nunca "*": o curinga aberto referencia QUALQUER arquivo da pasta
+         do jogo — inclusive ReShade.log, que com o jogo aberto fica travado e
+         vira CS0009 (erro duro) no build do VS. -->
+    <Reference Include="$(GameFolder)\bin\Win64_Shipping_Client\*.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(GameFolder)\Modules\Native\bin\Win64_Shipping_Client\*.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(GameFolder)\Modules\SandBoxCore\bin\Win64_Shipping_Client\*.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(GameFolder)\Modules\SandBox\bin\Win64_Shipping_Client\*.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(GameFolder)\Modules\CustomBattle\bin\Win64_Shipping_Client\*.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(GameFolder)\Modules\StoryMode\bin\Win64_Shipping_Client\*.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
+
+    <!-- NavalDLC: o SOTOR tem integracao naval com `using NavalDLC.*` DIRETO
+         (SotorNavalBridge, SotorAbandonShipMissionLogic, Summon, etc.), entao a
+         referencia e obrigatoria em tempo de compilacao — nao e so reflection. -->
+    <Reference Include="$(GameFolder)\Modules\NavalDLC\bin\Win64_Shipping_Client\*.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
+
+    <!-- Harmony -->
+    <Reference Include="$(GameFolder)\Modules\Bannerlord.Harmony\bin\Win64_Shipping_Client\0Harmony.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
+
+    <!-- UIExtenderEx -->
+    <Reference Include="$(GameFolder)\Modules\Bannerlord.UIExtenderEx\bin\Win64_Shipping_Client\Bannerlord.UIExtenderEx.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
+
+    <!-- MCM v5 (a pasta tem dezenas de DLLs versionadas; so a v5 interessa,
+         mesmo padrao do RealmsForgotten.csproj) -->
+    <Reference Include="$(GameFolder)\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCMv5.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="Build">
+    <!-- Deploy direto para o modulo SOTOR do jogo. A DLL original do mod foi
+         preservada manualmente como SOTOR.dll.orig antes do primeiro build. -->
+    <MakeDir Directories="$(ModuleBin)" Condition="'$(GameFolder)' != '' and '$(DisableModuleCopy)' != 'true'" />
+    <Copy SourceFiles="$(TargetPath)"
+          DestinationFolder="$(ModuleBin)"
+          SkipUnchangedFiles="true"
+          Condition="'$(GameFolder)' != '' and '$(DisableModuleCopy)' != 'true'" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb"
+          DestinationFolder="$(ModuleBin)"
+          SkipUnchangedFiles="true"
+          Condition="'$(GameFolder)' != '' and '$(DisableModuleCopy)' != 'true' and Exists('$(TargetDir)$(TargetName).pdb')" />
+  </Target>
+
+</Project>

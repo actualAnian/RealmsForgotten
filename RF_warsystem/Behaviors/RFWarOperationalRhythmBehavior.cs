@@ -69,6 +69,7 @@ public sealed class RFWarOperationalRhythmBehavior : CampaignBehaviorBase
 
     private void OnDailyTick()
     {
+            using var _rfPerf = RF_warsystem.Diagnostics.RFPerfProbe.Measure("WarRhythm");
         PruneInactivePairs();
 
         foreach (Kingdom kingdom in Kingdom.All)

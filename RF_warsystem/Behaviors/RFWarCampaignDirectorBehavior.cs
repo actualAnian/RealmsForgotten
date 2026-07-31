@@ -124,6 +124,8 @@ public sealed class RFWarCampaignDirectorBehavior : CampaignBehaviorBase
 
     private void OnDailyTick()
     {
+            RF_warsystem.Diagnostics.RFPerfProbe.FlushDaily((int)TaleWorlds.CampaignSystem.CampaignTime.Now.ToDays);
+            using var _rfPerf = RF_warsystem.Diagnostics.RFPerfProbe.Measure("WarDirector");
         foreach (Kingdom kingdom in Kingdom.All)
         {
             if (kingdom == null || kingdom.IsEliminated)

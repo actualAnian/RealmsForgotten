@@ -19,7 +19,12 @@ namespace RealmsForgotten.Models
             // weapon is null for unarmed/siege hits (vanilla handles it) — guard
             // before dereferencing WeaponClass.
             if (weapon != null && (weapon.WeaponClass == WeaponClass.Musket || weapon.WeaponClass == WeaponClass.Cartridge || weapon.WeaponClass == WeaponClass.Pistol))
-                baseValue = RFSkills.Arcane;
+            {
+                // [RF-LEGACY] mesma regra do GetCartridgeSkillPatch: com o legado
+                // desligado ainda devolvemos skill VALIDA (nunca null — o modelo base
+                // devolve null para estas classes), so nao a de magia.
+                baseValue = RFLegacyMagic.Enabled ? RFSkills.Arcane : DefaultSkills.Crossbow;
+            }
             return baseValue;
         }
     }

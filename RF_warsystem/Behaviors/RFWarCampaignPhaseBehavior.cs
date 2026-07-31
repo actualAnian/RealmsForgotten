@@ -71,6 +71,7 @@ public sealed class RFWarCampaignPhaseBehavior : CampaignBehaviorBase
 
     private void OnDailyTick()
     {
+            using var _rfPerf = RF_warsystem.Diagnostics.RFPerfProbe.Measure("WarPhase");
         PruneInactivePairs();
 
         foreach (Kingdom kingdom in Kingdom.All)

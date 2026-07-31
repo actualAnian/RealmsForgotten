@@ -38,6 +38,7 @@ namespace RealmsForgotten.Diagnostics
         public const string BattleAiMemory = "battle_ai_memory";
         public const string BattleAiTactics = "battle_ai_tactics";
         public const string BattleAiTrap = "battle_ai_trap";
+        public const string Perf = "perf";
 
         /// <summary>Per-file ceiling. Past it the file is rotated to .1 (one
         /// generation only), so a forgotten toggle costs at most 2x this.</summary>
@@ -115,6 +116,7 @@ namespace RealmsForgotten.Diagnostics
             RF_BattleAI.BattleAILogSwitches.Tactics = IsEnabled(BattleAiTactics);
             RF_BattleAI.BattleAILogSwitches.BanditTrap = IsEnabled(BattleAiTrap);
             RF_warsystem.Diagnostics.RFWarSystemTraceLog.RuntimeEnabled = IsEnabled(WarSystemTrace);
+            RF_warsystem.Diagnostics.RFPerfProbe.RuntimeEnabled = IsEnabled(Perf);
 
             PushStatic("RF_Settlers.SettlersLog, RF_Settlers", "LogEnabled", IsEnabled(Settlers));
             PushStatic("RF_ResourceZones.ResourceZonesCampaignBehavior, RF_ResourceZones", "LogEnabled", IsEnabled(ResourceZones));

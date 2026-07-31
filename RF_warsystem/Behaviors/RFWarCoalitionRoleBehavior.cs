@@ -69,6 +69,7 @@ public sealed class RFWarCoalitionRoleBehavior : CampaignBehaviorBase
 
     private void OnDailyTick()
     {
+            using var _rfPerf = RF_warsystem.Diagnostics.RFPerfProbe.Measure("WarCoalition");
         PruneInactivePairs();
 
         foreach (Kingdom kingdom in Kingdom.All)

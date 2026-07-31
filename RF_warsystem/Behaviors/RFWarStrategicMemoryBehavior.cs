@@ -254,6 +254,7 @@ public sealed class RFWarStrategicMemoryBehavior : CampaignBehaviorBase
 
     private void OnDailyTick()
     {
+            using var _rfPerf = RF_warsystem.Diagnostics.RFPerfProbe.Measure("WarMemory");
         DecayDictionary(_pairMomentum, 0.92f);
         DecayDictionary(_pairRivalry, 0.988f);
         DecayDictionary(_pairCommitment, 0.94f);

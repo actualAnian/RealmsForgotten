@@ -24,6 +24,10 @@ namespace RealmsForgotten.HuntableHerds.Models
         public bool FleeOnAttacked;
         ItemDropsData ItemDrops;
         public List<string> SceneIds;
+        // Terrain types this herd can be spotted on. Empty = any terrain
+        // (backward compatible: a herd without a <terrains> tag still appears
+        // everywhere). Parsed from a comma-separated list of TerrainType names.
+        public List<TerrainType> Terrains = new();
 
         public static List<HerdBuildData> allHuntableAgentBuildDatas = new();
         public static HerdBuildData? CurrentHerdBuildData;
@@ -109,6 +113,19 @@ namespace RealmsForgotten.HuntableHerds.Models
                         sceneIds.Add(sceneId.Value);
 
                 HerdBuildData buildData = new(notifMessage, messageTitle, message, spawnId, totalAmountInHerd, isPassive, startingHealth, maxSpeed, hitboxRange, damageToPlayer, sightRange, fleeOnAttacked, itemDrops, sceneIds);
+
+                // Optional <terrains>Forest,Swamp</terrains> — comma-separated
+                // TerrainType names. Absent/empty = spotted on any terrain.
+                XElement? terrainsElement = element.Element("terrains");
+                if (terrainsElement != null && !string.IsNullOrWhiteSpace(terrainsElement.Value))
+                {
+                    foreach (string name in terrainsElement.Value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        if (Enum.TryParse(name.Trim(), true, out TerrainType terrain))
+                            buildData.Terrains.Add(terrain);
+                    }
+                }
+
                 allHuntableAgentBuildDatas.Add(buildData);
             }
         }
@@ -116,6 +133,43 @@ namespace RealmsForgotten.HuntableHerds.Models
         public static void Randomize() {
             int randomIndex = MBRandom.RandomInt(0, allHuntableAgentBuildDatas.Count);
             CurrentHerdBuildData = allHuntableAgentBuildDatas[randomIndex];
+        }
+
+        /// <summary>
+        /// Picks a herd appropriate to the terrain: candidates are herds with no
+        /// terrain restriction (appear anywhere) plus herds whose terrain list
+        /// contains this terrain. Returns false if there is nothing to spot here
+        /// (e.g. a herd list that is entirely terrain-locked to other biomes) so
+        /// the caller can suppress the notification. Falls back to the old
+        /// any-herd behaviour only if NO herd declares terrain at all.
+        /// </summary>
+        public static bool RandomizeForTerrain(TerrainType terrain) {
+            if (allHuntableAgentBuildDatas.Count == 0)
+                return false;
+
+            bool anyTerrainTagged = false;
+            List<HerdBuildData> candidates = new();
+            foreach (HerdBuildData herd in allHuntableAgentBuildDatas) {
+                if (herd.Terrains.Count == 0) {
+                    candidates.Add(herd); // no restriction — fits any terrain
+                } else {
+                    anyTerrainTagged = true;
+                    if (herd.Terrains.Contains(terrain))
+                        candidates.Add(herd);
+                }
+            }
+
+            // Nobody tagged terrain at all → preserve the old random behaviour.
+            if (!anyTerrainTagged) {
+                Randomize();
+                return true;
+            }
+
+            if (candidates.Count == 0)
+                return false; // nothing lives on this terrain — no sighting
+
+            CurrentHerdBuildData = candidates[MBRandom.RandomInt(0, candidates.Count)];
+            return true;
         }
     }
 }

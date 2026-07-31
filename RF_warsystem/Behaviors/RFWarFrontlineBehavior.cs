@@ -70,6 +70,7 @@ public sealed class RFWarFrontlineBehavior : CampaignBehaviorBase
 
     private void OnDailyTick()
     {
+            using var _rfPerf = RF_warsystem.Diagnostics.RFPerfProbe.Measure("WarFrontline");
         PruneInactivePairs();
 
         foreach (Kingdom kingdom in Kingdom.All)

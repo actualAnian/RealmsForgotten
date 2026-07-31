@@ -36,7 +36,7 @@
   <Zone id="rf_zone_gold_tlanaquilar" type="Gold" name="Tlanaquilar Mine" posX="554.51" posY="308.46" />
   <Zone id="rf_zone_gold_tezquendel" type="Gold" name="Tezquendel Mine" posX="578.38" posY="365.83" />
   <Zone id="rf_zone_wood_uitlaxi" type="Wood" name="Uitlaxi Mine" posX="577.58" posY="265.05" />
-  <Zone id="rf_zone_gold_nexotlitan" type="Gold" name="Nexotlitan Mine" posX="628.61" posY="215.38" />
+  <Zone id="rf_zone_gold_nexotlitan" type="Gold" name="Nexotlitan Mine" posX="613.04" posY="190.94" />
   <Zone id="rf_zone_wood_nexochquen" type="Wood" name="Nexochquen Mine" posX="510.56" posY="367.62" />
   <Zone id="rf_zone_charcoal_temer" type="Charcoal" name="Temer Mine" posX="758.02" posY="957.72" />
   <Zone id="rf_zone_iron_ebonridge" type="Iron" name="Ebonridge Mine" posX="788.85" posY="864.46" />
@@ -56,7 +56,7 @@
   <Zone id="rf_zone_iron_vuzruk" type="Iron" name="Vuzruk Mine" posX="649.04" posY="1527.81" />
   <Zone id="rf_zone_iron_throsgar" type="Iron" name="Throsgar Mine" posX="783.35" posY="1455.49" />
   <Zone id="rf_zone_wood_grimhold" type="Wood" name="Grimhold Mine" posX="702.46" posY="1319.88" />
-  <Zone id="rf_zone_silver_stoneguard" type="Silver" name="Stoneguard Mine" posX="680.03" posY="1257.00" />
+  <Zone id="rf_zone_silver_stoneguard" type="Silver" name="Stoneguard Mine" posX="682.92" posY="1263.53" />
   <Zone id="rf_zone_iron_lost" type="Iron" name="Lost Mine" posX="824.62" posY="1385.09" />
   <Zone id="rf_zone_iron_ironwrath" type="Iron" name="Ironwrath Mine" posX="918.21" posY="1257.57" />
   <Zone id="rf_zone_wood_dreadmoor" type="Wood" name="Dreadmoor Mine" posX="1006.09" posY="1256.92" />

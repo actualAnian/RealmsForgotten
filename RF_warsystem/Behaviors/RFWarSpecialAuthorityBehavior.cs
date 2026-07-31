@@ -132,6 +132,7 @@ public sealed class RFWarSpecialAuthorityBehavior : CampaignBehaviorBase
 
     private void OnDailyTick()
     {
+            using var _rfPerf = RF_warsystem.Diagnostics.RFPerfProbe.Measure("WarSpecialAuth");
         if (_pendingWarsByPair.Count == 0)
         {
             ProcessPendingPeaces();

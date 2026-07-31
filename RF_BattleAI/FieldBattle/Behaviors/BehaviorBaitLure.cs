@@ -6,13 +6,14 @@ using TaleWorlds.MountAndBlade;
 namespace RF_BattleAI.FieldBattle.Behaviors;
 
 /// <summary>
-/// Bait arm of the bandit trap. From the FIRST tick of the battle it flees
-/// CONTINUOUSLY — the movement target is always a lookahead point ahead of the
-/// formation, recomputed every tick, so it never stands and never waits. The
-/// flee direction is away from the enemy, rotated toward this group's assigned
-/// side so the two bandit groups diverge to OPPOSITE sides of the field.
-/// The bait only stops fleeing when the tactic springs the trap (weights are
-/// switched to fight) or orders the cornered stand.
+/// Bait arm of the bandit trap. It keeps a stand-off distance from its chaser:
+/// the flee point is anchored to the ENEMY at <see cref="StandoffDistance"/>, so
+/// the bait gives ground only as the enemy advances and then HOLDS — it does not
+/// sprint continuously off the map (the old behaviour, which scattered the two
+/// bandit halves out of mutual support). The flight curves toward this group's
+/// assigned side so the two groups fan to opposite flanks, but only as far as
+/// the stand-off allows. The bait stops luring when the tactic springs the trap
+/// (weights switch to fight) or orders the cornered stand.
 /// </summary>
 public sealed class BehaviorBaitLure : BehaviorComponent
 {
@@ -23,11 +24,23 @@ public sealed class BehaviorBaitLure : BehaviorComponent
     /// <summary>Which side this group's flight curves toward.</summary>
     public FormationAI.BehaviorSide FlankSide { get; set; } = FormationAI.BehaviorSide.Left;
 
-    /// <summary>How far ahead the running point sits; recomputed every tick.</summary>
-    public float FleeLookahead { get; set; } = 45f;
+    /// <summary>The stand-off distance the bait tries to keep from its chaser.
+    /// The flee point is anchored to the ENEMY at this range, not to the group's
+    /// own moving median — so the bait recedes only until it is this far from the
+    /// enemy and then HOLDS, instead of sprinting off the map. It gives ground
+    /// gradually, in step with the enemy's advance, so the two bandit groups stay
+    /// within supporting distance instead of scattering to opposite horizons.</summary>
+    public float StandoffDistance { get; set; } = 90f;
+
+    /// <summary>Hysteresis band so the bait does not micro-jitter right on the
+    /// stand-off line: it recedes when closer than StandoffDistance and stops
+    /// once back past StandoffDistance + this.</summary>
+    public float StandoffHysteresis { get; set; } = 12f;
 
     /// <summary>Sideways curve of the flight, in radians (~34 degrees).</summary>
     public float LateralBiasRadians { get; set; } = 0.6f;
+
+    private Vec2 _heldPosition = Vec2.Invalid;
 
     /// <summary>Set by the tactic when this fleeing group is taking arrows in
     /// the back. A tight LINE running away is a shooting gallery for archers;
@@ -79,17 +92,46 @@ public sealed class BehaviorBaitLure : BehaviorComponent
             awayFromEnemy = (-base.Formation.Direction).Normalized();
         }
 
-        // At the map edge the flight does not stop: rotate the flee direction
-        // further and further toward our side until the target is back inside
-        // the boundary — the formation slides ALONG the edge, and the flight
-        // naturally becomes an orbit around the enemy (the encirclement).
+        // GRADUAL, PROXIMITY-RELATIVE FLIGHT. The old target was myPosition + a
+        // fixed 45m vector recomputed every tick — a treadmill that sprinted the
+        // group off the map even while the enemy was far away, scattering the two
+        // bandit halves so they could never support each other. Instead, anchor
+        // the flee point to the ENEMY at StandoffDistance: the bait gives ground
+        // only to keep that gap and then HOLDS. When already at (or beyond) the
+        // stand-off, it stands its ground and keeps luring rather than running.
+        float distToEnemy = myPosition.Distance(enemyPosition);
         float biasSign = FlankSide == FormationAI.BehaviorSide.Left ? 1f : -1f;
         Mission? mission = Mission.Current;
-        Vec2 targetPosition = myPosition + Vec2.FromRotation(awayFromEnemy.RotationInRadians + biasSign * LateralBiasRadians) * FleeLookahead;
-        for (int attempt = 1; attempt <= 5 && mission != null && !mission.IsPositionInsideBoundaries(targetPosition); attempt++)
+
+        bool alreadyAtStandoff = _heldPosition.IsValid
+            ? distToEnemy >= StandoffDistance
+            : distToEnemy >= StandoffDistance + StandoffHysteresis;
+        Vec2 targetPosition;
+        if (alreadyAtStandoff)
         {
-            float rotation = awayFromEnemy.RotationInRadians + biasSign * (LateralBiasRadians + attempt * 0.55f);
-            targetPosition = myPosition + Vec2.FromRotation(rotation) * FleeLookahead;
+            // Far enough: hold the current spot (captured once) and keep taunting.
+            if (!_heldPosition.IsValid || _heldPosition.Distance(myPosition) > StandoffHysteresis)
+            {
+                _heldPosition = myPosition;
+            }
+            targetPosition = _heldPosition;
+        }
+        else
+        {
+            // Enemy closed in: recede to a point StandoffDistance from the enemy,
+            // curved toward this group's side. Anchored to the enemy, so it never
+            // runs further than needed to restore the gap.
+            Vec2 fleeDirection = Vec2.FromRotation(awayFromEnemy.RotationInRadians + biasSign * LateralBiasRadians);
+            targetPosition = enemyPosition + fleeDirection * StandoffDistance;
+            _heldPosition = Vec2.Invalid; // re-capture the hold spot after this retreat
+
+            // Map edge: rotate the flee point toward our side until it is back
+            // inside the boundary — slides along the edge instead of clamping.
+            for (int attempt = 1; attempt <= 5 && mission != null && !mission.IsPositionInsideBoundaries(targetPosition); attempt++)
+            {
+                float rotation = awayFromEnemy.RotationInRadians + biasSign * (LateralBiasRadians + attempt * 0.55f);
+                targetPosition = enemyPosition + Vec2.FromRotation(rotation) * StandoffDistance;
+            }
         }
 
         WorldPosition worldPosition = BattleAITerrainAnalyzer.CreateTerrainAdjustedPosition(
