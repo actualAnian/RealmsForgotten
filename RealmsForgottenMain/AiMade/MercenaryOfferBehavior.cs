@@ -69,6 +69,8 @@ namespace RealmsForgotten.AiMade
                 return;
 
             // If anything is missing, or offer is already resolved (accepted/declined), never show again
+            if (_lord3_1.IsDead) return;
+            _lordKingdom ??= _lord3_1.Clan.Kingdom;
             if (_lord3_1 == null || _lordKingdom.IsEliminated || _hasAcceptedOffer || _hasDeclinedOffer)
                 return;
 
