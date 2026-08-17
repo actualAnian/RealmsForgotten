@@ -86,7 +86,7 @@ internal static class RFWarStrategicIntent
         return ClampSigned(objectiveFactor * 0.48f + frontAlignment * 0.32f + sacredTargetFactor * 0.2f);
     }
 
-    private static RFWarObjectiveType GetWarObjective(Kingdom attacker, Kingdom defender)
+    internal static RFWarObjectiveType GetWarObjective(Kingdom attacker, Kingdom defender)
     {
         float strengthRatio = attacker.CurrentTotalStrength / Math.Max(1f, defender.CurrentTotalStrength);
         float claimPressure = GetClaimPressure(attacker, defender);
@@ -320,6 +320,11 @@ internal static class RFWarStrategicIntent
 
     private static bool IsFrontierSettlement(Kingdom kingdom, Settlement settlement)
     {
+        if (RFWarPoliticalBorderContext.IsAvailable)
+        {
+            return RFWarPoliticalBorderContext.GetFrontierWeight(kingdom, settlement, null) >= 0.15f;
+        }
+
         foreach (Kingdom enemy in kingdom.FactionsAtWarWith.OfType<Kingdom>())
         {
             foreach (Town enemyTown in enemy.Fiefs)

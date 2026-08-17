@@ -1086,6 +1086,7 @@ public sealed class RFWarDecisionPlannerBehavior : CampaignBehaviorBase
         bias += 70f * GetAttackerDoctrineTargetBias(attacker, defender, frontierBias, specialWarBias, sacredTargetBias);
         bias += 75f * GetStrategicPostureWarBias(attacker, defender, frontierBias, specialWarBias, sacredTargetBias);
         bias += 60f * GetRivalryBias(attacker, defender);
+        bias += 85f * RFWarStrategicAssessment.GetHistoricalGrievance(attacker, defender);
         bias -= 110f * GetOwnMultiFrontPressure(attacker);
         bias -= 125f * GetHomePressure(attacker);
         bias -= 115f * GetOffAxisWarPenalty(attacker, defender);
@@ -1120,6 +1121,9 @@ public sealed class RFWarDecisionPlannerBehavior : CampaignBehaviorBase
         bias -= 95f * GetLiveCampaignPeaceResistanceBias(attacker, defender);
         bias += 85f * GetCampaignContinuationPeaceBias(attacker, defender);
         bias += 165f * authorityBias;
+        bias += 135f * RFWarStrategicAssessment.GetPeacePressure(attacker, defender);
+        bias -= 90f * RFWarStrategicAssessment.GetWarWill(attacker, defender);
+        bias -= 125f * RFWarStrategicAssessment.GetFinishPressure(attacker, defender);
         return bias;
     }
 

@@ -74,67 +74,67 @@ public static class SotorLores
 		["MinorMagic"] = new LoreDisplay
 		{
 			LoreId = "MinorMagic",
-			Title = "Minor Magic",
+			Title = "Thyrn-Kaeth",
 			SymbolSprite = "minormagic_symbol"
 		},
 		["LoreOfFire"] = new LoreDisplay
 		{
 			LoreId = "LoreOfFire",
-			Title = "Lore of Fire",
+			Title = "Bael-Vornir",
 			SymbolSprite = "firemagic_symbol"
 		},
 		["LoreOfHeavens"] = new LoreDisplay
 		{
 			LoreId = "LoreOfHeavens",
-			Title = "Lore of Heavens",
+			Title = "Vel-Karûn",
 			SymbolSprite = "celestial_symbol"
 		},
 		["LoreOfLight"] = new LoreDisplay
 		{
 			LoreId = "LoreOfLight",
-			Title = "Lore of Light",
+			Title = "Aer-Lúthien",
 			SymbolSprite = "lightmagic_symbol"
 		},
 		["LoreOfDeath"] = new LoreDisplay
 		{
 			LoreId = "LoreOfDeath",
-			Title = "Lore of Death",
+			Title = "Morg-Syl",
 			SymbolSprite = "deathmagic_symbol"
 		},
 		["LoreOfNecromancy"] = new LoreDisplay
 		{
 			LoreId = "LoreOfNecromancy",
-			Title = "Lore of Necromancy",
+			Title = "Bar-Gûlath",
 			SymbolSprite = "necromancy_symbol"
 		},
 		["LoreOfBeasts"] = new LoreDisplay
 		{
 			LoreId = "LoreOfBeasts",
-			Title = "Lore of Beasts",
+			Title = "Ulfr-Hâl",
 			SymbolSprite = "beastmagic_symbol"
 		},
 		["LoreOfLife"] = new LoreDisplay
 		{
 			LoreId = "LoreOfLife",
-			Title = "Lore of Life",
+			Title = "Edra-Sûl",
 			SymbolSprite = "lifemagic_symbol"
 		},
 		["LoreOfMetal"] = new LoreDisplay
 		{
 			LoreId = "LoreOfMetal",
-			Title = "Lore of Metal",
+			Title = "Orand-Ûr",
 			SymbolSprite = "metalmagic_symbol"
 		},
 		["HighMagic"] = new LoreDisplay
 		{
 			LoreId = "HighMagic",
-			Title = "High Magic",
+			Title = "Elda-Sîrion",
 			SymbolSprite = "highmagic_symbol"
 		},
 		["DarkMagic"] = new LoreDisplay
 		{
 			LoreId = "DarkMagic",
-			Title = "Dark Magic",
+			Title = "Dwimm-Vaen",
 			SymbolSprite = "darkmagic_symbol"
 		}
 	};

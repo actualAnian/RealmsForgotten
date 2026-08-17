@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LivingWorldParties>
+  <Party id="independent_merchants" type="Merchant" ambient="true" baseline="5" maxInstances="5" minimumSize="4" maximumSize="8" rumorReliability="0.90" />
+  <Party id="sheep_herders" type="Herder" herdVariant="Sheep" ambient="true" baseline="3" maxInstances="3" minimumSize="2" maximumSize="5" rumorReliability="0.65" />
+  <Party id="cattle_herders" type="Herder" herdVariant="Cow" ambient="true" baseline="3" maxInstances="3" minimumSize="2" maximumSize="5" rumorReliability="0.65" />
+  <Party id="hog_herders" type="Herder" herdVariant="Hog" ambient="true" baseline="2" maxInstances="2" minimumSize="2" maximumSize="5" rumorReliability="0.60" />
+  <Party id="mule_drivers" type="Herder" herdVariant="Mule" ambient="true" baseline="2" maxInstances="2" minimumSize="2" maximumSize="5" rumorReliability="0.75" />
+  <Party id="camel_drivers" type="Herder" herdVariant="Camel" ambient="true" baseline="2" maxInstances="2" minimumSize="2" maximumSize="5" rumorReliability="0.75" />
+  <Party id="pilgrims" type="Pilgrim" ambient="true" baseline="2" maxInstances="2" minimumSize="4" maximumSize="10" rumorReliability="0.75" />
+  <Party id="lepers" type="Leper" maxInstances="2" minimumSize="2" maximumSize="6" rumorReliability="0.65" />
+  <Party id="hunters" type="Hunter" ambient="true" baseline="3" maxInstances="3" minimumSize="3" maximumSize="6" rumorReliability="0.85" />
+  <Party id="religious_processions" type="ReligiousProcession" maxInstances="2" minimumSize="8" maximumSize="16" rumorReliability="0.80" />
+  <Party id="itinerant_healers" type="Healer" ambient="true" baseline="2" maxInstances="2" minimumSize="2" maximumSize="5" rumorReliability="0.90" />
+  <Party id="tax_collectors" type="TaxCollector" maxInstances="2" minimumSize="5" maximumSize="10" rumorReliability="0.90" />
+  <Party id="prisoner_escorts" type="PrisonerEscort" maxInstances="2" minimumSize="6" maximumSize="12" rumorReliability="0.75" />
+  <Party id="dowry_processions" type="DowryProcession" maxInstances="2" minimumSize="6" maximumSize="12" rumorReliability="0.80" />
+</LivingWorldParties>

@@ -229,7 +229,7 @@ public sealed class MagicRuneSocketVM : ViewModel
 		}
 		if (!targetMatches)
 		{
-			text += "\nInactive: the item in this slot changed.";
+			text += "\nInactive: the item in this slot changed or is no longer compatible.";
 		}
 		return text;
 	}
@@ -242,6 +242,7 @@ public sealed class MagicRuneSocketVM : ViewModel
 		AddTarget(ref text, targets, MagicRuneTarget.Bow, "Bow");
 		AddTarget(ref text, targets, MagicRuneTarget.Thrown, "Thrown");
 		AddTarget(ref text, targets, MagicRuneTarget.Ammunition, "Ammunition");
+		AddTarget(ref text, targets, MagicRuneTarget.MagicFocus, "Staff/Wand");
 		return string.IsNullOrEmpty(text) ? "None" : text;
 	}
 
@@ -259,11 +260,11 @@ public sealed class MagicRuneSocketVM : ViewModel
 		string text = string.Empty;
 		if (Math.Abs(rune.MaxWindsBonus) > 0.001f)
 		{
-			AddBonus(ref text, "Max Winds " + FormatSigned(rune.MaxWindsBonus));
+			AddBonus(ref text, "Max Mana " + FormatSigned(rune.MaxWindsBonus));
 		}
 		AddMultiplier(ref text, "Recharge", rune.RechargeMultiplier);
 		AddMultiplier(ref text, "Effectiveness", rune.EffectivenessMultiplier);
-		AddMultiplier(ref text, "Winds cost", rune.WindsCostMultiplier);
+		AddMultiplier(ref text, "Mana cost", rune.WindsCostMultiplier);
 		AddMultiplier(ref text, "Cooldown", rune.CooldownMultiplier);
 		return text;
 	}

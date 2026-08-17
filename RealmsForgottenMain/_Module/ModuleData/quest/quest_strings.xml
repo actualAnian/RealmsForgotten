@@ -142,8 +142,8 @@
 
 		<string id="rf_quest_title_part_three" text="{=rf_quest_title_part_three}Realms Forgotten Quest: Part Three" />
 
-		<string id="rf_anorit_message" text='{=rf_anorit_message}A messenger approached you while your troops were camped, taking a break from the march. "Some progress has been made in the translation. It is time to meet again. Find your way back to my presence."' />
-		<string id="rf_queen_message" text='{=rf_queen_message}While you were away, the Owl gave your map to the Queen to be deciphered. You must go and talk to her now.' />
+		<string id="rf_anorit_message" text='{=rf_anorit_message}You awoke in your tent with a splitting pain in your head. The Owl had found you there unconscious. A traitor from among your own troops had tried to steal the map, but he was caught before he could escape and executed for his betrayal. The map remained safely in Anorite hands. Once you had recovered, a messenger approached: "The translation has progressed. It is time to meet again. Return to my presence."' />
+		<string id="rf_queen_message" text='{=rf_queen_message}You awoke in your tent with a splitting pain in your head. The Owl had found you there unconscious. A traitor from among your own troops had tried to steal the map, but he was caught before he could escape and executed for his betrayal. While you recovered, the Owl carried the secured map to the Queen to be deciphered. You must speak with her now.' />
 		<string id="rf_ityr_arrive_message" text="{=rf_ityr_arrive_message}Your caravan enters Ityr. You surreptitiously leave the caravan and enter the lord's hall." />
 		<string id="rf_decipher_finished_message" text='{=rf_decipher_finished_message}A messenger approaches and delivers a message: "The deciphering is complete. Come to me when you are ready." ' />
 		<string id="rf_near_hideout_message" text='{=rf_near_hideout_message}As you neared the gate, the howling winds above the mountain peaks grew louder, and the rocky walls seemed to watch your party as if a hidden presence had taken hold of them. A shiver ran down the spines of you and your companions, but there was no doubt this was the place you were looking for.' />

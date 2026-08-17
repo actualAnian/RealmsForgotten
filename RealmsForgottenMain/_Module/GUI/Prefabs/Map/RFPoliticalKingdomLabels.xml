@@ -1,0 +1,46 @@
+<Prefab>
+  <Window>
+    <Widget WidthSizePolicy="StretchToParent"
+            HeightSizePolicy="StretchToParent"
+            DoNotAcceptEvents="true"
+            IsEnabled="false"
+            IsVisible="@IsVisible">
+      <Children>
+        <Widget DataSource="{Labels}"
+                WidthSizePolicy="StretchToParent"
+                HeightSizePolicy="StretchToParent"
+                DoNotAcceptEvents="true">
+          <ItemTemplate>
+            <Widget WidthSizePolicy="Fixed"
+                    HeightSizePolicy="Fixed"
+                    SuggestedWidth="@Width"
+                    SuggestedHeight="56"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    ScaledPositionXOffset="@X"
+                    ScaledPositionYOffset="@Y"
+                    IsVisible="@IsVisible"
+                    DoNotAcceptEvents="true">
+              <Children>
+                <TextWidget WidthSizePolicy="StretchToParent"
+                            HeightSizePolicy="StretchToParent"
+                            Brush="Kingdom.GeneralTitle.Text"
+                            Brush.FontSize="36"
+                            Brush.FontColor="#F4E1C4FF"
+                            Brush.TextOutlineColor="#090806FF"
+                            Brush.TextOutlineAmount="2"
+                            Brush.TextShadowOffset="2"
+                            Brush.TextShadowAngle="90"
+                            Brush.TextHorizontalAlignment="Center"
+                            Brush.TextVerticalAlignment="Center"
+                            Text="@Name"
+                            ClipContents="false"
+                            DoNotAcceptEvents="true" />
+              </Children>
+            </Widget>
+          </ItemTemplate>
+        </Widget>
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

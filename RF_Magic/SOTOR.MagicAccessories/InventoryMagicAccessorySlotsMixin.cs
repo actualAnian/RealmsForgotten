@@ -1049,7 +1049,9 @@ public sealed class InventoryMagicAccessorySlotsMixin : BaseViewModelMixin<SPInv
 		string runeItemId = MagicRuneService.GetRuneItemId(hero, slotIndex);
 		ItemObject runeItem = MagicRuneService.GetItemObject(runeItemId);
 		bool targetMatches = runeItem == null || (targetItem != null &&
-			string.Equals(targetItem.StringId, targetItemId, StringComparison.OrdinalIgnoreCase));
+			string.Equals(targetItem.StringId, targetItemId, StringComparison.OrdinalIgnoreCase) &&
+			(!MagicRuneRegistry.TryGet(runeItem.StringId, out MagicRuneData rune) ||
+				MagicRuneRegistry.CanApply(rune, targetItem)));
 
 		if (!string.IsNullOrEmpty(runeItemId) && runeItem == null)
 		{
@@ -1069,11 +1071,11 @@ public sealed class InventoryMagicAccessorySlotsMixin : BaseViewModelMixin<SPInv
 		List<string> bonuses = new List<string>();
 		if (Math.Abs(maxWindsBonus) > 0.001f)
 		{
-			bonuses.Add("Max Winds " + FormatSigned(maxWindsBonus));
+			bonuses.Add("Max Mana " + FormatSigned(maxWindsBonus));
 		}
 		AddMultiplier(bonuses, "Recharge", rechargeMultiplier);
 		AddMultiplier(bonuses, "Effectiveness", effectivenessMultiplier);
-		AddMultiplier(bonuses, "Winds cost", windsCostMultiplier);
+		AddMultiplier(bonuses, "Mana cost", windsCostMultiplier);
 		AddMultiplier(bonuses, "Cooldown", cooldownMultiplier);
 		return string.Join("\n", bonuses);
 	}

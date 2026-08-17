@@ -1,0 +1,24 @@
+<item_usage_sets>
+  <item_usage_set id="dual_shield_thrust" base_set="onehanded_shield_swing" has_single_stance="true">
+    <usages>
+      <usage style="attack_down" ready_action="act_dual_ready_thrust_1h" quick_release_action="act_dual_quick_release_thrust_1h" release_action="act_dual_release_thrust_1h" quick_blocked_action="act_dual_quick_blocked_thrust_1h" blocked_action="act_dual_blocked_thrust_1h" quick_stuck_action="act_stuck_quick_thrust_1h" stuck_action="act_stuck_thrust_1h" is_mounted="False" require_free_left_hand="False" strike_type="thrust" begin_hand_position="0,-0.4,-0.1" begin_hand_rotation="0,-90" begin_arm_rotation="0,0" begin_arm_length="0" end_hand_position="0,1,-0.1" end_hand_rotation="0,-90" end_arm_rotation="0,0" end_arm_length="0" require_left_hand_usage_root_set="dual_shield" />
+    </usages>
+    <guards>
+      <guard style="up" action="act_guard_up_1h" hand_position="0,0.1,0.2" hand_rotation="0,0" arm_rotation="0,0" arm_length="0" require_left_hand_usage_root_set="dual_shield" />
+      <guard style="up" is_left_stance="True" action="act_guard_up_1h_left_stance" hand_position="0,0.1,0.2" hand_rotation="0,0" arm_rotation="0,0" arm_length="0" require_left_hand_usage_root_set="dual_shield" />
+      <guard style="down" action="act_guard_bottom_1h" hand_position="0,0.1,-0.3" hand_rotation="0,-72" arm_rotation="0,0" arm_length="0" require_left_hand_usage_root_set="dual_shield" />
+      <guard style="down" is_left_stance="True" action="act_guard_bottom_1h_left_stance" hand_position="0,0.1,-0.3" hand_rotation="0,-72" arm_rotation="0,0" arm_length="0" require_left_hand_usage_root_set="dual_shield" />
+      <guard style="left" action="act_guard_left_1h" hand_position="-0.2,0.1,-0.2" hand_rotation="-36,0" arm_rotation="0,0" arm_length="0" require_left_hand_usage_root_set="dual_shield" />
+      <guard style="left" is_left_stance="True" action="act_guard_left_1h_left_stance" hand_position="-0.2,0.1,-0.2" hand_rotation="-36,0" arm_rotation="0,0" arm_length="0" require_left_hand_usage_root_set="dual_shield" />
+      <guard style="right" action="act_guard_right_1h" hand_position="0.2,0.1,-0.2" hand_rotation="36,0" arm_rotation="0,0" arm_length="0" require_left_hand_usage_root_set="dual_shield" />
+      <guard style="right" is_left_stance="True" action="act_guard_right_1h_left_stance" hand_position="0.2,0.1,-0.2" hand_rotation="36,0" arm_rotation="0,0" arm_length="0" require_left_hand_usage_root_set="dual_shield" />
+      <guard style="none" hand_position="0,0,-0.5" hand_rotation="0,-90" arm_rotation="0,0" arm_length="0" require_left_hand_usage_root_set="dual_shield" />
+      <guard style="none" is_left_stance="True" hand_position="0,0,-0.5" hand_rotation="0,-90" arm_rotation="0,0" arm_length="0" require_left_hand_usage_root_set="dual_shield" />
+    </guards>
+  </item_usage_set>
+  <item_usage_set id="dual_shield" base_set="hand_shield">
+    <movement_sets>
+      <movement_set id="1h_with_dual_shield" />
+    </movement_sets>
+  </item_usage_set>
+</item_usage_sets>

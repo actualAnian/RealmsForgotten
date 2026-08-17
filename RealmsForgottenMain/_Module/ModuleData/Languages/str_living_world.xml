@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="string">
+  <tags>
+    <tag language="English" />
+  </tags>
+  <strings>
+    <string id="rf_lw_independent_merchants" text="Independent Merchants" />
+    <string id="rf_lw_herders" text="{HERD} Herders" />
+    <string id="rf_lw_pilgrims" text="Pilgrims" />
+    <string id="rf_lw_lepers" text="Leper Caravan" />
+    <string id="rf_lw_hunters" text="Hunters" />
+    <string id="rf_lw_religious_procession" text="Religious Procession" />
+    <string id="rf_lw_itinerant_healers" text="Itinerant Healers" />
+    <string id="rf_lw_tax_collectors" text="Tax Collectors" />
+    <string id="rf_lw_prisoner_escort" text="Prisoner Escort" />
+    <string id="rf_lw_dowry_procession" text="Dowry Procession" />
+    <string id="rf_lw_sheep" text="Sheep" />
+    <string id="rf_lw_cattle" text="Cattle" />
+    <string id="rf_lw_hogs" text="Hog" />
+    <string id="rf_lw_mules" text="Mule" />
+    <string id="rf_lw_camels" text="Camel" />
+    <string id="rf_lw_wandering" text="Wandering" />
+    <string id="rf_lw_greeting" text="{RF_LW_GREETING}" />
+    <string id="rf_lw_merchant_greeting" text="We trade where the great caravans will not. What do you need, traveller?" />
+    <string id="rf_lw_herder_greeting" text="Easy now. The herd has had a long road, but we can still spare a moment." />
+    <string id="rf_lw_pilgrim_greeting" text="We walk in faith, and welcome a peaceful traveller." />
+    <string id="rf_lw_leper_greeting" text="Keep your distance if you wish. We mean no harm." />
+    <string id="rf_lw_hunter_greeting" text="The woods have been kind to us today. What brings you to this road?" />
+    <string id="rf_lw_procession_greeting" text="Our procession travels under a sacred purpose. Speak, traveller." />
+    <string id="rf_lw_healer_greeting" text="We carry remedies for those who need them. How may we help?" />
+    <string id="rf_lw_tax_greeting" text="These chests are accounted for. State your business." />
+    <string id="rf_lw_prisoner_greeting" text="Keep clear of the prisoners. This is official business." />
+    <string id="rf_lw_dowry_greeting" text="We carry gifts for a wedding. May the road treat us kindly." />
+    <string id="rf_lw_wandering_greeting" text="The road is long. What do you need?" />
+    <string id="rf_lw_ask_news" text="What news have you heard on the road?" />
+    <string id="rf_lw_refugee_ask_news" text="What did you see before you fled?" />
+    <string id="rf_lw_rumor_answer" text="{RF_LW_RUMOR_TEXT}" />
+    <string id="rf_lw_no_rumor" text="Nothing certain. The road has been quiet for once." />
+    <string id="rf_lw_reliable" text="I trust the source. " />
+    <string id="rf_lw_uncertain" text="Take this with caution. " />
+    <string id="rf_lw_rumor_refugees" text="We fled {VILLAGE}. The roads near our old home are still unsafe." />
+    <string id="rf_lw_rumor_siege" text="Travellers say {SETTLEMENT} is under siege. The roads around it will be dangerous." />
+    <string id="rf_lw_rumor_army" text="A large host led by {PARTY} was seen on the road." />
+    <string id="rf_lw_rumor_refugee_road" text="Displaced families from {VILLAGE} have been seen on the roads." />
+    <string id="rf_lw_buy_provisions" text="I will buy five sacks of provisions for 100 denars." />
+    <string id="rf_lw_buy_animal" text="I will buy one animal for 75 denars." />
+    <string id="rf_lw_donate_grain" text="Take two sacks of grain for the road." />
+    <string id="rf_lw_buy_meat" text="I will buy one portion of meat for 50 denars." />
+    <string id="rf_lw_buy_medicinal_plants" text="I will buy medicinal plants for 75 denars." />
+    <string id="rf_lw_tax_route" text="Where do you come from, and where are these taxes going?" />
+    <string id="rf_lw_tax_route_answer" text="We left {ORIGIN} and are taking the taxes to {DESTINATION}." />
+    <string id="rf_lw_prisoner_route" text="Who are you transporting?" />
+    <string id="rf_lw_prisoner_answer" text="{RF_LW_PRISONER_TEXT}" />
+    <string id="rf_lw_prisoner_answer_text" text="We are taking {COUNT} prisoners to {DESTINATION}." />
+    <string id="rf_lw_dowry_gift" text="Accept 100 denars as a gift for the wedding." />
+    <string id="rf_lw_unknown" text="unknown" />
+    <string id="rf_lw_purchase_done" text="A fair bargain. May it serve you well." />
+    <string id="rf_lw_leave" text="Safe travels." />
+  </strings>
+</base>

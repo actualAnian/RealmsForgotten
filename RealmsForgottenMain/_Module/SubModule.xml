@@ -75,6 +75,12 @@
       <Tags />
     </SubModule>
     <SubModule>
+      <Name value="RF_Ambush" />
+      <DLLName value="RF_Ambush.dll" />
+      <SubModuleClassType value="RF_Ambush.Submodule" />
+      <Tags />
+    </SubModule>
+    <SubModule>
       <Name value="RF_Promoted" />
       <DLLName value="RF_Promoted.dll" />
       <SubModuleClassType value="RF_Promoted.SubModule" />
@@ -105,6 +111,15 @@
       <Name value="RF_ResourceZones" />
       <DLLName value="RF_ResourceZones.dll" />
       <SubModuleClassType value="RF_ResourceZones.SubModule" />
+      <Tags>
+        <Tag key="DedicatedServerType" value="none" />
+        <Tag key="IsNoRenderModeElement" value="false" />
+      </Tags>
+    </SubModule>
+    <SubModule>
+      <Name value="RF_LivingWorld" />
+      <DLLName value="RF_LivingWorld.dll" />
+      <SubModuleClassType value="RF_LivingWorld.SubModule" />
       <Tags>
         <Tag key="DedicatedServerType" value="none" />
         <Tag key="IsNoRenderModeElement" value="false" />

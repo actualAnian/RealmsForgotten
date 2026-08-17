@@ -321,14 +321,15 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
         private void PrepareScholarHeroAndEvent()
         {
-            athasScholarHero =
-                HeroCreator.CreateSpecialHero(CharacterObject.Find("rf_athas_scholar"), Settlement.CurrentSettlement);
-
-            athasScholarHero.Clan = Ityr.OwnerClan;
+            if (athasScholarHero == null)
+            {
+                athasScholarHero = HeroCreator.CreateSpecialHero(
+                    CharacterObject.Find("rf_athas_scholar"),
+                    Settlement.CurrentSettlement,
+                    Ityr.OwnerClan);
+            }
 
             athasScholarHero.SetName(new TextObject("{=athas_scholar_name}Athas Scholar"), new TextObject("Scholar"));
-
-            athasScholarHero.StringId = "rf_athas_scholar";
 
             Monster monsterWithSuffix = FaceGen.GetMonsterWithSuffix(athasScholarHero.CharacterObject.Race, "_settlement");
             string actionSet = ActionSetCode.GenerateActionSetNameWithSuffix(monsterWithSuffix, athasScholarHero.IsFemale, ActionSetCode.LordActionSetSuffix);
@@ -397,6 +398,18 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 if (MobileParty.MainParty.Army.LeaderParty.GetNumDaysForFoodToLast() < 1)
                 {
                     MobileParty.MainParty.Army.LeaderParty.ItemRoster.AddToCounts(MBObjectManager.Instance.GetObject<ItemObject>(MBRandom.RandomFloat > 0.5f ? "grain" : "fish"), 100);
+                }
+
+                MobileParty owlParty = MobileParty.MainParty.Army.LeaderParty;
+                Settlement destination = Ityr;
+                if (IsPlayerInOwlArmy && owlParty?.LeaderHero == TheOwl && owlParty.MapEvent == null &&
+                    destination != null && owlParty.CurrentSettlement != destination &&
+                    owlParty.TargetSettlement?.StringId != destination.StringId)
+                {
+                    MobileParty.MainParty.Army.AiBehaviorObject = destination;
+                    owlParty.Ai?.SetDoNotMakeNewDecisions(false);
+                    owlParty.SetMoveGoToSettlement(destination, MobileParty.NavigationType.All, false);
+                    owlParty.Ai?.SetDoNotMakeNewDecisions(true);
                 }
             }
 
@@ -474,8 +487,8 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
             MobileParty.MainParty.Army.LeaderParty.Ai.SetDoNotMakeNewDecisions(true);
 
-            MobileParty.MainParty.Army.LeaderParty.IgnoreByOtherPartiesTill(CampaignTime.Never);
-            MobileParty.MainParty.IgnoreByOtherPartiesTill(CampaignTime.Never);
+            MobileParty.MainParty.Army.LeaderParty.IgnoreByOtherPartiesTill(CampaignTime.Now);
+            MobileParty.MainParty.IgnoreByOtherPartiesTill(CampaignTime.Now);
 
             MobileParty.MainParty.Army.LeaderParty.SpeedExplained.AddFactor(1.0f);
             MobileParty.MainParty.Army.Cohesion = 100f;

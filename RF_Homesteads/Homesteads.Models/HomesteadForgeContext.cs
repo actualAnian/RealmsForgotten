@@ -234,12 +234,93 @@ internal static class HomesteadForgeContext
 			WeaponDesign currentWeaponDesign = crafting.CurrentWeaponDesign;
 			float orderDifficulty = MBRandom.RandomInt(40, 160);
 			string customId = "hs_order_" + Guid.NewGuid().ToString("N");
-			return new CraftingOrder(owner, orderDifficulty, currentWeaponDesign, randomElement, -1, customId);
+			CraftingOrder craftingOrder = new CraftingOrder(owner, orderDifficulty, currentWeaponDesign, randomElement, -1, customId);
+			if (!IsValidCraftingOrder(craftingOrder))
+			{
+				TraceLogger.Write("HomesteadForgeContext", "TryCreateOrder rejected invalid order for '" + owner?.StringId + "'.");
+				return null;
+			}
+			return craftingOrder;
 		}
 		catch (Exception ex)
 		{
 			TraceLogger.Write("HomesteadForgeContext", "TryCreateOrder failed for '" + owner?.StringId + "': " + ex.GetType().Name + ": " + ex.Message);
 			return null;
+		}
+	}
+
+	public static void RemoveInvalidCraftingOrders()
+	{
+		try
+		{
+			ICraftingCampaignBehavior craftingCampaignBehavior = Campaign.Current?.GetCampaignBehavior<ICraftingCampaignBehavior>();
+			if (craftingCampaignBehavior?.CraftingOrders == null)
+			{
+				return;
+			}
+			int num = 0;
+			int num2 = 0;
+			foreach (KeyValuePair<Town, CraftingCampaignBehavior.CraftingOrderSlots> craftingOrder in craftingCampaignBehavior.CraftingOrders)
+			{
+				Town key = craftingOrder.Key;
+				CraftingCampaignBehavior.CraftingOrderSlots value = craftingOrder.Value;
+				if (key == null || value == null)
+				{
+					continue;
+				}
+				CraftingOrder[] slots = value.Slots;
+				if (slots != null)
+				{
+					for (int i = 0; i < slots.Length; i++)
+					{
+						CraftingOrder craftingOrder2 = slots[i];
+						if (craftingOrder2 != null && !IsValidCraftingOrder(craftingOrder2))
+						{
+							slots[i] = null;
+							num2++;
+							TraceLogger.Write("HomesteadForgeContext", "Removed invalid town crafting order from '" + key.Name + "' slot " + i + ".");
+						}
+					}
+				}
+				foreach (CraftingOrder item in value.CustomOrders.ToList())
+				{
+					if (IsValidCraftingOrder(item))
+					{
+						continue;
+					}
+					try
+					{
+						craftingCampaignBehavior.CancelCustomOrder(key, item);
+						num++;
+						TraceLogger.Write("HomesteadForgeContext", "Removed invalid custom order from '" + key.Name + "'.");
+					}
+					catch (Exception ex)
+					{
+						TraceLogger.Write("HomesteadForgeContext", "Could not remove invalid custom order from '" + key.Name + "': " + ex.GetType().Name + ": " + ex.Message);
+					}
+				}
+			}
+			if (num > 0 || num2 > 0)
+			{
+				TraceLogger.Write("HomesteadForgeContext", "Removed " + num2 + " invalid town order(s) and " + num + " invalid custom order(s) at session launch.");
+			}
+		}
+		catch (Exception ex2)
+		{
+			TraceLogger.Write("HomesteadForgeContext", "Invalid crafting-order cleanup failed: " + ex2.GetType().Name + ": " + ex2.Message);
+		}
+	}
+
+	private static bool IsValidCraftingOrder(CraftingOrder order)
+	{
+		try
+		{
+			ItemObject preCraftedWeaponDesignItem = order?.PreCraftedWeaponDesignItem;
+			return preCraftedWeaponDesignItem != null && preCraftedWeaponDesignItem != DefaultItems.Trash && preCraftedWeaponDesignItem.IsReady && preCraftedWeaponDesignItem.WeaponComponent != null && preCraftedWeaponDesignItem.Weapons != null && preCraftedWeaponDesignItem.Weapons.Count > 0 && preCraftedWeaponDesignItem.PrimaryWeapon != null && preCraftedWeaponDesignItem.WeaponDesign?.Template != null;
+		}
+		catch
+		{
+			return false;
 		}
 	}
 

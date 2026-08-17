@@ -60,7 +60,12 @@ namespace RealmsForgotten.Career.Ability
         private const string ClericAbilityMoralePerkId = "ClericSaintedIntercessor1_4";
         private static float _clericSelfHealPerSecond;
         private static float _clericAllyHealPerSecond;
+        private static float _clericArmyHealPerSecond;
         private static float _clericNextMoralePulseTime;
+        private static readonly HashSet<Agent> ClericArmyHealTargets = new();
+        private static GameEntity _clericHealingParticleEntity;
+        private const string ClericHealingParticleId = "healing_regeneration";
+        private const string ClericActivationAction = "act_cutscene_wedding_priest";
 
         // NOVO: Lista para armazenar o dano de burning pendente
         public static List<(Agent victim, int damage)> PendingBurningDamage = new();
@@ -79,19 +84,60 @@ namespace RealmsForgotten.Career.Ability
             if (career == null || career.StringId != "cleric")
                 return;
 
+            StopDivineRestoration();
+
             _clericSelfHealPerSecond = career.Ability.IsUpgraded ? 3.5f : 2.0f;
             if (PlayerCareerExtension.HasCareerChoice(ClericAbilityHealBoostPerkId))
                 _clericSelfHealPerSecond *= 1.2f;
 
             _clericAllyHealPerSecond = PlayerCareerExtension.HasCareerChoice(ClericAbilityAllyHealPerkId) ? 1.0f : 0f;
+            _clericArmyHealPerSecond = career.Ability.IsUpgraded ? 1.5f : 1.0f;
             _clericNextMoralePulseTime = Mission.Current?.CurrentTime + 1.5f ?? 0f;
+
+            Agent cleric = Agent.Main;
+            if (cleric == null || !cleric.IsActive())
+                return;
+
+            List<Agent> eligibleTroops = Mission.Current.PlayerTeam.ActiveAgents
+                .Where(ally => ally != null
+                    && !ally.IsMainAgent
+                    && !ally.IsMount
+                    && ally.IsHuman
+                    && ally.IsActive()
+                    && ally.Health > 0f
+                    && ally.BelongsToMainParty())
+                .ToList();
+            float armyPercentage = career.Ability.IsUpgraded ? 0.50f : 0.25f;
+            int troopsToHeal = (int)Math.Ceiling(eligibleTroops.Count * armyPercentage);
+            while (troopsToHeal > 0 && eligibleTroops.Count > 0)
+            {
+                int selectedIndex = MBRandom.RandomInt(eligibleTroops.Count);
+                ClericArmyHealTargets.Add(eligibleTroops[selectedIndex]);
+                eligibleTroops.RemoveAt(selectedIndex);
+                troopsToHeal--;
+            }
+
+            ActionIndexCache activationAction = ActionIndexCache.Create(ClericActivationAction);
+            if (activationAction.Index != ActionIndexCache.act_none.Index)
+                cleric.SetActionChannel(1, in activationAction, ignorePriority: false, (AnimFlags)0uL);
+
+            if (ParticleSystemManager.GetRuntimeIdByName(ClericHealingParticleId) != -1)
+                TOWParticleSystem.ApplyParticleToAgent(cleric, ClericHealingParticleId, out _clericHealingParticleEntity);
         }
 
         public static void StopDivineRestoration()
         {
             _clericSelfHealPerSecond = 0f;
             _clericAllyHealPerSecond = 0f;
+            _clericArmyHealPerSecond = 0f;
             _clericNextMoralePulseTime = 0f;
+            ClericArmyHealTargets.Clear();
+            if (_clericHealingParticleEntity != null)
+            {
+                _clericHealingParticleEntity.RemoveAllParticleSystems();
+                _clericHealingParticleEntity.Remove(0);
+                _clericHealingParticleEntity = null;
+            }
         }
 
         public static void TickDivineRestoration(float dt)
@@ -107,13 +153,19 @@ namespace RealmsForgotten.Career.Ability
                 if (ally == null || ally.IsMount || !ally.IsHuman || !ally.BelongsToMainParty())
                     continue;
 
-                if (_clericAllyHealPerSecond > 0f
+                float allyHealPerSecond = ClericArmyHealTargets.Contains(ally)
+                    ? _clericArmyHealPerSecond
+                    : (_clericAllyHealPerSecond > 0f
+                        && ally.Position.DistanceSquared(Agent.Main.Position) <= 100f
+                        ? _clericAllyHealPerSecond
+                        : 0f);
+
+                if (allyHealPerSecond > 0f
                     && !ally.IsMainAgent
                     && ally.IsActive()
-                    && ally.Health > 0f
-                    && ally.Position.DistanceSquared(Agent.Main.Position) <= 100f)
+                    && ally.Health > 0f)
                 {
-                    ally.Health = MathF.Min(ally.HealthLimit, ally.Health + (_clericAllyHealPerSecond * dt));
+                    ally.Health = MathF.Min(ally.HealthLimit, ally.Health + (allyHealPerSecond * dt));
                 }
 
                 if (PlayerCareerExtension.HasCareerChoice(ClericAbilityMoralePerkId)

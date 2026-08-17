@@ -4,6 +4,7 @@ using SOTOR.AbilitySystem;
 using SOTOR.Extensions;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
+using SOTOR.MagicAccessories;
 
 namespace SOTOR.RFIntegration;
 
@@ -83,7 +84,12 @@ public static class TroopWindsPool
 			arcane = agent.Character?.GetSkillValue(skill) ?? 0;
 		}
 
-		return focus.MaxWinds + 0.3f * arcane;
+		float result = focus.MaxWinds + 0.3f * arcane;
+		if (MagicRuneService.HasEffect(agent, MagicRuneEffect.Reservoir, out MagicRuneData reservoir))
+		{
+			result += reservoir.PrimaryValue;
+		}
+		return result;
 	}
 
 	/// <summary>
@@ -184,7 +190,7 @@ public static class TroopWindsPool
 		}
 
 		// Afinidade do cajado: instrumento afim gasta menos (ver ArcaneFocusAffinity).
-		int cost = ArcaneFocusAffinity.ApplyToWindsCost(template?.WindsOfMagicCost ?? 0, agent, template?.BelongsToLoreID);
+		int cost = GetRuneAdjustedCost(agent, template);
 		if (cost <= 0)
 		{
 			return true;
@@ -204,7 +210,7 @@ public static class TroopWindsPool
 		float now = Mission.Current?.CurrentTime ?? 0f;
 		_nextCastAllowedAt[agent] = now + MinSecondsBetweenCasts;
 
-		int cost = ArcaneFocusAffinity.ApplyToWindsCost(template?.WindsOfMagicCost ?? 0, agent, template?.BelongsToLoreID);
+		int cost = GetRuneAdjustedCost(agent, template);
 		if (cost <= 0)
 		{
 			return;
@@ -215,6 +221,26 @@ public static class TroopWindsPool
 		_remaining[agent] = after;
 
 		SotorLog.Debug($"Troop winds: '{agent.Character?.StringId}' spent {cost} on {template?.StringID} | {before:0} -> {after:0} / {GetMax(agent):0}.");
+	}
+
+	public static void RefundForEcho(Agent agent, AbilityTemplate template)
+	{
+		if (!AppliesTo(agent))
+		{
+			return;
+		}
+		_remaining[agent] = Math.Min(GetMax(agent), GetRemaining(agent) + GetRuneAdjustedCost(agent, template));
+		_nextCastAllowedAt.Remove(agent);
+	}
+
+	private static int GetRuneAdjustedCost(Agent agent, AbilityTemplate template)
+	{
+		int cost = ArcaneFocusAffinity.ApplyToWindsCost(template?.WindsOfMagicCost ?? 0, agent, template?.BelongsToLoreID);
+		if (cost > 0 && MagicRuneService.HasEffect(agent, MagicRuneEffect.Focus, out MagicRuneData focus))
+		{
+			cost = Math.Max(1, (int)Math.Round(cost * (1f - focus.PrimaryValue / 100f)));
+		}
+		return cost;
 	}
 
 	/// <summary>Fração restante (0-1). A IA usa para decidir quando poupar.</summary>

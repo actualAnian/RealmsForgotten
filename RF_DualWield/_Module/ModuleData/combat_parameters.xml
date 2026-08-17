@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  RF_DualWield / combat_parameters.xml
+
+  Este arquivo define APENAS os 4 combat_parameter novos do dual wield
+  (os ids referenciados pelos clipes .tpac deste modulo).
+
+  Nao ha bloco <definitions>: a versao anterior redeclarava 23 <def> do vanilla
+  (overswing_*, thrust_*, right_swing_*, swing_vertical_rot_limit ...) com os
+  MESMOS valores do Native. Redeclarar id vanilla e sobreposicao global gratuita
+  e conflita com qualquer outro modulo que carregue combat_parameters
+  (RF_Extension tambem traz um). Os valores foram inlinados como literais,
+  identicos aos do Native 1.4.8 - mesmo comportamento, zero colisao de id.
+  RF_Extension segue o mesmo padrao (declara so o def proprio, usa literais no resto).
+
+  Literais e sua origem em Native/ModuleData/combat_parameters.xml:
+    overswing_rider_rot_limit_left            = 100     overswing_rider_rot_limit_right   = 80
+    up_min_rider_rot_limit_left               = 45      up_min_rider_rot_limit_right      = 10
+    overswing_rider_look_down_limit           = 120
+    overswing_ladder_rot_limit_left           = 67.3    overswing_ladder_rot_limit_right  = 57.3
+    thrust_vertical_rot_limit                 = 1.0
+    thrust_rider_rot_limit_left               = 120     thrust_rider_rot_limit_right      = 90
+    thrust_rider_look_down_limit              = -10
+    down_and_upperstab_min_rider_rot_limit_left  = 40   ..._right                         = 0
+    thrust_ladder_rot_limit_left              = 80.59   thrust_ladder_rot_limit_right     = 57.3
+    swing_vertical_rot_limit                  = 0.75
+    right_swing_rider_rot_limit_left          = 110     right_swing_rider_rot_limit_right = 100
+    right_min_rider_rot_limit_left            = 120     right_min_rider_rot_limit_right   = 100
+    right_swing_rider_look_down_limit         = -10
+    right_swing_ladder_rot_limit_left         = 57.3    right_swing_ladder_rot_limit_right= 57.3
+-->
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="combat_parameters">
+  <combat_parameters>
+
+    <!-- usado por ready_dual_thrust_1h -->
+    <combat_parameter id="1h_dual_others"
+                      collision_check_starting_percent="0.29"
+                      collision_check_ending_percent="0.39"
+                      vertical_rot_limit_multiplier_up="1"
+                      vertical_rot_limit_multiplier_down="0.4"
+                      left_rider_rot_limit="100"
+                      left_rider_min_rot_limit="45"
+                      right_rider_rot_limit="80"
+                      right_rider_min_rot_limit="10"
+                      rider_look_down_limit="120"
+                      left_ladder_rot_limit="67.3"
+                      right_ladder_rot_limit="57.3"
+                      hit_bone_index="20"
+                      shoulder_hit_bone_index="14" />
+
+    <!-- usado por quick_release/release/quick_blocked _dual_thrust_1h(_balanced) -->
+    <combat_parameter id="onehanded_dual_thrust"
+                      collision_check_starting_percent="0.27"
+                      collision_damage_starting_percent="0.32"
+                      collision_check_ending_percent="0.51"
+                      vertical_rot_limit_multiplier_up="1.0"
+                      vertical_rot_limit_multiplier_down="1.0"
+                      left_rider_rot_limit="120"
+                      left_rider_min_rot_limit="40"
+                      right_rider_rot_limit="90"
+                      right_rider_min_rot_limit="0"
+                      rider_look_down_limit="-10"
+                      left_ladder_rot_limit="80.59"
+                      right_ladder_rot_limit="57.3"
+                      hit_bone_index="20"
+                      shoulder_hit_bone_index="14" />
+
+    <!-- usado pelos clipes de slash dual (nao balanceados) -->
+    <combat_parameter id="onehanded_dual_right"
+                      collision_check_starting_percent="0.333"
+                      collision_check_ending_percent="0.56"
+                      vertical_rot_limit_multiplier_up="0.75"
+                      vertical_rot_limit_multiplier_down="0.75"
+                      left_rider_rot_limit="110"
+                      left_rider_min_rot_limit="120"
+                      right_rider_rot_limit="100"
+                      right_rider_min_rot_limit="100"
+                      rider_look_down_limit="-10"
+                      left_ladder_rot_limit="57.3"
+                      right_ladder_rot_limit="57.3"
+                      hit_bone_index="20"
+                      shoulder_hit_bone_index="14" />
+
+    <!-- usado pelos clipes de slash dual balanceados -->
+    <combat_parameter id="onehanded_dual_right_balanced"
+                      collision_check_starting_percent="0.363"
+                      collision_check_ending_percent="0.56"
+                      vertical_rot_limit_multiplier_up="0.75"
+                      vertical_rot_limit_multiplier_down="0.75"
+                      left_rider_rot_limit="110"
+                      left_rider_min_rot_limit="120"
+                      right_rider_rot_limit="100"
+                      right_rider_min_rot_limit="100"
+                      rider_look_down_limit="-10"
+                      left_ladder_rot_limit="57.3"
+                      right_ladder_rot_limit="57.3"
+                      hit_bone_index="20"
+                      shoulder_hit_bone_index="14" />
+
+  </combat_parameters>
+</base>

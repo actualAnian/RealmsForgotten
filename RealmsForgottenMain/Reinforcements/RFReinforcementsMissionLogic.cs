@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.AgentOrigins;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
@@ -52,6 +53,7 @@ namespace RealmsForgotten.Reinforcements
 
         private readonly List<PendingReinforcement> _pending = new();
         private readonly Queue<IAgentOriginBase>[] _spawnQueues = { new Queue<IAgentOriginBase>(), new Queue<IAgentOriginBase>() };
+        private readonly HashSet<Agent>[] _spawnedAgents = { new HashSet<Agent>(), new HashSet<Agent>() };
         private readonly List<PendingReinforcement> _arrivedThisTick = new();
         private MissionTimer _spawnPumpTimer;
         private bool _scanned;
@@ -426,7 +428,7 @@ namespace RealmsForgotten.Reinforcements
                 try
                 {
                     Vec2 spawnPosition = mission.GetFormationSpawnPosition(sideTeam, origin.Troop.DefaultFormationClass);
-                    mission.SpawnTroop(
+                    Agent spawnedAgent = mission.SpawnTroop(
                         origin,
                         isPlayerSide,
                         hasAllyTeam,
@@ -440,12 +442,32 @@ namespace RealmsForgotten.Reinforcements
                         null,
                         FormationClass.NumberOfAllFormations,
                         false);
+                    if (spawnedAgent != null)
+                    {
+                        _spawnedAgents[sideIndex].Add(spawnedAgent);
+                    }
                 }
                 catch (Exception e)
                 {
                     RFReinforcementsConfig.Debug($"[RFReinforcements] spawn failed: {e.Message}");
                 }
             }
+        }
+
+        internal bool ShouldDelayBattleEnd(BattleSideEnum depletedSide)
+        {
+            int sideIndex = depletedSide == BattleSideEnum.Defender
+                ? DefenderSideIndex
+                : AttackerSideIndex;
+
+            if (_spawnQueues[sideIndex].Count > 0)
+            {
+                return true;
+            }
+
+            HashSet<Agent> agents = _spawnedAgents[sideIndex];
+            agents.RemoveWhere(agent => agent == null || !agent.IsActive() || agent.IsRunningAway);
+            return agents.Count > 0;
         }
 
         public override void OnMissionResultReady(MissionResult missionResult)
@@ -458,6 +480,42 @@ namespace RealmsForgotten.Reinforcements
         {
             base.OnEndMission();
             _stopped = true;
+            _spawnedAgents[DefenderSideIndex].Clear();
+            _spawnedAgents[AttackerSideIndex].Clear();
+        }
+    }
+
+    [HarmonyPatch(typeof(BattleEndLogic), nameof(BattleEndLogic.MissionEnded))]
+    internal static class RFReinforcementsBattleEndPatch
+    {
+        [HarmonyPrefix]
+        private static bool DelayVictoryWhileArrivedReinforcementsFight(BattleEndLogic __instance, ref bool __result)
+        {
+            Mission mission = Mission.Current;
+            Team playerTeam = mission?.PlayerTeam;
+            RFReinforcementsMissionLogic reinforcementLogic = mission?.GetMissionBehavior<RFReinforcementsMissionLogic>();
+            if (playerTeam == null || reinforcementLogic == null)
+            {
+                return true;
+            }
+
+            BattleSideEnum? depletedSide = null;
+            if (__instance.PlayerVictory)
+            {
+                depletedSide = playerTeam.Side.GetOppositeSide();
+            }
+            else if (__instance.EnemyVictory)
+            {
+                depletedSide = playerTeam.Side;
+            }
+
+            if (depletedSide.HasValue && reinforcementLogic.ShouldDelayBattleEnd(depletedSide.Value))
+            {
+                __result = false;
+                return false;
+            }
+
+            return true;
         }
     }
 

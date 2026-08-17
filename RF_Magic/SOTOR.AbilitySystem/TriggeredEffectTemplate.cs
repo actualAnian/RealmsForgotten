@@ -54,4 +54,13 @@ public class TriggeredEffectTemplate
 
 	[XmlAttribute]
 	public int NumberToSummon { get; set; }
+
+	[XmlAttribute]
+	public string TransformationTroopId { get; set; } = "none";
+
+	[XmlAttribute]
+	public TransformationTargetGroup TransformationTargetGroup { get; set; }
+
+	[XmlAttribute]
+	public float RegularTroopTransformationPercent { get; set; }
 }

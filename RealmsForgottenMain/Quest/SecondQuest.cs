@@ -6,7 +6,6 @@ using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.AgentOrigins;
-using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.Conversation;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameMenus;
@@ -30,6 +29,9 @@ namespace RealmsForgotten.Quest
     public class SecondQuest : QuestBase
     {
         public static readonly string TheOwlId = "rf_the_owl";
+        private const string HellboundClanId = "hellbound_outlaw";
+        private const string HellboundPartyTemplateId = "hellbound_outlaw_template";
+        private const string HellboundBossPartyTemplateId = "hellbound_outlaw_boss_party_template";
 
         [SaveableField(0)]
         public bool HasTalkedToOwl;
@@ -77,26 +79,88 @@ namespace RealmsForgotten.Quest
         }
         private void OnSettlementEntered(MobileParty mobileParty, Settlement settlement, Hero hero)
         {
-            if (_isPlayerInOwlArmy && mobileParty == MobileParty.MainParty && settlement == mobileParty.Army.AiBehaviorObject)
+            bool owlEscortArrived = mobileParty == MobileParty.MainParty || mobileParty?.LeaderHero == TheOwl;
+            if (_isPlayerInOwlArmy && owlEscortArrived && settlement?.StringId == "town_EW3")
             {
+                Hero anoritLord = AnoritLord;
+                ConversationManager conversationManager = Campaign.Current?.ConversationManager;
+                if (anoritLord == null || conversationManager == null)
+                    return;
 
-                EnterSettlementAction.ApplyForCharacterOnly(AnoritLord, settlement);
+                EnterSettlementAction.ApplyForCharacterOnly(anoritLord, settlement);
 
                 ConversationCharacterData playerData = new(CharacterObject.PlayerCharacter, PartyBase.MainParty);
-                ConversationCharacterData anoritData = new(AnoritLord.CharacterObject, AnoritLord.PartyBelongedTo?.Party);
-                Campaign.Current.ConversationManager.OpenMapConversation(playerData, anoritData);
+                ConversationCharacterData anoritData = new(anoritLord.CharacterObject, anoritLord.PartyBelongedTo?.Party ?? settlement.Party);
+                conversationManager.OpenMapConversation(playerData, anoritData);
                 _isPlayerInOwlArmy = false;
                 MobileParty.MainParty.IgnoreByOtherPartiesTill(CampaignTime.Now);
                 QuestPatches.AvoidDisbanding = false;
             }
             if (mobileParty == MobileParty.MainParty && QuestHelperCampaignBehavior.IsInHideoutForQuest2())
             {
+                InitializeSecondQuestHideout(settlement.Hideout);
                 while (settlement.Hideout.GetDefenderParties(MapEvent.BattleTypes.Hideout).Sum(p => p.MemberRoster.TotalManCount) < 60)
                 {
-                    var behavior = Campaign.Current.GetCampaignBehavior<BanditSpawnCampaignBehavior>();
-                    behavior.AddBanditToHideout(settlement.Hideout);
+                    if (!AddHellboundPartyToHideout(settlement.Hideout, false))
+                        break;
                 }
             }
+        }
+
+        private static void InitializeSecondQuestHideout(Hideout hideout, bool reset = false)
+        {
+            if (hideout == null)
+                return;
+
+            Clan hellboundClan = Clan.FindFirst(x => x.StringId == HellboundClanId);
+            if (hellboundClan == null)
+                return;
+
+            List<PartyBase> defenders = hideout.GetDefenderParties(MapEvent.BattleTypes.Hideout).ToList();
+            if (reset || defenders.Any(p => p.MapFaction != hellboundClan))
+            {
+                foreach (PartyBase defender in defenders.Where(p => p?.MobileParty?.IsActive == true).ToList())
+                    DestroyPartyAction.Apply(null, defender.MobileParty);
+
+                defenders.Clear();
+            }
+
+            if (!hideout.IsInfested || defenders.Count == 0)
+            {
+                AddHellboundPartyToHideout(hideout, false);
+                AddHellboundPartyToHideout(hideout, false);
+                AddHellboundPartyToHideout(hideout, true);
+                HarmonyLib.AccessTools.Field(typeof(Hideout), "_nextPossibleAttackTime").SetValue(hideout, CampaignTime.Now);
+                hideout.IsSpotted = true;
+            }
+
+            hideout.Settlement.IsVisible = true;
+        }
+
+        private static bool AddHellboundPartyToHideout(Hideout hideout, bool isBossParty)
+        {
+            Clan hellboundClan = Clan.FindFirst(x => x.StringId == HellboundClanId);
+            string templateId = isBossParty ? HellboundBossPartyTemplateId : HellboundPartyTemplateId;
+            PartyTemplateObject partyTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>(templateId);
+            if (hellboundClan == null || partyTemplate == null)
+                return false;
+
+            string partyId = $"second_quest_hellbound_{hideout.StringId}_{Guid.NewGuid():N}";
+            MobileParty bandits = BanditPartyComponent.CreateBanditParty(
+                partyId,
+                hellboundClan,
+                hideout,
+                isBossParty,
+                partyTemplate,
+                hideout.Settlement.Position);
+            if (bandits == null)
+                return false;
+
+            bandits.InitializeMobilePartyAtPosition(partyTemplate, hideout.Settlement.Position);
+            bandits.SetMoveGoToSettlement(hideout.Settlement, MobileParty.NavigationType.All, false);
+            bandits.RecalculateShortTermBehavior();
+            EnterSettlementAction.ApplyForParty(bandits, hideout.Settlement);
+            return true;
         }
 
         private bool isOwlOnPlayerParty => PartyBase.MainParty.MemberRoster.GetTroopRoster().Any(x => x.Character?.HeroObject == TheOwl);
@@ -116,31 +180,31 @@ namespace RealmsForgotten.Quest
                             if (findMapJournalLog?.CurrentProgress == 0)
                             {
                                 InformationManager.ShowInquiry(new InquiryData(GameTexts.FindText("rf_event").ToString(), GameTexts.FindText("rf_map_not_found_inquiry").ToString(), true, false, new TextObject("{=continue}Continue").ToString(), "", null, null), true);
-                                InitializeHideoutIfNeeded(hideout.Hideout, true);
+                                InitializeSecondQuestHideout(hideout.Hideout, true);
                                 return;
                             }
                             this.RemoveTrackedObject(hideout);
                             nextHideout = Settlement.Find("hideout_seaside_14").Hideout;
-                            InitializeHideoutIfNeeded(nextHideout);
+                            InitializeSecondQuestHideout(nextHideout);
                             this.AddTrackedObject(nextHideout.Settlement);
                             break;
                         case "hideout_seaside_14":
                             if (findMapJournalLog?.CurrentProgress == 1)
                             {
                                 InformationManager.ShowInquiry(new InquiryData(GameTexts.FindText("rf_event").ToString(), GameTexts.FindText("rf_map_not_found_inquiry").ToString(), true, false, new TextObject("{=continue}Continue").ToString(), "", null, null), true);
-                                InitializeHideoutIfNeeded(hideout.Hideout, true);
+                                InitializeSecondQuestHideout(hideout.Hideout, true);
                                 return;
                             }
                             this.RemoveTrackedObject(hideout);
                             nextHideout = Settlement.Find("hideout_seaside_11").Hideout;
-                            InitializeHideoutIfNeeded(nextHideout);
+                            InitializeSecondQuestHideout(nextHideout);
                             this.AddTrackedObject(nextHideout.Settlement);
                             break;
                         case "hideout_seaside_11":
                             if (findMapJournalLog?.CurrentProgress == 2)
                             {
                                 InformationManager.ShowInquiry(new InquiryData(GameTexts.FindText("rf_event").ToString(), GameTexts.FindText("rf_map_not_found_inquiry").ToString(), true, false, new TextObject("{=continue}Continue").ToString(), "", null, null), true);
-                                InitializeHideoutIfNeeded(hideout.Hideout, true);
+                                InitializeSecondQuestHideout(hideout.Hideout, true);
                                 return;
                             }
                             this.RemoveTrackedObject(hideout);
@@ -160,11 +224,14 @@ namespace RealmsForgotten.Quest
 
         protected override void InitializeQuestOnGameLoad()
         {
+            QuestLibrary.InitializeVariables();
             SetDialogs();
             QuestPatches.AvoidDisbanding = _isPlayerInOwlArmy;
             if (_isPlayerInOwlArmy)
-                CreateOwlArmy(MobileParty.All.Find(x => x.LeaderHero == TheOwl));
-            QuestLibrary.InitializeVariables();
+            {
+                Hero owl = TheOwl;
+                CreateOwlArmy(owl == null ? null : MobileParty.All.FirstOrDefault(x => x?.LeaderHero == owl));
+            }
         }
         private void LocationCharactersAreReadyToSpawn(Dictionary<string, int> unusedUsablePointCount)
         {
@@ -206,7 +273,7 @@ namespace RealmsForgotten.Quest
         {
             HasTalkedToOwl = true;
             Hideout hideout = Settlement.Find("hideout_seaside_13").Hideout;
-            InitializeHideoutIfNeeded(hideout);
+            InitializeSecondQuestHideout(hideout);
 
             findMapJournalLog = this.AddDiscreteLog(GameTexts.FindText("rf_second_quest_find_map_log"), GameTexts.FindText("rf_second_quest_first_part_log_task"), 0, 3);
             this.AddTrackedObject((ITrackableCampaignObject)hideout.Settlement);
@@ -229,37 +296,63 @@ namespace RealmsForgotten.Quest
 
         }
 
-        private void CreateOwlArmy(MobileParty owlParty)
+        private bool CreateOwlArmy(MobileParty owlParty)
         {
             Settlement settlement = Settlement.Find("town_EW3");
+            MobileParty mainParty = MobileParty.MainParty;
+            Hero owl = TheOwl;
+            Hero questGiver = QuestGiver;
+            Kingdom kingdom = questGiver?.Clan?.Kingdom;
 
-            if (owlParty == null)
+            if (settlement == null || mainParty == null || owl == null || questGiver?.HomeSettlement == null ||
+                questGiver.Culture?.DefaultPartyTemplate == null || kingdom == null)
+                return false;
+
+            if (owlParty == null || !owlParty.IsActive)
             {
-                owlParty = LordPartyComponent.CreateLordParty("the_owl_party", TheOwl, CampaignVec2.Zero, 0f,
-                    QuestGiver.HomeSettlement, TheOwl);
-                owlParty.InitializeMobilePartyAtPosition(QuestGiver.Culture.DefaultPartyTemplate, new(MobileParty.MainParty.GetPosition2D, !MobileParty.MainParty.IsCurrentlyAtSea));
+                owlParty = LordPartyComponent.CreateLordParty("the_owl_party", owl, CampaignVec2.Zero, 0f,
+                    questGiver.HomeSettlement, owl);
+                if (owlParty == null)
+                    return false;
+
+                owlParty.InitializeMobilePartyAtPosition(questGiver.Culture.DefaultPartyTemplate, new(mainParty.GetPosition2D, !mainParty.IsCurrentlyAtSea));
             }
 
-            owlParty.Army = new Army(QuestGiver.Clan.Kingdom, owlParty, Army.ArmyTypes.Patrolling);
+            Army owlArmy = owlParty.Army;
+            bool createdArmy = owlArmy == null || owlArmy.LeaderParty != owlParty;
+            if (createdArmy)
+            {
+                owlArmy = new Army(kingdom, owlParty, Army.ArmyTypes.Patrolling);
+                owlParty.Army = owlArmy;
+            }
 
-            MobileParty.MainParty.Army = owlParty.Army;
+            mainParty.Army = owlArmy;
 
-            MobileParty.MainParty.Army.AddPartyToMergedParties(MobileParty.MainParty);
+            if (!owlArmy.DoesLeaderPartyAndAttachedPartiesContain(mainParty))
+                owlArmy.AddPartyToMergedParties(mainParty);
 
-            MobileParty.MainParty.Army.AiBehaviorObject = settlement;
-            MobileParty.MainParty.Army.LeaderParty.SetMoveGoToSettlement(settlement, MobileParty.NavigationType.All, false);
+            MobileParty leaderParty = owlArmy.LeaderParty;
+            if (leaderParty == null)
+                return false;
 
-            MobileParty.MainParty.Army.LeaderParty.Ai.SetDoNotMakeNewDecisions(true);
+            owlArmy.AiBehaviorObject = settlement;
+            leaderParty.SetMoveGoToSettlement(settlement, MobileParty.NavigationType.All, false);
 
-            MobileParty.MainParty.Army.LeaderParty.IgnoreByOtherPartiesTill(CampaignTime.Never);
-            MobileParty.MainParty.IgnoreByOtherPartiesTill(CampaignTime.Never);
+            leaderParty.Ai?.SetDoNotMakeNewDecisions(true);
 
-            MobileParty.MainParty.Army.LeaderParty.SpeedExplained.AddFactor(1.0f);
-            MobileParty.MainParty.Army.Cohesion = 100f;
-            MobileParty.MainParty.Army.DailyCohesionChangeExplanation.Add(100f);
+            leaderParty.IgnoreByOtherPartiesTill(CampaignTime.Now);
+            mainParty.IgnoreByOtherPartiesTill(CampaignTime.Now);
+
+            if (createdArmy)
+            {
+                leaderParty.SpeedExplained.AddFactor(1.0f);
+                owlArmy.DailyCohesionChangeExplanation.Add(100f);
+            }
+            owlArmy.Cohesion = 100f;
 
             QuestPatches.AvoidDisbanding = true;
             _isPlayerInOwlArmy = true;
+            return true;
         }
         private void GoToAnoritLord()
         {
@@ -341,6 +434,34 @@ namespace RealmsForgotten.Quest
 
         protected override void HourlyTick()
         {
+            if (_isPlayerInOwlArmy)
+            {
+                Hero owl = TheOwl;
+                MobileParty owlParty = owl == null ? null : MobileParty.All.FirstOrDefault(x => x?.LeaderHero == owl);
+                Army owlArmy = MobileParty.MainParty?.Army;
+
+                if (owlParty == null || owlArmy?.LeaderParty != owlParty)
+                {
+                    CreateOwlArmy(owlParty);
+                }
+                else
+                {
+                    Settlement destination = Settlement.Find("town_EW3");
+                    if (destination != null && owlParty.CurrentSettlement == destination)
+                    {
+                        OnSettlementEntered(owlParty, destination, owl);
+                    }
+                    else if (destination != null && owlParty.MapEvent == null &&
+                             owlParty.TargetSettlement?.StringId != destination.StringId)
+                    {
+                        owlArmy.AiBehaviorObject = destination;
+                        owlParty.Ai?.SetDoNotMakeNewDecisions(false);
+                        owlParty.SetMoveGoToSettlement(destination, MobileParty.NavigationType.All, false);
+                        owlParty.Ai?.SetDoNotMakeNewDecisions(true);
+                    }
+                }
+            }
+
             if (findMapJournalLog?.CurrentProgress == 3 && !hasTalkedToOwl2 && lastHideoutTime != CampaignTime.Never && lastHideoutTime.ElapsedHoursUntilNow >= 2 && !PlayerEncounter.InsideSettlement)
             {
                 MobileParty mobileParty = null;

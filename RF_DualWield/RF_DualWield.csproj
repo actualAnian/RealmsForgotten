@@ -1,0 +1,96 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>10.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+    <AssemblyName>RF_DualWield</AssemblyName>
+    <RootNamespace>RF_DualWield</RootNamespace>
+    <GameFolder>$(BANNERLORD_GAME_DIR)</GameFolder>
+    <ModuleRoot>$(GameFolder)\Modules\RF_DualWield</ModuleRoot>
+    <ModuleBin>$(ModuleRoot)\bin\Win64_Shipping_Client</ModuleBin>
+    <LocalModuleBin>_Module\bin\Win64_Shipping_Client</LocalModuleBin>
+  </PropertyGroup>
+
+  <!-- Fontes antigos (escritos por GPT) ficam arquivados fora do build. -->
+  <ItemGroup>
+    <Compile Remove="_old_gpt_backup\**\*.cs" />
+    <None Include="_old_gpt_backup\**\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="TaleWorlds.Core">
+      <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.Core.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="TaleWorlds.Library">
+      <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.Library.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <!-- Necessario so porque as sobrecargas de TaleWorlds.Library.Debug tocam DotNetObject. -->
+    <Reference Include="TaleWorlds.DotNet">
+      <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.DotNet.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="TaleWorlds.MountAndBlade">
+      <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>$(GameFolder)\Modules\Bannerlord.Harmony\bin\Win64_Shipping_Client\0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <RFModuleAsset Include="_Module\SubModule.xml">
+      <ModuleRelativePath>SubModule.xml</ModuleRelativePath>
+    </RFModuleAsset>
+    <RFModuleAsset Include="_Module\Assets\*.tpac">
+      <ModuleRelativePath>Assets\%(Filename)%(Extension)</ModuleRelativePath>
+    </RFModuleAsset>
+    <!--
+      RuntimeDataCache NAO e cache descartavel: os *_anm.tpac de Assets tem ~500 bytes (so
+      metadata + o GUID do clipe) e o payload de animacao mora no .rdc de mesmo GUID. Sem os .rdc
+      nenhum clipe existe e MBActionSet.CheckActionAnimationClipExists devolve false para todas as
+      actions do dual wield - foi metade da causa do 2o teste falho. A outra metade era
+      AssetSources (abaixo), que e o que faz o engine olhar para Assets/ afinal. NAO remover.
+    -->
+    <RFModuleAsset Include="_Module\RuntimeDataCache\*.rdc">
+      <ModuleRelativePath>RuntimeDataCache\%(Filename)%(Extension)</ModuleRelativePath>
+    </RFModuleAsset>
+    <RFModuleAsset Include="_Module\ModuleData\*.*">
+      <ModuleRelativePath>ModuleData\%(Filename)%(Extension)</ModuleRelativePath>
+    </RFModuleAsset>
+    <!--
+      AssetSources e o MARCADOR que faz o engine carregar os assets soltos de Assets/.
+      Evidencia (rgl_log_43480, 2026-08-10): todo modulo cujo "Loading packages .../<X>/Assets"
+      aparece no log (RF_Map, RealmsForgotten, RF_Core_III, RF_Magic, UniqueCombat, RFMonsters)
+      tem AssetSources; RF_DualWield era o UNICO com Assets/ sem AssetSources e o engine caiu
+      para a rota AssetPackages (vazia) — nenhum clipe carregado. Os .fbx sao as fontes das
+      animacoes dual do UniqueCombat original. NAO remover.
+    -->
+    <RFModuleAsset Include="_Module\AssetSources\*.fbx">
+      <ModuleRelativePath>AssetSources\%(Filename)%(Extension)</ModuleRelativePath>
+    </RFModuleAsset>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="Build">
+    <MakeDir Directories="$(LocalModuleBin)" />
+    <!--
+      NAO criar AssetPackages aqui. A rodada 3 criava uma AssetPackages vazia como "seguro" por
+      achar que ela ou o RuntimeDataCache era o gatilho do carregamento de Assets/. Era palpite
+      errado: o marcador e AssetSources (ver o comentario do RFModuleAsset acima), e uma
+      AssetPackages presente e justamente a rota errada em que o modulo caia. A forma final do
+      modulo e a mesma dos modulos que comprovadamente carregam Assets/ soltos - UniqueCombat e
+      RFMonsters: Assets + AssetSources + RuntimeDataCache e NENHUMA AssetPackages.
+    -->
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(LocalModuleBin)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(LocalModuleBin)" SkipUnchangedFiles="true" Condition="Exists('$(TargetDir)$(TargetName).pdb')" />
+    <MakeDir Directories="$(ModuleBin)" Condition="'$(GameFolder)' != '' and '$(DisableModuleCopy)' != 'true'" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModuleBin)" SkipUnchangedFiles="true" Condition="'$(GameFolder)' != '' and '$(DisableModuleCopy)' != 'true'" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(ModuleBin)" SkipUnchangedFiles="true" Condition="'$(GameFolder)' != '' and '$(DisableModuleCopy)' != 'true' and Exists('$(TargetDir)$(TargetName).pdb')" />
+    <Copy SourceFiles="@(RFModuleAsset)" DestinationFiles="@(RFModuleAsset->'$(ModuleRoot)\%(ModuleRelativePath)')" SkipUnchangedFiles="true" Condition="'$(GameFolder)' != '' and '$(DisableModuleCopy)' != 'true'" />
+  </Target>
+</Project>

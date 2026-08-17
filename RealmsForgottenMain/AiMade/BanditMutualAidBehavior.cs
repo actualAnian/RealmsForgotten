@@ -78,7 +78,7 @@ namespace RealmsForgotten.AiMade
             foreach (string id in _ralliedPartyIds.ToList())
             {
                 MobileParty party = MobileParty.All.FirstOrDefault(p => p?.StringId == id);
-                if (party != null && party.Ai.IsDisabled)
+                if (party != null && !IsSelfDrivenParty(party) && party.Ai.IsDisabled)
                 {
                     party.Ai.EnableAi();
                 }
@@ -122,7 +122,8 @@ namespace RealmsForgotten.AiMade
                 bool inBattle = (!aGone && a.MapEvent != null) || (!bGone && b.MapEvent != null);
                 bool expired = rally.Expires.IsPast;
 
-                if (aGone || bGone || inBattle || expired)
+                if (aGone || bGone || inBattle || expired
+                    || IsSelfDrivenParty(a) || IsSelfDrivenParty(b))
                 {
                     ReleaseRally(i);
                     continue;
@@ -171,7 +172,7 @@ namespace RealmsForgotten.AiMade
             {
                 return;
             }
-            if (party.IsActive && party.Ai.IsDisabled)
+            if (!IsSelfDrivenParty(party) && party.IsActive && party.Ai.IsDisabled)
             {
                 party.Ai.EnableAi();
             }
@@ -203,6 +204,7 @@ namespace RealmsForgotten.AiMade
                     && party.MapEvent == null && party.CurrentSettlement == null
                     && !party.IsBanditBossParty && party.Army == null
                     && party.MemberRoster.TotalHealthyCount > 0
+                    && !IsSelfDrivenParty(party)
                     && !IsInRally(party))
                 {
                     bandits.Add(party);
@@ -358,6 +360,30 @@ namespace RealmsForgotten.AiMade
             }
 
             return best;
+        }
+
+        /// <summary>
+        /// Parties such as resource zones and settler camps are controlled by
+        /// their own campaign behavior. Some resource zones belong to a bandit
+        /// clan, but they must never be treated as mobile bandit warbands.
+        /// The marker is checked by name to keep RealmsForgotten independent
+        /// from the optional RF_Settlers/RF_ResourceZones assemblies.
+        /// </summary>
+        private static bool IsSelfDrivenParty(MobileParty party)
+        {
+            Type componentType = party?.PartyComponent?.GetType();
+            if (componentType == null)
+            {
+                return false;
+            }
+
+            if (componentType.FullName == "RF_ResourceZones.ResourceZonePartyComponent")
+            {
+                return true;
+            }
+
+            return componentType.GetInterfaces().Any(interfaceType =>
+                interfaceType.FullName == "RF_Settlers.IRFSelfDrivenParty");
         }
 
         private static void MergeBands(MobileParty first, MobileParty second)

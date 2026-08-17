@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Items>
+	<!-- Rune artwork is tiered: the new set is Lesser, the original elemental set is Greater, and Ancient remains a placeholder. -->
+	<Item id="rf_rune_sundering_lesser" name="Lesser Sundering Rune" mesh="rune_sundering" item_category="jewelry" is_merchandise="true" value="350" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_sundering_greater" name="Greater Sundering Rune" mesh="rune_sundering" item_category="jewelry" is_merchandise="true" value="900" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_sundering_ancient" name="Ancient Sundering Rune" mesh="rune_sundering" item_category="jewelry" is_merchandise="true" value="2500" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_impact_lesser" name="Lesser Impact Rune" mesh="rune_impact" item_category="jewelry" is_merchandise="true" value="350" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_impact_greater" name="Greater Impact Rune" mesh="iceberg_rune" item_category="jewelry" is_merchandise="true" value="900" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_impact_ancient" name="Ancient Impact Rune" mesh="iceberg_rune" item_category="jewelry" is_merchandise="true" value="2500" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_keen_edge_lesser" name="Lesser Rune of the Keen Edge" mesh="rune_keen_edge" item_category="jewelry" is_merchandise="true" value="350" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_keen_edge_greater" name="Greater Rune of the Keen Edge" mesh="rune_keen_edge" item_category="jewelry" is_merchandise="true" value="900" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_keen_edge_ancient" name="Ancient Rune of the Keen Edge" mesh="rune_keen_edge" item_category="jewelry" is_merchandise="true" value="2500" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_piercing_lesser" name="Lesser Piercing Rune" mesh="rune_forge" item_category="jewelry" is_merchandise="true" value="350" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_piercing_greater" name="Greater Piercing Rune" mesh="karthradium_rune" item_category="jewelry" is_merchandise="true" value="900" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_piercing_ancient" name="Ancient Piercing Rune" mesh="karthradium_rune" item_category="jewelry" is_merchandise="true" value="2500" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_executioner_lesser" name="Lesser Executioner's Rune" mesh="dark_rune" item_category="jewelry" is_merchandise="true" value="350" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_executioner_greater" name="Greater Executioner's Rune" mesh="dark_rune" item_category="jewelry" is_merchandise="true" value="900" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_executioner_ancient" name="Ancient Executioner's Rune" mesh="dark_rune" item_category="jewelry" is_merchandise="true" value="2500" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_vampiric_lesser" name="Lesser Vampiric Rune" mesh="necromancer_rune" item_category="jewelry" is_merchandise="true" value="350" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_vampiric_greater" name="Greater Vampiric Rune" mesh="necromancer_rune" item_category="jewelry" is_merchandise="true" value="900" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_vampiric_ancient" name="Ancient Vampiric Rune" mesh="necromancer_rune" item_category="jewelry" is_merchandise="true" value="2500" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_precision_lesser" name="Lesser Precision Rune" mesh="rune_far_sight" item_category="jewelry" is_merchandise="true" value="350" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_precision_greater" name="Greater Precision Rune" mesh="rune_far_sight" item_category="jewelry" is_merchandise="true" value="900" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_precision_ancient" name="Ancient Precision Rune" mesh="rune_far_sight" item_category="jewelry" is_merchandise="true" value="2500" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_wind_lesser" name="Lesser Rune of the Wind" mesh="rune_storm" item_category="jewelry" is_merchandise="true" value="350" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_wind_greater" name="Greater Rune of the Wind" mesh="rune_storm" item_category="jewelry" is_merchandise="true" value="900" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_wind_ancient" name="Ancient Rune of the Wind" mesh="rune_storm" item_category="jewelry" is_merchandise="true" value="2500" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_windlass_lesser" name="Lesser Rune of the Windlass" mesh="rune_windlass" item_category="jewelry" is_merchandise="true" value="350" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_windlass_greater" name="Greater Rune of the Windlass" mesh="rune_windlass" item_category="jewelry" is_merchandise="true" value="900" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_windlass_ancient" name="Ancient Rune of the Windlass" mesh="rune_windlass" item_category="jewelry" is_merchandise="true" value="2500" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_far_sight_lesser" name="Lesser Rune of Far Sight" mesh="rune_far_sight" item_category="jewelry" is_merchandise="true" value="350" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_far_sight_greater" name="Greater Rune of Far Sight" mesh="rune_far_sight" item_category="jewelry" is_merchandise="true" value="900" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_far_sight_ancient" name="Ancient Rune of Far Sight" mesh="rune_far_sight" item_category="jewelry" is_merchandise="true" value="2500" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_huntsman_lesser" name="Lesser Huntsman's Rune" mesh="rune_huntsman" item_category="jewelry" is_merchandise="true" value="350" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_huntsman_greater" name="Greater Huntsman's Rune" mesh="rune_huntsman" item_category="jewelry" is_merchandise="true" value="900" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_huntsman_ancient" name="Ancient Huntsman's Rune" mesh="rune_huntsman" item_category="jewelry" is_merchandise="true" value="2500" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_returning_lesser" name="Lesser Returning Rune" mesh="rune_returning" item_category="jewelry" is_merchandise="true" value="350" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_returning_greater" name="Greater Returning Rune" mesh="rune_returning" item_category="jewelry" is_merchandise="true" value="900" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_returning_ancient" name="Ancient Returning Rune" mesh="rune_returning" item_category="jewelry" is_merchandise="true" value="2500" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_flame_lesser" name="Lesser Flame Rune" mesh="fire_rune" item_category="jewelry" is_merchandise="true" value="350" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_flame_greater" name="Greater Flame Rune" mesh="fire_rune" item_category="jewelry" is_merchandise="true" value="900" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_flame_ancient" name="Ancient Flame Rune" mesh="fire_rune" item_category="jewelry" is_merchandise="true" value="2500" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_frost_lesser" name="Lesser Frost Rune" mesh="ice_rune" item_category="jewelry" is_merchandise="true" value="350" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_frost_greater" name="Greater Frost Rune" mesh="ice_rune" item_category="jewelry" is_merchandise="true" value="900" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_frost_ancient" name="Ancient Frost Rune" mesh="ice_rune" item_category="jewelry" is_merchandise="true" value="2500" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_storm_lesser" name="Lesser Storm Rune" mesh="rune_storm" item_category="jewelry" is_merchandise="true" value="350" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_storm_greater" name="Greater Storm Rune" mesh="rune_storm" item_category="jewelry" is_merchandise="true" value="900" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_storm_ancient" name="Ancient Storm Rune" mesh="rune_storm" item_category="jewelry" is_merchandise="true" value="2500" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_explosive_lesser" name="Lesser Explosive Rune" mesh="rune_explosive" item_category="jewelry" is_merchandise="true" value="350" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_explosive_greater" name="Greater Explosive Rune" mesh="rune_explosive" item_category="jewelry" is_merchandise="true" value="900" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_explosive_ancient" name="Ancient Explosive Rune" mesh="rune_explosive" item_category="jewelry" is_merchandise="true" value="2500" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_bulwark_lesser" name="Lesser Rune of the Bulwark" mesh="earth_rune" item_category="jewelry" is_merchandise="true" value="350" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_bulwark_greater" name="Greater Rune of the Bulwark" mesh="earth_rune" item_category="jewelry" is_merchandise="true" value="900" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_bulwark_ancient" name="Ancient Rune of the Bulwark" mesh="earth_rune" item_category="jewelry" is_merchandise="true" value="2500" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_reprisal_lesser" name="Lesser Reprisal Rune" mesh="rune_reprisal" item_category="jewelry" is_merchandise="true" value="350" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_reprisal_greater" name="Greater Reprisal Rune" mesh="rune_reprisal" item_category="jewelry" is_merchandise="true" value="900" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_reprisal_ancient" name="Ancient Reprisal Rune" mesh="rune_reprisal" item_category="jewelry" is_merchandise="true" value="2500" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_mirror_lesser" name="Lesser Mirror Rune" mesh="rune_mirror" item_category="jewelry" is_merchandise="true" value="350" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_mirror_greater" name="Greater Mirror Rune" mesh="rune_mirror" item_category="jewelry" is_merchandise="true" value="900" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_mirror_ancient" name="Ancient Mirror Rune" mesh="rune_mirror" item_category="jewelry" is_merchandise="true" value="2500" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_lightness_lesser" name="Lesser Lightness Rune" mesh="rune_lightness" item_category="jewelry" is_merchandise="true" value="350" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_lightness_greater" name="Greater Lightness Rune" mesh="rune_lightness" item_category="jewelry" is_merchandise="true" value="900" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_lightness_ancient" name="Ancient Lightness Rune" mesh="rune_lightness" item_category="jewelry" is_merchandise="true" value="2500" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_arcane_lesser" name="Lesser Arcane Rune" mesh="cosmic_rune" item_category="jewelry" is_merchandise="true" value="350" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_arcane_greater" name="Greater Arcane Rune" mesh="cosmic_rune" item_category="jewelry" is_merchandise="true" value="900" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_arcane_ancient" name="Ancient Arcane Rune" mesh="cosmic_rune" item_category="jewelry" is_merchandise="true" value="2500" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_focus_lesser" name="Lesser Focus Rune" mesh="rune_focus" item_category="jewelry" is_merchandise="true" value="350" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_focus_greater" name="Greater Focus Rune" mesh="rune_focus" item_category="jewelry" is_merchandise="true" value="900" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_focus_ancient" name="Ancient Focus Rune" mesh="rune_focus" item_category="jewelry" is_merchandise="true" value="2500" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_reservoir_lesser" name="Lesser Reservoir Rune" mesh="life_rune" item_category="jewelry" is_merchandise="true" value="350" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_reservoir_greater" name="Greater Reservoir Rune" mesh="life_rune" item_category="jewelry" is_merchandise="true" value="900" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_reservoir_ancient" name="Ancient Reservoir Rune" mesh="life_rune" item_category="jewelry" is_merchandise="true" value="2500" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_echo_lesser" name="Lesser Echo Rune" mesh="rune_metamorfosis" item_category="jewelry" is_merchandise="true" value="350" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_echo_greater" name="Greater Echo Rune" mesh="rune_metamorfosis" item_category="jewelry" is_merchandise="true" value="900" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+	<Item id="rf_rune_echo_ancient" name="Ancient Echo Rune" mesh="rune_metamorfosis" item_category="jewelry" is_merchandise="true" value="2500" weight="0.1" Type="Goods"><Flags Civilian="true" /></Item>
+</Items>

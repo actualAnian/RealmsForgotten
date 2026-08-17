@@ -789,13 +789,14 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
         RefreshKingdomState(kingdom);
         state = GetKingdomState(kingdom);
 
-        TextObject text = new TextObject("{=rf_ko_wartable_report}{TITLE}\n\n{BRIEFING}\n\nCampaign posture: {POSTURE}\nCourt pressure: {PRESSURE}\nYour standing: {SUPPORT}\nImmediate need: {NEED}");
+        TextObject text = new TextObject("{=rf_ko_wartable_report}{TITLE}\n\n{BRIEFING}\n\nCampaign posture: {POSTURE}\nCourt pressure: {PRESSURE}\nYour standing: {SUPPORT}\nImmediate need: {NEED}\n\nStrategic war state:\n{WARSTATE}");
         text.SetTextVariable("TITLE", KingdomObjectiveService.GetTitle(state.ObjectiveType));
         text.SetTextVariable("BRIEFING", GetKingdomObjectiveBriefing(kingdom));
         text.SetTextVariable("POSTURE", BuildObjectivePostureText(state));
         text.SetTextVariable("PRESSURE", BuildObjectivePressureText(kingdom, state));
         text.SetTextVariable("SUPPORT", BuildObjectiveSupportText(state));
         text.SetTextVariable("NEED", BuildObjectiveNeedText(kingdom, state));
+        text.SetTextVariable("WARSTATE", new TextObject(RFWarExternalIntentApi.BuildKingdomWarSituationReport(kingdom)));
         return text;
     }
 
@@ -1226,6 +1227,7 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
     private void OnSessionLaunched(CampaignGameStarter starter)
     {
         EnsureInitialized();
+        RFWarExternalIntentApi.SetWarProposalPolicyProvider(EvaluateGrandDesignWarProposalPolicy);
         AddWarTableMenus(starter);
     }
 
@@ -4302,6 +4304,136 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
             pressForWar);
     }
 
+    /// <summary>Martial Glory remains aggressive, but it conquers in a coherent
+    /// direction. The ordinary war planner receives this policy too, so it cannot
+    /// bypass the grand design's target order by proposing a distant war.</summary>
+    private float? EvaluateGrandDesignWarProposalPolicy(Kingdom attacker, Kingdom defender)
+    {
+        if (attacker == null
+            || defender == null
+            || attacker == defender
+            || attacker.RulingClan == Clan.PlayerClan
+            || KingdomObjectiveService.ResolveObjective(attacker) != KingdomObjectiveType.MartialGlory)
+        {
+            return null;
+        }
+
+        if (!IsAvailableMartialGloryTarget(attacker, defender))
+        {
+            return -1f;
+        }
+
+        _kingdomStates.TryGetValue(attacker, out KingdomIntrigueState state);
+        if (state != null && CampaignTime.Now < state.ObjectiveWarQuietUntil)
+        {
+            return -1f;
+        }
+
+        if (!HasMartialGloryWarCapacity(attacker, defender, state))
+        {
+            return -1f;
+        }
+
+        List<Kingdom> availableTargets = Kingdom.All
+            .Where(candidate => IsAvailableMartialGloryTarget(attacker, candidate))
+            .ToList();
+        bool hasBorderingTarget = availableTargets.Any(candidate => SharesCurrentFrontier(attacker, candidate));
+        bool sharesFrontier = SharesCurrentFrontier(attacker, defender);
+
+        // A living neighbour must be dealt with before the objective reaches
+        // across the map. As territory changes, the next frontier changes too.
+        if (hasBorderingTarget && !sharesFrontier)
+        {
+            return -1f;
+        }
+
+        if (!hasBorderingTarget)
+        {
+            float candidateDistance = GetBorderDistance(attacker, defender);
+            float nearestDistance = availableTargets
+                .Select(candidate => GetBorderDistance(attacker, candidate))
+                .DefaultIfEmpty(float.MaxValue)
+                .Min();
+            float allowedReach = nearestDistance + Math.Max(25f, nearestDistance * 0.12f);
+            if (candidateDistance > allowedReach)
+            {
+                return -1f;
+            }
+        }
+
+        return GetMartialGloryTargetPriority(attacker, defender, sharesFrontier);
+    }
+
+    private static bool IsAvailableMartialGloryTarget(Kingdom attacker, Kingdom candidate)
+    {
+        if (attacker == null
+            || candidate == null
+            || candidate == attacker
+            || candidate.IsEliminated
+            || attacker.IsAtWarWith(candidate)
+            || !candidate.Fiefs.Any())
+        {
+            return false;
+        }
+
+        StanceLink stance = candidate.GetStanceWith(attacker);
+        return stance == null || stance.PeaceDeclarationDate.ElapsedDaysUntilNow > 20f;
+    }
+
+    private static bool HasMartialGloryWarCapacity(
+        Kingdom attacker,
+        Kingdom candidate,
+        KingdomIntrigueState state)
+    {
+        List<Kingdom> activeEnemies = attacker.FactionsAtWarWith.OfType<Kingdom>().ToList();
+        if (activeEnemies.Count == 0)
+        {
+            return true;
+        }
+
+        // Normally Glory fights one war. A second front is possible only for a
+        // genuinely dominant, rested and funded realm; a third is never opened.
+        if (activeEnemies.Count >= 2
+            || state == null
+            || state.WarExhaustion > 25f
+            || (attacker.RulingClan?.Gold ?? 0) < 75000
+            || attacker.Fiefs.Any(fief => fief?.Settlement?.IsUnderSiege == true))
+        {
+            return false;
+        }
+
+        float prospectiveEnemyStrength = activeEnemies.Sum(enemy => Math.Max(1f, enemy.CurrentTotalStrength))
+            + Math.Max(1f, candidate.CurrentTotalStrength);
+        return attacker.CurrentTotalStrength >= prospectiveEnemyStrength * 1.65f;
+    }
+
+    private static bool SharesCurrentFrontier(Kingdom left, Kingdom right)
+    {
+        if (RFWarExternalIntentApi.HasPoliticalBorderData)
+        {
+            return RFWarExternalIntentApi.GetPoliticalAdjacency(left, right) > 0f;
+        }
+
+        return GetBorderDistanceSquared(left, right) <= 19600f;
+    }
+
+    private static float GetMartialGloryTargetPriority(Kingdom attacker, Kingdom defender, bool sharesFrontier)
+    {
+        float adjacency = sharesFrontier
+            ? Math.Max(0.35f, RFWarExternalIntentApi.GetPoliticalAdjacency(attacker, defender))
+            : 0f;
+        float strengthOpportunity = MBMath.ClampFloat(
+            attacker.CurrentTotalStrength / Math.Max(1f, defender.CurrentTotalStrength),
+            0f,
+            3f) / 3f;
+        float distance = GetBorderDistance(attacker, defender);
+        float proximity = 1f - MBMath.ClampFloat(distance / 500f, 0f, 1f);
+        return MBMath.ClampFloat(
+            0.15f + (adjacency * 0.55f) + (strengthOpportunity * 0.2f) + (proximity * 0.1f),
+            0f,
+            1f);
+    }
+
     /// <summary>The one realm the design is pointed at right now. A design already
     /// at war with one of its targets stays pointed at that war — that is the case
     /// where the bridge earns its keep, aiming the armies at the right ground
@@ -4316,17 +4448,31 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
             return activeWarTarget;
         }
 
+        List<Kingdom> candidates = Kingdom.All
+            .Where(candidate => IsObjectiveTargetKingdom(kingdom, objectiveType, candidate)
+                && !kingdom.IsAtWarWith(candidate)
+                && candidate.Fiefs.Any())
+            .ToList();
+        if (objectiveType == KingdomObjectiveType.MartialGlory
+            && candidates.Any(candidate => SharesCurrentFrontier(kingdom, candidate)))
+        {
+            candidates = candidates
+                .Where(candidate => SharesCurrentFrontier(kingdom, candidate))
+                .ToList();
+        }
+        else if (objectiveType == KingdomObjectiveType.MartialGlory && candidates.Count > 0)
+        {
+            float nearestDistance = candidates.Min(candidate => GetBorderDistance(kingdom, candidate));
+            float allowedReach = nearestDistance + Math.Max(25f, nearestDistance * 0.12f);
+            candidates = candidates
+                .Where(candidate => GetBorderDistance(kingdom, candidate) <= allowedReach)
+                .ToList();
+        }
+
         Kingdom best = null;
         float bestScore = float.MinValue;
-        foreach (Kingdom candidate in Kingdom.All)
+        foreach (Kingdom candidate in candidates)
         {
-            if (!IsObjectiveTargetKingdom(kingdom, objectiveType, candidate)
-                || kingdom.IsAtWarWith(candidate)
-                || !candidate.Fiefs.Any())
-            {
-                continue;
-            }
-
             float score = GetGrandDesignTargetScore(kingdom, candidate);
             if (score > bestScore)
             {
@@ -4346,6 +4492,12 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
         float weakness = kingdom.CurrentTotalStrength / Math.Max(1f, candidate.CurrentTotalStrength);
         float score = MBMath.ClampFloat(weakness, 0f, 3f);
 
+        if (SharesCurrentFrontier(kingdom, candidate))
+        {
+            float adjacency = Math.Max(0.35f, RFWarExternalIntentApi.GetPoliticalAdjacency(kingdom, candidate));
+            score += 3f + (adjacency * 1.5f);
+        }
+
         float borderDistanceSquared = GetBorderDistanceSquared(kingdom, candidate);
         if (borderDistanceSquared < float.MaxValue)
         {
@@ -4354,6 +4506,14 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
         }
 
         return score;
+    }
+
+    private static float GetBorderDistance(Kingdom left, Kingdom right)
+    {
+        float distanceSquared = GetBorderDistanceSquared(left, right);
+        return distanceSquared < float.MaxValue
+            ? (float)Math.Sqrt(distanceSquared)
+            : float.MaxValue;
     }
 
     /// <summary>Distance between the two realms' nearest holdings — how far the
@@ -4983,18 +5143,22 @@ public sealed class StrategicIntrigueCampaignBehavior : CampaignBehaviorBase
 
     private float GetWarExhaustionFactor(Kingdom kingdom)
     {
-        float pressure = kingdom.FactionsAtWarWith.Count(x => x.IsKingdomFaction) * 8f;
+        float pressure = kingdom.FactionsAtWarWith.Count(x => x.IsKingdomFaction) * 6f;
         foreach (Kingdom enemy in kingdom.FactionsAtWarWith.OfType<Kingdom>())
         {
             float progress = global::TaleWorlds.CampaignSystem.Campaign.Current.Models.DiplomacyModel.GetWarProgressScore(kingdom, enemy).ResultNumber;
+            float vanillaPressure = 0f;
             if (progress < 0f)
             {
-                pressure += MBMath.ClampFloat(-progress / 3f, 0f, 14f);
+                vanillaPressure = MBMath.ClampFloat(-progress / 3f, 0f, 14f);
             }
             else
             {
-                pressure -= MBMath.ClampFloat(progress / 6f, 0f, 5f);
+                vanillaPressure = -MBMath.ClampFloat(progress / 6f, 0f, 5f);
             }
+
+            float strategicPressure = RFWarExternalIntentApi.GetWarExhaustion(kingdom, enemy) * 30f;
+            pressure += Math.Max(vanillaPressure, strategicPressure);
         }
 
         return MBMath.ClampFloat(pressure, 0f, 100f);

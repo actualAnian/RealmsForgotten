@@ -423,6 +423,10 @@ public class HomesteadBehavior : CampaignBehaviorBase
 		});
 		CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, delegate
 		{
+			HomesteadForgeContext.RemoveInvalidCraftingOrders();
+		});
+		CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, delegate
+		{
 			RebuildPatrolPartyRegistry("session launch");
 		});
 		CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, delegate
@@ -7250,7 +7254,7 @@ public class HomesteadBehavior : CampaignBehaviorBase
 					LeftPrisonerRoster = leftPrisonerRoster,
 					RightMemberRoster = MobileParty.MainParty.MemberRoster,
 					RightPrisonerRoster = MobileParty.MainParty.PrisonRoster,
-					LeftLeaderHero = homestead.MobileParty.LeaderHero,
+					LeftLeaderHero = null,
 					RightLeaderHero = Hero.MainHero,
 					LeftPartyName = homestead.Name,
 					RightPartyName = MobileParty.MainParty.Name,

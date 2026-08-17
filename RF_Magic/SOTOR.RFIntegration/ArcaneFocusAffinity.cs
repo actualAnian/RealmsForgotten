@@ -1,4 +1,5 @@
 using System;
+using SOTOR.Extensions;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.MountAndBlade;
 
@@ -150,6 +151,13 @@ public static class ArcaneFocusAffinity
 	/// </summary>
 	public static int ApplyToCooldown(int baseCooldown, Agent agent, string loreId)
 	{
-		return Scale(baseCooldown, GetMultiplier(agent, loreId));
+		int focusAdjusted = Scale(baseCooldown, GetMultiplier(agent, loreId));
+		int result = SOTOR.MagicAccessories.MagicAccessoryService.ApplyCooldown(agent?.GetHero(), focusAdjusted);
+		if (agent?.GetHero() == null && SOTOR.MagicAccessories.MagicRuneService.HasEffect(agent,
+			SOTOR.MagicAccessories.MagicRuneEffect.Focus, out SOTOR.MagicAccessories.MagicRuneData focus))
+		{
+			result = Math.Max(1, (int)Math.Round(result * (1f - focus.SecondaryValue / 100f)));
+		}
+		return result;
 	}
 }

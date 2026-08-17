@@ -33,6 +33,9 @@ public class SubModule : MBSubModuleBase
 		// [RF-B] registro dos focos arcanos (rf_arcane_foci.xml). Se o XML faltar o
 		// registro fica vazio e o gate se desliga sozinho — fail-open deliberado.
 		SOTOR.RFIntegration.ArcaneFocusRegistry.Load();
+		SOTOR.MagicAccessories.MagicAccessoryRegistry.Load();
+		SOTOR.MagicAccessories.MagicRuneRegistry.Load();
+		SOTOR.MagicAccessories.MagicRuneLoadoutRegistry.Load();
 		// [RF-B] escolas por cultura + piso de Arcane por escola. Ambos fail-open:
 		// XML ausente devolve o comportamento do SOTOR puro.
 		SOTOR.RFIntegration.RFCultureLores.Load();
@@ -156,6 +159,7 @@ public class SubModule : MBSubModuleBase
 		mission.AddMissionBehavior(new AbilityManagerMissionLogic());
 		mission.AddMissionBehavior((MissionBehavior)(object)new AbilityHUDMissionView());
 		mission.AddMissionBehavior(new StatusEffectMissionLogic());
+		mission.AddMissionBehavior(new TransformationMissionLogic());
 		mission.AddMissionBehavior(new SotorUndeadMoraleMissionLogic());
 		mission.AddMissionBehavior(new SotorThrownJavelinMissionLogic());
 		mission.AddMissionBehavior(new SotorMindControlMissionLogic());
@@ -163,5 +167,6 @@ public class SubModule : MBSubModuleBase
 		mission.AddMissionBehavior(new SotorBurningDeckMissionLogic());
 		mission.AddMissionBehavior(new SotorAbandonShipMissionLogic());
 		mission.AddMissionBehavior(new SotorSummonNavalGuardMissionLogic());
+		mission.AddMissionBehavior(new SOTOR.MagicAccessories.MagicRuneMissionLogic());
 	}
 }

@@ -1,0 +1,56 @@
+====================================================================
+ DISCORD POST - paste alongside the download
+====================================================================
+
+🛠️ Realms Forgotten — Co-op Test Build #1
+
+This is an EARLY, experimental build that lets a few of us load Realms
+Forgotten together through BannerlordCoop, with the War Sails DLC kept
+ON. It's a first compatibility pass — the goal of this test isn't a
+polished co-op campaign yet, it's to answer two questions:
+
+  1) Can we actually connect with RF + War Sails loaded on both sides?
+  2) Does it stay stable (no crashes / no desync) while we play?
+
+────────────────────────
+✅ What to expect
+────────────────────────
+• RF content is there: the map, troops, items, cultures, scenes.
+• You host from your own PC — no rented server needed. One person
+  hosts, the others join by IP (Radmin VPN is the easy way).
+• War Sails stays ENABLED (this build unblocks Coop's DLC check).
+
+────────────────────────
+⚠️ What is NOT in yet (on purpose)
+────────────────────────
+To keep this first build stable, RF's dynamic systems (its custom
+world events, quests, magic, etc.) are DORMANT inside co-op for now.
+You'll get a stable shared campaign with RF's world/content, and we
+turn those systems back on one at a time in later builds, once each is
+tested. Naval/War Sails systems are also not synchronized yet.
+
+So: think "does it run and hold together," not "everything works."
+
+────────────────────────
+📦 What you need
+────────────────────────
+• Bannerlord + the War Sails DLC (you must own it — keep it ON).
+• BannerlordCoop from the Steam Workshop (everyone on the SAME version).
+• The mod pack in this download (RF modules + RF_CoopCompat).
+• Full step-by-step is in README_TESTERS.txt inside the download.
+
+⚠️ Everyone must run the EXACT same mods and versions, or Coop refuses
+the connection. The README has the precise list and load order.
+
+────────────────────────
+🧪 How to help
+────────────────────────
+If it works: tell us how long you played and whether anything looked
+out of sync between players.
+
+If it breaks (expected on a first build!): send back
+  • the exact error message, and
+  • the file  Modules\RF_CoopCompat\rf_coop_compat.log  from BOTH the
+    host and the joiner.
+That log is exactly what we need to fix it. Thanks for testing! 🙏
+====================================================================

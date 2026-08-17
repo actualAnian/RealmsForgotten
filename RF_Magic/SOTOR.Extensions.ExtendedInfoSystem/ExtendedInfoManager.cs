@@ -42,7 +42,9 @@ public class ExtendedInfoManager : CampaignBehaviorBase
 			{
 				float armorWeight;
 				float armorRechargeFactor = GetArmorRechargeFactor(allAliveHero, out armorWeight);
-				float num = (2f + SotorSpellcraftHelper.GetWindsRechargeSkillBonus(allAliveHero)) * armorRechargeFactor * GetCatalystTownFactor(allAliveHero);
+				float num = (2f + SotorSpellcraftHelper.GetWindsRechargeSkillBonus(allAliveHero)) * armorRechargeFactor
+					* GetCatalystTownFactor(allAliveHero)
+					* SOTOR.MagicAccessories.MagicAccessoryService.GetBonuses(allAliveHero).RechargeMultiplier;
 				value.AddWindsOfMagic(num);
 				if (allAliveHero.IsHumanPlayerCharacter && Math.Abs(num - _lastLoggedPlayerRate) > 0.001f)
 				{
@@ -71,7 +73,9 @@ public class ExtendedInfoManager : CampaignBehaviorBase
 	public static float GetWindsRechargePerHour(Hero hero)
 	{
 		float armorWeight;
-		return (2f + SotorSpellcraftHelper.GetWindsRechargeSkillBonus(hero)) * GetArmorRechargeFactor(hero, out armorWeight) * GetCatalystTownFactor(hero);
+		return (2f + SotorSpellcraftHelper.GetWindsRechargeSkillBonus(hero)) * GetArmorRechargeFactor(hero, out armorWeight)
+			* GetCatalystTownFactor(hero)
+			* SOTOR.MagicAccessories.MagicAccessoryService.GetBonuses(hero).RechargeMultiplier;
 	}
 
 	private static float GetCatalystTownFactor(Hero hero)

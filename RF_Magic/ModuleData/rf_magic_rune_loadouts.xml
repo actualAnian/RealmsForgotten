@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  NPC and troop rune assignments. Slots 0-3 correspond to the four battle weapon slots.
+  Example:
+  <Loadout characterId="rf_example_archer" slot0="rf_rune_precision_lesser" slot1="" slot2="" slot3="" />
+  Initial low-impact assignments below also prove that ordinary troops use the
+  same runtime as the player. More templates can be added without recompiling.
+-->
+<MagicRuneLoadouts>
+	<Loadout characterId="khuzait_footman" slot0="rf_rune_impact_lesser" slot1="rf_rune_bulwark_lesser" />
+	<Loadout characterId="khuzait_darkhan" slot0="rf_rune_returning_greater" slot1="rf_rune_bulwark_greater" slot2="rf_rune_keen_edge_greater" />
+</MagicRuneLoadouts>

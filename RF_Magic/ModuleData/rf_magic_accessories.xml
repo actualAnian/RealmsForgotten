@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Registry for the two virtual magic-accessory slots.
+
+  slot: Ring or Necklace
+  maxWindsBonus: flat bonus
+  rechargeMult/effectivenessMult: 1.0 is neutral, 1.10 is +10%
+  windsCostMult/cooldownMult: 1.0 is neutral, 0.90 is -10%
+
+  These first two entries use vanilla meshes as temporary art placeholders.
+-->
+<MagicAccessories>
+	<Accessory itemId="rf_test_arcane_ring" slot="Ring" maxWindsBonus="10"
+	             rechargeMult="1.00" effectivenessMult="1.05"
+	             windsCostMult="1.00" cooldownMult="1.00" />
+	<Accessory itemId="rf_test_mage_necklace" slot="Necklace" maxWindsBonus="0"
+	             rechargeMult="1.10" effectivenessMult="1.00"
+	             windsCostMult="0.95" cooldownMult="1.00" />
+</MagicAccessories>

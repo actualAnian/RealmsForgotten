@@ -1,0 +1,59 @@
+<Module>
+	<Name value="(RBM RF) Realms Forgotten RBM Compatibility"/>
+	<Id value="RBM_RF"/>
+	<Version value="v1.1.0"/>
+	<DefaultModule value="false"/>
+	<ModuleCategory value="Singleplayer"/>
+	<DependedModules>
+		<DependedModule Id="Native" DependentVersion="v1.4.6" Optional="false"/>
+		<DependedModule Id="SandBoxCore" DependentVersion="v1.4.6" Optional="false"/>
+		<!-- Harmony passou a ser obrigatorio na v1.1.0: a DLL deste modulo aplica um patch no RBMAI. -->
+		<DependedModule Id="Bannerlord.Harmony" Optional="false"/>
+		<DependedModule Id="RBM" Optional="false"/>
+		<DependedModule Id="RealmsForgotten" Optional="false"/>
+	</DependedModules>
+	<DependedModuleMetadatas>
+		<DependedModuleMetadata id="Bannerlord.Harmony" order="LoadBeforeThis"/>
+		<DependedModuleMetadata id="Native" order="LoadBeforeThis"/>
+		<DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis"/>
+		<DependedModuleMetadata id="RBM" order="LoadBeforeThis"/>
+		<DependedModuleMetadata id="RealmsForgotten" order="LoadBeforeThis"/>
+	</DependedModuleMetadatas>
+	<SubModules>
+		<SubModule>
+			<Name value="RBM RF Compatibility"/>
+			<DLLName value="RBM_RF.dll"/>
+			<SubModuleClassType value="RBM_RF.SubModule"/>
+			<Tags/>
+		</SubModule>
+	</SubModules>
+	<Xmls>
+		<XmlNode>
+			<XmlName id="Items" path="XSLT/RBM_RF_enchanted_armors"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+				<GameType value="CustomGame"/>
+				<GameType value="EditorGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+		<XmlNode>
+			<XmlName id="WeaponDescriptions" path="XSLT/RBM_RF_weapon_descriptions"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+				<GameType value="CustomGame"/>
+				<GameType value="EditorGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+		<XmlNode>
+			<XmlName id="CraftingTemplates" path="XSLT/RBM_RF_crafting_templates"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+				<GameType value="CustomGame"/>
+				<GameType value="EditorGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+	</Xmls>
+</Module>

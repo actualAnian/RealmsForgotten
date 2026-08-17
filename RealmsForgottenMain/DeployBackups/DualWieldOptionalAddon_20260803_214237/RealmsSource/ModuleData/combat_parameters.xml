@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="combat_parameters">
+  <definitions>
+
+    <def name="overswing_rider_rot_limit_left"
+         val="100" />
+    <def name="overswing_rider_rot_limit_right"
+         val="80" />
+
+    <def name="up_min_rider_rot_limit_left"
+         val="45" />
+    <def name="up_min_rider_rot_limit_right"
+         val="10" />
+
+    <def name="overswing_rider_look_down_limit"
+         val="120" />
+
+    <def name="overswing_ladder_rot_limit_left"
+         val="67.3" />
+    <def name="overswing_ladder_rot_limit_right"
+         val="57.3" />
+
+    <def name="thrust_vertical_rot_limit"
+         val="1.0" />
+
+    <def name="thrust_rider_rot_limit_left"
+         val="120" />
+    <def name="thrust_rider_rot_limit_right"
+         val="90" />
+
+    <def name="thrust_rider_look_down_limit"
+         val="-10" />
+
+    <def name="down_and_upperstab_min_rider_rot_limit_left"
+         val="40" />
+    <def name="down_and_upperstab_min_rider_rot_limit_right"
+         val="0" />
+
+    <def name="thrust_ladder_rot_limit_left"
+         val="80.59" />
+    <def name="thrust_ladder_rot_limit_right"
+         val="57.3" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <def name="swing_vertical_rot_limit"
+         val="0.75" />
+    <def name="right_swing_rider_rot_limit_left"
+         val="110" />
+    <def name="right_swing_rider_rot_limit_right"
+         val="100" />
+    <def name="right_min_rider_rot_limit_left"
+         val="120" />
+    <def name="right_min_rider_rot_limit_right"
+         val="100" />
+    <def name="right_swing_rider_look_down_limit"
+         val="-10" />
+    <def name="right_swing_ladder_rot_limit_left"
+         val="57.3" />
+    <def name="right_swing_ladder_rot_limit_right"
+         val="57.3" />
+
+
+
+
+  </definitions>
+  <combat_parameters>
+    <combat_parameter id="1h_dual_others"
+                      collision_check_starting_percent="0.29"
+                      collision_check_ending_percent="0.39"
+                      vertical_rot_limit_multiplier_up="1"
+                      vertical_rot_limit_multiplier_down="0.4"
+                      left_rider_rot_limit="overswing_rider_rot_limit_left"
+                      left_rider_min_rot_limit="up_min_rider_rot_limit_left"
+                      right_rider_rot_limit="overswing_rider_rot_limit_right"
+                      right_rider_min_rot_limit="up_min_rider_rot_limit_right"
+                      rider_look_down_limit="overswing_rider_look_down_limit"
+                      left_ladder_rot_limit="overswing_ladder_rot_limit_left"
+                      right_ladder_rot_limit="overswing_ladder_rot_limit_right"
+                      hit_bone_index="20"
+                      shoulder_hit_bone_index="14" />
+
+    <combat_parameter id="onehanded_dual_thrust"
+                      collision_check_starting_percent="0.27"
+                      collision_damage_starting_percent="0.32"
+                      collision_check_ending_percent="0.51"
+                      vertical_rot_limit_multiplier_up="thrust_vertical_rot_limit"
+                      vertical_rot_limit_multiplier_down="thrust_vertical_rot_limit"
+                      left_rider_rot_limit="thrust_rider_rot_limit_left"
+                      left_rider_min_rot_limit="down_and_upperstab_min_rider_rot_limit_left"
+                      right_rider_rot_limit="thrust_rider_rot_limit_right"
+                      right_rider_min_rot_limit="down_and_upperstab_min_rider_rot_limit_right"
+                      rider_look_down_limit="thrust_rider_look_down_limit"
+                      left_ladder_rot_limit="thrust_ladder_rot_limit_left"
+                      right_ladder_rot_limit="thrust_ladder_rot_limit_right"
+                      hit_bone_index="20"
+                      shoulder_hit_bone_index="14" />
+
+
+
+
+
+
+    <combat_parameter id="onehanded_dual_right"
+                      collision_check_starting_percent="0.333"
+                      collision_check_ending_percent="0.56"
+                      vertical_rot_limit_multiplier_up="swing_vertical_rot_limit"
+                      vertical_rot_limit_multiplier_down="swing_vertical_rot_limit"
+                      left_rider_rot_limit="right_swing_rider_rot_limit_left"
+                      left_rider_min_rot_limit="right_min_rider_rot_limit_left"
+                      right_rider_rot_limit="right_swing_rider_rot_limit_right"
+                      right_rider_min_rot_limit="right_min_rider_rot_limit_right"
+                      rider_look_down_limit="right_swing_rider_look_down_limit"
+                      left_ladder_rot_limit="right_swing_ladder_rot_limit_left"
+                      right_ladder_rot_limit="right_swing_ladder_rot_limit_right"
+                      hit_bone_index="20"
+                      shoulder_hit_bone_index="14" />
+
+    <combat_parameter id="onehanded_dual_right_balanced"
+                      collision_check_starting_percent="0.363"
+                      collision_check_ending_percent="0.56"
+                      vertical_rot_limit_multiplier_up="swing_vertical_rot_limit"
+                      vertical_rot_limit_multiplier_down="swing_vertical_rot_limit"
+                      left_rider_rot_limit="right_swing_rider_rot_limit_left"
+                      left_rider_min_rot_limit="right_min_rider_rot_limit_left"
+                      right_rider_rot_limit="right_swing_rider_rot_limit_right"
+                      right_rider_min_rot_limit="right_min_rider_rot_limit_right"
+                      rider_look_down_limit="right_swing_rider_look_down_limit"
+                      left_ladder_rot_limit="right_swing_ladder_rot_limit_left"
+                      right_ladder_rot_limit="right_swing_ladder_rot_limit_right"
+                      hit_bone_index="20"
+                      shoulder_hit_bone_index="14" />
+
+
+
+
+
+  </combat_parameters>
+</base>
+

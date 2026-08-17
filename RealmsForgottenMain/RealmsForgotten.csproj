@@ -128,6 +128,12 @@
       <RFArmyCommandAsset Include="_Module\GUI\Brushes\ArmyCommanderBrushes.xml">
         <ModuleRelativePath>GUI\Brushes\ArmyCommanderBrushes.xml</ModuleRelativePath>
       </RFArmyCommandAsset>
+      <RFArmyCommandAsset Include="_Module\GUI\Prefabs\Map\RFPoliticalKingdomLabels.xml">
+        <ModuleRelativePath>GUI\Prefabs\Map\RFPoliticalKingdomLabels.xml</ModuleRelativePath>
+      </RFArmyCommandAsset>
+      <RFArmyCommandAsset Include="_Module\ModuleData\rfitems\rf_magic_accessory_items.xml">
+        <ModuleRelativePath>ModuleData\rfitems\rf_magic_accessory_items.xml</ModuleRelativePath>
+      </RFArmyCommandAsset>
     </ItemGroup>
 
     <Target Name="PostBuild" AfterTargets="Build">

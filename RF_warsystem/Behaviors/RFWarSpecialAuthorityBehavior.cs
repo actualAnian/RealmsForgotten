@@ -125,9 +125,26 @@ public sealed class RFWarSpecialAuthorityBehavior : CampaignBehaviorBase
         return Instance?.GetPendingWarPriorityInternal(attacker, defender) ?? 0f;
     }
 
+    internal static RFWarSpecialRequestType? GetPendingWarType(Kingdom attacker, Kingdom defender)
+    {
+        return Instance?.GetPendingWarTypeInternal(attacker, defender);
+    }
+
     internal static float GetPendingPeacePriority(Kingdom left, Kingdom right)
     {
         return Instance?.GetPendingPeacePriorityInternal(left, right) ?? 0f;
+    }
+
+    private RFWarSpecialRequestType? GetPendingWarTypeInternal(Kingdom attacker, Kingdom defender)
+    {
+        if (attacker == null || defender == null)
+        {
+            return null;
+        }
+
+        return _pendingWarsByPair.TryGetValue(GetPairKey(attacker, defender), out PendingSpecialWarRequest request)
+            ? request.Type
+            : null;
     }
 
     private void OnDailyTick()

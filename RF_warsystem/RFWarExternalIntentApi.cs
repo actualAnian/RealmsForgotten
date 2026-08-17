@@ -11,6 +11,78 @@ namespace RF_warsystem;
 public static class RFWarExternalIntentApi
 {
     /// <summary>
+    /// Connects a terrain-aware political territory map to the war planner.
+    /// Passing null providers restores the original distance-based fallback.
+    /// </summary>
+    public static void SetPoliticalBorderProviders(
+        Func<Kingdom, Kingdom, float>? adjacencyProvider,
+        Func<Kingdom, Settlement, Kingdom?, float>? frontierProvider)
+    {
+        RFWarPoliticalBorderContext.AdjacencyProvider = adjacencyProvider;
+        RFWarPoliticalBorderContext.FrontierProvider = frontierProvider;
+    }
+
+    public static float GetPoliticalAdjacency(Kingdom first, Kingdom second)
+    {
+        return RFWarPoliticalBorderContext.GetAdjacency(first, second);
+    }
+
+    public static bool HasPoliticalBorderData => RFWarPoliticalBorderContext.IsAvailable;
+
+    /// <summary>
+    /// Lets a realm-objective system constrain ordinary war proposals without
+    /// making the independent war module depend on that objective system.
+    /// Null means no policy; a negative value vetoes the proposal; 0..1 is a
+    /// target-priority bonus.
+    /// </summary>
+    public static void SetWarProposalPolicyProvider(Func<Kingdom, Kingdom, float?>? provider)
+    {
+        RFWarExternalFrontContext.WarProposalPolicyProvider = provider;
+    }
+
+    public static float GetWarScore(Kingdom kingdom, Kingdom enemy)
+    {
+        return kingdom == null || enemy == null ? 0f : RFWarLedgerBehavior.GetScoreFor(kingdom, enemy);
+    }
+
+    public static float GetWarExhaustion(Kingdom kingdom, Kingdom enemy)
+    {
+        return kingdom == null || enemy == null ? 0f : RFWarStrategicAssessment.GetWarExhaustion(kingdom, enemy);
+    }
+
+    public static float GetWarWill(Kingdom kingdom, Kingdom enemy)
+    {
+        return kingdom == null || enemy == null ? 0f : RFWarStrategicAssessment.GetWarWill(kingdom, enemy);
+    }
+
+    public static float GetPeacePressure(Kingdom kingdom, Kingdom enemy)
+    {
+        return kingdom == null || enemy == null ? 0f : RFWarStrategicAssessment.GetPeacePressure(kingdom, enemy);
+    }
+
+    public static float GetFinishPressure(Kingdom kingdom, Kingdom enemy)
+    {
+        return kingdom == null || enemy == null ? 0f : RFWarStrategicAssessment.GetFinishPressure(kingdom, enemy);
+    }
+
+    public static float GetHistoricalGrievance(Kingdom kingdom, Kingdom enemy)
+    {
+        return kingdom == null || enemy == null ? 0f : RFWarStrategicAssessment.GetHistoricalGrievance(kingdom, enemy);
+    }
+
+    public static RFWarMotive GetWarMotive(Kingdom kingdom, Kingdom enemy)
+    {
+        return kingdom == null || enemy == null
+            ? RFWarMotive.Unknown
+            : RFWarLedgerBehavior.GetActiveWar(kingdom, enemy)?.Motive ?? RFWarMotive.Unknown;
+    }
+
+    public static string BuildKingdomWarSituationReport(Kingdom kingdom)
+    {
+        return RFWarStrategicAssessment.BuildKingdomSituationReport(kingdom);
+    }
+
+    /// <summary>
     /// Tells the war director whether the quest-driven global alignment war is
     /// active. While false, the director must not treat good/evil culture sides
     /// as strategic blocs (no same-side peer treatment, no alignment-based

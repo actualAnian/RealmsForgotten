@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Items>
+	<!-- Temporary visuals: both meshes come from the base game. -->
+	<Item
+		id="rf_test_arcane_ring"
+		name="Anel Arcano de Teste"
+		mesh="bd_sturgia_statue"
+		item_category="jewelry"
+		is_merchandise="true"
+		value="675"
+		weight="0.1"
+		Type="Goods">
+		<Flags Civilian="true" />
+	</Item>
+	<Item
+		id="rf_test_mage_necklace"
+		name="Colar do Mago de Teste"
+		mesh="silver_ore"
+		item_category="jewelry"
+		is_merchandise="true"
+		value="750"
+		weight="0.1"
+		Type="Goods">
+		<Flags Civilian="true" />
+	</Item>
+	<Item
+		id="rf_test_rune_power"
+		name="Runa de Poder (Teste)"
+		mesh="bd_sturgia_statue"
+		item_category="jewelry"
+		is_merchandise="true"
+		value="425"
+		weight="0.1"
+		Type="Goods">
+		<Flags Civilian="true" />
+	</Item>
+	<Item
+		id="rf_test_rune_ward"
+		name="Runa de Protecao (Teste)"
+		mesh="silver_ore"
+		item_category="jewelry"
+		is_merchandise="true"
+		value="475"
+		weight="0.1"
+		Type="Goods">
+		<Flags Civilian="true" />
+	</Item>
+</Items>

@@ -1,4 +1,4 @@
-﻿using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.Core;
 
@@ -133,27 +133,27 @@ namespace RealmsForgotten.CustomSkills
             //   1.3 / 1.7 / 2.25 (pi.r^2), mais forte que o eixo de dano — justo,
             //   porque o raio so ajuda feitico de area, enquanto o Talisman vale
             //   tambem para alvo unico.
-            _neophytesTalisman.Initialize("{=arcane_perk_title.1}Neophytes Talisman", RFSkills.Arcane, 50, _neophytesStaff,
+            _neophytesTalisman.Initialize("{=arcane_perk_title.1}Thael-Pŷr", RFSkills.Arcane, 50, _neophytesStaff,
                 "{=arcane_perk_desc.1}Increases your spell damage by x1.1.",
                 PartyRole.Personal, 1.1f, EffectIncrementType.AddFactor);
 
-            _neophytesStaff.Initialize("{=arcane_perk_title.2}Neophytes Staff", RFSkills.Arcane, 50, _neophytesTalisman,
+            _neophytesStaff.Initialize("{=arcane_perk_title.2}Hrîng-Kael", RFSkills.Arcane, 50, _neophytesTalisman,
                 "{=arcane_perk_desc.2}Increases the area of effect radius of your spells by x1.15.",
                 PartyRole.Personal, 1.15f, EffectIncrementType.AddFactor);
 
-            _initiatesTalisman.Initialize("{=arcane_perk_title.3}Initiates Talisman", RFSkills.Arcane, 100, _initiatesStaff,
+            _initiatesTalisman.Initialize("{=arcane_perk_title.3}Pŷr-Dôr", RFSkills.Arcane, 100, _initiatesStaff,
                 "{=arcane_perk_desc.3}Increases your spell damage by x1.2.",
                 PartyRole.Personal, 1.2f, EffectIncrementType.AddFactor);
 
-            _initiatesStaff.Initialize("{=arcane_perk_title.4}Initiates Staff", RFSkills.Arcane, 100, _initiatesTalisman,
+            _initiatesStaff.Initialize("{=arcane_perk_title.4}Hrîng-Vorn", RFSkills.Arcane, 100, _initiatesTalisman,
                 "{=arcane_perk_desc.4}Increases the area of effect radius of your spells by x1.3.",
                 PartyRole.Personal, 1.3f, EffectIncrementType.AddFactor);
 
-            _hierophantsTalisman.Initialize("{=arcane_perk_title.5}Hierophant's Talisman", RFSkills.Arcane, 150, _hierophantsStaff,
+            _hierophantsTalisman.Initialize("{=arcane_perk_title.5}Pŷr-Nael", RFSkills.Arcane, 150, _hierophantsStaff,
                 "{=arcane_perk_desc.5}Increases your spell damage by x1.3.",
                 PartyRole.Personal, 1.3f, EffectIncrementType.AddFactor);
 
-            _hierophantsStaff.Initialize("{=arcane_perk_title.6}Hierophant's Staff", RFSkills.Arcane, 150, _hierophantsTalisman,
+            _hierophantsStaff.Initialize("{=arcane_perk_title.6}Hrîng-Gwaer", RFSkills.Arcane, 150, _hierophantsTalisman,
                 "{=arcane_perk_desc.6}Increases the area of effect radius of your spells by x1.5.",
                 PartyRole.Personal, 1.5f, EffectIncrementType.AddFactor);
 

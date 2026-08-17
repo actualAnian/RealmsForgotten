@@ -42,6 +42,12 @@ internal static class RFWarStrategicHeuristics
 
         RFWarStrategicProfile profile = RFWarStrategicProfiles.Get(attacker);
         float threshold = Math.Max(1000f, baseModel.GetDecisionMakingThreshold(attacker));
+        float? objectivePolicy = RFWarExternalFrontContext.GetWarProposalPolicy(attacker, defender);
+        if (objectivePolicy < 0f)
+        {
+            return -1000000f;
+        }
+
         float adjustment = 0f;
         float alignmentHostility = Math.Max(0f, GetAlignmentHostility(attacker, defender));
         float holyPressure = Math.Max(0f, RFWarExternalFrontContext.GetHolyWarPressure(attacker, defender));
@@ -61,12 +67,14 @@ internal static class RFWarStrategicHeuristics
         adjustment += threshold * 0.2f * specialAuthorityPressure;
         adjustment += threshold * 0.18f * GetClaimPressure(attacker, defender);
         adjustment += threshold * 0.14f * GetFrontierPressure(attacker, defender);
+        adjustment += threshold * 0.35f * objectivePolicy.GetValueOrDefault();
         adjustment += threshold * 0.08f * GetAlignmentHostility(attacker, defender);
         adjustment += threshold * 0.08f * profile.OffensiveDrive;
         adjustment += threshold * 0.05f * GetProfileCampaignIdentityWarPressure(attacker, defender);
         adjustment += threshold * 0.04f * profile.Persistence * Math.Max(0f, GetMomentumMemory(attacker, defender));
         adjustment += threshold * 0.03f * profile.Persistence * GetRivalryMemory(attacker, defender);
         adjustment += threshold * 0.05f * profile.RevengeBias * GetRivalryMemory(attacker, defender);
+        adjustment += threshold * 0.08f * profile.RevengeBias * RFWarStrategicAssessment.GetHistoricalGrievance(attacker, defender);
         adjustment += threshold * 0.05f * profile.Opportunism * Math.Max(0f, GetStrengthOpportunity(attacker, defender));
         adjustment += threshold * 0.04f * profile.Opportunism * Math.Max(0f, RFWarStrategicIntent.GetOpportunityWindow(attacker, defender));
         adjustment += threshold * 0.05f * profile.SacredZeal * Math.Max(alignmentHostility, Math.Max(holyPressure, alignmentPressure));
@@ -136,6 +144,7 @@ internal static class RFWarStrategicHeuristics
         adjustment += threshold * 0.08f * GetTreasuryDistress(attacker);
         adjustment += threshold * RFWarOperationalRhythmBehavior.GetPeaceFactor(attacker, defender);
         adjustment += threshold * 0.12f * phasePeaceFactor;
+        adjustment += threshold * 0.18f * RFWarStrategicAssessment.GetPeacePressure(attacker, defender);
         adjustment -= threshold * 0.12f * Math.Max(0f, GetStrengthOpportunity(attacker, defender));
         adjustment -= threshold * 0.08f * GetClaimPressure(attacker, defender);
         adjustment -= threshold * 0.08f * GetCoalitionDutyWarPressure(attacker, defender);
@@ -146,6 +155,8 @@ internal static class RFWarStrategicHeuristics
         adjustment -= threshold * 0.12f * RFWarCampaignDirectorBehavior.GetCampaignLockFactor(attacker, defender);
         adjustment -= threshold * 0.1f * RFWarCampaignDirectorBehavior.GetDecisiveCampaignPressure(attacker, defender);
         adjustment -= threshold * 0.12f * collapsePressure;
+        adjustment -= threshold * 0.12f * RFWarStrategicAssessment.GetWarWill(attacker, defender);
+        adjustment -= threshold * 0.16f * RFWarStrategicAssessment.GetFinishPressure(attacker, defender);
         adjustment -= threshold * 0.04f * profile.Persistence * Math.Max(0f, GetMomentumMemory(attacker, defender));
         adjustment -= threshold * 0.05f * profile.RevengeBias * GetRivalryMemory(attacker, defender);
         adjustment -= threshold * 0.05f * profile.SacredZeal * Math.Max(alignmentHostility, Math.Max(holyPressure, alignmentPressure));
@@ -555,6 +566,12 @@ internal static class RFWarStrategicHeuristics
         if (!attacker.Fiefs.Any() || !defender.Fiefs.Any())
         {
             return -0.25f;
+        }
+
+        if (RFWarPoliticalBorderContext.IsAvailable)
+        {
+            float adjacency = RFWarPoliticalBorderContext.GetAdjacency(attacker, defender);
+            return adjacency > 0f ? 0.35f + (adjacency * 0.65f) : -0.6f;
         }
 
         if (HasNeighborContact(attacker, defender))

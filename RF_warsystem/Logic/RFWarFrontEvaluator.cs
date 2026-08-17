@@ -279,6 +279,11 @@ internal static class RFWarFrontEvaluator
 
     private static bool IsFrontierSettlement(Kingdom ownerKingdom, Settlement settlement, Kingdom? specificEnemy)
     {
+        if (RFWarPoliticalBorderContext.IsAvailable)
+        {
+            return RFWarPoliticalBorderContext.GetFrontierWeight(ownerKingdom, settlement, specificEnemy) >= 0.15f;
+        }
+
         foreach (Kingdom enemyKingdom in ownerKingdom.FactionsAtWarWith.OfType<Kingdom>())
         {
             if (specificEnemy != null && enemyKingdom != specificEnemy)

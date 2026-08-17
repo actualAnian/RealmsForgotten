@@ -1,0 +1,66 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <Platforms>x64</Platforms>
+    <LangVersion>10.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <AssemblyName>RF_CoopWarsails</AssemblyName>
+    <RootNamespace>RF_CoopWarsails</RootNamespace>
+    <GameFolder>$(BANNERLORD_GAME_DIR)</GameFolder>
+    <ModuleRoot>$(GameFolder)\Modules\RF_CoopWarsails</ModuleRoot>
+    <ModuleBin>$(ModuleRoot)\bin\Win64_Shipping_Client</ModuleBin>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Optimize>False</Optimize>
+    <DebugType>portable</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Optimize>False</Optimize>
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
+  <!-- LiteNetLib: biblioteca de rede MIT independente (github.com/RevenantX/LiteNetLib).
+       Nenhuma relacao com o codigo do BannerlordCoop; usada direto do NuGet. -->
+  <ItemGroup>
+    <PackageReference Include="LiteNetLib" Version="1.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.*.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(GameFolder)\Modules\Native\bin\Win64_Shipping_Client\TaleWorlds.*.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(GameFolder)\Modules\SandBoxCore\bin\Win64_Shipping_Client\*.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(GameFolder)\Modules\SandBox\bin\Win64_Shipping_Client\SandBox.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="_Module\SubModule.xml" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="Build" Condition="'$(GameFolder)' != ''">
+    <MakeDir Directories="$(ModuleBin)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModuleBin)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(ModuleBin)"
+          SkipUnchangedFiles="true" Condition="Exists('$(TargetDir)$(TargetName).pdb')" />
+    <Copy SourceFiles="$(TargetDir)LiteNetLib.dll" DestinationFolder="$(ModuleBin)"
+          SkipUnchangedFiles="true" Condition="Exists('$(TargetDir)LiteNetLib.dll')" />
+    <Copy SourceFiles="_Module\SubModule.xml" DestinationFolder="$(ModuleRoot)" SkipUnchangedFiles="true" />
+  </Target>
+
+</Project>

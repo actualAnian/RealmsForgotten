@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Values are percentages unless a description states otherwise. -->
+<MagicRunes>
+	<Rune itemId="rf_rune_sundering_lesser" name="Lesser Rune of Sundering" description="Deals 15% more damage to shields and grants a 4% chance for heavy melee attacks to crush through a block." tier="Lesser" effect="Sundering" targets="Melee" primary="15" secondary="4" />
+	<Rune itemId="rf_rune_sundering_greater" name="Greater Rune of Sundering" description="Deals 30% more damage to shields and grants an 8% chance for heavy melee attacks to crush through a block." tier="Greater" effect="Sundering" targets="Melee" primary="30" secondary="8" />
+	<Rune itemId="rf_rune_sundering_ancient" name="Ancient Rune of Sundering" description="Deals 50% more damage to shields and grants a 12% chance for heavy melee attacks to crush through a block." tier="Ancient" effect="Sundering" targets="Melee" primary="50" secondary="12" />
+
+	<Rune itemId="rf_rune_impact_lesser" name="Lesser Rune of Impact" description="Melee hits have a 5% chance to stagger the target." tier="Lesser" effect="Impact" targets="Melee" primary="5" secondary="0" />
+	<Rune itemId="rf_rune_impact_greater" name="Greater Rune of Impact" description="Melee hits have a 10% chance to stagger the target and a 2% chance to knock it down." tier="Greater" effect="Impact" targets="Melee" primary="10" secondary="2" />
+	<Rune itemId="rf_rune_impact_ancient" name="Ancient Rune of Impact" description="Melee hits have a 15% chance to stagger the target and a 5% chance to knock it down." tier="Ancient" effect="Impact" targets="Melee" primary="15" secondary="5" />
+
+	<Rune itemId="rf_rune_keen_edge_lesser" name="Lesser Rune of the Keen Edge" description="Increases melee damage by 4% and attack speed by 3%." tier="Lesser" effect="KeenEdge" targets="Melee" primary="4" secondary="3" />
+	<Rune itemId="rf_rune_keen_edge_greater" name="Greater Rune of the Keen Edge" description="Increases melee damage by 7% and attack speed by 5%." tier="Greater" effect="KeenEdge" targets="Melee" primary="7" secondary="5" />
+	<Rune itemId="rf_rune_keen_edge_ancient" name="Ancient Rune of the Keen Edge" description="Increases melee damage by 10% and attack speed by 8%." tier="Ancient" effect="KeenEdge" targets="Melee" primary="10" secondary="8" />
+
+	<Rune itemId="rf_rune_piercing_lesser" name="Lesser Piercing Rune" description="Increases damage against armor by 5%." tier="Lesser" effect="Piercing" targets="Melee|Bow|Thrown|Ammunition" primary="5" secondary="0" />
+	<Rune itemId="rf_rune_piercing_greater" name="Greater Piercing Rune" description="Increases damage against armor by 10%." tier="Greater" effect="Piercing" targets="Melee|Bow|Thrown|Ammunition" primary="10" secondary="0" />
+	<Rune itemId="rf_rune_piercing_ancient" name="Ancient Piercing Rune" description="Increases damage against armor by 15%." tier="Ancient" effect="Piercing" targets="Melee|Bow|Thrown|Ammunition" primary="15" secondary="0" />
+
+	<Rune itemId="rf_rune_executioner_lesser" name="Lesser Executioner's Rune" description="Deals 10% more damage to enemies below 20% health." tier="Lesser" effect="Executioner" targets="Melee|Bow|Thrown|Ammunition" primary="10" secondary="20" />
+	<Rune itemId="rf_rune_executioner_greater" name="Greater Executioner's Rune" description="Deals 20% more damage to enemies below 25% health." tier="Greater" effect="Executioner" targets="Melee|Bow|Thrown|Ammunition" primary="20" secondary="25" />
+	<Rune itemId="rf_rune_executioner_ancient" name="Ancient Executioner's Rune" description="Deals 30% more damage to enemies below 30% health." tier="Ancient" effect="Executioner" targets="Melee|Bow|Thrown|Ammunition" primary="30" secondary="30" />
+
+	<Rune itemId="rf_rune_vampiric_lesser" name="Lesser Vampiric Rune" description="Restores 2 health when this weapon kills an enemy." tier="Lesser" effect="Vampiric" targets="Melee|Bow|Thrown|Ammunition" primary="2" secondary="0" />
+	<Rune itemId="rf_rune_vampiric_greater" name="Greater Vampiric Rune" description="Restores 4 health when this weapon kills an enemy." tier="Greater" effect="Vampiric" targets="Melee|Bow|Thrown|Ammunition" primary="4" secondary="0" />
+	<Rune itemId="rf_rune_vampiric_ancient" name="Ancient Vampiric Rune" description="Restores 7 health when this weapon kills an enemy." tier="Ancient" effect="Vampiric" targets="Melee|Bow|Thrown|Ammunition" primary="7" secondary="0" />
+
+	<Rune itemId="rf_rune_precision_lesser" name="Lesser Rune of Precision" description="Reduces bow and crossbow spread by 10%." tier="Lesser" effect="Precision" targets="Bow" primary="10" secondary="0" />
+	<Rune itemId="rf_rune_precision_greater" name="Greater Rune of Precision" description="Reduces bow and crossbow spread by 20%." tier="Greater" effect="Precision" targets="Bow" primary="20" secondary="0" />
+	<Rune itemId="rf_rune_precision_ancient" name="Ancient Rune of Precision" description="Reduces bow and crossbow spread by 30%." tier="Ancient" effect="Precision" targets="Bow" primary="30" secondary="0" />
+
+	<Rune itemId="rf_rune_wind_lesser" name="Lesser Rune of the Wind" description="Increases projectile speed by 5% and ranged ready speed by 3%." tier="Lesser" effect="Wind" targets="Bow|Thrown|Ammunition" primary="5" secondary="3" />
+	<Rune itemId="rf_rune_wind_greater" name="Greater Rune of the Wind" description="Increases projectile speed by 10% and ranged ready speed by 6%." tier="Greater" effect="Wind" targets="Bow|Thrown|Ammunition" primary="10" secondary="6" />
+	<Rune itemId="rf_rune_wind_ancient" name="Ancient Rune of the Wind" description="Increases projectile speed by 15% and ranged ready speed by 10%." tier="Ancient" effect="Wind" targets="Bow|Thrown|Ammunition" primary="15" secondary="10" />
+
+	<Rune itemId="rf_rune_windlass_lesser" name="Lesser Rune of the Windlass" description="Increases crossbow reload speed by 8%." tier="Lesser" effect="Windlass" targets="Bow" primary="8" secondary="0" />
+	<Rune itemId="rf_rune_windlass_greater" name="Greater Rune of the Windlass" description="Increases crossbow reload speed by 15%." tier="Greater" effect="Windlass" targets="Bow" primary="15" secondary="0" />
+	<Rune itemId="rf_rune_windlass_ancient" name="Ancient Rune of the Windlass" description="Increases crossbow reload speed by 25%." tier="Ancient" effect="Windlass" targets="Bow" primary="25" secondary="0" />
+
+	<Rune itemId="rf_rune_far_sight_lesser" name="Lesser Rune of Far Sight" description="Reduces accuracy penalties from movement and long aiming by 10%." tier="Lesser" effect="FarSight" targets="Bow|Thrown" primary="10" secondary="0" />
+	<Rune itemId="rf_rune_far_sight_greater" name="Greater Rune of Far Sight" description="Reduces accuracy penalties from movement and long aiming by 20%." tier="Greater" effect="FarSight" targets="Bow|Thrown" primary="20" secondary="0" />
+	<Rune itemId="rf_rune_far_sight_ancient" name="Ancient Rune of Far Sight" description="Reduces accuracy penalties from movement and long aiming by 30%." tier="Ancient" effect="FarSight" targets="Bow|Thrown" primary="30" secondary="0" />
+
+	<Rune itemId="rf_rune_huntsman_lesser" name="Lesser Huntsman's Rune" description="Deals 10% more damage to mounts and monstrous creatures." tier="Lesser" effect="Huntsman" targets="Melee|Bow|Thrown|Ammunition" primary="10" secondary="0" />
+	<Rune itemId="rf_rune_huntsman_greater" name="Greater Huntsman's Rune" description="Deals 20% more damage to mounts and monstrous creatures." tier="Greater" effect="Huntsman" targets="Melee|Bow|Thrown|Ammunition" primary="20" secondary="0" />
+	<Rune itemId="rf_rune_huntsman_ancient" name="Ancient Huntsman's Rune" description="Deals 30% more damage to mounts and monstrous creatures." tier="Ancient" effect="Huntsman" targets="Melee|Bow|Thrown|Ammunition" primary="30" secondary="0" />
+
+	<Rune itemId="rf_rune_returning_lesser" name="Lesser Returning Rune" description="Grants a 10% chance to recover a fired projectile or thrown weapon." tier="Lesser" effect="Returning" targets="Bow|Thrown|Ammunition" primary="10" secondary="0" />
+	<Rune itemId="rf_rune_returning_greater" name="Greater Returning Rune" description="Grants a 20% chance to recover a fired projectile or thrown weapon." tier="Greater" effect="Returning" targets="Bow|Thrown|Ammunition" primary="20" secondary="0" />
+	<Rune itemId="rf_rune_returning_ancient" name="Ancient Returning Rune" description="Grants a 35% chance to recover a fired projectile or thrown weapon." tier="Ancient" effect="Returning" targets="Bow|Thrown|Ammunition" primary="35" secondary="0" />
+
+	<Rune itemId="rf_rune_flame_lesser" name="Lesser Flame Rune" description="Hits ignite enemies for 2 damage per second for 3 seconds." tier="Lesser" effect="Flame" targets="Melee|Bow|Thrown|Ammunition" primary="2" secondary="3" />
+	<Rune itemId="rf_rune_flame_greater" name="Greater Flame Rune" description="Hits ignite enemies for 4 damage per second for 4 seconds." tier="Greater" effect="Flame" targets="Melee|Bow|Thrown|Ammunition" primary="4" secondary="4" />
+	<Rune itemId="rf_rune_flame_ancient" name="Ancient Flame Rune" description="Hits ignite enemies for 6 damage per second for 5 seconds." tier="Ancient" effect="Flame" targets="Melee|Bow|Thrown|Ammunition" primary="6" secondary="5" />
+
+	<Rune itemId="rf_rune_frost_lesser" name="Lesser Frost Rune" description="Hits slow enemy movement and attacks by 10% for 2 seconds." tier="Lesser" effect="Frost" targets="Melee|Bow|Thrown|Ammunition" primary="10" secondary="2" />
+	<Rune itemId="rf_rune_frost_greater" name="Greater Frost Rune" description="Hits slow enemy movement and attacks by 18% for 3 seconds." tier="Greater" effect="Frost" targets="Melee|Bow|Thrown|Ammunition" primary="18" secondary="3" />
+	<Rune itemId="rf_rune_frost_ancient" name="Ancient Frost Rune" description="Hits slow enemy movement and attacks by 25% for 4 seconds." tier="Ancient" effect="Frost" targets="Melee|Bow|Thrown|Ammunition" primary="25" secondary="4" />
+
+	<Rune itemId="rf_rune_storm_lesser" name="Lesser Storm Rune" description="Hits have a 15% chance to arc 5 lightning damage to a nearby enemy." tier="Lesser" effect="Storm" targets="Melee|Bow|Thrown|Ammunition" primary="5" secondary="15" />
+	<Rune itemId="rf_rune_storm_greater" name="Greater Storm Rune" description="Hits have a 25% chance to arc 10 lightning damage to a nearby enemy." tier="Greater" effect="Storm" targets="Melee|Bow|Thrown|Ammunition" primary="10" secondary="25" />
+	<Rune itemId="rf_rune_storm_ancient" name="Ancient Storm Rune" description="Hits have a 40% chance to arc 15 lightning damage to a nearby enemy." tier="Ancient" effect="Storm" targets="Melee|Bow|Thrown|Ammunition" primary="15" secondary="40" />
+
+	<Rune itemId="rf_rune_explosive_lesser" name="Lesser Explosive Rune" description="Hits deal 5 damage to other enemies within 1.5 meters." tier="Lesser" effect="Explosive" targets="Bow|Thrown|Ammunition" primary="5" secondary="1.5" />
+	<Rune itemId="rf_rune_explosive_greater" name="Greater Explosive Rune" description="Hits deal 10 damage to other enemies within 2 meters." tier="Greater" effect="Explosive" targets="Bow|Thrown|Ammunition" primary="10" secondary="2" />
+	<Rune itemId="rf_rune_explosive_ancient" name="Ancient Explosive Rune" description="Hits deal 15 damage to other enemies within 2.5 meters." tier="Ancient" effect="Explosive" targets="Bow|Thrown|Ammunition" primary="15" secondary="2.5" />
+
+	<Rune itemId="rf_rune_bulwark_lesser" name="Lesser Rune of the Bulwark" description="Reduces damage received by this shield by 10%." tier="Lesser" effect="Bulwark" targets="Shield" primary="10" secondary="0" />
+	<Rune itemId="rf_rune_bulwark_greater" name="Greater Rune of the Bulwark" description="Reduces damage received by this shield by 20%." tier="Greater" effect="Bulwark" targets="Shield" primary="20" secondary="0" />
+	<Rune itemId="rf_rune_bulwark_ancient" name="Ancient Rune of the Bulwark" description="Reduces damage received by this shield by 30%." tier="Ancient" effect="Bulwark" targets="Shield" primary="30" secondary="0" />
+
+	<Rune itemId="rf_rune_reprisal_lesser" name="Lesser Rune of Reprisal" description="Shield blocks deal 3 retaliatory damage to the attacker." tier="Lesser" effect="Reprisal" targets="Shield" primary="3" secondary="0" />
+	<Rune itemId="rf_rune_reprisal_greater" name="Greater Rune of Reprisal" description="Shield blocks deal 6 retaliatory damage to the attacker." tier="Greater" effect="Reprisal" targets="Shield" primary="6" secondary="0" />
+	<Rune itemId="rf_rune_reprisal_ancient" name="Ancient Rune of Reprisal" description="Shield blocks deal 10 retaliatory damage to the attacker." tier="Ancient" effect="Reprisal" targets="Shield" primary="10" secondary="0" />
+
+	<Rune itemId="rf_rune_mirror_lesser" name="Lesser Mirror Rune" description="Reduces magic damage by 10% and reflects 3% of it to the caster." tier="Lesser" effect="Mirror" targets="Shield" primary="10" secondary="3" />
+	<Rune itemId="rf_rune_mirror_greater" name="Greater Mirror Rune" description="Reduces magic damage by 20% and reflects 6% of it to the caster." tier="Greater" effect="Mirror" targets="Shield" primary="20" secondary="6" />
+	<Rune itemId="rf_rune_mirror_ancient" name="Ancient Mirror Rune" description="Reduces magic damage by 30% and reflects 10% of it to the caster." tier="Ancient" effect="Mirror" targets="Shield" primary="30" secondary="10" />
+
+	<Rune itemId="rf_rune_lightness_lesser" name="Lesser Rune of Lightness" description="Reduces weapon encumbrance by 10% and increases handling by 3%." tier="Lesser" effect="Lightness" targets="Melee|Shield|Bow|Thrown" primary="10" secondary="3" />
+	<Rune itemId="rf_rune_lightness_greater" name="Greater Rune of Lightness" description="Reduces weapon encumbrance by 20% and increases handling by 6%." tier="Greater" effect="Lightness" targets="Melee|Shield|Bow|Thrown" primary="20" secondary="6" />
+	<Rune itemId="rf_rune_lightness_ancient" name="Ancient Rune of Lightness" description="Reduces weapon encumbrance by 30% and increases handling by 10%." tier="Ancient" effect="Lightness" targets="Melee|Shield|Bow|Thrown" primary="30" secondary="10" />
+
+	<Rune itemId="rf_rune_arcane_lesser" name="Lesser Arcane Rune" description="Increases spell effectiveness by 3%." tier="Lesser" effect="Arcane" targets="MagicFocus" primary="3" secondary="0" effectivenessMult="1.03" />
+	<Rune itemId="rf_rune_arcane_greater" name="Greater Arcane Rune" description="Increases spell effectiveness by 6%." tier="Greater" effect="Arcane" targets="MagicFocus" primary="6" secondary="0" effectivenessMult="1.06" />
+	<Rune itemId="rf_rune_arcane_ancient" name="Ancient Arcane Rune" description="Increases spell effectiveness by 10%." tier="Ancient" effect="Arcane" targets="MagicFocus" primary="10" secondary="0" effectivenessMult="1.10" />
+
+	<Rune itemId="rf_rune_focus_lesser" name="Lesser Rune of Focus" description="Reduces Mana cost by 3% and spell cooldowns by 2%." tier="Lesser" effect="Focus" targets="MagicFocus" primary="3" secondary="2" windsCostMult="0.97" cooldownMult="0.98" />
+	<Rune itemId="rf_rune_focus_greater" name="Greater Rune of Focus" description="Reduces Mana cost by 6% and spell cooldowns by 4%." tier="Greater" effect="Focus" targets="MagicFocus" primary="6" secondary="4" windsCostMult="0.94" cooldownMult="0.96" />
+	<Rune itemId="rf_rune_focus_ancient" name="Ancient Rune of Focus" description="Reduces Mana cost by 10% and spell cooldowns by 6%." tier="Ancient" effect="Focus" targets="MagicFocus" primary="10" secondary="6" windsCostMult="0.90" cooldownMult="0.94" />
+
+	<Rune itemId="rf_rune_reservoir_lesser" name="Lesser Reservoir Rune" description="Increases maximum Mana by 5." tier="Lesser" effect="Reservoir" targets="MagicFocus" primary="5" secondary="0" maxWindsBonus="5" />
+	<Rune itemId="rf_rune_reservoir_greater" name="Greater Reservoir Rune" description="Increases maximum Mana by 10." tier="Greater" effect="Reservoir" targets="MagicFocus" primary="10" secondary="0" maxWindsBonus="10" />
+	<Rune itemId="rf_rune_reservoir_ancient" name="Ancient Reservoir Rune" description="Increases maximum Mana by 20." tier="Ancient" effect="Reservoir" targets="MagicFocus" primary="20" secondary="0" maxWindsBonus="20" />
+
+	<Rune itemId="rf_rune_echo_lesser" name="Lesser Echo Rune" description="Grants a 3% chance for a spell to echo without an additional Mana cost." tier="Lesser" effect="Echo" targets="MagicFocus" primary="3" secondary="0" />
+	<Rune itemId="rf_rune_echo_greater" name="Greater Echo Rune" description="Grants a 6% chance for a spell to echo without an additional Mana cost." tier="Greater" effect="Echo" targets="MagicFocus" primary="6" secondary="0" />
+	<Rune itemId="rf_rune_echo_ancient" name="Ancient Echo Rune" description="Grants a 10% chance for a spell to echo without an additional Mana cost." tier="Ancient" effect="Echo" targets="MagicFocus" primary="10" secondary="0" />
+</MagicRunes>

@@ -16,6 +16,7 @@ public static class RFWarSystemRegistrar
         // kingdom StringId and would otherwise leak between campaigns.
         RF_warsystem.Logic.RFWarExternalFrontContext.Reset();
 
+        campaignGameStarter.AddBehavior(new RFWarLedgerBehavior());
         campaignGameStarter.AddBehavior(new RFWarStrategicMemoryBehavior());
         campaignGameStarter.AddBehavior(new RFWarCoalitionRoleBehavior());
         campaignGameStarter.AddBehavior(new RFWarOperationalRhythmBehavior());

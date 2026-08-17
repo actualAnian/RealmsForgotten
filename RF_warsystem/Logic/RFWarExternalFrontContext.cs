@@ -27,6 +27,11 @@ internal static class RFWarExternalFrontContext
     // undefined across session launches.
     internal static Func<Kingdom, Kingdom, float>? ResourceGreedProvider;
 
+    // Optional realm-objective policy. Null means the objective system has no
+    // opinion about this pair; a negative value vetoes an ordinary new-war
+    // proposal; 0..1 expresses how strongly this target should be preferred.
+    internal static Func<Kingdom, Kingdom, float?>? WarProposalPolicyProvider;
+
     private const float FrontClusterDistanceSquared = 32400f;
 
     /// <summary>
@@ -44,6 +49,7 @@ internal static class RFWarExternalFrontContext
         AlignmentWarPressureByPair.Clear();
         SacredTargetByPair.Clear();
         AlignmentDoctrineActive = false;
+        WarProposalPolicyProvider = null;
     }
 
     public static void ReinforceTarget(Kingdom kingdom, Settlement settlement, float priority, float durationDays)
@@ -187,6 +193,25 @@ internal static class RFWarExternalFrontContext
         {
             ResourceGreedProvider = null;
             return 0f;
+        }
+    }
+
+    public static float? GetWarProposalPolicy(Kingdom kingdom, Kingdom enemy)
+    {
+        if (kingdom == null || enemy == null || WarProposalPolicyProvider == null)
+        {
+            return null;
+        }
+
+        try
+        {
+            float? value = WarProposalPolicyProvider(kingdom, enemy);
+            return value.HasValue ? Math.Max(-1f, Math.Min(1f, value.Value)) : null;
+        }
+        catch
+        {
+            WarProposalPolicyProvider = null;
+            return null;
         }
     }
 

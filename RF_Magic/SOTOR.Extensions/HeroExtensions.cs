@@ -89,6 +89,7 @@ public static class HeroExtensions
 		int perkAdjusted = Math.Max(0, (int)Math.Round((float)num * num2));
 		// [RF-B] afinidade do cajado: instrumento afim com a escola gasta menos Mana,
 		// instrumento estranho gasta mais. Ponto unico do custo.
-		return SOTOR.RFIntegration.ArcaneFocusAffinity.ApplyToWindsCost(perkAdjusted, hero, template?.BelongsToLoreID);
+		int focusAdjusted = SOTOR.RFIntegration.ArcaneFocusAffinity.ApplyToWindsCost(perkAdjusted, hero, template?.BelongsToLoreID);
+		return SOTOR.MagicAccessories.MagicAccessoryService.ApplyWindsCost(hero, focusAdjusted);
 	}
 }

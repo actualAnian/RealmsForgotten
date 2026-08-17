@@ -39,6 +39,7 @@ namespace RealmsForgotten.WarSailsPatches
             TryApply("NavalDLCBanditDensityModel_IsPositionInsideNavalSafeZone_Patch", () => NavalDLCBanditDensityModel_IsPositionInsideNavalSafeZone_Patch.TryApply(harmony));
             TryApply("NavalDLCMapDistanceModel_GetDistance_GuardPatch", () => NavalDLCMapDistanceModel_GetDistance_GuardPatch.TryApply(harmony));
             TryApply("NavalDLCMapDistanceModel_GetPortToGateDistanceForSettlement_GuardPatch", () => NavalDLCMapDistanceModel_GetPortToGateDistanceForSettlement_GuardPatch.TryApply(harmony));
+            TryApply("ShipUpgradeCampaignBehaviorGuardPatch", () => ShipUpgradeCampaignBehaviorGuardPatch.TryApply(harmony));
         }
         private static void TryApply(string patchName, Func<bool> apply)
         {

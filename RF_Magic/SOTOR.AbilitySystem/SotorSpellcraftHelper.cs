@@ -113,7 +113,8 @@ public static class SotorSpellcraftHelper
 		// cima), para que nenhum nivel de Arcane compense um cajado pior. Com o gate
 		// desligado devolve a formula original do SOTOR (10 + 0.3/ponto).
 		int arcane = SpellcraftValue(hero);
-		return SOTOR.RFIntegration.ArcaneFocusGate.ComputeMaxWinds(hero, arcane, 10f + 0.3f * (float)arcane);
+		float focusMaximum = SOTOR.RFIntegration.ArcaneFocusGate.ComputeMaxWinds(hero, arcane, 10f + 0.3f * (float)arcane);
+		return SOTOR.MagicAccessories.MagicAccessoryService.ApplyMaxWinds(hero, focusMaximum);
 	}
 
 	public static float GetWindsRechargeSkillBonus(Hero hero)
@@ -130,7 +131,9 @@ public static class SotorSpellcraftHelper
 			return 1f;
 		}
 		// [RF-B] o cajado multiplica a efetividade do feitico.
-		return (1f + 0.0005f * (float)hero.GetSkillValue(spellcraft) + SotorSettings.SpellEffectivenessBonusFraction) * SOTOR.RFIntegration.ArcaneFocusGate.GetEffectivenessMultiplier(hero);
+		return (1f + 0.0005f * (float)hero.GetSkillValue(spellcraft) + SotorSettings.SpellEffectivenessBonusFraction)
+			* SOTOR.RFIntegration.ArcaneFocusGate.GetEffectivenessMultiplier(hero)
+			* SOTOR.MagicAccessories.MagicAccessoryService.GetBonuses(hero).EffectivenessMultiplier;
 	}
 
 	public static float GetCasterPerkDamageFactor(Hero hero)

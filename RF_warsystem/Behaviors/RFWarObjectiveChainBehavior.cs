@@ -174,6 +174,7 @@ public sealed class RFWarObjectiveChainBehavior : CampaignBehaviorBase
         if (!string.Equals(previousId, newObjective.StringId, StringComparison.Ordinal))
         {
             RFWarSystemTraceLog.ObjectiveChanged(kingdom, enemy, currentObjective, newObjective, "daily");
+            RFWarLedgerBehavior.RecordObjectiveSelection(kingdom, enemy, newObjective, "daily");
         }
     }
 
@@ -194,6 +195,7 @@ public sealed class RFWarObjectiveChainBehavior : CampaignBehaviorBase
         if (previous == null || previous.StringId != next.StringId)
         {
             RFWarSystemTraceLog.ObjectiveChanged(kingdom, enemy, previous, next, source);
+            RFWarLedgerBehavior.RecordObjectiveSelection(kingdom, enemy, next, source);
         }
     }
 

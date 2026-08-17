@@ -476,6 +476,11 @@ public sealed class RFWarFrontlineBehavior : CampaignBehaviorBase
 
     private static bool IsFrontierSettlement(Kingdom kingdom, Kingdom enemy, Settlement settlement)
     {
+        if (RFWarPoliticalBorderContext.IsAvailable)
+        {
+            return RFWarPoliticalBorderContext.GetFrontierWeight(kingdom, settlement, enemy) >= 0.15f;
+        }
+
         foreach (Town enemyTown in enemy.Fiefs)
         {
             if (enemyTown?.Settlement == null)
@@ -494,6 +499,11 @@ public sealed class RFWarFrontlineBehavior : CampaignBehaviorBase
 
     private static bool IsFrontierContact(Kingdom kingdom, Settlement settlement)
     {
+        if (RFWarPoliticalBorderContext.IsAvailable && settlement.MapFaction is Kingdom settlementKingdom)
+        {
+            return RFWarPoliticalBorderContext.GetFrontierWeight(settlementKingdom, settlement, kingdom) >= 0.15f;
+        }
+
         foreach (Town ownTown in kingdom.Fiefs)
         {
             if (ownTown?.Settlement == null)

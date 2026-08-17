@@ -4,6 +4,7 @@ using MCM.Abstractions.Attributes;
 using NavalDLC.GauntletUI;
 using Newtonsoft.Json.Linq;
 using RealmsForgotten.AiMade;
+using RealmsForgotten.AiMade.PoliticalBorders;
 using RealmsForgotten.AiMade.StrategicIntrigue.SaveSystem;
 using RealmsForgotten.Behaviors;
 using RealmsForgotten.Career;
@@ -377,6 +378,7 @@ namespace RealmsForgotten
             if (Game.Current.GameType is Campaign)
             {
                 mission.AddMissionBehavior(new CareerPerkMissionBehavior());
+                mission.AddMissionBehavior(new RFSettlementTorchMissionBehavior());
             }
             mission.AddMissionBehavior(new MagicEffectsBehavior());
             mission.AddMissionBehavior(new WeaponParticlesBehavior());
@@ -410,6 +412,7 @@ namespace RealmsForgotten
         {
             base.OnApplicationTick(dt);
             RealmsForgotten.BannerWorks.RFBannerWorksHotkey.Tick();
+            RFPoliticalMapManager.Tick(dt);
         }
         public override void OnGameInitializationFinished(Game game)
         {
@@ -521,6 +524,10 @@ namespace RealmsForgotten
 
         protected override void OnSubModuleLoad()
         {
+            // This one managed patch must exist before save deserialization calls Hero.AfterLoad.
+            // The remaining manual patches deliberately stay in OnGameInitializationFinished.
+            QuestPatches.PatchAthasScholarLoadRepair();
+
             if (Globals.IsWarSailsLoaded)
             {
                 WarSailsPatchRegister.Apply(harmony);
@@ -533,10 +540,16 @@ namespace RealmsForgotten
             ViewModelExtensionManager.Initialize(); //has to happen before harmony PatchAll
             try
             {
+                Assembly rfSmithingAssembly = Assembly.Load("RFSmithing");
+                IEnumerable<Type> uiExtensionTypes = asm.GetTypes()
+                    .Concat(rfSmithingAssembly.GetTypes())
+                    .Where(type => type.CustomAttributes.Any(attribute =>
+                        attribute.AttributeType.IsSubclassOf(typeof(Bannerlord.UIExtenderEx.Attributes.BaseUIExtenderAttribute))));
+
                 uiExtender = new UIExtender("RealmsForgotten");
-                uiExtender.Register(asm);
+                uiExtender.Register(uiExtensionTypes);
                 uiExtender.Enable();
-                RFLogger.Log("[Lifecycle] UIExtender registered from RealmsForgotten.SubModule.");
+                RFLogger.Log("[Lifecycle] UIExtender registered from RealmsForgotten.SubModule with RFSmithing extensions.");
             }
             catch (Exception ex)
             {
@@ -572,6 +585,7 @@ namespace RealmsForgotten
 
         protected override void OnSubModuleUnloaded()
         {
+            RFPoliticalMapManager.Dispose();
             uiExtender?.Disable();
             uiExtender?.Deregister();
             uiExtender = null;

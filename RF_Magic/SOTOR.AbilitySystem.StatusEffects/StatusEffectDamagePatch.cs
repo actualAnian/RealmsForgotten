@@ -4,6 +4,7 @@ using SOTOR.Extensions;
 using SandBox.GameComponents;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.MountAndBlade;
+using SOTOR.MagicAccessories;
 
 namespace SOTOR.AbilitySystem.StatusEffects;
 
@@ -14,6 +15,7 @@ public static class StatusEffectDamagePatch
 	{
 		try
 		{
+			__result = MagicRuneCombatPatches.ApplyWeaponDamage(__result, in attackInformation);
 			float num = __result;
 			if (num <= 0f)
 			{

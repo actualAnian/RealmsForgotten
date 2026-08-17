@@ -1,0 +1,3 @@
+<action_sets>
+  <action_set id="as_rf_dualwield_registration_anchor" base_set="as_human_warrior" />
+</action_sets>

@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>10.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+    <AssemblyName>RBM_RF</AssemblyName>
+    <RootNamespace>RBM_RF</RootNamespace>
+    <GameFolder>$(BANNERLORD_GAME_DIR)</GameFolder>
+    <ModuleRoot>$(GameFolder)\Modules\RBM_RF</ModuleRoot>
+    <ModuleBin>$(ModuleRoot)\bin\Win64_Shipping_Client</ModuleBin>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Mesmo idioma do RF_Magic: referencia o bin do jogo por curinga em vez de listar DLL por DLL. -->
+    <Reference Include="$(GameFolder)\bin\Win64_Shipping_Client\*.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="$(GameFolder)\Modules\Bannerlord.Harmony\bin\Win64_Shipping_Client\0Harmony.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!--
+    O modulo RBM_RF nasceu so com dados (XSLT). O _Module aqui e a FONTE de verdade do que vai para
+    Modules/RBM_RF: SubModule.xml + o XSLT. A copia antiga em <workspace>/RBM_RF ficou obsoleta.
+  -->
+  <ItemGroup>
+    <RFModuleAsset Include="_Module\SubModule.xml">
+      <ModuleRelativePath>SubModule.xml</ModuleRelativePath>
+    </RFModuleAsset>
+    <RFModuleAsset Include="_Module\ModuleData\XSLT\*.xslt">
+      <ModuleRelativePath>ModuleData\XSLT\%(Filename)%(Extension)</ModuleRelativePath>
+    </RFModuleAsset>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="Build">
+    <MakeDir Directories="$(ModuleBin)" Condition="'$(GameFolder)' != '' and '$(DisableModuleCopy)' != 'true'" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModuleBin)" SkipUnchangedFiles="true" Condition="'$(GameFolder)' != '' and '$(DisableModuleCopy)' != 'true'" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(ModuleBin)" SkipUnchangedFiles="true" Condition="'$(GameFolder)' != '' and '$(DisableModuleCopy)' != 'true' and Exists('$(TargetDir)$(TargetName).pdb')" />
+    <Copy SourceFiles="@(RFModuleAsset)" DestinationFiles="@(RFModuleAsset->'$(ModuleRoot)\%(ModuleRelativePath)')" SkipUnchangedFiles="true" Condition="'$(GameFolder)' != '' and '$(DisableModuleCopy)' != 'true'" />
+  </Target>
+</Project>

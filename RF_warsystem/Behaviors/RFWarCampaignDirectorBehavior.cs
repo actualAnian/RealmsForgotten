@@ -1206,6 +1206,12 @@ public sealed class RFWarCampaignDirectorBehavior : CampaignBehaviorBase
             return -0.2f;
         }
 
+        if (RFWarPoliticalBorderContext.IsAvailable)
+        {
+            float adjacency = RFWarPoliticalBorderContext.GetAdjacency(kingdom, enemy);
+            return adjacency > 0f ? 0.35f + (adjacency * 0.65f) : -0.65f;
+        }
+
         if (kingdom.Fiefs.Any(town => town?.Settlement != null && IsNearEnemy(kingdom, enemy, town.Settlement)))
         {
             return 1f;
@@ -1330,6 +1336,13 @@ public sealed class RFWarCampaignDirectorBehavior : CampaignBehaviorBase
 
     private static bool IsFrontierSettlement(Kingdom kingdom, Settlement settlement)
     {
+        if (RFWarPoliticalBorderContext.IsAvailable && settlement.MapFaction is Kingdom settlementKingdom)
+        {
+            Kingdom owner = settlementKingdom == kingdom ? kingdom : settlementKingdom;
+            Kingdom? enemy = settlementKingdom == kingdom ? null : kingdom;
+            return RFWarPoliticalBorderContext.GetFrontierWeight(owner, settlement, enemy) >= 0.15f;
+        }
+
         foreach (Town ownTown in kingdom.Fiefs)
         {
             if (ownTown?.Settlement == null)
@@ -1348,6 +1361,11 @@ public sealed class RFWarCampaignDirectorBehavior : CampaignBehaviorBase
 
     private static bool IsNearEnemy(Kingdom kingdom, Kingdom enemy, Settlement settlement)
     {
+        if (RFWarPoliticalBorderContext.IsAvailable)
+        {
+            return RFWarPoliticalBorderContext.GetFrontierWeight(kingdom, settlement, enemy) >= 0.15f;
+        }
+
         foreach (Town enemyTown in enemy.Fiefs)
         {
             if (enemyTown?.Settlement == null)

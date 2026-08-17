@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/BUTR/Bannerlord.XmlSchemas/master/SubModule.xsd">
+  <Id value="RF_CoopCompat" />
+  <Name value="Realms Forgotten - Coop Compatibility" />
+  <Version value="v1.0.0" />
+  <DefaultModule value="false" />
+  <ModuleCategory value="Singleplayer" />
+  <ModuleType value="Community" />
+  <DependedModules>
+    <DependedModule Id="Native" />
+    <DependedModule Id="SandBoxCore" />
+    <DependedModule Id="Sandbox" />
+    <DependedModule Id="RealmsForgotten" />
+  </DependedModules>
+  <DependedModuleMetadatas>
+    <DependedModuleMetadata id="Native" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="RealmsForgotten" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="RF_Magic" order="LoadBeforeThis" optional="true" />
+    <DependedModuleMetadata id="RF_DualWield" order="LoadBeforeThis" optional="true" />
+    <DependedModuleMetadata id="RBM_RF" order="LoadBeforeThis" optional="true" />
+    <DependedModuleMetadata id="Coop" order="LoadBeforeThis" optional="true" />
+  </DependedModuleMetadatas>
+  <SubModules>
+    <SubModule>
+      <Name value="RF_CoopCompat" />
+      <DLLName value="RF_CoopCompat.dll" />
+      <SubModuleClassType value="RF_CoopCompat.SubModule" />
+      <Tags />
+    </SubModule>
+  </SubModules>
+</Module>

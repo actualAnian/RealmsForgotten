@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Items>
+  <!-- Test pair. Equip both items in weapon slots: main first, offhand second. -->
+  <Item id="rf_dual_blade_main_test"
+        name="Dual Blade - Main Hand"
+        is_merchandise="false"
+        body_name="bo_mace_a"
+        recalculate_body="false"
+        mesh="vlandia_twohanded_sword_a"
+        weight="1.1"
+        value="250"
+        Type="OneHandedWeapon"
+        item_holsters="sword_left_hip">
+    <ItemComponent>
+      <Weapon weapon_class="OneHandedSword"
+              weapon_balance="100"
+              thrust_speed="88"
+              speed_rating="96"
+              physics_material="metal_weapon"
+              missile_speed="0"
+              weapon_length="95"
+              thrust_damage="22"
+              thrust_damage_type="Pierce"
+              swing_damage="48"
+              swing_damage_type="Cut"
+              item_usage="dual_shield_thrust">
+        <WeaponFlags MeleeWeapon="true" />
+      </Weapon>
+    </ItemComponent>
+    <Flags />
+  </Item>
+
+  <Item id="rf_dual_blade_offhand_test"
+        name="Dual Blade - Off Hand"
+        is_merchandise="false"
+        body_name="bo_mace_a"
+        recalculate_body="false"
+        mesh="vlandia_twohanded_sword_a"
+        weight="1.1"
+        value="250"
+        Type="OneHandedWeapon"
+        item_holsters="dual_back">
+    <ItemComponent>
+      <Weapon weapon_class="OneHandedSword"
+              weapon_balance="100"
+              thrust_speed="88"
+              speed_rating="96"
+              physics_material="metal_weapon"
+              missile_speed="0"
+              weapon_length="95"
+              thrust_damage="22"
+              thrust_damage_type="Pierce"
+              swing_damage="48"
+              swing_damage_type="Cut"
+              item_usage="dual_shield">
+        <WeaponFlags MeleeWeapon="true" />
+      </Weapon>
+    </ItemComponent>
+    <Flags WoodenParry="true"
+           ForceAttachOffHandPrimaryItemBone="true"
+           HeldInOffHand="true" />
+  </Item>
+</Items>

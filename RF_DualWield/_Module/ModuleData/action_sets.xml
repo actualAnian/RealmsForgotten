@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  RF_DualWield / action_sets.xml
+
+  Este arquivo MESCLA actions em as_human_warrior (o loader nativo faz merge por id;
+  o mesmo padrao ja e usado por RealmsForgotten/ModuleData/action_sets.xml).
+
+  REGRA CRITICA: toda action declarada em action_types.xml deste modulo PRECISA de um
+  binding aqui. Sem binding, MBActionSet.GetAnimationIndexOfAction devolve -1 e o engine
+  crasha nativamente (CTD sem excecao gerenciada). Evidencia no rgl_log:
+     "as_human_warrior does not contain act_dual_quick_release_thrust_1h"  /  "5013 -1 6218"
+
+  GERADO por scripts/gen_action_sets.ps1 - nao editar a mao; editar o mapa do script.
+-->
+<action_sets>
+  <action_set id="as_human_warrior" skeleton="human_skeleton" movement_system="bipedal">
+
+    <!-- thrust (attack_down) -->
+    <action type="act_dual_ready_thrust_1h" animation="ready_dual_thrust_1h" />
+    <action type="act_dual_quick_release_thrust_1h" animation="quick_release_dual_thrust_1h" />
+    <action type="act_dual_quick_release_thrust_1h_balanced" animation="quick_release_dual_thrust_1h_balanced" />
+    <action type="act_dual_release_thrust_1h" animation="release_dual_thrust_1h" />
+    <action type="act_dual_release_thrust_1h_balanced" animation="release_dual_thrust_1h_balanced" />
+    <action type="act_dual_quick_blocked_thrust_1h" animation="quick_dual_blocked_thrust_1h" />
+    <action type="act_dual_quick_blocked_thrust_1h_balanced" animation="quick_dual_blocked_thrust_1h_balanced" />
+    <action type="act_dual_blocked_thrust_1h" animation="quick_dual_blocked_thrust_1h" />
+    <action type="act_dual_blocked_thrust_1h_balanced" animation="quick_dual_blocked_thrust_1h_balanced" />
+    <action type="act_dual_stuck_thrust_1h" animation="stuck_thrust_1h" />
+    <action type="act_dual_stuck_quick_thrust_1h" animation="stuck_quick_thrust_1h" />
+    <action type="act_dual_ready_thrust_1h_left_stance" animation="ready_dual_thrust_1h" />
+    <action type="act_dual_quick_release_thrust_1h_left_stance" animation="quick_release_dual_thrust_1h" />
+    <action type="act_dual_quick_release_thrust_1h_balanced_left_stance" animation="quick_release_dual_thrust_1h_balanced" />
+    <action type="act_dual_release_thrust_1h_left_stance" animation="release_dual_thrust_1h" />
+    <action type="act_dual_release_thrust_1h_balanced_left_stance" animation="release_dual_thrust_1h_balanced" />
+    <action type="act_dual_quick_blocked_thrust_1h_left_stance" animation="quick_dual_blocked_thrust_1h" />
+    <action type="act_dual_quick_blocked_thrust_1h_balanced_left_stance" animation="quick_dual_blocked_thrust_1h_balanced" />
+    <action type="act_dual_blocked_thrust_1h_left_stance" animation="quick_dual_blocked_thrust_1h" />
+    <action type="act_dual_blocked_thrust_1h_balanced_left_stance" animation="quick_dual_blocked_thrust_1h_balanced" />
+    <action type="act_dual_stuck_thrust_1h_left_stance" animation="stuck_thrust_1h_left_stance" />
+    <action type="act_dual_stuck_quick_thrust_1h_left_stance" animation="stuck_quick_thrust_1h_left_stance" />
+
+    <!-- slash right (attack_right) -->
+    <action type="act_dual_ready_slashright_1h" animation="ready_slashright_1h" />
+    <action type="act_dual_ready_from_up_slashright_1h" animation="ready_from_up_slashright_1h" />
+    <action type="act_dual_ready_from_up_slashright_1h_unbalanced" animation="ready_from_up_slashright_1h_unbalanced" />
+    <action type="act_dual_ready_from_right_slashright_1h" animation="ready_from_right_slashright_1h" />
+    <action type="act_dual_ready_from_right_slashright_1h_unbalanced" animation="ready_from_right_slashright_1h_unbalanced" />
+    <action type="act_dual_quick_release_slashright_1h" animation="quick_release_dual_slashright_1h" />
+    <action type="act_dual_quick_release_slashright_1h_balanced" animation="quick_release_dual_slashright_1h_balanced" />
+    <action type="act_dual_release_slashright_1h" animation="quick_release_dual2_slashright_1h" />
+    <action type="act_dual_release_slashright_1h_balanced" animation="quick_release_dual2_slashright_1h_balanced" />
+    <action type="act_dual_quick_blocked_slashright_1h" animation="quick_dual_blocked_slashright_1h" />
+    <action type="act_dual_quick_blocked_slashright_1h_balanced" animation="quick_dual_blocked_slashright_1h_balanced" />
+    <action type="act_dual_blocked_slashright_1h" animation="quick_dual_blocked_slashright_1h" />
+    <action type="act_dual_blocked_slashright_1h_balanced" animation="quick_dual_blocked_slashright_1h_balanced" />
+    <action type="act_dual_ready_slashright_1h_left_stance" animation="ready_slashright_1h_left_stance" />
+    <action type="act_dual_ready_from_up_slashright_1h_left_stance" animation="ready_from_up_slashright_1h_left_stance" />
+    <action type="act_dual_ready_from_up_slashright_1h_unbalanced_left_stance" animation="ready_from_up_slashright_1h_left_stance_unbalanced" />
+    <action type="act_dual_ready_from_right_slashright_1h_left_stance" animation="ready_from_right_slashright_1h_left_stance" />
+    <action type="act_dual_ready_from_right_slashright_1h_unbalanced_left_stance" animation="ready_from_right_slashright_1h_left_stance_unbalanced" />
+    <action type="act_dual_quick_release_slashright_1h_left_stance" animation="quick_release_dual_slashright_1h" />
+    <action type="act_dual_quick_release_slashright_1h_balanced_left_stance" animation="quick_release_dual_slashright_1h_balanced" />
+    <action type="act_dual_release_slashright_1h_left_stance" animation="quick_release_dual2_slashright_1h" />
+    <action type="act_dual_release_slashright_1h_balanced_left_stance" animation="quick_release_dual2_slashright_1h_balanced" />
+    <action type="act_dual_quick_blocked_slashright_1h_left_stance" animation="quick_dual_blocked_slashright_1h" />
+    <action type="act_dual_quick_blocked_slashright_1h_balanced_left_stance" animation="quick_dual_blocked_slashright_1h_balanced" />
+    <action type="act_dual_blocked_slashright_1h_left_stance" animation="quick_dual_blocked_slashright_1h" />
+    <action type="act_dual_blocked_slashright_1h_balanced_left_stance" animation="quick_dual_blocked_slashright_1h_balanced" />
+
+    <!-- slash left (attack_left) -->
+    <action type="act_dual_ready_slashleft_1h" animation="ready_dual_slashleft_1h" />
+    <action type="act_dual_ready_from_up_slashleft_1h" animation="ready_from_up_slashleft_1h" />
+    <action type="act_dual_ready_from_up_slashleft_1h_unbalanced" animation="ready_from_up_slashleft_1h_unbalanced" />
+    <action type="act_dual_ready_from_left_slashleft_1h" animation="ready_from_left_slashleft_1h" />
+    <action type="act_dual_ready_from_left_slashleft_1h_unbalanced" animation="ready_from_left_slashleft_1h_unbalanced" />
+    <action type="act_dual_quick_release_slashleft_1h" animation="quick_release_dual_slashleft_1h" />
+    <action type="act_dual_quick_release_slashleft_1h_balanced" animation="quick_release_dual_slashleft_1h_balanced" />
+    <action type="act_dual_release_slashleft_1h" animation="quick_release_dual_slashleft_1h" />
+    <action type="act_dual_release_slashleft_1h_balanced" animation="quick_release_dual_slashleft_1h_balanced" />
+    <action type="act_dual_quick_blocked_slashleft_1h" animation="quick_dual_blocked_slashleft_1h" />
+    <action type="act_dual_quick_blocked_slashleft_1h_balanced" animation="quick_dual_blocked_slashleft_1h_balanced" />
+    <action type="act_dual_blocked_slashleft_1h" animation="quick_dual_blocked_slashleft_1h" />
+    <action type="act_dual_blocked_slashleft_1h_balanced" animation="quick_dual_blocked_slashleft_1h_balanced" />
+    <action type="act_dual_ready_slashleft_1h_left_stance" animation="ready_slashleft_1h_left_stance" />
+    <action type="act_dual_ready_from_up_slashleft_1h_left_stance" animation="ready_from_up_slashleft_1h_left_stance" />
+    <action type="act_dual_ready_from_up_slashleft_1h_unbalanced_left_stance" animation="ready_from_up_slashleft_1h_left_stance_unbalanced" />
+    <action type="act_dual_ready_from_left_slashleft_1h_left_stance" animation="ready_from_left_slashleft_1h_left_stance" />
+    <action type="act_dual_ready_from_left_slashleft_1h_unbalanced_left_stance" animation="ready_from_left_slashleft_1h_left_stance_unbalanced" />
+    <action type="act_dual_quick_release_slashleft_1h_left_stance" animation="quick_release_dual_slashleft_1h" />
+    <action type="act_dual_quick_release_slashleft_1h_balanced_left_stance" animation="quick_release_dual_slashleft_1h_balanced" />
+    <action type="act_dual_release_slashleft_1h_left_stance" animation="quick_release_dual_slashleft_1h" />
+    <action type="act_dual_release_slashleft_1h_balanced_left_stance" animation="quick_release_dual_slashleft_1h_balanced" />
+    <action type="act_dual_quick_blocked_slashleft_1h_left_stance" animation="quick_dual_blocked_slashleft_1h" />
+    <action type="act_dual_quick_blocked_slashleft_1h_balanced_left_stance" animation="quick_dual_blocked_slashleft_1h_balanced" />
+    <action type="act_dual_blocked_slashleft_1h_left_stance" animation="quick_dual_blocked_slashleft_1h" />
+    <action type="act_dual_blocked_slashleft_1h_balanced_left_stance" animation="quick_dual_blocked_slashleft_1h_balanced" />
+
+    <!-- locomocao com arma na mao esquerda -->
+    <action type="act_walk_idle_1h_with_d_shld" animation="dual_stand_1h" />
+    <action type="act_walk_forward_1h_with_d_shld" animation="dual_walk_forward_1h" />
+    <action type="act_walk_idle_1h_with_d_shld_left_stance" animation="dual_stand_1h_left_stance" />
+    <action type="act_walk_forward_1h_with_d_shld_left_stance" animation="dual_walk_forward_1h_left_stance" />
+    <action type="act_run_idle_1h_with_d_shld" animation="dual_stand_1h" />
+    <action type="act_run_forward_1h_with_d_shld" animation="dual_run_forward_1h_with_hand_shield" />
+    <action type="act_run_idle_1h_with_d_shld_left_stance" animation="dual_stand_1h_left_stance" />
+    <action type="act_run_forward_1h_with_d_shld_left_stance" animation="dual_run_forward_1h_with_hand_shield_left_stance" />
+
+  </action_set>
+</action_sets>

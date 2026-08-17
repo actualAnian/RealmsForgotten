@@ -10,6 +10,7 @@ public static class TriggeredScriptRegistry
 		["SpiritLeech"] = new SpiritLeech(),
 		["SummonScript"] = new Summon(),
 		["Summon"] = new Summon(),
+		["Transform"] = new Transform(),
 		// [RF-B] Skull of Terror: unico feitico do RF sem equivalente no SOTOR — ele
 		// nao tem NENHUM efeito de moral. Referenciado por ScriptNameToTrigger no
 		// rf_triggeredeffects.xml.

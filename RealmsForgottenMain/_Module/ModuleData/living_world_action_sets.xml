@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<action_sets>
+  <action_set id="as_sheep_map" base_set="as_sheep" />
+  <action_set id="as_cow_map" base_set="as_cow" />
+  <action_set id="as_hog_map" base_set="as_hog" />
+</action_sets>

@@ -6,6 +6,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using SOTOR.MagicAccessories;
 
 namespace SOTOR.AbilitySystem;
 
@@ -13,8 +14,9 @@ public static class SotorDamageHelper
 {
 	public static bool InSpellBlow;
 
-	public static void ApplyDamageOverTime(Agent agent, int damageAmount, Agent applier)
+	public static float ApplyDamageOverTime(Agent agent, int damageAmount, Agent applier)
 	{
+		float before = agent?.Health ?? 0f;
 		if (agent != null && agent.IsHuman && agent.IsActive() && !(agent.Health < 1f) && !agent.IsFadingOut() && damageAmount > 0)
 		{
 			if (agent.Health > (float)damageAmount)
@@ -26,14 +28,17 @@ public static class SotorDamageHelper
 				ApplyDamage(agent, damageAmount, agent.Position, applier, hasShockWave: false);
 			}
 		}
+		return Math.Max(0f, before - (agent?.Health ?? before));
 	}
 
-	public static void ApplyReflectedDamage(Agent attacker, int damageAmount, Agent reflector)
+	public static float ApplyReflectedDamage(Agent attacker, int damageAmount, Agent reflector)
 	{
+		float before = attacker?.Health ?? 0f;
 		if (attacker != null && damageAmount > 0)
 		{
 			ApplyDamage(attacker, damageAmount, attacker.GetChestGlobalPosition(), reflector, hasShockWave: false);
 		}
+		return Math.Max(0f, before - (attacker?.Health ?? before));
 	}
 
 	public static void DamageAgents(IEnumerable<Agent> agents, int minDamage, int maxDamage, Agent damager, TriggeredEffectTemplate template, bool hasShockWave, Vec3 impactPosition, bool singleTarget = false, string spellName = null)
@@ -115,11 +120,12 @@ public static class SotorDamageHelper
 	public static float GetSpellcraftDamageFactorFor(Agent damager)
 	{
 		Hero hero = damager?.GetHero();
-		if (hero == null)
+		float factor = hero == null ? 1f : SotorSpellcraftHelper.GetSpellDamageFactor(hero) * SotorSpellcraftHelper.GetCasterPerkDamageFactor(hero);
+		if (MagicRuneService.HasEffect(damager, MagicRuneEffect.Arcane, out MagicRuneData rune))
 		{
-			return 1f;
+			factor *= 1f + rune.PrimaryValue / 100f;
 		}
-		return SotorSpellcraftHelper.GetSpellDamageFactor(hero) * SotorSpellcraftHelper.GetCasterPerkDamageFactor(hero);
+		return factor;
 	}
 
 	private static int ScaleBySpellcraft(int amount, Agent damager, Agent victim)
@@ -129,20 +135,20 @@ public static class SotorDamageHelper
 			return amount;
 		}
 		Hero hero = damager.GetHero();
-		if (hero == null)
-		{
-			return amount;
-		}
-		float spellDamageFactor = SotorSpellcraftHelper.GetSpellDamageFactor(hero);
-		float casterPerkDamageFactor = SotorSpellcraftHelper.GetCasterPerkDamageFactor(hero);
-		float victimPerkDamageFactor = SotorSpellcraftHelper.GetVictimPerkDamageFactor(hero, damager, victim);
-		float num = spellDamageFactor * casterPerkDamageFactor * victimPerkDamageFactor;
+		float victimPerkDamageFactor = hero == null ? 1f : SotorSpellcraftHelper.GetVictimPerkDamageFactor(hero, damager, victim);
+		float casterDamageFactor = GetSpellcraftDamageFactorFor(damager);
+		float num = casterDamageFactor * victimPerkDamageFactor;
 		if (num == 1f)
 		{
 			return amount;
 		}
 		int num2 = (int)((float)amount * num);
-		SotorLog.Debug($"Spellcraft damage scale: skill={spellDamageFactor:0.000} casterPerk={casterPerkDamageFactor:0.000} victimPerk={victimPerkDamageFactor:0.000} => x{num:0.000} | {amount} -> {num2}.");
+		if (MagicRuneService.HasEffect(damager, MagicRuneEffect.Arcane, out MagicRuneData rune))
+		{
+			MagicRuneCombatFeedback.Report(damager, MagicRuneEffect.Arcane, "spell_damage",
+				$"{rune.Name}: active (+{rune.PrimaryValue:0}% spell-damage calculation)", Colors.Cyan);
+		}
+		SotorLog.Debug($"Spell damage scale: caster={casterDamageFactor:0.000} victimPerk={victimPerkDamageFactor:0.000} => x{num:0.000} | {amount} -> {num2}.");
 		return num2;
 	}
 

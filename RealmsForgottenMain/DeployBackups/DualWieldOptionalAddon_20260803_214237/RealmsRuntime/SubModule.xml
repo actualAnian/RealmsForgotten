@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/BUTR/Bannerlord.XmlSchemas/master/SubModule.xsd">
+  <Id value="RealmsForgotten" />
+  <Name value="RealmsForgotten" />
+  <Version value="v1.3.1" />
+  <DefaultModule value="false" />
+  <ModuleCategory value="Singleplayer" />
+  <ModuleType value="Community" />
+  <DependedModules>
+    <DependedModule Id="Bannerlord.UIExtenderEx" Optional="false" />
+    <DependedModule Id="Native" />
+    <DependedModule Id="SandBoxCore" />
+    <DependedModule Id="Sandbox" />
+    <DependedModule Id="StoryMode" />
+    <DependedModule Id="CustomBattle" />
+    <DependedModule Id="RF_DualWield" Optional="false" />
+  </DependedModules>
+  <!-- Community Dependency Metadata -->
+  <!-- https://github.com/BUTR/Bannerlord.BUTRLoader#for-modders -->
+  <DependedModuleMetadatas>
+    <DependedModuleMetadata id="Bannerlord.UIExtenderEx" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="Native" DependentVersion="v1.1.2" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="SandBoxCore" DependentVersion="v1.1.2" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="Sandbox" DependentVersion="v1.1.2" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="StoryMode" DependentVersion="v1.1.2" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="CustomBattle" DependentVersion="v1.1.2" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="RF_DualWield" order="LoadBeforeThis" />
+  </DependedModuleMetadatas>
+  <!-- Community Dependency Metadata -->
+  <SubModules>
+    <SubModule>
+      <Name value="RealmsForgotten" />
+      <DLLName value="RealmsForgotten.dll" />
+      <SubModuleClassType value="RealmsForgotten.SubModule" />
+      <Tags />
+    </SubModule>
+    <SubModule>
+      <Name value="RFCustomSettlements" />
+      <DLLName value="RFCustomSettlements.dll" />
+      <SubModuleClassType value="RFCustomSettlements.SubModule" />
+      <Tags />
+    </SubModule>
+    <SubModule>
+      <Name value="NecromancyAndSummoning" />
+      <DLLName value="NecromancyAndSummoning.dll" />
+      <SubModuleClassType value="NecromancyAndSummoning.SubModule" />
+      <Tags />
+    </SubModule>
+    <SubModule>
+      <Name value="RFSmithing" />
+      <DLLName value="RFSmithing.dll" />
+      <SubModuleClassType value="RealmsForgotten.Smithing.SubModule" />
+      <Tags />
+    </SubModule>
+    <SubModule>
+      <Name value="RFReligions" />
+      <DLLName value="RFReligions.dll" />
+      <SubModuleClassType value="RealmsForgotten.RFReligions.SubModule" />
+      <Tags />
+    </SubModule>
+    <SubModule>
+      <Name value="HuntableHerds" />
+      <DLLName value="HuntableHerds.dll" />
+      <SubModuleClassType value="RealmsForgotten.HuntableHerds.SubModule" />
+      <Tags />
+    </SubModule>
+    <SubModule>
+      <Name value="RF_AIDialog" />
+      <DLLName value="RF_AIDialog.dll" />
+      <SubModuleClassType value="RF_AIDialog.RF_AIDialogSubModule" />
+      <Tags />
+    </SubModule>
+    <SubModule>
+      <Name value="RF_BattleAI" />
+      <DLLName value="RF_BattleAI.dll" />
+      <SubModuleClassType value="RF_BattleAI.SubModule" />
+      <Tags />
+    </SubModule>
+    <SubModule>
+      <Name value="RF_Promoted" />
+      <DLLName value="RF_Promoted.dll" />
+      <SubModuleClassType value="RF_Promoted.SubModule" />
+      <Tags>
+        <Tag key="DedicatedServerType" value="none" />
+        <Tag key="IsNoRenderModeElement" value="false" />
+      </Tags>
+    </SubModule>
+    <SubModule>
+      <Name value="RF_warsystem" />
+      <DLLName value="RF_warsystem.dll" />
+      <SubModuleClassType value="RF_warsystem.SubModule" />
+      <Tags>
+        <Tag key="DedicatedServerType" value="none" />
+        <Tag key="IsNoRenderModeElement" value="false" />
+      </Tags>
+    </SubModule>
+    <SubModule>
+      <Name value="RF_Settlers" />
+      <DLLName value="RF_Settlers.dll" />
+      <SubModuleClassType value="RF_Settlers.SubModule" />
+      <Tags>
+        <Tag key="DedicatedServerType" value="none" />
+        <Tag key="IsNoRenderModeElement" value="false" />
+      </Tags>
+    </SubModule>
+    <SubModule>
+      <Name value="RF_ResourceZones" />
+      <DLLName value="RF_ResourceZones.dll" />
+      <SubModuleClassType value="RF_ResourceZones.SubModule" />
+      <Tags>
+        <Tag key="DedicatedServerType" value="none" />
+        <Tag key="IsNoRenderModeElement" value="false" />
+      </Tags>
+    </SubModule>
+    <SubModule>
+      <Name value="MCMv5" />
+      <DLLName value="MCMv5.dll" />
+      <SubModuleClassType value="MCM.MCMSubModule" />
+      <Tags />
+    </SubModule>
+    <SubModule>
+      <Name value="MCMv5 Basic Implementation" />
+      <DLLName value="MCMv5.dll" />
+      <SubModuleClassType value="MCM.Internal.MCMImplementationSubModule" />
+      <Tags />
+    </SubModule>
+    <SubModule>
+      <Name value="RF_Enlistment" />
+      <DLLName value="RF_Enlistment.dll" />
+      <SubModuleClassType value="RF_Enlistment.SubModule" />
+      <Tags>
+        <Tag key="DedicatedServerType" value="none" />
+        <Tag key="IsNoRenderModeElement" value="false" />
+      </Tags>
+    </SubModule>
+    <SubModule>
+      <Name value="RF Homestead" />
+      <DLLName value="HomesteadsReloaded.dll" />
+      <SubModuleClassType value="Homesteads.HomesteadsReloaded" />
+      <Tags>
+        <Tag key="DedicatedServerType" value="none" />
+        <Tag key="IsNoRenderModeElement" value="false" />
+      </Tags>
+    </SubModule>
+  </SubModules>
+  <Xmls>
+    <XmlNode>
+      <XmlName id="Items" path="rfitems" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="CraftingPieces" path="RF_crafting_pieces" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="WeaponDescriptions" path="weapon_descriptions" />
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="CraftingTemplates" path="crafting_templates" />
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="spnpccharacters" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <!-- Declared (with no local .xml) so RF's naval_characters.xslt is applied to
+         WarSails' NavalDLC/naval_characters.xml at load — re-themes the naval troops. -->
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="naval_characters" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <!-- Declared so RF's ship_upgrade_pieces.xslt is applied (Imperial -> North Realm). -->
+    <XmlNode>
+      <XmlName id="ShipUpgradePieces" path="ship_upgrade_pieces" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="merged_troops" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="SkeletonScales" path="skeleton_scales" />
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="SPCultures" path="spcultures" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="spspecialcharacters" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="rf_spspecialcharacters" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="SPCultures" path="rf_cultures" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="Kingdoms" path="spkingdoms" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="Kingdoms" path="rf_spkingdoms" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="Factions" path="spclans" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="Factions" path="rf_spclans" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="EquipmentRosters" path="rf_equipment_sets" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="EquipmentRosters" path="arena_equipment_sets" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="lords" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="rf_lords" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="GameText" path="module_strings" />
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="GameText" path="rf_module_strings" />
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="GameText" path="rfsmithing" />
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="Strings" path="homestead_strings" />
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="homestead_characters" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="rf_spnpccharactertemplates" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="partyTemplates" path="rf_partyTemplates" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="partyTemplates" path="partyTemplates" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="rf_spnpccharacters" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="rf_spgenericcharacters" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="GameText" path="rf_wanderer_strings" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="rf_education_character_templates" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="EquipmentRosters" path="rf_education_equipment_templates" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="EquipmentRosters" path="rf_equipment_sets_southrealm" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="EquipmentRosters" path="rf_equipment_sets_westrealm" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="rf_troops" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="bandits" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="rf_bandits" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="BodyProperties" path="sandboxcore_bodyproperties" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="custom_settlements_npcs" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="RFChamberlain/RFBaseChamberlainTroops" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="GameText" path="religion_strings" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="EquipmentRosters" path="custom_start_equipment_sets" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+        <GameType value="CustomGame" />
+        <GameType value="EditorGame" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="Heroes" path="quest/heroes" />
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="GameText" path="quest/quest_strings" />
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="quest/the_owl" />
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="Items" path="quest/weapons" />
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="strings" path="enlistment_strings" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="strings" path="promoted_strings" />
+      <IncludedGameTypes>
+        <GameType value="Campaign" />
+        <GameType value="CampaignStoryMode" />
+      </IncludedGameTypes>
+    </XmlNode>
+  </Xmls>
+</Module>

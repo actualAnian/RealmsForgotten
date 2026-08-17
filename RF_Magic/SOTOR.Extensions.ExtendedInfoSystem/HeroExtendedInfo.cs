@@ -37,6 +37,40 @@ public class HeroExtendedInfo
 	[SaveableField(7)]
 	public List<string> AcquiredSpells = new List<string>();
 
+	[SaveableField(8)]
+	private string _equippedRingItemId;
+
+	[SaveableField(9)]
+	private string _equippedNecklaceItemId;
+
+	[SaveableField(10)]
+	private string _weaponRuneItemId0;
+
+	[SaveableField(11)]
+	private string _weaponRuneItemId1;
+
+	[SaveableField(12)]
+	private string _weaponRuneItemId2;
+
+	[SaveableField(13)]
+	private string _weaponRuneItemId3;
+
+	[SaveableField(14)]
+	private string _weaponRuneTargetItemId0;
+
+	[SaveableField(15)]
+	private string _weaponRuneTargetItemId1;
+
+	[SaveableField(16)]
+	private string _weaponRuneTargetItemId2;
+
+	[SaveableField(17)]
+	private string _weaponRuneTargetItemId3;
+
+	public string EquippedRingItemId => _equippedRingItemId;
+
+	public string EquippedNecklaceItemId => _equippedNecklaceItemId;
+
 	public float MaxWindsOfMagic
 	{
 		get
@@ -167,6 +201,63 @@ public class HeroExtendedInfo
 	{
 		EnsureSpells();
 		AcquiredSpells.Remove(abilityId);
+	}
+
+	internal void SetEquippedRingItemId(string itemId)
+	{
+		_equippedRingItemId = itemId;
+	}
+
+	internal void SetEquippedNecklaceItemId(string itemId)
+	{
+		_equippedNecklaceItemId = itemId;
+	}
+
+	internal string GetWeaponRuneItemId(int slotIndex)
+	{
+		return slotIndex switch
+		{
+			0 => _weaponRuneItemId0,
+			1 => _weaponRuneItemId1,
+			2 => _weaponRuneItemId2,
+			3 => _weaponRuneItemId3,
+			_ => null
+		};
+	}
+
+	internal string GetWeaponRuneTargetItemId(int slotIndex)
+	{
+		return slotIndex switch
+		{
+			0 => _weaponRuneTargetItemId0,
+			1 => _weaponRuneTargetItemId1,
+			2 => _weaponRuneTargetItemId2,
+			3 => _weaponRuneTargetItemId3,
+			_ => null
+		};
+	}
+
+	internal void SetWeaponRune(int slotIndex, string runeItemId, string targetItemId)
+	{
+		switch (slotIndex)
+		{
+		case 0:
+			_weaponRuneItemId0 = runeItemId;
+			_weaponRuneTargetItemId0 = targetItemId;
+			break;
+		case 1:
+			_weaponRuneItemId1 = runeItemId;
+			_weaponRuneTargetItemId1 = targetItemId;
+			break;
+		case 2:
+			_weaponRuneItemId2 = runeItemId;
+			_weaponRuneTargetItemId2 = targetItemId;
+			break;
+		case 3:
+			_weaponRuneItemId3 = runeItemId;
+			_weaponRuneTargetItemId3 = targetItemId;
+			break;
+		}
 	}
 
 	private void EnsureWindsInitialized()

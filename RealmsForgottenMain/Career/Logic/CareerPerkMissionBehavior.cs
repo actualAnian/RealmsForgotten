@@ -23,6 +23,12 @@ namespace RealmsForgotten.Career.Logic
             AbilityEffects.StopDivineRestoration();
         }
 
+        protected override void OnEndMission()
+        {
+            AbilityEffects.StopDivineRestoration();
+            base.OnEndMission();
+        }
+
         public override void OnAgentRemoved(
             Agent affectedAgent,
             Agent affectorAgent,
@@ -247,6 +253,10 @@ namespace RealmsForgotten.Career.Logic
             if (career?.StringId == "cleric" && career.Ability.IsActiveInMission)
             {
                 AbilityEffects.TickDivineRestoration(dt);
+            }
+            else if (career?.StringId == "cleric")
+            {
+                AbilityEffects.StopDivineRestoration();
             }
         }
 
