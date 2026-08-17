@@ -1,4 +1,5 @@
-﻿using RealmsForgotten.HuntableHerds.AgentComponents;
+﻿using RealmsForgotten.HuntableHerds;
+using RealmsForgotten.HuntableHerds.AgentComponents;
 using RFCustomSettlements;
 using SandBox.AI;
 using SandBox.Objects.Usables;
@@ -35,14 +36,35 @@ namespace RealmsForgotten.RFCustomSettlements
             {"passage", RFUsableObjectType.Passage},
             {"healing", RFUsableObjectType.Healing}
         };
+        /// <summary>
+        /// The mission logic that owns lootable corpses in the current mission, resolved through
+        /// <see cref="IRFLootableMission"/> so both RF custom settlements and standalone hunting
+        /// missions share the same loot gates.
+        /// </summary>
+        public static IRFLootableMission? GetLootableMission()
+        {
+            return RFLootableMissionHelper.GetLootableMission();
+        }
+
+        private static bool IsInCustomSettlementMission()
+        {
+            return Mission.Current != null && Mission.Current.MissionBehaviors.Any(item => item is CustomSettlementMissionLogic);
+        }
+
         public static bool IsRFObject(IFocusable focusable)
         {
-            if (!Mission.Current.MissionBehaviors.Any(item => item is CustomSettlementMissionLogic)) return false;
+            if (Mission.Current == null) return false;
+
+            // Corpses: any mission that implements IRFLootableMission (settlements AND hunts).
             Agent? agent;
-            if ((agent = focusable as Agent) != null && IsLootableDeadAgent(agent)) return true;
+            if ((agent = focusable as Agent) != null)
+                return GetLootableMission() != null && IsLootableDeadAgent(agent);
+
+            // rf_* usable places only make sense inside an RF custom settlement scene.
             UsablePlace? usablePlace;
-            if ((usablePlace = focusable as UsablePlace) != null && usablePlace.GameEntity.Name.StartsWith("rf_")) return true;
-            //if (gameEntity != null && gameEntity.Name.StartsWith("rf_")) return true;
+            if ((usablePlace = focusable as UsablePlace) != null)
+                return IsInCustomSettlementMission() && usablePlace.GameEntity.Name.StartsWith("rf_");
+
             return false;
         }
 
@@ -50,7 +72,13 @@ namespace RealmsForgotten.RFCustomSettlements
         {
             Agent? agent;
             if ((agent = focusable as Agent) != null && IsLootableDeadAgent(agent)) return true;
-            if (((UsablePlace)focusable).GameEntity.GlobalPosition.Distance(Agent.Main.Position) < rfInteractionDistance)
+            // Defensive: focusable can be a plain Agent (e.g. a live herd animal) which must not be cast.
+            if (focusable is not UsablePlace place)
+            {
+                _canInteract = false;
+                return false;
+            }
+            if (place.GameEntity.GlobalPosition.Distance(Agent.Main.Position) < rfInteractionDistance)
             {
                 _canInteract = true;
                 return true;
@@ -85,8 +113,8 @@ namespace RealmsForgotten.RFCustomSettlements
             // ALSO PREVENTS THE MOUNTS ENEMIES FROM HUNTABLE HERDS TO BE MOUNTABLE
             if (agent != null && agent.Components.Any(c => c is HuntableHerds.AgentComponents.HerdAgentComponent)) return null;
             if (agent != null) return agent;
-            CustomSettlementMissionLogic logic;
-            if ((logic = Mission.Current.GetMissionBehavior<CustomSettlementMissionLogic>()) == null) return null;
+            IRFLootableMission? logic = GetLootableMission();
+            if (logic == null) return null;
             if (logic.LootableAgents.IsEmpty()) return null;
             float num = 10f;
             MatrixFrame cf = Mission.Current.GetCameraFrame();

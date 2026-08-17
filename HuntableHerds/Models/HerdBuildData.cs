@@ -1,18 +1,31 @@
-﻿using HuntableHerds.Models;
+using HuntableHerds.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Xml.Linq;
-using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Core;
+
 namespace RealmsForgotten.HuntableHerds.Models
 {
-    public class HerdBuildData {
-        public string NotifMessage;
-        public string MessageTitle;
-        public string Message;
+    public class HerdBuildData
+    {
+        /// <summary>Stable position of this entry inside <see cref="allHuntableAgentBuildDatas"/>, assigned by <see cref="BuildAll"/>.</summary>
+        public int Index;
+
+        /// <summary>All &lt;notifMessage&gt; variants declared for this herd (at least one).</summary>
+        public readonly List<string> NotifMessages = new();
+
+        /// <summary>All &lt;messageTitle&gt; variants declared for this herd (at least one).</summary>
+        public readonly List<string> MessageTitles = new();
+
+        /// <summary>All &lt;message&gt; variants declared for this herd (at least one).</summary>
+        public readonly List<string> Messages = new();
+
+        /// <summary>Terrains this herd may be spotted on. Empty = any terrain.</summary>
+        public readonly List<TerrainType> Terrains = new();
+
         public string SpawnId;
         public int TotalAmountInHerd;
         public bool IsPassive;
@@ -22,21 +35,34 @@ namespace RealmsForgotten.HuntableHerds.Models
         public int DamageToPlayer;
         public float SightRange;
         public bool FleeOnAttacked;
-        ItemDropsData ItemDrops;
+        readonly ItemDropsData ItemDrops;
         public List<string> SceneIds;
-        // Terrain types this herd can be spotted on. Empty = any terrain
-        // (backward compatible: a herd without a <terrains> tag still appears
-        // everywhere). Parsed from a comma-separated list of TerrainType names.
-        public List<TerrainType> Terrains = new();
 
         public static List<HerdBuildData> allHuntableAgentBuildDatas = new();
+
+        /// <summary>
+        /// The herd of the hunt the player is currently on. It is set when a hunt is ACCEPTED (or
+        /// when an RF settlement scene spawns wildlife), never as a side effect of showing a
+        /// notification: the notification carries its own herd, see <see cref="HerdMapNotification"/>.
+        /// </summary>
         public static HerdBuildData? CurrentHerdBuildData;
 
+        // Legacy single-value accessors, kept so nothing outside breaks. They pick a random variant.
+        public string NotifMessage => PickRandomString(NotifMessages, "Herd spotted");
+        public string MessageTitle => PickRandomString(MessageTitles, "Herd Spotted");
+        public string Message => PickRandomString(Messages, "Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?");
 
-        public HerdBuildData(string notifMessage, string messageTitle, string message, string spawnId, int totalAmountInHerd, bool isPassive, float startingHealth, float maxSpeed, float hitboxRange, int damageToPlayer, float sightRange, bool fleeOnAttacked, ItemDropsData itemDropsIdAndCount, List<string> sceneIds) {
-            NotifMessage = notifMessage;
-            MessageTitle = messageTitle;
-            Message = message;
+        public HerdBuildData(IEnumerable<string> notifMessages, IEnumerable<string> messageTitles, IEnumerable<string> messages,
+                             string spawnId, int totalAmountInHerd, bool isPassive, float startingHealth, float maxSpeed,
+                             float hitboxRange, int damageToPlayer, float sightRange, bool fleeOnAttacked,
+                             ItemDropsData itemDropsIdAndCount, List<string> sceneIds, IEnumerable<TerrainType>? terrains = null)
+        {
+            NotifMessages.AddRange(notifMessages);
+            MessageTitles.AddRange(messageTitles);
+            Messages.AddRange(messages);
+            if (terrains != null)
+                Terrains.AddRange(terrains);
+
             SpawnId = spawnId;
             TotalAmountInHerd = totalAmountInHerd;
             IsPassive = isPassive;
@@ -49,127 +75,187 @@ namespace RealmsForgotten.HuntableHerds.Models
             ItemDrops = itemDropsIdAndCount;
             SceneIds = sceneIds;
 
-            CurrentHerdBuildData = this;
+            // NOTE: deliberately does NOT touch CurrentHerdBuildData. Building the data must never
+            // change which herd the player is hunting.
         }
 
-        public ItemDropsData GetCopyOfItemDrops() {
+        public ItemDropsData GetCopyOfItemDrops()
+        {
             return ItemDrops;
         }
 
-        public static void BuildAll() {
+        /// <summary>Number of animals that may be alive at the same time, clamped by <see cref="Settings.MaxAliveAnimalsPerHunt"/>.</summary>
+        public int GetAliveAnimalCap()
+        {
+            int cap = Settings.Instance.MaxAliveAnimalsPerHunt;
+            if (TotalAmountInHerd <= 0)
+                return 1;
+            return TotalAmountInHerd > cap ? cap : TotalAmountInHerd;
+        }
+
+        public bool MatchesTerrain(TerrainType terrain)
+        {
+            return Terrains.Count == 0 || Terrains.Contains(terrain);
+        }
+
+        private static string PickRandomString(List<string> options, string fallback)
+        {
+            if (options == null || options.Count == 0)
+                return fallback;
+            if (options.Count == 1)
+                return options[0];
+            return options[MBRandom.RandomInt(0, options.Count)];
+        }
+
+        public static void BuildAll()
+        {
             allHuntableAgentBuildDatas.Clear();
 
             string assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string xmlFileName = Path.Combine(assemblyFolder, "hunting_herds.xml");
 
-            // Missing/malformed XML must not CTD at boot (this runs from
-            // OnBeforeInitialModuleScreenSetAsRoot). Leave the herd list empty.
-            if (!File.Exists(xmlFileName))
-                return;
+            XElement huntingHerds = XElement.Load(xmlFileName);
 
-            XElement huntingHerds;
-            try
+            foreach (XElement element in huntingHerds.Descendants("Herd"))
             {
-                huntingHerds = XElement.Load(xmlFileName);
-            }
-            catch (Exception ex)
-            {
-                TaleWorlds.Library.Debug.Print($"[HuntableHerds] Failed to load hunting_herds.xml: {ex.Message}");
-                return;
-            }
-
-            foreach (XElement element in huntingHerds.Descendants("Herd")) {
-                string notifMessage = element.Element("notifMessage").Value;
-                string messageTitle = element.Element("messageTitle").Value;
-                string message = element.Element("message").Value;
-                string spawnId = element.Element("spawnId").Value;
-                int totalAmountInHerd = (int)element.Element("totalAmountInHerd");
-                bool isPassive = element.Element("isPassive").Value.ToLower() == "true" ? true : false;
-                float startingHealth = (float)element.Element("startingHealth");
-                float maxSpeed = (float)element.Element("maxSpeed");
-                float hitboxRange = (float)element.Element("hitboxRange");
-                int damageToPlayer = (int)element.Element("damageToPlayer");
-                float sightRange = (float)element.Element("sightRange");
-                bool fleeOnAttacked = element.Element("fleeOnAttacked").Value.ToLower() == "true" ? true : false;
-
-                List<ItemDrop> item = new();
-                XElement? itemDropsElement = element.Element("ItemDrops");
-                if (itemDropsElement != null)
-                    foreach (XElement itemDrop in itemDropsElement.Descendants("ItemDrop")) {
-                        int amount = (int)itemDrop.Element("amount");
-                        int maxAmount = amount;
-                        XElement? maxAmountNode = itemDrop.Element("maxAmount");
-                        if (maxAmountNode != null)
-                            maxAmount = (int)maxAmountNode;
-                        item.Add(new(itemDrop.Element("itemId").Value, amount, maxAmount, 1));
-                        //itemDrops.Add((itemDrop.Element("itemId").Value, (amount, maxAmount)));
-                    }
-
-                ItemDropsData itemDrops = new(item,  $"HH_{spawnId}_item_drops");
-                List<string> sceneIds = new();
-                XElement? sceneIdsElement = element.Element("SceneIds");
-                if (sceneIdsElement != null)
-                    foreach (XElement sceneId in sceneIdsElement.Descendants("sceneId"))
-                        sceneIds.Add(sceneId.Value);
-
-                HerdBuildData buildData = new(notifMessage, messageTitle, message, spawnId, totalAmountInHerd, isPassive, startingHealth, maxSpeed, hitboxRange, damageToPlayer, sightRange, fleeOnAttacked, itemDrops, sceneIds);
-
-                // Optional <terrains>Forest,Swamp</terrains> — comma-separated
-                // TerrainType names. Absent/empty = spotted on any terrain.
-                XElement? terrainsElement = element.Element("terrains");
-                if (terrainsElement != null && !string.IsNullOrWhiteSpace(terrainsElement.Value))
+                try
                 {
-                    foreach (string name in terrainsElement.Value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    List<string> notifMessages = ReadAllStrings(element, "notifMessage");
+                    List<string> messageTitles = ReadAllStrings(element, "messageTitle");
+                    List<string> messages = ReadAllStrings(element, "message");
+                    string spawnId = element.Element("spawnId").Value;
+                    int totalAmountInHerd = (int)element.Element("totalAmountInHerd");
+                    bool isPassive = element.Element("isPassive").Value.ToLower() == "true";
+                    float startingHealth = (float)element.Element("startingHealth");
+                    float maxSpeed = (float)element.Element("maxSpeed");
+                    float hitboxRange = (float)element.Element("hitboxRange");
+                    int damageToPlayer = (int)element.Element("damageToPlayer");
+                    float sightRange = (float)element.Element("sightRange");
+                    bool fleeOnAttacked = element.Element("fleeOnAttacked").Value.ToLower() == "true";
+
+                    List<ItemDrop> item = new();
+                    XElement? itemDropsElement = element.Element("ItemDrops");
+                    if (itemDropsElement != null)
+                        foreach (XElement itemDrop in itemDropsElement.Descendants("ItemDrop"))
+                        {
+                            int amount = (int)itemDrop.Element("amount");
+                            int maxAmount = amount;
+                            XElement? maxAmountNode = itemDrop.Element("maxAmount");
+                            if (maxAmountNode != null)
+                                maxAmount = (int)maxAmountNode;
+                            item.Add(new(itemDrop.Element("itemId").Value, amount, maxAmount, 1));
+                        }
+
+                    ItemDropsData itemDrops = new(item, $"HH_{spawnId}_item_drops");
+                    List<string> sceneIds = new();
+                    XElement? sceneIdsElement = element.Element("SceneIds");
+                    if (sceneIdsElement != null)
+                        foreach (XElement sceneId in sceneIdsElement.Descendants("sceneId"))
+                            sceneIds.Add(sceneId.Value);
+
+                    List<TerrainType> terrains = ReadTerrains(element);
+
+                    HerdBuildData buildData = new(notifMessages, messageTitles, messages, spawnId, totalAmountInHerd,
+                                                  isPassive, startingHealth, maxSpeed, hitboxRange, damageToPlayer,
+                                                  sightRange, fleeOnAttacked, itemDrops, sceneIds, terrains)
                     {
-                        if (Enum.TryParse(name.Trim(), true, out TerrainType terrain))
-                            buildData.Terrains.Add(terrain);
-                    }
+                        Index = allHuntableAgentBuildDatas.Count
+                    };
+                    allHuntableAgentBuildDatas.Add(buildData);
                 }
-
-                allHuntableAgentBuildDatas.Add(buildData);
+                catch (Exception e)
+                {
+                    SubModule.PrintDebugMessage($"HuntableHerds: could not read a <Herd> entry from hunting_herds.xml ({e.Message})", 255, 0, 0);
+                }
             }
-        }
 
-        public static void Randomize() {
-            int randomIndex = MBRandom.RandomInt(0, allHuntableAgentBuildDatas.Count);
-            CurrentHerdBuildData = allHuntableAgentBuildDatas[randomIndex];
+            // Keep a sane default so code that still reads the static before any hunt starts is safe.
+            if (CurrentHerdBuildData == null && allHuntableAgentBuildDatas.Count > 0)
+                CurrentHerdBuildData = allHuntableAgentBuildDatas[0];
         }
 
         /// <summary>
-        /// Picks a herd appropriate to the terrain: candidates are herds with no
-        /// terrain restriction (appear anywhere) plus herds whose terrain list
-        /// contains this terrain. Returns false if there is nothing to spot here
-        /// (e.g. a herd list that is entirely terrain-locked to other biomes) so
-        /// the caller can suppress the notification. Falls back to the old
-        /// any-herd behaviour only if NO herd declares terrain at all.
+        /// Reads every occurrence of <paramref name="name"/> (the element is repeatable so a herd can
+        /// declare several text variants). Always returns at least one entry when the element exists.
         /// </summary>
-        public static bool RandomizeForTerrain(TerrainType terrain) {
+        private static List<string> ReadAllStrings(XElement herd, string name)
+        {
+            List<string> values = new();
+            foreach (XElement child in herd.Elements(name))
+            {
+                string value = child.Value?.Trim() ?? string.Empty;
+                if (value.Length > 0)
+                    values.Add(value);
+            }
+            return values;
+        }
+
+        private static List<TerrainType> ReadTerrains(XElement herd)
+        {
+            List<TerrainType> terrains = new();
+            IEnumerable<XElement> nodes = herd.Elements("terrain");
+            XElement? container = herd.Element("Terrains");
+            if (container != null)
+                nodes = nodes.Concat(container.Elements("terrain"));
+
+            foreach (XElement node in nodes)
+            {
+                string raw = node.Value?.Trim() ?? string.Empty;
+                if (raw.Length == 0)
+                    continue;
+                if (Enum.TryParse(raw, true, out TerrainType parsed))
+                    terrains.Add(parsed);
+                else
+                    SubModule.PrintDebugMessage($"HuntableHerds: unknown <terrain> value \"{raw}\" in hunting_herds.xml", 255, 200, 0);
+            }
+            return terrains;
+        }
+
+        /// <summary>Picks a random herd, preferring the ones allowed on <paramref name="terrain"/>.</summary>
+        public static HerdBuildData? PickRandom(TerrainType? terrain)
+        {
             if (allHuntableAgentBuildDatas.Count == 0)
-                return false;
+                return null;
 
-            bool anyTerrainTagged = false;
-            List<HerdBuildData> candidates = new();
-            foreach (HerdBuildData herd in allHuntableAgentBuildDatas) {
-                if (herd.Terrains.Count == 0) {
-                    candidates.Add(herd); // no restriction — fits any terrain
-                } else {
-                    anyTerrainTagged = true;
-                    if (herd.Terrains.Contains(terrain))
-                        candidates.Add(herd);
-                }
+            if (terrain.HasValue && Settings.Instance.FilterHerdsByTerrain)
+            {
+                List<HerdBuildData> matching = allHuntableAgentBuildDatas.Where(h => h.MatchesTerrain(terrain.Value)).ToList();
+                if (matching.Count > 0)
+                    return matching[MBRandom.RandomInt(0, matching.Count)];
             }
 
-            // Nobody tagged terrain at all → preserve the old random behaviour.
-            if (!anyTerrainTagged) {
-                Randomize();
-                return true;
+            return allHuntableAgentBuildDatas[MBRandom.RandomInt(0, allHuntableAgentBuildDatas.Count)];
+        }
+
+        /// <summary>
+        /// Resolves the herd a saved notification points at. Falls back to the spawn id and finally
+        /// to a random herd, so a hunting_herds.xml edited between saves can never NRE.
+        /// </summary>
+        public static HerdBuildData? Resolve(int index, string? spawnId)
+        {
+            if (index >= 0 && index < allHuntableAgentBuildDatas.Count)
+            {
+                HerdBuildData candidate = allHuntableAgentBuildDatas[index];
+                if (string.IsNullOrEmpty(spawnId) || candidate.SpawnId == spawnId)
+                    return candidate;
             }
 
-            if (candidates.Count == 0)
-                return false; // nothing lives on this terrain — no sighting
+            if (!string.IsNullOrEmpty(spawnId))
+            {
+                HerdBuildData? bySpawnId = allHuntableAgentBuildDatas.FirstOrDefault(h => h.SpawnId == spawnId);
+                if (bySpawnId != null)
+                    return bySpawnId;
+            }
 
-            CurrentHerdBuildData = candidates[MBRandom.RandomInt(0, candidates.Count)];
-            return true;
+            return PickRandom(null);
+        }
+
+        /// <summary>Legacy helper: randomizes the static "current herd". Kept for compatibility.</summary>
+        public static void Randomize()
+        {
+            HerdBuildData? picked = PickRandom(null);
+            if (picked != null)
+                CurrentHerdBuildData = picked;
         }
     }
 }

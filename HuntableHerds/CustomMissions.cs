@@ -11,7 +11,7 @@ using TaleWorlds.MountAndBlade.View;
 namespace RealmsForgotten.HuntableHerds
 {
     public static class CustomMissions {
-        public static Mission StartHuntingMission(string sceneName, bool isRandomScene) {
+        public static Mission StartHuntingMission(string sceneName, bool isRandomScene, HerdBuildData? herd = null) {
             return MissionState.OpenNew(sceneName,
                 SandBoxMissions.CreateSandBoxMissionInitializerRecord(sceneName, "", false, DecalAtlasGroup.Battle),
                 (Mission mission) => new MissionBehavior[] {
@@ -35,7 +35,7 @@ namespace RealmsForgotten.HuntableHerds
                     ViewCreator.CreateMissionSingleplayerEscapeMenu(false),
                     ViewCreator.CreateOptionsUIHandler(),
                     ViewCreator.CreatePhotoModeView(),
-                    new HerdMissionLogic(isRandomScene)
+                    new HerdMissionLogic(isRandomScene, herd)
                 });
         }
     }

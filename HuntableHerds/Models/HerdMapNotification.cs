@@ -1,32 +1,47 @@
-﻿using TaleWorlds.Core;
+using TaleWorlds.Core;
 using TaleWorlds.Localization;
 using TaleWorlds.SaveSystem;
 
-namespace RealmsForgotten.HuntableHerds.Models {
-    public class HerdMapNotification : InformationData {
-        // Capture the title at construction. Reading the live static in the
-        // getter meant a SAVED notification showed the title of whatever herd
-        // was randomized LAST (the last XML entry after load), not the one this
-        // notification was created for. Fall back to the static for old saves.
+namespace RealmsForgotten.HuntableHerds.Models
+{
+    /// <summary>
+    /// A "herd spotted" map notice. The herd it refers to is stored ON THE NOTIFICATION, so an old
+    /// notice opened after a newer one was created still starts the hunt it advertised. Previously
+    /// this class read <see cref="HerdBuildData.CurrentHerdBuildData"/>, which meant every notice
+    /// silently mutated into whatever herd was rolled last.
+    /// </summary>
+    public class HerdMapNotification : InformationData
+    {
+        // Only save-system friendly primitives are persisted; the HerdBuildData itself is resolved
+        // on demand, so editing hunting_herds.xml between saves cannot corrupt a save.
         [SaveableField(1)]
-        private string _capturedTitle;
+        private int _herdIndex;
 
-        public override TextObject TitleText {
-            get {
-                return new TextObject(string.IsNullOrEmpty(_capturedTitle)
-                    ? HerdBuildData.CurrentHerdBuildData.MessageTitle
-                    : _capturedTitle);
-            }
+        [SaveableField(2)]
+        private string _herdSpawnId;
+
+        [SaveableField(3)]
+        private string _titleText;
+
+        public HerdMapNotification(TextObject description) : base(description)
+        {
+            _herdIndex = -1;
+            _herdSpawnId = string.Empty;
+            _titleText = "Herd Spotted";
         }
 
-        public override string SoundEventPath {
-            get {
-                return "";
-            }
+        public HerdMapNotification(HerdBuildData herd, string title, TextObject description) : base(description)
+        {
+            _herdIndex = herd?.Index ?? -1;
+            _herdSpawnId = herd?.SpawnId ?? string.Empty;
+            _titleText = string.IsNullOrEmpty(title) ? "Herd Spotted" : title;
         }
 
-        public HerdMapNotification(TextObject description) : base(description) {
-            _capturedTitle = HerdBuildData.CurrentHerdBuildData.MessageTitle;
-        }
+        /// <summary>The herd this notice advertises. Never null while hunting_herds.xml has entries.</summary>
+        public HerdBuildData? Herd => HerdBuildData.Resolve(_herdIndex, _herdSpawnId);
+
+        public override TextObject TitleText => new TextObject(_titleText ?? "Herd Spotted");
+
+        public override string SoundEventPath => "";
     }
 }

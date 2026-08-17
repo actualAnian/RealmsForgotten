@@ -1,6 +1,6 @@
-﻿using RealmsForgotten.HuntableHerds.Models;
+using RealmsForgotten.HuntableHerds.Models;
+using System;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
@@ -8,65 +8,117 @@ using TaleWorlds.SaveSystem;
 
 namespace RealmsForgotten.HuntableHerds
 {
-    public class HerdSpottingBehavior : CampaignBehaviorBase {
-        public override void RegisterEvents() {
+    public class HerdSpottingBehavior : CampaignBehaviorBase
+    {
+        /// <summary>Campaign day (fractional) before which no new herd notification may appear.</summary>
+        private float _nextSpottingDay = -1f;
+
+        private static HerdSpottingBehavior? _instance;
+
+        public HerdSpottingBehavior()
+        {
+            _instance = this;
+        }
+
+        public override void RegisterEvents()
+        {
             CampaignEvents.DailyTickPartyEvent.AddNonSerializedListener(this, OnDailyTickParty);
-
         }
 
-        public override void SyncData(IDataStore dataStore) {
-            //
+        public override void SyncData(IDataStore dataStore)
+        {
+            // New key: absent in old saves, which just means "no cooldown pending".
+            dataStore.SyncData("_rfHuntNextSpottingDay", ref _nextSpottingDay);
         }
 
-        // Water terrains the player crosses only by ship — no land herds there.
-        private static bool IsWaterTerrain(TerrainType terrain) {
-            return terrain == TerrainType.Water
-                || terrain == TerrainType.Lake
-                || terrain == TerrainType.River
-                || terrain == TerrainType.CoastalSea
-                || terrain == TerrainType.OpenSea;
+        /// <summary>Called when the player accepts a hunt, so the map goes quiet for a while afterwards.</summary>
+        public static void NotifyHuntAccepted()
+        {
+            try
+            {
+                _instance?.ApplyPostHuntCooldown();
+            }
+            catch (Exception)
+            {
+                // never let cooldown bookkeeping break the hunt
+            }
         }
 
-        private void OnDailyTickParty(MobileParty party) {
-            if (!party.IsMainParty || party.CurrentSettlement != null)
-                return;
-
-            // Only spot herds while genuinely travelling the land campaign map:
-            // not aboard a ship / at sea, not mid-encounter or battle, not parked
-            // in a menu (settlement is already covered above).
-            if (party.IsCurrentlyAtSea
-                || party.MapEvent != null
-                || party.BesiegerCamp != null
-                || party.Army != null && party.Army.LeaderParty != party
-                || PlayerEncounter.Current != null
-                || Campaign.Current.CurrentMenuContext != null)
-                return;
-
-            TerrainType terrain = Campaign.Current.MapSceneWrapper.GetFaceTerrainType(party.CurrentNavigationFace);
-            if (IsWaterTerrain(terrain))
-                return;
-
-            if (MBRandom.RandomFloat <= Settings.Instance.DailyChanceOfSpottingHerd)
-                ShowHuntingHerdNotification(terrain);
+        private void ApplyPostHuntCooldown()
+        {
+            float today = (float)CampaignTime.Now.ToDays;
+            float candidate = today + Settings.Instance.MinDaysBetweenHerdSpottings + Settings.Instance.ExtraCooldownDaysAfterHunt;
+            if (candidate > _nextSpottingDay)
+                _nextSpottingDay = candidate;
         }
 
-        private void ShowHuntingHerdNotification(TerrainType terrain) {
-            // Pick a herd that fits this biome; suppress if nothing lives here.
-            if (!HerdBuildData.RandomizeForTerrain(terrain) || HerdBuildData.CurrentHerdBuildData == null)
+        private void OnDailyTickParty(MobileParty party)
+        {
+            try
+            {
+                if (party == null || !party.IsMainParty || party.CurrentSettlement != null)
+                    return;
+
+                if (Settings.Instance.DailyChanceOfSpottingHerd <= 0f)
+                    return;
+
+                float today = (float)CampaignTime.Now.ToDays;
+                if (_nextSpottingDay > 0f && today < _nextSpottingDay)
+                    return;
+
+                if (MBRandom.RandomFloat > Settings.Instance.DailyChanceOfSpottingHerd)
+                    return;
+
+                ShowHuntingHerdNotification(today);
+            }
+            catch (Exception e)
+            {
+                SubModule.PrintDebugMessage($"HuntableHerds: herd spotting tick failed ({e.Message})", 255, 0, 0);
+            }
+        }
+
+        private void ShowHuntingHerdNotification(float today)
+        {
+            HerdBuildData? herd = HerdBuildData.PickRandom(TryGetMainPartyTerrain());
+            if (herd == null)
                 return;
-            Campaign.Current.CampaignInformationManager.NewMapNoticeAdded(new HerdMapNotification(new TextObject(HerdBuildData.CurrentHerdBuildData.NotifMessage)));
+
+            // Cooldown starts the moment a notice is posted, whether or not the player inspects it.
+            _nextSpottingDay = today + Settings.Instance.MinDaysBetweenHerdSpottings;
+
+            string title = herd.MessageTitle;
+            string notice = herd.NotifMessage;
+            Campaign.Current.CampaignInformationManager.NewMapNoticeAdded(
+                new HerdMapNotification(herd, title, new TextObject(notice)));
+        }
+
+        private static TerrainType? TryGetMainPartyTerrain()
+        {
+            if (!Settings.Instance.FilterHerdsByTerrain)
+                return null;
+            try
+            {
+                return Campaign.Current.MapSceneWrapper.GetTerrainTypeAtPosition(MobileParty.MainParty.Position);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 
-    public class CustomSaveDefiner : SaveableTypeDefiner {
+    public class CustomSaveDefiner : SaveableTypeDefiner
+    {
         public CustomSaveDefiner() : base(877885323) { }
 
-        protected override void DefineClassTypes() {
+        protected override void DefineClassTypes()
+        {
             AddClassDefinition(typeof(HerdMapNotification), 1);
             AddClassDefinition(typeof(HerdMapNotificationItemVM), 2);
         }
 
-        protected override void DefineContainerDefinitions() {
+        protected override void DefineContainerDefinitions()
+        {
             //
         }
     }

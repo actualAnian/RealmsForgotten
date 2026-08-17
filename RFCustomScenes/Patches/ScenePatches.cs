@@ -29,20 +29,30 @@ namespace RFCustomSettlements.Patches
         static readonly MethodInfo curMisInfo = AccessTools.PropertyGetter("MissionMainAgentInteractionComponent:CurrentMission");
         static bool Prefix(MissionMainAgentInteractionComponent __instance)
         {
-            CustomSettlementMissionLogic logic;
-            if ((logic = Mission.Current.GetMissionBehavior<CustomSettlementMissionLogic>()) == null) return true;
+            // Resolved through the shared interface: RF custom settlements AND standalone hunting
+            // missions both provide lootable corpses.
+            RealmsForgotten.HuntableHerds.IRFLootableMission? logic = GetLootableMission();
+            if (logic == null) return true;
             if (!((MissionScreen)curMisScrInfo.Invoke(__instance, null)).SceneLayer.Input.IsGameKeyPressed(13)) return true;
             var c = (Mission)curMisInfo.Invoke(__instance, null);
             Agent? agent;
-            if ((agent = __instance.CurrentFocusedObject as Agent) != null && IsLootableDeadAgent(agent))
+            if ((agent = __instance.CurrentFocusedObject as Agent) != null)
             {
-                logic.OnAgentLooted(agent);
-                return false;
+                if (IsLootableDeadAgent(agent))
+                {
+                    logic.OnAgentLooted(agent);
+                    return false;
+                }
+                // Live prey must never be mountable: swallow the interaction instead.
+                if (agent.IsActive() && agent.Components.Any(comp => comp is RealmsForgotten.HuntableHerds.AgentComponents.HerdAgentComponent))
+                    return false;
             }
             UsablePlace? usablePlace;
             if ((usablePlace = (__instance.CurrentFocusedMachine as UsablePlace)) != null && IsRFObject(usablePlace) && CanInteract)
             {
-                ((CustomSettlementMissionLogic)c.MissionBehaviors.Where(m => m is CustomSettlementMissionLogic).ElementAt(0)).OnObjectUsed(usablePlace);
+                CustomSettlementMissionLogic? settlementLogic = c.MissionBehaviors.FirstOrDefault(m => m is CustomSettlementMissionLogic) as CustomSettlementMissionLogic;
+                if (settlementLogic == null) return true;
+                settlementLogic.OnObjectUsed(usablePlace);
                 return false;
             }
             return true;

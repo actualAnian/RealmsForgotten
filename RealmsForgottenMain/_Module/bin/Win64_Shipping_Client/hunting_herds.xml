@@ -1,10 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  HuntableHerds data. Read by HerdBuildData.BuildAll() from the folder the assembly lives in
+  (Modules/RealmsForgotten/bin/Win64_Shipping_Client), so this file must be copied next to
+  HuntableHerds.dll.
+
+  Per-herd tuning:
+    notifMessage / messageTitle / message  REPEATABLE. One is picked at random per notification,
+                                           which is what keeps the map notices from reading the same
+                                           four lines forever.
+    spawnId          ItemObject id of the animal (its <Horse monster="..."> decides the action set).
+    totalAmountInHerd  Animals spawned over the hunt. Hard-clamped by
+                       Settings.MaxAliveAnimalsPerHunt, so huge values here are safe but pointless.
+    isPassive        true  -> PassiveHerdAgentComponent: only flees.
+                     false -> AggressiveHerdAgentComponent: chase / telegraph / bite / short recoil.
+    sightRange       METERS. It is now really used as a distance (it used to be passed into the
+                     view-cone angle slot, which made the cone always true and pinned the real
+                     distance at the 30m default).
+    hitboxRange      METERS at which a blow can land. The wind-up starts
+                     Settings.TelegraphExtraRange meters earlier.
+    fleeOnAttacked   MUST match isPassive. An aggressive animal with fleeOnAttacked=true was the
+                     old "bite and run away" bug: every hit cancelled its pursuit.
+                     Want deer / sheep to be fleeing prey instead of fighters? Set BOTH
+                     isPassive=true and fleeOnAttacked=true on that entry.
+    terrain          OPTIONAL, repeatable. Campaign-map TerrainType names (Plain, Forest, Steppe,
+                     Desert, Snow, Mountain, Swamp, Dune, RuralArea, Canyon, Beach, ...). When
+                     present, the herd is only offered while the main party stands on one of them.
+                     No <terrain> entries = any terrain. Can be switched off globally with
+                     Settings.FilterHerdsByTerrain.
+-->
 <Herds>
 
-<Herd>
-    <notifMessage>Herd of Rats spotted</notifMessage>
+  <Herd>
+    <notifMessage>Rodent tracks spotted</notifMessage>
+    <notifMessage>Something is nesting nearby</notifMessage>
+    <notifMessage>Gnawed bones found off the road</notifMessage>
+    <messageTitle>Vermin Nest</messageTitle>
     <messageTitle>Herd Spotted</messageTitle>
-    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <message>Your scouts found a warren of overgrown rodents. Do you clear it out?</message>
+    <message>Fresh droppings and gnawed bones mark a rodent den close by. Do you hunt?</message>
     <spawnId>giant_rodent_baby</spawnId>
     <totalAmountInHerd>3</totalAmountInHerd>
     <isPassive>false</isPassive>
@@ -14,6 +47,9 @@
     <damageToPlayer>10</damageToPlayer>
     <sightRange>25.0</sightRange>
     <fleeOnAttacked>false</fleeOnAttacked>
+    <terrain>Forest</terrain>
+    <terrain>Swamp</terrain>
+    <terrain>Plain</terrain>
     <ItemDrops>
       <ItemDrop>
         <itemId>fur</itemId>
@@ -30,10 +66,14 @@
     </SceneIds>
   </Herd>
 
-<Herd>
-    <notifMessage>Herd of Rats spotted</notifMessage>
-    <messageTitle>Herd Spotted</messageTitle>
-    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+  <Herd>
+    <notifMessage>A plague rat prowls nearby</notifMessage>
+    <notifMessage>Villagers speak of a monstrous rat</notifMessage>
+    <notifMessage>Something large moves through the reeds</notifMessage>
+    <messageTitle>A Plague Rat</messageTitle>
+    <messageTitle>Beast Spotted</messageTitle>
+    <message>A rat the size of a hound has been sighted. It will not run. Do you hunt it?</message>
+    <message>Your scouts followed a foul trail to a lair. Whatever made it is still there. Do you go in?</message>
     <spawnId>rat</spawnId>
     <totalAmountInHerd>1</totalAmountInHerd>
     <isPassive>false</isPassive>
@@ -42,7 +82,9 @@
     <hitboxRange>2.1</hitboxRange>
     <damageToPlayer>100</damageToPlayer>
     <sightRange>25.0</sightRange>
-    <fleeOnAttacked>true</fleeOnAttacked>
+    <fleeOnAttacked>false</fleeOnAttacked>
+    <terrain>Swamp</terrain>
+    <terrain>Forest</terrain>
     <ItemDrops>
       <ItemDrop>
         <itemId>fur</itemId>
@@ -59,10 +101,14 @@
     </SceneIds>
   </Herd>
 
-<Herd>
-    <notifMessage>Herd of Cows spotted</notifMessage>
+  <Herd>
+    <notifMessage>Wild cattle grazing on the plain</notifMessage>
+    <notifMessage>A herd of cattle wanders unattended</notifMessage>
+    <notifMessage>Hoofprints of heavy cattle cross the road</notifMessage>
+    <messageTitle>Wild Cattle</messageTitle>
     <messageTitle>Herd Spotted</messageTitle>
-    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <message>A herd of unbranded cattle grazes ahead. Do you take the meat and hides?</message>
+    <message>Your scouts counted a score of cattle with no herdsman in sight. Do you hunt?</message>
     <spawnId>cow</spawnId>
     <totalAmountInHerd>20</totalAmountInHerd>
     <isPassive>false</isPassive>
@@ -70,8 +116,11 @@
     <maxSpeed>12.0</maxSpeed>
     <hitboxRange>2.0</hitboxRange>
     <damageToPlayer>20</damageToPlayer>
-    <sightRange>15.0</sightRange>
-    <fleeOnAttacked>true</fleeOnAttacked>
+    <sightRange>30.0</sightRange>
+    <fleeOnAttacked>false</fleeOnAttacked>
+    <terrain>Plain</terrain>
+    <terrain>RuralArea</terrain>
+    <terrain>Steppe</terrain>
     <ItemDrops>
       <ItemDrop>
         <itemId>fur</itemId>
@@ -84,14 +133,19 @@
         <maxAmount>20</maxAmount>
       </ItemDrop>
     </ItemDrops>
-      <SceneIds>
+    <SceneIds>
       <sceneId>hunting_ground_e</sceneId>
     </SceneIds>
   </Herd>
-<Herd>
-    <notifMessage>Herd of Sheep spotted</notifMessage>
+
+  <Herd>
+    <notifMessage>A flock of sheep strays on the hillside</notifMessage>
+    <notifMessage>Sheep without a shepherd nearby</notifMessage>
+    <notifMessage>Wool caught on the thornbushes ahead</notifMessage>
+    <messageTitle>Stray Flock</messageTitle>
     <messageTitle>Herd Spotted</messageTitle>
-    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <message>A flock has strayed far from any pen. Do you take what you need?</message>
+    <message>Your scouts found sheep grazing the slopes with no shepherd. Do you hunt?</message>
     <spawnId>sheep</spawnId>
     <totalAmountInHerd>20</totalAmountInHerd>
     <isPassive>false</isPassive>
@@ -99,8 +153,11 @@
     <maxSpeed>12.0</maxSpeed>
     <hitboxRange>2.0</hitboxRange>
     <damageToPlayer>20</damageToPlayer>
-    <sightRange>15.0</sightRange>
-    <fleeOnAttacked>true</fleeOnAttacked>
+    <sightRange>30.0</sightRange>
+    <fleeOnAttacked>false</fleeOnAttacked>
+    <terrain>Plain</terrain>
+    <terrain>RuralArea</terrain>
+    <terrain>Mountain</terrain>
     <ItemDrops>
       <ItemDrop>
         <itemId>fur</itemId>
@@ -113,14 +170,19 @@
         <maxAmount>8</maxAmount>
       </ItemDrop>
     </ItemDrops>
-      <SceneIds>
+    <SceneIds>
       <sceneId>hunting_ground_d</sceneId>
     </SceneIds>
   </Herd>
-<Herd>
-    <notifMessage>Herd of Cows spotted</notifMessage>
+
+  <Herd>
+    <notifMessage>Cattle bellowing beyond the ridge</notifMessage>
+    <notifMessage>A drove of cattle blocks the low ground</notifMessage>
+    <notifMessage>Trampled grass marks a passing herd</notifMessage>
+    <messageTitle>Wild Cattle</messageTitle>
     <messageTitle>Herd Spotted</messageTitle>
-    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <message>Cattle have gathered at the water below. Do you go down after them?</message>
+    <message>Your scouts spotted a drove of cattle. Meat enough for days. Do you hunt?</message>
     <spawnId>cow</spawnId>
     <totalAmountInHerd>20</totalAmountInHerd>
     <isPassive>false</isPassive>
@@ -128,8 +190,11 @@
     <maxSpeed>12.0</maxSpeed>
     <hitboxRange>2.0</hitboxRange>
     <damageToPlayer>20</damageToPlayer>
-    <sightRange>15.0</sightRange>
-    <fleeOnAttacked>true</fleeOnAttacked>
+    <sightRange>30.0</sightRange>
+    <fleeOnAttacked>false</fleeOnAttacked>
+    <terrain>Plain</terrain>
+    <terrain>Steppe</terrain>
+    <terrain>RuralArea</terrain>
     <ItemDrops>
       <ItemDrop>
         <itemId>fur</itemId>
@@ -142,14 +207,19 @@
         <maxAmount>20</maxAmount>
       </ItemDrop>
     </ItemDrops>
-      <SceneIds>
+    <SceneIds>
       <sceneId>hunting_ground_c</sceneId>
     </SceneIds>
   </Herd>
-<Herd>
-    <notifMessage>Herd of Boars spotted</notifMessage>
+
+  <Herd>
+    <notifMessage>Boar rootings found in the undergrowth</notifMessage>
+    <notifMessage>Boars are moving through the thicket</notifMessage>
+    <notifMessage>Tusk marks on the trees ahead</notifMessage>
+    <messageTitle>Boar in the Thicket</messageTitle>
     <messageTitle>Herd Spotted</messageTitle>
-    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <message>Boars have torn up the forest floor nearby. They will charge. Do you hunt?</message>
+    <message>Your scouts found a sounder of boar. Dangerous, and worth the risk. Do you go?</message>
     <spawnId>dugrast_boar</spawnId>
     <totalAmountInHerd>20</totalAmountInHerd>
     <isPassive>false</isPassive>
@@ -157,8 +227,10 @@
     <maxSpeed>12.0</maxSpeed>
     <hitboxRange>2.0</hitboxRange>
     <damageToPlayer>20</damageToPlayer>
-    <sightRange>15.0</sightRange>
-    <fleeOnAttacked>true</fleeOnAttacked>
+    <sightRange>30.0</sightRange>
+    <fleeOnAttacked>false</fleeOnAttacked>
+    <terrain>Forest</terrain>
+    <terrain>Swamp</terrain>
     <ItemDrops>
       <ItemDrop>
         <itemId>fur</itemId>
@@ -171,14 +243,19 @@
         <maxAmount>8</maxAmount>
       </ItemDrop>
     </ItemDrops>
-      <SceneIds>
+    <SceneIds>
       <sceneId>hunting_ground_b</sceneId>
     </SceneIds>
   </Herd>
-<Herd>
-    <notifMessage>Herd of Deers spotted</notifMessage>
+
+  <Herd>
+    <notifMessage>Deer tracks lead into the woods</notifMessage>
+    <notifMessage>A stag was seen at the treeline</notifMessage>
+    <notifMessage>Fresh slots in the mud by the stream</notifMessage>
+    <messageTitle>Deer at the Treeline</messageTitle>
     <messageTitle>Herd Spotted</messageTitle>
-    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <message>Deer are grazing at the edge of the wood. Do you stalk them?</message>
+    <message>Your scouts followed deer tracks to a clearing. Do you pursue a hunt?</message>
     <spawnId>red_deer</spawnId>
     <totalAmountInHerd>20</totalAmountInHerd>
     <isPassive>false</isPassive>
@@ -186,8 +263,10 @@
     <maxSpeed>15.0</maxSpeed>
     <hitboxRange>3.0</hitboxRange>
     <damageToPlayer>20</damageToPlayer>
-    <sightRange>20.0</sightRange>
-    <fleeOnAttacked>true</fleeOnAttacked>
+    <sightRange>45.0</sightRange>
+    <fleeOnAttacked>false</fleeOnAttacked>
+    <terrain>Forest</terrain>
+    <terrain>Plain</terrain>
     <ItemDrops>
       <ItemDrop>
         <itemId>fur</itemId>
@@ -200,14 +279,19 @@
         <maxAmount>8</maxAmount>
       </ItemDrop>
     </ItemDrops>
-      <SceneIds>
+    <SceneIds>
       <sceneId>hunting_ground_a</sceneId>
     </SceneIds>
   </Herd>
-<Herd>
-    <notifMessage>Herd of Hogs spotted</notifMessage>
+
+  <Herd>
+    <notifMessage>Wild hogs rooting near the ruins</notifMessage>
+    <notifMessage>A sounder of hogs crosses the trail</notifMessage>
+    <notifMessage>Squealing carries from the brush</notifMessage>
+    <messageTitle>Wild Hogs</messageTitle>
     <messageTitle>Herd Spotted</messageTitle>
-    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <message>Hogs are rooting through the brush ahead. They will not scatter. Do you hunt?</message>
+    <message>Your scouts found a sounder of wild hogs. Do you pursue a hunt?</message>
     <spawnId>hog</spawnId>
     <totalAmountInHerd>15</totalAmountInHerd>
     <isPassive>false</isPassive>
@@ -215,8 +299,11 @@
     <maxSpeed>10.0</maxSpeed>
     <hitboxRange>2.1</hitboxRange>
     <damageToPlayer>15</damageToPlayer>
-    <sightRange>15.0</sightRange>
-    <fleeOnAttacked>true</fleeOnAttacked>
+    <sightRange>30.0</sightRange>
+    <fleeOnAttacked>false</fleeOnAttacked>
+    <terrain>Forest</terrain>
+    <terrain>Swamp</terrain>
+    <terrain>RuralArea</terrain>
     <ItemDrops>
       <ItemDrop>
         <itemId>fur</itemId>
@@ -229,23 +316,30 @@
         <maxAmount>5</maxAmount>
       </ItemDrop>
     </ItemDrops>
-      <SceneIds>
+    <SceneIds>
       <sceneId>cyclops_battle</sceneId>
     </SceneIds>
   </Herd>
-<Herd>
-    <notifMessage>Tracks of Wild Beast Spotted</notifMessage>
-    <messageTitle>You spotted tracks of a wild beast</messageTitle>
-    <message>You spotted tracks of a wild beast</message>
+
+  <Herd>
+    <notifMessage>Tracks of a wild beast spotted</notifMessage>
+    <notifMessage>Great hoofprints churn the steppe</notifMessage>
+    <notifMessage>Dust on the horizon: something big is moving</notifMessage>
+    <messageTitle>Tracks of a Wild Beast</messageTitle>
+    <messageTitle>Great Beasts</messageTitle>
+    <message>You spotted the tracks of a wild beast. Do you follow them?</message>
+    <message>Something heavy crossed here, and not long ago. Do you hunt it?</message>
     <spawnId>bison</spawnId>
     <totalAmountInHerd>5</totalAmountInHerd>
     <isPassive>false</isPassive>
     <startingHealth>60.0</startingHealth>
-     <maxSpeed>20.0</maxSpeed>
+    <maxSpeed>20.0</maxSpeed>
     <hitboxRange>1.2</hitboxRange>
     <damageToPlayer>12</damageToPlayer>
-    <sightRange>30.0</sightRange>
+    <sightRange>40.0</sightRange>
     <fleeOnAttacked>false</fleeOnAttacked>
+    <terrain>Steppe</terrain>
+    <terrain>Plain</terrain>
     <ItemDrops>
       <ItemDrop>
         <itemId>fur</itemId>
@@ -257,15 +351,19 @@
         <amount>5</amount>
       </ItemDrop>
     </ItemDrops>
-     <SceneIds>
-        <sceneId>tribal_island</sceneId>
-     </SceneIds>
+    <SceneIds>
+      <sceneId>tribal_island</sceneId>
+    </SceneIds>
   </Herd>
 
   <Herd>
-    <notifMessage>Herd of Deers spotted</notifMessage>
+    <notifMessage>An old stag walks the deep wood</notifMessage>
+    <notifMessage>Antler scars high on ancient trunks</notifMessage>
+    <notifMessage>The forest has gone quiet ahead</notifMessage>
+    <messageTitle>The Old Stag</messageTitle>
     <messageTitle>Herd Spotted</messageTitle>
-    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <message>Something very old moves through the deep wood. Do you go after it?</message>
+    <message>Your scouts will not follow the tracks any further. Do you hunt alone?</message>
     <spawnId>ancient_deer</spawnId>
     <totalAmountInHerd>2</totalAmountInHerd>
     <isPassive>false</isPassive>
@@ -273,8 +371,9 @@
     <maxSpeed>15.0</maxSpeed>
     <hitboxRange>2.1</hitboxRange>
     <damageToPlayer>20</damageToPlayer>
-    <sightRange>25.0</sightRange>
-    <fleeOnAttacked>true</fleeOnAttacked>
+    <sightRange>45.0</sightRange>
+    <fleeOnAttacked>false</fleeOnAttacked>
+    <terrain>Forest</terrain>
     <ItemDrops>
       <ItemDrop>
         <itemId>fur</itemId>
@@ -287,15 +386,19 @@
         <maxAmount>12</maxAmount>
       </ItemDrop>
     </ItemDrops>
-      <SceneIds>
+    <SceneIds>
       <sceneId>beast_hunt_1</sceneId>
     </SceneIds>
   </Herd>
 
   <Herd>
-    <notifMessage>Herd of Deers spotted</notifMessage>
+    <notifMessage>Deer graze among old stones</notifMessage>
+    <notifMessage>A herd shelters in the ruins</notifMessage>
+    <notifMessage>Tracks lead in among fallen walls</notifMessage>
+    <messageTitle>Deer Among the Ruins</messageTitle>
     <messageTitle>Herd Spotted</messageTitle>
-    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <message>A herd has made the old ruins its own. Do you hunt there?</message>
+    <message>Your scouts spotted deer between the broken walls. Do you pursue a hunt?</message>
     <spawnId>red_deer</spawnId>
     <totalAmountInHerd>12</totalAmountInHerd>
     <isPassive>false</isPassive>
@@ -303,8 +406,10 @@
     <maxSpeed>15.0</maxSpeed>
     <hitboxRange>2.1</hitboxRange>
     <damageToPlayer>100</damageToPlayer>
-    <sightRange>25.0</sightRange>
-    <fleeOnAttacked>true</fleeOnAttacked>
+    <sightRange>45.0</sightRange>
+    <fleeOnAttacked>false</fleeOnAttacked>
+    <terrain>Forest</terrain>
+    <terrain>Plain</terrain>
     <ItemDrops>
       <ItemDrop>
         <itemId>fur</itemId>
@@ -320,10 +425,15 @@
       <sceneId>old_king_ruins</sceneId>
     </SceneIds>
   </Herd>
+
   <Herd>
-    <notifMessage>Herd of mad cows spotted</notifMessage>
+    <notifMessage>Maddened cattle roam the fields</notifMessage>
+    <notifMessage>Farmers speak of cattle gone wrong</notifMessage>
+    <notifMessage>Cattle bellow in the dark and will not settle</notifMessage>
+    <messageTitle>Mad Cattle</messageTitle>
     <messageTitle>Herd Spotted</messageTitle>
-    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <message>These cattle charge anything that moves. Do you put them down?</message>
+    <message>Something is wrong with this herd. Do you go and see?</message>
     <spawnId>cow</spawnId>
     <totalAmountInHerd>100</totalAmountInHerd>
     <isPassive>false</isPassive>
@@ -331,8 +441,8 @@
     <maxSpeed>10.0</maxSpeed>
     <hitboxRange>2.1</hitboxRange>
     <damageToPlayer>15</damageToPlayer>
-    <sightRange>15.0</sightRange>
-    <fleeOnAttacked>true</fleeOnAttacked>
+    <sightRange>30.0</sightRange>
+    <fleeOnAttacked>false</fleeOnAttacked>
     <ItemDrops>
       <ItemDrop>
         <itemId>fur</itemId>
@@ -346,10 +456,15 @@
       </ItemDrop>
     </ItemDrops>
   </Herd>
+
   <Herd>
-    <notifMessage>Herd of chickens spotted</notifMessage>
+    <notifMessage>Wild fowl scratching in the grass</notifMessage>
+    <notifMessage>A brood of chickens has gone feral</notifMessage>
+    <notifMessage>Feathers and scratchings by the hedgerow</notifMessage>
+    <messageTitle>Wild Fowl</messageTitle>
     <messageTitle>Herd Spotted</messageTitle>
-    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <message>Easy meat, if you can catch it. Do you go after the birds?</message>
+    <message>Your scouts found feral fowl in the grass. Do you pursue a hunt?</message>
     <spawnId>chicken</spawnId>
     <totalAmountInHerd>100</totalAmountInHerd>
     <isPassive>true</isPassive>
@@ -366,10 +481,15 @@
       </ItemDrop>
     </ItemDrops>
   </Herd>
+
   <Herd>
-    <notifMessage>Herd of vengeful horses spotted</notifMessage>
+    <notifMessage>Riderless horses circle the field</notifMessage>
+    <notifMessage>Warhorses without riders, and no bodies</notifMessage>
+    <notifMessage>Hoofbeats in the night, coming closer</notifMessage>
+    <messageTitle>Vengeful Horses</messageTitle>
     <messageTitle>Herd Spotted</messageTitle>
-    <message>Your scouts spotted the tracks of wild beasts. Do you pursue a hunt?</message>
+    <message>These horses lost their riders and have not forgiven it. Do you face them?</message>
+    <message>Your scouts refuse to go near them. Do you ride out yourself?</message>
     <spawnId>battania_horse_tournament</spawnId>
     <totalAmountInHerd>1000</totalAmountInHerd>
     <isPassive>false</isPassive>
@@ -377,7 +497,7 @@
     <maxSpeed>40.0</maxSpeed>
     <hitboxRange>2.25</hitboxRange>
     <damageToPlayer>35</damageToPlayer>
-    <sightRange>100.0</sightRange>
+    <sightRange>60.0</sightRange>
     <fleeOnAttacked>false</fleeOnAttacked>
     <ItemDrops>
       <ItemDrop>
@@ -387,5 +507,5 @@
       </ItemDrop>
     </ItemDrops>
   </Herd>
-  
+
 </Herds>
