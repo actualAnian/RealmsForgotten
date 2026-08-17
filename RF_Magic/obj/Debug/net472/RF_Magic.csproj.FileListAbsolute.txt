@@ -1,0 +1,10 @@
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Magic\bin\Debug\net472\SOTOR.dll
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Magic\bin\Debug\net472\SOTOR.pdb
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Magic\obj\Debug\net472\RF_Magic.csproj.AssemblyReference.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Magic\obj\Debug\net472\RF_Magic.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Magic\obj\Debug\net472\RF_Magic.AssemblyInfoInputs.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Magic\obj\Debug\net472\RF_Magic.AssemblyInfo.cs
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Magic\obj\Debug\net472\RF_Magic.csproj.CoreCompileInputs.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Magic\obj\Debug\net472\RF_Magic.sourcelink.json
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Magic\obj\Debug\net472\SOTOR.dll
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Magic\obj\Debug\net472\SOTOR.pdb

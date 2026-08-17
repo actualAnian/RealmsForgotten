@@ -1,0 +1,169 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\gupol\\Documents\\Bannerlord_Warsails_AI\\RF_Warsails_AI\\RF_ResourceZones\\RF_ResourceZones.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\gupol\\Documents\\Bannerlord_Warsails_AI\\RF_Warsails_AI\\RF_ResourceZones\\RF_ResourceZones.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\gupol\\Documents\\Bannerlord_Warsails_AI\\RF_Warsails_AI\\RF_ResourceZones\\RF_ResourceZones.csproj",
+        "projectName": "RF_ResourceZones",
+        "projectPath": "C:\\Users\\gupol\\Documents\\Bannerlord_Warsails_AI\\RF_Warsails_AI\\RF_ResourceZones\\RF_ResourceZones.csproj",
+        "packagesPath": "C:\\Users\\gupol\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\gupol\\Documents\\Bannerlord_Warsails_AI\\RF_Warsails_AI\\RF_ResourceZones\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\gupol\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net472"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net472": {
+            "targetAlias": "net472",
+            "projectReferences": {
+              "C:\\Users\\gupol\\Documents\\Bannerlord_Warsails_AI\\RF_Warsails_AI\\RF_Settlers\\RF_Settlers.csproj": {
+                "projectPath": "C:\\Users\\gupol\\Documents\\Bannerlord_Warsails_AI\\RF_Warsails_AI\\RF_Settlers\\RF_Settlers.csproj"
+              },
+              "C:\\Users\\gupol\\Documents\\Bannerlord_Warsails_AI\\RF_Warsails_AI\\RF_warsystem\\RF_warsystem.csproj": {
+                "projectPath": "C:\\Users\\gupol\\Documents\\Bannerlord_Warsails_AI\\RF_Warsails_AI\\RF_warsystem\\RF_warsystem.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net472": {
+          "targetAlias": "net472",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.315\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\gupol\\Documents\\Bannerlord_Warsails_AI\\RF_Warsails_AI\\RF_Settlers\\RF_Settlers.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\gupol\\Documents\\Bannerlord_Warsails_AI\\RF_Warsails_AI\\RF_Settlers\\RF_Settlers.csproj",
+        "projectName": "RF_Settlers",
+        "projectPath": "C:\\Users\\gupol\\Documents\\Bannerlord_Warsails_AI\\RF_Warsails_AI\\RF_Settlers\\RF_Settlers.csproj",
+        "packagesPath": "C:\\Users\\gupol\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\gupol\\Documents\\Bannerlord_Warsails_AI\\RF_Warsails_AI\\RF_Settlers\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\gupol\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net472"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net472": {
+            "targetAlias": "net472",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net472": {
+          "targetAlias": "net472",
+          "dependencies": {
+            "Lib.Harmony": {
+              "include": "Compile",
+              "target": "Package",
+              "version": "[2.4.2, )"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.315\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\gupol\\Documents\\Bannerlord_Warsails_AI\\RF_Warsails_AI\\RF_warsystem\\RF_warsystem.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\gupol\\Documents\\Bannerlord_Warsails_AI\\RF_Warsails_AI\\RF_warsystem\\RF_warsystem.csproj",
+        "projectName": "RF_warsystem",
+        "projectPath": "C:\\Users\\gupol\\Documents\\Bannerlord_Warsails_AI\\RF_Warsails_AI\\RF_warsystem\\RF_warsystem.csproj",
+        "packagesPath": "C:\\Users\\gupol\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\gupol\\Documents\\Bannerlord_Warsails_AI\\RF_Warsails_AI\\RF_warsystem\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\gupol\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net472"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net472": {
+            "targetAlias": "net472",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net472": {
+          "targetAlias": "net472",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.315\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

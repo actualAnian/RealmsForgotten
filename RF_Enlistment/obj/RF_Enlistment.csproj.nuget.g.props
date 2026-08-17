@@ -1,0 +1,224 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <RestoreSuccess Condition=" '$(RestoreSuccess)' == '' ">True</RestoreSuccess>
+    <RestoreTool Condition=" '$(RestoreTool)' == '' ">NuGet</RestoreTool>
+    <ProjectAssetsFile Condition=" '$(ProjectAssetsFile)' == '' ">$(MSBuildThisFileDirectory)project.assets.json</ProjectAssetsFile>
+    <NuGetPackageRoot Condition=" '$(NuGetPackageRoot)' == '' ">$(UserProfile)\.nuget\packages\</NuGetPackageRoot>
+    <NuGetPackageFolders Condition=" '$(NuGetPackageFolders)' == '' ">C:\Users\gupol\.nuget\packages\;C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages</NuGetPackageFolders>
+    <NuGetProjectStyle Condition=" '$(NuGetProjectStyle)' == '' ">PackageReference</NuGetProjectStyle>
+    <NuGetToolVersion Condition=" '$(NuGetToolVersion)' == '' ">6.14.2</NuGetToolVersion>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <SourceRoot Include="C:\Users\gupol\.nuget\packages\" />
+    <SourceRoot Include="C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages\" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Language)' == 'C#' AND '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Compile Include="$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\AccessCacheHandle.cs" Condition="Exists('$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\AccessCacheHandle.cs')">
+      <NuGetPackageId>Harmony.Extensions</NuGetPackageId>
+      <NuGetPackageVersion>3.2.0.77</NuGetPackageVersion>
+      <NuGetItemType>Compile</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>Harmony.Extensions\AccessCacheHandle.cs</Link>
+    </Compile>
+    <Compile Include="$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\AccessTools2.Constructor.cs" Condition="Exists('$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\AccessTools2.Constructor.cs')">
+      <NuGetPackageId>Harmony.Extensions</NuGetPackageId>
+      <NuGetPackageVersion>3.2.0.77</NuGetPackageVersion>
+      <NuGetItemType>Compile</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>Harmony.Extensions\AccessTools2.Constructor.cs</Link>
+    </Compile>
+    <Compile Include="$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\AccessTools2.Delegate.Constructor.cs" Condition="Exists('$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\AccessTools2.Delegate.Constructor.cs')">
+      <NuGetPackageId>Harmony.Extensions</NuGetPackageId>
+      <NuGetPackageVersion>3.2.0.77</NuGetPackageVersion>
+      <NuGetItemType>Compile</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>Harmony.Extensions\AccessTools2.Delegate.Constructor.cs</Link>
+    </Compile>
+    <Compile Include="$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\AccessTools2.Delegate.Property.cs" Condition="Exists('$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\AccessTools2.Delegate.Property.cs')">
+      <NuGetPackageId>Harmony.Extensions</NuGetPackageId>
+      <NuGetPackageVersion>3.2.0.77</NuGetPackageVersion>
+      <NuGetItemType>Compile</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>Harmony.Extensions\AccessTools2.Delegate.Property.cs</Link>
+    </Compile>
+    <Compile Include="$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\AccessTools2.Delegate.Shared.cs" Condition="Exists('$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\AccessTools2.Delegate.Shared.cs')">
+      <NuGetPackageId>Harmony.Extensions</NuGetPackageId>
+      <NuGetPackageVersion>3.2.0.77</NuGetPackageVersion>
+      <NuGetItemType>Compile</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>Harmony.Extensions\AccessTools2.Delegate.Shared.cs</Link>
+    </Compile>
+    <Compile Include="$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\AccessTools2.Delegate.cs" Condition="Exists('$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\AccessTools2.Delegate.cs')">
+      <NuGetPackageId>Harmony.Extensions</NuGetPackageId>
+      <NuGetPackageVersion>3.2.0.77</NuGetPackageVersion>
+      <NuGetItemType>Compile</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>Harmony.Extensions\AccessTools2.Delegate.cs</Link>
+    </Compile>
+    <Compile Include="$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\AccessTools2.Field.cs" Condition="Exists('$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\AccessTools2.Field.cs')">
+      <NuGetPackageId>Harmony.Extensions</NuGetPackageId>
+      <NuGetPackageVersion>3.2.0.77</NuGetPackageVersion>
+      <NuGetItemType>Compile</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>Harmony.Extensions\AccessTools2.Field.cs</Link>
+    </Compile>
+    <Compile Include="$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\AccessTools2.FieldRef.cs" Condition="Exists('$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\AccessTools2.FieldRef.cs')">
+      <NuGetPackageId>Harmony.Extensions</NuGetPackageId>
+      <NuGetPackageVersion>3.2.0.77</NuGetPackageVersion>
+      <NuGetItemType>Compile</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>Harmony.Extensions\AccessTools2.FieldRef.cs</Link>
+    </Compile>
+    <Compile Include="$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\AccessTools2.Method.cs" Condition="Exists('$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\AccessTools2.Method.cs')">
+      <NuGetPackageId>Harmony.Extensions</NuGetPackageId>
+      <NuGetPackageVersion>3.2.0.77</NuGetPackageVersion>
+      <NuGetItemType>Compile</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>Harmony.Extensions\AccessTools2.Method.cs</Link>
+    </Compile>
+    <Compile Include="$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\AccessTools2.Property.cs" Condition="Exists('$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\AccessTools2.Property.cs')">
+      <NuGetPackageId>Harmony.Extensions</NuGetPackageId>
+      <NuGetPackageVersion>3.2.0.77</NuGetPackageVersion>
+      <NuGetItemType>Compile</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>Harmony.Extensions\AccessTools2.Property.cs</Link>
+    </Compile>
+    <Compile Include="$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\AccessTools2.StaticFieldRef.cs" Condition="Exists('$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\AccessTools2.StaticFieldRef.cs')">
+      <NuGetPackageId>Harmony.Extensions</NuGetPackageId>
+      <NuGetPackageVersion>3.2.0.77</NuGetPackageVersion>
+      <NuGetItemType>Compile</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>Harmony.Extensions\AccessTools2.StaticFieldRef.cs</Link>
+    </Compile>
+    <Compile Include="$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\AccessTools2.StructFieldRef.cs" Condition="Exists('$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\AccessTools2.StructFieldRef.cs')">
+      <NuGetPackageId>Harmony.Extensions</NuGetPackageId>
+      <NuGetPackageVersion>3.2.0.77</NuGetPackageVersion>
+      <NuGetItemType>Compile</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>Harmony.Extensions\AccessTools2.StructFieldRef.cs</Link>
+    </Compile>
+    <Compile Include="$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\AccessTools2.cs" Condition="Exists('$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\AccessTools2.cs')">
+      <NuGetPackageId>Harmony.Extensions</NuGetPackageId>
+      <NuGetPackageVersion>3.2.0.77</NuGetPackageVersion>
+      <NuGetItemType>Compile</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>Harmony.Extensions\AccessTools2.cs</Link>
+    </Compile>
+    <Compile Include="$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\CodeInstructionExtensions.cs" Condition="Exists('$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\CodeInstructionExtensions.cs')">
+      <NuGetPackageId>Harmony.Extensions</NuGetPackageId>
+      <NuGetPackageVersion>3.2.0.77</NuGetPackageVersion>
+      <NuGetItemType>Compile</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>Harmony.Extensions\CodeInstructionExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\HarmonyExtensions.cs" Condition="Exists('$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\HarmonyExtensions.cs')">
+      <NuGetPackageId>Harmony.Extensions</NuGetPackageId>
+      <NuGetPackageVersion>3.2.0.77</NuGetPackageVersion>
+      <NuGetItemType>Compile</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>Harmony.Extensions\HarmonyExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\Reflect.cs" Condition="Exists('$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\Reflect.cs')">
+      <NuGetPackageId>Harmony.Extensions</NuGetPackageId>
+      <NuGetPackageVersion>3.2.0.77</NuGetPackageVersion>
+      <NuGetItemType>Compile</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>Harmony.Extensions\Reflect.cs</Link>
+    </Compile>
+    <Compile Include="$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\SymbolExtensions2.Constructor.cs" Condition="Exists('$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\SymbolExtensions2.Constructor.cs')">
+      <NuGetPackageId>Harmony.Extensions</NuGetPackageId>
+      <NuGetPackageVersion>3.2.0.77</NuGetPackageVersion>
+      <NuGetItemType>Compile</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>Harmony.Extensions\SymbolExtensions2.Constructor.cs</Link>
+    </Compile>
+    <Compile Include="$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\SymbolExtensions2.Field.cs" Condition="Exists('$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\SymbolExtensions2.Field.cs')">
+      <NuGetPackageId>Harmony.Extensions</NuGetPackageId>
+      <NuGetPackageVersion>3.2.0.77</NuGetPackageVersion>
+      <NuGetItemType>Compile</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>Harmony.Extensions\SymbolExtensions2.Field.cs</Link>
+    </Compile>
+    <Compile Include="$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\SymbolExtensions2.FieldRef.cs" Condition="Exists('$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\SymbolExtensions2.FieldRef.cs')">
+      <NuGetPackageId>Harmony.Extensions</NuGetPackageId>
+      <NuGetPackageVersion>3.2.0.77</NuGetPackageVersion>
+      <NuGetItemType>Compile</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>Harmony.Extensions\SymbolExtensions2.FieldRef.cs</Link>
+    </Compile>
+    <Compile Include="$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\SymbolExtensions2.Method.cs" Condition="Exists('$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\SymbolExtensions2.Method.cs')">
+      <NuGetPackageId>Harmony.Extensions</NuGetPackageId>
+      <NuGetPackageVersion>3.2.0.77</NuGetPackageVersion>
+      <NuGetItemType>Compile</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>Harmony.Extensions\SymbolExtensions2.Method.cs</Link>
+    </Compile>
+    <Compile Include="$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\SymbolExtensions2.Property.cs" Condition="Exists('$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\SymbolExtensions2.Property.cs')">
+      <NuGetPackageId>Harmony.Extensions</NuGetPackageId>
+      <NuGetPackageVersion>3.2.0.77</NuGetPackageVersion>
+      <NuGetItemType>Compile</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>Harmony.Extensions\SymbolExtensions2.Property.cs</Link>
+    </Compile>
+    <Compile Include="$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\SymbolExtensions2.StaticFieldRef.cs" Condition="Exists('$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\SymbolExtensions2.StaticFieldRef.cs')">
+      <NuGetPackageId>Harmony.Extensions</NuGetPackageId>
+      <NuGetPackageVersion>3.2.0.77</NuGetPackageVersion>
+      <NuGetItemType>Compile</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>Harmony.Extensions\SymbolExtensions2.StaticFieldRef.cs</Link>
+    </Compile>
+    <Compile Include="$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\SymbolExtensions2.StructFieldRef.cs" Condition="Exists('$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\SymbolExtensions2.StructFieldRef.cs')">
+      <NuGetPackageId>Harmony.Extensions</NuGetPackageId>
+      <NuGetPackageVersion>3.2.0.77</NuGetPackageVersion>
+      <NuGetItemType>Compile</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>Harmony.Extensions\SymbolExtensions2.StructFieldRef.cs</Link>
+    </Compile>
+    <Compile Include="$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\SymbolExtensions2.cs" Condition="Exists('$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\SymbolExtensions2.cs')">
+      <NuGetPackageId>Harmony.Extensions</NuGetPackageId>
+      <NuGetPackageVersion>3.2.0.77</NuGetPackageVersion>
+      <NuGetItemType>Compile</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>Harmony.Extensions\SymbolExtensions2.cs</Link>
+    </Compile>
+    <Compile Include="$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\Traverse2.cs" Condition="Exists('$(NuGetPackageRoot)harmony.extensions\3.2.0.77\contentFiles\cs\net45\Harmony.Extensions\Traverse2.cs')">
+      <NuGetPackageId>Harmony.Extensions</NuGetPackageId>
+      <NuGetPackageVersion>3.2.0.77</NuGetPackageVersion>
+      <NuGetItemType>Compile</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>Harmony.Extensions\Traverse2.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Import Project="$(NuGetPackageRoot)harmony.extensions\3.2.0.77\build\Harmony.Extensions.props" Condition="Exists('$(NuGetPackageRoot)harmony.extensions\3.2.0.77\build\Harmony.Extensions.props')" />
+  </ImportGroup>
+  <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <PkgBUTR_Harmony_Analyzer Condition=" '$(PkgBUTR_Harmony_Analyzer)' == '' ">C:\Users\gupol\.nuget\packages\butr.harmony.analyzer\1.0.1.50</PkgBUTR_Harmony_Analyzer>
+  </PropertyGroup>
+</Project>

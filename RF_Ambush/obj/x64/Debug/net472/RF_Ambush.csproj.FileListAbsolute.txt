@@ -1,0 +1,10 @@
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Ambush\bin\x64\Debug\net472\RF_Ambush.dll
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Ambush\bin\x64\Debug\net472\RF_Ambush.pdb
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Ambush\obj\x64\Debug\net472\RF_Ambush.csproj.AssemblyReference.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Ambush\obj\x64\Debug\net472\RF_Ambush.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Ambush\obj\x64\Debug\net472\RF_Ambush.AssemblyInfoInputs.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Ambush\obj\x64\Debug\net472\RF_Ambush.AssemblyInfo.cs
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Ambush\obj\x64\Debug\net472\RF_Ambush.csproj.CoreCompileInputs.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Ambush\obj\x64\Debug\net472\RF_Ambush.sourcelink.json
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Ambush\obj\x64\Debug\net472\RF_Ambush.dll
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Ambush\obj\x64\Debug\net472\RF_Ambush.pdb

@@ -1,0 +1,15 @@
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RFLegendaryTroops\bin\x64\Release\net472\RFLegendaryTroops.dll
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RFLegendaryTroops\bin\x64\Release\net472\RFLegendaryTroops.pdb
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RFLegendaryTroops\bin\x64\Release\net472\RealmsForgotten.dll
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RFLegendaryTroops\bin\x64\Release\net472\MCMv5.dll
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RFLegendaryTroops\bin\x64\Release\net472\ServeAsSoldier.dll
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RFLegendaryTroops\bin\x64\Release\net472\RealmsForgotten.pdb
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RFLegendaryTroops\obj\x64\Release\net472\RFLegendaryTroops.csproj.AssemblyReference.cache
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RFLegendaryTroops\obj\x64\Release\net472\RFLegendaryTroops.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RFLegendaryTroops\obj\x64\Release\net472\RFLegendaryTroops.AssemblyInfoInputs.cache
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RFLegendaryTroops\obj\x64\Release\net472\RFLegendaryTroops.AssemblyInfo.cs
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RFLegendaryTroops\obj\x64\Release\net472\RFLegendaryTroops.csproj.CoreCompileInputs.cache
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RFLegendaryTroops\obj\x64\Release\net472\RFLegendaryTroops.sourcelink.json
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RFLegendaryTroops\obj\x64\Release\net472\RFLegend.2E682567.Up2Date
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RFLegendaryTroops\obj\x64\Release\net472\RFLegendaryTroops.dll
+C:\Users\gupol\Documents\RealmForgotten_Project\RealmsForgotten\RFLegendaryTroops\obj\x64\Release\net472\RFLegendaryTroops.pdb

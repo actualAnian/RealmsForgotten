@@ -1,0 +1,10 @@
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Homesteads\bin\x64\Release\net472\HomesteadsReloaded.dll
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Homesteads\bin\x64\Release\net472\HomesteadsReloaded.pdb
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Homesteads\obj\x64\Release\net472\RF_Homesteads.csproj.AssemblyReference.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Homesteads\obj\x64\Release\net472\RF_Homesteads.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Homesteads\obj\x64\Release\net472\RF_Homesteads.AssemblyInfoInputs.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Homesteads\obj\x64\Release\net472\RF_Homesteads.AssemblyInfo.cs
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Homesteads\obj\x64\Release\net472\RF_Homesteads.csproj.CoreCompileInputs.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Homesteads\obj\x64\Release\net472\RF_Homesteads.sourcelink.json
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Homesteads\obj\x64\Release\net472\HomesteadsReloaded.dll
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Homesteads\obj\x64\Release\net472\HomesteadsReloaded.pdb

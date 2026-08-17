@@ -1,0 +1,12 @@
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_CoopWarsails\obj\Release\net472\RF_CoopWarsails.csproj.AssemblyReference.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_CoopWarsails\obj\Release\net472\RF_CoopWarsails.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_CoopWarsails\obj\Release\net472\RF_CoopWarsails.AssemblyInfoInputs.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_CoopWarsails\obj\Release\net472\RF_CoopWarsails.AssemblyInfo.cs
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_CoopWarsails\obj\Release\net472\RF_CoopWarsails.csproj.CoreCompileInputs.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_CoopWarsails\obj\Release\net472\RF_CoopWarsails.sourcelink.json
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_CoopWarsails\bin\Release\net472\RF_CoopWarsails.dll
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_CoopWarsails\bin\Release\net472\RF_CoopWarsails.pdb
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_CoopWarsails\bin\Release\net472\LiteNetLib.dll
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_CoopWarsails\obj\Release\net472\RF_CoopW.8D524D62.Up2Date
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_CoopWarsails\obj\Release\net472\RF_CoopWarsails.dll
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_CoopWarsails\obj\Release\net472\RF_CoopWarsails.pdb

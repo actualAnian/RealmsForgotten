@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "x5IK4qVul2A=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\gupol\\Documents\\Bannerlord_Warsails_AI\\RF_Warsails_AI\\RF_LivingWorld\\RF_LivingWorld.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\gupol\\.nuget\\packages\\bannerlord.uiextenderex\\2.13.2\\bannerlord.uiextenderex.2.13.2.nupkg.sha512",
+    "C:\\Users\\gupol\\.nuget\\packages\\butr.messageboxpinvoke\\1.0.0.1\\butr.messageboxpinvoke.1.0.0.1.nupkg.sha512",
+    "C:\\Users\\gupol\\.nuget\\packages\\lib.harmony\\2.4.2\\lib.harmony.2.4.2.nupkg.sha512"
+  ],
+  "logs": []
+}

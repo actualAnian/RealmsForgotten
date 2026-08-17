@@ -1,0 +1,567 @@
+{
+  "version": 3,
+  "targets": {
+    ".NETFramework,Version=v4.7.2": {
+      "BUTR.Harmony.Analyzer/1.0.1.50": {
+        "type": "package"
+      },
+      "Harmony.Extensions/3.2.0.77": {
+        "type": "package",
+        "contentFiles": {
+          "contentFiles/cs/net45/Harmony.Extensions/AccessCacheHandle.cs": {
+            "buildAction": "Compile",
+            "codeLanguage": "cs",
+            "copyToOutput": false
+          },
+          "contentFiles/cs/net45/Harmony.Extensions/AccessTools2.Constructor.cs": {
+            "buildAction": "Compile",
+            "codeLanguage": "cs",
+            "copyToOutput": false
+          },
+          "contentFiles/cs/net45/Harmony.Extensions/AccessTools2.Delegate.Constructor.cs": {
+            "buildAction": "Compile",
+            "codeLanguage": "cs",
+            "copyToOutput": false
+          },
+          "contentFiles/cs/net45/Harmony.Extensions/AccessTools2.Delegate.Property.cs": {
+            "buildAction": "Compile",
+            "codeLanguage": "cs",
+            "copyToOutput": false
+          },
+          "contentFiles/cs/net45/Harmony.Extensions/AccessTools2.Delegate.Shared.cs": {
+            "buildAction": "Compile",
+            "codeLanguage": "cs",
+            "copyToOutput": false
+          },
+          "contentFiles/cs/net45/Harmony.Extensions/AccessTools2.Delegate.cs": {
+            "buildAction": "Compile",
+            "codeLanguage": "cs",
+            "copyToOutput": false
+          },
+          "contentFiles/cs/net45/Harmony.Extensions/AccessTools2.Field.cs": {
+            "buildAction": "Compile",
+            "codeLanguage": "cs",
+            "copyToOutput": false
+          },
+          "contentFiles/cs/net45/Harmony.Extensions/AccessTools2.FieldRef.cs": {
+            "buildAction": "Compile",
+            "codeLanguage": "cs",
+            "copyToOutput": false
+          },
+          "contentFiles/cs/net45/Harmony.Extensions/AccessTools2.Method.cs": {
+            "buildAction": "Compile",
+            "codeLanguage": "cs",
+            "copyToOutput": false
+          },
+          "contentFiles/cs/net45/Harmony.Extensions/AccessTools2.Property.cs": {
+            "buildAction": "Compile",
+            "codeLanguage": "cs",
+            "copyToOutput": false
+          },
+          "contentFiles/cs/net45/Harmony.Extensions/AccessTools2.StaticFieldRef.cs": {
+            "buildAction": "Compile",
+            "codeLanguage": "cs",
+            "copyToOutput": false
+          },
+          "contentFiles/cs/net45/Harmony.Extensions/AccessTools2.StructFieldRef.cs": {
+            "buildAction": "Compile",
+            "codeLanguage": "cs",
+            "copyToOutput": false
+          },
+          "contentFiles/cs/net45/Harmony.Extensions/AccessTools2.cs": {
+            "buildAction": "Compile",
+            "codeLanguage": "cs",
+            "copyToOutput": false
+          },
+          "contentFiles/cs/net45/Harmony.Extensions/CodeInstructionExtensions.cs": {
+            "buildAction": "Compile",
+            "codeLanguage": "cs",
+            "copyToOutput": false
+          },
+          "contentFiles/cs/net45/Harmony.Extensions/HarmonyExtensions.cs": {
+            "buildAction": "Compile",
+            "codeLanguage": "cs",
+            "copyToOutput": false
+          },
+          "contentFiles/cs/net45/Harmony.Extensions/Reflect.cs": {
+            "buildAction": "Compile",
+            "codeLanguage": "cs",
+            "copyToOutput": false
+          },
+          "contentFiles/cs/net45/Harmony.Extensions/SymbolExtensions2.Constructor.cs": {
+            "buildAction": "Compile",
+            "codeLanguage": "cs",
+            "copyToOutput": false
+          },
+          "contentFiles/cs/net45/Harmony.Extensions/SymbolExtensions2.Field.cs": {
+            "buildAction": "Compile",
+            "codeLanguage": "cs",
+            "copyToOutput": false
+          },
+          "contentFiles/cs/net45/Harmony.Extensions/SymbolExtensions2.FieldRef.cs": {
+            "buildAction": "Compile",
+            "codeLanguage": "cs",
+            "copyToOutput": false
+          },
+          "contentFiles/cs/net45/Harmony.Extensions/SymbolExtensions2.Method.cs": {
+            "buildAction": "Compile",
+            "codeLanguage": "cs",
+            "copyToOutput": false
+          },
+          "contentFiles/cs/net45/Harmony.Extensions/SymbolExtensions2.Property.cs": {
+            "buildAction": "Compile",
+            "codeLanguage": "cs",
+            "copyToOutput": false
+          },
+          "contentFiles/cs/net45/Harmony.Extensions/SymbolExtensions2.StaticFieldRef.cs": {
+            "buildAction": "Compile",
+            "codeLanguage": "cs",
+            "copyToOutput": false
+          },
+          "contentFiles/cs/net45/Harmony.Extensions/SymbolExtensions2.StructFieldRef.cs": {
+            "buildAction": "Compile",
+            "codeLanguage": "cs",
+            "copyToOutput": false
+          },
+          "contentFiles/cs/net45/Harmony.Extensions/SymbolExtensions2.cs": {
+            "buildAction": "Compile",
+            "codeLanguage": "cs",
+            "copyToOutput": false
+          },
+          "contentFiles/cs/net45/Harmony.Extensions/Traverse2.cs": {
+            "buildAction": "Compile",
+            "codeLanguage": "cs",
+            "copyToOutput": false
+          }
+        },
+        "build": {
+          "build/Harmony.Extensions.props": {}
+        }
+      },
+      "Lib.Harmony/2.4.2": {
+        "type": "package",
+        "compile": {
+          "lib/net472/0Harmony.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net472/_._": {
+            "related": ".pdb;.xml"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "BUTR.Harmony.Analyzer/1.0.1.50": {
+      "sha512": "39Y2jGWy+BrwKXfdyP4sHT43T/yrkUXMxdi2EvOFwrub4kMPZ8K5feDVJzfgiJHOEJj5kG7YXCIxPsje0D8Dvg==",
+      "type": "package",
+      "path": "butr.harmony.analyzer/1.0.1.50",
+      "hasTools": true,
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "analyzers/dotnet/cs/BUTR.Harmony.Analyzer.CodeFixes.dll",
+        "analyzers/dotnet/cs/BUTR.Harmony.Analyzer.dll",
+        "butr.harmony.analyzer.1.0.1.50.nupkg.sha512",
+        "butr.harmony.analyzer.nuspec",
+        "tools/install.ps1",
+        "tools/uninstall.ps1"
+      ]
+    },
+    "Harmony.Extensions/3.2.0.77": {
+      "sha512": "bXvQpnH3awXEfHvWigHCuMfBxSWInko7i74t7IoWM6aLjJpQrDpEHMnDQbcBoU8Uv5itH92BTb0vczGknajMTA==",
+      "type": "package",
+      "path": "harmony.extensions/3.2.0.77",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/Harmony.Extensions.props",
+        "content/cs/net45/Harmony.Extensions/AccessCacheHandle.cs",
+        "content/cs/net45/Harmony.Extensions/AccessTools2.Constructor.cs",
+        "content/cs/net45/Harmony.Extensions/AccessTools2.Delegate.Constructor.cs",
+        "content/cs/net45/Harmony.Extensions/AccessTools2.Delegate.Property.cs",
+        "content/cs/net45/Harmony.Extensions/AccessTools2.Delegate.Shared.cs",
+        "content/cs/net45/Harmony.Extensions/AccessTools2.Delegate.cs",
+        "content/cs/net45/Harmony.Extensions/AccessTools2.Field.cs",
+        "content/cs/net45/Harmony.Extensions/AccessTools2.FieldRef.cs",
+        "content/cs/net45/Harmony.Extensions/AccessTools2.Method.cs",
+        "content/cs/net45/Harmony.Extensions/AccessTools2.Property.cs",
+        "content/cs/net45/Harmony.Extensions/AccessTools2.StaticFieldRef.cs",
+        "content/cs/net45/Harmony.Extensions/AccessTools2.StructFieldRef.cs",
+        "content/cs/net45/Harmony.Extensions/AccessTools2.cs",
+        "content/cs/net45/Harmony.Extensions/CodeInstructionExtensions.cs",
+        "content/cs/net45/Harmony.Extensions/HarmonyExtensions.cs",
+        "content/cs/net45/Harmony.Extensions/Reflect.cs",
+        "content/cs/net45/Harmony.Extensions/SymbolExtensions2.Constructor.cs",
+        "content/cs/net45/Harmony.Extensions/SymbolExtensions2.Field.cs",
+        "content/cs/net45/Harmony.Extensions/SymbolExtensions2.FieldRef.cs",
+        "content/cs/net45/Harmony.Extensions/SymbolExtensions2.Method.cs",
+        "content/cs/net45/Harmony.Extensions/SymbolExtensions2.Property.cs",
+        "content/cs/net45/Harmony.Extensions/SymbolExtensions2.StaticFieldRef.cs",
+        "content/cs/net45/Harmony.Extensions/SymbolExtensions2.StructFieldRef.cs",
+        "content/cs/net45/Harmony.Extensions/SymbolExtensions2.cs",
+        "content/cs/net45/Harmony.Extensions/Traverse2.cs",
+        "content/cs/net5.0/Harmony.Extensions/AccessCacheHandle.cs",
+        "content/cs/net5.0/Harmony.Extensions/AccessTools2.Constructor.cs",
+        "content/cs/net5.0/Harmony.Extensions/AccessTools2.Delegate.Constructor.cs",
+        "content/cs/net5.0/Harmony.Extensions/AccessTools2.Delegate.Property.cs",
+        "content/cs/net5.0/Harmony.Extensions/AccessTools2.Delegate.Shared.cs",
+        "content/cs/net5.0/Harmony.Extensions/AccessTools2.Delegate.cs",
+        "content/cs/net5.0/Harmony.Extensions/AccessTools2.Field.cs",
+        "content/cs/net5.0/Harmony.Extensions/AccessTools2.FieldRef.cs",
+        "content/cs/net5.0/Harmony.Extensions/AccessTools2.Method.cs",
+        "content/cs/net5.0/Harmony.Extensions/AccessTools2.Property.cs",
+        "content/cs/net5.0/Harmony.Extensions/AccessTools2.StaticFieldRef.cs",
+        "content/cs/net5.0/Harmony.Extensions/AccessTools2.StructFieldRef.cs",
+        "content/cs/net5.0/Harmony.Extensions/AccessTools2.cs",
+        "content/cs/net5.0/Harmony.Extensions/CodeInstructionExtensions.cs",
+        "content/cs/net5.0/Harmony.Extensions/HarmonyExtensions.cs",
+        "content/cs/net5.0/Harmony.Extensions/Reflect.cs",
+        "content/cs/net5.0/Harmony.Extensions/SymbolExtensions2.Constructor.cs",
+        "content/cs/net5.0/Harmony.Extensions/SymbolExtensions2.Field.cs",
+        "content/cs/net5.0/Harmony.Extensions/SymbolExtensions2.FieldRef.cs",
+        "content/cs/net5.0/Harmony.Extensions/SymbolExtensions2.Method.cs",
+        "content/cs/net5.0/Harmony.Extensions/SymbolExtensions2.Property.cs",
+        "content/cs/net5.0/Harmony.Extensions/SymbolExtensions2.StaticFieldRef.cs",
+        "content/cs/net5.0/Harmony.Extensions/SymbolExtensions2.StructFieldRef.cs",
+        "content/cs/net5.0/Harmony.Extensions/SymbolExtensions2.cs",
+        "content/cs/net5.0/Harmony.Extensions/Traverse2.cs",
+        "content/cs/net6.0/Harmony.Extensions/AccessCacheHandle.cs",
+        "content/cs/net6.0/Harmony.Extensions/AccessTools2.Constructor.cs",
+        "content/cs/net6.0/Harmony.Extensions/AccessTools2.Delegate.Constructor.cs",
+        "content/cs/net6.0/Harmony.Extensions/AccessTools2.Delegate.Property.cs",
+        "content/cs/net6.0/Harmony.Extensions/AccessTools2.Delegate.Shared.cs",
+        "content/cs/net6.0/Harmony.Extensions/AccessTools2.Delegate.cs",
+        "content/cs/net6.0/Harmony.Extensions/AccessTools2.Field.cs",
+        "content/cs/net6.0/Harmony.Extensions/AccessTools2.FieldRef.cs",
+        "content/cs/net6.0/Harmony.Extensions/AccessTools2.Method.cs",
+        "content/cs/net6.0/Harmony.Extensions/AccessTools2.Property.cs",
+        "content/cs/net6.0/Harmony.Extensions/AccessTools2.StaticFieldRef.cs",
+        "content/cs/net6.0/Harmony.Extensions/AccessTools2.StructFieldRef.cs",
+        "content/cs/net6.0/Harmony.Extensions/AccessTools2.cs",
+        "content/cs/net6.0/Harmony.Extensions/CodeInstructionExtensions.cs",
+        "content/cs/net6.0/Harmony.Extensions/HarmonyExtensions.cs",
+        "content/cs/net6.0/Harmony.Extensions/Reflect.cs",
+        "content/cs/net6.0/Harmony.Extensions/SymbolExtensions2.Constructor.cs",
+        "content/cs/net6.0/Harmony.Extensions/SymbolExtensions2.Field.cs",
+        "content/cs/net6.0/Harmony.Extensions/SymbolExtensions2.FieldRef.cs",
+        "content/cs/net6.0/Harmony.Extensions/SymbolExtensions2.Method.cs",
+        "content/cs/net6.0/Harmony.Extensions/SymbolExtensions2.Property.cs",
+        "content/cs/net6.0/Harmony.Extensions/SymbolExtensions2.StaticFieldRef.cs",
+        "content/cs/net6.0/Harmony.Extensions/SymbolExtensions2.StructFieldRef.cs",
+        "content/cs/net6.0/Harmony.Extensions/SymbolExtensions2.cs",
+        "content/cs/net6.0/Harmony.Extensions/Traverse2.cs",
+        "content/cs/netcoreapp3.1/Harmony.Extensions/AccessCacheHandle.cs",
+        "content/cs/netcoreapp3.1/Harmony.Extensions/AccessTools2.Constructor.cs",
+        "content/cs/netcoreapp3.1/Harmony.Extensions/AccessTools2.Delegate.Constructor.cs",
+        "content/cs/netcoreapp3.1/Harmony.Extensions/AccessTools2.Delegate.Property.cs",
+        "content/cs/netcoreapp3.1/Harmony.Extensions/AccessTools2.Delegate.Shared.cs",
+        "content/cs/netcoreapp3.1/Harmony.Extensions/AccessTools2.Delegate.cs",
+        "content/cs/netcoreapp3.1/Harmony.Extensions/AccessTools2.Field.cs",
+        "content/cs/netcoreapp3.1/Harmony.Extensions/AccessTools2.FieldRef.cs",
+        "content/cs/netcoreapp3.1/Harmony.Extensions/AccessTools2.Method.cs",
+        "content/cs/netcoreapp3.1/Harmony.Extensions/AccessTools2.Property.cs",
+        "content/cs/netcoreapp3.1/Harmony.Extensions/AccessTools2.StaticFieldRef.cs",
+        "content/cs/netcoreapp3.1/Harmony.Extensions/AccessTools2.StructFieldRef.cs",
+        "content/cs/netcoreapp3.1/Harmony.Extensions/AccessTools2.cs",
+        "content/cs/netcoreapp3.1/Harmony.Extensions/CodeInstructionExtensions.cs",
+        "content/cs/netcoreapp3.1/Harmony.Extensions/HarmonyExtensions.cs",
+        "content/cs/netcoreapp3.1/Harmony.Extensions/Reflect.cs",
+        "content/cs/netcoreapp3.1/Harmony.Extensions/SymbolExtensions2.Constructor.cs",
+        "content/cs/netcoreapp3.1/Harmony.Extensions/SymbolExtensions2.Field.cs",
+        "content/cs/netcoreapp3.1/Harmony.Extensions/SymbolExtensions2.FieldRef.cs",
+        "content/cs/netcoreapp3.1/Harmony.Extensions/SymbolExtensions2.Method.cs",
+        "content/cs/netcoreapp3.1/Harmony.Extensions/SymbolExtensions2.Property.cs",
+        "content/cs/netcoreapp3.1/Harmony.Extensions/SymbolExtensions2.StaticFieldRef.cs",
+        "content/cs/netcoreapp3.1/Harmony.Extensions/SymbolExtensions2.StructFieldRef.cs",
+        "content/cs/netcoreapp3.1/Harmony.Extensions/SymbolExtensions2.cs",
+        "content/cs/netcoreapp3.1/Harmony.Extensions/Traverse2.cs",
+        "content/cs/netstandard2.0/Harmony.Extensions/AccessCacheHandle.cs",
+        "content/cs/netstandard2.0/Harmony.Extensions/AccessTools2.Constructor.cs",
+        "content/cs/netstandard2.0/Harmony.Extensions/AccessTools2.Delegate.Constructor.cs",
+        "content/cs/netstandard2.0/Harmony.Extensions/AccessTools2.Delegate.Property.cs",
+        "content/cs/netstandard2.0/Harmony.Extensions/AccessTools2.Delegate.Shared.cs",
+        "content/cs/netstandard2.0/Harmony.Extensions/AccessTools2.Delegate.cs",
+        "content/cs/netstandard2.0/Harmony.Extensions/AccessTools2.Field.cs",
+        "content/cs/netstandard2.0/Harmony.Extensions/AccessTools2.FieldRef.cs",
+        "content/cs/netstandard2.0/Harmony.Extensions/AccessTools2.Method.cs",
+        "content/cs/netstandard2.0/Harmony.Extensions/AccessTools2.Property.cs",
+        "content/cs/netstandard2.0/Harmony.Extensions/AccessTools2.StaticFieldRef.cs",
+        "content/cs/netstandard2.0/Harmony.Extensions/AccessTools2.StructFieldRef.cs",
+        "content/cs/netstandard2.0/Harmony.Extensions/AccessTools2.cs",
+        "content/cs/netstandard2.0/Harmony.Extensions/CodeInstructionExtensions.cs",
+        "content/cs/netstandard2.0/Harmony.Extensions/HarmonyExtensions.cs",
+        "content/cs/netstandard2.0/Harmony.Extensions/Reflect.cs",
+        "content/cs/netstandard2.0/Harmony.Extensions/SymbolExtensions2.Constructor.cs",
+        "content/cs/netstandard2.0/Harmony.Extensions/SymbolExtensions2.Field.cs",
+        "content/cs/netstandard2.0/Harmony.Extensions/SymbolExtensions2.FieldRef.cs",
+        "content/cs/netstandard2.0/Harmony.Extensions/SymbolExtensions2.Method.cs",
+        "content/cs/netstandard2.0/Harmony.Extensions/SymbolExtensions2.Property.cs",
+        "content/cs/netstandard2.0/Harmony.Extensions/SymbolExtensions2.StaticFieldRef.cs",
+        "content/cs/netstandard2.0/Harmony.Extensions/SymbolExtensions2.StructFieldRef.cs",
+        "content/cs/netstandard2.0/Harmony.Extensions/SymbolExtensions2.cs",
+        "content/cs/netstandard2.0/Harmony.Extensions/Traverse2.cs",
+        "contentFiles/cs/net45/Harmony.Extensions/AccessCacheHandle.cs",
+        "contentFiles/cs/net45/Harmony.Extensions/AccessTools2.Constructor.cs",
+        "contentFiles/cs/net45/Harmony.Extensions/AccessTools2.Delegate.Constructor.cs",
+        "contentFiles/cs/net45/Harmony.Extensions/AccessTools2.Delegate.Property.cs",
+        "contentFiles/cs/net45/Harmony.Extensions/AccessTools2.Delegate.Shared.cs",
+        "contentFiles/cs/net45/Harmony.Extensions/AccessTools2.Delegate.cs",
+        "contentFiles/cs/net45/Harmony.Extensions/AccessTools2.Field.cs",
+        "contentFiles/cs/net45/Harmony.Extensions/AccessTools2.FieldRef.cs",
+        "contentFiles/cs/net45/Harmony.Extensions/AccessTools2.Method.cs",
+        "contentFiles/cs/net45/Harmony.Extensions/AccessTools2.Property.cs",
+        "contentFiles/cs/net45/Harmony.Extensions/AccessTools2.StaticFieldRef.cs",
+        "contentFiles/cs/net45/Harmony.Extensions/AccessTools2.StructFieldRef.cs",
+        "contentFiles/cs/net45/Harmony.Extensions/AccessTools2.cs",
+        "contentFiles/cs/net45/Harmony.Extensions/CodeInstructionExtensions.cs",
+        "contentFiles/cs/net45/Harmony.Extensions/HarmonyExtensions.cs",
+        "contentFiles/cs/net45/Harmony.Extensions/Reflect.cs",
+        "contentFiles/cs/net45/Harmony.Extensions/SymbolExtensions2.Constructor.cs",
+        "contentFiles/cs/net45/Harmony.Extensions/SymbolExtensions2.Field.cs",
+        "contentFiles/cs/net45/Harmony.Extensions/SymbolExtensions2.FieldRef.cs",
+        "contentFiles/cs/net45/Harmony.Extensions/SymbolExtensions2.Method.cs",
+        "contentFiles/cs/net45/Harmony.Extensions/SymbolExtensions2.Property.cs",
+        "contentFiles/cs/net45/Harmony.Extensions/SymbolExtensions2.StaticFieldRef.cs",
+        "contentFiles/cs/net45/Harmony.Extensions/SymbolExtensions2.StructFieldRef.cs",
+        "contentFiles/cs/net45/Harmony.Extensions/SymbolExtensions2.cs",
+        "contentFiles/cs/net45/Harmony.Extensions/Traverse2.cs",
+        "contentFiles/cs/net5.0/Harmony.Extensions/AccessCacheHandle.cs",
+        "contentFiles/cs/net5.0/Harmony.Extensions/AccessTools2.Constructor.cs",
+        "contentFiles/cs/net5.0/Harmony.Extensions/AccessTools2.Delegate.Constructor.cs",
+        "contentFiles/cs/net5.0/Harmony.Extensions/AccessTools2.Delegate.Property.cs",
+        "contentFiles/cs/net5.0/Harmony.Extensions/AccessTools2.Delegate.Shared.cs",
+        "contentFiles/cs/net5.0/Harmony.Extensions/AccessTools2.Delegate.cs",
+        "contentFiles/cs/net5.0/Harmony.Extensions/AccessTools2.Field.cs",
+        "contentFiles/cs/net5.0/Harmony.Extensions/AccessTools2.FieldRef.cs",
+        "contentFiles/cs/net5.0/Harmony.Extensions/AccessTools2.Method.cs",
+        "contentFiles/cs/net5.0/Harmony.Extensions/AccessTools2.Property.cs",
+        "contentFiles/cs/net5.0/Harmony.Extensions/AccessTools2.StaticFieldRef.cs",
+        "contentFiles/cs/net5.0/Harmony.Extensions/AccessTools2.StructFieldRef.cs",
+        "contentFiles/cs/net5.0/Harmony.Extensions/AccessTools2.cs",
+        "contentFiles/cs/net5.0/Harmony.Extensions/CodeInstructionExtensions.cs",
+        "contentFiles/cs/net5.0/Harmony.Extensions/HarmonyExtensions.cs",
+        "contentFiles/cs/net5.0/Harmony.Extensions/Reflect.cs",
+        "contentFiles/cs/net5.0/Harmony.Extensions/SymbolExtensions2.Constructor.cs",
+        "contentFiles/cs/net5.0/Harmony.Extensions/SymbolExtensions2.Field.cs",
+        "contentFiles/cs/net5.0/Harmony.Extensions/SymbolExtensions2.FieldRef.cs",
+        "contentFiles/cs/net5.0/Harmony.Extensions/SymbolExtensions2.Method.cs",
+        "contentFiles/cs/net5.0/Harmony.Extensions/SymbolExtensions2.Property.cs",
+        "contentFiles/cs/net5.0/Harmony.Extensions/SymbolExtensions2.StaticFieldRef.cs",
+        "contentFiles/cs/net5.0/Harmony.Extensions/SymbolExtensions2.StructFieldRef.cs",
+        "contentFiles/cs/net5.0/Harmony.Extensions/SymbolExtensions2.cs",
+        "contentFiles/cs/net5.0/Harmony.Extensions/Traverse2.cs",
+        "contentFiles/cs/net6.0/Harmony.Extensions/AccessCacheHandle.cs",
+        "contentFiles/cs/net6.0/Harmony.Extensions/AccessTools2.Constructor.cs",
+        "contentFiles/cs/net6.0/Harmony.Extensions/AccessTools2.Delegate.Constructor.cs",
+        "contentFiles/cs/net6.0/Harmony.Extensions/AccessTools2.Delegate.Property.cs",
+        "contentFiles/cs/net6.0/Harmony.Extensions/AccessTools2.Delegate.Shared.cs",
+        "contentFiles/cs/net6.0/Harmony.Extensions/AccessTools2.Delegate.cs",
+        "contentFiles/cs/net6.0/Harmony.Extensions/AccessTools2.Field.cs",
+        "contentFiles/cs/net6.0/Harmony.Extensions/AccessTools2.FieldRef.cs",
+        "contentFiles/cs/net6.0/Harmony.Extensions/AccessTools2.Method.cs",
+        "contentFiles/cs/net6.0/Harmony.Extensions/AccessTools2.Property.cs",
+        "contentFiles/cs/net6.0/Harmony.Extensions/AccessTools2.StaticFieldRef.cs",
+        "contentFiles/cs/net6.0/Harmony.Extensions/AccessTools2.StructFieldRef.cs",
+        "contentFiles/cs/net6.0/Harmony.Extensions/AccessTools2.cs",
+        "contentFiles/cs/net6.0/Harmony.Extensions/CodeInstructionExtensions.cs",
+        "contentFiles/cs/net6.0/Harmony.Extensions/HarmonyExtensions.cs",
+        "contentFiles/cs/net6.0/Harmony.Extensions/Reflect.cs",
+        "contentFiles/cs/net6.0/Harmony.Extensions/SymbolExtensions2.Constructor.cs",
+        "contentFiles/cs/net6.0/Harmony.Extensions/SymbolExtensions2.Field.cs",
+        "contentFiles/cs/net6.0/Harmony.Extensions/SymbolExtensions2.FieldRef.cs",
+        "contentFiles/cs/net6.0/Harmony.Extensions/SymbolExtensions2.Method.cs",
+        "contentFiles/cs/net6.0/Harmony.Extensions/SymbolExtensions2.Property.cs",
+        "contentFiles/cs/net6.0/Harmony.Extensions/SymbolExtensions2.StaticFieldRef.cs",
+        "contentFiles/cs/net6.0/Harmony.Extensions/SymbolExtensions2.StructFieldRef.cs",
+        "contentFiles/cs/net6.0/Harmony.Extensions/SymbolExtensions2.cs",
+        "contentFiles/cs/net6.0/Harmony.Extensions/Traverse2.cs",
+        "contentFiles/cs/netcoreapp3.1/Harmony.Extensions/AccessCacheHandle.cs",
+        "contentFiles/cs/netcoreapp3.1/Harmony.Extensions/AccessTools2.Constructor.cs",
+        "contentFiles/cs/netcoreapp3.1/Harmony.Extensions/AccessTools2.Delegate.Constructor.cs",
+        "contentFiles/cs/netcoreapp3.1/Harmony.Extensions/AccessTools2.Delegate.Property.cs",
+        "contentFiles/cs/netcoreapp3.1/Harmony.Extensions/AccessTools2.Delegate.Shared.cs",
+        "contentFiles/cs/netcoreapp3.1/Harmony.Extensions/AccessTools2.Delegate.cs",
+        "contentFiles/cs/netcoreapp3.1/Harmony.Extensions/AccessTools2.Field.cs",
+        "contentFiles/cs/netcoreapp3.1/Harmony.Extensions/AccessTools2.FieldRef.cs",
+        "contentFiles/cs/netcoreapp3.1/Harmony.Extensions/AccessTools2.Method.cs",
+        "contentFiles/cs/netcoreapp3.1/Harmony.Extensions/AccessTools2.Property.cs",
+        "contentFiles/cs/netcoreapp3.1/Harmony.Extensions/AccessTools2.StaticFieldRef.cs",
+        "contentFiles/cs/netcoreapp3.1/Harmony.Extensions/AccessTools2.StructFieldRef.cs",
+        "contentFiles/cs/netcoreapp3.1/Harmony.Extensions/AccessTools2.cs",
+        "contentFiles/cs/netcoreapp3.1/Harmony.Extensions/CodeInstructionExtensions.cs",
+        "contentFiles/cs/netcoreapp3.1/Harmony.Extensions/HarmonyExtensions.cs",
+        "contentFiles/cs/netcoreapp3.1/Harmony.Extensions/Reflect.cs",
+        "contentFiles/cs/netcoreapp3.1/Harmony.Extensions/SymbolExtensions2.Constructor.cs",
+        "contentFiles/cs/netcoreapp3.1/Harmony.Extensions/SymbolExtensions2.Field.cs",
+        "contentFiles/cs/netcoreapp3.1/Harmony.Extensions/SymbolExtensions2.FieldRef.cs",
+        "contentFiles/cs/netcoreapp3.1/Harmony.Extensions/SymbolExtensions2.Method.cs",
+        "contentFiles/cs/netcoreapp3.1/Harmony.Extensions/SymbolExtensions2.Property.cs",
+        "contentFiles/cs/netcoreapp3.1/Harmony.Extensions/SymbolExtensions2.StaticFieldRef.cs",
+        "contentFiles/cs/netcoreapp3.1/Harmony.Extensions/SymbolExtensions2.StructFieldRef.cs",
+        "contentFiles/cs/netcoreapp3.1/Harmony.Extensions/SymbolExtensions2.cs",
+        "contentFiles/cs/netcoreapp3.1/Harmony.Extensions/Traverse2.cs",
+        "contentFiles/cs/netstandard2.0/Harmony.Extensions/AccessCacheHandle.cs",
+        "contentFiles/cs/netstandard2.0/Harmony.Extensions/AccessTools2.Constructor.cs",
+        "contentFiles/cs/netstandard2.0/Harmony.Extensions/AccessTools2.Delegate.Constructor.cs",
+        "contentFiles/cs/netstandard2.0/Harmony.Extensions/AccessTools2.Delegate.Property.cs",
+        "contentFiles/cs/netstandard2.0/Harmony.Extensions/AccessTools2.Delegate.Shared.cs",
+        "contentFiles/cs/netstandard2.0/Harmony.Extensions/AccessTools2.Delegate.cs",
+        "contentFiles/cs/netstandard2.0/Harmony.Extensions/AccessTools2.Field.cs",
+        "contentFiles/cs/netstandard2.0/Harmony.Extensions/AccessTools2.FieldRef.cs",
+        "contentFiles/cs/netstandard2.0/Harmony.Extensions/AccessTools2.Method.cs",
+        "contentFiles/cs/netstandard2.0/Harmony.Extensions/AccessTools2.Property.cs",
+        "contentFiles/cs/netstandard2.0/Harmony.Extensions/AccessTools2.StaticFieldRef.cs",
+        "contentFiles/cs/netstandard2.0/Harmony.Extensions/AccessTools2.StructFieldRef.cs",
+        "contentFiles/cs/netstandard2.0/Harmony.Extensions/AccessTools2.cs",
+        "contentFiles/cs/netstandard2.0/Harmony.Extensions/CodeInstructionExtensions.cs",
+        "contentFiles/cs/netstandard2.0/Harmony.Extensions/HarmonyExtensions.cs",
+        "contentFiles/cs/netstandard2.0/Harmony.Extensions/Reflect.cs",
+        "contentFiles/cs/netstandard2.0/Harmony.Extensions/SymbolExtensions2.Constructor.cs",
+        "contentFiles/cs/netstandard2.0/Harmony.Extensions/SymbolExtensions2.Field.cs",
+        "contentFiles/cs/netstandard2.0/Harmony.Extensions/SymbolExtensions2.FieldRef.cs",
+        "contentFiles/cs/netstandard2.0/Harmony.Extensions/SymbolExtensions2.Method.cs",
+        "contentFiles/cs/netstandard2.0/Harmony.Extensions/SymbolExtensions2.Property.cs",
+        "contentFiles/cs/netstandard2.0/Harmony.Extensions/SymbolExtensions2.StaticFieldRef.cs",
+        "contentFiles/cs/netstandard2.0/Harmony.Extensions/SymbolExtensions2.StructFieldRef.cs",
+        "contentFiles/cs/netstandard2.0/Harmony.Extensions/SymbolExtensions2.cs",
+        "contentFiles/cs/netstandard2.0/Harmony.Extensions/Traverse2.cs",
+        "harmony.extensions.3.2.0.77.nupkg.sha512",
+        "harmony.extensions.nuspec",
+        "icon.png"
+      ]
+    },
+    "Lib.Harmony/2.4.2": {
+      "sha512": "D2X9ojVjqbqdqWVK3VQETrEb56yVoXxtEp6tP5UvW0PP+bA4uJiswqOxF8GhH02ECwyevUa9vwhwdLzyXfksbw==",
+      "type": "package",
+      "path": "lib.harmony/2.4.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "HarmonyLogo.png",
+        "LICENSE",
+        "README.md",
+        "lib.harmony.2.4.2.nupkg.sha512",
+        "lib.harmony.nuspec",
+        "lib/net10.0/0Harmony.dll",
+        "lib/net10.0/0Harmony.pdb",
+        "lib/net10.0/0Harmony.xml",
+        "lib/net35/0Harmony.dll",
+        "lib/net35/0Harmony.pdb",
+        "lib/net35/0Harmony.xml",
+        "lib/net452/0Harmony.dll",
+        "lib/net452/0Harmony.pdb",
+        "lib/net452/0Harmony.xml",
+        "lib/net472/0Harmony.dll",
+        "lib/net472/0Harmony.pdb",
+        "lib/net472/0Harmony.xml",
+        "lib/net48/0Harmony.dll",
+        "lib/net48/0Harmony.pdb",
+        "lib/net48/0Harmony.xml",
+        "lib/net5.0/0Harmony.dll",
+        "lib/net5.0/0Harmony.pdb",
+        "lib/net5.0/0Harmony.xml",
+        "lib/net6.0/0Harmony.dll",
+        "lib/net6.0/0Harmony.pdb",
+        "lib/net6.0/0Harmony.xml",
+        "lib/net7.0/0Harmony.dll",
+        "lib/net7.0/0Harmony.pdb",
+        "lib/net7.0/0Harmony.xml",
+        "lib/net8.0/0Harmony.dll",
+        "lib/net8.0/0Harmony.pdb",
+        "lib/net8.0/0Harmony.xml",
+        "lib/net9.0/0Harmony.dll",
+        "lib/net9.0/0Harmony.pdb",
+        "lib/net9.0/0Harmony.xml",
+        "lib/netcoreapp3.0/0Harmony.dll",
+        "lib/netcoreapp3.0/0Harmony.pdb",
+        "lib/netcoreapp3.0/0Harmony.xml",
+        "lib/netcoreapp3.1/0Harmony.dll",
+        "lib/netcoreapp3.1/0Harmony.pdb",
+        "lib/netcoreapp3.1/0Harmony.xml",
+        "lib/netstandard2.0/_._"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    ".NETFramework,Version=v4.7.2": [
+      "BUTR.Harmony.Analyzer >= 1.0.1.50",
+      "Harmony.Extensions >= 3.2.0.77",
+      "Lib.Harmony >= 2.4.2"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\gupol\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\Users\\gupol\\Documents\\Bannerlord_Warsails_AI\\RF_Warsails_AI\\RF_BattleAI\\RF_BattleAI.csproj",
+      "projectName": "RF_BattleAI",
+      "projectPath": "C:\\Users\\gupol\\Documents\\Bannerlord_Warsails_AI\\RF_Warsails_AI\\RF_BattleAI\\RF_BattleAI.csproj",
+      "packagesPath": "C:\\Users\\gupol\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\gupol\\Documents\\Bannerlord_Warsails_AI\\RF_Warsails_AI\\RF_BattleAI\\obj\\",
+      "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
+      "configFilePaths": [
+        "C:\\Users\\gupol\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net472"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net472": {
+          "targetAlias": "net472",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      },
+      "SdkAnalysisLevel": "9.0.300"
+    },
+    "frameworks": {
+      "net472": {
+        "targetAlias": "net472",
+        "dependencies": {
+          "BUTR.Harmony.Analyzer": {
+            "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+            "suppressParent": "All",
+            "target": "Package",
+            "version": "[1.0.1.50, )"
+          },
+          "Harmony.Extensions": {
+            "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+            "suppressParent": "All",
+            "target": "Package",
+            "version": "[3.2.0.77, )"
+          },
+          "Lib.Harmony": {
+            "include": "Compile",
+            "target": "Package",
+            "version": "[2.4.2, )"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.315\\RuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

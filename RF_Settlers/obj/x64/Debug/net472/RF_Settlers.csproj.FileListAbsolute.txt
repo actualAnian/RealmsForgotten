@@ -1,0 +1,10 @@
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Settlers\obj\x64\Debug\net472\RF_Settlers.csproj.AssemblyReference.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Settlers\obj\x64\Debug\net472\RF_Settlers.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Settlers\obj\x64\Debug\net472\RF_Settlers.AssemblyInfoInputs.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Settlers\obj\x64\Debug\net472\RF_Settlers.AssemblyInfo.cs
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Settlers\obj\x64\Debug\net472\RF_Settlers.csproj.CoreCompileInputs.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Settlers\obj\x64\Debug\net472\RF_Settlers.sourcelink.json
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Settlers\bin\x64\Debug\net472\RF_Settlers.dll
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Settlers\bin\x64\Debug\net472\RF_Settlers.pdb
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Settlers\obj\x64\Debug\net472\RF_Settlers.dll
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_Settlers\obj\x64\Debug\net472\RF_Settlers.pdb

@@ -1,0 +1,10 @@
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_BattleAI\obj\x64\Debug\net472\RF_BattleAI.csproj.AssemblyReference.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_BattleAI\obj\x64\Debug\net472\RF_BattleAI.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_BattleAI\obj\x64\Debug\net472\RF_BattleAI.AssemblyInfoInputs.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_BattleAI\obj\x64\Debug\net472\RF_BattleAI.AssemblyInfo.cs
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_BattleAI\obj\x64\Debug\net472\RF_BattleAI.csproj.CoreCompileInputs.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_BattleAI\obj\x64\Debug\net472\RF_BattleAI.sourcelink.json
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_BattleAI\bin\x64\Debug\net472\RF_BattleAI.dll
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_BattleAI\bin\x64\Debug\net472\RF_BattleAI.pdb
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_BattleAI\obj\x64\Debug\net472\RF_BattleAI.dll
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_BattleAI\obj\x64\Debug\net472\RF_BattleAI.pdb

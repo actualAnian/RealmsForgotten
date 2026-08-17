@@ -1,0 +1,10 @@
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_ResourceZones\obj\x64\Debug\net472\RF_ResourceZones.csproj.AssemblyReference.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_ResourceZones\obj\x64\Debug\net472\RF_ResourceZones.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_ResourceZones\obj\x64\Debug\net472\RF_ResourceZones.AssemblyInfoInputs.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_ResourceZones\obj\x64\Debug\net472\RF_ResourceZones.AssemblyInfo.cs
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_ResourceZones\obj\x64\Debug\net472\RF_ResourceZones.csproj.CoreCompileInputs.cache
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_ResourceZones\obj\x64\Debug\net472\RF_ResourceZones.sourcelink.json
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_ResourceZones\bin\x64\Debug\net472\RF_ResourceZones.dll
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_ResourceZones\bin\x64\Debug\net472\RF_ResourceZones.pdb
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_ResourceZones\obj\x64\Debug\net472\RF_ResourceZones.dll
+C:\Users\gupol\Documents\Bannerlord_Warsails_AI\RF_Warsails_AI\RF_ResourceZones\obj\x64\Debug\net472\RF_ResourceZones.pdb
