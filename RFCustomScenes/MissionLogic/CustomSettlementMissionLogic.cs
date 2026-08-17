@@ -36,7 +36,7 @@ using static RealmsForgotten.RFCustomSettlements.ExploreSettlementStateHandler;
 
 namespace RealmsForgotten.RFCustomSettlements
 {
-    internal class CustomSettlementMissionLogic : MissionBehavior
+    internal class CustomSettlementMissionLogic : MissionBehavior, RealmsForgotten.HuntableHerds.IRFLootableMission
     {
         private class UsedObject
         {
@@ -368,8 +368,7 @@ namespace RealmsForgotten.RFCustomSettlements
                     Agent agent = base.Mission.SpawnMonster(rosterElement, default, in position, in initialDirection);
 
                     HerdBuildData herdBuildData = (from buildData in HerdBuildData.allHuntableAgentBuildDatas where buildData.SpawnId == entity.Name select buildData).ElementAt(0);
-                    HerdBuildData.CurrentHerdBuildData = herdBuildData;
-                    HerdAgentComponent huntAgentComponent = herdBuildData.IsPassive ? new PassiveHerdAgentComponent(agent) : new AggressiveHerdAgentComponent(agent);
+                    HerdAgentComponent huntAgentComponent = herdBuildData.IsPassive ? new PassiveHerdAgentComponent(agent, herdBuildData) : new AggressiveHerdAgentComponent(agent, herdBuildData);
 
                     agent.AddComponent(huntAgentComponent);
                     for (int i = 0; i < 3; i++)
@@ -773,7 +772,7 @@ namespace RealmsForgotten.RFCustomSettlements
                 skeleton.TickAnimations(0.1f, visuals.GetGlobalFrame(), true);
             }
         }
-        internal void OnAgentLooted(Agent agent)
+        public void OnAgentLooted(Agent agent)
         {
             if (Helper.IsLootableDeadAgent(agent))
             {

@@ -1,6 +1,7 @@
 using RealmsForgotten.HuntableHerds.Models;
 using System;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
@@ -57,6 +58,17 @@ namespace RealmsForgotten.HuntableHerds
             try
             {
                 if (party == null || !party.IsMainParty || party.CurrentSettlement != null)
+                    return;
+
+                // Only spot herds while genuinely travelling the land campaign map:
+                // not aboard a ship / at sea, not mid-encounter or battle, not parked
+                // in a menu (settlement is already covered above).
+                if (party.IsCurrentlyAtSea
+                    || party.MapEvent != null
+                    || party.BesiegerCamp != null
+                    || (party.Army != null && party.Army.LeaderParty != party)
+                    || PlayerEncounter.Current != null
+                    || Campaign.Current.CurrentMenuContext != null)
                     return;
 
                 if (Settings.Instance.DailyChanceOfSpottingHerd <= 0f)

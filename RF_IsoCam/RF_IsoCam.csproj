@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Version>0.0.1</Version>
+        <TargetFramework>net472</TargetFramework>
+        <Platforms>x64</Platforms>
+        <LangVersion>10.0</LangVersion>
+        <Nullable>disable</Nullable>
+        <AssemblyName>RF_IsoCam</AssemblyName>
+        <RootNamespace>RF_IsoCam</RootNamespace>
+        <Configurations>Debug;Release</Configurations>
+        <GameFolder>$(BANNERLORD_GAME_DIR)</GameFolder>
+    </PropertyGroup>
+
+    <!--
+      NOTE: This project intentionally does NOT copy any artifact into the game's
+      Modules folder. The mod author deploys RF_IsoCam manually from the warsails
+      branch in Visual Studio. Build output stays in the local bin only.
+    -->
+
+    <!-- Game + engine assemblies (API only, never copied to output). -->
+    <ItemGroup>
+        <Reference Include="$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.*.dll">
+            <HintPath>%(Identity)</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <!-- TaleWorlds.MountAndBlade.View.dll (MissionView / MissionScreen) lives under Native. -->
+        <Reference Include="$(GameFolder)\Modules\Native\bin\Win64_Shipping_Client\*.dll">
+            <HintPath>%(Identity)</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="$(GameFolder)\Modules\Bannerlord.Harmony\bin\Win64_Shipping_Client\0Harmony.dll">
+            <HintPath>%(Identity)</HintPath>
+            <Private>False</Private>
+        </Reference>
+    </ItemGroup>
+
+    <!-- MCM via NuGet, matching the exact pattern used by RFSmithing. -->
+    <ItemGroup>
+        <PackageReference Include="Bannerlord.MCM" Version="5.9.1" IncludeAssets="compile" />
+    </ItemGroup>
+
+</Project>

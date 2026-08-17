@@ -44,7 +44,7 @@ namespace RealmsForgotten.HuntableHerds
         /// &lt;terrain&gt; lists cover the map.
         /// </para>
         /// </summary>
-        public bool FilterHerdsByTerrain { get; } = false;
+        public bool FilterHerdsByTerrain { get; } = true;
 
         // ---------------------------------------------------------------------------------------
         // MISSION: looting
