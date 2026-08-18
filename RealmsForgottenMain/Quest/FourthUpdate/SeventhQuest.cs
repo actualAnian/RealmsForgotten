@@ -522,7 +522,8 @@ namespace RealmsForgotten.Quest.FourthUpdate
                // Debug logging
                bool logExists = dwarfKingLog != null;
                bool progressCorrect = dwarfKingLog?.CurrentProgress == 0;
-               bool heroMatch = Hero.OneToOneConversationHero?.StringId == "lord_dugrast_faction_1";
+               // Papel, nao id fixo: se Borgul Tharn morreu, quem herdou o trono dos Dugrast serve.
+               bool heroMatch = QuestHeroes.IsInConversation(QuestHeroes.DwarfKing);
                
                return logExists && progressCorrect && heroMatch;
            })
@@ -590,7 +591,7 @@ namespace RealmsForgotten.Quest.FourthUpdate
      .Condition(() =>
          dwarfKingLog != null &&
          dwarfKingLog.CurrentProgress == 0 &&
-         Hero.OneToOneConversationHero?.StringId == "lord_dugrast_faction_1")
+         QuestHeroes.IsInConversation(QuestHeroes.DwarfKing))
      .NpcLine(new TextObject(
          "So you've come seeking our aid? We, the Dugrast folk, have long prepared for these dark times."
      ))

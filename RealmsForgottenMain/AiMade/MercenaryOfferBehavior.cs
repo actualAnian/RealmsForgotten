@@ -48,7 +48,7 @@ namespace RealmsForgotten.AiMade
 
         private void Initialize()
         {
-            _lord3_1 = Hero.FindFirst(hero => hero.StringId == "lord_3_1");
+            _lord3_1 = RealmsForgotten.Quest.QuestHeroes.Resolve(RealmsForgotten.Quest.QuestHeroes.AserailMercenaryLord);
             _lordKingdom = _lord3_1?.Clan?.Kingdom;
 
             if (_lord3_1 == null || _lordKingdom == null)

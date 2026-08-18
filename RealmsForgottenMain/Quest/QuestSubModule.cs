@@ -27,6 +27,7 @@ namespace RealmsForgotten.Quest
                 gameStarter.AddBehavior(new SaveCurrentQuestCampaignBehavior());
                 gameStarter.AddBehavior(new SpawnNpcInLordsHallBecomeKnightBehavior());
                 gameStarter.AddBehavior(new QuestHelperCampaignBehavior());
+                gameStarter.AddBehavior(new QuestHeroSuccessionBehavior());
 
                 gameStarter.AddBehavior(new RescueUliahBehavior(isNewGame));
                 gameStarter.AddBehavior(new EighthQuestBehavior(isNewGame));
@@ -56,6 +57,12 @@ namespace RealmsForgotten.Quest
             AddClassDefinition(typeof(BecomeKnightQuest), 21);
            
 
+        }
+
+        protected override void DefineContainerDefinitions()
+        {
+            // Papel de missao -> heroi que herdou (QuestHeroSuccessionBehavior).
+            ConstructContainerDefinition(typeof(System.Collections.Generic.Dictionary<string, Hero>));
         }
     }
 }

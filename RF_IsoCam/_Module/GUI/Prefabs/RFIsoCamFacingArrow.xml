@@ -1,0 +1,23 @@
+<Prefab>
+  <Window>
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsDisabled="true">
+      <Children>
+        <!-- Rotating container centered on the player (the iso camera keeps the player at
+             screen center). PivotX/Y are normalized (0-1), so 0.5/0.5 = spin around center.
+             The arrow child sits at the top edge pointing outward, so container rotation
+             makes it orbit the character like a compass needle. -->
+        <Widget IsVisible="@IsArrowVisible" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                SuggestedWidth="240" SuggestedHeight="240"
+                HorizontalAlignment="Center" VerticalAlignment="Center"
+                PivotX="0.5" PivotY="0.5" Rotation="@ArrowRotation">
+          <Children>
+            <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                         SuggestedWidth="24" SuggestedHeight="100"
+                         HorizontalAlignment="Center" VerticalAlignment="Top"
+                         Sprite="crosshair_arrow_vertical" Color="#F4E1C4B4" />
+          </Children>
+        </Widget>
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

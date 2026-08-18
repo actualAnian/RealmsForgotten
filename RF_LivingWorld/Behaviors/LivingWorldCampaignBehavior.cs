@@ -20,6 +20,7 @@ namespace RF_LivingWorld
         private const int ContextualPopulationCap = 4;
         private const int MaximumCompletedRoutes = 6;
         private const float MaximumPartyAgeDays = 60f;
+        private const float HerdGrazeDaysPerRegion = 7f;   // transhumance: days a herd grazes one region before migrating
 
         private static LivingWorldCampaignBehavior? _instance;
         private List<LivingWorldRumorReport> _rumors = new();
@@ -82,6 +83,51 @@ namespace RF_LivingWorld
                 }
 
                 LivingWorldPartyComponent component = (LivingWorldPartyComponent)party.PartyComponent;
+
+                // Herders graze autonomously (PatrolAroundPoint set at spawn), so they are not
+                // re-routed each hour. We only age them out — so the herd population slowly
+                // refreshes across the map via ReconcileAmbientPopulation — and restore grazing
+                // if an encounter cleared their patrol order.
+                if (component.PartyType == LivingWorldPartyType.Herder)
+                {
+                    if (party.MapEvent != null)
+                    {
+                        continue;
+                    }
+
+                    // Current grazing region (transhumance target); falls back to home.
+                    Settlement? anchor = component.Destination ?? component.Origin;
+
+                    // Retire by age or after migrating through enough regions; the herd
+                    // population then refreshes across the map via ReconcileAmbientPopulation.
+                    if (PlayerEncounter.Current == null
+                        && ((CampaignTime.Now - component.CreatedAt).ToDays >= MaximumPartyAgeDays
+                            || component.CompletedRoutes >= MaximumCompletedRoutes))
+                    {
+                        DestroyPartyAction.Apply(null, party);
+                        continue;
+                    }
+
+                    // Transhumance: after grazing a region for a while, migrate the grazing
+                    // ground to a neighbouring settlement. Scheduled off CompletedRoutes so it
+                    // needs no extra saved state and does real work only at the migration moment.
+                    if (PlayerEncounter.Current == null && anchor != null
+                        && (CampaignTime.Now - component.CreatedAt).ToDays
+                            >= (component.CompletedRoutes + 1) * HerdGrazeDaysPerRegion)
+                    {
+                        Settlement nextRegion = ChooseDestination(anchor, party.Position) ?? anchor;
+                        component.SetDestination(nextRegion);
+                        component.CompleteRoute();
+                        party.SetMovePatrolAroundSettlement(nextRegion, MobileParty.NavigationType.Default, false);
+                    }
+                    else if (party.DefaultBehavior != AiBehavior.PatrolAroundPoint && anchor != null)
+                    {
+                        // Self-heal if an encounter cleared the patrol order.
+                        party.SetMovePatrolAroundSettlement(anchor, MobileParty.NavigationType.Default, false);
+                    }
+                    continue;
+                }
+
                 if (party.MapEvent == null && ShouldExpireInTransit(component) && PlayerEncounter.Current == null)
                 {
                     DestroyPartyAction.Apply(null, party);
@@ -98,6 +144,14 @@ namespace RF_LivingWorld
                         && party.Position.Distance(component.Destination.GatePosition) <= 2f);
                 if (!arrived)
                 {
+                    // Self-heal: if the move order was lost (e.g. cleared when a MapEvent or
+                    // encounter ended), the party would otherwise idle forever, since a fresh
+                    // order is only issued on arrival. Re-issue it whenever the party is no
+                    // longer heading to a point.
+                    if (component.Destination != null && party.DefaultBehavior != AiBehavior.GoToPoint)
+                    {
+                        party.SetMoveGoToPoint(component.Destination.GatePosition, MobileParty.NavigationType.Default);
+                    }
                     continue;
                 }
 
@@ -431,7 +485,19 @@ namespace RF_LivingWorld
             party.Aggressiveness = 0f;
             party.ItemRoster.AddToCounts(DefaultItems.Grain, Math.Max(4, size));
             AddCargo(party, definition);
-            party.SetMoveGoToPoint(destination.GatePosition, MobileParty.NavigationType.Default);
+            // Herders graze: the engine drives PatrolAroundSettlement autonomously (wander the
+            // vicinity of the settlement, pause, resume) with no recurring tick cost from us.
+            // NOTE: the point-only overload (SetMovePatrolAroundPoint) does NOT anchor an
+            // arbitrary point — with no target settlement the engine falls back to the nearest
+            // hideout or just holds. Anchoring to the origin settlement is what actually keeps
+            // them grazing around home. Everyone else travels settlement to settlement.
+            if (definition.Type == LivingWorldPartyType.Herder)
+            {
+                component.SetDestination(origin);   // start grazing at home, then transhume outward
+                party.SetMovePatrolAroundSettlement(origin, MobileParty.NavigationType.Default, false);
+            }
+            else
+                party.SetMoveGoToPoint(destination.GatePosition, MobileParty.NavigationType.Default);
             party.Party.SetVisualAsDirty();
             return true;
         }

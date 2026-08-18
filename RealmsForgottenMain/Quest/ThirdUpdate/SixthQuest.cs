@@ -35,8 +35,9 @@ namespace RealmsForgotten.Quest.SecondUpdate
         private bool isObjectiveCompleted => defeatDemonLordPartiesLog?.CurrentProgress >= demonLordPartiesToDefeatTarget;
 
         private const int demonLordPartiesToDefeatTarget = 2;
-        private Hero TheOwl => Hero.AllAliveHeroes.FirstOrDefault(hero => hero.StringId == "rf_the_owl");
-        private Hero Lord2_1 => Hero.AllAliveHeroes.FirstOrDefault(hero => hero.StringId == "lord_2_1");
+        private Hero TheOwl => QuestHeroes.Resolve(QuestHeroes.TheOwl);
+        // Se o Dreadking morrer, o papel passa para quem herdou (ver QuestHeroSuccession).
+        private Hero Lord2_1 => QuestHeroes.Resolve(QuestHeroes.DreadKing);
 
         public SixthQuest(string questId, Hero questGiver, CampaignTime duration, int rewardGold) : base(questId, questGiver, duration, rewardGold) { }
 

@@ -2,4 +2,19 @@
     <action_set id="as_human_warrior" skeleton="human_skeleton" movement_system="bipedal">
         <action type="act_human_blow_horn" animation="blow_horn" />
     </action_set>
+
+    <!--
+      RF_PartyVisuals (vindo do modulo stand-alone em 2026-08-18).
+
+      Porco/vaca/ovelha nao tem action set "_map" no Native, ao contrario de cavalo e
+      camelo, entao o visual de icone de mapa deles ficava sem action set valido. Estes
+      overlays finos declaram os "_map" que faltam como puros herdeiros do set base
+      (base_set=...), herdando toda animacao de cena que o animal ja usa — inclusive
+      hog_idle_graze, entao um porco parado pasta no mapa. Nenhum nome de animacao novo e
+      citado (regra do canario: nada apontando para clipe inexistente). Espelha o padrao
+      vanilla (ex.: as_camel_map base_set="as_camel"). O carregador junta por id.
+    -->
+    <action_set id="as_hog_map" base_set="as_hog" />
+    <action_set id="as_cow_map" base_set="as_cow" />
+    <action_set id="as_sheep_map" base_set="as_sheep" />
 </action_sets>

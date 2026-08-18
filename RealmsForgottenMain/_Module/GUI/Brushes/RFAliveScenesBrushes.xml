@@ -1,0 +1,7 @@
+<Brushes>
+  <Brush Name="RFAliveScenes.Bubble.Text" Font="Galahad" TextHorizontalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#C6AC8DFF" TextGlowColor="#000000FF" TextOutlineColor="#000000FF" TextOutlineAmount="0.1" TextGlowRadius="0" TextBlur="0.6" FontSize="42" />
+    </Styles>
+  </Brush>
+</Brushes>

@@ -1,0 +1,81 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <Platforms>x64</Platforms>
+    <LangVersion>10.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <GameFolder>$(BANNERLORD_GAME_DIR)</GameFolder>
+    <AssemblyName>RF_AliveScenes</AssemblyName>
+    <RootNamespace>RF_AliveScenes</RootNamespace>
+    <ModuleRoot>$(GameFolder)\Modules\RealmsForgotten</ModuleRoot>
+    <ModuleBin>$(ModuleRoot)\bin\Win64_Shipping_Client</ModuleBin>
+    <LocalModuleBin>..\RealmsForgottenMain\_Module\bin\Win64_Shipping_Client</LocalModuleBin>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Optimize>False</Optimize>
+    <DebugType>portable</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Optimize>False</Optimize>
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
+  <!-- Assemblies do jogo (somente API, nunca copiadas para o output). -->
+  <ItemGroup>
+    <Reference Include="$(GameFolder)\bin\Win64_Shipping_Client\*.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(GameFolder)\Modules\Native\bin\Win64_Shipping_Client\*.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(GameFolder)\Modules\SandBoxCore\bin\Win64_Shipping_Client\*.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(GameFolder)\Modules\CustomBattle\bin\Win64_Shipping_Client\*.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(GameFolder)\Modules\SandBox\bin\Win64_Shipping_Client\*.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(GameFolder)\Modules\StoryMode\bin\Win64_Shipping_Client\*.dll">
+      <HintPath>%(Identity)</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Bannerlord.MCM" Version="5.9.1" IncludeAssets="compile" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="Build">
+    <MakeDir Directories="$(LocalModuleBin)" />
+    <Copy SourceFiles="$(TargetPath)"
+          DestinationFolder="$(LocalModuleBin)"
+          SkipUnchangedFiles="true" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb"
+          DestinationFolder="$(LocalModuleBin)"
+          SkipUnchangedFiles="true"
+          Condition="Exists('$(TargetDir)$(TargetName).pdb')" />
+
+    <MakeDir Directories="$(ModuleBin)" Condition="'$(GameFolder)' != ''" />
+    <Copy SourceFiles="$(TargetPath)"
+          DestinationFolder="$(ModuleBin)"
+          SkipUnchangedFiles="true"
+          Condition="'$(GameFolder)' != ''" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb"
+          DestinationFolder="$(ModuleBin)"
+          SkipUnchangedFiles="true"
+          Condition="'$(GameFolder)' != '' and Exists('$(TargetDir)$(TargetName).pdb')" />
+  </Target>
+
+</Project>

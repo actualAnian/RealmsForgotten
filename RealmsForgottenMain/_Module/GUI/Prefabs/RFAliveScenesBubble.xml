@@ -1,0 +1,21 @@
+<Window>
+  <RFAliveScenesScreenWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" BubblesContainer="BubblesContainer">
+    <Children>
+      <Widget Id="BubblesContainer" DataSource="{Bubbles}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+        <ItemTemplate>
+          <RFAliveScenesBubbleWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                     Position="@ScreenPosition" IsEnemy="@IsEnemy"
+                                     NameTextWidget="NameTextWidget" EnemyColor="#ED1C24FF"
+                                     StackLayout.LayoutMethod="VerticalBottomToTop">
+            <Children>
+              <TextWidget Id="NameTextWidget" WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren"
+                          SuggestedWidth="350" Text="@Name" HorizontalAlignment="Center"
+                          Brush="RFAliveScenes.Bubble.Text" Brush.FontSize="@FontSize"
+                          OverrideDefaultStateSwitchingEnabled="true" ClipContents="false" />
+            </Children>
+          </RFAliveScenesBubbleWidget>
+        </ItemTemplate>
+      </Widget>
+    </Children>
+  </RFAliveScenesScreenWidget>
+</Window>

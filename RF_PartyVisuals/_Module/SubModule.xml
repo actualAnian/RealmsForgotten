@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Module>
+	<Name value="RF Party Visuals"/>
+	<Id value="RF_PartyVisuals"/>
+	<Version value="v0.0.1"/>
+	<DefaultModule value="false"/>
+	<SingleplayerModule value="true"/>
+	<MultiplayerModule value="false"/>
+	<Official value="false"/>
+	<DependedModules>
+		<DependedModule Id="Native" DependentVersion="v1.4.8"/>
+		<DependedModule Id="SandBoxCore" DependentVersion="v1.4.8"/>
+		<DependedModule Id="Sandbox" DependentVersion="v1.4.8"/>
+		<DependedModule Id="Bannerlord.Harmony" DependentVersion="v1.0.0"/>
+		<DependedModule Id="Bannerlord.MBOptionScreen" DependentVersion="v5.0.0"/>
+	</DependedModules>
+	<SubModules>
+		<SubModule>
+			<Name value="RF_PartyVisuals"/>
+			<DLLName value="RF_PartyVisuals.dll"/>
+			<SubModuleClassType value="RF_PartyVisuals.SubModule"/>
+			<Tags>
+				<Tag key="DedicatedServerType" value="none" />
+				<Tag key="IsNoRenderModeElement" value="false" />
+			</Tags>
+		</SubModule>
+	</SubModules>
+	<Xmls>
+		<XmlNode>
+			<XmlName id="action_sets" path="action_sets"/>
+		</XmlNode>
+	</Xmls>
+</Module>

@@ -81,6 +81,24 @@
       <Tags />
     </SubModule>
     <SubModule>
+      <Name value="RF_PartyVisuals" />
+      <DLLName value="RF_PartyVisuals.dll" />
+      <SubModuleClassType value="RF_PartyVisuals.SubModule" />
+      <Tags>
+        <Tag key="DedicatedServerType" value="none" />
+        <Tag key="IsNoRenderModeElement" value="false" />
+      </Tags>
+    </SubModule>
+    <SubModule>
+      <Name value="RF_AliveScenes" />
+      <DLLName value="RF_AliveScenes.dll" />
+      <SubModuleClassType value="RF_AliveScenes.SubModule" />
+      <Tags>
+        <Tag key="DedicatedServerType" value="none" />
+        <Tag key="IsNoRenderModeElement" value="false" />
+      </Tags>
+    </SubModule>
+    <SubModule>
       <Name value="RF_Promoted" />
       <DLLName value="RF_Promoted.dll" />
       <SubModuleClassType value="RF_Promoted.SubModule" />

@@ -23,7 +23,9 @@ public sealed class SotorMcmSettings : AttributeGlobalSettings<SotorMcmSettings>
 
 	public override string Id => "SOTOR_Settings_v1";
 
-	public override string DisplayName => "Spells of the Old Realms";
+	// Nome visivel no MCM: o modulo vigente e o RF_Magic (Id/FolderName ficam como estao
+	// de proposito — mudar aquilo apagaria as configuracoes ja salvas do jogador).
+	public override string DisplayName => "RF Magic";
 
 	public override string FolderName => "SOTOR";
 

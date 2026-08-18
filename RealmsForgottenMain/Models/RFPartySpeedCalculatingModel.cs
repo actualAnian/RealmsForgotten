@@ -74,6 +74,19 @@ namespace RealmsForgotten.Models
             if (untrainedFactor < 0f)
                 value.AddFactor(untrainedFactor, new TextObject("{=rf_untrained_refugees}Untrained refugees"));
 
+            // Living-world ambient parties (herders, pilgrims, etc.) are ownerless, so the vanilla
+            // livestock/overburden penalties crush them to a near-zero crawl with nothing to offset
+            // (a herder drives 8-18 animals with only a few drovers). Guarantee a minimum walking
+            // pace so they keep moving on the map instead of parking. Only raises those below it.
+            if (mobileParty?.StringId != null &&
+                mobileParty.StringId.StartsWith("rf_living_", StringComparison.Ordinal))
+            {
+                const float minLivingWorldSpeed = 3.0f;
+                if (value.ResultNumber < minLivingWorldSpeed)
+                    value.Add(minLivingWorldSpeed - value.ResultNumber,
+                        new TextObject("{=rf_lw_herding_pace}Herding pace"));
+            }
+
             return value;
         }
     }

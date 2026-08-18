@@ -118,11 +118,11 @@ namespace RealmsForgotten.Quest
                 Hero hero = null;
                 if (Instance.questStoppedAt == "anorit")
 
-                    hero = Hero.FindFirst(x => x.StringId == "lord_WE9_l");
+                    hero = QuestHeroes.Resolve(QuestHeroes.AnoritLord);
 
                 else if (Instance.questStoppedAt == "queen")
 
-                    hero = Kingdom.All.First(x => x.StringId == "empire").Leader.Spouse;
+                    hero = QuestHeroes.ResolveRulerConsort("empire");
 
 
 

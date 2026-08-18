@@ -83,7 +83,8 @@ namespace RealmsForgotten.Quest
             {
                 try
                 {
-                    return Hero.FindFirst(x => x.StringId == "lord_WE9_l");
+                    // Papel, nao id fixo — se Vincantios morreu, quem herdou responde por ele.
+                    return QuestHeroes.Resolve(QuestHeroes.AnoritLord);
                 }
                 catch (Exception)
                 {
@@ -100,7 +101,7 @@ namespace RealmsForgotten.Quest
             {
                 try
                 {
-                    return Hero.FindFirst(x => x.StringId == "rf_the_owl");
+                    return QuestHeroes.Resolve(QuestHeroes.TheOwl);
                 }
                 catch (Exception)
                 {
@@ -114,7 +115,8 @@ namespace RealmsForgotten.Quest
         {
             try
             {
-                QuestQueen = Kingdom.All.First(x => x.StringId == "empire").Leader.Spouse;
+                // Se a consorte morreu, quem responde pelo papel e quem esta no trono agora.
+                QuestQueen = QuestHeroes.ResolveRulerConsort("empire");
                 if (QuestQueen == null)
                     throw new Exception();
             }

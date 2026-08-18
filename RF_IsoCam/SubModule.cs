@@ -1,6 +1,7 @@
 using System;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using TaleWorlds.MountAndBlade.View.Screens;
 
 namespace RF_IsoCam
 {
@@ -24,8 +25,24 @@ namespace RF_IsoCam
             base.OnMissionBehaviorInitialize(mission);
             try
             {
-                mission.AddMissionBehavior(new IsometricCameraMissionView());
-                Debug.Print("[RF_IsoCam] IsometricCameraMissionView added to mission.");
+                // This hook fires inside Mission.AfterStart(), which runs AFTER the
+                // MissionScreen has already snapshotted Mission.MissionBehaviors into its
+                // ticking container (Handler.OnMissionAfterStarting). A view added here via
+                // mission.AddMissionBehavior() is therefore never registered and never gets
+                // OnMissionScreenTick. MissionScreen.AddMissionView() is the runtime-add API:
+                // it adds the behavior AND registers it for ticking.
+                IsometricCameraMissionView view = new IsometricCameraMissionView();
+                MissionState state = MissionState.Current;
+                if (state != null && state.CurrentMission == mission && state.Handler is MissionScreen screen)
+                {
+                    screen.AddMissionView(view);
+                    Debug.Print("[RF_IsoCam] IsometricCameraMissionView registered via MissionScreen.AddMissionView.");
+                }
+                else
+                {
+                    mission.AddMissionBehavior(view);
+                    Debug.Print("[RF_IsoCam] WARNING: MissionScreen unavailable, view added unregistered (camera inactive).");
+                }
             }
             catch (Exception e)
             {

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  RF_PartyVisuals / action_sets.xml
+
+  Farm animals (hog/cow/sheep) ship WITHOUT a "_map" action set in Native, unlike
+  horse/camel. Their map-icon visuals therefore had no valid map action set. These thin
+  overlays declare the missing "_map" sets as pure inheritors of each animal's base set
+  (base_set=...), so they inherit every existing scene animation the animal already uses —
+  including hog_idle_graze, so a stopped hog grazes on the map. We reference no animation
+  names of our own (canary rule: nothing to point at a missing clip). Mirrors the vanilla
+  pattern (e.g. as_camel_map base_set="as_camel"). The loader merges by id.
+-->
+<action_sets>
+	<action_set id="as_hog_map" base_set="as_hog" />
+	<action_set id="as_cow_map" base_set="as_cow" />
+	<action_set id="as_sheep_map" base_set="as_sheep" />
+</action_sets>

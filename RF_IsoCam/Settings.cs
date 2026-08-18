@@ -30,6 +30,17 @@ namespace RF_IsoCam
             set { if (value != _enableIsoCamera) { _enableIsoCamera = value; OnPropertyChanged(); } }
         }
 
+        private bool _mouseTurnsCharacter = true;
+
+        [SettingPropertyBool("{=rf_isocam_mouse_turn}Mouse turns character", RequireRestart = false,
+            HintText = "{=rf_isocam_mouse_turn_desc}First-person style: moving the mouse rotates the character in place and WASD strafes screen-relative. When off, the character simply faces whichever direction they walk.")]
+        [SettingPropertyGroup("RF IsoCam")]
+        public bool MouseTurnsCharacter
+        {
+            get => _mouseTurnsCharacter;
+            set { if (value != _mouseTurnsCharacter) { _mouseTurnsCharacter = value; OnPropertyChanged(); } }
+        }
+
         // ---------------- Keys ----------------
 
         private string _toggleKey = "H";
@@ -67,10 +78,10 @@ namespace RF_IsoCam
 
         // ---------------- Camera geometry ----------------
 
-        private float _cameraDistance = 14f;
+        private float _cameraDistance = 18f;
 
         [SettingPropertyFloatingInteger("{=rf_isocam_distance}Camera distance", 3f, 45f, "0.0", RequireRestart = false,
-            HintText = "{=rf_isocam_distance_desc}Straight-line distance from the player to the camera. Higher = further away / more zoomed out. Default 14.")]
+            HintText = "{=rf_isocam_distance_desc}Straight-line distance from the player to the camera. Higher = further away / more zoomed out. Default 18.")]
         [SettingPropertyGroup("RF IsoCam/Camera")]
         public float CameraDistance
         {
@@ -78,10 +89,10 @@ namespace RF_IsoCam
             set { if (value != _cameraDistance) { _cameraDistance = value; OnPropertyChanged(); } }
         }
 
-        private float _cameraHeight = 6f;
+        private float _cameraHeight = 0f;
 
         [SettingPropertyFloatingInteger("{=rf_isocam_height}Extra camera height", 0f, 30f, "0.0", RequireRestart = false,
-            HintText = "{=rf_isocam_height_desc}Additional vertical raise applied to both the camera and the look target. Raises the whole framing without changing the tilt. Default 6.")]
+            HintText = "{=rf_isocam_height_desc}Additional vertical raise applied to both the camera and the look target. Pushes the player toward the bottom of the screen; keep at 0 to keep the player centered. Default 0.")]
         [SettingPropertyGroup("RF IsoCam/Camera")]
         public float CameraHeight
         {
@@ -89,15 +100,26 @@ namespace RF_IsoCam
             set { if (value != _cameraHeight) { _cameraHeight = value; OnPropertyChanged(); } }
         }
 
-        private float _cameraAngle = 55f;
+        private float _cameraAngle = 65f;
 
         [SettingPropertyFloatingInteger("{=rf_isocam_angle}Camera pitch angle", 15f, 85f, "0.0", RequireRestart = false,
-            HintText = "{=rf_isocam_angle_desc}Down-tilt of the camera in degrees. 90 = straight top-down, low values = flatter/behind. Default 55.")]
+            HintText = "{=rf_isocam_angle_desc}Down-tilt of the camera in degrees. 90 = straight top-down, low values = flatter/behind. Default 65.")]
         [SettingPropertyGroup("RF IsoCam/Camera")]
         public float CameraAngle
         {
             get => _cameraAngle;
             set { if (value != _cameraAngle) { _cameraAngle = value; OnPropertyChanged(); } }
+        }
+
+        private float _fieldOfView = 40f;
+
+        [SettingPropertyFloatingInteger("{=rf_isocam_fov}Field of view", 20f, 90f, "0.0", RequireRestart = false,
+            HintText = "{=rf_isocam_fov_desc}Vertical FOV in degrees. Low values (30-40) flatten perspective for the classic isometric look; high values feel like a normal 3rd person camera. Default 40.")]
+        [SettingPropertyGroup("RF IsoCam/Camera")]
+        public float FieldOfView
+        {
+            get => _fieldOfView;
+            set { if (value != _fieldOfView) { _fieldOfView = value; OnPropertyChanged(); } }
         }
 
         private float _rotationSpeed = 70f;
