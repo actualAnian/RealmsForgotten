@@ -1,6 +1,9 @@
 ﻿using Helpers;
 using RealmsForgotten.Quest.UI;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
@@ -67,34 +70,85 @@ namespace RealmsForgotten.Quest.SecondUpdate
             RegisterQuestEvents(this);
         }
 
+        private float _owlEnsureCooldown;
+
+        /// <summary>
+        /// REGRA DO AUTOR: enquanto esta quest existe, o Owl esta VIVO e NA PARTY do
+        /// jogador — sempre, em qualquer fase. Roda por tick (gancho de load de quest
+        /// nao e confiavel): se ele morreu, o Resolve ja revive; se saiu do roster
+        /// (morte na janela do bug, impostor que consumiu a vaga), volta em ate 2s.
+        /// </summary>
+        private void EnsureOwlInParty(float dt)
+        {
+            _owlEnsureCooldown -= dt;
+            if (_owlEnsureCooldown > 0f)
+                return;
+            _owlEnsureCooldown = 2f;
+
+            // Cirurgia completa (expulsa impostor, revive, renasce do template se o
+            // heroi sumiu do save) — segura aqui porque o tick so roda com o jogo vivo.
+            Hero owl = QuestHeroSuccessionBehavior.RepairImmortal(QuestHeroes.TheOwl);
+            if (owl == null || owl.IsPrisoner || owl.PartyBelongedTo == MobileParty.MainParty)
+                return;
+
+            if (!owl.IsActive)
+                owl.ChangeState(Hero.CharacterStates.Active);
+            owl.HitPoints = Math.Max(owl.HitPoints, Math.Max(10, owl.MaxHitPoints / 2));
+            AddHeroToPartyAction.Apply(owl, MobileParty.MainParty);
+        }
+
         private void BattleEnd(MapEvent mapEvent)
         {
             MapEventSide? defeatedSide = mapEvent.DefenderSide.MissionSide == mapEvent.DefeatedSide
                 ? mapEvent.DefenderSide
                 : mapEvent.AttackerSide.MissionSide == mapEvent.DefeatedSide ? mapEvent.AttackerSide : null;
 
-            if (captureHellboundLog?.CurrentProgress == 0 && defeatedSide?.LeaderParty.Culture.StringId == "hellbound_outlaw")
+            if (captureHellboundLog?.CurrentProgress == 0 && defeatedSide?.LeaderParty?.Culture?.StringId == "hellbound_outlaw")
             {
                 captureHellboundLog.UpdateCurrentProgress(1);
             }
         }
 
+        // O fluxo historico da quest abre a conversa de mapa direto ao fim da batalha —
+        // o vanilla (CampaignMapConversation) convive com encounter/map event em
+        // teardown, e e assim que o dialogo "fura a fila" mesmo com a party inimiga
+        // reengajando (exigir mapa limpo aqui deixava o dialogo mudo sob perseguicao).
+        // As duas unicas guardas necessarias: nao abrir DENTRO de uma missao e nao
+        // reabrir em cima de uma conversa ja em andamento. O crash de 2026-08-19 nunca
+        // foi o teardown: era NRE de TheOwl nulo, corrigido na resolucao do papel.
+        private static bool CanOpenMapConversation()
+            => Mission.Current == null
+               && Campaign.Current?.ConversationManager?.IsConversationInProgress != true;
+
         private void OnTick(float dt)
         {
+            EnsureOwlInParty(dt);
+
             if (takeBossToLordLog?.CurrentProgress == 2)
             {
                 if (Hero.MainHero.IsPrisoner)
+                {
                     EndCaptivityAction.ApplyByReleasedAfterBattle(Hero.MainHero);
+                    return;
+                }
 
-                CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter), new ConversationCharacterData(TheOwl.CharacterObject));
+                if (CanOpenMapConversation() && TheOwl?.CharacterObject != null)
+                    CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter), new ConversationCharacterData(TheOwl.CharacterObject));
             }
             if (captureHellboundLog?.CurrentProgress == 1)
             {
-                CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty), new ConversationCharacterData(CharacterObject.Find("hellbound_chief")));
+                CharacterObject chief = CharacterObject.Find("hellbound_chief");
+                if (CanOpenMapConversation() && chief != null)
+                    CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter, PartyBase.MainParty), new ConversationCharacterData(chief));
             }
             if (captureHellboundLog?.CurrentProgress == 2)
             {
-                new FifthQuest("rf_fifth_quest", QuestGiver, CampaignTime.Never, 50000).StartQuest();
+                // Guarda p/ instancia de replay (rf.quest.replay_ambush): nao criar uma
+                // SEGUNDA 5ª quest se a original existe neste save.
+                if (!Campaign.Current.QuestManager.Quests.Any(q => q is FifthQuest))
+                {
+                    new FifthQuest("rf_fifth_quest", QuestGiver, CampaignTime.Never, 50000).StartQuest();
+                }
                 CompleteQuestWithSuccess();
             }
 
@@ -154,6 +208,108 @@ namespace RealmsForgotten.Quest.SecondUpdate
                 CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter), new ConversationCharacterData(TheOwl.CharacterObject));
             }
         }
+        /// <summary>
+        /// Rebobina a 4ª quest para o checkpoint DA EMBOSCADA dos Nelrog (pedido do autor
+        /// para regravar narração, 2026-08-19: o save pré-batalha foi sobrescrito por
+        /// quicksaves). Usar numa CÓPIA do save ("salvar como" antes!). O que faz:
+        /// remove a party de emboscada remanescente, volta o estágio para 0 e rearma o
+        /// gatilho de distância — a emboscada re-dispara no próximo tick de hora perto do
+        /// lorde. Efeito colateral aceito: refazer o diálogo do Owl duplica a entrada
+        /// "ir ao monastério" no diário (cosmético).
+        /// </summary>
+        /// <summary>
+        /// TRAVA DE DISTRIBUIÇÃO: as ferramentas de filmagem/replay só existem na máquina
+        /// do autor — exigem um arquivo-chave em Documentos (fora da pasta do mod, nunca
+        /// distribuído). Em qualquer instalação de jogador isto é código morto.
+        /// </summary>
+        internal static readonly bool FilmingToolsEnabled = System.IO.File.Exists(
+            System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                "Mount and Blade II Bannerlord", "rf_dev_filming.flag"));
+
+        [CommandLineFunctionality.CommandLineArgumentFunction("replay_ambush", "rf.quest")]
+        public static string ReplayAmbush(List<string> args)
+        {
+            if (!FilmingToolsEnabled)
+            {
+                return "Ferramenta de dev desativada nesta máquina.";
+            }
+            if (Campaign.Current == null)
+            {
+                return "rf.quest.replay_ambush: campanha não está rodando.";
+            }
+
+            StringBuilder report = new StringBuilder();
+            report.AppendLine("=== Replay da emboscada dos Nelrog ===");
+
+            FourthQuest quest = Instance;
+            if (quest == null || quest.IsFinalized)
+            {
+                // Quest ja concluida (save avancado): recria uma INSTANCIA DE REPLAY so
+                // para este save de filmagem — diario limpo, mesma emboscada, mesmo
+                // dialogo do Owl. O lorde da quest vem do argumento ou de outra quest
+                // principal ativa (a 5ª herda o mesmo giver).
+                Hero giver = null;
+                if (args != null && args.Count > 0)
+                {
+                    string name = string.Join(" ", args).Trim();
+                    giver = Hero.AllAliveHeroes.FirstOrDefault(h => h.Name != null && h.Name.ToString().Equals(name, StringComparison.OrdinalIgnoreCase));
+                    if (giver == null)
+                    {
+                        return $"Herói '{name}' não encontrado (vivo).";
+                    }
+                }
+
+                giver ??= Campaign.Current.QuestManager.Quests
+                    .FirstOrDefault(q => q is FifthQuest && !q.IsFinalized && q.QuestGiver != null && q.QuestGiver.IsAlive)?.QuestGiver;
+                giver ??= Campaign.Current.QuestManager.Quests
+                    .FirstOrDefault(q => !q.IsFinalized && q.QuestGiver != null && q.QuestGiver.IsAlive
+                                         && q.GetType().Namespace?.StartsWith("RealmsForgotten") == true)?.QuestGiver;
+
+                if (giver == null)
+                {
+                    return "A 4ª quest já foi concluída e não achei o lorde da quest neste save. Rode: rf.quest.replay_ambush <nome do lorde a quem você levou o boss>.";
+                }
+
+                quest = new FourthQuest("rf_fourth_quest_replay", giver, CampaignTime.Never, 0);
+                quest.StartQuest();
+                report.AppendLine($"Quest concluída neste save — instância de REPLAY criada (lorde: {giver.Name}).");
+            }
+            report.AppendLine($"Estado atual: takeBossToLord={quest.takeBossToLordLog?.CurrentProgress.ToString() ?? "null"}, " +
+                              $"goToMonastery={quest.goToMonasteryLog?.CurrentProgress.ToString() ?? "null"}, " +
+                              $"captureHellbound={quest.captureHellboundLog?.CurrentProgress.ToString() ?? "null"}");
+
+            if (quest.captureHellboundLog != null)
+            {
+                report.AppendLine("AVISO: a fase de capturar o chefe Hellbound já começou — o replay volta só a emboscada; o resto da quest permanece adiantado.");
+            }
+
+            foreach (MobileParty party in MobileParty.All.ToList())
+            {
+                if (party.StringId != null && party.StringId.StartsWith("quest_hellbound_party") && party.IsActive)
+                {
+                    DestroyPartyAction.Apply(null, party);
+                    report.AppendLine($"Party de emboscada remanescente removida: {party.StringId}");
+                }
+            }
+
+            quest.takeBossToLordLog?.UpdateCurrentProgress(0);
+            if (quest.takeBossToLordLog != null && quest.takeBossToLordLog.CurrentProgress != 0)
+            {
+                // UpdateCurrentProgress recusou descer — força pelo setter privado.
+                var prop = typeof(JournalLog).GetProperty("CurrentProgress");
+                prop?.GetSetMethod(true)?.Invoke(quest.takeBossToLordLog, new object[] { 0 });
+            }
+            report.AppendLine($"Estágio rebobinado para {quest.takeBossToLordLog?.CurrentProgress.ToString() ?? "null"}.");
+
+            // Rearma o gatilho: com o "raio inicial" 1.5x a distância atual, a condição
+            // (dist² <= inicial*0.7) já vale onde o jogador está — a emboscada vem no
+            // próximo tick de hora. Posicione-se ANTES de rodar o comando.
+            quest.initialDistanceFromQuestGiver = Math.Max(1f, quest.GetDistanceFromQuestGiver() * 1.5f);
+            report.AppendLine("Gatilho rearmado: a emboscada dispara no próximo tick de hora (deixe o tempo correr).");
+            report.AppendLine("LEMBRETE: rode isto numa CÓPIA do save (Save As antes de tudo).");
+            return report.ToString();
+        }
+
         private float GetDistanceFromQuestGiver() => MobileParty.MainParty.GetPosition2D.DistanceSquared(QuestGiver.PartyBelongedTo != null ? QuestGiver.PartyBelongedTo.GetPosition2D : QuestGiver.CurrentSettlement.GetPosition2D);
         private float GetDistanceFromMonastery() => MobileParty.MainParty.GetPosition2D.DistanceSquared(QuestMonastery.GetPosition2D);
         protected override void OnStartQuest()

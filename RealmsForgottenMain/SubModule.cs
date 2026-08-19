@@ -117,6 +117,8 @@ namespace RealmsForgotten
                 campaignGameStarter.AddBehavior(new RFLegendaryTroopsNotableBehaviors());
                 campaignGameStarter.AddBehavior(new RFLegendaryTroopsAIRecruitment());
                 campaignGameStarter.AddBehavior(new RealmsForgotten.AiMade.ArmyCommand.RFArmyCommandCampaignBehavior());
+                // Mensageiro pago com conversa a distancia (porte do LOTRAOM, 2026-08-18).
+                campaignGameStarter.AddBehavior(new RealmsForgotten.AiMade.Messengers.RFMessengerCampaignBehavior());
 
                 campaignGameStarter.AddModel(new RFAgentApplyDamageModel(campaignGameStarter.GetExistingModel<AgentApplyDamageModel>()));
                 campaignGameStarter.AddModel(new RFBuildingConstructionModel(campaignGameStarter.GetExistingModel<BuildingConstructionModel>()));
@@ -125,6 +127,9 @@ namespace RealmsForgotten
                 campaignGameStarter.AddModel(new RFPartyMoraleModel(campaignGameStarter.GetExistingModel<PartyMoraleModel>()));
                 campaignGameStarter.AddModel(new RFPartySpeedCalculatingModel(campaignGameStarter.GetExistingModel<PartySpeedModel>()));
                 campaignGameStarter.AddModel(new RFCharacterStatsModel(campaignGameStarter.GetExistingModel<CharacterStatsModel>()));
+                // Filho de casamento inter-racial: aparencia gerada na raca certa
+                // (achado do estudo LOTRAOM 2026-08-18; ver RFHeroCreationModel).
+                campaignGameStarter.AddModel(new RealmsForgotten.Models.RFHeroCreationModel());
                 campaignGameStarter.AddModel(new RFPartyHealingModel(campaignGameStarter.GetExistingModel<PartyHealingModel>()));
                 campaignGameStarter.AddModel(new RFClanPoliticsModel(campaignGameStarter.GetExistingModel<ClanPoliticsModel>()));
                 campaignGameStarter.AddModel(new RFPrisonerRecruitmentCalculationModel(campaignGameStarter.GetExistingModel<PrisonerRecruitmentCalculationModel>()));
@@ -527,6 +532,12 @@ namespace RealmsForgotten
             // This one managed patch must exist before save deserialization calls Hero.AfterLoad.
             // The remaining manual patches deliberately stay in OnGameInitializationFinished.
             QuestPatches.PatchAthasScholarLoadRepair();
+
+            // SaveShield (portado do LOTRAOM): finalizers observadores em SaveManager que nomeiam
+            // o mod culpado quando save/load falha. Precisa existir antes do primeiro Load da
+            // sessão, que acontece antes de OnGameInitializationFinished. Categoria própria, fora
+            // do sweep de não-categorizados.
+            RealmsForgotten.SaveShield.SaveShieldBootstrap.Apply(harmony);
 
             if (Globals.IsWarSailsLoaded)
             {

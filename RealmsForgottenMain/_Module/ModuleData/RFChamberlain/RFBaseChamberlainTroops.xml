@@ -137,10 +137,10 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster civilian="false">
-        <equipment slot="Item1" id="Item.rf_banner" />
+        <equipment slot="Item1" id="Item.campaign_banner_small" />
       </EquipmentRoster>
       <EquipmentRoster civilian="true">
-        <equipment slot="Item1" id="Item.rf_banner" />
+        <equipment slot="Item1" id="Item.campaign_banner_small" />
       </EquipmentRoster>
     </Equipments>
   </NPCCharacter>

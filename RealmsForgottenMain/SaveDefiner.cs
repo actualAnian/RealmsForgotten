@@ -23,6 +23,8 @@ internal class SaveDefiner : SaveableTypeDefiner
         AddClassDefinition(typeof(CareerPointsSaveableData), 7);
         AddClassDefinition(typeof(RenownPointsSystem), 8);
         AddClassDefinition(typeof(DeedsPointsSystem), 9);
+        // Mensageiros (porte do LOTRAOM, 2026-08-18)
+        AddClassDefinition(typeof(RealmsForgotten.AiMade.Messengers.RFMessenger), 10);
         
     }
     protected override void DefineContainerDefinitions()
@@ -30,6 +32,7 @@ internal class SaveDefiner : SaveableTypeDefiner
         ConstructContainerDefinition(typeof(Dictionary<Settlement, MercenaryData>)); 
         ConstructContainerDefinition(typeof(Dictionary<string, TownSlaveData>));
         ConstructContainerDefinition(typeof(Dictionary<Settlement, CampaignTime>));
+        ConstructContainerDefinition(typeof(List<RealmsForgotten.AiMade.Messengers.RFMessenger>));
 
     }
 }

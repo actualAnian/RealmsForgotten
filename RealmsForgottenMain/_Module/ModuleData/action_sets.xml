@@ -1,20 +1,153 @@
-<action_sets>
+﻿<action_sets>
     <action_set id="as_human_warrior" skeleton="human_skeleton" movement_system="bipedal">
         <action type="act_human_blow_horn" animation="blow_horn" />
     </action_set>
 
     <!--
-      RF_PartyVisuals (vindo do modulo stand-alone em 2026-08-18).
-
-      Porco/vaca/ovelha nao tem action set "_map" no Native, ao contrario de cavalo e
-      camelo, entao o visual de icone de mapa deles ficava sem action set valido. Estes
-      overlays finos declaram os "_map" que faltam como puros herdeiros do set base
-      (base_set=...), herdando toda animacao de cena que o animal ja usa — inclusive
-      hog_idle_graze, entao um porco parado pasta no mapa. Nenhum nome de animacao novo e
-      citado (regra do canario: nada apontando para clipe inexistente). Espelha o padrao
-      vanilla (ex.: as_camel_map base_set="as_camel"). O carregador junta por id.
+      Sets "_map" dos farm animals — COPIAS COMPLETAS e autossuficientes dos sets
+      base vanilla (skeleton + todas as acoes, geradas por script do Native em
+      2026-08-19). A forma fina (so base_set=) herdada cross-modulo carregava sem
+      esqueleto e gerava AV nativo no AgentVisuals do icone de mapa (2x debugger).
+      Duplicata em living_world_action_sets.xml deletada no mesmo dia.
     -->
-    <action_set id="as_hog_map" base_set="as_hog" />
-    <action_set id="as_cow_map" base_set="as_cow" />
-    <action_set id="as_sheep_map" base_set="as_sheep" />
+    <action_set id="as_hog_map" skeleton="hog_skeleton" movement_system="quadrupedal">
+        <action type="act_horse_stand_for_movement_data" animation="hog_stand_for_movement_data" />
+        <action type="act_horse_stand_1" animation="hog_idle_graze" alternative_group="hog_stand_alternative_group" />
+        <action type="act_horse_stand_2" animation="hog_idle_look_around" alternative_group="hog_stand_alternative_group" />
+        <action type="act_horse_idle_1" animation="hog_idle_graze" alternative_group="hog_idle_alternative_group" />
+        <action type="act_horse_idle_2" animation="hog_idle_look_around" alternative_group="hog_idle_alternative_group" />
+        <action type="act_horse_forward_walk_stand" animation="hog_gait_walk_forward" />
+        <action type="act_horse_forward_walk" animation="hog_walk_forward" />
+        <action type="act_horse_forward_walk_strafe_left" animation="hog_walk_forward_strafe_left" />
+        <action type="act_horse_forward_walk_strafe_right" animation="hog_walk_forward_strafe_right" />
+        <action type="act_horse_forward_trot_stand" animation="hog_gait_trot" />
+        <action type="act_horse_forward_trot" animation="hog_trot" />
+        <action type="act_horse_forward_trot_strafe_right" animation="hog_trot_strafe_right" />
+        <action type="act_horse_forward_trot_strafe_left" animation="hog_trot_strafe_left" />
+        <action type="act_horse_forward_canter_stand" animation="hog_gait_canter" />
+        <action type="act_horse_forward_canter" animation="hog_canter" />
+        <action type="act_horse_forward_canter_strafe_right" animation="hog_canter_strafe_right" />
+        <action type="act_horse_forward_canter_strafe_left" animation="hog_canter_strafe_left" />
+        <action type="act_horse_forward_gallop_right_foot_stand" animation="hog_gait_gallop" />
+        <action type="act_horse_forward_gallop_right_foot" animation="hog_gallop" />
+        <action type="act_horse_forward_gallop_right_foot_strafe_right" animation="hog_gallop_strafe_right" />
+        <action type="act_horse_forward_gallop_right_foot_strafe_left" animation="hog_gallop_strafe_left" />
+        <action type="act_horse_forward_gallop_left_foot_stand" animation="hog_gait_gallop" />
+        <action type="act_horse_forward_gallop_left_foot" animation="hog_gallop" />
+        <action type="act_horse_forward_gallop_left_foot_strafe_right" animation="hog_gallop_strafe_right" />
+        <action type="act_horse_forward_gallop_left_foot_strafe_left" animation="hog_gallop_strafe_left" />
+        <action type="act_jump_loop" animation="hog_jump" />
+        <action type="act_jump_end" animation="hog_jump" />
+        <action type="act_jump_end_hard" animation="hog_jump" />
+        <action type="act_horse_fall_right" animation="hog_death" />
+        <action type="act_horse_fall_left" animation="hog_death" />
+        <action type="act_horse_fall_roll" animation="hog_death" />
+        <action type="act_horse_backward_walk_stand" animation="hog_gait_walk_forward" />
+        <action type="act_horse_backward_walk" animation="hog_walk_forward" />
+        <action type="act_horse_backward_walk_strafe_right" animation="hog_walk_forward" />
+        <action type="act_horse_backward_walk_strafe_left" animation="hog_walk_forward" />
+        <action type="act_horse_strike_back" animation="hog_get_hit_back" />
+        <action type="act_horse_strike_front" animation="hog_get_hit_front" />
+        <action type="act_mount_strike_back_while_moving" animation="hog_walk_get_hit_back" />
+        <action type="act_mount_strike_front_while_moving" animation="hog_walk_get_hit_front" />
+        <action type="act_horse_turn_right" animation="hog_walk_forward" />
+        <action type="act_horse_turn_left" animation="hog_walk_forward" />
+        <action type="act_horse_strafe_right" animation="hog_walk_forward" />
+        <action type="act_horse_strafe_left" animation="hog_walk_forward" />
+        <action type="act_horse_turn_right_head" animation="hog_walk_forward" />
+        <action type="act_horse_turn_left_head" animation="hog_walk_forward" />
+        <action type="act_inventory_idle_start" animation="anim_hog_inventory_start" />
+        <action type="act_inventory_idle" animation="anim_hog_inventory" />
+    </action_set>
+    <action_set id="as_cow_map" skeleton="cow_skeleton" movement_system="quadrupedal">
+        <action type="act_horse_stand_for_movement_data" animation="cow_stand_for_movement_data" />
+        <action type="act_horse_stand_1" animation="cow_stand" />
+        <action type="act_horse_idle_1" animation="cow_stand" />
+        <action type="act_horse_forward_walk_stand" animation="cow_walk_gait" />
+        <action type="act_horse_forward_walk" animation="cow_walk" />
+        <action type="act_horse_forward_walk_strafe_left" animation="cow_walk_strafe_left" />
+        <action type="act_horse_forward_walk_strafe_right" animation="cow_walk_strafe_right" />
+        <action type="act_horse_forward_trot_stand" animation="cow_trot_gait" />
+        <action type="act_horse_forward_trot" animation="cow_trot" />
+        <action type="act_horse_forward_trot_strafe_right" animation="cow_trot_strafe_right" />
+        <action type="act_horse_forward_trot_strafe_left" animation="cow_trot_strafe_left" />
+        <action type="act_horse_forward_canter_stand" animation="cow_run_gait" />
+        <action type="act_horse_forward_canter" animation="cow_run" />
+        <action type="act_horse_forward_canter_strafe_right" animation="cow_run_strafe_right" />
+        <action type="act_horse_forward_canter_strafe_left" animation="cow_run_strafe_left" />
+        <action type="act_jump_loop" animation="cow_walk" />
+        <action type="act_jump_end" animation="cow_walk" />
+        <action type="act_jump_end_hard" animation="cow_walk" />
+        <action type="act_jump_loop_left_stance" animation="cow_walk" />
+        <action type="act_jump_end_left_stance" animation="cow_walk" />
+        <action type="act_jump_end_hard_left_stance" animation="cow_walk" />
+        <action type="act_horse_fall_right" animation="cow_death" />
+        <action type="act_horse_fall_left" animation="cow_death" />
+        <action type="act_horse_fall_roll" animation="cow_death" />
+        <action type="act_horse_fall_slow_right" animation="cow_death" />
+        <action type="act_horse_fall_slow_left" animation="cow_death" />
+        <action type="act_horse_backward_walk_stand" animation="cow_walk_gait" />
+        <action type="act_horse_backward_walk" animation="cow_walk" />
+        <action type="act_horse_backward_walk_strafe_right" animation="cow_walk" />
+        <action type="act_horse_backward_walk_strafe_left" animation="cow_walk" />
+        <action type="act_horse_strike_back" animation="cow_strike_back" />
+        <action type="act_horse_strike_front" animation="cow_strike_front" />
+        <action type="act_mount_strike_back_while_moving" animation="strike_back_while_moving" />
+        <action type="act_mount_strike_front_while_moving" animation="strike_front_while_moving" />
+        <action type="act_horse_turn_right" animation="cow_walk" />
+        <action type="act_horse_turn_left" animation="cow_walk" />
+        <action type="act_horse_strafe_right" animation="cow_walk" />
+        <action type="act_horse_strafe_left" animation="cow_walk" />
+        <action type="act_horse_turn_right_head" animation="cow_walk" />
+        <action type="act_horse_turn_left_head" animation="cow_walk" />
+        <action type="act_horse_jump_start" animation="cow_walk" />
+        <action type="act_horse_dash" animation="cow_walk" />
+        <action type="act_inventory_idle_start" animation="anim_cow_inventory_start" />
+        <action type="act_inventory_idle" animation="anim_cow_inventory" />
+    </action_set>
+    <action_set id="as_sheep_map" skeleton="sheep_skeleton_01" movement_system="quadrupedal">
+        <action type="act_horse_stand_for_movement_data" animation="sheep_stand_for_movement_data" />
+        <action type="act_horse_stand_1" animation="anim_sheep_idle" alternative_group="sheep_stand_alternative_group" />
+        <action type="act_horse_stand_2" animation="anim_sheep_idle_2" alternative_group="sheep_stand_alternative_group" />
+        <action type="act_horse_idle_1" animation="anim_sheep_idle" alternative_group="sheep_idle_alternative_group" />
+        <action type="act_horse_idle_2" animation="anim_sheep_idle_2" alternative_group="sheep_idle_alternative_group" />
+        <action type="act_horse_forward_walk_stand" animation="sheep_walkforward_stand" />
+        <action type="act_horse_forward_walk" animation="sheep_walkforward" />
+        <action type="act_horse_forward_walk_strafe_left" animation="sheep_walk_left" />
+        <action type="act_horse_forward_walk_strafe_right" animation="sheep_walk_right" />
+        <action type="act_horse_forward_trot_stand" animation="sheep_trot_forward_stand" />
+        <action type="act_horse_forward_trot" animation="sheep_trot_forward" />
+        <action type="act_horse_forward_trot_strafe_right" animation="sheep_trot_forward" />
+        <action type="act_horse_forward_trot_strafe_left" animation="sheep_trot_forward" />
+        <action type="act_horse_forward_canter" animation="sheep_canter_forward" />
+        <action type="act_horse_forward_canter_stand" animation="sheep_canter_forward_stand" />
+        <action type="act_horse_forward_canter_strafe_right" animation="sheep_canter_forward" />
+        <action type="act_horse_forward_canter_strafe_left" animation="sheep_canter_forward" />
+        <action type="act_horse_strike_back" animation="sheep_strike" />
+        <action type="act_horse_strike_front" animation="sheep_strike" />
+        <action type="act_mount_strike_back_while_moving" animation="sheep_strike" />
+        <action type="act_mount_strike_front_while_moving" animation="sheep_strike" />
+        <action type="act_jump" animation="sheep_walkforward" />
+        <action type="act_horse_jump_start" animation="sheep_walkforward" />
+        <action type="act_jump_loop" animation="sheep_walkforward" />
+        <action type="act_jump_end" animation="sheep_walkforward" />
+        <action type="act_jump_end_hard" animation="sheep_walkforward" />
+        <action type="act_horse_fall_right" animation="sheep_death" />
+        <action type="act_horse_fall_left" animation="sheep_death" />
+        <action type="act_horse_fall_roll" animation="sheep_death" />
+        <action type="act_horse_fall_slow_right" animation="sheep_death" />
+        <action type="act_horse_fall_slow_left" animation="sheep_death" />
+        <action type="act_horse_backward_walk_stand" animation="sheep_walkbackward_stand" />
+        <action type="act_horse_backward_walk" animation="sheep_walkbackward" />
+        <action type="act_horse_backward_walk_strafe_right" animation="sheep_walkbackward" />
+        <action type="act_horse_backward_walk_strafe_left" animation="sheep_walkbackward" />
+        <action type="act_horse_turn_right" animation="sheep_walk_right" />
+        <action type="act_horse_turn_left" animation="sheep_walk_left" />
+        <action type="act_horse_strafe_right" animation="sheep_walk_right" />
+        <action type="act_horse_strafe_left" animation="sheep_walk_left" />
+        <action type="act_horse_turn_right_head" animation="sheep_walkright_stand" />
+        <action type="act_horse_turn_left_head" animation="sheep_walkleft_stand" />
+        <action type="act_inventory_idle_start" animation="anim_sheep_inventory_start" />
+        <action type="act_inventory_idle" animation="anim_sheep_inventory" />
+    </action_set>
 </action_sets>

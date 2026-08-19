@@ -40,7 +40,11 @@ namespace RealmsForgotten.Quest
             CampaignEvents.CanHeroDieEvent.AddNonSerializedListener(obj,
                 (Hero hero, KillCharacterAction.KillCharacterActionDetail detail, ref bool canDie) =>
                 {
-                    if (hero == QuestQueen || hero == QuestQueen.Spouse || hero == TheOwl ||
+                    if (hero == null)
+                        return;
+
+                    Hero queen = QuestQueen;
+                    if (hero == queen || (queen != null && hero == queen.Spouse) || hero == TheOwl ||
                         hero == QuestLibrary.AnoritLord)
                     {
                         canDie = false;

@@ -40,6 +40,11 @@ public sealed class BubbleLayerVM : ViewModel
         {
             return;
         }
+
+        // Um agente fala uma coisa de cada vez: qualquer balao anterior dele sai antes de
+        // entrar o novo. Tambem blinda contra evento assinado em duplicidade (baloes
+        // duplicados vistos no teste de 2026-08-18).
+        Remove(agent);
         Bubbles.Add(new BubbleVM(agent, message, isEnemy));
     }
 

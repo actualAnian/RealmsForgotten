@@ -217,7 +217,9 @@ public sealed class CrowdMissionLogic : MissionLogic
         try
         {
             WorldPosition position = new WorldPosition(Mission.Scene, target);
-            agent.SetScriptedPosition(ref position, true, Agent.AIScriptedFrameFlags.NoAttack);
+            // DoNotRun (16): o mesmo flag do mod original. Sem ele os figurantes CORREM
+            // entre os pontos em vez de caminhar (visto no teste de 2026-08-18).
+            agent.SetScriptedPosition(ref position, true, Agent.AIScriptedFrameFlags.DoNotRun);
             _walkTargets[agent] = target;
         }
         catch (Exception e)

@@ -14,7 +14,7 @@
                 skill_template="SkillSet.spc_notable_empire_21"
                 occupation="RuralNotable">
     <face>
-      <face_key_template value="BodyProperty.villager_woman_empire" />
+      <face_key_template value="BodyProperty.villager_empire" />
     </face>
     <Equipments>
       <EquipmentSet id="npc_armed_wanderer_equipment_template_empire" />

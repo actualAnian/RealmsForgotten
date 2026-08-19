@@ -430,7 +430,15 @@ namespace NecromancyAndSummoning
             ItemObject wieldedItem = GetWieldedItem(attacker);
             if (wieldedItem != null)
             {
-                if (IsSummonUnitItem(wieldedItem.StringId))
+                // Diagnostico no rgl_log: cada elo do summon nomeia sua falha
+                // (config apontando tropa inexistente ficava 100% muda — bug
+                // zombie_looter, 2026-08-19).
+                if (!IsSummonUnitItem(wieldedItem.StringId))
+                {
+                    if (SubModule.ItemUnitConfig.ItemSummonUnit.Any(x => x.ItemId.Equals(wieldedItem.StringId)))
+                        Debug.Print("[NecroSummon] Item " + wieldedItem.StringId + " esta na config mas nao e arma de arremesso valida.");
+                    return;
+                }
                 {
                     int summonUnitAmount = GetSummonUnitAmount(wieldedItem.StringId);
                     for (int i = 0; i < summonUnitAmount; i++)
@@ -459,11 +467,29 @@ namespace NecromancyAndSummoning
                 {
                     PartyBase validParty = GetValidParty(attacker);
                     if (validParty != null)
-                        return Mission.Current.SpawnTroop((IAgentOriginBase)new PartyAgentOrigin(validParty, characterObject, -1, new UniqueTroopDescriptor(), false), IsPlayerSide(validParty), true, ((BasicCharacterObject)characterObject).HasMount(), false, 1, 1, true, true, new Vec3?(), new Vec2?(), (string)null, (ItemObject)null, (FormationClass)10, false);
+                    {
+                        try
+                        {
+                            return Mission.Current.SpawnTroop((IAgentOriginBase)new PartyAgentOrigin(validParty, characterObject, -1, new UniqueTroopDescriptor(), false), IsPlayerSide(validParty), true, ((BasicCharacterObject)characterObject).HasMount(), false, 1, 1, true, true, new Vec3?(), new Vec2?(), (string)null, (ItemObject)null, (FormationClass)10, false);
+                        }
+                        catch (Exception ex)
+                        {
+                            // Cena sem estrutura de times/spawn completa (algumas missoes
+                            // custom): nao derrubar o jogo por causa de uma pedra.
+                            Debug.Print("[NecroSummon] SpawnTroop falhou nesta missao: " + ex.Message);
+                            return (Agent)null;
+                        }
+                    }
+                    Debug.Print("[NecroSummon] Sem party valida para o summoner (origem " + (attacker?.Origin?.GetType().Name ?? "null") + ") — custom battle nao tem PartyAgentOrigin.");
                 }
                 else
+                {
+                    Debug.Print("[NecroSummon] Tropa '" + summonUnitId + "' do item " + itemId + " nao existe no jogo.");
                     InformationManager.DisplayMessage(new InformationMessage(((object)new TextObject("{=summon_invalid_unit}Unit is invalid for summon", (Dictionary<string, object>)null)).ToString()));
+                }
             }
+            else
+                Debug.Print("[NecroSummon] Item " + itemId + ": NENHUMA tropa valida na config (ids inexistentes?) — summon abortado em silencio.");
             return (Agent)null;
         }
 
@@ -688,6 +714,10 @@ namespace NecromancyAndSummoning
                 return pOrigin.Party;
             else if (affectorAgent.Origin is PartyGroupAgentOrigin pOGrigin)
                 return pOGrigin.Party;
+            // Missoes fora do fluxo normal de campanha (custom settlements usam
+            // RFAgentOrigin): o JOGADOR sempre responde pela MainParty (fix 2026-08-19).
+            else if (affectorAgent == Agent.Main && Campaign.Current != null && PartyBase.MainParty != null)
+                return PartyBase.MainParty;
             else return null;
         }
 

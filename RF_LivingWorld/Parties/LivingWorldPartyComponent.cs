@@ -1,5 +1,6 @@
 using RF_Settlers;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.MountAndBlade;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Party.PartyComponents;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -113,12 +114,14 @@ namespace RF_LivingWorld
                 return;
             }
 
-            ItemObject animal = MBObjectManager.Instance?.GetObject<ItemObject>(HerdItemId(HerdVariant));
-            string visualId = animal?.HorseComponent?.Monster?.StringId;
-            if (!string.IsNullOrEmpty(visualId))
-            {
-                mountVisualId = visualId;
-            }
+            // HERDER NAO USA o slot vanilla de montaria do icone — de proposito.
+            // Historia (2026-08-19): passar o animal do rebanho por aqui alimentava
+            // MobilePartyVisual.AddMountToPartyIcon, cujo Skeleton.ForceUpdateBoneFrames
+            // final NAO tem guarda e da AccessViolation com farm animals (sheep/cow/hog)
+            // MESMO com o action set as_*_map carregado — AV capturado no debugger do
+            // autor. O rebanho visivel no mapa e desenhado pelo RF_PartyVisuals
+            // (PartyVisualsEnhancer, caso "Herder": 5 animais pastando em circulo, com
+            // sonda de action set e fallback) — caminho unico, comprovado e sem crash.
         }
 
         public static string HerdItemId(LivingWorldHerdVariant variant) => variant switch

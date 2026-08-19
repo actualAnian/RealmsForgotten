@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
@@ -35,6 +36,13 @@ namespace RealmsForgotten.Quest
         /// qualquer da mesma cultura — para eles isso fica falso e o papel morre com o dono.
         /// </summary>
         public bool AllowCultureFallback = true;
+
+        /// <summary>
+        /// Personagem que NUNCA pode morrer (regra do autor para o Owl). O behavior de
+        /// sucessao veta a morte sempre — sem depender de quest ativa — e, se um save
+        /// antigo ja o tiver morto, ressuscita no proximo tick de hora.
+        /// </summary>
+        public bool Immortal;
 
         /// <summary>Nome usado no aviso ao jogador quando alguem herda o papel.</summary>
         public TextObject Title;
@@ -97,10 +105,12 @@ namespace RealmsForgotten.Quest
             },
             new QuestHeroRole
             {
-                // Personagem unico: sem herdeiro. Se o Owl morre, quem chama trata o null.
+                // Personagem unico: sem herdeiro e IMORTAL — a quest principal depende
+                // dele do comeco ao fim.
                 RoleId = TheOwl,
                 OriginalHeroId = "rf_the_owl",
                 AllowCultureFallback = false,
+                Immortal = true,
                 Title = new TextObject("{=rf_role_the_owl}The Owl")
             }
         }.ToDictionary(r => r.RoleId, r => r);
@@ -115,13 +125,25 @@ namespace RealmsForgotten.Quest
 
             try
             {
+                Hero original = FindOriginal(role);
+
+                // Personagem unico e imortal (o Owl): o papel NUNCA troca de dono — nem
+                // por reino, nem por cla. AQUI e so LEITURA: Resolve roda em condicao de
+                // dialogo e durante o load, onde mexer em roster/criar heroi crasha o
+                // jogo (licao de 2026-08-19). Toda a cirurgia — expulsar impostor,
+                // reviver, renascer do template — vive em RepairImmortal, chamada apenas
+                // com o jogo rodando (tick da quest / tick de hora).
+                if (role.Immortal)
+                {
+                    return original ?? QuestHeroSuccessionBehavior.GetReborn(roleId);
+                }
+
                 Hero stored = QuestHeroSuccessionBehavior.GetSuccessor(roleId);
                 if (IsUsable(stored))
                 {
                     return stored;
                 }
 
-                Hero original = MBObjectManager.Instance.GetObject<Hero>(role.OriginalHeroId);
                 if (IsUsable(original))
                 {
                     return original;
@@ -198,15 +220,56 @@ namespace RealmsForgotten.Quest
             }
         }
 
+        /// <summary>Heroi original do papel, por qualquer via: registro de objetos OU a
+        /// varredura de herois (o caminho historico do codigo antigo — acha vivos, mortos
+        /// e desativados).</summary>
+        internal static Hero FindOriginal(QuestHeroRole role)
+            => MBObjectManager.Instance?.GetObject<Hero>(role.OriginalHeroId)
+               ?? Hero.FindFirst(h => h.StringId == role.OriginalHeroId);
+
+        /// <summary>Este heroi ocupa um papel imortal? (StringId cobre o original em
+        /// qualquer estado; a segunda checagem cobre um imortal renascido do template,
+        /// cujo StringId e novo).</summary>
+        internal static bool IsImmortal(Hero hero)
+        {
+            if (hero == null)
+            {
+                return false;
+            }
+            foreach (QuestHeroRole role in Roles.Values)
+            {
+                if (!role.Immortal)
+                {
+                    continue;
+                }
+                if (hero.StringId == role.OriginalHeroId || hero == QuestHeroSuccessionBehavior.GetReborn(role.RoleId))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         internal static QuestHeroRole GetRole(string roleId)
             => Roles.TryGetValue(roleId, out QuestHeroRole role) ? role : null;
 
         internal static IEnumerable<QuestHeroRole> AllRoles => Roles.Values;
 
-        private static bool IsUsable(Hero hero) => hero != null && hero.IsAlive && !hero.IsDisabled;
+        // "Disabled" nao conta como indisponivel: NPCs de historia (o Owl) vivem
+        // desativados entre as aparicoes, e o codigo antigo (Hero.FindFirst) os devolvia
+        // assim mesmo. Exigir !IsDisabled aqui fazia TheOwl resolver null no meio da
+        // quarta missao — NRE por tick numa versao, dialogo mudo na outra. Sucessao e
+        // so para morte.
+        private static bool IsUsable(Hero hero) => hero != null && hero.IsAlive;
 
         private static Hero FindHeir(QuestHeroRole role, Hero original)
         {
+            // Cinto e suspensorio: imortal nunca tem herdeiro por caminho nenhum.
+            if (role.Immortal)
+            {
+                return null;
+            }
+
             // 1. O trono. Para papel de rei este e o herdeiro certo: a sucessao vanilla ja
             //    escolheu alguem quando o rei morreu.
             Kingdom kingdom = FindKingdom(role, original);
@@ -300,6 +363,11 @@ namespace RealmsForgotten.Quest
 
         private Dictionary<string, Hero> _successors = new Dictionary<string, Hero>();
 
+        /// <summary>Imortais RENASCIDOS do template (quando o heroi original sumiu do
+        /// save por completo). Persistido: o mesmo renascido responde pelo papel para
+        /// sempre, em vez de nascer um por load.</summary>
+        private Dictionary<string, Hero> _rebornImmortals = new Dictionary<string, Hero>();
+
         public QuestHeroSuccessionBehavior()
         {
             _instance = this;
@@ -308,14 +376,92 @@ namespace RealmsForgotten.Quest
         public override void RegisterEvents()
         {
             CampaignEvents.HeroKilledEvent.AddNonSerializedListener(this, OnHeroKilled);
+
+            // Imortalidade dos personagens de historia: o veto do QuestLibrary so existe
+            // enquanto alguma quest esta ativa (e ja falhou uma vez por TheOwl nulo).
+            // Este behavior vive a campanha inteira — a garantia mora aqui.
+            CampaignEvents.CanHeroDieEvent.AddNonSerializedListener(this, OnCanHeroDie);
+            // Rede horaria de revive. NADA no load-finished: mexer em heroi/roster
+            // durante a montagem do mapa crashava o load (2026-08-19). A ressurreicao
+            // "imediata" fica no tick da quest ativa (RepairImmortal), 2s apos o load.
+            CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, ReviveImmortalsIfNeeded);
+            CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, ArmFilmingReplayIfNeeded);
+        }
+
+        /// <summary>Persistido: o save de filmagem só é rebobinado UMA vez — recarregar
+        /// quicksaves feitos durante a filmagem não rebobina de novo.</summary>
+        private bool _filmingReplayArmed;
+
+        /// <summary>
+        /// Save de filmagem do autor (2026-08-19): quando o slot carregado se chama
+        /// "filmagem_nelrog", arma o replay da emboscada dos Nelrog automaticamente —
+        /// zero console. O gate pelo NOME DO SLOT garante que nenhum outro save é
+        /// afetado. Remover quando a gravação acabar (hack temporário e inofensivo).
+        /// </summary>
+        private void ArmFilmingReplayIfNeeded()
+        {
+            // Trava de distribuição: sem o arquivo-chave local (que nunca é distribuído
+            // com o mod), este gancho é código morto em máquina de jogador.
+            if (!SecondUpdate.FourthQuest.FilmingToolsEnabled || _filmingReplayArmed)
+            {
+                return;
+            }
+
+            string slot = TaleWorlds.Core.MBSaveLoad.ActiveSaveSlotName;
+            if (!string.Equals(slot, "filmagem_nelrog", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            _filmingReplayArmed = true;
+            string result = SecondUpdate.FourthQuest.ReplayAmbush(null);
+            Debug.Print("[RF_FilmingReplay] " + result);
+            InformationManager.ShowInquiry(new InquiryData(
+                "Replay da emboscada", result, true, false,
+                GameTexts.FindText("str_done").ToString(), string.Empty, null, null), true);
+        }
+
+        private void OnCanHeroDie(Hero hero, KillCharacterAction.KillCharacterActionDetail detail, ref bool canDie)
+        {
+            if (QuestHeroes.IsImmortal(hero))
+            {
+                canDie = false;
+            }
+        }
+
+        /// <summary>
+        /// Rede de seguranca para saves onde um imortal ja morreu (janela do bug de
+        /// 2026-08-18/19, ou qualquer caminho de morte que nao consulte CanHeroDie).
+        /// Revive para Disabled — o estado natural dos NPCs de historia entre aparicoes —
+        /// e as quests continuam a usa-lo como sempre.
+        /// </summary>
+        private void ReviveImmortalsIfNeeded()
+        {
+            foreach (QuestHeroRole role in QuestHeroes.AllRoles)
+            {
+                if (!role.Immortal)
+                {
+                    continue;
+                }
+
+                // Expulsa substituto herdado por engano e revive se preciso.
+                EvictImpostor(role.RoleId);
+                ReviveIfDead(role, QuestHeroes.FindOriginal(role) ?? GetReborn(role.RoleId));
+            }
         }
 
         public override void SyncData(IDataStore dataStore)
         {
             dataStore.SyncData("_rfQuestHeroSuccessors", ref _successors);
+            dataStore.SyncData("_rfRebornImmortals", ref _rebornImmortals);
+            dataStore.SyncData("_rfFilmingReplayArmed", ref _filmingReplayArmed);
             if (_successors == null)
             {
                 _successors = new Dictionary<string, Hero>();
+            }
+            if (_rebornImmortals == null)
+            {
+                _rebornImmortals = new Dictionary<string, Hero>();
             }
             _instance = this;
         }
@@ -327,6 +473,98 @@ namespace RealmsForgotten.Quest
                 return null;
             }
             return _instance._successors.TryGetValue(roleId, out Hero hero) ? hero : null;
+        }
+
+        internal static void ClearSuccessor(string roleId)
+        {
+            _instance?._successors?.Remove(roleId);
+        }
+
+        internal static Hero GetReborn(string roleId)
+        {
+            if (_instance?._rebornImmortals == null)
+            {
+                return null;
+            }
+            return _instance._rebornImmortals.TryGetValue(roleId, out Hero hero) ? hero : null;
+        }
+
+        /// <summary>
+        /// Cirurgia completa de um papel imortal — SO chamar com o jogo rodando (tick):
+        /// expulsa impostor da party, acha o dono (original ou renascido), renasce do
+        /// template XML se ele sumiu do save, e revive se morto. Devolve o dono do papel.
+        /// </summary>
+        internal static Hero RepairImmortal(string roleId)
+        {
+            QuestHeroRole role = QuestHeroes.GetRole(roleId);
+            if (role == null || !role.Immortal || _instance == null || Campaign.Current == null)
+            {
+                return null;
+            }
+
+            EvictImpostor(roleId);
+
+            Hero hero = QuestHeroes.FindOriginal(role) ?? GetReborn(roleId);
+            if (hero == null)
+            {
+                hero = CreateRebornFromTemplate(role);
+            }
+
+            ReviveIfDead(role, hero);
+            return hero;
+        }
+
+        private static Hero CreateRebornFromTemplate(QuestHeroRole role)
+        {
+            CharacterObject template = MBObjectManager.Instance?.GetObject<CharacterObject>(role.OriginalHeroId);
+            if (template == null)
+            {
+                Debug.Print("[RF_QuestHeroes] Sem template XML para renascer " + role.RoleId + " (" + role.OriginalHeroId + ").");
+                return null;
+            }
+
+            int age = template.Age >= 18f ? (int)template.Age : 40;
+            Hero reborn = HeroCreator.CreateSpecialHero(template, null, null, null, age);
+            reborn.SetName(template.Name, template.Name);
+            reborn.ChangeState(Hero.CharacterStates.Active);
+            _instance._rebornImmortals[role.RoleId] = reborn;
+
+            Debug.Print("[RF_QuestHeroes] Imortal " + role.RoleId + " nao existia mais no save — RENASCIDO do template como " + reborn.StringId + ".");
+            TextObject revived = new TextObject("{=rf_role_revived}Fate is not done with {NAME} yet.");
+            revived.SetTextVariable("NAME", reborn.Name);
+            InformationManager.DisplayMessage(new InformationMessage(revived.ToString(), Colors.Yellow));
+            return reborn;
+        }
+
+        /// <summary>Papel imortal nunca tem substituto. Se um foi gravado por engano e
+        /// ainda esta na party do jogador (entrou no lugar do dono do papel, caso do
+        /// feiticeiro vortiak em 2026-08-19), sai dela — e o registro e limpo.</summary>
+        internal static void EvictImpostor(string roleId)
+        {
+            Hero impostor = GetSuccessor(roleId);
+            if (impostor != null && impostor.PartyBelongedTo == MobileParty.MainParty)
+            {
+                MobileParty.MainParty.MemberRoster.RemoveIf(t => t.Character?.HeroObject == impostor);
+            }
+            ClearSuccessor(roleId);
+        }
+
+        /// <summary>Revive um imortal morto para Disabled — o estado natural dos NPCs de
+        /// historia entre aparicoes; as quests continuam a usa-lo como sempre.</summary>
+        internal static void ReviveIfDead(QuestHeroRole role, Hero hero)
+        {
+            if (hero == null || hero.IsAlive)
+            {
+                return;
+            }
+
+            hero.ChangeState(Hero.CharacterStates.Disabled);
+            hero.HitPoints = Math.Max(10, hero.MaxHitPoints / 2);
+            Debug.Print("[RF_QuestHeroes] Imortal " + role.RoleId + " estava morto — revivido (Disabled).");
+
+            TextObject revived = new TextObject("{=rf_role_revived}Fate is not done with {NAME} yet.");
+            revived.SetTextVariable("NAME", hero.Name);
+            InformationManager.DisplayMessage(new InformationMessage(revived.ToString(), Colors.Yellow));
         }
 
         internal static void SetSuccessor(string roleId, Hero heir, QuestHeroRole role, Hero original)

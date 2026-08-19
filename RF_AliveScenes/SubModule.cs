@@ -81,6 +81,11 @@ public class SubModule : MBSubModuleBase
                 return;
             }
 
+            if (mission.GetMissionBehavior<AliveScenesBubbleView>() != null)
+            {
+                return; // view ja registrada nesta missao; nunca duplicar
+            }
+
             MissionState state = MissionState.Current;
             if (state != null && state.CurrentMission == mission && state.Handler is MissionScreen screen)
             {

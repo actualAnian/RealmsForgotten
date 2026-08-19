@@ -45,7 +45,19 @@ namespace NecromancyAndSummoning
         }
 		public override void OnMissileHit(Agent attacker, Agent victim, bool isCanceled, AttackCollisionData collisionData)
 		{
-			if (IsInBattle())
+			// Missoes de custom settlement sao marcadas "amigaveis" mas tem combate —
+			// o summon tambem vale nelas quando ha inimigo vivo do arremessador na cena
+			// (fix 2026-08-19; em cena pacifica de verdade continua bloqueado).
+			bool gateOpen = IsInBattle() || HasLiveHostiles(attacker);
+			if (attacker != null && attacker == Agent.Main)
+			{
+				// Diagnostico (so para misseis do jogador): um arremesso, uma linha.
+				ItemObject held = NecroSummon.GetWieldedItem(attacker);
+				TaleWorlds.Library.Debug.Print("[NecroSummon] hit do jogador: gate=" + gateOpen
+					+ " friendly=" + (Mission.Current?.IsFriendlyMission.ToString() ?? "?")
+					+ " item=" + (held?.StringId ?? "null"));
+			}
+			if (gateOpen)
 			{
 				ItemObject wieldedItem = NecroSummon.GetWieldedItem(attacker);
 				if (!NecroSummon.IsAgentOverLimit())
@@ -97,6 +109,18 @@ namespace NecromancyAndSummoning
 		public static bool IsInBattle()
 		{
 			return !Mission.Current.IsFriendlyMission;
+		}
+
+		private static bool HasLiveHostiles(Agent attacker)
+		{
+			if (attacker == null || Mission.Current == null)
+				return false;
+			foreach (Agent agent in Mission.Current.Agents)
+			{
+				if (agent.IsActive() && agent.IsHuman && agent.IsEnemyOf(attacker))
+					return true;
+			}
+			return false;
 		}
 
 		private static bool battleVictory;

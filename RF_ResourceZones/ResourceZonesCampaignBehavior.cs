@@ -678,6 +678,10 @@ namespace RF_ResourceZones
                    ?? SettlementHelper.FindNearestSettlementToPoint(zoneParty.Position, s => s.IsTown);
         }
 
+        /// <summary>Freio anti-loop do respawn por tick de hora (nao persistido de
+        /// proposito: apos load, a zona ganha direito a 1 respawn imediato).</summary>
+        private readonly Dictionary<string, CampaignTime> _hourlyRespawnCooldown = new();
+
         private void OnHourlyTick()
         {
             if (!RuntimeEnabled)
@@ -692,11 +696,26 @@ namespace RF_ResourceZones
             {
                 // A zone beaten in battle respawns within the hour under its
                 // new owner — the capture should feel immediate, not next-day.
+                // MAS no maximo 1x por dia por zona NESTE caminho: sem o cooldown,
+                // um inimigo acampado na mina matava a guarnicao a cada hora e o
+                // tick respawnava em loop infinito (dunhollow: 5 spawns em ~10h de
+                // jogo no log de 2026-08-19) — churn de party que alimenta o crash
+                // nativo de visuais em velocidade alta. Recaptura do jogador nao
+                // passa por aqui e continua imediata.
                 if ((!_zoneParties.TryGetValue(record.ZoneId, out MobileParty? zoneParty)
                         || zoneParty == null || !zoneParty.IsActive)
                     && _definitions.TryGetValue(record.ZoneId, out ResourceZoneDefinition? definition))
                 {
-                    EnsureZoneParty(record, definition);
+                    if (!_hourlyRespawnCooldown.TryGetValue(record.ZoneId, out CampaignTime notBefore)
+                        || CampaignTime.Now >= notBefore)
+                    {
+                        EnsureZoneParty(record, definition);
+                        if (_zoneParties.TryGetValue(record.ZoneId, out MobileParty? spawned)
+                            && spawned != null && spawned.IsActive)
+                        {
+                            _hourlyRespawnCooldown[record.ZoneId] = CampaignTime.Now + CampaignTime.Days(1f);
+                        }
+                    }
                     _zoneParties.TryGetValue(record.ZoneId, out zoneParty);
                 }
 

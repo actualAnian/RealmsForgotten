@@ -50,6 +50,11 @@ namespace RF_PartyVisuals
         {
             public AgentVisuals Visual;
             public Vec3 LocalOffset;
+
+            /// <summary>ForceUpdateBoneFrames ja rodou uma vez para esta figura.
+            /// Forcar TODO tick era o site do AccessViolation com esqueleto de farm
+            /// animal (debugger do autor, 2026-08-19) — o vanilla so forca apos criar.</summary>
+            public bool BonesForced;
         }
 
         public PartyVisualsEnhancer()
@@ -118,6 +123,14 @@ namespace RF_PartyVisuals
             MobileParty main = MobileParty.MainParty;
             Vec2 center = main != null ? main.GetPosition2D : Vec2.Zero;
 
+            _membershipClock += RebuildInterval;
+
+            // Limpa a quarentena de parties que sumiram (mortas/destruidas).
+            if (_firstSeenAt.Count > 256)
+            {
+                _firstSeenAt.Clear();
+            }
+
             // Drop parties that are no longer eligible.
             _scratchRemove.Clear();
             foreach (var kvp in _tracked)
@@ -139,6 +152,7 @@ namespace RF_PartyVisuals
                 PartyBase party = mp?.Party;
                 if (party == null || _tracked.ContainsKey(party)) continue;
                 if (!IsEligible(party, center, maxDist)) continue;
+                if (!IsPastQuarantine(party)) continue;
 
                 var figures = BuildSet(party, s);
                 if (figures != null && figures.Count > 0)
@@ -146,14 +160,38 @@ namespace RF_PartyVisuals
             }
         }
 
+        // Parties recem-criadas ficam em quarentena por alguns segundos antes de ganharem
+        // figuras: criar AgentVisuals no mesmo frame em que a party nasce e o vetor do AV
+        // nativo historico visto no spawn de zone parties do RF_ResourceZones
+        // (crash 2026-08-18, watchdog sem excecao gerenciada).
+        private const float NewPartyQuarantineSeconds = 3f;
+        private readonly Dictionary<PartyBase, float> _firstSeenAt = new Dictionary<PartyBase, float>();
+        private float _membershipClock;
+
         private bool IsEligible(PartyBase party, Vec2 center, float maxDist)
         {
             MobileParty mp = party?.MobileParty;
-            if (mp == null || !party.IsVisible) return false;
+            if (mp == null || !mp.IsActive || !party.IsVisible) return false;
             if (mp.CurrentSettlement != null) return false;
             if (mp.IsCurrentlyAtSea) return false;
             if (party.MemberRoster == null || party.MemberRoster.TotalHealthyCount < 1) return false;
+
+            // O visual vanilla da party precisa existir e ter entidade estrategica pronta —
+            // e a prova de que a engine ja terminou de construir a party.
+            var visual = MobilePartyVisualManager.Current?.GetPartyVisual(party);
+            if (visual?.StrategicEntity == null) return false;
+
             return mp.GetPosition2D.Distance(center) <= maxDist;
+        }
+
+        private bool IsPastQuarantine(PartyBase party)
+        {
+            if (_firstSeenAt.TryGetValue(party, out float firstSeen))
+            {
+                return _membershipClock - firstSeen >= NewPartyQuarantineSeconds;
+            }
+            _firstSeenAt[party] = _membershipClock;
+            return false;
         }
 
         // ---- creation --------------------------------------------------------
@@ -292,14 +330,22 @@ namespace RF_PartyVisuals
                 Equipment equipment = new Equipment();
                 equipment[EquipmentIndex.Horse] = new EquipmentElement(item, null, null, false);
 
-                // Farm animals (hog/cow/sheep) have no "_map" action set — MBGlobals.GetActionSet
-                // THROWS on a missing id, so we must probe validity via MBActionSet and fall back
-                // to the base set. The base set (as_hog etc.) is what carries the idle/graze clips
-                // anyway (e.g. hog_idle_graze), so this is also what makes them graze when stopped.
+                // Design do autor: todo rebanho usa o set "_map" do animal. Para os farm
+                // animals ele e NOSSO (action_sets.xml do modulo) e, desde 2026-08-19, e
+                // uma COPIA COMPLETA e autossuficiente do set base vanilla (skeleton +
+                // todas as acoes) — a forma fina (so base_set= herdado cross-modulo)
+                // carregava sem esqueleto e dava AccessViolation nativo no AgentVisuals
+                // (2x no debugger). Fallback para o set base (o das cenas) se o _map
+                // faltar; sem nenhum valido, figura pulada COM log.
                 string setCode = monster.ActionSetCode;
                 MBActionSet actionSet = MBActionSet.GetActionSet(setCode + "_map");
                 if (!actionSet.IsValid)
                     actionSet = MBActionSet.GetActionSet(setCode);
+                if (!actionSet.IsValid)
+                {
+                    Debug.Print("[RF_PartyVisuals] Animal '" + itemId + "' sem action set valido ('" + setCode + "[_map]') — figura pulada.");
+                    return null;
+                }
 
                 AgentVisualsData data = new AgentVisualsData()
                     .Equipment(equipment)
@@ -442,7 +488,13 @@ namespace RF_PartyVisuals
 
                     entity.SetFrame(ref world, true);
                     f.Visual.Tick(null, dt, moving, animSpeed);
-                    entity.Skeleton?.ForceUpdateBoneFrames();
+                    if (!f.BonesForced)
+                    {
+                        // Uma vez por figura, como o vanilla — repetir por tick foi o
+                        // ponto exato do AV (esqueleto nativo invalido de farm animal).
+                        f.BonesForced = true;
+                        entity.Skeleton?.ForceUpdateBoneFrames();
+                    }
                 }
             }
             catch (Exception e)

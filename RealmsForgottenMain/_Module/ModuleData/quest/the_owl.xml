@@ -22,7 +22,7 @@
 				<equipment slot="Head"
 						   id="Item.laced_coif" />
 				<equipment slot="Cape"
-						   id="Item.sturgia_cape_a" />
+						   id="Item.fur_cloak_a" />
 				<equipment slot="Body"
 						   id="Item.leather_scale_armor" />
 				<equipment slot="Gloves"
@@ -55,7 +55,7 @@
 				<equipment slot="Head"
 				           id="Item.laced_coif" />
 				<equipment slot="Cape"
-				           id="Item.sturgia_cape_a" />
+				           id="Item.fur_cloak_a" />
 				<equipment slot="Body"
 				           id="Item.leather_scale_armor" />
 				<equipment slot="Gloves"

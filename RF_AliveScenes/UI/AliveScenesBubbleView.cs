@@ -32,6 +32,10 @@ public sealed class AliveScenesBubbleView : MissionView
             _logic = Mission.GetMissionBehavior<AliveScenesMissionLogic>();
             if (_logic != null)
             {
+                // -= antes do +=: se a engine reinicializar a tela da missao, a assinatura
+                // nao duplica (causa provavel dos baloes em dobro no teste de 2026-08-18).
+                _logic.AgentSpoke -= OnAgentSpoke;
+                _logic.AgentStoppedSpeaking -= OnAgentStoppedSpeaking;
                 _logic.AgentSpoke += OnAgentSpoke;
                 _logic.AgentStoppedSpeaking += OnAgentStoppedSpeaking;
             }

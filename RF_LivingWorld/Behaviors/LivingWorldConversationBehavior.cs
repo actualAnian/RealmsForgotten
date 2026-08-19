@@ -45,60 +45,62 @@ namespace RF_LivingWorld
                 "{=rf_lw_rumor_answer}{RF_LW_RUMOR_TEXT}",
                 null, null);
 
+            // --- negociacao unificada: pastor (animal), mercador (provisoes), cacador
+            //     (carne) e curandeiro (plantas). O jogador pergunta, o vendedor decide se
+            //     vende e cota o preco (valor real do item + folga do estoque), da para
+            //     pechinchar uma vez por Comercio, e so entao vem o aceite.
             starter.AddPlayerLine(
-                "rf_lw_buy_provisions", "rf_lw_hub", "rf_lw_purchase_done",
-                "{=rf_lw_buy_provisions}I will buy five sacks of provisions for 100 denars.",
-                CanBuyProvisions, BuyProvisions);
-            // --- negociacao do animal: o jogador pergunta, o pastor decide se vende e cota
-            //     o preco, e so entao vem o aceite. Ver AskAboutAnimal mais abaixo.
-            starter.AddPlayerLine(
-                "rf_lw_ask_animal", "rf_lw_hub", "rf_lw_animal_answer",
+                "rf_lw_ask_animal", "rf_lw_hub", "rf_lw_offer_answer",
                 "{=rf_lw_ask_animal}Would you part with one of your animals?",
-                CanAskAboutAnimal, AskAboutAnimal);
-            starter.AddDialogLine(
-                "rf_lw_animal_refuse", "rf_lw_animal_answer", "rf_lw_hub",
-                "{=rf_lw_animal_refuse}{RF_LW_ANIMAL_ANSWER}",
-                HerderRefusesToSell, null);
-            starter.AddDialogLine(
-                "rf_lw_animal_offer", "rf_lw_animal_answer", "rf_lw_animal_deal",
-                "{=rf_lw_animal_offer}{RF_LW_ANIMAL_ANSWER}",
-                HerderMadeAnOffer, null);
+                CanAskAnimal, AskAnimal);
             starter.AddPlayerLine(
-                "rf_lw_animal_haggle", "rf_lw_animal_deal", "rf_lw_animal_haggle_answer",
-                "{=rf_lw_animal_haggle}That is more than the beast is worth. I say {RF_LW_ANIMAL_COUNTER} denars.",
-                CanHaggleForAnimal, HaggleForAnimal);
+                "rf_lw_ask_provisions", "rf_lw_hub", "rf_lw_offer_answer",
+                "{=rf_lw_ask_provisions}Could you spare some provisions from your stores?",
+                CanAskProvisions, AskProvisions);
+            starter.AddPlayerLine(
+                "rf_lw_ask_meat", "rf_lw_hub", "rf_lw_offer_answer",
+                "{=rf_lw_ask_meat}That is fresh game you carry. Would you sell a portion?",
+                CanAskMeat, AskMeat);
+            starter.AddPlayerLine(
+                "rf_lw_ask_plants", "rf_lw_hub", "rf_lw_offer_answer",
+                "{=rf_lw_ask_plants}I have wounded to tend. Would you sell some of your remedies?",
+                CanAskPlants, AskPlants);
             starter.AddDialogLine(
-                "rf_lw_animal_haggle_answer", "rf_lw_animal_haggle_answer", "rf_lw_animal_deal",
-                "{=rf_lw_animal_haggle_answer}{RF_LW_ANIMAL_ANSWER}",
+                "rf_lw_offer_refuse", "rf_lw_offer_answer", "rf_lw_hub",
+                "{=rf_lw_offer_refuse}{RF_LW_OFFER_ANSWER}",
+                SellerRefused, null);
+            starter.AddDialogLine(
+                "rf_lw_offer_made", "rf_lw_offer_answer", "rf_lw_offer_deal",
+                "{=rf_lw_offer_made}{RF_LW_OFFER_ANSWER}",
+                SellerMadeAnOffer, null);
+            starter.AddPlayerLine(
+                "rf_lw_offer_haggle", "rf_lw_offer_deal", "rf_lw_offer_haggle_answer",
+                "{=rf_lw_offer_haggle}That is steep for goods on the road. I say {RF_LW_OFFER_COUNTER} denars.",
+                CanHaggle, Haggle);
+            starter.AddDialogLine(
+                "rf_lw_offer_haggle_answer", "rf_lw_offer_haggle_answer", "rf_lw_offer_deal",
+                "{=rf_lw_offer_haggle_answer}{RF_LW_OFFER_ANSWER}",
                 null, null);
             starter.AddPlayerLine(
-                "rf_lw_animal_accept", "rf_lw_animal_deal", "rf_lw_purchase_done",
-                "{=rf_lw_animal_accept}Done. {RF_LW_ANIMAL_PRICE} denars, and I will take her now.",
-                CanAffordOffer, BuyAnimal);
+                "rf_lw_offer_accept", "rf_lw_offer_deal", "rf_lw_purchase_done",
+                "{=rf_lw_offer_accept}Done. {RF_LW_OFFER_PRICE} denars.",
+                CanAffordOffer, AcceptOffer);
             starter.AddPlayerLine(
-                "rf_lw_animal_no_coin", "rf_lw_animal_deal", "rf_lw_animal_declined",
-                "{=rf_lw_animal_no_coin}I do not carry that kind of coin. Another time.",
+                "rf_lw_offer_no_coin", "rf_lw_offer_deal", "rf_lw_offer_declined",
+                "{=rf_lw_offer_no_coin}I do not carry that kind of coin. Another time.",
                 CannotAffordOffer, ClearOffer);
             starter.AddPlayerLine(
-                "rf_lw_animal_decline", "rf_lw_animal_deal", "rf_lw_animal_declined",
-                "{=rf_lw_animal_decline}Keep her. The road is long enough without a beast in tow.",
+                "rf_lw_offer_decline", "rf_lw_offer_deal", "rf_lw_offer_declined",
+                "{=rf_lw_offer_decline}Keep it. The price does not suit me.",
                 CanAffordOffer, ClearOffer);
             starter.AddDialogLine(
-                "rf_lw_animal_declined", "rf_lw_animal_declined", "rf_lw_hub",
-                "{=rf_lw_animal_declined}As you like. She walks with us, then.",
+                "rf_lw_offer_declined", "rf_lw_offer_declined", "rf_lw_hub",
+                "{=rf_lw_offer_declined}As you like, traveller. The road provides for those who pay.",
                 null, null);
             starter.AddPlayerLine(
                 "rf_lw_donate_grain", "rf_lw_hub", "rf_lw_purchase_done",
                 "{=rf_lw_donate_grain}Take two sacks of grain for the road.",
                 CanDonateGrain, DonateGrain);
-            starter.AddPlayerLine(
-                "rf_lw_buy_meat", "rf_lw_hub", "rf_lw_purchase_done",
-                "{=rf_lw_buy_meat}I will buy one portion of meat for 50 denars.",
-                CanBuyMeat, BuyMeat);
-            starter.AddPlayerLine(
-                "rf_lw_buy_medicinal_plants", "rf_lw_hub", "rf_lw_purchase_done",
-                "{=rf_lw_buy_medicinal_plants}I will buy medicinal plants for 75 denars.",
-                CanBuyMedicinalPlants, BuyMedicinalPlants);
             starter.AddPlayerLine(
                 "rf_lw_tax_route", "rf_lw_hub", "rf_lw_route_answer",
                 "{=rf_lw_tax_route}Where do you come from, and where are these taxes going?",
@@ -189,42 +191,69 @@ namespace RF_LivingWorld
             MBTextManager.SetTextVariable("RF_LW_RUMOR_TEXT", text);
         }
 
-        private static bool CanBuyProvisions()
-        {
-            MobileParty party = MobileParty.ConversationParty;
-            return party?.PartyComponent is LivingWorldPartyComponent component
-                && component.PartyType == LivingWorldPartyType.Merchant
-                && Hero.MainHero.Gold >= ProvisionPrice
-                && party.ItemRoster.GetItemNumber(DefaultItems.Grain) >= ProvisionCount;
-        }
-
-        private static void BuyProvisions()
-        {
-            MobileParty party = MobileParty.ConversationParty;
-            if (!CanBuyProvisions())
-            {
-                return;
-            }
-
-            GiveGoldAction.ApplyBetweenCharacters(Hero.MainHero, null, ProvisionPrice, disableNotification: false);
-            party.ItemRoster.AddToCounts(DefaultItems.Grain, -ProvisionCount);
-            MobileParty.MainParty.ItemRoster.AddToCounts(DefaultItems.Grain, ProvisionCount);
-            AnnouncePurchase(DefaultItems.Grain, ProvisionCount, ProvisionPrice);
-        }
-
-        // ------------------------------------------------------------ negocio do animal
+        // ------------------------------------------------------- negociacao unificada
         //
-        // O fluxo antigo era uma linha unica ("I will buy one animal for 75 denars") que
-        // debitava o ouro em silencio. Agora o jogador pergunta, o pastor decide se vende,
-        // poe um preco vindo do valor real do bicho e da folga do rebanho, e ainda da para
-        // pechinchar uma vez usando Comercio.
+        // Uma oferta por vez: com quem, qual item, quantos, preco cotado (valor real do
+        // item + margem + folga do estoque, nunca abaixo do piso da categoria) e se a
+        // pechincha ja foi usada. Cada vendedor tem so a pergunta e o texto proprios.
 
         private static MobileParty _offerParty;
-        private static ItemObject _offerAnimal;
+        private static ItemObject _offerItem;
+        private static int _offerCount;
         private static int _offerPrice;
         private static bool _offerHaggled;
 
-        private static bool CanAskAboutAnimal()
+        private static bool IsSellerOfType(LivingWorldPartyType type, string itemId, int minStock, out MobileParty party, out ItemObject item)
+        {
+            party = MobileParty.ConversationParty;
+            item = null;
+            if (party?.PartyComponent is not LivingWorldPartyComponent component || component.PartyType != type)
+            {
+                return false;
+            }
+            item = MBObjectManager.Instance?.GetObject<ItemObject>(itemId);
+            return item != null && party.ItemRoster.GetItemNumber(item) >= minStock;
+        }
+
+        private static int QuotePrice(ItemObject item, int count, int stock, int floorPrice)
+        {
+            float price = item.Value > 0 ? item.Value * count * 1.15f : floorPrice;
+
+            if (stock <= count * 2)
+            {
+                price *= 1.3f;      // estoque curto encarece
+            }
+            else if (stock >= count * 6)
+            {
+                price *= 0.9f;      // fartura alivia
+            }
+
+            return Math.Max(floorPrice, (int)Math.Round(price));
+        }
+
+        private static void OpenOffer(MobileParty party, ItemObject item, int count, int floorPrice, TextObject offerLine)
+        {
+            _offerParty = party;
+            _offerItem = item;
+            _offerCount = count;
+            _offerPrice = QuotePrice(item, count, party.ItemRoster.GetItemNumber(item), floorPrice);
+            _offerHaggled = false;
+
+            offerLine.SetTextVariable("ITEM", item.Name);
+            offerLine.SetTextVariable("COUNT", count);
+            offerLine.SetTextVariable("PRICE", _offerPrice);
+            PublishOffer(offerLine);
+        }
+
+        private static void Refuse(TextObject line)
+        {
+            ClearOffer();
+            MBTextManager.SetTextVariable("RF_LW_OFFER_ANSWER", line.ToString());
+        }
+
+        // ------------------------------------------------------------ os 4 vendedores
+
+        private static bool CanAskAnimal()
         {
             MobileParty party = MobileParty.ConversationParty;
             if (party?.PartyComponent is not LivingWorldPartyComponent component
@@ -232,25 +261,18 @@ namespace RF_LivingWorld
             {
                 return false;
             }
-
             ItemObject animal = MBObjectManager.Instance?.GetObject<ItemObject>(LivingWorldPartyComponent.HerdItemId(component.HerdVariant));
             return animal != null && party.ItemRoster.GetItemNumber(animal) > 0;
         }
 
-        /// <summary>
-        /// Monta a oferta: com quem, qual bicho, quanto custa e se o pastor topa vender.
-        /// Roda quando o jogador faz a pergunta, antes de a resposta do pastor ser escolhida.
-        /// </summary>
-        private static void AskAboutAnimal()
+        private static void AskAnimal()
         {
             ClearOffer();
-
             MobileParty party = MobileParty.ConversationParty;
             if (party?.PartyComponent is not LivingWorldPartyComponent component)
             {
                 return;
             }
-
             ItemObject animal = MBObjectManager.Instance?.GetObject<ItemObject>(LivingWorldPartyComponent.HerdItemId(component.HerdVariant));
             if (animal == null)
             {
@@ -265,71 +287,93 @@ namespace RF_LivingWorld
             {
                 TextObject refusal = new("{=rf_lw_animal_refusal}She is the last of them, and {DESTINATION} is expecting a herd, not a story. Not this one, traveller.");
                 refusal.SetTextVariable("DESTINATION", destination);
-                MBTextManager.SetTextVariable("RF_LW_ANIMAL_ANSWER", refusal.ToString());
+                Refuse(refusal);
                 return;
             }
 
-            _offerParty = party;
-            _offerAnimal = animal;
-            _offerPrice = QuotePrice(animal, herdSize);
-            _offerHaggled = false;
-
             TextObject offer = herdSize <= 3
-                ? new TextObject("{=rf_lw_animal_offer_scarce}I could, but the herd is thin this season and every head is spoken for. A good {ANIMAL} would cost you {PRICE} denars.")
-                : new TextObject("{=rf_lw_animal_offer_plenty}Aye, the herd can spare one. A sound {ANIMAL}, {PRICE} denars, and she is yours before we reach {DESTINATION}.");
-            offer.SetTextVariable("ANIMAL", animal.Name);
-            offer.SetTextVariable("PRICE", _offerPrice);
+                ? new TextObject("{=rf_lw_animal_offer_scarce}I could, but the herd is thin this season and every head is spoken for. A good {ITEM} would cost you {PRICE} denars.")
+                : new TextObject("{=rf_lw_animal_offer_plenty}Aye, the herd can spare one. A sound {ITEM}, {PRICE} denars, and she is yours before we reach {DESTINATION}.");
             offer.SetTextVariable("DESTINATION", destination);
-
-            PublishOffer(offer);
+            OpenOffer(party, animal, 1, AnimalPrice, offer);
         }
 
-        /// <summary>
-        /// Preco do bicho: valor real do item com a margem do pastor, ajustado pela folga do
-        /// rebanho. Rebanho curto encarece, rebanho grande alivia.
-        ///
-        /// Antes era 75 denares fixos para qualquer animal — o que fazia uma vaca (valor 200)
-        /// sair de graca e um porco (valor 60) sair caro. Agora porco, ovelha, mula e vaca
-        /// custam coisas diferentes, como devem.
-        /// </summary>
-        private static int QuotePrice(ItemObject animal, int herdSize)
+        private static bool CanAskProvisions()
+            => IsSellerOfType(LivingWorldPartyType.Merchant, "grain", 1, out _, out _);
+
+        private static void AskProvisions()
         {
-            float price = animal.Value > 0 ? animal.Value * 1.15f : AnimalPrice;
-
-            if (herdSize <= 3)
+            ClearOffer();
+            if (!IsSellerOfType(LivingWorldPartyType.Merchant, "grain", 1, out MobileParty party, out ItemObject grain))
             {
-                price *= 1.3f;
-            }
-            else if (herdSize >= 12)
-            {
-                price *= 0.9f;
+                return;
             }
 
-            return Math.Max(MinimumAnimalPrice, (int)Math.Round(price));
+            int stock = party.ItemRoster.GetItemNumber(grain);
+            if (stock < ProvisionCount)
+            {
+                Refuse(new TextObject("{=rf_lw_provisions_refusal}Barely enough left for our own bellies, traveller. Try the next caravan."));
+                return;
+            }
+
+            OpenOffer(party, grain, ProvisionCount, ProvisionPrice,
+                new TextObject("{=rf_lw_provisions_offer}We trade where the great caravans will not - and that has a price. {COUNT} sacks of {ITEM}, {PRICE} denars."));
         }
 
-        private static bool HerderMadeAnOffer() => IsOfferValid();
+        private static bool CanAskMeat()
+            => IsSellerOfType(LivingWorldPartyType.Hunter, "meat", 1, out _, out _);
 
-        private static bool HerderRefusesToSell() => !IsOfferValid();
+        private static void AskMeat()
+        {
+            ClearOffer();
+            if (!IsSellerOfType(LivingWorldPartyType.Hunter, "meat", 1, out MobileParty party, out ItemObject meat))
+            {
+                return;
+            }
+
+            OpenOffer(party, meat, 1, MeatPrice,
+                new TextObject("{=rf_lw_meat_offer}Tracked since dawn and dressed by my own knife. A portion of {ITEM} for {PRICE} denars."));
+        }
+
+        private static bool CanAskPlants()
+            => IsSellerOfType(LivingWorldPartyType.Healer, "medicinal_plants", 1, out _, out _);
+
+        private static void AskPlants()
+        {
+            ClearOffer();
+            if (!IsSellerOfType(LivingWorldPartyType.Healer, "medicinal_plants", 1, out MobileParty party, out ItemObject plants))
+            {
+                return;
+            }
+
+            OpenOffer(party, plants, 1, MedicinalPlantsPrice,
+                new TextObject("{=rf_lw_plants_offer}Gathered where the roads do not go, and worth every step. {ITEM} for {PRICE} denars."));
+        }
+
+        // ------------------------------------------------------------------ fluxo comum
+
+        private static bool SellerMadeAnOffer() => IsOfferValid();
+
+        private static bool SellerRefused() => !IsOfferValid();
 
         private static bool IsOfferValid()
-            => _offerAnimal != null
+            => _offerItem != null
                && _offerParty != null
                && _offerParty == MobileParty.ConversationParty
-               && _offerParty.ItemRoster.GetItemNumber(_offerAnimal) > 0;
+               && _offerParty.ItemRoster.GetItemNumber(_offerItem) >= _offerCount;
 
         private static bool CanAffordOffer() => IsOfferValid() && Hero.MainHero.Gold >= _offerPrice;
 
         private static bool CannotAffordOffer() => IsOfferValid() && Hero.MainHero.Gold < _offerPrice;
 
-        private static bool CanHaggleForAnimal()
+        private static bool CanHaggle()
         {
             if (!IsOfferValid() || _offerHaggled)
             {
                 return false;
             }
 
-            MBTextManager.SetTextVariable("RF_LW_ANIMAL_COUNTER", CounterOffer());
+            MBTextManager.SetTextVariable("RF_LW_OFFER_COUNTER", CounterOffer());
             return true;
         }
 
@@ -337,9 +381,9 @@ namespace RF_LivingWorld
 
         /// <summary>
         /// Uma pechincha por oferta, decidida por Comercio. Sucesso derruba o preco para a
-        /// contraproposta; fracasso mantem o preco (o pastor nao se ofende, so nao cede).
+        /// contraproposta; fracasso mantem o preco (o vendedor nao se ofende, so nao cede).
         /// </summary>
-        private static void HaggleForAnimal()
+        private static void Haggle()
         {
             if (!IsOfferValid())
             {
@@ -357,12 +401,12 @@ namespace RF_LivingWorld
             if (convinced)
             {
                 _offerPrice = counter;
-                answer = new TextObject("{=rf_lw_haggle_win}Hah. You have handled livestock before, that much is plain. {PRICE} denars, and I will hear no more of it.");
+                answer = new TextObject("{=rf_lw_haggle_win}Hah. You bargain like one of us, traveller. {PRICE} denars, and I will hear no more of it.");
                 Hero.MainHero.AddSkillXp(DefaultSkills.Trade, 15f);
             }
             else
             {
-                answer = new TextObject("{=rf_lw_haggle_fail}She has walked further than you have, traveller. {PRICE} denars is my price, take it or leave it.");
+                answer = new TextObject("{=rf_lw_haggle_fail}The road sets my prices, not you. {PRICE} denars, take it or leave it.");
                 Hero.MainHero.AddSkillXp(DefaultSkills.Trade, 5f);
             }
 
@@ -370,7 +414,7 @@ namespace RF_LivingWorld
             PublishOffer(answer);
         }
 
-        private static void BuyAnimal()
+        private static void AcceptOffer()
         {
             if (!CanAffordOffer())
             {
@@ -378,28 +422,30 @@ namespace RF_LivingWorld
             }
 
             MobileParty party = _offerParty;
-            ItemObject animal = _offerAnimal;
+            ItemObject item = _offerItem;
+            int count = _offerCount;
             int price = _offerPrice;
 
             GiveGoldAction.ApplyBetweenCharacters(Hero.MainHero, null, price, disableNotification: false);
-            party.ItemRoster.AddToCounts(animal, -1);
-            MobileParty.MainParty.ItemRoster.AddToCounts(animal, 1);
-            AnnouncePurchase(animal, 1, price);
+            party.ItemRoster.AddToCounts(item, -count);
+            MobileParty.MainParty.ItemRoster.AddToCounts(item, count);
+            AnnouncePurchase(item, count, price);
             ClearOffer();
         }
 
-        /// <summary>Publica a fala do pastor e deixa o preco vigente visivel para as opcoes.</summary>
+        /// <summary>Publica a fala do vendedor e deixa item/preco visiveis para as opcoes.</summary>
         private static void PublishOffer(TextObject line)
         {
-            MBTextManager.SetTextVariable("RF_LW_ANIMAL_ANSWER", line.ToString());
-            MBTextManager.SetTextVariable("RF_LW_ANIMAL", _offerAnimal?.Name ?? new TextObject("{=rf_lw_beast}beast"));
-            MBTextManager.SetTextVariable("RF_LW_ANIMAL_PRICE", _offerPrice);
+            MBTextManager.SetTextVariable("RF_LW_OFFER_ANSWER", line.ToString());
+            MBTextManager.SetTextVariable("RF_LW_OFFER_ITEM", _offerItem?.Name ?? new TextObject("{=rf_lw_goods}goods"));
+            MBTextManager.SetTextVariable("RF_LW_OFFER_PRICE", _offerPrice);
         }
 
         private static void ClearOffer()
         {
             _offerParty = null;
-            _offerAnimal = null;
+            _offerItem = null;
+            _offerCount = 0;
             _offerPrice = 0;
             _offerHaggled = false;
         }
@@ -425,40 +471,6 @@ namespace RF_LivingWorld
             MobileParty.MainParty.ItemRoster.AddToCounts(DefaultItems.Grain, -DonationCount);
             party.ItemRoster.AddToCounts(DefaultItems.Grain, DonationCount);
             AnnounceDonation(DefaultItems.Grain, DonationCount);
-        }
-
-        private static bool CanBuyMeat() => CanBuyItem(LivingWorldPartyType.Hunter, "meat", MeatPrice);
-
-        private static void BuyMeat() => BuyItem("meat", MeatPrice);
-
-        private static bool CanBuyMedicinalPlants() => CanBuyItem(LivingWorldPartyType.Healer, "medicinal_plants", MedicinalPlantsPrice);
-
-        private static void BuyMedicinalPlants() => BuyItem("medicinal_plants", MedicinalPlantsPrice);
-
-        private static bool CanBuyItem(LivingWorldPartyType type, string itemId, int price)
-        {
-            MobileParty party = MobileParty.ConversationParty;
-            ItemObject item = MBObjectManager.Instance?.GetObject<ItemObject>(itemId);
-            return party?.PartyComponent is LivingWorldPartyComponent component
-                && component.PartyType == type
-                && item != null
-                && Hero.MainHero.Gold >= price
-                && party.ItemRoster.GetItemNumber(item) > 0;
-        }
-
-        private static void BuyItem(string itemId, int price)
-        {
-            MobileParty party = MobileParty.ConversationParty;
-            ItemObject item = MBObjectManager.Instance?.GetObject<ItemObject>(itemId);
-            if (party == null || item == null || Hero.MainHero.Gold < price || party.ItemRoster.GetItemNumber(item) <= 0)
-            {
-                return;
-            }
-
-            GiveGoldAction.ApplyBetweenCharacters(Hero.MainHero, null, price, disableNotification: false);
-            party.ItemRoster.AddToCounts(item, -1);
-            MobileParty.MainParty.ItemRoster.AddToCounts(item, 1);
-            AnnouncePurchase(item, 1, price);
         }
 
         /// <summary>

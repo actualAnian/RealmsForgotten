@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using SOTOR.AbilitySystem;
 using TaleWorlds.Core;
+using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
@@ -15,6 +16,11 @@ public sealed class MagicRuneMissionLogic : MissionLogic
 		public float Value;
 		public float EndsAt;
 		public float NextTick;
+
+		/// <summary>Entidades portadoras das particulas de fogo presas ao esqueleto do
+		/// alvo (Flame) — uma por osso, padrao TOWParticleSystem. Null/vazio nos
+		/// efeitos sem visual (Frost).</summary>
+		public List<GameEntity> Carriers;
 	}
 
 	private static readonly Dictionary<Agent, TimedEffect> _burns = new Dictionary<Agent, TimedEffect>();
@@ -94,10 +100,17 @@ public sealed class MagicRuneMissionLogic : MissionLogic
 				}
 				break;
 			case MagicRuneEffect.Flame:
-				_burns[affectedAgent] = new TimedEffect { Source = affectorAgent, Value = rune.PrimaryValue, EndsAt = now + rune.SecondaryValue, NextTick = now + 1f };
+			{
+				// Reaproveita a chama de um burn ja ativo no mesmo alvo (refresh) em vez
+				// de empilhar particulas a cada golpe.
+				List<GameEntity> carriers = _burns.TryGetValue(affectedAgent, out TimedEffect existing) ? existing.Carriers : null;
+				if (carriers == null || carriers.Count == 0)
+					carriers = AttachBurnParticles(affectedAgent);
+				_burns[affectedAgent] = new TimedEffect { Source = affectorAgent, Value = rune.PrimaryValue, EndsAt = now + rune.SecondaryValue, NextTick = now + 1f, Carriers = carriers };
 				MagicRuneCombatFeedback.Report(affectorAgent, MagicRuneEffect.Flame, "burn_applied",
 					$"{rune.Name}: burn applied ({rune.PrimaryValue:0} damage/sec for {rune.SecondaryValue:0}s)", Colors.Red);
 				break;
+			}
 			case MagicRuneEffect.Frost:
 				_frost[affectedAgent] = new TimedEffect { Source = affectorAgent, Value = rune.PrimaryValue, EndsAt = now + rune.SecondaryValue };
 				MagicRuneCombatFeedback.Report(affectorAgent, MagicRuneEffect.Frost, "frost_applied",
@@ -180,6 +193,7 @@ public sealed class MagicRuneMissionLogic : MissionLogic
 			TimedEffect burn = _burns[agent];
 			if (agent == null || !agent.IsActive() || now >= burn.EndsAt)
 			{
+				DetachBurnParticle(agent, burn);
 				_burns.Remove(agent);
 				continue;
 			}
@@ -195,6 +209,105 @@ public sealed class MagicRuneMissionLogic : MissionLogic
 			if (agent == null || !agent.IsActive() || now >= _frost[agent].EndsAt)
 			{
 				_frost.Remove(agent);
+			}
+		}
+	}
+
+	/// <summary>Particula de vitima em chamas dos fire swords do RFEffects
+	/// (weapons_effects.xml, victim_particle="fire_ground") — visual comprovado em jogo.
+	/// Fallback vanilla se a arte do RF nao estiver carregada.</summary>
+	private const string BurnParticleName = "fire_ground";
+	private const string BurnParticleFallback = "psys_game_burning_agent";
+
+	/// <summary>Ossos usados pelo TOWParticleSystem do RFEffects para cobrir o corpo.</summary>
+	private static readonly sbyte[] BurnBones = { 0, 1, 2, 3, 5, 6, 7, 9, 12, 13, 15, 17, 22, 24 };
+
+	/// <summary>
+	/// Poe o alvo visivelmente em chamas — padrao da casa (RFEffects/TOWParticleSystem):
+	/// uma entidade portadora por osso, particula "fire_ground". O bug original: a runa
+	/// Flame so aplicava o dano por segundo, sem visual nenhum (autor, 2026-08-19); a 1ª
+	/// tentativa com psys unico no osso 1 tambem nao rendeu chama visivel.
+	/// </summary>
+	private static List<GameEntity> AttachBurnParticles(Agent agent)
+	{
+		List<GameEntity> carriers = new List<GameEntity>();
+		try
+		{
+			Skeleton skeleton = agent?.AgentVisuals?.GetSkeleton();
+			Scene scene = Mission.Current?.Scene;
+			if (skeleton == null || !skeleton.IsValid || scene == null)
+			{
+				return carriers;
+			}
+
+			string particleName = BurnParticleName;
+			if (ParticleSystemManager.GetRuntimeIdByName(particleName) == -1)
+			{
+				SotorLog.Warn("MagicRuneMissionLogic: particula '" + particleName + "' inexistente no runtime — usando fallback '" + BurnParticleFallback + "'.");
+				particleName = BurnParticleFallback;
+				if (ParticleSystemManager.GetRuntimeIdByName(particleName) == -1)
+				{
+					SotorLog.Warn("MagicRuneMissionLogic: fallback tambem inexistente — burn fica sem visual.");
+					return carriers;
+				}
+			}
+
+			int boneCount = skeleton.GetBoneCount();
+			foreach (sbyte bone in BurnBones)
+			{
+				if (bone >= boneCount)
+				{
+					continue;
+				}
+				GameEntity carrier = GameEntity.CreateEmpty(scene);
+				MatrixFrame boneLocalFrame = MatrixFrame.Identity;
+				ParticleSystem particle = ParticleSystem.CreateParticleSystemAttachedToEntity(particleName, carrier, ref boneLocalFrame);
+				if (particle == null)
+				{
+					carrier.Remove(0);
+					continue;
+				}
+				agent.AgentVisuals.AddChildEntity(carrier);
+				skeleton.AddComponentToBone(bone, particle);
+				carriers.Add(carrier);
+			}
+		}
+		catch (Exception ex)
+		{
+			SotorLog.Warn("MagicRuneMissionLogic.AttachBurnParticles failed: " + ex.Message);
+		}
+		return carriers;
+	}
+
+	private static void DetachBurnParticle(Agent agent, TimedEffect burn)
+	{
+		List<GameEntity> carriers = burn?.Carriers;
+		if (carriers == null)
+		{
+			return;
+		}
+		burn.Carriers = null;
+		foreach (GameEntity carrier in carriers)
+		{
+			if (carrier == null)
+			{
+				continue;
+			}
+			try
+			{
+				carrier.RemoveAllParticleSystems();
+				if (agent?.AgentVisuals != null)
+				{
+					agent.AgentVisuals.RemoveChildEntity(carrier, 0);
+				}
+				else
+				{
+					carrier.Remove(0);
+				}
+			}
+			catch (Exception ex)
+			{
+				SotorLog.Warn("MagicRuneMissionLogic.DetachBurnParticle failed: " + ex.Message);
 			}
 		}
 	}
