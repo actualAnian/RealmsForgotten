@@ -1,0 +1,3399 @@
+<?xml version="1.0"?>
+<scene name="rf_european_siege_001" version="2">
+	<flora_bounding_rect min="345.187, 385.346" max="753.094, 783.513"/>
+	<levels>
+		<level name="base" mask="1"/>
+		<level name="level_1" mask="2"/>
+		<level name="level_2" mask="4"/>
+		<level name="level_3" mask="8"/>
+		<level name="siege" mask="16"/>
+		<level name="civilian" mask="32"/>
+	</levels>
+	<environment_properties>
+		<property name="nav_mesh_auto_generated_" value="false"/>
+		<property name="physics_world_min" value="-2976.560, -2474.161"/>
+		<property name="physics_world_max_" value="1200.000, 1200.000"/>
+		<property name="north_angle" value="42.600"/>
+		<property name="is_indoors" value="false"/>
+		<property name="disable_flora_billboards" value="true"/>
+		<property name="ground_color" value="0.000, 0.000, 0.000"/>
+		<property name="prt_multiplier" value="1.000"/>
+		<property name="prt_point_light_multiplier" value="1.000"/>
+		<property name="fog_start_distance" value="35.000"/>
+		<property name="prt_color_contrast" value="1.000"/>
+		<property name="scene_scale_multiplier" value="1.500"/>
+		<property name="prt_intensity_contrast" value="1.000"/>
+		<property name="prt_fallback_probe_index" value="-1, -1, -1"/>
+		<property name="enforced_color_grade" value=""/>
+		<property name="gi_data_exists" value="false"/>
+		<atmosphere_properties>
+			<property name="atmosphere_name" value="scene_atmosphere"/>
+			<property name="wind" value="-1.076, 0.500"/>
+			<property name="scene_fog_falloff_offset" value="0.000"/>
+		</atmosphere_properties>
+		<water_properties version="1">
+			<property name="water_level" value="-100.000"/>
+			<property name="water_strength" value="5.000"/>
+			<property name="water_wind_dependency" value="1.000"/>
+			<property name="choppiness" value="1.000"/>
+			<property name="water_material" value="water_default"/>
+			<property name="water_shallow_color" value="1.000, 1.000, 1.000"/>
+			<property name="water_deep_color" value="1.000, 1.000, 1.000"/>
+			<property name="water_exists" value="false"/>
+			<property name="place_water_probe" value="true"/>
+		</water_properties>
+		<out_of_bounds_effects_properties>
+			<property name="vignette_color" value="0.000, 0.500, 1.000"/>
+			<property name="vignette_alpha" value="0.000"/>
+		</out_of_bounds_effects_properties>
+	</environment_properties>
+	<entities>
+		<game_entity prefab="european_castle_wall_a_l1">
+			<transform position="549.861, 618.843, 81.000" rotation_euler="0.000, 0.000, 0.322"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l1">
+			<transform position="538.894, 622.499, 81.000" rotation_euler="0.000, 0.000, 0.322"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l1">
+			<transform position="531.069, 629.163, 81.000" rotation_euler="0.000, 0.000, 1.120"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l1">
+			<transform position="526.385, 638.833, 81.000" rotation_euler="0.000, 0.000, 1.120"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_wall_left_l1" prefab="european_castle_wall_a_l1_broken">
+			<tags>
+				<tag name="left_wall_lvl1"/>
+			</tags>
+			<transform position="521.701, 648.504, 81.000" rotation_euler="0.000, 0.000, 1.120"/>
+			<scripts>
+				<script name="WallSegment">
+					<variables>
+						<variable name="_properGroundOutsideNavmeshID" value="610"/>
+						<variable name="_properGroundInsideNavmeshID" value="611"/>
+						<variable name="_underDebrisOutsideNavmeshID" value="612"/>
+						<variable name="_underDebrisInsideNavmeshID" value="-1"/>
+						<variable name="_overDebrisOutsideNavmeshID" value="613"/>
+						<variable name="_overDebrisInsideNavmeshID" value="614"/>
+						<variable name="_underDebrisGenericNavmeshID" value="615"/>
+						<variable name="_overDebrisGenericNavmeshID" value="616"/>
+						<variable name="_onSolidWallGenericNavmeshID" value="617"/>
+						<variable name="SideTag" value="left"/>
+						<variable name="NavMeshPrefabName" value=""/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l1">
+			<transform position="517.017, 658.174, 81.000" rotation_euler="0.000, 0.000, 1.120"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l1">
+			<transform position="517.653, 667.271, 81.000" rotation_euler="0.000, 0.000, 2.181"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l1">
+			<transform position="523.609, 675.795, 81.000" rotation_euler="0.000, 0.000, 2.181"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l1">
+			<transform position="529.566, 684.319, 81.000" rotation_euler="0.000, 0.000, 2.181"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l1">
+			<transform position="535.522, 692.843, 81.000" rotation_euler="0.000, 0.000, 2.181"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l1">
+			<transform position="544.786, 695.878, 81.000" rotation_euler="0.000, 0.000, -2.949"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l1">
+			<transform position="557.357, 693.422, 81.000" rotation_euler="0.000, 0.000, -2.949"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l1">
+			<transform position="569.928, 690.967, 81.000" rotation_euler="0.000, 0.000, -2.949"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l1">
+			<transform position="582.499, 688.512, 81.000" rotation_euler="0.000, 0.000, -2.949"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l1">
+			<transform position="591.542, 681.917, 81.000" rotation_euler="0.000, 0.000, -2.045"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l1">
+			<transform position="597.057, 671.181, 81.000" rotation_euler="0.000, 0.000, -2.045"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l1">
+			<transform position="602.571, 660.446, 81.000" rotation_euler="0.000, 0.000, -2.045"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l1">
+			<transform position="602.571, 650.114, 81.000" rotation_euler="0.000, 0.000, -1.064"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l1">
+			<transform position="597.056, 640.186, 81.000" rotation_euler="0.000, 0.000, -1.064"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l1">
+			<transform position="591.540, 630.258, 81.000" rotation_euler="0.000, 0.000, -1.064"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l1">
+			<transform position="583.210, 623.914, 81.000" rotation_euler="0.000, 0.000, -0.243"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_wall_right_l1" prefab="european_castle_wall_a_l1_broken">
+			<tags>
+				<tag name="right_wall_lvl1"/>
+			</tags>
+			<transform position="572.064, 621.155, 81.000" rotation_euler="0.000, 0.000, -0.243"/>
+			<scripts>
+				<script name="WallSegment">
+					<variables>
+						<variable name="_properGroundOutsideNavmeshID" value="710"/>
+						<variable name="_properGroundInsideNavmeshID" value="711"/>
+						<variable name="_underDebrisOutsideNavmeshID" value="712"/>
+						<variable name="_underDebrisInsideNavmeshID" value="-1"/>
+						<variable name="_overDebrisOutsideNavmeshID" value="713"/>
+						<variable name="_overDebrisInsideNavmeshID" value="714"/>
+						<variable name="_underDebrisGenericNavmeshID" value="715"/>
+						<variable name="_overDebrisGenericNavmeshID" value="716"/>
+						<variable name="_onSolidWallGenericNavmeshID" value="717"/>
+						<variable name="SideTag" value="right"/>
+						<variable name="NavMeshPrefabName" value=""/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l1">
+			<transform position="560.918, 618.395, 81.000" rotation_euler="0.000, 0.000, -0.243"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_tower_sw_l1" prefab="european_castle_tower_round_a_l1">
+			<transform position="533.411, 624.328, 81.000" rotation_euler="0.000, 0.000, -2.478"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_tower_w_l1" prefab="european_castle_tower_round_a_l1">
+			<transform position="514.675, 663.009, 81.000" rotation_euler="0.000, 0.000, -1.484"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_tower_nw_l1" prefab="european_castle_tower_round_a_l1">
+			<transform position="538.500, 697.105, 81.000" rotation_euler="0.000, 0.000, -0.524"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_tower_e_l1" prefab="european_castle_tower_round_a_l1">
+			<transform position="605.329, 655.078, 81.000" rotation_euler="0.000, 0.000, 1.658"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_tower_se_l1" prefab="european_castle_tower_round_a_l1">
+			<transform position="588.783, 625.294, 81.000" rotation_euler="0.000, 0.000, 2.443"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_gatehouse_l1" prefab="european_castle_gatehouse_a_l1">
+			<transform position="555.345, 617.015, 81.000" rotation_euler="0.000, 0.000, -3.019"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_outer_gate_l1" prefab="european_castle_gate_outer_l1">
+			<tags>
+				<tag name="outer_gate"/>
+			</tags>
+			<transform position="552.908, 597.164, 76.700" rotation_euler="0.000, 0.000, -3.019"/>
+			<scripts>
+				<script name="CastleGate">
+					<variables>
+						<variable name="NavigationMeshId" value="501"/>
+						<variable name="NavigationMeshIdToDisableOnOpen" value="511"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_inner_gate_l1" prefab="european_castle_gate_outer_l1">
+			<tags>
+				<tag name="inner_gate"/>
+			</tags>
+			<transform position="555.345, 617.015, 81.000" rotation_euler="0.000, 0.000, -3.019"/>
+			<scripts>
+				<script name="CastleGate">
+					<variables>
+						<variable name="NavigationMeshId" value="521"/>
+						<variable name="NavigationMeshIdToDisableOnOpen" value="531"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_ladder_left_a_l1" prefab="siege_ladder_8m_spawner">
+			<transform position="526.988, 642.175, 81.000" rotation_euler="0.000, 0.000, -2.022"/>
+			<scripts>
+				<script name="SiegeLadderSpawner">
+					<variables>
+						<variable name="SideTag" value="left"/>
+						<variable name="TargetWallSegmentTag" value="left_wall_lvl1"/>
+						<variable name="OnWallNavMeshId" value="201"/>
+						<variable name="TacticalPositionWidth" value="4.000"/>
+						<variable name="BarrierTagToRemove" value="left_ladder_barrier_a"/>
+						<variable name="IndestructibleMerlonsTag" value="merlon_solid_left"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_ladder_left_b_l1" prefab="siege_ladder_8m_spawner">
+			<transform position="520.014, 656.575, 81.000" rotation_euler="0.000, 0.000, -2.022"/>
+			<scripts>
+				<script name="SiegeLadderSpawner">
+					<variables>
+						<variable name="SideTag" value="left"/>
+						<variable name="TargetWallSegmentTag" value="left_wall_lvl1"/>
+						<variable name="OnWallNavMeshId" value="201"/>
+						<variable name="TacticalPositionWidth" value="4.000"/>
+						<variable name="BarrierTagToRemove" value="left_ladder_barrier_b"/>
+						<variable name="IndestructibleMerlonsTag" value="merlon_solid_left"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_stower_left_l1" prefab="siege_tower_9m_spawner">
+			<transform position="527.101, 651.119, 81.000" rotation_euler="0.000, 0.000, -2.022"/>
+			<scripts>
+				<script name="SiegeTowerSpawner">
+					<variables>
+						<variable name="SideTag" value="left"/>
+						<variable name="TargetWallSegmentTag" value="left_wall_lvl1"/>
+						<variable name="PathEntityName" value="siege_tower_path_left_lvl1"/>
+						<variable name="RampRotationDegree" value="90.000"/>
+						<variable name="BarrierLength" value="3.000"/>
+						<variable name="BarrierTagToRemove" value="tower_barrier_lvl1_left"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_ladder_right_a_l1" prefab="siege_ladder_8m_spawner">
+			<transform position="579.349, 625.019, 81.000" rotation_euler="0.000, 0.000, 2.899"/>
+			<scripts>
+				<script name="SiegeLadderSpawner">
+					<variables>
+						<variable name="SideTag" value="right"/>
+						<variable name="TargetWallSegmentTag" value="right_wall_lvl1"/>
+						<variable name="OnWallNavMeshId" value="301"/>
+						<variable name="TacticalPositionWidth" value="4.000"/>
+						<variable name="BarrierTagToRemove" value="right_ladder_barrier_a"/>
+						<variable name="IndestructibleMerlonsTag" value="merlon_solid_right"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_ladder_right_b_l1" prefab="siege_ladder_8m_spawner">
+			<transform position="563.818, 621.173, 81.000" rotation_euler="0.000, 0.000, 2.899"/>
+			<scripts>
+				<script name="SiegeLadderSpawner">
+					<variables>
+						<variable name="SideTag" value="right"/>
+						<variable name="TargetWallSegmentTag" value="right_wall_lvl1"/>
+						<variable name="OnWallNavMeshId" value="301"/>
+						<variable name="TacticalPositionWidth" value="4.000"/>
+						<variable name="BarrierTagToRemove" value="right_ladder_barrier_b"/>
+						<variable name="IndestructibleMerlonsTag" value="merlon_solid_right"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_stower_right_l1" prefab="siege_tower_9m_spawner">
+			<transform position="570.622, 626.979, 81.000" rotation_euler="0.000, 0.000, 2.899"/>
+			<scripts>
+				<script name="SiegeTowerSpawner">
+					<variables>
+						<variable name="SideTag" value="right"/>
+						<variable name="TargetWallSegmentTag" value="right_wall_lvl1"/>
+						<variable name="PathEntityName" value="siege_tower_path_right_lvl1"/>
+						<variable name="RampRotationDegree" value="90.000"/>
+						<variable name="BarrierLength" value="3.000"/>
+						<variable name="BarrierTagToRemove" value="tower_barrier_lvl1_right"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_ram_l1" prefab="batteringram_a_spawner">
+			<transform position="545.595, 537.612, 56.000" rotation_euler="0.000, 0.000, 0.122"/>
+			<scripts>
+				<script name="BatteringRamSpawner">
+					<variables>
+						<variable name="SideTag" value="middle"/>
+						<variable name="GateTag" value="outer_gate"/>
+						<variable name="PathEntityName" value="ram_path_lvl1"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l2">
+			<transform position="549.861, 618.843, 81.000" rotation_euler="0.000, 0.000, 0.322"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l2">
+			<transform position="538.894, 622.499, 81.000" rotation_euler="0.000, 0.000, 0.322"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l2">
+			<transform position="531.069, 629.163, 81.000" rotation_euler="0.000, 0.000, 1.120"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l2">
+			<transform position="526.385, 638.833, 81.000" rotation_euler="0.000, 0.000, 1.120"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_wall_left_l2" prefab="european_castle_wall_a_l2_broken">
+			<tags>
+				<tag name="left_wall_lvl2"/>
+			</tags>
+			<transform position="521.701, 648.504, 81.000" rotation_euler="0.000, 0.000, 1.120"/>
+			<scripts>
+				<script name="WallSegment">
+					<variables>
+						<variable name="_properGroundOutsideNavmeshID" value="620"/>
+						<variable name="_properGroundInsideNavmeshID" value="621"/>
+						<variable name="_underDebrisOutsideNavmeshID" value="622"/>
+						<variable name="_underDebrisInsideNavmeshID" value="-1"/>
+						<variable name="_overDebrisOutsideNavmeshID" value="623"/>
+						<variable name="_overDebrisInsideNavmeshID" value="624"/>
+						<variable name="_underDebrisGenericNavmeshID" value="625"/>
+						<variable name="_overDebrisGenericNavmeshID" value="626"/>
+						<variable name="_onSolidWallGenericNavmeshID" value="627"/>
+						<variable name="SideTag" value="left"/>
+						<variable name="NavMeshPrefabName" value=""/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l2">
+			<transform position="517.017, 658.174, 81.000" rotation_euler="0.000, 0.000, 1.120"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l2">
+			<transform position="517.653, 667.271, 81.000" rotation_euler="0.000, 0.000, 2.181"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l2">
+			<transform position="523.609, 675.795, 81.000" rotation_euler="0.000, 0.000, 2.181"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l2">
+			<transform position="529.566, 684.319, 81.000" rotation_euler="0.000, 0.000, 2.181"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l2">
+			<transform position="535.522, 692.843, 81.000" rotation_euler="0.000, 0.000, 2.181"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l2">
+			<transform position="544.786, 695.878, 81.000" rotation_euler="0.000, 0.000, -2.949"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l2">
+			<transform position="557.357, 693.422, 81.000" rotation_euler="0.000, 0.000, -2.949"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l2">
+			<transform position="569.928, 690.967, 81.000" rotation_euler="0.000, 0.000, -2.949"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l2">
+			<transform position="582.499, 688.512, 81.000" rotation_euler="0.000, 0.000, -2.949"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l2">
+			<transform position="591.542, 681.917, 81.000" rotation_euler="0.000, 0.000, -2.045"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l2">
+			<transform position="597.057, 671.181, 81.000" rotation_euler="0.000, 0.000, -2.045"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l2">
+			<transform position="602.571, 660.446, 81.000" rotation_euler="0.000, 0.000, -2.045"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l2">
+			<transform position="602.571, 650.114, 81.000" rotation_euler="0.000, 0.000, -1.064"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l2">
+			<transform position="597.056, 640.186, 81.000" rotation_euler="0.000, 0.000, -1.064"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l2">
+			<transform position="591.540, 630.258, 81.000" rotation_euler="0.000, 0.000, -1.064"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l2">
+			<transform position="583.210, 623.914, 81.000" rotation_euler="0.000, 0.000, -0.243"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_wall_right_l2" prefab="european_castle_wall_a_l2_broken">
+			<tags>
+				<tag name="right_wall_lvl2"/>
+			</tags>
+			<transform position="572.064, 621.155, 81.000" rotation_euler="0.000, 0.000, -0.243"/>
+			<scripts>
+				<script name="WallSegment">
+					<variables>
+						<variable name="_properGroundOutsideNavmeshID" value="720"/>
+						<variable name="_properGroundInsideNavmeshID" value="721"/>
+						<variable name="_underDebrisOutsideNavmeshID" value="722"/>
+						<variable name="_underDebrisInsideNavmeshID" value="-1"/>
+						<variable name="_overDebrisOutsideNavmeshID" value="723"/>
+						<variable name="_overDebrisInsideNavmeshID" value="724"/>
+						<variable name="_underDebrisGenericNavmeshID" value="725"/>
+						<variable name="_overDebrisGenericNavmeshID" value="726"/>
+						<variable name="_onSolidWallGenericNavmeshID" value="727"/>
+						<variable name="SideTag" value="right"/>
+						<variable name="NavMeshPrefabName" value=""/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l2">
+			<transform position="560.918, 618.395, 81.000" rotation_euler="0.000, 0.000, -0.243"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_tower_sw_l2" prefab="european_castle_tower_round_a_l2">
+			<transform position="533.411, 624.328, 81.000" rotation_euler="0.000, 0.000, -2.478"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_tower_w_l2" prefab="european_castle_tower_round_a_l2">
+			<transform position="514.675, 663.009, 81.000" rotation_euler="0.000, 0.000, -1.484"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_tower_nw_l2" prefab="european_castle_tower_round_a_l2">
+			<transform position="538.500, 697.105, 81.000" rotation_euler="0.000, 0.000, -0.524"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_tower_e_l2" prefab="european_castle_tower_round_a_l2">
+			<transform position="605.329, 655.078, 81.000" rotation_euler="0.000, 0.000, 1.658"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_tower_se_l2" prefab="european_castle_tower_round_a_l2">
+			<transform position="588.783, 625.294, 81.000" rotation_euler="0.000, 0.000, 2.443"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_gatehouse_l2" prefab="european_castle_gatehouse_a_l2">
+			<transform position="555.345, 617.015, 81.000" rotation_euler="0.000, 0.000, -3.019"/>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_outer_gate_l2" prefab="european_castle_gate_outer_l2">
+			<tags>
+				<tag name="outer_gate"/>
+			</tags>
+			<transform position="552.908, 597.164, 76.700" rotation_euler="0.000, 0.000, -3.019"/>
+			<scripts>
+				<script name="CastleGate">
+					<variables>
+						<variable name="NavigationMeshId" value="501"/>
+						<variable name="NavigationMeshIdToDisableOnOpen" value="511"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_inner_gate_l2" prefab="european_castle_gate_outer_l2">
+			<tags>
+				<tag name="inner_gate"/>
+			</tags>
+			<transform position="555.345, 617.015, 81.000" rotation_euler="0.000, 0.000, -3.019"/>
+			<scripts>
+				<script name="CastleGate">
+					<variables>
+						<variable name="NavigationMeshId" value="521"/>
+						<variable name="NavigationMeshIdToDisableOnOpen" value="531"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_ladder_left_a_l2" prefab="siege_ladder_8m_spawner">
+			<transform position="526.988, 642.175, 81.000" rotation_euler="0.000, 0.000, -2.022"/>
+			<scripts>
+				<script name="SiegeLadderSpawner">
+					<variables>
+						<variable name="SideTag" value="left"/>
+						<variable name="TargetWallSegmentTag" value="left_wall_lvl2"/>
+						<variable name="OnWallNavMeshId" value="202"/>
+						<variable name="TacticalPositionWidth" value="4.000"/>
+						<variable name="BarrierTagToRemove" value="left_ladder_barrier_a"/>
+						<variable name="IndestructibleMerlonsTag" value="merlon_solid_left"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_ladder_left_b_l2" prefab="siege_ladder_8m_spawner">
+			<transform position="520.014, 656.575, 81.000" rotation_euler="0.000, 0.000, -2.022"/>
+			<scripts>
+				<script name="SiegeLadderSpawner">
+					<variables>
+						<variable name="SideTag" value="left"/>
+						<variable name="TargetWallSegmentTag" value="left_wall_lvl2"/>
+						<variable name="OnWallNavMeshId" value="202"/>
+						<variable name="TacticalPositionWidth" value="4.000"/>
+						<variable name="BarrierTagToRemove" value="left_ladder_barrier_b"/>
+						<variable name="IndestructibleMerlonsTag" value="merlon_solid_left"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_stower_left_l2" prefab="siege_tower_9m_spawner">
+			<transform position="527.101, 651.119, 81.000" rotation_euler="0.000, 0.000, -2.022"/>
+			<scripts>
+				<script name="SiegeTowerSpawner">
+					<variables>
+						<variable name="SideTag" value="left"/>
+						<variable name="TargetWallSegmentTag" value="left_wall_lvl2"/>
+						<variable name="PathEntityName" value="siege_tower_path_left_lvl2"/>
+						<variable name="RampRotationDegree" value="90.000"/>
+						<variable name="BarrierLength" value="3.000"/>
+						<variable name="BarrierTagToRemove" value="tower_barrier_lvl2_left"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_ladder_right_a_l2" prefab="siege_ladder_8m_spawner">
+			<transform position="579.349, 625.019, 81.000" rotation_euler="0.000, 0.000, 2.899"/>
+			<scripts>
+				<script name="SiegeLadderSpawner">
+					<variables>
+						<variable name="SideTag" value="right"/>
+						<variable name="TargetWallSegmentTag" value="right_wall_lvl2"/>
+						<variable name="OnWallNavMeshId" value="302"/>
+						<variable name="TacticalPositionWidth" value="4.000"/>
+						<variable name="BarrierTagToRemove" value="right_ladder_barrier_a"/>
+						<variable name="IndestructibleMerlonsTag" value="merlon_solid_right"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_ladder_right_b_l2" prefab="siege_ladder_8m_spawner">
+			<transform position="563.818, 621.173, 81.000" rotation_euler="0.000, 0.000, 2.899"/>
+			<scripts>
+				<script name="SiegeLadderSpawner">
+					<variables>
+						<variable name="SideTag" value="right"/>
+						<variable name="TargetWallSegmentTag" value="right_wall_lvl2"/>
+						<variable name="OnWallNavMeshId" value="302"/>
+						<variable name="TacticalPositionWidth" value="4.000"/>
+						<variable name="BarrierTagToRemove" value="right_ladder_barrier_b"/>
+						<variable name="IndestructibleMerlonsTag" value="merlon_solid_right"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_stower_right_l2" prefab="siege_tower_9m_spawner">
+			<transform position="570.622, 626.979, 81.000" rotation_euler="0.000, 0.000, 2.899"/>
+			<scripts>
+				<script name="SiegeTowerSpawner">
+					<variables>
+						<variable name="SideTag" value="right"/>
+						<variable name="TargetWallSegmentTag" value="right_wall_lvl2"/>
+						<variable name="PathEntityName" value="siege_tower_path_right_lvl2"/>
+						<variable name="RampRotationDegree" value="90.000"/>
+						<variable name="BarrierLength" value="3.000"/>
+						<variable name="BarrierTagToRemove" value="tower_barrier_lvl2_right"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_ram_l2" prefab="batteringram_a_spawner">
+			<transform position="545.595, 537.612, 56.000" rotation_euler="0.000, 0.000, 0.122"/>
+			<scripts>
+				<script name="BatteringRamSpawner">
+					<variables>
+						<variable name="SideTag" value="middle"/>
+						<variable name="GateTag" value="outer_gate"/>
+						<variable name="PathEntityName" value="ram_path_lvl2"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_2"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l3">
+			<transform position="549.861, 618.843, 81.000" rotation_euler="0.000, 0.000, 0.322"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l3">
+			<transform position="538.894, 622.499, 81.000" rotation_euler="0.000, 0.000, 0.322"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l3">
+			<transform position="531.069, 629.163, 81.000" rotation_euler="0.000, 0.000, 1.120"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l3">
+			<transform position="526.385, 638.833, 81.000" rotation_euler="0.000, 0.000, 1.120"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_wall_left_l3" prefab="european_castle_wall_a_l3_broken">
+			<tags>
+				<tag name="left_wall_lvl3"/>
+			</tags>
+			<transform position="521.701, 648.504, 81.000" rotation_euler="0.000, 0.000, 1.120"/>
+			<scripts>
+				<script name="WallSegment">
+					<variables>
+						<variable name="_properGroundOutsideNavmeshID" value="630"/>
+						<variable name="_properGroundInsideNavmeshID" value="631"/>
+						<variable name="_underDebrisOutsideNavmeshID" value="632"/>
+						<variable name="_underDebrisInsideNavmeshID" value="-1"/>
+						<variable name="_overDebrisOutsideNavmeshID" value="633"/>
+						<variable name="_overDebrisInsideNavmeshID" value="634"/>
+						<variable name="_underDebrisGenericNavmeshID" value="635"/>
+						<variable name="_overDebrisGenericNavmeshID" value="636"/>
+						<variable name="_onSolidWallGenericNavmeshID" value="637"/>
+						<variable name="SideTag" value="left"/>
+						<variable name="NavMeshPrefabName" value=""/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l3">
+			<transform position="517.017, 658.174, 81.000" rotation_euler="0.000, 0.000, 1.120"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l3">
+			<transform position="517.653, 667.271, 81.000" rotation_euler="0.000, 0.000, 2.181"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l3">
+			<transform position="523.609, 675.795, 81.000" rotation_euler="0.000, 0.000, 2.181"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l3">
+			<transform position="529.566, 684.319, 81.000" rotation_euler="0.000, 0.000, 2.181"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l3">
+			<transform position="535.522, 692.843, 81.000" rotation_euler="0.000, 0.000, 2.181"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l3">
+			<transform position="544.786, 695.878, 81.000" rotation_euler="0.000, 0.000, -2.949"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l3">
+			<transform position="557.357, 693.422, 81.000" rotation_euler="0.000, 0.000, -2.949"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l3">
+			<transform position="569.928, 690.967, 81.000" rotation_euler="0.000, 0.000, -2.949"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l3">
+			<transform position="582.499, 688.512, 81.000" rotation_euler="0.000, 0.000, -2.949"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l3">
+			<transform position="591.542, 681.917, 81.000" rotation_euler="0.000, 0.000, -2.045"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l3">
+			<transform position="597.057, 671.181, 81.000" rotation_euler="0.000, 0.000, -2.045"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l3">
+			<transform position="602.571, 660.446, 81.000" rotation_euler="0.000, 0.000, -2.045"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l3">
+			<transform position="602.571, 650.114, 81.000" rotation_euler="0.000, 0.000, -1.064"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l3">
+			<transform position="597.056, 640.186, 81.000" rotation_euler="0.000, 0.000, -1.064"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l3">
+			<transform position="591.540, 630.258, 81.000" rotation_euler="0.000, 0.000, -1.064"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l3">
+			<transform position="583.210, 623.914, 81.000" rotation_euler="0.000, 0.000, -0.243"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_wall_right_l3" prefab="european_castle_wall_a_l3_broken">
+			<tags>
+				<tag name="right_wall_lvl3"/>
+			</tags>
+			<transform position="572.064, 621.155, 81.000" rotation_euler="0.000, 0.000, -0.243"/>
+			<scripts>
+				<script name="WallSegment">
+					<variables>
+						<variable name="_properGroundOutsideNavmeshID" value="730"/>
+						<variable name="_properGroundInsideNavmeshID" value="731"/>
+						<variable name="_underDebrisOutsideNavmeshID" value="732"/>
+						<variable name="_underDebrisInsideNavmeshID" value="-1"/>
+						<variable name="_overDebrisOutsideNavmeshID" value="733"/>
+						<variable name="_overDebrisInsideNavmeshID" value="734"/>
+						<variable name="_underDebrisGenericNavmeshID" value="735"/>
+						<variable name="_overDebrisGenericNavmeshID" value="736"/>
+						<variable name="_onSolidWallGenericNavmeshID" value="737"/>
+						<variable name="SideTag" value="right"/>
+						<variable name="NavMeshPrefabName" value=""/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="european_castle_wall_a_l3">
+			<transform position="560.918, 618.395, 81.000" rotation_euler="0.000, 0.000, -0.243"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_tower_sw_l3" prefab="european_castle_tower_round_a_l3">
+			<transform position="533.411, 624.328, 81.000" rotation_euler="0.000, 0.000, -2.478"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_tower_w_l3" prefab="european_castle_tower_round_a_l3">
+			<transform position="514.675, 663.009, 81.000" rotation_euler="0.000, 0.000, -1.484"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_tower_nw_l3" prefab="european_castle_tower_round_a_l3">
+			<transform position="538.500, 697.105, 81.000" rotation_euler="0.000, 0.000, -0.524"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_tower_e_l3" prefab="european_castle_tower_round_a_l3">
+			<transform position="605.329, 655.078, 81.000" rotation_euler="0.000, 0.000, 1.658"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_tower_se_l3" prefab="european_castle_tower_round_a_l3">
+			<transform position="588.783, 625.294, 81.000" rotation_euler="0.000, 0.000, 2.443"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_gatehouse_l3" prefab="european_castle_gatehouse_a_l3">
+			<transform position="555.345, 617.015, 81.000" rotation_euler="0.000, 0.000, -3.019"/>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_outer_gate_l3" prefab="european_castle_gate_outer_l2_l3">
+			<tags>
+				<tag name="outer_gate"/>
+			</tags>
+			<transform position="552.908, 597.164, 76.700" rotation_euler="0.000, 0.000, -3.019"/>
+			<scripts>
+				<script name="CastleGate">
+					<variables>
+						<variable name="NavigationMeshId" value="501"/>
+						<variable name="NavigationMeshIdToDisableOnOpen" value="511"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_inner_gate_l3" prefab="european_castle_gate_outer_l2_l3">
+			<tags>
+				<tag name="inner_gate"/>
+			</tags>
+			<transform position="555.345, 617.015, 81.000" rotation_euler="0.000, 0.000, -3.019"/>
+			<scripts>
+				<script name="CastleGate">
+					<variables>
+						<variable name="NavigationMeshId" value="521"/>
+						<variable name="NavigationMeshIdToDisableOnOpen" value="531"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_ladder_left_a_l3" prefab="siege_ladder_8m_spawner">
+			<transform position="526.988, 642.175, 81.000" rotation_euler="0.000, 0.000, -2.022"/>
+			<scripts>
+				<script name="SiegeLadderSpawner">
+					<variables>
+						<variable name="SideTag" value="left"/>
+						<variable name="TargetWallSegmentTag" value="left_wall_lvl3"/>
+						<variable name="OnWallNavMeshId" value="203"/>
+						<variable name="TacticalPositionWidth" value="4.000"/>
+						<variable name="BarrierTagToRemove" value="left_ladder_barrier_a"/>
+						<variable name="IndestructibleMerlonsTag" value="merlon_solid_left"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_ladder_left_b_l3" prefab="siege_ladder_8m_spawner">
+			<transform position="520.014, 656.575, 81.000" rotation_euler="0.000, 0.000, -2.022"/>
+			<scripts>
+				<script name="SiegeLadderSpawner">
+					<variables>
+						<variable name="SideTag" value="left"/>
+						<variable name="TargetWallSegmentTag" value="left_wall_lvl3"/>
+						<variable name="OnWallNavMeshId" value="203"/>
+						<variable name="TacticalPositionWidth" value="4.000"/>
+						<variable name="BarrierTagToRemove" value="left_ladder_barrier_b"/>
+						<variable name="IndestructibleMerlonsTag" value="merlon_solid_left"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_stower_left_l3" prefab="siege_tower_9m_spawner">
+			<transform position="527.101, 651.119, 81.000" rotation_euler="0.000, 0.000, -2.022"/>
+			<scripts>
+				<script name="SiegeTowerSpawner">
+					<variables>
+						<variable name="SideTag" value="left"/>
+						<variable name="TargetWallSegmentTag" value="left_wall_lvl3"/>
+						<variable name="PathEntityName" value="siege_tower_path_left"/>
+						<variable name="RampRotationDegree" value="90.000"/>
+						<variable name="BarrierLength" value="3.000"/>
+						<variable name="BarrierTagToRemove" value="tower_barrier_lvl3_left"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_ladder_right_a_l3" prefab="siege_ladder_8m_spawner">
+			<transform position="579.349, 625.019, 81.000" rotation_euler="0.000, 0.000, 2.899"/>
+			<scripts>
+				<script name="SiegeLadderSpawner">
+					<variables>
+						<variable name="SideTag" value="right"/>
+						<variable name="TargetWallSegmentTag" value="right_wall_lvl3"/>
+						<variable name="OnWallNavMeshId" value="303"/>
+						<variable name="TacticalPositionWidth" value="4.000"/>
+						<variable name="BarrierTagToRemove" value="right_ladder_barrier_a"/>
+						<variable name="IndestructibleMerlonsTag" value="merlon_solid_right"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_ladder_right_b_l3" prefab="siege_ladder_8m_spawner">
+			<transform position="563.818, 621.173, 81.000" rotation_euler="0.000, 0.000, 2.899"/>
+			<scripts>
+				<script name="SiegeLadderSpawner">
+					<variables>
+						<variable name="SideTag" value="right"/>
+						<variable name="TargetWallSegmentTag" value="right_wall_lvl3"/>
+						<variable name="OnWallNavMeshId" value="303"/>
+						<variable name="TacticalPositionWidth" value="4.000"/>
+						<variable name="BarrierTagToRemove" value="right_ladder_barrier_b"/>
+						<variable name="IndestructibleMerlonsTag" value="merlon_solid_right"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_stower_right_l3" prefab="siege_tower_9m_spawner">
+			<transform position="570.622, 626.979, 81.000" rotation_euler="0.000, 0.000, 2.899"/>
+			<scripts>
+				<script name="SiegeTowerSpawner">
+					<variables>
+						<variable name="SideTag" value="right"/>
+						<variable name="TargetWallSegmentTag" value="right_wall_lvl3"/>
+						<variable name="PathEntityName" value="siege_tower_path_right"/>
+						<variable name="RampRotationDegree" value="90.000"/>
+						<variable name="BarrierLength" value="3.000"/>
+						<variable name="BarrierTagToRemove" value="tower_barrier_lvl3_right"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_ram_l3" prefab="batteringram_a_spawner">
+			<transform position="545.595, 537.612, 56.000" rotation_euler="0.000, 0.000, 0.122"/>
+			<scripts>
+				<script name="BatteringRamSpawner">
+					<variables>
+						<variable name="SideTag" value="middle"/>
+						<variable name="GateTag" value="outer_gate"/>
+						<variable name="PathEntityName" value="ram_path"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_keep" prefab="european_castle_keep">
+			<transform position="588.784, 687.284, 81.000" rotation_euler="0.000, 0.000, -2.356"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_innerwall_0" prefab="european_castle_wall_a_l2">
+			<transform position="555.291, 672.547, 81.000" rotation_euler="0.000, 0.000, -1.872"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_innerwall_tp_0">
+			<transform position="555.291, 672.547, 86.000" rotation_euler="0.000, 0.000, -1.872"/>
+			<scripts>
+				<script name="TacticalPosition">
+					<variables>
+						<variable name="_width" value="8.000"/>
+						<variable name="_slope" value="0.000"/>
+						<variable name="_isInsurmountable" value="false"/>
+						<variable name="_isOuterEdge" value="false"/>
+						<variable name="_tacticalPositionType" value="SpecialMissionPosition"/>
+						<variable name="_tacticalRegionMembership" value="NormalGround"/>
+						<variable name="_tacticalPositionSide" value="Defender"/>
+						<variable name="NavMeshPrefabName" value=""/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="strategic_archer_point">
+			<transform position="555.291, 672.547, 86.000" rotation_euler="0.000, 0.000, -1.872"/>
+			<scripts>
+				<script name="StrategicArea">
+					<variables>
+						<variable name="_width" value="1.000"/>
+						<variable name="_side" value="Defender"/>
+						<variable name="_depth" value="1.000"/>
+						<variable name="_distanceToCheck" value="40.000"/>
+						<variable name="_ignoreHeight" value="true"/>
+						<variable name="_disableShimmy" value="false"/>
+						<variable name="NavMeshPrefabName" value=""/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_innerwall_1" prefab="european_castle_wall_a_l2">
+			<transform position="558.554, 662.053, 81.000" rotation_euler="0.000, 0.000, -1.872"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_innerwall_tp_1">
+			<transform position="558.554, 662.053, 86.000" rotation_euler="0.000, 0.000, -1.872"/>
+			<scripts>
+				<script name="TacticalPosition">
+					<variables>
+						<variable name="_width" value="8.000"/>
+						<variable name="_slope" value="0.000"/>
+						<variable name="_isInsurmountable" value="false"/>
+						<variable name="_isOuterEdge" value="false"/>
+						<variable name="_tacticalPositionType" value="SpecialMissionPosition"/>
+						<variable name="_tacticalRegionMembership" value="NormalGround"/>
+						<variable name="_tacticalPositionSide" value="Defender"/>
+						<variable name="NavMeshPrefabName" value=""/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="strategic_archer_point">
+			<transform position="558.554, 662.053, 86.000" rotation_euler="0.000, 0.000, -1.872"/>
+			<scripts>
+				<script name="StrategicArea">
+					<variables>
+						<variable name="_width" value="1.000"/>
+						<variable name="_side" value="Defender"/>
+						<variable name="_depth" value="1.000"/>
+						<variable name="_distanceToCheck" value="40.000"/>
+						<variable name="_ignoreHeight" value="true"/>
+						<variable name="_disableShimmy" value="false"/>
+						<variable name="NavMeshPrefabName" value=""/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_innerwall_2" prefab="european_castle_wall_gate_l2">
+			<transform position="561.817, 651.559, 81.000" rotation_euler="0.000, 0.000, -1.872"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_innerwall_3" prefab="european_castle_wall_a_l2">
+			<transform position="565.080, 641.065, 81.000" rotation_euler="0.000, 0.000, -1.872"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_innerwall_tp_3">
+			<transform position="565.080, 641.065, 86.000" rotation_euler="0.000, 0.000, -1.872"/>
+			<scripts>
+				<script name="TacticalPosition">
+					<variables>
+						<variable name="_width" value="8.000"/>
+						<variable name="_slope" value="0.000"/>
+						<variable name="_isInsurmountable" value="false"/>
+						<variable name="_isOuterEdge" value="false"/>
+						<variable name="_tacticalPositionType" value="SpecialMissionPosition"/>
+						<variable name="_tacticalRegionMembership" value="NormalGround"/>
+						<variable name="_tacticalPositionSide" value="Defender"/>
+						<variable name="NavMeshPrefabName" value=""/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="strategic_archer_point">
+			<transform position="565.080, 641.065, 86.000" rotation_euler="0.000, 0.000, -1.872"/>
+			<scripts>
+				<script name="StrategicArea">
+					<variables>
+						<variable name="_width" value="1.000"/>
+						<variable name="_side" value="Defender"/>
+						<variable name="_depth" value="1.000"/>
+						<variable name="_distanceToCheck" value="40.000"/>
+						<variable name="_ignoreHeight" value="true"/>
+						<variable name="_disableShimmy" value="false"/>
+						<variable name="NavMeshPrefabName" value=""/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_def_archers_0" prefab="defender_archer_position">
+			<tags>
+				<tag name="archer_position"/>
+			</tags>
+			<transform position="535.258, 626.692, 89.000" rotation_euler="0.000, 0.000, -2.478"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="strategic_archer_point">
+			<transform position="538.243, 623.382, 89.000" rotation_euler="0.000, 0.000, -2.478"/>
+			<scripts>
+				<script name="StrategicArea">
+					<variables>
+						<variable name="_width" value="1.000"/>
+						<variable name="_side" value="Defender"/>
+						<variable name="_depth" value="1.000"/>
+						<variable name="_distanceToCheck" value="40.000"/>
+						<variable name="_ignoreHeight" value="true"/>
+						<variable name="_disableShimmy" value="false"/>
+						<variable name="NavMeshPrefabName" value=""/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="strategic_archer_point">
+			<transform position="531.324, 628.788, 89.000" rotation_euler="0.000, 0.000, -2.478"/>
+			<scripts>
+				<script name="StrategicArea">
+					<variables>
+						<variable name="_width" value="1.000"/>
+						<variable name="_side" value="Defender"/>
+						<variable name="_depth" value="1.000"/>
+						<variable name="_distanceToCheck" value="40.000"/>
+						<variable name="_ignoreHeight" value="true"/>
+						<variable name="_disableShimmy" value="false"/>
+						<variable name="NavMeshPrefabName" value=""/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_def_archers_1" prefab="defender_archer_position">
+			<tags>
+				<tag name="archer_position"/>
+			</tags>
+			<transform position="517.664, 662.748, 89.000" rotation_euler="0.000, 0.000, -1.484"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="strategic_archer_point">
+			<transform position="516.507, 658.232, 89.000" rotation_euler="0.000, 0.000, -1.484"/>
+			<scripts>
+				<script name="StrategicArea">
+					<variables>
+						<variable name="_width" value="1.000"/>
+						<variable name="_side" value="Defender"/>
+						<variable name="_depth" value="1.000"/>
+						<variable name="_distanceToCheck" value="40.000"/>
+						<variable name="_ignoreHeight" value="true"/>
+						<variable name="_disableShimmy" value="false"/>
+						<variable name="NavMeshPrefabName" value=""/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="strategic_archer_point">
+			<transform position="517.308, 667.396, 89.000" rotation_euler="0.000, 0.000, -1.484"/>
+			<scripts>
+				<script name="StrategicArea">
+					<variables>
+						<variable name="_width" value="1.000"/>
+						<variable name="_side" value="Defender"/>
+						<variable name="_depth" value="1.000"/>
+						<variable name="_distanceToCheck" value="40.000"/>
+						<variable name="_ignoreHeight" value="true"/>
+						<variable name="_disableShimmy" value="false"/>
+						<variable name="NavMeshPrefabName" value=""/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_def_archers_2" prefab="defender_archer_position">
+			<tags>
+				<tag name="archer_position"/>
+			</tags>
+			<transform position="540.000, 694.507, 89.000" rotation_euler="0.000, 0.000, -0.524"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="strategic_archer_point">
+			<transform position="535.813, 692.979, 89.000" rotation_euler="0.000, 0.000, -0.524"/>
+			<scripts>
+				<script name="StrategicArea">
+					<variables>
+						<variable name="_width" value="1.000"/>
+						<variable name="_side" value="Defender"/>
+						<variable name="_depth" value="1.000"/>
+						<variable name="_distanceToCheck" value="40.000"/>
+						<variable name="_ignoreHeight" value="true"/>
+						<variable name="_disableShimmy" value="false"/>
+						<variable name="NavMeshPrefabName" value=""/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="strategic_archer_point">
+			<transform position="543.417, 697.369, 89.000" rotation_euler="0.000, 0.000, -0.524"/>
+			<scripts>
+				<script name="StrategicArea">
+					<variables>
+						<variable name="_width" value="1.000"/>
+						<variable name="_side" value="Defender"/>
+						<variable name="_depth" value="1.000"/>
+						<variable name="_distanceToCheck" value="40.000"/>
+						<variable name="_ignoreHeight" value="true"/>
+						<variable name="_disableShimmy" value="false"/>
+						<variable name="NavMeshPrefabName" value=""/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_def_archers_3" prefab="defender_archer_position">
+			<tags>
+				<tag name="archer_position"/>
+			</tags>
+			<transform position="602.340, 655.339, 89.000" rotation_euler="0.000, 0.000, 1.658"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="strategic_archer_point">
+			<transform position="603.493, 659.750, 89.000" rotation_euler="0.000, 0.000, 1.658"/>
+			<scripts>
+				<script name="StrategicArea">
+					<variables>
+						<variable name="_width" value="1.000"/>
+						<variable name="_side" value="Defender"/>
+						<variable name="_depth" value="1.000"/>
+						<variable name="_distanceToCheck" value="40.000"/>
+						<variable name="_ignoreHeight" value="true"/>
+						<variable name="_disableShimmy" value="false"/>
+						<variable name="NavMeshPrefabName" value=""/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="strategic_archer_point">
+			<transform position="602.710, 650.795, 89.000" rotation_euler="0.000, 0.000, 1.658"/>
+			<scripts>
+				<script name="StrategicArea">
+					<variables>
+						<variable name="_width" value="1.000"/>
+						<variable name="_side" value="Defender"/>
+						<variable name="_depth" value="1.000"/>
+						<variable name="_distanceToCheck" value="40.000"/>
+						<variable name="_ignoreHeight" value="true"/>
+						<variable name="_disableShimmy" value="false"/>
+						<variable name="NavMeshPrefabName" value=""/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_def_archers_4" prefab="defender_archer_position">
+			<tags>
+				<tag name="archer_position"/>
+			</tags>
+			<transform position="586.854, 627.592, 89.000" rotation_euler="0.000, 0.000, 2.443"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="strategic_archer_point">
+			<transform position="590.712, 629.824, 89.000" rotation_euler="0.000, 0.000, 2.443"/>
+			<scripts>
+				<script name="StrategicArea">
+					<variables>
+						<variable name="_width" value="1.000"/>
+						<variable name="_side" value="Defender"/>
+						<variable name="_depth" value="1.000"/>
+						<variable name="_distanceToCheck" value="40.000"/>
+						<variable name="_ignoreHeight" value="true"/>
+						<variable name="_disableShimmy" value="false"/>
+						<variable name="NavMeshPrefabName" value=""/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="strategic_archer_point">
+			<transform position="583.986, 624.180, 89.000" rotation_euler="0.000, 0.000, 2.443"/>
+			<scripts>
+				<script name="StrategicArea">
+					<variables>
+						<variable name="_width" value="1.000"/>
+						<variable name="_side" value="Defender"/>
+						<variable name="_depth" value="1.000"/>
+						<variable name="_distanceToCheck" value="40.000"/>
+						<variable name="_ignoreHeight" value="true"/>
+						<variable name="_disableShimmy" value="false"/>
+						<variable name="NavMeshPrefabName" value=""/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_def_archers_5" prefab="defender_archer_position">
+			<tags>
+				<tag name="archer_position"/>
+			</tags>
+			<transform position="547.705, 621.841, 89.000" rotation_euler="0.000, 0.000, -3.019"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="strategic_archer_point">
+			<transform position="551.434, 619.733, 89.000" rotation_euler="0.000, 0.000, -3.019"/>
+			<scripts>
+				<script name="StrategicArea">
+					<variables>
+						<variable name="_width" value="1.000"/>
+						<variable name="_side" value="Defender"/>
+						<variable name="_depth" value="1.000"/>
+						<variable name="_distanceToCheck" value="40.000"/>
+						<variable name="_ignoreHeight" value="true"/>
+						<variable name="_disableShimmy" value="false"/>
+						<variable name="NavMeshPrefabName" value=""/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity prefab="strategic_archer_point">
+			<transform position="543.468, 622.476, 89.000" rotation_euler="0.000, 0.000, -3.019"/>
+			<scripts>
+				<script name="StrategicArea">
+					<variables>
+						<variable name="_width" value="1.000"/>
+						<variable name="_side" value="Defender"/>
+						<variable name="_depth" value="1.000"/>
+						<variable name="_distanceToCheck" value="40.000"/>
+						<variable name="_ignoreHeight" value="true"/>
+						<variable name="_disableShimmy" value="false"/>
+						<variable name="NavMeshPrefabName" value=""/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_atk_archers_0" prefab="attacker_archer_position">
+			<tags>
+				<tag name="archer_position_attacker"/>
+			</tags>
+			<transform position="589.857, 568.650, 58.000" rotation_euler="0.000, 0.000, 0.122"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_atk_archers_1" prefab="attacker_archer_position">
+			<tags>
+				<tag name="archer_position_attacker"/>
+			</tags>
+			<transform position="510.158, 578.435, 58.000" rotation_euler="0.000, 0.000, 0.122"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_dp_att_0">
+			<transform position="594.702, 565.031, 57.000" rotation_euler="0.000, 0.000, 0.000"/>
+			<scripts>
+				<script name="DeploymentPoint">
+					<variables>
+						<variable name="Side" value="Attacker"/>
+						<variable name="Radius" value="6.000"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_dp_def_0">
+			<transform position="570.500, 676.321, 81.000" rotation_euler="0.000, 0.000, 0.000"/>
+			<scripts>
+				<script name="DeploymentPoint">
+					<variables>
+						<variable name="Side" value="Defender"/>
+						<variable name="Radius" value="6.000"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_dp_att_1">
+			<transform position="563.990, 559.061, 57.000" rotation_euler="0.000, 0.000, 0.000"/>
+			<scripts>
+				<script name="DeploymentPoint">
+					<variables>
+						<variable name="Side" value="Attacker"/>
+						<variable name="Radius" value="6.000"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_dp_def_1">
+			<transform position="579.294, 652.160, 81.000" rotation_euler="0.000, 0.000, 0.000"/>
+			<scripts>
+				<script name="DeploymentPoint">
+					<variables>
+						<variable name="Side" value="Defender"/>
+						<variable name="Radius" value="6.000"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_dp_att_2">
+			<transform position="532.936, 562.874, 57.000" rotation_euler="0.000, 0.000, 0.000"/>
+			<scripts>
+				<script name="DeploymentPoint">
+					<variables>
+						<variable name="Side" value="Attacker"/>
+						<variable name="Radius" value="6.000"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_dp_def_2">
+			<transform position="557.027, 639.304, 81.000" rotation_euler="0.000, 0.000, 0.000"/>
+			<scripts>
+				<script name="DeploymentPoint">
+					<variables>
+						<variable name="Side" value="Defender"/>
+						<variable name="Radius" value="6.000"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_dp_att_3">
+			<transform position="504.581, 576.096, 57.000" rotation_euler="0.000, 0.000, 0.000"/>
+			<scripts>
+				<script name="DeploymentPoint">
+					<variables>
+						<variable name="Side" value="Attacker"/>
+						<variable name="Radius" value="6.000"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_dp_def_3">
+			<transform position="540.500, 659.000, 81.000" rotation_euler="0.000, 0.000, 0.000"/>
+			<scripts>
+				<script name="DeploymentPoint">
+					<variables>
+						<variable name="Side" value="Defender"/>
+						<variable name="Radius" value="6.000"/>
+					</variables>
+				</script>
+			</scripts>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_spawnset" prefab="sp_battle_set">
+			<transform position="551.969, 589.522, 62.000" rotation_euler="0.000, 0.000, 0.122"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_cam_attacker" prefab="Camera_Instance">
+			<tags>
+				<tag name="strategycameraattacker"/>
+			</tags>
+			<transform position="545.876, 539.894, 100.000" rotation_euler="0.000, 0.000, 0.122"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_cam_defender" prefab="Camera_Instance">
+			<tags>
+				<tag name="strategycameradefender"/>
+			</tags>
+			<transform position="560.500, 659.000, 116.000" rotation_euler="0.000, 0.000, -3.019"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_flee_attacker" prefab="flee_line">
+			<transform position="544.657, 529.969, 55.000" rotation_euler="0.000, 0.000, -3.019"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_flee_defender" prefab="flee_line">
+			<transform position="588.784, 687.284, 81.000" rotation_euler="0.000, 0.000, 0.785"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_bnd_att_0" prefab="attacker_boundry">
+			<tags>
+				<tag name="walk_area_vertex"/>
+				<tag name="attacker"/>
+				<tag name="deployment_castle_boundary_0"/>
+			</tags>
+			<transform position="644.062, 559.414, 56.000" rotation_euler="0.000, 0.000, 0.000"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_bnd_def_0" prefab="defender_boundry">
+			<tags>
+				<tag name="walk_area_vertex"/>
+				<tag name="defender"/>
+				<tag name="deployment_castle_boundary_1"/>
+			</tags>
+			<transform position="560.500, 693.000, 81.000" rotation_euler="0.000, 0.000, 0.000"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_bnd_att_1" prefab="attacker_boundry">
+			<tags>
+				<tag name="walk_area_vertex"/>
+				<tag name="attacker"/>
+				<tag name="deployment_castle_boundary_0"/>
+			</tags>
+			<transform position="604.963, 536.840, 56.000" rotation_euler="0.000, 0.000, 0.000"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_bnd_def_1" prefab="defender_boundry">
+			<tags>
+				<tag name="walk_area_vertex"/>
+				<tag name="defender"/>
+				<tag name="deployment_castle_boundary_1"/>
+			</tags>
+			<transform position="589.945, 676.000, 81.000" rotation_euler="0.000, 0.000, 0.000"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_bnd_att_2" prefab="attacker_boundry">
+			<tags>
+				<tag name="walk_area_vertex"/>
+				<tag name="attacker"/>
+				<tag name="deployment_castle_boundary_0"/>
+			</tags>
+			<transform position="560.500, 529.000, 56.000" rotation_euler="0.000, 0.000, 0.000"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_bnd_def_2" prefab="defender_boundry">
+			<tags>
+				<tag name="walk_area_vertex"/>
+				<tag name="defender"/>
+				<tag name="deployment_castle_boundary_1"/>
+			</tags>
+			<transform position="589.945, 642.000, 81.000" rotation_euler="0.000, 0.000, 0.000"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_bnd_att_3" prefab="attacker_boundry">
+			<tags>
+				<tag name="walk_area_vertex"/>
+				<tag name="attacker"/>
+				<tag name="deployment_castle_boundary_0"/>
+			</tags>
+			<transform position="516.037, 536.840, 56.000" rotation_euler="0.000, 0.000, 0.000"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_bnd_def_3" prefab="defender_boundry">
+			<tags>
+				<tag name="walk_area_vertex"/>
+				<tag name="defender"/>
+				<tag name="deployment_castle_boundary_1"/>
+			</tags>
+			<transform position="560.500, 625.000, 81.000" rotation_euler="0.000, 0.000, 0.000"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_bnd_att_4" prefab="attacker_boundry">
+			<tags>
+				<tag name="walk_area_vertex"/>
+				<tag name="attacker"/>
+				<tag name="deployment_castle_boundary_0"/>
+			</tags>
+			<transform position="476.938, 559.414, 56.000" rotation_euler="0.000, 0.000, 0.000"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_bnd_def_4" prefab="defender_boundry">
+			<tags>
+				<tag name="walk_area_vertex"/>
+				<tag name="defender"/>
+				<tag name="deployment_castle_boundary_1"/>
+			</tags>
+			<transform position="531.055, 642.000, 81.000" rotation_euler="0.000, 0.000, 0.000"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_bnd_att_5" prefab="attacker_boundry">
+			<tags>
+				<tag name="walk_area_vertex"/>
+				<tag name="attacker"/>
+				<tag name="deployment_castle_boundary_0"/>
+			</tags>
+			<transform position="447.917, 594.000, 56.000" rotation_euler="0.000, 0.000, 0.000"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_bnd_def_5" prefab="defender_boundry">
+			<tags>
+				<tag name="walk_area_vertex"/>
+				<tag name="defender"/>
+				<tag name="deployment_castle_boundary_1"/>
+			</tags>
+			<transform position="531.055, 676.000, 81.000" rotation_euler="0.000, 0.000, 0.000"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_rocks_left" prefab="throwable_rock_pile">
+			<transform position="521.701, 648.504, 89.000" rotation_euler="0.000, 0.000, 1.120"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_rocks_right" prefab="throwable_rock_pile">
+			<transform position="572.064, 621.155, 89.000" rotation_euler="0.000, 0.000, -0.243"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_def_mangonel_0" prefab="mangonel_a_spawner">
+			<transform position="537.105, 629.056, 90.000" rotation_euler="0.000, 0.000, -2.478"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_def_mangonel_1" prefab="mangonel_a_spawner">
+			<transform position="584.926, 629.890, 90.000" rotation_euler="0.000, 0.000, 2.443"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_def_ballista_0" prefab="ballista_a_spawner">
+			<transform position="520.652, 662.486, 90.000" rotation_euler="0.000, 0.000, -1.484"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_def_ballista_1" prefab="ballista_a_spawner">
+			<transform position="599.352, 655.601, 90.000" rotation_euler="0.000, 0.000, 1.658"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_atk_treb_0" prefab="trebuchet_a_spawner">
+			<transform position="579.601, 550.671, 56.500" rotation_euler="0.000, 0.000, 0.122"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_atk_mangonel_0" prefab="mangonel_a_spawner">
+			<transform position="567.755, 555.253, 57.000" rotation_euler="0.000, 0.000, 0.122"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_atk_treb_1" prefab="trebuchet_a_spawner">
+			<transform position="515.759, 558.510, 56.500" rotation_euler="0.000, 0.000, 0.122"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+		<game_entity name="rf_atk_mangonel_1" prefab="mangonel_a_spawner">
+			<transform position="528.362, 560.090, 57.000" rotation_euler="0.000, 0.000, 0.122"/>
+			<levels>
+				<level name="level_1"/>
+				<level name="level_2"/>
+				<level name="level_3"/>
+				<level name="siege"/>
+				<level name="civilian"/>
+			</levels>
+		</game_entity>
+	</entities>
+	<terrain enabled="true" node_dimension_x="4" node_dimension_y="4" node_size="300.000" lod_multiplier="1.000" min_height="0.000" max_height="113.651" vista_normalmap="" vista_diffuse_name="" vista_diffuse_winter_name="" vista_diffuse_fall_name="" vista_diffuse_blend_type="0" vista_diffuse_blend_amount="0.000" vista_layer_detail_distance="35.000" vista_albedo_multiplier="0.670" vista_detail_albedo_name="" vista_detail_normal_name="" vista_detail_tile="20.000" vista_blend_start="0.000" vista_blend_end="0.000" vista_tileset="" use_dynamic_weather_effects="false" dynamic_flowmap_texture_name="" colormap_detail_level="-1" ao_intensity="2.000">
+		<outer_mesh>
+			<variable name="outer_mesh_name" value=""/>
+			<variable name="diffuse1_texture_name" value=""/>
+			<variable name="diffuse2_texture_name" value=""/>
+			<variable name="diffuse3_texture_name" value=""/>
+			<variable name="areamap_texture_name" value=""/>
+			<variable name="splatmap_texture_name" value=""/>
+			<variable name="splatmap_normal_name" value=""/>
+			<variable name="horizon_mesh_diffuse_1_multiplier" value="1.000"/>
+			<variable name="horizon_mesh_diffuse_2_multiplier" value="1.000"/>
+			<variable name="horizon_mesh_diffuse_3_multiplier" value="1.000"/>
+			<variable name="horizon_mesh_areamap_tile_multiplier" value="1.000"/>
+			<variable name="horizon_mesh_areamap_power" value="1.000"/>
+			<variable name="horizon_mesh_height" value="1.000"/>
+		</outer_mesh>
+		<layers version="1">
+			<layer name="base_grass">
+				<summer is_enabled="true" name="base_grass" is_flora_layer="false" is_mesh_blend_layer="false" pitch_roll_yaw="0.000, 0.000, 0.000" scale="5.000, 5.000" shear="0.000, 0.000" position_offset="0.000, 0.000" physics_material="grass" detail_level_adjustment="0" elevation_amount="0.000" parallax_amount="0.000" ground_slope_scale="1.000" bigdetailmap_mode="2" bigdetailmap_weight="0.500" bigdetailmap_scale_x="5.000" bigdetailmap_scale_y="5.000" bigdetailmap_bias_x="0.080" bigdetailmap_bias_y="0.080">
+					<textures>
+						<texture type="diffusemap" name="ground2"/>
+						<texture type="areamap" name="ground_grass_c_d"/>
+						<texture type="normalmap" name="ground2_bump"/>
+						<texture type="specularmap" name="ground2_s"/>
+						<texture type="splattingmap" name="none"/>
+						<texture type="displacementmap" name=""/>
+					</textures>
+					<layer_flags>
+						<flag name="use_parallax" value="false"/>
+						<flag name="use_displacement_mapping" value="false"/>
+						<flag name="use_randomized_normalmap" value="false"/>
+						<flag name="use_transparency_of_diffuse_alpha" value="false"/>
+						<flag name="use_transparency_of_ground_slope" value="false"/>
+						<flag name="use_dxt5_normal" value="false"/>
+						<flag name="use_six_side_uv_mapping" value="false"/>
+					</layer_flags>
+					<meshes/>
+				</summer>
+				<fall is_enabled="true" name="base_grass" is_flora_layer="false" is_mesh_blend_layer="false" physics_material="grass" bigdetailmap_weight="0.600">
+					<textures>
+						<texture type="diffusemap" name="dry_grass"/>
+						<texture type="areamap" name="ground_grass_f_d"/>
+						<texture type="normalmap" name="dry_grass_bump"/>
+						<texture type="specularmap" name="dry_grass_s"/>
+					</textures>
+					<meshes/>
+				</fall>
+				<winter is_enabled="true" name="base_grass" is_flora_layer="false" is_mesh_blend_layer="false" physics_material="grass">
+					<textures>
+						<texture type="diffusemap" name="dry_grass"/>
+						<texture type="normalmap" name="dry_grass_bump"/>
+						<texture type="specularmap" name="dry_grass_s"/>
+					</textures>
+					<meshes/>
+				</winter>
+				<spring is_enabled="true" name="base_grass" is_flora_layer="false" is_mesh_blend_layer="false" physics_material="grass">
+					<meshes/>
+				</spring>
+			</layer>
+			<layer name="soil_b">
+				<summer is_enabled="true" name="soil_b" is_flora_layer="false" is_mesh_blend_layer="false" pitch_roll_yaw="0.000, 0.000, 0.000" scale="-10.000, 10.000" shear="0.000, 0.000" position_offset="0.000, 0.000" physics_material="soil" detail_level_adjustment="0" elevation_amount="0.000" parallax_amount="0.000" ground_slope_scale="1.000" bigdetailmap_mode="2" bigdetailmap_weight="0.300" bigdetailmap_scale_x="5.000" bigdetailmap_scale_y="5.000" bigdetailmap_bias_x="0.080" bigdetailmap_bias_y="0.080">
+					<textures>
+						<texture type="diffusemap" name="ground_grass_soil_a_d"/>
+						<texture type="areamap" name="ground_grass_c_d"/>
+						<texture type="normalmap" name="ground_grass_soil_a_n"/>
+						<texture type="specularmap" name="ground_grass_soil_a_s"/>
+						<texture type="splattingmap" name="none"/>
+						<texture type="displacementmap" name="ground_grass_soil_a_h"/>
+					</textures>
+					<layer_flags>
+						<flag name="use_parallax" value="false"/>
+						<flag name="use_displacement_mapping" value="false"/>
+						<flag name="use_randomized_normalmap" value="false"/>
+						<flag name="use_transparency_of_diffuse_alpha" value="false"/>
+						<flag name="use_transparency_of_ground_slope" value="false"/>
+						<flag name="use_dxt5_normal" value="false"/>
+						<flag name="use_six_side_uv_mapping" value="false"/>
+					</layer_flags>
+					<meshes/>
+				</summer>
+				<fall is_enabled="true" name="soil_b" is_flora_layer="false" is_mesh_blend_layer="false" physics_material="soil" bigdetailmap_weight="0.500">
+					<textures>
+						<texture type="areamap" name="ground_grass_f_d"/>
+					</textures>
+					<meshes/>
+				</fall>
+				<winter is_enabled="true" name="soil_b" is_flora_layer="false" is_mesh_blend_layer="false" physics_material="soil">
+					<textures>
+						<texture type="diffusemap" name="ground_soil_b_d"/>
+						<texture type="normalmap" name="ground_soil_b_n"/>
+						<texture type="specularmap" name="ground_soil_b_s"/>
+						<texture type="displacementmap" name="ground_soil_b_h"/>
+					</textures>
+					<meshes/>
+				</winter>
+				<spring is_enabled="true" name="soil_b" is_flora_layer="false" is_mesh_blend_layer="false" physics_material="soil">
+					<meshes/>
+				</spring>
+			</layer>
+			<layer name="rock_cliff">
+				<summer is_enabled="true" name="rock_cliff" is_flora_layer="false" is_mesh_blend_layer="false" pitch_roll_yaw="0.000, 0.000, 0.000" scale="55.000, 55.000" shear="0.000, 0.000" position_offset="0.000, 0.000" physics_material="stone" detail_level_adjustment="0" elevation_amount="0.000" parallax_amount="0.000" ground_slope_scale="1.000" bigdetailmap_mode="0" bigdetailmap_weight="0.000" bigdetailmap_scale_x="0.080" bigdetailmap_scale_y="0.080" bigdetailmap_bias_x="0.080" bigdetailmap_bias_y="0.080">
+					<textures>
+						<texture type="diffusemap" name="rock_cliff_b_d"/>
+						<texture type="areamap" name="none"/>
+						<texture type="normalmap" name="rock_cliff_b_n"/>
+						<texture type="specularmap" name="rock_cliff_b_s"/>
+						<texture type="splattingmap" name="none"/>
+						<texture type="displacementmap" name="rock_cliff_b_h"/>
+					</textures>
+					<layer_flags>
+						<flag name="use_parallax" value="false"/>
+						<flag name="use_displacement_mapping" value="false"/>
+						<flag name="use_randomized_normalmap" value="false"/>
+						<flag name="use_transparency_of_diffuse_alpha" value="false"/>
+						<flag name="use_transparency_of_ground_slope" value="false"/>
+						<flag name="use_dxt5_normal" value="false"/>
+						<flag name="use_six_side_uv_mapping" value="false"/>
+					</layer_flags>
+					<meshes/>
+				</summer>
+				<fall is_enabled="true" name="rock_cliff" is_flora_layer="false" is_mesh_blend_layer="false" physics_material="stone">
+					<meshes/>
+				</fall>
+				<winter is_enabled="true" name="rock_cliff" is_flora_layer="false" is_mesh_blend_layer="false" physics_material="stone">
+					<meshes/>
+				</winter>
+				<spring is_enabled="true" name="rock_cliff" is_flora_layer="false" is_mesh_blend_layer="false" physics_material="stone">
+					<meshes/>
+				</spring>
+			</layer>
+			<layer name="flora_habitat_a">
+				<summer is_enabled="true" name="flora_habitat_a" is_flora_layer="false" is_mesh_blend_layer="false" pitch_roll_yaw="0.000, 0.000, 0.000" scale="5.000, 5.000" shear="0.000, 0.000" position_offset="0.000, 0.000" physics_material="grass" detail_level_adjustment="0" elevation_amount="0.000" parallax_amount="0.000" ground_slope_scale="1.000" bigdetailmap_mode="0" bigdetailmap_weight="0.000" bigdetailmap_scale_x="0.080" bigdetailmap_scale_y="0.080" bigdetailmap_bias_x="0.080" bigdetailmap_bias_y="0.080">
+					<textures>
+						<texture type="diffusemap" name="ground_grass_c_d"/>
+						<texture type="areamap" name="none"/>
+						<texture type="normalmap" name="ground_grass_c_n"/>
+						<texture type="specularmap" name="ground_grass_c_s"/>
+						<texture type="splattingmap" name="none"/>
+						<texture type="displacementmap" name="ground_grass_c_h"/>
+					</textures>
+					<layer_flags>
+						<flag name="use_parallax" value="false"/>
+						<flag name="use_displacement_mapping" value="false"/>
+						<flag name="use_randomized_normalmap" value="false"/>
+						<flag name="use_transparency_of_diffuse_alpha" value="false"/>
+						<flag name="use_transparency_of_ground_slope" value="false"/>
+						<flag name="use_dxt5_normal" value="false"/>
+						<flag name="use_six_side_uv_mapping" value="false"/>
+					</layer_flags>
+					<meshes>
+						<mesh name="flora_grass_a_non_shadow" index="0" density="65.000" seed_index="2" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.400, 1.400, 1.400" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="flora_green__mix" index="1" density="50.000" seed_index="2" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.500, 1.500, 1.500" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="shrub__mix" index="2" density="6.000" seed_index="3" colony_radius="0.000" colony_threshold="0.000" size_min="1.000, 1.000, 1.000" size_max="1.000, 1.000, 1.000" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="flora_green_g" index="3" density="50.000" seed_index="4" colony_radius="0.000" colony_threshold="0.000" size_min="1.000, 1.000, 1.000" size_max="1.000, 1.000, 1.000" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="brushwood" index="4" density="25.000" seed_index="5" colony_radius="0.000" colony_threshold="0.000" size_min="0.700, 0.700, 0.700" size_max="1.000, 1.000, 1.000" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="flora_dry_plant__mix_grass" index="5" density="35.000" seed_index="6" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.550, 1.550, 1.750" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+					</meshes>
+				</summer>
+				<fall is_enabled="true" name="flora_habitat_a" is_flora_layer="false" is_mesh_blend_layer="false">
+					<textures>
+						<texture type="diffusemap" name="ground_grass_f_d"/>
+					</textures>
+					<meshes>
+						<mesh name="flora_grass_b_non_shadow" index="0" density="65.000" seed_index="2" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.100, 1.100, 1.100" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="flora_green__mix" index="1" density="25.000" seed_index="2" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.500, 1.500, 1.500" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="flora_green_k" index="2" density="15.000" seed_index="3" colony_radius="0.000" colony_threshold="0.000" size_min="1.000, 1.000, 1.000" size_max="1.000, 1.000, 1.000" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="flora_dry_plant__mix_big_volume" index="3" density="35.000" seed_index="4" colony_radius="0.000" colony_threshold="0.000" size_min="1.000, 1.000, 1.000" size_max="1.000, 1.000, 1.000" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="brushwood" index="4" density="25.000" seed_index="5" colony_radius="0.000" colony_threshold="0.000" size_min="0.700, 0.700, 0.700" size_max="1.000, 1.000, 1.000" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+					</meshes>
+				</fall>
+				<winter is_enabled="true" name="flora_habitat_a" is_flora_layer="false" is_mesh_blend_layer="false" physics_material="soil">
+					<textures>
+						<texture type="diffusemap" name="ground_soil_b_d"/>
+						<texture type="normalmap" name="ground_soil_b_n"/>
+						<texture type="specularmap" name="ground_soil_b_s"/>
+						<texture type="displacementmap" name="ground_soil_b_h"/>
+					</textures>
+					<meshes>
+						<mesh name="flora_snow__mix" index="0" density="55.000" seed_index="2" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.100, 1.100, 1.100" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="flora_snow_c" index="1" density="35.000" seed_index="3" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.550, 1.550, 1.750" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="flora_snow_f" index="2" density="40.000" seed_index="4" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.550, 1.550, 1.750" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+					</meshes>
+				</winter>
+				<spring is_enabled="true" name="flora_habitat_a" is_flora_layer="false" is_mesh_blend_layer="false">
+					<meshes>
+						<mesh name="flora_grass_a_non_shadow" index="0" density="65.000" seed_index="2" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.500, 1.500, 1.500" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="flora_green__mix" index="1" density="35.000" seed_index="2" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.500, 1.500, 1.500" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="flora_green_k" index="2" density="20.000" seed_index="3" colony_radius="0.000" colony_threshold="0.000" size_min="1.000, 1.000, 1.000" size_max="1.000, 1.000, 1.000" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="flora_green_g" index="3" density="50.000" seed_index="4" colony_radius="0.000" colony_threshold="0.000" size_min="1.000, 1.000, 1.000" size_max="1.000, 1.000, 1.000" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="brushwood" index="4" density="25.000" seed_index="5" colony_radius="0.000" colony_threshold="0.000" size_min="0.700, 0.700, 0.700" size_max="1.000, 1.000, 1.000" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="free_valley_flower__mix" index="5" density="35.000" seed_index="8" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.550, 1.550, 1.750" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="flora_plant__mix" index="6" density="35.000" seed_index="7" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.550, 1.550, 1.750" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+					</meshes>
+				</spring>
+			</layer>
+			<layer name="trees">
+				<summer is_enabled="true" name="trees" is_flora_layer="true" is_mesh_blend_layer="false" pitch_roll_yaw="0.000, 0.000, 0.000" scale="5.000, 5.000" shear="0.000, 0.000" position_offset="0.000, 0.000" physics_material="grass" detail_level_adjustment="0" elevation_amount="0.000" parallax_amount="0.000" ground_slope_scale="1.000" bigdetailmap_mode="0" bigdetailmap_weight="0.000" bigdetailmap_scale_x="0.080" bigdetailmap_scale_y="0.080" bigdetailmap_bias_x="0.080" bigdetailmap_bias_y="0.080">
+					<textures>
+						<texture type="diffusemap" name="editor_grid_8"/>
+						<texture type="areamap" name="none"/>
+						<texture type="normalmap" name="none"/>
+						<texture type="specularmap" name="editor_grid_8_s"/>
+						<texture type="splattingmap" name="none"/>
+						<texture type="displacementmap" name=""/>
+					</textures>
+					<layer_flags>
+						<flag name="use_parallax" value="false"/>
+						<flag name="use_displacement_mapping" value="false"/>
+						<flag name="use_randomized_normalmap" value="false"/>
+						<flag name="use_transparency_of_diffuse_alpha" value="false"/>
+						<flag name="use_transparency_of_ground_slope" value="false"/>
+						<flag name="use_dxt5_normal" value="false"/>
+						<flag name="use_six_side_uv_mapping" value="false"/>
+					</layer_flags>
+					<meshes>
+						<mesh name="tree_high__mix_pine" index="0" density="22.000" seed_index="2" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.550, 1.550, 1.750" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="tree_high__mix" index="1" density="15.000" seed_index="3" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.000, 1.000, 1.000" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="tree_high__mix_pine_sprout" index="2" density="15.000" seed_index="4" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.550, 1.550, 1.750" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="tree_high__mix_poplar_forest" index="3" density="25.000" seed_index="5" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.400, 1.400, 1.400" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+					</meshes>
+				</summer>
+				<fall is_enabled="true" name="trees" is_flora_layer="true" is_mesh_blend_layer="false" physics_material="grass">
+					<meshes>
+						<mesh name="tree_high__mix_pine" index="0" density="22.000" seed_index="2" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.550, 1.550, 1.750" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="tree_high__mix" index="1" density="15.000" seed_index="3" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.000, 1.000, 1.000" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="tree_high__mix_pine_sprout" index="2" density="15.000" seed_index="4" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.550, 1.550, 1.750" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="tree_high__mix_poplar_forest" index="3" density="25.000" seed_index="5" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.300, 1.300, 1.300" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+					</meshes>
+				</fall>
+				<winter is_enabled="true" name="trees" is_flora_layer="true" is_mesh_blend_layer="false" physics_material="grass">
+					<meshes>
+						<mesh name="tree_high__mix_pine" index="0" density="22.000" seed_index="2" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.550, 1.550, 1.750" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="tree_high__mix" index="1" density="15.000" seed_index="3" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.000, 1.000, 1.000" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="tree_high__mix_pine_sprout" index="2" density="15.000" seed_index="4" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.550, 1.550, 1.750" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="tree_high__mix_poplar_forest" index="3" density="12.000" seed_index="5" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.300, 1.300, 1.300" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+					</meshes>
+				</winter>
+				<spring is_enabled="true" name="trees" is_flora_layer="true" is_mesh_blend_layer="false" physics_material="grass">
+					<meshes>
+						<mesh name="tree_high__mix_pine" index="0" density="22.000" seed_index="2" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.550, 1.550, 1.750" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="tree_high__mix" index="1" density="15.000" seed_index="3" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.000, 1.000, 1.000" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="tree_high__mix_pine_sprout" index="2" density="15.000" seed_index="4" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.550, 1.550, 1.750" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+						<mesh name="tree_high__mix_poplar_forest" index="3" density="12.000" seed_index="5" colony_radius="0.000" colony_threshold="0.000" size_min="0.650, 0.650, 0.650" size_max="1.300, 1.300, 1.300" albedo_multiplier="1.000, 1.000, 1.000" weight_offset="0.500"/>
+					</meshes>
+				</spring>
+			</layer>
+			<layer name="road">
+				<summer is_enabled="true" name="road" is_flora_layer="false" is_mesh_blend_layer="false" pitch_roll_yaw="0.000, 0.000, 0.000" scale="7.000, 7.000" shear="0.000, 0.000" position_offset="0.000, 0.000" physics_material="path" detail_level_adjustment="0" elevation_amount="0.000" parallax_amount="0.120" ground_slope_scale="1.000" bigdetailmap_mode="2" bigdetailmap_weight="0.100" bigdetailmap_scale_x="5.000" bigdetailmap_scale_y="5.000" bigdetailmap_bias_x="0.080" bigdetailmap_bias_y="0.080">
+					<textures>
+						<texture type="diffusemap" name="ground_roads_a_d"/>
+						<texture type="areamap" name="ground_grass_c_d"/>
+						<texture type="normalmap" name="ground_roads_a_n"/>
+						<texture type="specularmap" name="ground_roads_a_s"/>
+						<texture type="splattingmap" name="none"/>
+						<texture type="displacementmap" name="ground_roads_a_h"/>
+					</textures>
+					<layer_flags>
+						<flag name="use_parallax" value="true"/>
+						<flag name="use_displacement_mapping" value="false"/>
+						<flag name="use_randomized_normalmap" value="false"/>
+						<flag name="use_transparency_of_diffuse_alpha" value="false"/>
+						<flag name="use_transparency_of_ground_slope" value="false"/>
+						<flag name="use_dxt5_normal" value="false"/>
+						<flag name="use_six_side_uv_mapping" value="false"/>
+					</layer_flags>
+					<meshes/>
+				</summer>
+				<fall is_enabled="true" name="road" is_flora_layer="false" is_mesh_blend_layer="false" physics_material="path" bigdetailmap_weight="0.600">
+					<textures>
+						<texture type="areamap" name="ground_grass_f_d"/>
+					</textures>
+					<meshes/>
+				</fall>
+				<winter is_enabled="true" name="road" is_flora_layer="false" is_mesh_blend_layer="false" physics_material="mud" bigdetailmap_weight="0.300">
+					<textures>
+						<texture type="diffusemap" name="ground_road_mud_a_d"/>
+						<texture type="areamap" name="ground_grass_f_d"/>
+						<texture type="normalmap" name="ground_road_mud_a_n"/>
+						<texture type="specularmap" name="ground_road_mud_a_s"/>
+						<texture type="displacementmap" name="ground_road_mud_a_h"/>
+					</textures>
+					<meshes/>
+				</winter>
+				<spring is_enabled="true" name="road" is_flora_layer="false" is_mesh_blend_layer="false" physics_material="path">
+					<meshes/>
+				</spring>
+			</layer>
+			<layer name="muddy">
+				<summer is_enabled="true" name="muddy" is_flora_layer="false" is_mesh_blend_layer="false" pitch_roll_yaw="0.000, 0.000, 0.000" scale="5.000, 5.000" shear="0.000, 0.000" position_offset="0.000, 0.000" physics_material="mud" detail_level_adjustment="0" elevation_amount="0.000" parallax_amount="0.000" ground_slope_scale="1.000" bigdetailmap_mode="0" bigdetailmap_weight="0.000" bigdetailmap_scale_x="0.080" bigdetailmap_scale_y="0.080" bigdetailmap_bias_x="0.080" bigdetailmap_bias_y="0.080">
+					<textures>
+						<texture type="diffusemap" name="ground_road_mud_a_d"/>
+						<texture type="areamap" name="none"/>
+						<texture type="normalmap" name="ground_road_mud_a_n"/>
+						<texture type="specularmap" name="ground_road_mud_a_s"/>
+						<texture type="splattingmap" name="none"/>
+						<texture type="displacementmap" name="ground_road_mud_a_h"/>
+					</textures>
+					<layer_flags>
+						<flag name="use_parallax" value="false"/>
+						<flag name="use_displacement_mapping" value="false"/>
+						<flag name="use_randomized_normalmap" value="false"/>
+						<flag name="use_transparency_of_diffuse_alpha" value="false"/>
+						<flag name="use_transparency_of_ground_slope" value="false"/>
+						<flag name="use_dxt5_normal" value="false"/>
+						<flag name="use_six_side_uv_mapping" value="false"/>
+					</layer_flags>
+					<meshes/>
+				</summer>
+				<fall is_enabled="true" name="muddy" is_flora_layer="false" is_mesh_blend_layer="false" physics_material="mud">
+					<meshes/>
+				</fall>
+				<winter is_enabled="true" name="muddy" is_flora_layer="false" is_mesh_blend_layer="false" physics_material="mud">
+					<meshes/>
+				</winter>
+				<spring is_enabled="true" name="muddy" is_flora_layer="false" is_mesh_blend_layer="false" physics_material="mud">
+					<meshes/>
+				</spring>
+			</layer>
+			<layer name="stone">
+				<summer is_enabled="true" name="stone" is_flora_layer="false" is_mesh_blend_layer="false" pitch_roll_yaw="0.000, 0.000, 0.000" scale="5.000, 5.000" shear="0.000, 0.000" position_offset="0.000, 0.000" physics_material="stone" detail_level_adjustment="0" elevation_amount="0.000" parallax_amount="0.130" ground_slope_scale="1.000" albedo_factor_color="1.000, 1.000, 1.000" bigdetailmap_scale_x="0.080" bigdetailmap_scale_y="0.080" bigdetailmap_bias_x="0.080" bigdetailmap_bias_y="0.080">
+					<textures>
+						<texture type="diffusemap" name="ground_grass_stone_b_d"/>
+						<texture type="areamap" name=""/>
+						<texture type="normalmap" name="ground_grass_stone_b_n"/>
+						<texture type="specularmap" name="ground_grass_stone_b_s"/>
+						<texture type="splattingmap" name="none"/>
+						<texture type="displacementmap" name="ground_grass_stone_b_h"/>
+					</textures>
+					<layer_flags>
+						<flag name="use_parallax" value="true"/>
+						<flag name="use_displacement_mapping" value="false"/>
+						<flag name="use_randomized_normalmap" value="false"/>
+						<flag name="use_transparency_of_diffuse_alpha" value="false"/>
+						<flag name="use_transparency_of_ground_slope" value="true"/>
+						<flag name="use_dxt5_normal" value="false"/>
+						<flag name="use_six_side_uv_mapping" value="false"/>
+					</layer_flags>
+					<meshes/>
+				</summer>
+				<fall is_enabled="true" name="stone" is_flora_layer="false" is_mesh_blend_layer="false" physics_material="stone">
+					<meshes/>
+				</fall>
+				<winter is_enabled="true" name="stone" is_flora_layer="false" is_mesh_blend_layer="false" physics_material="stone">
+					<meshes/>
+				</winter>
+				<spring is_enabled="true" name="stone" is_flora_layer="false" is_mesh_blend_layer="false" physics_material="stone">
+					<meshes/>
+				</spring>
+			</layer>
+			<layer name="hard_rock_cliff">
+				<summer is_enabled="true" name="hard_rock_cliff" is_flora_layer="false" is_mesh_blend_layer="false" pitch_roll_yaw="0.000, 0.000, 0.000" scale="10.000, 10.000" shear="0.000, 0.000" position_offset="0.000, 0.000" physics_material="stone" detail_level_adjustment="0" elevation_amount="0.000" parallax_amount="0.120" ground_slope_scale="1.000" bigdetailmap_mode="0" bigdetailmap_weight="0.000" bigdetailmap_scale_x="0.080" bigdetailmap_scale_y="0.080" bigdetailmap_bias_x="0.080" bigdetailmap_bias_y="0.080">
+					<textures>
+						<texture type="diffusemap" name="rock_cliff_b_d"/>
+						<texture type="areamap" name="none"/>
+						<texture type="normalmap" name="rock_cliff_b_n"/>
+						<texture type="specularmap" name="rock_cliff_b_s"/>
+						<texture type="splattingmap" name="none"/>
+						<texture type="displacementmap" name="rock_cliff_b_h"/>
+					</textures>
+					<layer_flags>
+						<flag name="use_parallax" value="true"/>
+						<flag name="use_displacement_mapping" value="false"/>
+						<flag name="use_randomized_normalmap" value="false"/>
+						<flag name="use_transparency_of_diffuse_alpha" value="false"/>
+						<flag name="use_transparency_of_ground_slope" value="false"/>
+						<flag name="use_dxt5_normal" value="false"/>
+						<flag name="use_six_side_uv_mapping" value="false"/>
+					</layer_flags>
+					<meshes/>
+				</summer>
+				<fall is_enabled="true" name="hard_rock_cliff" is_flora_layer="false" is_mesh_blend_layer="false" physics_material="stone">
+					<meshes/>
+				</fall>
+				<winter is_enabled="true" name="hard_rock_cliff" is_flora_layer="false" is_mesh_blend_layer="false" physics_material="stone">
+					<meshes/>
+				</winter>
+				<spring is_enabled="true" name="hard_rock_cliff" is_flora_layer="false" is_mesh_blend_layer="false" physics_material="stone">
+					<meshes/>
+				</spring>
+			</layer>
+			<layer name="snow">
+				<summer is_enabled="false" name="snow" is_flora_layer="false" is_mesh_blend_layer="false" pitch_roll_yaw="0.000, 0.000, 0.000" scale="5.000, 5.000" shear="0.000, 0.000" position_offset="0.000, 0.000" physics_material="snow" detail_level_adjustment="0" elevation_amount="0.000" parallax_amount="0.120" ground_slope_scale="0.100" bigdetailmap_mode="0" bigdetailmap_weight="0.000" bigdetailmap_scale_x="0.080" bigdetailmap_scale_y="0.080" bigdetailmap_bias_x="0.080" bigdetailmap_bias_y="0.080">
+					<textures>
+						<texture type="diffusemap" name="snow_a_d"/>
+						<texture type="areamap" name="none"/>
+						<texture type="normalmap" name="snow_a_n"/>
+						<texture type="specularmap" name="snow_a_s"/>
+						<texture type="splattingmap" name="none"/>
+						<texture type="displacementmap" name="snow_a_h"/>
+					</textures>
+					<layer_flags>
+						<flag name="use_parallax" value="true"/>
+						<flag name="use_displacement_mapping" value="false"/>
+						<flag name="use_randomized_normalmap" value="false"/>
+						<flag name="use_transparency_of_diffuse_alpha" value="false"/>
+						<flag name="use_transparency_of_ground_slope" value="true"/>
+						<flag name="use_dxt5_normal" value="false"/>
+						<flag name="use_six_side_uv_mapping" value="false"/>
+					</layer_flags>
+					<meshes/>
+				</summer>
+				<fall is_enabled="false" name="snow" is_flora_layer="false" is_mesh_blend_layer="false">
+					<meshes/>
+				</fall>
+				<winter is_enabled="true" name="snow" is_flora_layer="false" is_mesh_blend_layer="false" physics_material="snow" ground_slope_scale="0.100">
+					<meshes/>
+				</winter>
+				<spring is_enabled="false" name="snow" is_flora_layer="false" is_mesh_blend_layer="false">
+					<meshes/>
+				</spring>
+			</layer>
+			<layer name="detail_snow">
+				<summer is_enabled="false" name="detail_snow" is_flora_layer="false" is_mesh_blend_layer="false" pitch_roll_yaw="0.000, 0.000, 0.000" scale="5.000, 5.000" shear="0.000, 0.000" position_offset="0.000, 0.000" physics_material="snow" detail_level_adjustment="0" elevation_amount="0.000" parallax_amount="0.200" ground_slope_scale="1.000" bigdetailmap_mode="0" bigdetailmap_weight="0.000" bigdetailmap_scale_x="0.080" bigdetailmap_scale_y="0.080" bigdetailmap_bias_x="0.080" bigdetailmap_bias_y="0.080">
+					<textures>
+						<texture type="diffusemap" name="editor_grid_8"/>
+						<texture type="areamap" name="none"/>
+						<texture type="normalmap" name="none"/>
+						<texture type="specularmap" name="editor_grid_8_s"/>
+						<texture type="splattingmap" name="none"/>
+						<texture type="displacementmap" name=""/>
+					</textures>
+					<layer_flags>
+						<flag name="use_parallax" value="false"/>
+						<flag name="use_displacement_mapping" value="false"/>
+						<flag name="use_randomized_normalmap" value="false"/>
+						<flag name="use_transparency_of_diffuse_alpha" value="false"/>
+						<flag name="use_transparency_of_ground_slope" value="false"/>
+						<flag name="use_dxt5_normal" value="false"/>
+						<flag name="use_six_side_uv_mapping" value="false"/>
+					</layer_flags>
+					<meshes/>
+				</summer>
+				<fall is_enabled="false" name="detail_snow" is_flora_layer="false" is_mesh_blend_layer="false" physics_material="snow">
+					<meshes/>
+				</fall>
+				<winter is_enabled="true" name="detail_snow" is_flora_layer="false" is_mesh_blend_layer="false" pitch_roll_yaw="0.000, 0.000, 0.000" scale="7.000, 7.000" shear="0.000, 0.000" position_offset="0.000, 0.000" physics_material="snow" parallax_amount="-0.200">
+					<textures>
+						<texture type="diffusemap" name="snow_a_d"/>
+						<texture type="normalmap" name="snow_a_n"/>
+						<texture type="specularmap" name="snow_a_s"/>
+						<texture type="displacementmap" name="snow_a_h"/>
+					</textures>
+					<layer_flags>
+						<flag name="use_parallax" value="true"/>
+						<flag name="use_displacement_mapping" value="false"/>
+						<flag name="use_randomized_normalmap" value="false"/>
+						<flag name="use_transparency_of_diffuse_alpha" value="false"/>
+						<flag name="use_transparency_of_ground_slope" value="true"/>
+						<flag name="use_dxt5_normal" value="false"/>
+						<flag name="use_six_side_uv_mapping" value="false"/>
+					</layer_flags>
+					<meshes/>
+				</winter>
+				<spring is_enabled="false" name="detail_snow" is_flora_layer="false" is_mesh_blend_layer="false" physics_material="snow">
+					<meshes/>
+				</spring>
+			</layer>
+		</layers>
+		<nodes>
+			<node idx="0" idy="0" occluders_enabled="true" layer_is_used_mask_summer="31" layer_is_used_mask_fall="31" layer_is_used_mask_winter="543" layer_is_used_mask_spring="31" layer_is_used_mask="true" height_complexity="40.485" min_height="0.000" max_height="102.178">
+				<texture_levels>
+					<variable name="heightmap_level" value="8"/>
+					<variable name="min_heightmap_level" value="2"/>
+					<variable name="normalmap_level" value="8"/>
+					<variable name="weightmap_levels">
+						<variable layer="0" value="8"/>
+						<variable layer="1" value="8"/>
+						<variable layer="2" value="8"/>
+						<variable layer="3" value="8"/>
+						<variable layer="4" value="8"/>
+						<variable layer="5" value="8"/>
+						<variable layer="6" value="8"/>
+						<variable layer="7" value="8"/>
+						<variable layer="8" value="8"/>
+						<variable layer="9" value="8"/>
+						<variable layer="10" value="8"/>
+						<variable layer="11" value="0"/>
+						<variable layer="12" value="0"/>
+						<variable layer="13" value="0"/>
+						<variable layer="14" value="0"/>
+						<variable layer="15" value="0"/>
+					</variable>
+				</texture_levels>
+			</node>
+			<node idx="0" idy="1" occluders_enabled="true" layer_is_used_mask_summer="31" layer_is_used_mask_fall="31" layer_is_used_mask_winter="543" layer_is_used_mask_spring="31" layer_is_used_mask="true" height_complexity="0.507" min_height="14.918" max_height="77.384">
+				<texture_levels>
+					<variable name="heightmap_level" value="8"/>
+					<variable name="min_heightmap_level" value="2"/>
+					<variable name="normalmap_level" value="8"/>
+					<variable name="weightmap_levels">
+						<variable layer="0" value="8"/>
+						<variable layer="1" value="8"/>
+						<variable layer="2" value="8"/>
+						<variable layer="3" value="8"/>
+						<variable layer="4" value="8"/>
+						<variable layer="5" value="8"/>
+						<variable layer="6" value="8"/>
+						<variable layer="7" value="8"/>
+						<variable layer="8" value="8"/>
+						<variable layer="9" value="8"/>
+						<variable layer="10" value="8"/>
+						<variable layer="11" value="0"/>
+						<variable layer="12" value="0"/>
+						<variable layer="13" value="0"/>
+						<variable layer="14" value="0"/>
+						<variable layer="15" value="0"/>
+					</variable>
+				</texture_levels>
+			</node>
+			<node idx="0" idy="2" occluders_enabled="true" layer_is_used_mask_summer="31" layer_is_used_mask_fall="31" layer_is_used_mask_winter="543" layer_is_used_mask_spring="31" layer_is_used_mask="true" height_complexity="0.465" min_height="29.721" max_height="85.669">
+				<texture_levels>
+					<variable name="heightmap_level" value="8"/>
+					<variable name="min_heightmap_level" value="2"/>
+					<variable name="normalmap_level" value="8"/>
+					<variable name="weightmap_levels">
+						<variable layer="0" value="8"/>
+						<variable layer="1" value="8"/>
+						<variable layer="2" value="8"/>
+						<variable layer="3" value="8"/>
+						<variable layer="4" value="8"/>
+						<variable layer="5" value="8"/>
+						<variable layer="6" value="8"/>
+						<variable layer="7" value="8"/>
+						<variable layer="8" value="8"/>
+						<variable layer="9" value="8"/>
+						<variable layer="10" value="8"/>
+						<variable layer="11" value="0"/>
+						<variable layer="12" value="0"/>
+						<variable layer="13" value="0"/>
+						<variable layer="14" value="0"/>
+						<variable layer="15" value="0"/>
+					</variable>
+				</texture_levels>
+			</node>
+			<node idx="0" idy="3" occluders_enabled="true" layer_is_used_mask_summer="31" layer_is_used_mask_fall="31" layer_is_used_mask_winter="543" layer_is_used_mask_spring="31" layer_is_used_mask="true" height_complexity="0.382" min_height="46.799" max_height="101.353">
+				<texture_levels>
+					<variable name="heightmap_level" value="8"/>
+					<variable name="min_heightmap_level" value="2"/>
+					<variable name="normalmap_level" value="8"/>
+					<variable name="weightmap_levels">
+						<variable layer="0" value="8"/>
+						<variable layer="1" value="8"/>
+						<variable layer="2" value="8"/>
+						<variable layer="3" value="8"/>
+						<variable layer="4" value="8"/>
+						<variable layer="5" value="8"/>
+						<variable layer="6" value="8"/>
+						<variable layer="7" value="8"/>
+						<variable layer="8" value="8"/>
+						<variable layer="9" value="8"/>
+						<variable layer="10" value="8"/>
+						<variable layer="11" value="0"/>
+						<variable layer="12" value="0"/>
+						<variable layer="13" value="0"/>
+						<variable layer="14" value="0"/>
+						<variable layer="15" value="0"/>
+					</variable>
+				</texture_levels>
+			</node>
+			<node idx="1" idy="0" occluders_enabled="true" layer_is_used_mask_summer="31" layer_is_used_mask_fall="31" layer_is_used_mask_winter="543" layer_is_used_mask_spring="31" layer_is_used_mask="true" height_complexity="0.409" min_height="31.132" max_height="73.154">
+				<texture_levels>
+					<variable name="heightmap_level" value="8"/>
+					<variable name="min_heightmap_level" value="2"/>
+					<variable name="normalmap_level" value="8"/>
+					<variable name="weightmap_levels">
+						<variable layer="0" value="8"/>
+						<variable layer="1" value="8"/>
+						<variable layer="2" value="8"/>
+						<variable layer="3" value="8"/>
+						<variable layer="4" value="8"/>
+						<variable layer="5" value="8"/>
+						<variable layer="6" value="8"/>
+						<variable layer="7" value="8"/>
+						<variable layer="8" value="8"/>
+						<variable layer="9" value="8"/>
+						<variable layer="10" value="8"/>
+						<variable layer="11" value="0"/>
+						<variable layer="12" value="0"/>
+						<variable layer="13" value="0"/>
+						<variable layer="14" value="0"/>
+						<variable layer="15" value="0"/>
+					</variable>
+				</texture_levels>
+			</node>
+			<node idx="1" idy="1" occluders_enabled="true" layer_is_used_mask_summer="511" layer_is_used_mask_fall="511" layer_is_used_mask_winter="2047" layer_is_used_mask_spring="511" layer_is_used_mask="true" height_complexity="0.559" min_height="23.682" max_height="85.026">
+				<texture_levels>
+					<variable name="heightmap_level" value="8"/>
+					<variable name="min_heightmap_level" value="2"/>
+					<variable name="normalmap_level" value="8"/>
+					<variable name="weightmap_levels">
+						<variable layer="0" value="8"/>
+						<variable layer="1" value="8"/>
+						<variable layer="2" value="8"/>
+						<variable layer="3" value="8"/>
+						<variable layer="4" value="8"/>
+						<variable layer="5" value="8"/>
+						<variable layer="6" value="8"/>
+						<variable layer="7" value="8"/>
+						<variable layer="8" value="8"/>
+						<variable layer="9" value="8"/>
+						<variable layer="10" value="8"/>
+						<variable layer="11" value="0"/>
+						<variable layer="12" value="0"/>
+						<variable layer="13" value="0"/>
+						<variable layer="14" value="0"/>
+						<variable layer="15" value="0"/>
+					</variable>
+				</texture_levels>
+			</node>
+			<node idx="1" idy="2" occluders_enabled="true" layer_is_used_mask_summer="511" layer_is_used_mask_fall="511" layer_is_used_mask_winter="2047" layer_is_used_mask_spring="511" layer_is_used_mask="true" height_complexity="2.085" min_height="25.176" max_height="90.991">
+				<texture_levels>
+					<variable name="heightmap_level" value="8"/>
+					<variable name="min_heightmap_level" value="2"/>
+					<variable name="normalmap_level" value="8"/>
+					<variable name="weightmap_levels">
+						<variable layer="0" value="8"/>
+						<variable layer="1" value="8"/>
+						<variable layer="2" value="8"/>
+						<variable layer="3" value="8"/>
+						<variable layer="4" value="8"/>
+						<variable layer="5" value="8"/>
+						<variable layer="6" value="8"/>
+						<variable layer="7" value="8"/>
+						<variable layer="8" value="8"/>
+						<variable layer="9" value="8"/>
+						<variable layer="10" value="8"/>
+						<variable layer="11" value="0"/>
+						<variable layer="12" value="0"/>
+						<variable layer="13" value="0"/>
+						<variable layer="14" value="0"/>
+						<variable layer="15" value="0"/>
+					</variable>
+				</texture_levels>
+			</node>
+			<node idx="1" idy="3" occluders_enabled="true" layer_is_used_mask_summer="31" layer_is_used_mask_fall="31" layer_is_used_mask_winter="543" layer_is_used_mask_spring="31" layer_is_used_mask="true" height_complexity="0.311" min_height="12.089" max_height="93.974">
+				<texture_levels>
+					<variable name="heightmap_level" value="8"/>
+					<variable name="min_heightmap_level" value="2"/>
+					<variable name="normalmap_level" value="8"/>
+					<variable name="weightmap_levels">
+						<variable layer="0" value="8"/>
+						<variable layer="1" value="8"/>
+						<variable layer="2" value="8"/>
+						<variable layer="3" value="8"/>
+						<variable layer="4" value="8"/>
+						<variable layer="5" value="8"/>
+						<variable layer="6" value="8"/>
+						<variable layer="7" value="8"/>
+						<variable layer="8" value="8"/>
+						<variable layer="9" value="8"/>
+						<variable layer="10" value="8"/>
+						<variable layer="11" value="0"/>
+						<variable layer="12" value="0"/>
+						<variable layer="13" value="0"/>
+						<variable layer="14" value="0"/>
+						<variable layer="15" value="0"/>
+					</variable>
+				</texture_levels>
+			</node>
+			<node idx="2" idy="0" occluders_enabled="true" layer_is_used_mask_summer="31" layer_is_used_mask_fall="31" layer_is_used_mask_winter="543" layer_is_used_mask_spring="31" layer_is_used_mask="true" height_complexity="0.409" min_height="38.230" max_height="95.049">
+				<texture_levels>
+					<variable name="heightmap_level" value="8"/>
+					<variable name="min_heightmap_level" value="2"/>
+					<variable name="normalmap_level" value="8"/>
+					<variable name="weightmap_levels">
+						<variable layer="0" value="8"/>
+						<variable layer="1" value="8"/>
+						<variable layer="2" value="8"/>
+						<variable layer="3" value="8"/>
+						<variable layer="4" value="8"/>
+						<variable layer="5" value="8"/>
+						<variable layer="6" value="8"/>
+						<variable layer="7" value="8"/>
+						<variable layer="8" value="8"/>
+						<variable layer="9" value="8"/>
+						<variable layer="10" value="8"/>
+						<variable layer="11" value="0"/>
+						<variable layer="12" value="0"/>
+						<variable layer="13" value="0"/>
+						<variable layer="14" value="0"/>
+						<variable layer="15" value="0"/>
+					</variable>
+				</texture_levels>
+			</node>
+			<node idx="2" idy="1" occluders_enabled="true" layer_is_used_mask_summer="511" layer_is_used_mask_fall="511" layer_is_used_mask_winter="2047" layer_is_used_mask_spring="511" layer_is_used_mask="true" height_complexity="1.643" min_height="14.505" max_height="88.230">
+				<texture_levels>
+					<variable name="heightmap_level" value="8"/>
+					<variable name="min_heightmap_level" value="2"/>
+					<variable name="normalmap_level" value="8"/>
+					<variable name="weightmap_levels">
+						<variable layer="0" value="8"/>
+						<variable layer="1" value="8"/>
+						<variable layer="2" value="8"/>
+						<variable layer="3" value="8"/>
+						<variable layer="4" value="8"/>
+						<variable layer="5" value="8"/>
+						<variable layer="6" value="8"/>
+						<variable layer="7" value="8"/>
+						<variable layer="8" value="8"/>
+						<variable layer="9" value="8"/>
+						<variable layer="10" value="8"/>
+						<variable layer="11" value="0"/>
+						<variable layer="12" value="0"/>
+						<variable layer="13" value="0"/>
+						<variable layer="14" value="0"/>
+						<variable layer="15" value="0"/>
+					</variable>
+				</texture_levels>
+			</node>
+			<node idx="2" idy="2" occluders_enabled="true" layer_is_used_mask_summer="511" layer_is_used_mask_fall="511" layer_is_used_mask_winter="2047" layer_is_used_mask_spring="511" layer_is_used_mask="true" height_complexity="1.630" min_height="14.515" max_height="87.130">
+				<texture_levels>
+					<variable name="heightmap_level" value="8"/>
+					<variable name="min_heightmap_level" value="2"/>
+					<variable name="normalmap_level" value="8"/>
+					<variable name="weightmap_levels">
+						<variable layer="0" value="8"/>
+						<variable layer="1" value="8"/>
+						<variable layer="2" value="8"/>
+						<variable layer="3" value="8"/>
+						<variable layer="4" value="8"/>
+						<variable layer="5" value="8"/>
+						<variable layer="6" value="8"/>
+						<variable layer="7" value="8"/>
+						<variable layer="8" value="8"/>
+						<variable layer="9" value="8"/>
+						<variable layer="10" value="8"/>
+						<variable layer="11" value="0"/>
+						<variable layer="12" value="0"/>
+						<variable layer="13" value="0"/>
+						<variable layer="14" value="0"/>
+						<variable layer="15" value="0"/>
+					</variable>
+				</texture_levels>
+			</node>
+			<node idx="2" idy="3" occluders_enabled="true" layer_is_used_mask_summer="31" layer_is_used_mask_fall="31" layer_is_used_mask_winter="543" layer_is_used_mask_spring="31" layer_is_used_mask="true" height_complexity="0.567" min_height="9.454" max_height="91.960">
+				<texture_levels>
+					<variable name="heightmap_level" value="8"/>
+					<variable name="min_heightmap_level" value="2"/>
+					<variable name="normalmap_level" value="8"/>
+					<variable name="weightmap_levels">
+						<variable layer="0" value="8"/>
+						<variable layer="1" value="8"/>
+						<variable layer="2" value="8"/>
+						<variable layer="3" value="8"/>
+						<variable layer="4" value="8"/>
+						<variable layer="5" value="8"/>
+						<variable layer="6" value="8"/>
+						<variable layer="7" value="8"/>
+						<variable layer="8" value="8"/>
+						<variable layer="9" value="8"/>
+						<variable layer="10" value="8"/>
+						<variable layer="11" value="0"/>
+						<variable layer="12" value="0"/>
+						<variable layer="13" value="0"/>
+						<variable layer="14" value="0"/>
+						<variable layer="15" value="0"/>
+					</variable>
+				</texture_levels>
+			</node>
+			<node idx="3" idy="0" occluders_enabled="true" layer_is_used_mask_summer="31" layer_is_used_mask_fall="31" layer_is_used_mask_winter="543" layer_is_used_mask_spring="31" layer_is_used_mask="true" height_complexity="0.458" min_height="46.715" max_height="91.356">
+				<texture_levels>
+					<variable name="heightmap_level" value="8"/>
+					<variable name="min_heightmap_level" value="2"/>
+					<variable name="normalmap_level" value="8"/>
+					<variable name="weightmap_levels">
+						<variable layer="0" value="8"/>
+						<variable layer="1" value="8"/>
+						<variable layer="2" value="8"/>
+						<variable layer="3" value="8"/>
+						<variable layer="4" value="8"/>
+						<variable layer="5" value="8"/>
+						<variable layer="6" value="8"/>
+						<variable layer="7" value="8"/>
+						<variable layer="8" value="8"/>
+						<variable layer="9" value="8"/>
+						<variable layer="10" value="8"/>
+						<variable layer="11" value="0"/>
+						<variable layer="12" value="0"/>
+						<variable layer="13" value="0"/>
+						<variable layer="14" value="0"/>
+						<variable layer="15" value="0"/>
+					</variable>
+				</texture_levels>
+			</node>
+			<node idx="3" idy="1" occluders_enabled="true" layer_is_used_mask_summer="63" layer_is_used_mask_fall="63" layer_is_used_mask_winter="575" layer_is_used_mask_spring="63" layer_is_used_mask="true" height_complexity="0.620" min_height="18.472" max_height="111.421">
+				<texture_levels>
+					<variable name="heightmap_level" value="8"/>
+					<variable name="min_heightmap_level" value="2"/>
+					<variable name="normalmap_level" value="8"/>
+					<variable name="weightmap_levels">
+						<variable layer="0" value="8"/>
+						<variable layer="1" value="8"/>
+						<variable layer="2" value="8"/>
+						<variable layer="3" value="8"/>
+						<variable layer="4" value="8"/>
+						<variable layer="5" value="8"/>
+						<variable layer="6" value="8"/>
+						<variable layer="7" value="8"/>
+						<variable layer="8" value="8"/>
+						<variable layer="9" value="8"/>
+						<variable layer="10" value="8"/>
+						<variable layer="11" value="0"/>
+						<variable layer="12" value="0"/>
+						<variable layer="13" value="0"/>
+						<variable layer="14" value="0"/>
+						<variable layer="15" value="0"/>
+					</variable>
+				</texture_levels>
+			</node>
+			<node idx="3" idy="2" occluders_enabled="true" layer_is_used_mask_summer="63" layer_is_used_mask_fall="63" layer_is_used_mask_winter="575" layer_is_used_mask_spring="63" layer_is_used_mask="true" height_complexity="0.478" min_height="16.549" max_height="113.651">
+				<texture_levels>
+					<variable name="heightmap_level" value="8"/>
+					<variable name="min_heightmap_level" value="2"/>
+					<variable name="normalmap_level" value="8"/>
+					<variable name="weightmap_levels">
+						<variable layer="0" value="8"/>
+						<variable layer="1" value="8"/>
+						<variable layer="2" value="8"/>
+						<variable layer="3" value="8"/>
+						<variable layer="4" value="8"/>
+						<variable layer="5" value="8"/>
+						<variable layer="6" value="8"/>
+						<variable layer="7" value="8"/>
+						<variable layer="8" value="8"/>
+						<variable layer="9" value="8"/>
+						<variable layer="10" value="8"/>
+						<variable layer="11" value="0"/>
+						<variable layer="12" value="0"/>
+						<variable layer="13" value="0"/>
+						<variable layer="14" value="0"/>
+						<variable layer="15" value="0"/>
+					</variable>
+				</texture_levels>
+			</node>
+			<node idx="3" idy="3" occluders_enabled="true" layer_is_used_mask_summer="31" layer_is_used_mask_fall="31" layer_is_used_mask_winter="543" layer_is_used_mask_spring="31" layer_is_used_mask="true" height_complexity="0.510" min_height="36.681" max_height="110.265">
+				<texture_levels>
+					<variable name="heightmap_level" value="8"/>
+					<variable name="min_heightmap_level" value="2"/>
+					<variable name="normalmap_level" value="8"/>
+					<variable name="weightmap_levels">
+						<variable layer="0" value="8"/>
+						<variable layer="1" value="8"/>
+						<variable layer="2" value="8"/>
+						<variable layer="3" value="8"/>
+						<variable layer="4" value="8"/>
+						<variable layer="5" value="8"/>
+						<variable layer="6" value="8"/>
+						<variable layer="7" value="8"/>
+						<variable layer="8" value="8"/>
+						<variable layer="9" value="8"/>
+						<variable layer="10" value="8"/>
+						<variable layer="11" value="0"/>
+						<variable layer="12" value="0"/>
+						<variable layer="13" value="0"/>
+						<variable layer="14" value="0"/>
+						<variable layer="15" value="0"/>
+					</variable>
+				</texture_levels>
+			</node>
+		</nodes>
+	</terrain>
+	<editor_data editor_camera_position="560.500, 579.000, 120.000" editor_camera_elevation="0.4" editor_camera_bearing="0.0" editor_camera_forward="0.0, 0.9, -0.4" author="rf_generator" comment="gerada por Scripts/SiegeSceneGen"/>
+	<camera_data near_plane="0.100" far_plane="1500000.000"/>
+	<Paths>
+		<path name="siege_tower_path_left_lvl1" interpolation_type="hermite" scene_upgrade_level_mask_="4294967295" season_mask_="15">
+			<flags>
+				<flag name="auto_tangent" value="true"/>
+			</flags>
+			<points>
+				<point position="602.700, 687.736, 55.000" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+				<point position="562.200, 668.120, 68.000" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+				<point position="527.101, 651.119, 81.000" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+			</points>
+		</path>
+		<path name="siege_tower_path_right_lvl1" interpolation_type="hermite" scene_upgrade_level_mask_="4294967295" season_mask_="15">
+			<flags>
+				<flag name="auto_tangent" value="true"/>
+			</flags>
+			<points>
+				<point position="550.434, 708.517, 55.000" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+				<point position="561.249, 664.836, 68.000" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+				<point position="570.622, 626.979, 81.000" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+			</points>
+		</path>
+		<path name="ram_path_lvl1" interpolation_type="hermite" scene_upgrade_level_mask_="4294967295" season_mask_="15">
+			<flags>
+				<flag name="auto_tangent" value="true"/>
+			</flags>
+			<points>
+				<point position="545.595, 537.612, 56.000" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+				<point position="549.861, 572.351, 70.000" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+				<point position="552.664, 595.179, 76.700" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+			</points>
+		</path>
+		<path name="siege_tower_path_left_lvl2" interpolation_type="hermite" scene_upgrade_level_mask_="4294967295" season_mask_="15">
+			<flags>
+				<flag name="auto_tangent" value="true"/>
+			</flags>
+			<points>
+				<point position="602.700, 687.736, 55.000" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+				<point position="562.200, 668.120, 68.000" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+				<point position="527.101, 651.119, 81.000" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+			</points>
+		</path>
+		<path name="siege_tower_path_right_lvl2" interpolation_type="hermite" scene_upgrade_level_mask_="4294967295" season_mask_="15">
+			<flags>
+				<flag name="auto_tangent" value="true"/>
+			</flags>
+			<points>
+				<point position="550.434, 708.517, 55.000" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+				<point position="561.249, 664.836, 68.000" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+				<point position="570.622, 626.979, 81.000" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+			</points>
+		</path>
+		<path name="ram_path_lvl2" interpolation_type="hermite" scene_upgrade_level_mask_="4294967295" season_mask_="15">
+			<flags>
+				<flag name="auto_tangent" value="true"/>
+			</flags>
+			<points>
+				<point position="545.595, 537.612, 56.000" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+				<point position="549.861, 572.351, 70.000" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+				<point position="552.664, 595.179, 76.700" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+			</points>
+		</path>
+		<path name="siege_tower_path_left" interpolation_type="hermite" scene_upgrade_level_mask_="4294967295" season_mask_="15">
+			<flags>
+				<flag name="auto_tangent" value="true"/>
+			</flags>
+			<points>
+				<point position="602.700, 687.736, 55.000" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+				<point position="562.200, 668.120, 68.000" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+				<point position="527.101, 651.119, 81.000" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+			</points>
+		</path>
+		<path name="siege_tower_path_right" interpolation_type="hermite" scene_upgrade_level_mask_="4294967295" season_mask_="15">
+			<flags>
+				<flag name="auto_tangent" value="true"/>
+			</flags>
+			<points>
+				<point position="550.434, 708.517, 55.000" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+				<point position="561.249, 664.836, 68.000" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+				<point position="570.622, 626.979, 81.000" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+			</points>
+		</path>
+		<path name="ram_path" interpolation_type="hermite" scene_upgrade_level_mask_="4294967295" season_mask_="15">
+			<flags>
+				<flag name="auto_tangent" value="true"/>
+			</flags>
+			<points>
+				<point position="545.595, 537.612, 56.000" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+				<point position="549.861, 572.351, 70.000" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+				<point position="552.664, 595.179, 76.700" scale="1.000, 1.000, 1.000" color="1.000, 1.000, 1.000, 1.000" rotation="0.00000, 0.00000, 0.00000, 1.00000"/>
+			</points>
+		</path>
+	</Paths>
+</scene>
