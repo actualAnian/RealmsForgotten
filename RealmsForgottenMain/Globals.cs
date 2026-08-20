@@ -140,20 +140,32 @@ namespace RealmsForgotten
         {
             get
             {
-                // GetModuleFullPath throws KeyNotFoundException when RF_Map is
-                // not an active module, and GetFiles throws when the caches
-                // folder is missing — either way this used to hard-crash the
-                // game at startup on a partial install. A broken install must
-                // read as "not using the RF naval map", never as a crash.
+                // O modulo do mapa e distribuido tanto como "RF_Map" quanto com
+                // sufixo de versao ("RF_Map_1.3.0", "RF_Map_1.4.5", ...), e o Id
+                // no SubModule.xml acompanha o nome da pasta. Procurar o Id
+                // exato "RF_Map" fazia GetModuleFullPath estourar
+                // KeyNotFoundException e derrubar o jogo no OnSubModuleLoad
+                // (crash reportado por jogador com RF_Map_1.3.0 instalado).
+                // Casamos por prefixo e caimos para "nao esta usando o mapa
+                // naval" em qualquer instalacao quebrada, nunca em crash.
                 try
                 {
-                    if (!ModuleHelper.IsModuleActive("RF_Map"))
+                    foreach (ModuleInfo module in ModuleHelper.GetActiveModules())
                     {
-                        return false;
+                        if (module?.Id == null ||
+                            !module.Id.StartsWith("RF_Map", StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
+
+                        string cachesPath = module.FolderPath + "/ModuleData/DistanceCaches";
+                        if (Directory.Exists(cachesPath) && Directory.GetFiles(cachesPath).Count() >= 3)
+                        {
+                            return true;
+                        }
                     }
 
-                    string cachesPath = ModuleHelper.GetModuleFullPath("RF_Map") + "/ModuleData/DistanceCaches";
-                    return Directory.Exists(cachesPath) && Directory.GetFiles(cachesPath).Count() >= 3;
+                    return false;
                 }
                 catch
                 {

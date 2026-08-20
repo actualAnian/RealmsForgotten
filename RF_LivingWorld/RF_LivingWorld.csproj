@@ -39,7 +39,8 @@
 
   <ItemGroup>
     <LivingWorldAsset Include="..\RealmsForgottenMain\_Module\ModuleData\living_world_parties.xml"><ModuleRelativePath>ModuleData\living_world_parties.xml</ModuleRelativePath></LivingWorldAsset>
-    <LivingWorldAsset Include="..\RealmsForgottenMain\_Module\ModuleData\living_world_action_sets.xml"><ModuleRelativePath>ModuleData\living_world_action_sets.xml</ModuleRelativePath></LivingWorldAsset>
+    <!-- living_world_action_sets.xml removido do repo em 7b45dbc: os action sets
+         dos rebanhos ganharam definicao completa em ModuleData\action_sets.xml -->
     <LivingWorldAsset Include="..\RealmsForgottenMain\_Module\ModuleData\project.mbproj"><ModuleRelativePath>ModuleData\project.mbproj</ModuleRelativePath></LivingWorldAsset>
     <LivingWorldAsset Include="..\RealmsForgottenMain\_Module\ModuleData\Languages\language_data.xml"><ModuleRelativePath>ModuleData\Languages\language_data.xml</ModuleRelativePath></LivingWorldAsset>
     <LivingWorldAsset Include="..\RealmsForgottenMain\_Module\ModuleData\Languages\str_living_world.xml"><ModuleRelativePath>ModuleData\Languages\str_living_world.xml</ModuleRelativePath></LivingWorldAsset>
