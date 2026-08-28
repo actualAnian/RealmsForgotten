@@ -397,7 +397,7 @@
 														</Widget>
 
 														<!--Container-->
-														<Widget Id="ContainerWidget" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="CharacterDeveloper\character_progress_frame" />
+																							<Widget Id="ContainerWidget" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="PartyScreen\progress_bar_frame" />
 
 													</Children>
 												</FillBarWidget>
@@ -421,11 +421,11 @@
 						</Widget>
 
 						<!--Top Panel-->
-						<Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="887" SuggestedHeight="156" HorizontalAlignment="Center" Sprite="StdAssets\tabbar_long">
+						<Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="887" SuggestedHeight="156" HorizontalAlignment="Center" Sprite="StdAssets\rf_header_embroidered">
 							<Children>
 
 								<!--Character Selection-->
-								<AnimatedDropdownWidget Id="DropdownParent" DataSource="{CharacterList}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="434" SuggestedHeight="47" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="10" Button="DropdownButton" CurrentSelectedIndex="@SelectedIndex" ListPanel="DropdownClipWidget\DropdownContainerWidget\ScrollablePanel\ClipRect\PrimaryUsageSelectorList" DropdownContainerWidget="DropdownClipWidget\DropdownContainerWidget" DropdownClipWidget="DropdownClipWidget">
+								<AnimatedDropdownWidget Id="DropdownParent" DataSource="{CharacterList}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="434" SuggestedHeight="47" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="44" Button="DropdownButton" CurrentSelectedIndex="@SelectedIndex" ListPanel="DropdownClipWidget\DropdownContainerWidget\ScrollablePanel\ClipRect\PrimaryUsageSelectorList" DropdownContainerWidget="DropdownClipWidget\DropdownContainerWidget" DropdownClipWidget="DropdownClipWidget">
 									<Children>
 
 										<ButtonWidget Id="DropdownButton" DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Character.Selection.Button" IsDisabled="@HasSingleItem">

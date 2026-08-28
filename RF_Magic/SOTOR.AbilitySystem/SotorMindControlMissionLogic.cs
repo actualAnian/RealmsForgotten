@@ -52,9 +52,15 @@ public class SotorMindControlMissionLogic : MissionLogic
 
 	private bool AnyActiveTrueEnemy(Mission mission)
 	{
+		// Team com MBTeam nativo invalido faz IsEnemyOf estourar NRE por dentro
+		// (missoes de conversa/loading) — validar os dois lados, idioma vanilla.
+		if (mission.PlayerTeam == null || !mission.PlayerTeam.IsValid)
+		{
+			return false;
+		}
 		foreach (Team team in mission.Teams)
 		{
-			if (team == null || !team.IsEnemyOf(mission.PlayerTeam))
+			if (team == null || !team.IsValid || !team.IsEnemyOf(mission.PlayerTeam))
 			{
 				continue;
 			}

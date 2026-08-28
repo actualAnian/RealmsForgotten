@@ -6,6 +6,17 @@ public enum MagicAccessorySlot
 	Necklace
 }
 
+public enum MagicPowerRingEffect
+{
+	None,
+	Death,
+	Earth,
+	Fire,
+	Mirror,
+	Water,
+	Winter
+}
+
 public sealed class MagicAccessoryData
 {
 	public string ItemId { get; }
@@ -22,8 +33,19 @@ public sealed class MagicAccessoryData
 
 	public float CooldownMultiplier { get; }
 
+	public string Name { get; }
+
+	public string Description { get; }
+
+	public MagicPowerRingEffect Effect { get; }
+
+	public float PrimaryValue { get; }
+
+	public float SecondaryValue { get; }
+
 	public MagicAccessoryData(string itemId, MagicAccessorySlot slot, float maxWindsBonus, float rechargeMultiplier,
-		float effectivenessMultiplier, float windsCostMultiplier, float cooldownMultiplier)
+		float effectivenessMultiplier, float windsCostMultiplier, float cooldownMultiplier, string name,
+		string description, MagicPowerRingEffect effect, float primaryValue, float secondaryValue)
 	{
 		ItemId = itemId;
 		Slot = slot;
@@ -32,6 +54,11 @@ public sealed class MagicAccessoryData
 		EffectivenessMultiplier = effectivenessMultiplier;
 		WindsCostMultiplier = windsCostMultiplier;
 		CooldownMultiplier = cooldownMultiplier;
+		Name = name ?? itemId;
+		Description = description ?? string.Empty;
+		Effect = effect;
+		PrimaryValue = primaryValue;
+		SecondaryValue = secondaryValue;
 	}
 }
 

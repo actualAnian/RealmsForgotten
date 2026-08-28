@@ -1,0 +1,91 @@
+<Brushes>
+  <Brush Name="RF.Encyclopedia.Frame">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="StdAssets\standart_popup" />
+      <BrushLayer Name="Canvas" Sprite="Encyclopedia\canvas" />
+      <BrushLayer Name="Frame" Sprite="Frame1_frame" ExtendLeft="5" ExtendRight="5" ExtendTop="5" ExtendBottom="5" OverlayMethod="CoverWithTexture" OverlaySprite="stone_texture_overlay" />
+    </Layers>
+    <Styles>
+      <Style Name="Default">
+        <BrushLayer Name="Default" />
+        <BrushLayer Name="Canvas" />
+        <BrushLayer Name="Frame" />
+      </Style>
+    </Styles>
+  </Brush>
+
+  <Brush Name="RF.Recruitment.Frame">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="SPGeneral\SPRecruitment\rf_popup_canvas" />
+      <BrushLayer Name="Frame" Sprite="RFRecruitment_popup_frame_9" ExtendLeft="5" ExtendRight="0" ExtendTop="8" ExtendBottom="7" />
+    </Layers>
+    <Styles>
+      <Style Name="Default">
+        <BrushLayer Name="Default" />
+        <BrushLayer Name="Frame" />
+      </Style>
+    </Styles>
+  </Brush>
+
+  <Brush Name="RF.Recruitment.Troop">
+    <Layers>
+      <BrushLayer Name="Available" Sprite="SPGeneral\SPRecruitment\portrait_relation" IsHidden="true" />
+      <BrushLayer Name="Unavailable" Sprite="SPGeneral\SPRecruitment\portrait_norelation" IsHidden="true" />
+      <BrushLayer Name="EmptyNoRelation" Sprite="SPGeneral\SPRecruitment\portrait_norelation" IsHidden="true" />
+      <BrushLayer Name="EmptyEnoughRelation" Sprite="SPGeneral\SPRecruitment\portrait_relation" IsHidden="true" />
+    </Layers>
+    <Styles>
+      <Style Name="Available"><BrushLayer Name="Available" IsHidden="false" /></Style>
+      <Style Name="Unavailable"><BrushLayer Name="Unavailable" IsHidden="false" /></Style>
+      <Style Name="EmptyNoRelation"><BrushLayer Name="EmptyNoRelation" IsHidden="false" /></Style>
+      <Style Name="EmptyEnoughRelation"><BrushLayer Name="EmptyEnoughRelation" IsHidden="false" /></Style>
+    </Styles>
+    <SoundProperties>
+      <StateSounds>
+      </StateSounds>
+      <EventSounds>
+        <EventSound EventName="Click" Audio="transfer" />
+      </EventSounds>
+    </SoundProperties>
+  </Brush>
+
+  <Brush Name="RF.Recruitment.Troop.Cart">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="SPGeneral\SPRecruitment\rf_portrait_cart" IsHidden="true" />
+    </Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" IsHidden="false" ValueFactor="-10" SaturationFactor="10" /></Style>
+    </Styles>
+    <SoundProperties>
+      <StateSounds>
+      </StateSounds>
+      <EventSounds>
+        <EventSound EventName="Click" Audio="transfer" />
+      </EventSounds>
+    </SoundProperties>
+  </Brush>
+
+  <Brush Name="RF.Encyclopedia.Home.Concept" OverrideBrush="EncyclopediaConcept">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="Encyclopedia\concept" Color="#FFFFFFFF" XOffset="0" YOffset="0" ExtendLeft="0" ExtendRight="0" ExtendTop="0" ExtendBottom="0" />
+    </Layers>
+  </Brush>
+
+  <Brush Name="RF.Encyclopedia.Home.Hero" OverrideBrush="EncyclopediaHero">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="Encyclopedia\hero" Color="#FFFFFFFF" XOffset="0" YOffset="0" ExtendLeft="0" ExtendRight="0" ExtendTop="0" ExtendBottom="0" />
+    </Layers>
+  </Brush>
+
+  <Brush Name="RF.Encyclopedia.Home.Settlement" OverrideBrush="EncyclopediaSettlement">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="Encyclopedia\settlements" Color="#FFFFFFFF" XOffset="0" YOffset="0" ExtendLeft="0" ExtendRight="0" ExtendTop="0" ExtendBottom="0" />
+    </Layers>
+  </Brush>
+
+  <Brush Name="RF.Encyclopedia.Home.Ship" OverrideBrush="EncyclopediaShip">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="Encyclopedia\ship" Color="#FFFFFFFF" XOffset="0" YOffset="0" ExtendLeft="0" ExtendRight="0" ExtendTop="0" ExtendBottom="0" />
+    </Layers>
+  </Brush>
+</Brushes>

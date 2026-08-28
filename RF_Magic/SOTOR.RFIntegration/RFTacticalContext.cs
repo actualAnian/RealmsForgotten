@@ -54,7 +54,7 @@ public static class RFTacticalContext
 				{
 					continue;
 				}
-				if (other.Team == null || !other.Team.IsEnemyOf(agent.Team))
+				if (other.Team == null || !other.Team.IsValid || agent.Team == null || !agent.Team.IsValid || !other.Team.IsEnemyOf(agent.Team))
 				{
 					continue;
 				}
@@ -97,7 +97,7 @@ public static class RFTacticalContext
 				{
 					continue;
 				}
-				if (other.Team == null || !other.Team.IsEnemyOf(agent.Team))
+				if (other.Team == null || !other.Team.IsValid || !agent.Team.IsValid || !other.Team.IsEnemyOf(agent.Team))
 				{
 					continue;
 				}

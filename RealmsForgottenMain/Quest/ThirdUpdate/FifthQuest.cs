@@ -101,9 +101,17 @@ namespace RealmsForgotten.Quest.SecondUpdate
             }
 
             // STEP 2: Once enabled, devils spawn weekly regardless of quest progress
+            // (os NELROGS sairam daqui: spawnam no tick DIARIO, ao redor do jogador,
+            // 3 dias depois do pedido do rei nasoriano — ver OnDailyTick).
             if (devilsSpawningEnabled)
             {
-                SpawnNelrogParties();
+                // Objetivo dos 5 devils ja batido (ou conclusao pendente): parar de
+                // repor a praga — sem isso o mapa acumulava 100-250 raiders POR
+                // hideout POR semana ate a quest finalizar (fix 2026-08-26).
+                if (isObjectiveCompleted || _pendingCompleteAfterDevils || _devilsCompletionDone)
+                {
+                    return;
+                }
 
                 try
                 {
@@ -117,17 +125,30 @@ namespace RealmsForgotten.Quest.SecondUpdate
                         return;
                     }
 
-                    // Declare war on all other factions (optional, but evil 😈)
+                    // Declare war on all other factions (optional, but evil 😈) —
+                    // mas so uma vez por rival: redeclarar toda semana spamava os
+                    // eventos de diplomacia e as notificacoes.
                     foreach (Clan clan in Clan.All)
                     {
-                        if (clan != devilsClan && !clan.IsEliminated)
+                        if (clan != devilsClan && !clan.IsEliminated && !devilsClan.IsAtWarWith(clan))
                         {
                             FactionManager.DeclareWar(devilsClan, clan);
                         }
                     }
 
+                    // Teto de parties vivas: e uma INVASAO demoniaca (pedido do autor),
+                    // entao o teto e alto — ate ~24 hostes de 100-250 raiders no mapa
+                    // (2.4k-6k demonios). O teto so impede o acumulo INFINITO do
+                    // respawn semanal, nao a escala da invasao.
+                    const int maxAliveDevilParties = 24;
+                    int aliveDevilParties = MobileParty.All.Count(p => p.IsActive && p.StringId.StartsWith("devils_"));
+
                     foreach (Hideout hideout in Hideout.All)
                     {
+                        if (aliveDevilParties >= maxAliveDevilParties)
+                        {
+                            break;
+                        }
                         if (hideout?.Settlement == null)
                         {
                             Debug.Print("FifthQuest Warning: WeeklyTick found null hideout or settlement.");
@@ -153,6 +174,7 @@ namespace RealmsForgotten.Quest.SecondUpdate
                             Debug.PrintError($"FifthQuest Error: Failed to create Devil party '{partyId}' near {hideout.Settlement.Name}.");
                             continue;
                         }
+                        aliveDevilParties++;
 
                         party.Party.SetCustomName(new TextObject("Devils Party"));
 
@@ -193,10 +215,20 @@ namespace RealmsForgotten.Quest.SecondUpdate
             }
         }
 
+        // Bandos de nelrog para o jogador cacar e capturar. Nascem AO REDOR da party
+        // do jogador (design do autor: "3 dias depois eles aparecem perto de mim"),
+        // alguns por dia ate o teto de vivos. Ids UNICOS por party (era o literal
+        // "nelrogs" repetido — ids duplicados no object manager corrompem lookup e
+        // save); o teto conta pelo prefixo, cobrindo tambem parties de save velho.
         private void SpawnNelrogParties()
         {
             try
             {
+                if (MobileParty.MainParty == null)
+                {
+                    return;
+                }
+
                 Clan nelrogClan = Clan.FindFirst(c => c.StringId == "cs_nelrog_raiders");
                 if (nelrogClan == null)
                 {
@@ -204,19 +236,14 @@ namespace RealmsForgotten.Quest.SecondUpdate
                     return;
                 }
 
-                List<Hideout> seaRaiderHideouts = Hideout.All
-                    .Where(h => h?.Settlement?.Culture?.StringId == "sea_raiders")
-                    .ToList();
-
-                if (!seaRaiderHideouts.Any())
-                {
-                    InformationManager.DisplayMessage(new InformationMessage("No sea raider hideouts found."));
-                    return;
-                }
-
                 var nelrogTroopIds = new[] { "cs_nelrog_bandits_bandit", "cs_nelrog_bandits_raider", "cs_nelrog_bandits_chief" };
 
-                foreach (Hideout hideout in seaRaiderHideouts)
+                const int maxAliveNelrogParties = 10;
+                const int spawnsPerDay = 3;
+                int aliveNelrogParties = MobileParty.All.Count(p => p.IsActive && p.StringId.StartsWith("nelrog"));
+
+                int spawned = 0;
+                while (aliveNelrogParties < maxAliveNelrogParties && spawned < spawnsPerDay)
                 {
                     TroopRoster troopRoster = TroopRoster.CreateDummyTroopRoster();
                     int troopCount = MBRandom.RandomInt(3, 7);
@@ -230,27 +257,32 @@ namespace RealmsForgotten.Quest.SecondUpdate
                         }
                     }
                     PartyTemplateObject looterTemplate = Campaign.Current.ObjectManager.GetObject<PartyTemplateObject>("cs_nelrog_raiders_template");
-                    MobileParty party = BanditPartyComponent.CreateBanditParty("nelrogs", nelrogClan, null, false, looterTemplate, hideout.Settlement.Position);
+                    string nelrogPartyId = "nelrog_" + CampaignTime.Now.GetHashCode() + "_" + spawned;
+                    MobileParty party = BanditPartyComponent.CreateBanditParty(nelrogPartyId, nelrogClan, null, false, looterTemplate, MobileParty.MainParty.Position);
 
                     if (party == null)
                     {
                         InformationManager.DisplayMessage(new InformationMessage("Failed to create nelrog party."));
-                        continue;
+                        break;
                     }
+                    aliveNelrogParties++;
+                    spawned++;
 
+                    // Raio curto: nascem a vista do jogador, nao do outro lado do mapa.
                     party.InitializeMobilePartyAroundPosition(
                         troopRoster,
                         TroopRoster.CreateDummyTroopRoster(),
-                        hideout.Settlement.Position,
-                        100f, 10f);
+                        MobileParty.MainParty.Position,
+                        10f, 3f);
 
                     party.Aggressiveness = 100f;
-
-                    if (MobileParty.MainParty != null)
-                        party.SetMoveEngageParty(MobileParty.MainParty, MobileParty.NavigationType.Default);
+                    party.SetMoveEngageParty(MobileParty.MainParty, MobileParty.NavigationType.Default);
                 }
 
-                InformationManager.DisplayMessage(new InformationMessage($"Nelrog parties spawned at {seaRaiderHideouts.Count} sea raider hideouts."));
+                if (spawned > 0)
+                {
+                    InformationManager.DisplayMessage(new InformationMessage("Nelrog raiders have been sighted nearby!", Colors.Red));
+                }
             }
             catch (Exception ex)
             {
@@ -261,7 +293,16 @@ namespace RealmsForgotten.Quest.SecondUpdate
 
         private void OnDailyTick()
         {
-           
+            // Nelrogs para capturar: 3 dias depois de o rei nasoriano pedir a entrega
+            // (LogTime do journal e salvo, entao vale ate para save onde o pedido ja
+            // foi aceito), bandos comecam a aparecer AO REDOR do jogador — alguns por
+            // dia, ate o teto. Antes disso ficavam so no tick semanal em hideouts de
+            // sea raiders do outro lado do mapa e o jogador nao os encontrava.
+            if (deliverNelrogToNasorianLog?.CurrentProgress == 0
+                && deliverNelrogToNasorianLog.LogTime.ElapsedDaysUntilNow >= 3f)
+            {
+                SpawnNelrogParties();
+            }
         }
 
         private void OnMissionStart(IMission imission)
@@ -431,6 +472,28 @@ namespace RealmsForgotten.Quest.SecondUpdate
         {
             SetDialogs();
             Instance = this;
+        }
+
+        /// <summary>
+        /// FERRAMENTA DE FILMAGEM (RFQuestChapterJumper, capitulo 5b): reproduz o estado
+        /// exato de logo APOS a captura do elvean polearm — os mesmos passos que os
+        /// consequences do 1º/2º/3º dialogo executam (monge=2, arma=2, log do rei elvean
+        /// aberto) + o item no roster, igual ao pickup da cena (linha do AddToCounts).
+        /// Chamar logo depois de StartQuest.
+        /// </summary>
+        internal void SetupChapterAfterPolearm()
+        {
+            talkToMonkLog = AddLog(GameTexts.FindText("rf_fifth_quest_first_objective"));
+            talkToMonkLog.UpdateCurrentProgress(2);
+            takeMysticalWeaponLog = AddLog(GameTexts.FindText("rf_fifth_quest_second_objective"));
+            takeMysticalWeaponLog.UpdateCurrentProgress(2);
+            talkToElveanKingLog = AddLog(GameTexts.FindText("rf_fifth_quest_third_objective"));
+
+            ItemObject polearm = MBObjectManager.Instance.GetObject<ItemObject>(MysticWeaponId);
+            if (polearm != null && PartyBase.MainParty.ItemRoster.GetItemNumber(polearm) <= 0)
+            {
+                PartyBase.MainParty.ItemRoster.AddToCounts(polearm, 1);
+            }
         }
 
         protected override void HourlyTick()

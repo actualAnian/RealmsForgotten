@@ -16,4 +16,32 @@
 	<Accessory itemId="rf_test_mage_necklace" slot="Necklace" maxWindsBonus="0"
 	             rechargeMult="1.10" effectivenessMult="1.00"
 	             windsCostMult="0.95" cooldownMult="1.00" />
+	<Accessory itemId="rf_power_ring_cosmic" slot="Ring" name="Ring of the Astral Sovereign"
+	             description="Bends the currents of magic to its bearer." effect="None" primary="0" secondary="0"
+	             maxWindsBonus="30" rechargeMult="1.20" effectivenessMult="1.12"
+	             windsCostMult="0.90" cooldownMult="0.90" />
+	<Accessory itemId="rf_power_ring_death" slot="Ring" name="Ring of the Last Breath"
+	             description="The main hero wearer has an 80% chance to survive battle death. Each regular troop lost in battle has a 70% chance to return wounded. Wearing companions have a 60% chance to survive battle deaths." effect="Death" primary="70" secondary="60"
+	             maxWindsBonus="0" rechargeMult="1.00" effectivenessMult="1.00"
+	             windsCostMult="1.00" cooldownMult="1.00" />
+	<Accessory itemId="rf_power_ring_earth" slot="Ring" name="Ring of the Worldroot"
+	             description="Reduces physical damage received by 25%." effect="Earth" primary="25" secondary="0"
+	             maxWindsBonus="0" rechargeMult="1.00" effectivenessMult="1.00"
+	             windsCostMult="1.00" cooldownMult="1.00" />
+	<Accessory itemId="rf_power_ring_fire" slot="Ring" name="Ring of the Undying Ember"
+	             description="Damaging normal hits ignite enemies for 4 damage per second for 4 seconds. The wearer is immune to fire damage." effect="Fire" primary="4" secondary="4"
+	             maxWindsBonus="0" rechargeMult="1.00" effectivenessMult="1.00"
+	             windsCostMult="1.00" cooldownMult="1.00" />
+	<Accessory itemId="rf_power_ring_mirror" slot="Ring" name="Ring of the Silver Mirror"
+	             description="Reduces magic damage by 25% and reflects 12% to its caster." effect="Mirror" primary="25" secondary="12"
+	             maxWindsBonus="0" rechargeMult="1.00" effectivenessMult="1.00"
+	             windsCostMult="1.00" cooldownMult="1.00" />
+	<Accessory itemId="rf_power_ring_water" slot="Ring" name="Ring of the Deep Tide"
+	             description="Below 60% Health, restores 2 Health every 5 seconds: up to 20 per battle, with no campaign-map limit." effect="Water" primary="2" secondary="20"
+	             maxWindsBonus="0" rechargeMult="1.00" effectivenessMult="1.00"
+	             windsCostMult="1.00" cooldownMult="1.00" />
+	<Accessory itemId="rf_power_ring_winter" slot="Ring" name="Ring of the White Silence"
+	             description="While worn by the main hero, all enemies move 20% slower throughout battle." effect="Winter" primary="20" secondary="0"
+	             maxWindsBonus="0" rechargeMult="1.00" effectivenessMult="1.00"
+	             windsCostMult="1.00" cooldownMult="1.00" />
 </MagicAccessories>

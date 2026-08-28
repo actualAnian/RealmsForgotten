@@ -137,6 +137,21 @@ namespace RealmsForgotten.CampaignCheats
             return report.ToString();
         }
 
+        /// <summary>Salto de capítulo da quest principal (ferramenta de filmagem; ver
+        /// RFQuestChapterJumper — mesmo gate de dev-flag). Uso: rf.quest.jump 4</summary>
+        [CommandLineFunctionality.CommandLineArgumentFunction("jump", "rf.quest")]
+        public static string QuestJump(List<string> arguments)
+        {
+            if (arguments.Count == 0 || !int.TryParse(arguments[0], out int oneBased))
+            {
+                var sb = new StringBuilder("Uso: rf.quest.jump <numero>\n");
+                for (int i = 0; i < Quest.RFQuestChapterJumper.ChapterNames.Length; i++)
+                    sb.AppendLine($"  {i + 1} = {Quest.RFQuestChapterJumper.ChapterNames[i]}");
+                return sb.ToString();
+            }
+            return Quest.RFQuestChapterJumper.JumpTo(oneBased - 1);
+        }
+
         /// <summary>
         /// Raio-X dos papéis de herói de quest: para cada papel, mostra o herói original
         /// (vivo? desativado? preso? onde?) e para quem o Resolve aponta hoje. Serve para

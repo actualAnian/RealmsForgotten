@@ -31,6 +31,7 @@ public sealed class MagicRuneMissionLogic : MissionLogic
 		base.OnBehaviorInitialize();
 		_burns.Clear();
 		_frost.Clear();
+		_flameWeapons.Clear();
 		MagicRuneCombatFeedback.Reset();
 	}
 
@@ -38,6 +39,7 @@ public sealed class MagicRuneMissionLogic : MissionLogic
 	{
 		_burns.Clear();
 		_frost.Clear();
+		_flameWeapons.Clear();
 		MagicRuneCombatFeedback.Reset();
 		base.OnEndMission();
 	}
@@ -184,9 +186,148 @@ public sealed class MagicRuneMissionLogic : MissionLogic
 		}
 	}
 
+	// ---- arma flamejante da runa Flame ------------------------------------
+	// Receita dos fire swords do RFEffects (WeaponParticlesBehavior +
+	// TOWParticleSystem.ApplyParticleToWeapon), replicada aqui porque RF_Magic nao
+	// referencia o RealmsForgottenMain: particula "fire_sword" presa a ENTIDADE DA
+	// ARMA em degraus de 0,1u ao longo da lamina + componente no osso da mao.
+	// Detectada por polling (0,5s) da arma empunhada — sem o hack de drop/pickup do
+	// FireLord2, que poderia baguncar os slots das runas.
+	private const string WeaponFireParticle = "fire_sword";
+	private const float WieldPollInterval = 0.5f;
+
+	private sealed class FlameWeaponState
+	{
+		public ItemObject Item;
+		public Skeleton Skeleton;
+		public readonly List<ParticleSystem> Particles = new List<ParticleSystem>();
+	}
+
+	private static readonly Dictionary<Agent, FlameWeaponState> _flameWeapons = new Dictionary<Agent, FlameWeaponState>();
+	private float _wieldPollTimer;
+
+	private void PollFlameWeapons(float dt)
+	{
+		_wieldPollTimer += dt;
+		if (_wieldPollTimer < WieldPollInterval)
+		{
+			return;
+		}
+		_wieldPollTimer = 0f;
+
+		try
+		{
+			foreach (Agent agent in Mission.Agents)
+			{
+				if (agent == null || !agent.IsHuman)
+				{
+					continue;
+				}
+
+				bool alive = agent.IsActive();
+				MissionWeapon wielded = alive ? agent.WieldedWeapon : MissionWeapon.Invalid;
+				bool hasFlameRune = alive && wielded.Item != null
+					&& MagicRuneService.TryGetForWeapon(agent, in wielded, out MagicRuneData rune)
+					&& rune.Effect == MagicRuneEffect.Flame;
+
+				_flameWeapons.TryGetValue(agent, out FlameWeaponState state);
+				if (hasFlameRune)
+				{
+					if (state != null && state.Item == wielded.Item)
+					{
+						continue; // ja flamejando nesta arma
+					}
+					if (state == null)
+					{
+						state = new FlameWeaponState();
+						_flameWeapons[agent] = state;
+					}
+					else
+					{
+						RemoveWeaponFlames(state);
+					}
+					ApplyWeaponFlames(agent, wielded, state);
+				}
+				else if (state != null)
+				{
+					RemoveWeaponFlames(state);
+					_flameWeapons.Remove(agent);
+				}
+			}
+		}
+		catch (Exception ex)
+		{
+			SotorLog.Warn("MagicRuneMissionLogic.PollFlameWeapons: " + ex.Message);
+		}
+	}
+
+	private static void ApplyWeaponFlames(Agent agent, in MissionWeapon weapon, FlameWeaponState state)
+	{
+		try
+		{
+			Skeleton skeleton = agent.AgentVisuals?.GetSkeleton();
+			EquipmentIndex slot = agent.GetPrimaryWieldedItemIndex();
+			if (skeleton == null || slot == EquipmentIndex.None)
+			{
+				return;
+			}
+
+			GameEntity weaponEntity = GameEntity.CreateFromWeakEntity(agent.GetWeaponEntityFromEquipmentSlot(slot));
+			if (weaponEntity == null)
+			{
+				return;
+			}
+
+			if (ParticleSystemManager.GetRuntimeIdByName(WeaponFireParticle) == -1)
+			{
+				SotorLog.Warn("MagicRuneMissionLogic: particula '" + WeaponFireParticle + "' inexistente — arma da runa fica sem chama.");
+				return;
+			}
+
+			int weaponLength = (int)Math.Round(weapon.GetWeaponStatsData()[0].WeaponLength / 10.0);
+			int segments = Math.Max(2, weaponLength);
+			sbyte handBone = agent.Monster.MainHandItemBoneIndex;
+			for (int i = 1; i < segments; i++)
+			{
+				MatrixFrame baseFrame = new MatrixFrame(Mat3.Identity, default(Vec3));
+				MatrixFrame boneLocalFrame = baseFrame.Elevate(i * 0.1f);
+				ParticleSystem particle = ParticleSystem.CreateParticleSystemAttachedToEntity(WeaponFireParticle, weaponEntity, ref boneLocalFrame);
+				if (particle != null)
+				{
+					skeleton.AddComponentToBone(handBone, particle);
+					state.Particles.Add(particle);
+				}
+			}
+
+			state.Skeleton = skeleton;
+			state.Item = weapon.Item;
+		}
+		catch (Exception ex)
+		{
+			SotorLog.Warn("MagicRuneMissionLogic.ApplyWeaponFlames: " + ex.Message);
+		}
+	}
+
+	private static void RemoveWeaponFlames(FlameWeaponState state)
+	{
+		foreach (ParticleSystem particle in state.Particles)
+		{
+			try
+			{
+				state.Skeleton?.RemoveComponent(particle);
+			}
+			catch
+			{
+			}
+		}
+		state.Particles.Clear();
+		state.Item = null;
+	}
+
 	public override void OnMissionTick(float dt)
 	{
 		base.OnMissionTick(dt);
+		PollFlameWeapons(dt);
 		float now = base.Mission?.CurrentTime ?? 0f;
 		foreach (Agent agent in new List<Agent>(_burns.Keys))
 		{
@@ -200,7 +341,7 @@ public sealed class MagicRuneMissionLogic : MissionLogic
 			if (now >= burn.NextTick)
 			{
 				burn.NextTick = now + 1f;
-				float actualDamage = SotorDamageHelper.ApplyDamageOverTime(agent, Math.Max(1, (int)burn.Value), burn.Source);
+				float actualDamage = SotorDamageHelper.ApplyFireDamageOverTime(agent, Math.Max(1, (int)burn.Value), burn.Source);
 				SotorLog.Debug($"Rune Flame tick: source='{burn.Source?.Name}' target='{agent.Name}' damage={actualDamage:0}.");
 			}
 		}

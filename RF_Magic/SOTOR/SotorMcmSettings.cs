@@ -13,9 +13,9 @@ public sealed class SotorMcmSettings : AttributeGlobalSettings<SotorMcmSettings>
 
 	private const string GrpEff = "{=sotor_mcm_grp_tweaks}Magic Tweaks/{=sotor_mcm_grp_eff}Spell Effectiveness";
 
-	private const string GrpWindsKill = "{=sotor_mcm_grp_tweaks}Magic Tweaks/{=sotor_mcm_grp_winds_kill}Winds on Magic Kill";
+	private const string GrpWindsKill = "{=sotor_mcm_grp_tweaks}Magic Tweaks/{=sotor_mcm_grp_winds_kill}Mana on Magic Kill";
 
-	private const string GrpArmor = "{=sotor_mcm_grp_tweaks}Magic Tweaks/{=sotor_mcm_grp_armor}Armor Effect on Winds Recharge";
+	private const string GrpArmor = "{=sotor_mcm_grp_tweaks}Magic Tweaks/{=sotor_mcm_grp_armor}Armor Effect on Mana Recharge";
 
 	private const string GroupShipMagic = "{=sotor_mcm_grp_ship}Ship Magic";
 
@@ -31,7 +31,7 @@ public sealed class SotorMcmSettings : AttributeGlobalSettings<SotorMcmSettings>
 
 	public override string FormatType => "json2";
 
-	[SettingPropertyDropdown("{=sotor_mcm_hud_mode}Battle spell HUD", Order = 1, RequireRestart = false, HintText = "{=sotor_mcm_hud_mode_hint}When to show the bottom left spell and Winds of Magic panel in battle.")]
+	[SettingPropertyDropdown("{=sotor_mcm_hud_mode}Battle spell HUD", Order = 1, RequireRestart = false, HintText = "{=sotor_mcm_hud_mode_hint}When to show the bottom left spell and Mana panel in battle.")]
 	[SettingPropertyGroup("{=sotor_mcm_grp_features}Features", GroupOrder = 0)]
 	public Dropdown<string> HudMode { get; set; } = new Dropdown<string>(new string[3] { "{=sotor_mcm_hud_always}Always", "{=sotor_mcm_hud_casting}Only while casting", "{=sotor_mcm_hud_hidden}Hidden" }, 0);
 
@@ -51,7 +51,7 @@ public sealed class SotorMcmSettings : AttributeGlobalSettings<SotorMcmSettings>
 	[SettingPropertyGroup("{=sotor_mcm_grp_features}Features", GroupOrder = 0)]
 	public bool EnableMindControlledArmies { get; set; } = true;
 
-	[SettingPropertyBool("{=sotor_mcm_companion_casters}Companion Spellcasters", Order = 6, RequireRestart = false, HintText = "{=sotor_mcm_companion_casters_hint}Lets your clan companions and family use magic and appear in the spellbook's hero cycle. Turning it off later keeps their learned lores, spells and Winds intact for when you turn it back on. The main hero is always a caster.")]
+	[SettingPropertyBool("{=sotor_mcm_companion_casters}Companion Spellcasters", Order = 6, RequireRestart = false, HintText = "{=sotor_mcm_companion_casters_hint}Lets your clan companions and family use magic and appear in the spellbook's hero cycle. Turning it off later keeps their learned lores, spells and Mana intact for when you turn it back on. The main hero is always a caster.")]
 	[SettingPropertyGroup("{=sotor_mcm_grp_features}Features", GroupOrder = 0)]
 	public bool EnableCompanionSpellcasters { get; set; }
 
@@ -71,20 +71,20 @@ public sealed class SotorMcmSettings : AttributeGlobalSettings<SotorMcmSettings>
 	[SettingPropertyGroup("{=sotor_mcm_grp_tweaks}Magic Tweaks/{=sotor_mcm_grp_eff}Spell Effectiveness")]
 	public float SpellEffectivenessBonusPercent { get; set; }
 
-	[SettingPropertyBool("{=sotor_mcm_winds_on_kill}Winds on Magic Kill", Order = 0, RequireRestart = false, HintText = "{=sotor_mcm_winds_on_kill_hint}Gives Winds of Magic on a spell kill. Player only.")]
-	[SettingPropertyGroup("{=sotor_mcm_grp_tweaks}Magic Tweaks/{=sotor_mcm_grp_winds_kill}Winds on Magic Kill")]
+	[SettingPropertyBool("{=sotor_mcm_winds_on_kill}Mana on Magic Kill", Order = 0, RequireRestart = false, HintText = "{=sotor_mcm_winds_on_kill_hint}Gives Mana on a spell kill. Player only.")]
+	[SettingPropertyGroup("{=sotor_mcm_grp_tweaks}Magic Tweaks/{=sotor_mcm_grp_winds_kill}Mana on Magic Kill")]
 	public bool EnableWindsOnMagicKill { get; set; }
 
-	[SettingPropertyFloatingInteger("{=sotor_mcm_winds_on_kill_amt}Winds per magic kill", -15f, 30f, "0.0", Order = 1, RequireRestart = false, HintText = "{=sotor_mcm_winds_on_kill_amt_hint}How much Winds of Magic each spell kill grants.")]
-	[SettingPropertyGroup("{=sotor_mcm_grp_tweaks}Magic Tweaks/{=sotor_mcm_grp_winds_kill}Winds on Magic Kill")]
+	[SettingPropertyFloatingInteger("{=sotor_mcm_winds_on_kill_amt}Mana per magic kill", -15f, 30f, "0.0", Order = 1, RequireRestart = false, HintText = "{=sotor_mcm_winds_on_kill_amt_hint}How much Mana each spell kill grants.")]
+	[SettingPropertyGroup("{=sotor_mcm_grp_tweaks}Magic Tweaks/{=sotor_mcm_grp_winds_kill}Mana on Magic Kill")]
 	public float WindsOnMagicKillAmount { get; set; }
 
-	[SettingPropertyBool("{=sotor_mcm_armor_recharge}Armor Effect on Winds Recharge", Order = 0, RequireRestart = false, HintText = "{=sotor_mcm_armor_recharge_hint}Changes how much armor weight slows Winds of Magic recharge.")]
-	[SettingPropertyGroup("{=sotor_mcm_grp_tweaks}Magic Tweaks/{=sotor_mcm_grp_armor}Armor Effect on Winds Recharge")]
+	[SettingPropertyBool("{=sotor_mcm_armor_recharge}Armor Effect on Mana Recharge", Order = 0, RequireRestart = false, HintText = "{=sotor_mcm_armor_recharge_hint}Changes how much armor weight slows Mana recharge.")]
+	[SettingPropertyGroup("{=sotor_mcm_grp_tweaks}Magic Tweaks/{=sotor_mcm_grp_armor}Armor Effect on Mana Recharge")]
 	public bool EnableArmorWomRechargeTweak { get; set; }
 
-	[SettingPropertyFloatingInteger("{=sotor_mcm_armor_recharge_pct}Armor effect on Winds recharge", -100f, 200f, "0\\%", Order = 1, RequireRestart = false, HintText = "{=sotor_mcm_armor_recharge_pct_hint}-100% removes the armor penalty. 0% keeps default. 200% triples the armor penalty.")]
-	[SettingPropertyGroup("{=sotor_mcm_grp_tweaks}Magic Tweaks/{=sotor_mcm_grp_armor}Armor Effect on Winds Recharge")]
+	[SettingPropertyFloatingInteger("{=sotor_mcm_armor_recharge_pct}Armor effect on Mana recharge", -100f, 200f, "0\\%", Order = 1, RequireRestart = false, HintText = "{=sotor_mcm_armor_recharge_pct_hint}-100% removes the armor penalty. 0% keeps default. 200% triples the armor penalty.")]
+	[SettingPropertyGroup("{=sotor_mcm_grp_tweaks}Magic Tweaks/{=sotor_mcm_grp_armor}Armor Effect on Mana Recharge")]
 	public float ArmorWomRechargeEffectPercent { get; set; }
 
 	[SettingPropertyBool("{=sotor_mcm_ship_dmg}Spells Damage Ships", Order = 0, RequireRestart = false, HintText = "{=sotor_mcm_ship_dmg_hint}Requires the War Sails expansion. When on, your spells damage enemy ship hulls, set them ablaze, and shred their sails in naval battles. When off, magic only harms the crew.")]

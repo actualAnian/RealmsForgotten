@@ -42,6 +42,10 @@ public static class AmbushMath
                 case TerrainType.Steppe:
                 case TerrainType.Plain:
                     return 1.0f;   // campo aberto nao esconde ninguem
+                case TerrainType.Swamp:
+                    return 1.5f;   // juncos e vegetacao alta escondem razoavel
+                case TerrainType.Snow:
+                    return 0.9f;   // contraste e rastros na neve entregam a posicao
                 case TerrainType.Desert:
                 case TerrainType.Dune:
                     return 0.85f;  // areia aberta e ATE pior que campo

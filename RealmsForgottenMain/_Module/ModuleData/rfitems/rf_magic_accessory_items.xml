@@ -45,4 +45,32 @@
 		Type="Goods">
 		<Flags Civilian="true" />
 	</Item>
+	<Item id="rf_power_ring_cosmic" name="Ring of the Astral Sovereign" mesh="cosmic_ring"
+		item_category="jewelry" is_merchandise="false" value="25000" weight="0.1" Type="Goods">
+		<Flags Civilian="true" />
+	</Item>
+	<Item id="rf_power_ring_death" name="Ring of the Last Breath" mesh="death_ring"
+		item_category="jewelry" is_merchandise="false" value="25000" weight="0.1" Type="Goods">
+		<Flags Civilian="true" />
+	</Item>
+	<Item id="rf_power_ring_earth" name="Ring of the Worldroot" mesh="earth_ring"
+		item_category="jewelry" is_merchandise="false" value="25000" weight="0.1" Type="Goods">
+		<Flags Civilian="true" />
+	</Item>
+	<Item id="rf_power_ring_fire" name="Ring of the Undying Ember" mesh="fire_ring"
+		item_category="jewelry" is_merchandise="false" value="25000" weight="0.1" Type="Goods">
+		<Flags Civilian="true" />
+	</Item>
+	<Item id="rf_power_ring_mirror" name="Ring of the Silver Mirror" mesh="mirror_ring"
+		item_category="jewelry" is_merchandise="false" value="25000" weight="0.1" Type="Goods">
+		<Flags Civilian="true" />
+	</Item>
+	<Item id="rf_power_ring_water" name="Ring of the Deep Tide" mesh="water_ring"
+		item_category="jewelry" is_merchandise="false" value="25000" weight="0.1" Type="Goods">
+		<Flags Civilian="true" />
+	</Item>
+	<Item id="rf_power_ring_winter" name="Ring of the White Silence" mesh="winter_ring"
+		item_category="jewelry" is_merchandise="false" value="25000" weight="0.1" Type="Goods">
+		<Flags Civilian="true" />
+	</Item>
 </Items>

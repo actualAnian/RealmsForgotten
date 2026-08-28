@@ -352,9 +352,15 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
             return IsMountedDoctrineTeam() ? BanditBattleState.MountedOnslaught : BanditBattleState.AggressiveRush;
         }
 
-        if (isDominant && IsMountedDoctrineTeam())
+        // Superioridade = investida, a pe ou a cavalo. Antes so o bando MONTADO
+        // saia daqui; o bando a pe com vantagem (ratio 1.1-1.3) caia no fallback
+        // HarassingAdvance e ficava parado — e como nao avancava, a distancia
+        // nunca caia abaixo dos 50m que o _nearRushGate exige, entao o estado
+        // era um beco sem saida (relato do autor 2026-08-27: "com o power
+        // balance a favor deles nao atacaram, mantiveram retaguarda").
+        if (isDominant)
         {
-            return BanditBattleState.MountedOnslaught;
+            return IsMountedDoctrineTeam() ? BanditBattleState.MountedOnslaught : BanditBattleState.AggressiveRush;
         }
 
         return BanditBattleState.HarassingAdvance;
@@ -1207,21 +1213,30 @@ public sealed class TacticBanditAdaptiveSkirmish : TacticComponent
         {
             _mainInfantry.AI.ResetBehaviorWeights();
             SetDefaultBehaviorWeights(_mainInfantry);
-            _mainInfantry.AI.SetBehaviorWeight<BehaviorAdvance>(0.8f);
-            _mainInfantry.AI.SetBehaviorWeight<BehaviorDefend>(1f).DefensePosition = _mainInfantry.CachedMedianPosition;
+            // Avanco ACIMA da defesa: com Defend 1.0 ancorado na posicao atual
+            // contra Advance 0.8, a linha ficava plantada onde estava — o estado
+            // se chamava "HarassingAdvance" e nao avancava. Defend fica como
+            // piso baixo (reagrupar sob pressao), nao como ordem de parar.
+            _mainInfantry.AI.SetBehaviorWeight<BehaviorAdvance>(1.2f);
+            _mainInfantry.AI.SetBehaviorWeight<BehaviorDefend>(0.4f).DefensePosition = _mainInfantry.CachedMedianPosition;
         }
 
         if (_supportInfantry != null)
         {
             _supportInfantry.AI.ResetBehaviorWeights();
             SetDefaultBehaviorWeights(_supportInfantry);
-            if (_mainInfantry != null)
+            // Reserva faz sentido em luta equilibrada ou em desvantagem; quem
+            // esta ganhando entra na briga. O peso 1.5 fixo era o MAIOR do
+            // estado inteiro e o BehaviorMaintainReserve posiciona a formacao
+            // em (ancora - direcaoDoInimigo), ou seja: retaguarda ate vencendo.
+            bool holdingReserve = base.Team.QuerySystem.RemainingPowerRatio < 1f;
+            if (_mainInfantry != null && holdingReserve)
             {
-                _supportInfantry.AI.SetBehaviorWeight<BehaviorMaintainReserve>(1.5f).AnchorFormation = _mainInfantry;
+                _supportInfantry.AI.SetBehaviorWeight<BehaviorMaintainReserve>(0.9f).AnchorFormation = _mainInfantry;
             }
             else
             {
-                _supportInfantry.AI.SetBehaviorWeight<BehaviorAdvance>(0.8f);
+                _supportInfantry.AI.SetBehaviorWeight<BehaviorAdvance>(1.1f);
             }
         }
 

@@ -401,11 +401,18 @@ public class AbilityManagerMissionLogic : MissionLogic
 				TextObject disabledReason;
 				if (ability == null)
 				{
+					// Sem feitico selecionado: avisa em vez de "nada acontece".
+					TaleWorlds.Core.MBInformationManager.AddQuickInformation(
+						new TextObject("{=rf_no_spell_selected}No spell selected."));
 					DisableAbilityMode();
 				}
 				else if (ability.IsDisabled(Agent.Main, out disabledReason))
 				{
 					SotorLog.Info("Q release: '" + ability.StringID + "' disabled: " + (disabledReason?.ToString() ?? "unknown"));
+					// Mostra o motivo (ex.: sem foco arcano empunhado) em vez de
+					// falhar em silencio - e o que torna a regra do cajado visivel.
+					if (disabledReason != null)
+						TaleWorlds.Core.MBInformationManager.AddQuickInformation(disabledReason);
 					DisableAbilityMode();
 				}
 				else if (ability.IsThrownWeapon)
@@ -537,6 +544,8 @@ public class AbilityManagerMissionLogic : MissionLogic
 					if (!currentAbility.TryCast(main, preferredTarget, out var failureReason))
 					{
 						SotorLog.Info("Q quick-cast '" + currentAbility.StringID + "' failed: " + (failureReason?.ToString() ?? "unknown"));
+						if (failureReason != null)
+							TaleWorlds.Core.MBInformationManager.AddQuickInformation(failureReason);
 					}
 					else
 					{

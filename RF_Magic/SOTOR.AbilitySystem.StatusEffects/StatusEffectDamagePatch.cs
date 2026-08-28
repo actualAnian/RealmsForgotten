@@ -66,7 +66,7 @@ public static class StatusEffectDamagePatch
 				int num3 = (int)(__result * num2);
 				if (num3 > 0)
 				{
-					SotorDamageHelper.ApplyReflectedDamage(attackerAgent, num3, victimAgent);
+					SotorDamageHelper.ApplyFireDamage(attackerAgent, num3, victimAgent);
 					SotorLog.Debug($"Fire-Cloak thorns: '{victimAgent.Name}' reflects {num2:0.00}x -> {num3} Fire to '{attackerAgent.Name}'.");
 				}
 			}

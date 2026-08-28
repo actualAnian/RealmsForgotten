@@ -95,6 +95,8 @@ namespace RealmsForgotten
                 // guardados em Configs/RF_BannerWorks a cada carga de sessao.
                 campaignGameStarter.AddBehavior(new RealmsForgotten.BannerWorks.RFBannerWorksBehavior());
                 campaignGameStarter.AddBehavior(new RFEnchantmentVendorBehavior());
+                campaignGameStarter.AddBehavior(new RealmsForgotten.Raiding.RFBlackBannerBehavior());
+                campaignGameStarter.AddBehavior(new RealmsForgotten.Raiding.RFRaidCampaignBehavior());
                 //Faith bhv comes before cultures bhv
                 campaignGameStarter.AddBehavior(new RFFaithCampaignBehavior());
                 campaignGameStarter.AddBehavior(new CulturesCampaignBehavior());
@@ -387,7 +389,13 @@ namespace RealmsForgotten
             }
             mission.AddMissionBehavior(new MagicEffectsBehavior());
             mission.AddMissionBehavior(new WeaponParticlesBehavior());
+            // Fogueiras/braseiros da cena ferem e incendeiam quem chega perto
+            // (usa o pipeline de fogo do MagicEffectsBehavior — registrar DEPOIS dele).
+            mission.AddMissionBehavior(new BurningObjectsMissionLogic());
             mission.AddMissionBehavior(new MeteorMissionLogic());
+            // Tochas a noite (batalha e cena de assentamento): a propria logica
+            // checa horario e tipo de cena e se desliga sozinha fora deles.
+            mission.AddMissionBehavior(new RealmsForgotten.Raiding.RFNightTorchesMissionLogic());
         }
         public override void BeginGameStart(Game game)
         {
@@ -416,6 +424,8 @@ namespace RealmsForgotten
         protected override void OnApplicationTick(float dt)
         {
             base.OnApplicationTick(dt);
+            // Coracao do detector de travadas (dev-only, gated por arquivo-flag).
+            RealmsForgotten.Diagnostics.RFHitchDetector.Heartbeat();
             RealmsForgotten.BannerWorks.RFBannerWorksHotkey.Tick();
             RFPoliticalMapManager.Tick(dt);
         }

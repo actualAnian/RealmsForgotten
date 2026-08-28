@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Tocha de arremesso (2026-08-27) — a ferramenta do incendiario no saque a pe.
+
+  Modelada no arremessavel mais simples do jogo (classe Stone: sem municao
+  separada, sem skeleton proprio), mas com a MALHA e o PREFAB da tocha vanilla,
+  que ja carrega a chama presa ao objeto. O dano de impacto e simbolico: o que
+  importa e onde ela cai — o RFArsonMissionLogic acende o fogo no ponto do
+  impacto.
+-->
+<Items>
+  <Item
+    id="rf_throwing_torch"
+    name="{=rf_item_throwing_torch}Burning Torch"
+    is_merchandise="false"
+    body_name="bo_throwing_stone_01"
+    mesh="torch_g"
+    flying_mesh="torch_g"
+    prefab="torch_a_wm_only_flame"
+    culture="Culture.empire"
+    value="15"
+    weight="0.5"
+    appearance="0.2"
+    Type="Thrown"
+    item_holsters="throwing_stone:throwing_stone_2">
+    <ItemComponent>
+      <Weapon
+        weapon_class="Stone"
+        ammo_class="Stone"
+        stack_amount="5"
+        physics_material="missile"
+        accuracy="60"
+        thrust_speed="95"
+        speed_rating="95"
+        missile_speed="28"
+        weapon_length="20"
+        thrust_damage="10"
+        thrust_damage_type="Blunt"
+        item_usage="stone"
+        rotation="100,30,20"
+        rotation_speed="0, -3.0, 0">
+        <WeaponFlags
+          RangedWeapon="true"
+          Consumable="true"
+          UnloadWhenSheathed="true"
+          UseHandAsThrowBase="true" />
+      </Weapon>
+    </ItemComponent>
+    <Flags />
+  </Item>
+  <!--
+    Tocha EMPUNHADA (tecnica aprendida do "Raise your Torch", 2026-08-27): as
+    flags abaixo sao o que faz uma tocha ficar na mao esquerda, erguida, sem
+    ocupar slot de arma e sem cair quando o soldado troca de arma. O prefab e o
+    mesmo da tocha vanilla, que ja traz chama e luz.
+  -->
+  <Item
+    id="rf_carried_torch"
+    name="{=rf_item_carried_torch}Torch"
+    is_merchandise="false"
+    body_name="bo_mace_a"
+    recalculate_body="true"
+    mesh="torch_g"
+    prefab="torch_a_wm_only_flame"
+    culture="Culture.empire"
+    value="4"
+    weight="0.2"
+    Type="OneHandedWeapon"
+    item_holsters="throwing_stone_2">
+    <ItemComponent>
+      <Weapon
+        weapon_class="OneHandedAxe"
+        weapon_balance="100"
+        thrust_speed="78"
+        speed_rating="97"
+        missile_speed="0"
+        weapon_length="65"
+        swing_damage="6"
+        swing_damage_type="Blunt"
+        item_usage="banner"
+        physics_material="metal_weapon">
+        <WeaponFlags MeleeWeapon="true" />
+      </Weapon>
+    </ItemComponent>
+    <Flags
+      DropOnWeaponChange="false"
+      ForceAttachOffHandPrimaryItemBone="true"
+      HeldInOffHand="true"
+      HasToBeHeldUp="true" />
+  </Item>
+</Items>

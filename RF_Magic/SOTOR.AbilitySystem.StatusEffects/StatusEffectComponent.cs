@@ -277,7 +277,14 @@ public class StatusEffectComponent : AgentComponent, IDisposable
 				if (num > 0)
 				{
 					float health = Agent.Health;
-					SotorDamageHelper.ApplyDamageOverTime(Agent, num, item2.ApplierAgent);
+					if (item2.Template.DamageType == DamageType.Fire)
+					{
+						SotorDamageHelper.ApplyFireDamageOverTime(Agent, num, item2.ApplierAgent);
+					}
+					else
+					{
+						SotorDamageHelper.ApplyDamageOverTime(Agent, num, item2.ApplierAgent);
+					}
 					int num2 = (int)(health - Agent.Health);
 					bool killed = health > 0f && (!Agent.IsActive() || Agent.Health < 1f);
 					SotorLog.Info($"StatusEffect DoT tick: '{Agent?.Name}' takes {num2} from '{item2.OriginSpellName ?? item2.Template.StringID}' (health now {Agent?.Health:0}).");

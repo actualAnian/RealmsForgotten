@@ -56,6 +56,7 @@ public class SubModule : MBSubModuleBase
 			// matar junto todos os patches ainda na fila — falha silenciosa. Isolar
 			// por classe restaura o resultado que o SOTOR pretendia.
 			ApplyUncategorizedPatchesSafely();
+			SOTOR.MagicAccessories.MagicPowerRingCombat.TryPatchLegacyFireTick(_harmony);
 		}
 		catch (Exception ex)
 		{
@@ -149,6 +150,7 @@ public class SubModule : MBSubModuleBase
 			campaignGameStarter.AddBehavior(new ExtendedInfoManager());
 			campaignGameStarter.AddBehavior(new SotorRaiseDeadBehavior());
 			campaignGameStarter.AddBehavior(new SotorGraveyardBehavior());
+			campaignGameStarter.AddBehavior(new SOTOR.MagicAccessories.MagicPowerRingCampaignBehavior());
 			SotorLog.Info("ExtendedInfoManager + SotorRaiseDeadBehavior + SotorGraveyardBehavior registered.");
 		}
 	}
@@ -168,5 +170,6 @@ public class SubModule : MBSubModuleBase
 		mission.AddMissionBehavior(new SotorAbandonShipMissionLogic());
 		mission.AddMissionBehavior(new SotorSummonNavalGuardMissionLogic());
 		mission.AddMissionBehavior(new SOTOR.MagicAccessories.MagicRuneMissionLogic());
+		mission.AddMissionBehavior(new SOTOR.MagicAccessories.MagicPowerRingMissionLogic());
 	}
 }

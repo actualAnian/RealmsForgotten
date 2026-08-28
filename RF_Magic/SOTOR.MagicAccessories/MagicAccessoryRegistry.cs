@@ -114,7 +114,19 @@ public static class MagicAccessoryRegistry
 			ParsePositiveMultiplier(GetAttribute(node, "rechargeMult")),
 			ParsePositiveMultiplier(GetAttribute(node, "effectivenessMult")),
 			ParsePositiveMultiplier(GetAttribute(node, "windsCostMult")),
-			ParsePositiveMultiplier(GetAttribute(node, "cooldownMult")));
+			ParsePositiveMultiplier(GetAttribute(node, "cooldownMult")),
+			GetAttribute(node, "name"),
+			GetAttribute(node, "description"),
+			ParseEnum(GetAttribute(node, "effect"), MagicPowerRingEffect.None),
+			ParseFloat(GetAttribute(node, "primary"), 0f),
+			ParseFloat(GetAttribute(node, "secondary"), 0f));
+	}
+
+	private static T ParseEnum<T>(string raw, T defaultValue) where T : struct
+	{
+		return !string.IsNullOrWhiteSpace(raw) && Enum.TryParse(raw.Trim(), true, out T parsed)
+			? parsed
+			: defaultValue;
 	}
 
 	private static string GetAttribute(XmlNode node, string name)

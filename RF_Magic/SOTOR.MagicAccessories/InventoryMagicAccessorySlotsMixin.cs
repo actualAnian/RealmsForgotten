@@ -1032,13 +1032,12 @@ public sealed class InventoryMagicAccessorySlotsMixin : BaseViewModelMixin<SPInv
 
 		string slotName = slot == MagicAccessorySlot.Ring ? "Ring" : "Necklace";
 		string equippedName = item == null ? "Empty" : item.Name.ToString();
-		string bonusText = MagicAccessoryRegistry.TryGet(itemId, out MagicAccessoryData accessory)
-			? BuildBonusText(accessory.MaxWindsBonus, accessory.RechargeMultiplier, accessory.EffectivenessMultiplier,
-				accessory.WindsCostMultiplier, accessory.CooldownMultiplier)
-			: string.Empty;
+		MagicAccessoryRegistry.TryGet(itemId, out MagicAccessoryData accessory);
+		string description = string.IsNullOrEmpty(accessory?.Description) ? string.Empty : "\n" + accessory.Description;
+		string bonusText = MagicAccessoryService.GetBonusText(accessory, "\n");
 		string bonuses = string.IsNullOrEmpty(bonusText) ? string.Empty : "\n" + bonusText;
 		hint = new HintViewModel(new TextObject(
-			slotName + " slot\nEquipped: " + equippedName + bonuses +
+			slotName + " slot\nEquipped: " + equippedName + description + bonuses +
 			"\nSelect a compatible item in your inventory and click to equip. Click with no compatible item selected to unequip."));
 	}
 
@@ -1063,36 +1062,6 @@ public sealed class InventoryMagicAccessorySlotsMixin : BaseViewModelMixin<SPInv
 		socket.Refresh(targetItem, runeItem, targetMatches);
 		SotorLog.Debug($"RefreshRuneSlot slot={slotIndex} target='{targetItem?.StringId ?? "empty"}' " +
 			$"rune='{runeItem?.StringId ?? "none"}' occupied={runeItem != null} matches={targetMatches}");
-	}
-
-	private static string BuildBonusText(float maxWindsBonus, float rechargeMultiplier,
-		float effectivenessMultiplier, float windsCostMultiplier, float cooldownMultiplier)
-	{
-		List<string> bonuses = new List<string>();
-		if (Math.Abs(maxWindsBonus) > 0.001f)
-		{
-			bonuses.Add("Max Mana " + FormatSigned(maxWindsBonus));
-		}
-		AddMultiplier(bonuses, "Recharge", rechargeMultiplier);
-		AddMultiplier(bonuses, "Effectiveness", effectivenessMultiplier);
-		AddMultiplier(bonuses, "Mana cost", windsCostMultiplier);
-		AddMultiplier(bonuses, "Cooldown", cooldownMultiplier);
-		return string.Join("\n", bonuses);
-	}
-
-	private static void AddMultiplier(List<string> bonuses, string label, float multiplier)
-	{
-		float percent = (multiplier - 1f) * 100f;
-		if (Math.Abs(percent) <= 0.05f)
-		{
-			return;
-		}
-		bonuses.Add(label + " " + FormatSigned(percent) + "%");
-	}
-
-	private static string FormatSigned(float value)
-	{
-		return value >= 0f ? "+" + value.ToString("0.#") : value.ToString("0.#");
 	}
 
 	private static void ShowMessage(string message, Color color)
@@ -1154,7 +1123,9 @@ internal static class MagicRuneItemTooltipPatch
 		Hero hero = InventoryMagicAccessorySlotsMixin.GetTooltipHero();
 		MagicRuneData targetRune = GetRuneForTooltip(item, hero, out bool targetIsSocketed);
 		MagicRuneData comparedRune = GetRuneForTooltip(comparedItem, hero, out bool comparedIsSocketed);
-		if (targetRune == null && comparedRune == null)
+		MagicAccessoryData targetAccessory = GetAccessoryForTooltip(item, hero, out bool targetIsEquipped);
+		MagicAccessoryData comparedAccessory = GetAccessoryForTooltip(comparedItem, hero, out bool comparedIsEquipped);
+		if (targetRune == null && comparedRune == null && targetAccessory == null && comparedAccessory == null)
 		{
 			return;
 		}
@@ -1173,6 +1144,37 @@ internal static class MagicRuneItemTooltipPatch
 			__instance.TargetItemProperties?.Add(CreateProperty(targetRow));
 			__instance.ComparedItemProperties?.Add(CreateProperty(comparedRow));
 		}
+		AddAccessoryRows(__instance.TargetItemProperties, MagicAccessoryService.GetTooltipRows(targetAccessory, targetIsEquipped));
+		AddAccessoryRows(__instance.ComparedItemProperties, MagicAccessoryService.GetTooltipRows(comparedAccessory, comparedIsEquipped));
+	}
+
+	private static void AddAccessoryRows(MBBindingList<ItemMenuTooltipPropertyVM> properties,
+		IReadOnlyList<KeyValuePair<string, string>> rows)
+	{
+		if (properties == null)
+		{
+			return;
+		}
+		foreach (KeyValuePair<string, string> row in rows)
+		{
+			properties.Add(CreateProperty(row));
+		}
+	}
+
+	private static MagicAccessoryData GetAccessoryForTooltip(ItemVM item, Hero hero, out bool equipped)
+	{
+		equipped = false;
+		ItemObject itemObject = item?.ItemRosterElement.EquipmentElement.Item;
+		if (itemObject == null || !MagicAccessoryRegistry.TryGet(itemObject.StringId, out MagicAccessoryData accessory))
+		{
+			return null;
+		}
+		if (item is SPItemVM inventoryItem && inventoryItem.InventorySide == InventoryLogic.InventorySide.BattleEquipment)
+		{
+			equipped = string.Equals(MagicAccessoryService.GetEquippedItemId(hero, accessory.Slot), itemObject.StringId,
+				StringComparison.OrdinalIgnoreCase);
+		}
+		return accessory;
 	}
 
 	private static MagicRuneData GetRuneForTooltip(ItemVM item, Hero hero, out bool isSocketed)

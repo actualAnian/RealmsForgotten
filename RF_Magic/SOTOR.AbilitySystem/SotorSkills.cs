@@ -24,7 +24,7 @@ public class SotorSkills
 		string resolvedId;
 		CharacterAttribute characterAttribute = ResolveGoverningAttribute(out resolvedId);
 		_spellcraft = Game.Current.ObjectManager.RegisterPresumedObject(new SkillObject("SotorSpellcraft"));
-		_spellcraft.Initialize(new TextObject("Spellcraft"), new TextObject("Your mastery of the Winds of Magic. Higher Spellcraft increases spell damage and unlocks higher spell tiers."), new CharacterAttribute[1] { characterAttribute });
+		_spellcraft.Initialize(new TextObject("Spellcraft"), new TextObject("Your mastery of Mana. Higher Spellcraft increases spell damage and unlocks higher spell tiers."), new CharacterAttribute[1] { characterAttribute });
 		SotorLog.Info("SotorSkills: registered 'SotorSpellcraft' (attr=" + resolvedId + ").");
 	}
 

@@ -22,21 +22,27 @@ public static class AmbushConfig
 
     /// <summary>
     /// Multiplicador de dificuldade-de-ser-visto enquanto a party esta armada em
-    /// emboscada. Aplica EM CIMA da dificuldade vanilla (que ja considera floresta
-    /// e party parada). A escala vanilla e ~0.25 campo aberto / 0.30 floresta, e a
-    /// visibilidade decide por range²/dist²/dificuldade >= 1 — dobrar a dificuldade
-    /// corta a distancia de avistamento por ~1.41x.
+    /// emboscada. Aplica EM CIMA da dificuldade de terreno. A referencia REAL
+    /// (1.4.8, DefaultMapVisibilityModel): alcance-base de visao de QUALQUER
+    /// party = 12 unidades de dia / 6 de noite, e o avistado ocorre quando
+    /// dist <= range/dificuldade. Para a presa entrar no bote (3.2) sem ver,
+    /// a dificuldade total precisa passar de ~4. Recalibrado 2026-08-27 (era
+    /// 3.0 e "qualquer bandido avistava a emboscada" — feedback do autor):
+    /// floresta+assentado esconde ate party grande; campo aberto so esconde
+    /// party media plenamente assentada com batedor bom, e de noite tudo fica
+    /// 2x mais facil (o alcance-base cai a 6).
     /// </summary>
-    public const float StanceConcealmentMultiplier = 3.0f;
+    public const float StanceConcealmentMultiplier = 4.5f;
 
     /// <summary>Bonus de ocultacao por ponto de Scouting do NOSSO batedor (fracao).</summary>
     public const float ConcealmentPerScoutSkill = 1f / 300f;
 
     /// <summary>
-    /// Homens alem deste tanto comecam a estragar a ocultacao. 20 homens se
-    /// escondem numa mata; 200 nao.
+    /// Homens alem deste tanto comecam a estragar a ocultacao. 50 homens se
+    /// escondem numa mata; 500 nao. (Era 20 — punia qualquer exercito de
+    /// verdade; as parties do RF rodam na casa das centenas.)
     /// </summary>
-    public const int ConcealmentSizeGraceMen = 20;
+    public const int ConcealmentSizeGraceMen = 50;
 
     /// <summary>Horas paradas para atingir a ocultacao plena (assentar poeira, apagar fogueiras).</summary>
     public const float FullConcealmentAfterHours = 3f;

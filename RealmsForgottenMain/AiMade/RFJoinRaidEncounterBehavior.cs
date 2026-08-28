@@ -242,7 +242,11 @@ namespace RealmsForgotten.AiMade
             }
 
             PlayerEncounter.JoinBattle(BattleSideEnum.Attacker);
-            MenuHelper.EncounterAttackConsequence(args);
+            // Menu de encounter vanilla, NAO direto pra batalha: e la que moram
+            // "Attack!" E "Send your troops" — pular pro EncounterAttackConsequence
+            // roubava a opcao de mandar so as tropas (feedback do autor 2026-08-27).
+            // Mesmo idioma do caminho de cerco logo abaixo.
+            GameMenu.SwitchToMenu("encounter");
         }
 
         private bool JoinRaidDefenderCondition(MenuCallbackArgs args)
@@ -285,7 +289,9 @@ namespace RealmsForgotten.AiMade
             }
 
             PlayerEncounter.JoinBattle(BattleSideEnum.Defender);
-            MenuHelper.EncounterAttackConsequence(args);
+            // Ver comentario no lado atacante: o menu "encounter" preserva o
+            // "Send your troops" alem do "Attack!".
+            GameMenu.SwitchToMenu("encounter");
         }
 
         private bool JoinSiegeAttackerCondition(MenuCallbackArgs args)

@@ -39,8 +39,49 @@ namespace RealmsForgotten.Models
         static int daimo = FaceGen.GetRaceOrDefault("daimo");
         static int sillok = FaceGen.GetRaceOrDefault("sillok");
 
-        static List<int> standardRaces = new() { thog, shaitan, kharach, brute };
-        static List<int> specialRaces = new List<int> { bark, nurh, daimo, sillok };
+        // BUG 2026-08-26 (trace in-game): GetRaceOrDefault devolve 0 (=humano) quando o
+        // nome nao resolve, e as listas estaticas congelavam esse 0 — resultado: TODO
+        // inimigo de raca 0 caia na regra de special race (dano 0) e espada nenhuma
+        // feria ninguem. Fix SEM mudar o design: resolucao preguicosa (na 1ª utilizacao,
+        // com o FaceGen ja populado) e indice invalido/0 vira -1 (nunca casa com raca
+        // real). As regras por raca continuam exatamente as mesmas.
+        private static List<int> _standardRaces;
+        private static List<int> _specialRaces;
+
+        private static int ResolveRaceStrict(string name)
+        {
+            int race = FaceGen.GetRaceOrDefault(name);
+            if (race <= 0)
+            {
+                TaleWorlds.Library.Debug.Print($"[RF_Damage] raca '{name}' nao resolveu no FaceGen — excluida das listas de dano.");
+                return -1;
+            }
+            return race;
+        }
+
+        private static List<int> standardRaces
+        {
+            get
+            {
+                if (_standardRaces == null)
+                {
+                    _standardRaces = new List<int> { ResolveRaceStrict("thog"), ResolveRaceStrict("shaitan"), ResolveRaceStrict("kharach"), ResolveRaceStrict("brute") };
+                }
+                return _standardRaces;
+            }
+        }
+
+        private static List<int> specialRaces
+        {
+            get
+            {
+                if (_specialRaces == null)
+                {
+                    _specialRaces = new List<int> { ResolveRaceStrict("bark"), ResolveRaceStrict("nurh"), ResolveRaceStrict("daimo"), ResolveRaceStrict("sillok") };
+                }
+                return _specialRaces;
+            }
+        }
         public override bool DecideAgentKnockedBackByBlow(Agent attackerAgent, Agent victimAgent, in AttackCollisionData collisionData, WeaponComponentData attackerWeapon, in Blow blow)
         {
             bool baseValue = _baseModel.DecideAgentKnockedBackByBlow(attackerAgent, victimAgent, collisionData, attackerWeapon, blow);
@@ -258,11 +299,22 @@ namespace RealmsForgotten.Models
                 }
 
             }
-            float finalDamage = CalculateRaceDamageReduction(in attackInformation, baseDamage);
+            float afterRace = CalculateRaceDamageReduction(in attackInformation, baseDamage);
             // Chain the base model's result — perk/banner reductions and the War
             // Sails naval reductions were being discarded (only the race
             // reduction survived).
-            finalDamage = _baseModel.ApplyDamageReductions(in attackInformation, in collisionData, finalDamage);
+            float finalDamage = _baseModel.ApplyDamageReductions(in attackInformation, in collisionData, afterRace);
+
+            // Diagnostico "espada nao da dano" (2026-08-26): uma linha por golpe DO
+            // JOGADOR no rgl_log. entrada=0 => o dano ja chegou zerado do estagio de
+            // magnitude/armadura (RBM); entrada>0 e posRaca=0 => nosso sistema de
+            // reducao por raca zerou (special race = invulneravel por design antigo).
+            if (attackInformation.AttackerAgent != null && attackInformation.AttackerAgent == Agent.Main)
+            {
+                TaleWorlds.Library.Debug.Print(
+                    $"[RF_DamageTrace] arma={weapon.Item?.StringId ?? "?"} vitima={attackInformation.VictimAgent?.Character?.StringId ?? "?"} " +
+                    $"raca={attackInformation.VictimAgent?.Character?.Race.ToString() ?? "?"} entrada={baseDamage:0.#} posRaca={afterRace:0.#} final={finalDamage:0.#}");
+            }
             return finalDamage;
         }
         public override void DecideMissileWeaponFlags(Agent attackerAgent, in MissionWeapon missileWeapon, ref WeaponFlags missileWeaponFlags) => _baseModel.DecideMissileWeaponFlags(attackerAgent, in missileWeapon, ref missileWeaponFlags);

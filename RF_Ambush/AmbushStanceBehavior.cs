@@ -174,11 +174,32 @@ public sealed class AmbushStanceBehavior : CampaignBehaviorBase
             string settle = hours >= AmbushConfig.FullConcealmentAfterHours
                 ? "Your position is fully concealed."
                 : "Your troops are settling into cover.";
-            status = $"Your party lies in ambush. {settle} (Scout: {ScoutLabel()})";
+            status = $"Your party lies in ambush. {settle} (Scout: {ScoutLabel()})\n{ConcealmentReport()}";
         }
         MBTextManager.SetTextVariable("RF_AMBUSH_STATUS", status, false);
         MBTextManager.SetTextVariable("RF_AMBUSH_TARGET",
             AmbushState.PounceTarget?.Name?.ToString() ?? "no one", false);
+    }
+
+    /// <summary>
+    /// Diz ao jogador, em unidades de mapa, a que distancia um inimigo tipico o
+    /// avista AQUI e AGORA (alcance-base 12 dia/6 noite dividido pela nossa
+    /// ocultacao) contra o alcance do bote — sem isso o jogador nao tem como
+    /// saber que campo aberto + party grande = emboscada impossivel (feedback do
+    /// autor 2026-08-27: "qualquer bandido esta avistando").
+    /// </summary>
+    private static string ConcealmentReport()
+    {
+        MobileParty main = MobileParty.MainParty;
+        float baseRange = Campaign.Current.Models.MapVisibilityModel.GetPartySeeingRangeBase(main);
+        float spotDist = baseRange / Math.Max(0.01f, AmbushMath.ConcealmentDifficulty(main));
+
+        string rating = spotDist <= AmbushConfig.PounceRange * 0.85f
+            ? "STRONG — prey will walk into your trap blind"
+            : spotDist <= AmbushConfig.PounceRange * 1.3f
+                ? "FAIR — sharp-eyed enemies may spot you first"
+                : "POOR — you will be seen long before you can strike (seek forest, fewer men, or nightfall)";
+        return $"Concealment: {rating}. Enemies spot you at ~{spotDist:0.0} map units (strike range {AmbushConfig.PounceRange:0.0}).";
     }
 
     private static string ScoutLabel()

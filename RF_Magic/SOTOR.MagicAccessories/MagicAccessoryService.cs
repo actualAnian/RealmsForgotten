@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using SOTOR.Extensions;
 using SOTOR.Extensions.ExtendedInfoSystem;
 using TaleWorlds.CampaignSystem;
@@ -54,6 +55,63 @@ public static class MagicAccessoryService
 		cooldown *= runeBonuses.CooldownMultiplier;
 
 		return new MagicAccessoryBonuses(maxWinds, recharge, effectiveness, windsCost, cooldown);
+	}
+
+	public static MagicAccessoryData GetEquippedPowerRing(Hero hero, MagicPowerRingEffect effect = MagicPowerRingEffect.None)
+	{
+		MagicAccessoryData ring = GetEquippedAccessory(hero, MagicAccessorySlot.Ring);
+		return ring != null && ring.Effect != MagicPowerRingEffect.None &&
+			(effect == MagicPowerRingEffect.None || ring.Effect == effect) ? ring : null;
+	}
+
+	public static IReadOnlyList<KeyValuePair<string, string>> GetTooltipRows(MagicAccessoryData accessory, bool equipped)
+	{
+		if (accessory == null)
+		{
+			return Array.Empty<KeyValuePair<string, string>>();
+		}
+
+		List<KeyValuePair<string, string>> rows = new List<KeyValuePair<string, string>>
+		{
+			new KeyValuePair<string, string>(equipped ? "Equipped accessory" : "Magic accessory", accessory.Name),
+			new KeyValuePair<string, string>("Slot", accessory.Slot.ToString())
+		};
+		if (!string.IsNullOrEmpty(accessory.Description))
+		{
+			rows.Add(new KeyValuePair<string, string>("Effect", accessory.Description));
+		}
+		string bonuses = GetBonusText(accessory, ", ");
+		if (!string.IsNullOrEmpty(bonuses))
+		{
+			rows.Add(new KeyValuePair<string, string>("Magic bonuses", bonuses));
+		}
+		return rows;
+	}
+
+	public static string GetBonusText(MagicAccessoryData accessory, string separator)
+	{
+		if (accessory == null)
+		{
+			return string.Empty;
+		}
+		List<string> bonuses = new List<string>();
+		if (Math.Abs(accessory.MaxWindsBonus) > 0.001f) bonuses.Add("Max Mana " + FormatSigned(accessory.MaxWindsBonus));
+		AddMultiplier(bonuses, "Recharge", accessory.RechargeMultiplier);
+		AddMultiplier(bonuses, "Effectiveness", accessory.EffectivenessMultiplier);
+		AddMultiplier(bonuses, "Mana cost", accessory.WindsCostMultiplier);
+		AddMultiplier(bonuses, "Cooldown", accessory.CooldownMultiplier);
+		return string.Join(separator, bonuses);
+	}
+
+	private static void AddMultiplier(List<string> bonuses, string label, float multiplier)
+	{
+		float percent = (multiplier - 1f) * 100f;
+		if (Math.Abs(percent) > 0.05f) bonuses.Add(label + " " + FormatSigned(percent) + "%");
+	}
+
+	private static string FormatSigned(float value)
+	{
+		return value >= 0f ? "+" + value.ToString("0.#") : value.ToString("0.#");
 	}
 
 	public static float ApplyMaxWinds(Hero hero, float currentMaximum)

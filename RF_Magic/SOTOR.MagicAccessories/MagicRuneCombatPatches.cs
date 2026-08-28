@@ -10,8 +10,6 @@ namespace SOTOR.MagicAccessories;
 
 public static class MagicRuneCombatPatches
 {
-	private static bool _reflectingMirrorDamage;
-
 	public static float ApplyWeaponDamage(float damage, in AttackInformation attack)
 	{
 		if (damage <= 0f || attack.AttackerAgent == null || attack.VictimAgent == null)
@@ -46,31 +44,10 @@ public static class MagicRuneCombatPatches
 				MagicRuneCombatFeedback.RecordWeaponModifier(attack.AttackerAgent, attack.VictimAgent, rune);
 			}
 		}
-		if (!_reflectingMirrorDamage && SotorDamageHelper.InSpellBlow &&
-			MagicRuneService.HasEffect(attack.VictimAgent, MagicRuneEffect.Mirror, out MagicRuneData mirror))
+		if (SotorDamageHelper.InSpellBlow)
 		{
-			float before = damage;
-			damage *= Math.Max(0f, 1f - mirror.PrimaryValue / 100f);
-			MagicRuneCombatFeedback.Report(attack.VictimAgent, MagicRuneEffect.Mirror, "magic_damage_reduction",
-				$"{mirror.Name}: reduced incoming spell damage calculation by {mirror.PrimaryValue:0}%", Colors.Cyan);
-			int reflected = (int)(before * mirror.SecondaryValue / 100f);
-			if (reflected > 0)
-			{
-				try
-				{
-					_reflectingMirrorDamage = true;
-					float actualReflected = SotorDamageHelper.ApplyReflectedDamage(attack.AttackerAgent, reflected, attack.VictimAgent);
-					if (actualReflected > 0f)
-					{
-						MagicRuneCombatFeedback.Report(attack.VictimAgent, MagicRuneEffect.Mirror, "magic_reflection",
-							$"{mirror.Name}: reflected {actualReflected:0} magic damage", Colors.Cyan);
-					}
-				}
-				finally
-				{
-					_reflectingMirrorDamage = false;
-				}
-			}
+			MagicRuneService.HasEffect(attack.VictimAgent, MagicRuneEffect.Mirror, out MagicRuneData mirror);
+			damage = MagicPowerRingCombat.ApplyMagicMirrorDamage(damage, in attack, mirror);
 		}
 		return damage;
 	}

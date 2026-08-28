@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using RF_warsystem;
 using SandBox.View.Map;
 using TaleWorlds.CampaignSystem;
@@ -27,6 +28,16 @@ internal sealed class RFPoliticalMapRenderer : IDisposable
     private const float BorderHalfWidth = 0.45f;
     private const int MaximumTrianglesPerMesh = 12000;
 
+    // Construcao FATIADA (2026-08-26): o rebuild antigo era sincrono — ~48k
+    // AddTriangle nativos numa tacada = 9,5s de frame parado (capturado pelo
+    // RFHitchDetector; no zoom maximo virava "tela travada, mate o jogo").
+    // Agora o build roda em passos de ate BuildBudgetMs por frame, num par de
+    // entidades NOVO e invisivel (double-buffer); o mapa politico antigo continua
+    // de pe ate a troca atomica no fim. CellsPerStep e so a granularidade do
+    // gerador — o orcamento de tempo e quem manda.
+    private const double BuildBudgetMs = 6.0;
+    private const int CellsPerStep = 256;
+
     private readonly List<Mesh> _fillMeshes = new();
     private readonly List<Mesh> _borderMeshes = new();
     private GameEntity? _fillEntity;
@@ -42,6 +53,16 @@ internal sealed class RFPoliticalMapRenderer : IDisposable
     private GauntletMovieIdentifier? _labelsMovie;
     private bool _cleanStrategicViewActive;
     private bool _disposed;
+
+    // Estado do build em andamento (double-buffer).
+    private IEnumerator<object?>? _buildJob;
+    private GameEntity? _pendingFillEntity;
+    private GameEntity? _pendingBorderEntity;
+    private Material? _pendingFillMaterial;
+    private Material? _pendingBorderMaterial;
+    private readonly List<Mesh> _pendingFillMeshes = new();
+    private readonly List<Mesh> _pendingBorderMeshes = new();
+    private readonly Stopwatch _buildClock = new();
 
     internal MapScreen Screen { get; }
 
@@ -59,6 +80,13 @@ internal sealed class RFPoliticalMapRenderer : IDisposable
 
         UpdateOverlayVisibility();
         UpdateCleanStrategicView();
+
+        if (_buildJob != null)
+        {
+            RunBuildSlice();
+            return;
+        }
+
         if (_retryTimer > 0f)
         {
             _retryTimer -= dt;
@@ -69,7 +97,7 @@ internal sealed class RFPoliticalMapRenderer : IDisposable
         {
             if (CanBuildGeometry())
             {
-                TryRebuild();
+                StartRebuild();
             }
             return;
         }
@@ -80,7 +108,7 @@ internal sealed class RFPoliticalMapRenderer : IDisposable
             _ownershipCheckTimer = OwnershipCheckInterval;
             if (RFPoliticalTerritoryBuilder.ComputeOwnershipFingerprint() != _ownershipFingerprint)
             {
-                TryRebuild();
+                StartRebuild();
             }
         }
     }
@@ -93,52 +121,127 @@ internal sealed class RFPoliticalMapRenderer : IDisposable
         }
 
         _disposed = true;
+        AbortBuildJob();
         SetCleanStrategicView(false);
         RemoveLabelsLayer();
         RFWarExternalIntentApi.SetPoliticalBorderProviders(null, null);
-        RemoveGeometry();
+        RemoveActiveGeometry();
     }
 
-    private void TryRebuild()
+    private void StartRebuild()
     {
+        AbortBuildJob();
+        _buildJob = BuildSteps().GetEnumerator();
+        RunBuildSlice();
+    }
+
+    /// <summary>Avanca o build ate estourar o orcamento de tempo do frame.</summary>
+    private void RunBuildSlice()
+    {
+        if (_buildJob == null)
+        {
+            return;
+        }
+
+        _buildClock.Restart();
         try
         {
-            Rebuild();
-            _ownershipFingerprint = RFPoliticalTerritoryBuilder.ComputeOwnershipFingerprint();
-            _ownershipCheckTimer = OwnershipCheckInterval;
-            _retryTimer = 0f;
-            RFLogger.Log($"[PoliticalBorders] Territory rebuilt. fillMeshes={_fillMeshes.Count} borderMeshes={_borderMeshes.Count}");
+            while (_buildClock.Elapsed.TotalMilliseconds < BuildBudgetMs)
+            {
+                if (!_buildJob.MoveNext())
+                {
+                    _buildJob = null;
+                    return;
+                }
+            }
         }
         catch (Exception ex)
         {
-            RFWarExternalIntentApi.SetPoliticalBorderProviders(null, null);
-            RemoveGeometry();
+            AbortBuildJob();
             _retryTimer = RetryInterval;
-            RFLogger.Log($"[PoliticalBorders] Territory rebuild failed; retrying later. {ex}");
+            RFLogger.Log($"[PoliticalBorders] Sliced rebuild failed; retrying later. {ex}");
         }
     }
 
-    private void Rebuild()
+    private void AbortBuildJob()
+    {
+        _buildJob = null;
+        if (_pendingFillEntity != null)
+        {
+            _pendingFillEntity.Remove(0);
+            _pendingFillEntity = null;
+        }
+        if (_pendingBorderEntity != null)
+        {
+            _pendingBorderEntity.Remove(0);
+            _pendingBorderEntity = null;
+        }
+        _pendingFillMeshes.Clear();
+        _pendingBorderMeshes.Clear();
+        _pendingFillMaterial = null;
+        _pendingBorderMaterial = null;
+    }
+
+    /// <summary>
+    /// Passos do rebuild. Cada yield e um ponto onde o RunBuildSlice pode devolver o
+    /// frame ao jogo. Sem try/catch aqui dentro (limitacao de iterator) — o catch mora
+    /// no RunBuildSlice.
+    /// </summary>
+    private IEnumerable<object?> BuildSteps()
     {
         if (Campaign.Current?.MapSceneWrapper == null || Screen.MapScene == null)
         {
             throw new InvalidOperationException("Campaign map scene is not ready.");
         }
 
+        // Passo 1: dados do territorio (grade de donos + alturas de canto).
         RFPoliticalTerritoryMap map = new RFPoliticalTerritoryBuilder(Campaign.Current.MapSceneWrapper).Build();
-        RemoveGeometry();
+        yield return null;
 
-        _fillMaterial = CreateOverlayMaterial(ignoreDepth: true);
-        _borderMaterial = CreateOverlayMaterial(ignoreDepth: true);
-        _fillEntity = CreateRootEntity("rf_political_territory_fill");
-        _borderEntity = CreateRootEntity("rf_political_territory_borders");
+        // Passo 2: buffers novos, invisiveis ate a troca.
+        _pendingFillMaterial = CreateOverlayMaterial(ignoreDepth: true);
+        _pendingBorderMaterial = CreateOverlayMaterial(ignoreDepth: true);
+        _pendingFillEntity = CreateRootEntity("rf_political_territory_fill");
+        _pendingBorderEntity = CreateRootEntity("rf_political_territory_borders");
+        _pendingFillEntity.SetVisibilityExcludeParents(false);
+        _pendingBorderEntity.SetVisibilityExcludeParents(false);
+        yield return null;
 
-        BuildFillMeshes(map);
-        BuildBorderMeshes(map);
+        // Passo 3: preenchimento, fatiado por celulas.
+        foreach (object? step in BuildFillMeshesSliced(map))
+        {
+            yield return step;
+        }
+
+        // Passo 4: bordas, fatiado por celulas.
+        foreach (object? step in BuildBorderMeshesSliced(map))
+        {
+            yield return step;
+        }
+
+        // Passo 5: troca atomica — o mapa antigo sai, o novo entra ja completo.
+        RemoveActiveGeometry();
+        _fillEntity = _pendingFillEntity;
+        _borderEntity = _pendingBorderEntity;
+        _fillMaterial = _pendingFillMaterial;
+        _borderMaterial = _pendingBorderMaterial;
+        _fillMeshes.AddRange(_pendingFillMeshes);
+        _borderMeshes.AddRange(_pendingBorderMeshes);
+        _pendingFillEntity = null;
+        _pendingBorderEntity = null;
+        _pendingFillMaterial = null;
+        _pendingBorderMaterial = null;
+        _pendingFillMeshes.Clear();
+        _pendingBorderMeshes.Clear();
+
         EnsureLabelsLayer();
         _labelsVm?.Rebuild(map);
         RFWarExternalIntentApi.SetPoliticalBorderProviders(map.GetAdjacency, map.GetFrontierWeight);
+        _ownershipFingerprint = RFPoliticalTerritoryBuilder.ComputeOwnershipFingerprint();
+        _ownershipCheckTimer = OwnershipCheckInterval;
+        _retryTimer = 0f;
         UpdateOverlayVisibility(force: true);
+        RFLogger.Log($"[PoliticalBorders] Territory rebuilt (sliced). fillMeshes={_fillMeshes.Count} borderMeshes={_borderMeshes.Count}");
     }
 
     private GameEntity CreateRootEntity(string name)
@@ -168,15 +271,11 @@ internal sealed class RFPoliticalMapRenderer : IDisposable
         return material;
     }
 
-    private void BuildFillMeshes(RFPoliticalTerritoryMap map)
+    private IEnumerable<object?> BuildFillMeshesSliced(RFPoliticalTerritoryMap map)
     {
-        if (_fillEntity == null || _fillMaterial == null)
-        {
-            return;
-        }
-
         Mesh? mesh = null;
         int triangleCount = 0;
+        int cellsSinceYield = 0;
         Vec2 uv00 = new(0f, 0f);
         Vec2 uv10 = new(1f, 0f);
         Vec2 uv01 = new(0f, 1f);
@@ -186,6 +285,12 @@ internal sealed class RFPoliticalMapRenderer : IDisposable
         {
             for (int column = 0; column < map.Columns; column++)
             {
+                if (++cellsSinceYield >= CellsPerStep)
+                {
+                    cellsSinceYield = 0;
+                    yield return null;
+                }
+
                 int index = map.CellIndex(column, row);
                 int owner = map.Owners[index];
                 if (owner < 0 || !map.LandCells[index])
@@ -195,8 +300,8 @@ internal sealed class RFPoliticalMapRenderer : IDisposable
 
                 if (mesh == null || triangleCount + 2 > MaximumTrianglesPerMesh)
                 {
-                    FinishMesh(mesh, _fillEntity, _fillMeshes);
-                    mesh = CreateMesh(_fillMaterial, 5);
+                    FinishMesh(mesh, _pendingFillEntity!, _pendingFillMeshes);
+                    mesh = CreateMesh(_pendingFillMaterial!, 5);
                     triangleCount = 0;
                 }
 
@@ -212,18 +317,14 @@ internal sealed class RFPoliticalMapRenderer : IDisposable
             }
         }
 
-        FinishMesh(mesh, _fillEntity, _fillMeshes);
+        FinishMesh(mesh, _pendingFillEntity!, _pendingFillMeshes);
     }
 
-    private void BuildBorderMeshes(RFPoliticalTerritoryMap map)
+    private IEnumerable<object?> BuildBorderMeshesSliced(RFPoliticalTerritoryMap map)
     {
-        if (_borderEntity == null || _borderMaterial == null)
-        {
-            return;
-        }
-
         Mesh? mesh = null;
         int triangleCount = 0;
+        int cellsSinceYield = 0;
         Color borderColor = new(0.012f, 0.016f, 0.021f, 0.82f);
         uint color = borderColor.ToUnsignedInteger();
 
@@ -231,6 +332,12 @@ internal sealed class RFPoliticalMapRenderer : IDisposable
         {
             for (int column = 0; column < map.Columns; column++)
             {
+                if (++cellsSinceYield >= CellsPerStep)
+                {
+                    cellsSinceYield = 0;
+                    yield return null;
+                }
+
                 int owner = map.Owners[map.CellIndex(column, row)];
                 if (owner < 0)
                 {
@@ -245,6 +352,8 @@ internal sealed class RFPoliticalMapRenderer : IDisposable
                         AddBorderSegment(
                             map.CornerPosition(column + 1, row),
                             map.CornerPosition(column + 1, row + 1),
+                            map.CornerHeights[map.CornerIndex(column + 1, row)],
+                            map.CornerHeights[map.CornerIndex(column + 1, row + 1)],
                             ref mesh,
                             ref triangleCount,
                             color);
@@ -259,6 +368,8 @@ internal sealed class RFPoliticalMapRenderer : IDisposable
                         AddBorderSegment(
                             map.CornerPosition(column, row + 1),
                             map.CornerPosition(column + 1, row + 1),
+                            map.CornerHeights[map.CornerIndex(column, row + 1)],
+                            map.CornerHeights[map.CornerIndex(column + 1, row + 1)],
                             ref mesh,
                             ref triangleCount,
                             color);
@@ -267,20 +378,20 @@ internal sealed class RFPoliticalMapRenderer : IDisposable
             }
         }
 
-        FinishMesh(mesh, _borderEntity, _borderMeshes);
+        FinishMesh(mesh, _pendingBorderEntity!, _pendingBorderMeshes);
     }
 
-    private void AddBorderSegment(Vec2 start, Vec2 end, ref Mesh? mesh, ref int triangleCount, uint color)
+    private void AddBorderSegment(Vec2 start, Vec2 end, float startHeight, float endHeight, ref Mesh? mesh, ref int triangleCount, uint color)
     {
-        if (_borderEntity == null || _borderMaterial == null)
+        if (_pendingBorderEntity == null || _pendingBorderMaterial == null)
         {
             return;
         }
 
         if (mesh == null || triangleCount + 2 > MaximumTrianglesPerMesh)
         {
-            FinishMesh(mesh, _borderEntity, _borderMeshes);
-            mesh = CreateMesh(_borderMaterial, 10);
+            FinishMesh(mesh, _pendingBorderEntity, _pendingBorderMeshes);
+            mesh = CreateMesh(_pendingBorderMaterial, 10);
             triangleCount = 0;
         }
 
@@ -298,19 +409,17 @@ internal sealed class RFPoliticalMapRenderer : IDisposable
         Vec2 secondLeft = new(end.x + offset.x, end.y + offset.y);
         Vec2 secondRight = new(end.x - offset.x, end.y - offset.y);
 
+        // Alturas vem dos CANTOS ja amostrados pelo territory builder — a versao
+        // antiga fazia GetTerrainHeightAndNormal nativo POR VERTICE aqui (4 por
+        // segmento, milhares por rebuild). O offset lateral e de 0,45u e a borda
+        // flutua 0,44u acima do chao: a diferenca de altura e imperceptivel.
         Vec2 uv00 = new(0f, 0f);
         Vec2 uv10 = new(1f, 0f);
         Vec2 uv01 = new(0f, 1f);
         Vec2 uv11 = new(1f, 1f);
-        AddTriangle(mesh, GroundPoint(firstLeft, BorderElevation), GroundPoint(firstRight, BorderElevation), GroundPoint(secondRight, BorderElevation), uv00, uv10, uv11, color);
-        AddTriangle(mesh, GroundPoint(firstLeft, BorderElevation), GroundPoint(secondRight, BorderElevation), GroundPoint(secondLeft, BorderElevation), uv00, uv11, uv01, color);
+        AddTriangle(mesh, ToGroundPoint(firstLeft, startHeight, BorderElevation), ToGroundPoint(firstRight, startHeight, BorderElevation), ToGroundPoint(secondRight, endHeight, BorderElevation), uv00, uv10, uv11, color);
+        AddTriangle(mesh, ToGroundPoint(firstLeft, startHeight, BorderElevation), ToGroundPoint(secondRight, endHeight, BorderElevation), ToGroundPoint(secondLeft, endHeight, BorderElevation), uv00, uv11, uv01, color);
         triangleCount += 2;
-    }
-
-    private Vec3 GroundPoint(Vec2 position, float elevation)
-    {
-        Campaign.Current.MapSceneWrapper.GetTerrainHeightAndNormal(position, out float height, out Vec3 normal);
-        return ToGroundPoint(position, height, elevation);
     }
 
     private static Vec3 ToGroundPoint(Vec2 position, float height, float elevation)
@@ -485,7 +594,7 @@ internal sealed class RFPoliticalMapRenderer : IDisposable
         _labelsVm = null;
     }
 
-    private void RemoveGeometry()
+    private void RemoveActiveGeometry()
     {
         if (_fillEntity != null)
         {

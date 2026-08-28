@@ -203,7 +203,11 @@ public static class RFSpellProfile
 		{
 			foreach (Agent other in Mission.Current.Agents)
 			{
-				if (other == null || !other.IsActive() || !other.IsHuman || other.Team == null || other == caster)
+				if (other == null || !other.IsActive() || !other.IsHuman || other.Team == null || !other.Team.IsValid || other == caster)
+				{
+					continue;
+				}
+				if (caster.Team == null || !caster.Team.IsValid)
 				{
 					continue;
 				}

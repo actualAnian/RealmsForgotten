@@ -153,7 +153,7 @@ public static class ArcaneFocusGate
 		ArcaneFocusData focus = ArcaneFocusRegistry.GetEquippedFocus(agent);
 		if (focus == null)
 		{
-			reason = new TextObject("{=rf_no_focus}Sem um foco arcano empunhado.");
+			reason = new TextObject("{=rf_no_focus}You must hold a staff (arcane focus) to cast.");
 			return true;
 		}
 
@@ -164,7 +164,7 @@ public static class ArcaneFocusGate
 
 		if (!focus.AllowsSpellTier(template.SpellTier))
 		{
-			reason = new TextObject("{=rf_wand_tier}Uma varinha só canaliza feitiços de tier 1-2.");
+			reason = new TextObject("{=rf_wand_tier}A wand can only channel tier 1-2 spells.");
 			return true;
 		}
 

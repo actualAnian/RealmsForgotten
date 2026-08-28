@@ -14,6 +14,24 @@ public static class SotorDamageHelper
 {
 	public static bool InSpellBlow;
 
+	public static float ApplyFireDamageOverTime(Agent agent, int damageAmount, Agent applier)
+	{
+		if (MagicAccessoryService.GetEquippedPowerRing(agent?.GetHero(), MagicPowerRingEffect.Fire) != null)
+		{
+			return 0f;
+		}
+		return ApplyDamageOverTime(agent, damageAmount, applier);
+	}
+
+	public static float ApplyFireDamage(Agent agent, int damageAmount, Agent applier)
+	{
+		if (MagicAccessoryService.GetEquippedPowerRing(agent?.GetHero(), MagicPowerRingEffect.Fire) != null)
+		{
+			return 0f;
+		}
+		return ApplyReflectedDamage(agent, damageAmount, applier);
+	}
+
 	public static float ApplyDamageOverTime(Agent agent, int damageAmount, Agent applier)
 	{
 		float before = agent?.Health ?? 0f;
@@ -54,6 +72,10 @@ public static class SotorDamageHelper
 		{
 			num++;
 			if (agent == null || !agent.IsHuman || !agent.IsActive() || agent.Health < 1f || agent.IsFadingOut() || (current != null && current.FindAgentWithIndex(agent.Index) != agent))
+			{
+				continue;
+			}
+			if (template?.DamageType == DamageType.Fire && MagicAccessoryService.GetEquippedPowerRing(agent.GetHero(), MagicPowerRingEffect.Fire) != null)
 			{
 				continue;
 			}

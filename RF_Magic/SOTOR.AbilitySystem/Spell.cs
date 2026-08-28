@@ -45,7 +45,7 @@ public class Spell : Ability
 		if (SOTOR.RFIntegration.TroopWindsPool.AppliesTo(casterAgent)
 			&& !SOTOR.RFIntegration.TroopWindsPool.CanAfford(casterAgent, base.Template))
 		{
-			disabledReason = new TextObject("{=sotor_spell_not_enough_wom}Not enough Winds of Magic");
+			disabledReason = new TextObject("{=sotor_spell_not_enough_wom}Not enough Mana");
 			return true;
 		}
 		if (TryGetWindsHero(casterAgent, out var hero))
@@ -53,7 +53,7 @@ public class Spell : Ability
 			int effectiveWindsCostForSpell = hero.GetEffectiveWindsCostForSpell(base.Template);
 			if (hero.GetWindsOfMagic() < (float)effectiveWindsCostForSpell)
 			{
-				disabledReason = new TextObject("{=sotor_spell_not_enough_wom}Not enough Winds of Magic");
+				disabledReason = new TextObject("{=sotor_spell_not_enough_wom}Not enough Mana");
 				return true;
 			}
 		}

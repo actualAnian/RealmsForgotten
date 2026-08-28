@@ -44,7 +44,7 @@ public class SotorBurningDeckMissionLogic : MissionLogic
 			{
 				try
 				{
-					SotorDamageHelper.ApplyDamageOverTime(agent, damageAmount, agent);
+					SotorDamageHelper.ApplyFireDamageOverTime(agent, damageAmount, agent);
 				}
 				catch (Exception ex)
 				{
